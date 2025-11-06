@@ -1,0 +1,172 @@
+/**
+ * Comprehensive Site Testing Script
+ * Tests all critical functionality of the GB Automation landing page
+ */
+
+import { createServer } from 'http';
+
+const COLORS = {
+  reset: '\x1b[0m',
+  green: '\x1b[32m',
+  red: '\x1b[31m',
+  yellow: '\x1b[33m',
+  blue: '\x1b[34m',
+  bold: '\x1b[1m'
+};
+
+function log(message, color = 'reset') {
+  console.log(`${COLORS[color]}${message}${COLORS.reset}`);
+}
+
+async function testEndpoint(url, testName) {
+  try {
+    const response = await fetch(url);
+    if (response.ok) {
+      log(`✓ ${testName}: PASSED`, 'green');
+      return { passed: true, status: response.status };
+    } else {
+      log(`✗ ${testName}: FAILED (Status ${response.status})`, 'red');
+      return { passed: false, status: response.status };
+    }
+  } catch (error) {
+    log(`✗ ${testName}: ERROR - ${error.message}`, 'red');
+    return { passed: false, error: error.message };
+  }
+}
+
+async function findVitePort() {
+  log('\n🔍 Finding active Vite dev server...', 'blue');
+
+  const commonPorts = [5173, 5174, 5175, 5176, 5177, 5178, 5179];
+
+  for (const port of commonPorts) {
+    try {
+      const response = await fetch(`http://localhost:${port}`, {
+        signal: AbortSignal.timeout(1000)
+      });
+      if (response.ok) {
+        const html = await response.text();
+        if (html.includes('vite') || html.includes('root')) {
+          log(`✓ Found Vite server on port ${port}`, 'green');
+          return port;
+        }
+      }
+    } catch (error) {
+      // Port not available, continue
+    }
+  }
+
+  log('✗ No Vite server found on common ports', 'red');
+  return null;
+}
+
+async function runTests() {
+  log('\n=================================', 'bold');
+  log('GB AUTOMATION - SITE TEST SUITE', 'bold');
+  log('=================================\n', 'bold');
+
+  const port = await findVitePort();
+
+  if (!port) {
+    log('\n❌ TEST SUITE FAILED: Dev server not running', 'red');
+    log('\nTo start the dev server, run:', 'yellow');
+    log('  npm run dev\n', 'yellow');
+    process.exit(1);
+  }
+
+  const baseUrl = `http://localhost:${port}`;
+  const results = [];
+
+  log('\n📋 Running tests...\n', 'blue');
+
+  // Test 1: Main page loads
+  results.push(await testEndpoint(baseUrl, 'Main page loads'));
+
+  // Test 2: Check for React app initialization
+  try {
+    const response = await fetch(baseUrl);
+    const html = await response.text();
+
+    if (html.includes('id="root"')) {
+      log('✓ React root element found', 'green');
+      results.push({ passed: true });
+    } else {
+      log('✗ React root element missing', 'red');
+      results.push({ passed: false });
+    }
+  } catch (error) {
+    log(`✗ Failed to check React root: ${error.message}`, 'red');
+    results.push({ passed: false });
+  }
+
+  // Test 3: Main JavaScript entry point
+  results.push(await testEndpoint(`${baseUrl}/src/main.jsx`, 'Main.jsx loads'));
+
+  // Test 4: App component
+  results.push(await testEndpoint(`${baseUrl}/src/App.jsx`, 'App.jsx loads'));
+
+  // Test 5: CSS loads
+  results.push(await testEndpoint(`${baseUrl}/src/index.css`, 'CSS loads'));
+
+  // Test 6: Check all components exist
+  const components = ['Hero', 'Features', 'Process', 'Pricing', 'ContactForm', 'Footer'];
+
+  for (const component of components) {
+    results.push(await testEndpoint(
+      `${baseUrl}/src/components/${component}.jsx`,
+      `${component} component loads`
+    ));
+  }
+
+  // Test 7: Check for common JavaScript errors
+  try {
+    const response = await fetch(`${baseUrl}/src/App.jsx`);
+    const code = await response.text();
+
+    const commonIssues = [
+      { pattern: /import.*from ['"]react['"]/, name: 'React import' },
+      { pattern: /export default/, name: 'Default export' },
+    ];
+
+    for (const issue of commonIssues) {
+      if (issue.pattern.test(code)) {
+        log(`✓ ${issue.name} found in App.jsx`, 'green');
+        results.push({ passed: true });
+      } else {
+        log(`✗ ${issue.name} missing in App.jsx`, 'red');
+        results.push({ passed: false });
+      }
+    }
+  } catch (error) {
+    log(`✗ Failed to analyze App.jsx: ${error.message}`, 'red');
+    results.push({ passed: false });
+  }
+
+  // Summary
+  const passed = results.filter(r => r.passed).length;
+  const total = results.length;
+  const percentage = ((passed / total) * 100).toFixed(1);
+
+  log('\n=================================', 'bold');
+  log('TEST RESULTS', 'bold');
+  log('=================================', 'bold');
+  log(`\nPassed: ${passed}/${total} (${percentage}%)`, passed === total ? 'green' : 'yellow');
+
+  if (passed === total) {
+    log('\n✅ ALL TESTS PASSED!', 'green');
+    log(`\n🌐 Your site is running at: ${baseUrl}`, 'blue');
+    log('\nOpen this URL in your browser to view the site.\n', 'blue');
+  } else {
+    log('\n❌ SOME TESTS FAILED', 'red');
+    log('\nPlease check the errors above and fix them.\n', 'yellow');
+  }
+
+  process.exit(passed === total ? 0 : 1);
+}
+
+// Run tests
+runTests().catch(error => {
+  log(`\n❌ Fatal error: ${error.message}`, 'red');
+  console.error(error);
+  process.exit(1);
+});

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Site Diagnostics - GB Automation</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .container {
+      background: white;
+      border-radius: 8px;
+      padding: 30px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #2563eb;
+      margin-bottom: 10px;
+    }
+    .subtitle {
+      color: #666;
+      margin-bottom: 30px;
+    }
+    .test-section {
+      margin: 20px 0;
+      padding: 15px;
+      border-left: 4px solid #e5e7eb;
+      background: #f9fafb;
+    }
+    .test-result {
+      display: flex;
+      align-items: center;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 4px;
+    }
+    .test-result.pass {
+      background: #d1fae5;
+      border-left: 4px solid #10b981;
+    }
+    .test-result.fail {
+      background: #fee2e2;
+      border-left: 4px solid #ef4444;
+    }
+    .icon {
+      font-size: 20px;
+      margin-right: 10px;
+    }
+    .button {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 10px 5px;
+    }
+    .button:hover {
+      background: #1d4ed8;
+    }
+    .button.secondary {
+      background: #6b7280;
+    }
+    .button.secondary:hover {
+      background: #4b5563;
+    }
+    #results {
+      margin-top: 20px;
+    }
+    .code {
+      background: #1f2937;
+      color: #f3f4f6;
+      padding: 15px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+    }
+    .summary {
+      font-size: 18px;
+      padding: 20px;
+      border-radius: 6px;
+      margin: 20px 0;
+      font-weight: 600;
+    }
+    .summary.success {
+      background: #d1fae5;
+      color: #065f46;
+    }
+    .summary.warning {
+      background: #fef3c7;
+      color: #92400e;
+    }
+    .summary.error {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔧 GB Automation Site Diagnostics</h1>
+    <p class="subtitle">Comprehensive testing for your landing page</p>
+
+    <div class="test-section">
+      <h3>Quick Actions</h3>
+      <button class="button" onclick="runAllTests()">Run All Tests</button>
+      <button class="button secondary" onclick="location.href='/'">Go to Main Site</button>
+      <button class="button secondary" onclick="location.reload()">Refresh Tests</button>
+    </div>
+
+    <div id="results"></div>
+  </div>
+
+  <script>
+    const tests = {
+      network: [],
+      components: [],
+      functionality: [],
+      performance: []
+    };
+
+    function addResult(category, name, passed, details = '') {
+      tests[category].push({ name, passed, details });
+    }
+
+    function displayResults() {
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = '';
+
+      const categories = [
+        { key: 'network', title: '🌐 Network & Resources' },
+        { key: 'components', title: '⚛️ React Components' },
+        { key: 'functionality', title: '⚙️ Functionality' },
+        { key: 'performance', title: '⚡ Performance' }
+      ];
+
+      let totalPassed = 0;
+      let totalTests = 0;
+
+      categories.forEach(({ key, title }) => {
+        const categoryTests = tests[key];
+        if (categoryTests.length === 0) return;
+
+        const passed = categoryTests.filter(t => t.passed).length;
+        totalPassed += passed;
+        totalTests += categoryTests.length;
+
+        const section = document.createElement('div');
+        section.className = 'test-section';
+        section.innerHTML = `<h3>${title} (${passed}/${categoryTests.length})</h3>`;
+
+        categoryTests.forEach(test => {
+          const result = document.createElement('div');
+          result.className = `test-result ${test.passed ? 'pass' : 'fail'}`;
+          result.innerHTML = `
+            <span class="icon">${test.passed ? '✅' : '❌'}</span>
+            <div>
+              <strong>${test.name}</strong>
+              ${test.details ? `<div style="font-size: 14px; color: #666; margin-top: 4px;">${test.details}</div>` : ''}
+            </div>
+          `;
+          section.appendChild(result);
+        });
+
+        resultsDiv.appendChild(section);
+      });
+
+      // Summary
+      const percentage = totalTests > 0 ? ((totalPassed / totalTests) * 100).toFixed(1) : 0;
+      const summaryClass = percentage === 100 ? 'success' : percentage > 70 ? 'warning' : 'error';
+      const summaryIcon = percentage === 100 ? '🎉' : percentage > 70 ? '⚠️' : '❌';
+
+      const summary = document.createElement('div');
+      summary.className = `summary ${summaryClass}`;
+      summary.innerHTML = `
+        ${summaryIcon} Test Results: ${totalPassed}/${totalTests} passed (${percentage}%)
+        ${percentage === 100 ? '<br>✨ All systems operational!' : ''}
+      `;
+      resultsDiv.insertBefore(summary, resultsDiv.firstChild);
+    }
+
+    async function testNetworkResources() {
+      const resources = [
+        { url: '/', name: 'Main page' },
+        { url: '/src/main.jsx', name: 'Main.jsx' },
+        { url: '/src/App.jsx', name: 'App.jsx' },
+        { url: '/src/index.css', name: 'Styles' }
+      ];
+
+      for (const resource of resources) {
+        try {
+          const response = await fetch(resource.url);
+          addResult('network', resource.name, response.ok, `Status: ${response.status}`);
+        } catch (error) {
+          addResult('network', resource.name, false, `Error: ${error.message}`);
+        }
+      }
+    }
+
+    async function testComponents() {
+      const components = ['Hero', 'Features', 'Process', 'Pricing', 'ContactForm', 'Footer'];
+
+      for (const component of components) {
+        try {
+          const response = await fetch(`/src/components/${component}.jsx`);
+          const exists = response.ok;
+          addResult('components', `${component} component`, exists,
+            exists ? 'Component file found' : 'Component file missing');
+        } catch (error) {
+          addResult('components', `${component} component`, false, error.message);
+        }
+      }
+    }
+
+    async function testFunctionality() {
+      // Test if page has rendered
+      const hasRoot = !!document.querySelector('#root');
+      addResult('functionality', 'React root element', hasRoot,
+        hasRoot ? 'Root div exists' : 'Root div not found');
+
+      // Test console errors
+      const originalError = console.error;
+      const errors = [];
+      console.error = function(...args) {
+        errors.push(args.join(' '));
+        originalError.apply(console, args);
+      };
+
+      // Wait a bit to catch any async errors
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      console.error = originalError;
+
+      addResult('functionality', 'No console errors', errors.length === 0,
+        errors.length > 0 ? `Found ${errors.length} errors` : 'Clean console');
+
+      // Test if any links work
+      const links = document.querySelectorAll('a[href^="#"]');
+      addResult('functionality', 'Navigation links', links.length > 0,
+        `Found ${links.length} navigation links`);
+    }
+
+    async function testPerformance() {
+      if (window.performance && window.performance.timing) {
+        const timing = window.performance.timing;
+        const loadTime = timing.loadEventEnd - timing.navigationStart;
+        const domReady = timing.domContentLoadedEventEnd - timing.navigationStart;
+
+        addResult('performance', 'Page load time', loadTime < 5000,
+          `${loadTime}ms ${loadTime < 5000 ? '(Good)' : '(Slow)'}`);
+
+        addResult('performance', 'DOM ready time', domReady < 3000,
+          `${domReady}ms ${domReady < 3000 ? '(Good)' : '(Slow)'}`);
+      }
+
+      // Check for heavy resources
+      if (window.performance && window.performance.getEntries) {
+        const resources = window.performance.getEntries();
+        const largeResources = resources.filter(r => r.transferSize > 500000);
+
+        addResult('performance', 'Resource sizes', largeResources.length === 0,
+          largeResources.length > 0
+            ? `${largeResources.length} resources > 500KB`
+            : 'All resources optimized');
+      }
+    }
+
+    async function runAllTests() {
+      // Clear previous results
+      Object.keys(tests).forEach(key => tests[key] = []);
+
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = '<p style="text-align: center; padding: 40px;">🔄 Running tests...</p>';
+
+      try {
+        await testNetworkResources();
+        await testComponents();
+        await testFunctionality();
+        await testPerformance();
+
+        displayResults();
+      } catch (error) {
+        resultsDiv.innerHTML = `
+          <div class="summary error">
+            ❌ Test suite failed: ${error.message}
+          </div>
+        `;
+      }
+    }
+
+    // Auto-run tests on load
+    window.addEventListener('load', () => {
+      setTimeout(runAllTests, 500);
+    });
+  </script>
+</body>
+</html>
