@@ -36,10 +36,6 @@ export default function VideoHero() {
             <a href="#contact" className="hover:text-white hover:scale-105 transition-colors duration-300">
               Contact
             </a>
-            <button className="flex items-center gap-1 hover:text-white hover:scale-105 transition-colors duration-300 cursor-pointer">
-              EN
-              <ChevronDown size={14} />
-            </button>
           </div>
         </div>
       </nav>
