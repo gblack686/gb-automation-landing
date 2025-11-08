@@ -66,9 +66,8 @@ export default function VideoHero() {
       {/* Footer */}
       <div className="absolute bottom-6 left-0 right-0 z-10">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="flex justify-between items-center">
-            <p className="font-sans text-white/70 text-xs font-light">© 2025 GB Automation. All rights reserved.</p>
-            <p className="font-sans text-white/70 text-xs font-light">dev@gbautomation.xyz</p>
+          <div className="flex justify-center items-center">
+            <p className="font-sans text-white/70 text-xs font-light">GB Automation</p>
           </div>
         </div>
       </div>
