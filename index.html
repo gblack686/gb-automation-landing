@@ -7,9 +7,36 @@
     <meta name="description" content="GB Automation - 90-Day Agentic Systems Program. Build smarter and faster with AI developers that code in your vibe." />
     <title>GB Automation - Agentic Systems & Vibe Coding</title>
     <style>
-      /* Move ElevenLabs widget up to avoid covering footer email */
+      /* Customize ElevenLabs widget to match landing page */
       elevenlabs-convai {
-        bottom: 72px !important;
+        bottom: 120px !important;
+        right: 50% !important;
+        transform: translateX(50%) !important;
+        --el-avatar-size: 80px !important;
+        --el-primary-color: #00DCFF !important;
+        --el-background-color: rgba(0, 0, 0, 0.6) !important;
+        --el-text-color: #ffffff !important;
+      }
+
+      /* Make the orb larger and add glow effect */
+      elevenlabs-convai::part(avatar) {
+        width: 80px !important;
+        height: 80px !important;
+        box-shadow: 0 0 30px rgba(0, 220, 255, 0.5) !important;
+      }
+
+      /* Style the button to match landing page */
+      elevenlabs-convai::part(button) {
+        background: linear-gradient(135deg, #00DCFF 0%, #0088CC 100%) !important;
+        border: none !important;
+        box-shadow: 0 4px 20px rgba(0, 220, 255, 0.3) !important;
+      }
+
+      /* Style the chat window */
+      elevenlabs-convai::part(window) {
+        background: rgba(0, 0, 0, 0.85) !important;
+        backdrop-filter: blur(10px) !important;
+        border: 1px solid rgba(0, 220, 255, 0.2) !important;
       }
     </style>
   </head>
