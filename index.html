@@ -12,31 +12,41 @@
         bottom: 120px !important;
         right: 50% !important;
         transform: translateX(50%) !important;
-        --el-avatar-size: 80px !important;
+        --el-avatar-size: 120px !important;
         --el-primary-color: #00DCFF !important;
-        --el-background-color: rgba(0, 0, 0, 0.6) !important;
+        --el-background-color: transparent !important;
         --el-text-color: #ffffff !important;
       }
 
-      /* Make the orb larger and add glow effect */
+      /* Make the orb much larger and add glow effect */
       elevenlabs-convai::part(avatar) {
-        width: 80px !important;
-        height: 80px !important;
-        box-shadow: 0 0 30px rgba(0, 220, 255, 0.5) !important;
+        width: 120px !important;
+        height: 120px !important;
+        box-shadow: 0 0 40px rgba(0, 220, 255, 0.6) !important;
       }
 
-      /* Style the button to match landing page */
+      /* Make button bigger, circular, black with white icon */
       elevenlabs-convai::part(button) {
-        background: linear-gradient(135deg, #00DCFF 0%, #0088CC 100%) !important;
-        border: none !important;
-        box-shadow: 0 4px 20px rgba(0, 220, 255, 0.3) !important;
+        width: 70px !important;
+        height: 70px !important;
+        border-radius: 50% !important;
+        background: #000000 !important;
+        color: #ffffff !important;
+        border: 2px solid #ffffff !important;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4) !important;
+        padding: 0 !important;
       }
 
-      /* Style the chat window */
+      /* Style the chat window with dark transparent background */
       elevenlabs-convai::part(window) {
-        background: rgba(0, 0, 0, 0.85) !important;
-        backdrop-filter: blur(10px) !important;
-        border: 1px solid rgba(0, 220, 255, 0.2) !important;
+        background: rgba(0, 0, 0, 0.9) !important;
+        backdrop-filter: blur(15px) !important;
+        border: 1px solid rgba(0, 220, 255, 0.3) !important;
+      }
+
+      /* Make widget container background fully transparent */
+      elevenlabs-convai::part(container) {
+        background: transparent !important;
       }
     </style>
   </head>
