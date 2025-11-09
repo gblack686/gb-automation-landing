@@ -93,8 +93,24 @@ Use markdown with clear section headers:
 ## 11. Timeline Estimate`;
 
   useEffect(() => {
-    // Connect to orchestrator WebSocket
-    const websocket = new WebSocket('ws://44.208.161.19:3000');
+    // Determine WebSocket protocol based on page protocol
+    const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const wsUrl = import.meta.env.VITE_WS_URL || `${wsProtocol}//44.208.161.19:3000`;
+
+    console.log(`Connecting to WebSocket at ${wsUrl}`);
+
+    let websocket;
+    try {
+      websocket = new WebSocket(wsUrl);
+    } catch (error) {
+      console.error('Failed to create WebSocket:', error);
+      setMessages([{
+        role: 'assistant',
+        content: `⚠️ **Connection Error**\n\nUnable to connect to the PRD Generator service.\n\n**Issue**: The service requires a secure WebSocket connection (wss://) but is currently configured for http only.\n\n**To fix this**, the Lightsail orchestrator needs SSL/TLS configured:\n1. Set up nginx with Let's Encrypt SSL\n2. Configure wss:// endpoint\n3. Update the WebSocket URL\n\nFor now, please contact support for assistance.`,
+        timestamp: new Date()
+      }]);
+      return;
+    }
 
     websocket.onopen = () => {
       console.log('Connected to PRD Generator');
@@ -115,16 +131,28 @@ Use markdown with clear section headers:
 
     websocket.onerror = (error) => {
       console.error('WebSocket error:', error);
+      setMessages(prev => [...prev, {
+        role: 'assistant',
+        content: `⚠️ **Connection Error**\n\nThe PRD Generator service is currently unavailable.\n\n**Technical Details**: ${error.message || 'WebSocket connection failed'}\n\nPlease try again later or contact support.`,
+        timestamp: new Date()
+      }]);
     };
 
-    websocket.onclose = () => {
-      console.log('WebSocket connection closed');
+    websocket.onclose = (event) => {
+      console.log('WebSocket connection closed', event.code, event.reason);
+      if (event.code !== 1000 && event.code !== 1001) {
+        setMessages(prev => [...prev, {
+          role: 'assistant',
+          content: `⚠️ **Connection Lost**\n\nThe connection to the PRD Generator was closed unexpectedly.\n\n**Code**: ${event.code}\n**Reason**: ${event.reason || 'Unknown'}\n\nPlease refresh the page to reconnect.`,
+          timestamp: new Date()
+        }]);
+      }
     };
 
     setWs(websocket);
 
     return () => {
-      if (websocket.readyState === WebSocket.OPEN) {
+      if (websocket && websocket.readyState === WebSocket.OPEN) {
         websocket.close();
       }
     };
