@@ -25,11 +25,11 @@ export default function VideoHero() {
       <div className="absolute inset-0 bg-black/20 z-0" />
 
       {/* Navigation Bar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-black/10 backdrop-blur-sm py-4 px-6">
-        <div className="flex justify-between items-center">
-          <div className="text-white font-serif text-xl">GB Automation</div>
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-black/10 backdrop-blur-sm py-3 sm:py-4 px-4 sm:px-6">
+        <div className="flex justify-between items-center max-w-7xl mx-auto">
+          <div className="text-white font-serif text-lg sm:text-xl">GB Automation</div>
 
-          <div className="flex items-center gap-8 text-white/90 font-sans text-sm font-light">
+          <div className="flex items-center gap-4 sm:gap-8 text-white/90 font-sans text-xs sm:text-sm font-light">
             <a href="#features" className="hover:text-white hover:scale-105 transition-colors duration-300">
               Features
             </a>
@@ -41,21 +41,21 @@ export default function VideoHero() {
       </nav>
 
       {/* Hero Content */}
-      <div className="relative z-10 flex items-center h-screen">
-        <div className="max-w-7xl mx-auto px-6">
+      <div className="relative z-10 flex items-center min-h-screen pt-16 pb-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="max-w-2xl fade-in">
-            <h1 className="font-serif text-white text-4xl lg:text-6xl font-normal tracking-tight mb-8">
+            <h1 className="font-serif text-white text-3xl sm:text-4xl lg:text-6xl font-normal tracking-tight mb-6 sm:mb-8 leading-tight">
               Build Smarter and Faster with an AI Developer <em className="text-cyan-400">That Codes in Your Vibe</em>
             </h1>
 
             {/* Hero Subheading */}
-            <p className="font-sans text-gray-200 text-lg lg:text-xl font-light leading-relaxed mb-12 max-w-xl">
+            <p className="font-sans text-gray-200 text-base sm:text-lg lg:text-xl font-light leading-relaxed mb-8 sm:mb-12 max-w-xl">
               90-Day Agentic Systems Program: Internal tools, external products, and autonomous AI workflows built for your business
             </p>
 
             <button
               onClick={scrollToContact}
-              className="bg-white text-gray-900 font-sans font-medium px-6 py-3 rounded-lg text-base hover:bg-gray-100 hover:scale-105 hover:shadow-lg transition-all duration-300"
+              className="bg-white text-gray-900 font-sans font-medium px-6 sm:px-8 py-3 sm:py-4 rounded-lg text-sm sm:text-base hover:bg-gray-100 hover:scale-105 hover:shadow-lg transition-all duration-300 w-full sm:w-auto"
             >
               Schedule Discovery Call
             </button>

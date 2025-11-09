@@ -29,17 +29,17 @@ export default function ContactForm() {
   };
 
   return (
-    <section id="contact" className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-950">
+    <section id="contact" className="py-12 sm:py-20 px-4 sm:px-6 lg:px-8 bg-gray-950">
       <div className="max-w-3xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-white mb-4">Let's Build Together</h2>
-          <p className="text-xl text-gray-400">
+        <div className="text-center mb-8 sm:mb-12">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3 sm:mb-4">Let's Build Together</h2>
+          <p className="text-lg sm:text-xl text-gray-400">
             Ready to transform your business with agentic systems? Tell us about your project.
           </p>
         </div>
 
-        <div className="bg-gray-900 rounded-2xl border border-gray-800 p-8">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <div className="bg-gray-900 rounded-2xl border border-gray-800 p-6 sm:p-8">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 sm:space-y-6">
             {/* Name */}
             <div>
               <label htmlFor="name" className="block text-sm font-semibold text-white mb-2">
@@ -143,7 +143,7 @@ export default function ContactForm() {
             <button
               type="submit"
               disabled={submitStatus === 'submitting'}
-              className="w-full bg-cyan-400 text-black py-4 px-8 rounded-lg text-lg font-semibold hover:bg-cyan-300 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-cyan-400 text-black py-3 sm:py-4 px-6 sm:px-8 rounded-lg text-base sm:text-lg font-semibold hover:bg-cyan-300 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {submitStatus === 'submitting' ? 'Sending...' : 'Schedule Discovery Call'}
             </button>
@@ -159,18 +159,10 @@ export default function ContactForm() {
             {submitStatus === 'error' && (
               <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-800">
                 <p className="font-semibold">Oops! Something went wrong.</p>
-                <p className="text-sm">Please try again or email us directly at dev@gbautomation.xyz</p>
+                <p className="text-sm">Please try again or reach out directly.</p>
               </div>
             )}
           </form>
-        </div>
-
-        {/* Direct Contact */}
-        <div className="mt-8 text-center">
-          <p className="text-gray-400 mb-2">Or reach out directly:</p>
-          <a href="mailto:dev@gbautomation.xyz" className="text-cyan-400 font-semibold hover:text-cyan-300 text-lg">
-            dev@gbautomation.xyz
-          </a>
         </div>
       </div>
     </section>

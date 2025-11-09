@@ -7,28 +7,30 @@
     <meta name="description" content="GB Automation - 90-Day Agentic Systems Program. Build smarter and faster with AI developers that code in your vibe." />
     <title>GB Automation - Agentic Systems & Vibe Coding</title>
     <style>
-      /* Customize ElevenLabs widget to match landing page */
+      /* Customize ElevenLabs widget - FIXED POSITION */
       elevenlabs-convai {
-        bottom: 120px !important;
-        right: 50% !important;
-        transform: translateX(50%) !important;
-        --el-avatar-size: 120px !important;
+        position: fixed !important;
+        bottom: 30px !important;
+        right: 30px !important;
+        transform: none !important;
+        z-index: 9999 !important;
+        --el-avatar-size: 80px !important;
         --el-primary-color: #00DCFF !important;
         --el-background-color: transparent !important;
         --el-text-color: #ffffff !important;
       }
 
-      /* Make the orb much larger and add glow effect */
+      /* Orb styling with glow */
       elevenlabs-convai::part(avatar) {
-        width: 120px !important;
-        height: 120px !important;
-        box-shadow: 0 0 40px rgba(0, 220, 255, 0.6) !important;
+        width: 80px !important;
+        height: 80px !important;
+        box-shadow: 0 0 30px rgba(0, 220, 255, 0.6) !important;
       }
 
-      /* Make button bigger, circular, black with white icon */
+      /* Button styling - circular, black with white icon */
       elevenlabs-convai::part(button) {
-        width: 70px !important;
-        height: 70px !important;
+        width: 60px !important;
+        height: 60px !important;
         border-radius: 50% !important;
         background: #000000 !important;
         color: #ffffff !important;
@@ -37,16 +39,44 @@
         padding: 0 !important;
       }
 
-      /* Style the chat window with dark transparent background */
+      /* Chat window styling */
       elevenlabs-convai::part(window) {
-        background: rgba(0, 0, 0, 0.9) !important;
-        backdrop-filter: blur(15px) !important;
+        background: rgba(0, 0, 0, 0.95) !important;
+        backdrop-filter: blur(20px) !important;
         border: 1px solid rgba(0, 220, 255, 0.3) !important;
+        border-radius: 20px !important;
       }
 
-      /* Make widget container background fully transparent */
+      /* Transparent container */
       elevenlabs-convai::part(container) {
         background: transparent !important;
+      }
+
+      /* Mobile responsive adjustments */
+      @media (max-width: 768px) {
+        elevenlabs-convai {
+          bottom: 20px !important;
+          right: 20px !important;
+          --el-avatar-size: 60px !important;
+        }
+
+        elevenlabs-convai::part(avatar) {
+          width: 60px !important;
+          height: 60px !important;
+        }
+
+        elevenlabs-convai::part(button) {
+          width: 50px !important;
+          height: 50px !important;
+        }
+
+        /* Make chat window full width on mobile */
+        elevenlabs-convai::part(window) {
+          width: calc(100vw - 40px) !important;
+          max-width: 400px !important;
+          right: 20px !important;
+          bottom: 90px !important;
+        }
       }
     </style>
   </head>
