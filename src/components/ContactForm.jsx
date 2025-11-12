@@ -48,8 +48,9 @@ export default function ContactForm() {
               <input
                 id="name"
                 type="text"
+                autoComplete="name"
                 {...register('name', { required: 'Name is required' })}
-                className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all duration-200"
+                className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all duration-200 text-base min-h-[48px]"
                 placeholder="Your full name"
               />
               {errors.name && (
@@ -65,6 +66,8 @@ export default function ContactForm() {
               <input
                 id="email"
                 type="email"
+                autoComplete="email"
+                inputMode="email"
                 {...register('email', {
                   required: 'Email is required',
                   pattern: {
@@ -72,7 +75,7 @@ export default function ContactForm() {
                     message: 'Invalid email address'
                   }
                 })}
-                className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all duration-200"
+                className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all duration-200 text-base min-h-[48px]"
                 placeholder="you@company.com"
               />
               {errors.email && (
@@ -88,8 +91,9 @@ export default function ContactForm() {
               <input
                 id="company"
                 type="text"
+                autoComplete="organization"
                 {...register('company')}
-                className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all duration-200"
+                className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all duration-200 text-base min-h-[48px]"
                 placeholder="Your company name"
               />
             </div>
@@ -102,8 +106,10 @@ export default function ContactForm() {
               <input
                 id="phone"
                 type="tel"
+                autoComplete="tel"
+                inputMode="tel"
                 {...register('phone')}
-                className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all duration-200"
+                className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all duration-200 text-base min-h-[48px]"
                 placeholder="(555) 123-4567"
               />
             </div>
@@ -117,7 +123,7 @@ export default function ContactForm() {
                 id="projectDescription"
                 {...register('projectDescription', { required: 'Project description is required' })}
                 rows="4"
-                className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all duration-200"
+                className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all duration-200 text-base"
                 placeholder="Tell us about your project, goals, and challenges..."
               />
               {errors.projectDescription && (
@@ -134,7 +140,7 @@ export default function ContactForm() {
                 id="message"
                 {...register('message')}
                 rows="3"
-                className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all duration-200"
+                className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all duration-200 text-base"
                 placeholder="Any other details you'd like to share..."
               />
             </div>
@@ -143,7 +149,8 @@ export default function ContactForm() {
             <button
               type="submit"
               disabled={submitStatus === 'submitting'}
-              className="w-full bg-cyan-400 text-black py-3 sm:py-4 px-6 sm:px-8 rounded-lg text-base sm:text-lg font-semibold hover:bg-cyan-300 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-cyan-400 text-black py-4 px-6 sm:px-8 rounded-lg text-base sm:text-lg font-semibold hover:bg-cyan-300 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed min-h-[52px] active:scale-95 touch-manipulation"
+              aria-label="Submit contact form"
             >
               {submitStatus === 'submitting' ? 'Sending...' : 'Schedule Discovery Call'}
             </button>

@@ -74,7 +74,8 @@ export default function Pricing() {
 
             <button
               onClick={scrollToContact}
-              className="w-full bg-cyan-400 text-black py-4 px-8 rounded-lg text-lg font-semibold hover:bg-cyan-300 transition-all duration-200 shadow-lg hover:shadow-xl"
+              className="w-full bg-cyan-400 text-black py-4 px-8 rounded-lg text-lg font-semibold hover:bg-cyan-300 transition-all duration-200 shadow-lg hover:shadow-xl min-h-[52px] active:scale-95 touch-manipulation"
+              aria-label="Start your transformation"
             >
               Start Your Transformation
             </button>
