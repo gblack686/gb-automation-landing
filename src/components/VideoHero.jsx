@@ -1,23 +1,25 @@
-import { ChevronDown } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 
 export default function VideoHero() {
   const videoRef = useRef(null)
   const [isMobile, setIsMobile] = useState(false)
   const [videoLoaded, setVideoLoaded] = useState(false)
+  const [isRevealed, setIsRevealed] = useState(false)
 
   useEffect(() => {
-    // Detect mobile device
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768)
     }
     checkMobile()
     window.addEventListener('resize', checkMobile)
+    
+    // Trigger reveal animation
+    setTimeout(() => setIsRevealed(true), 100)
+    
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
   useEffect(() => {
-    // Ensure video plays on mobile
     if (videoRef.current && isMobile) {
       videoRef.current.play().catch(err => {
         console.log('Video autoplay prevented:', err)
@@ -30,18 +32,24 @@ export default function VideoHero() {
   }
 
   return (
-    <div className="relative min-h-screen bg-black overflow-hidden">
+    <div className="relative min-h-screen overflow-hidden selection:bg-[#D97757] selection:text-white">
+      {/* Ambient Background Glow */}
+      <div className="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[#D97757]/5 rounded-full blur-[120px]"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-[#C26D52]/10 rounded-full blur-[120px]"></div>
+      </div>
+
       {/* Background Video */}
       <video
         ref={videoRef}
-        className="absolute inset-0 w-full h-full object-cover z-0"
+        className="absolute inset-0 w-full h-full object-cover z-0 opacity-30"
         autoPlay
         muted
         loop
         playsInline
         preload="auto"
         onLoadedData={() => setVideoLoaded(true)}
-        poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 1080'%3E%3Crect fill='%23000000' width='1920' height='1080'/%3E%3C/svg%3E"
+        poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 1080'%3E%3Crect fill='%23F3F1E7' width='1920' height='1080'/%3E%3C/svg%3E"
       >
         <source
           src="https://res.cloudinary.com/doevp9obh/video/upload/v1751630378/social_u7865913127_httpss.mj.runfy9I6hP3bjY_A_serene_cinematic_anima_3732f431-944f-4ee3-9b66-c82c1462de47_1_vjttzg.mp4"
@@ -49,65 +57,87 @@ export default function VideoHero() {
         />
       </video>
 
-      {/* Video Overlay */}
-      <div className="absolute inset-0 bg-black/20 z-0" />
+      {/* Video Overlay - cream tint */}
+      <div className="absolute inset-0 bg-[#F3F1E7]/70 z-0" />
 
       {/* Navigation Bar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-black/10 backdrop-blur-sm py-3 sm:py-4 px-4 sm:px-6">
-        <div className="flex justify-between items-center max-w-7xl mx-auto">
-          <div className="text-white font-serif text-lg sm:text-xl">GB Automation</div>
+      <header className="fixed top-0 w-full z-50 border-b border-[#D6D4C8]/60 bg-[#F3F1E7]/80 backdrop-blur-xl">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-2 hover-mini cursor-default">
+            <div className="relative w-6 h-6 flex items-center justify-center">
+              <div className="absolute inset-0 bg-[#D97757]/20 blur-md rounded-full"></div>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#D97757] relative z-10">
+                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                <path d="M2 17l10 5 10-5"></path>
+                <path d="M2 12l10 5 10-5"></path>
+              </svg>
+            </div>
+            <span className="font-serif text-lg font-semibold tracking-tight text-[#191919]">
+              GB AUTOMATION
+            </span>
+          </div>
 
-          <div className="flex items-center gap-4 sm:gap-8 text-white/90 font-sans text-xs sm:text-sm font-light">
-            <a
-              href="#features"
-              className="hover:text-white hover:scale-105 transition-colors duration-300 min-h-[44px] flex items-center"
-              aria-label="View features"
-            >
+          <nav className="hidden md:flex gap-8 text-[11px] font-medium tracking-widest uppercase text-[#8C8A84]">
+            <a href="#features" className="hover:text-[#D97757] transition-colors hover-mini">
               Features
             </a>
-            <a
-              href="#contact"
-              className="hover:text-white hover:scale-105 transition-colors duration-300 min-h-[44px] flex items-center"
-              aria-label="Contact us"
-            >
-              Contact
+            <a href="#process" className="hover:text-[#D97757] transition-colors hover-mini">
+              90-Day Process
             </a>
-          </div>
+            <a href="#pricing" className="hover:text-[#D97757] transition-colors hover-mini">
+              Investment
+            </a>
+          </nav>
+
+          <a href="#contact" className="hidden md:flex items-center gap-2 px-4 py-1.5 bg-white border border-[#D6D4C8] text-[#191919] text-[11px] font-medium tracking-wide rounded-full hover:bg-[#191919] hover:text-[#F3F1E7] transition-all shadow-sm hover-mini group">
+            Start Vibe Coding
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="group-hover:translate-x-0.5 transition-transform">
+              <path d="M5 12h14"></path>
+              <path d="m12 5 7 7-7 7"></path>
+            </svg>
+          </a>
         </div>
-      </nav>
+      </header>
 
       {/* Hero Content */}
-      <div className="relative z-10 flex items-center min-h-screen pt-16 pb-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="max-w-2xl fade-in">
-            <h1 className="font-serif text-white text-3xl sm:text-4xl lg:text-6xl font-normal tracking-tight mb-6 sm:mb-8 leading-tight">
-              Build Smarter and Faster with an AI Developer <em className="text-cyan-400">That Codes in Your Vibe</em>
-            </h1>
+      <section className="relative pt-40 pb-20 px-6 overflow-hidden flex flex-col items-center text-center z-10 min-h-screen justify-center">
+        {/* Status Indicator */}
+        <div className={`mb-8 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#D6D4C8] bg-white/60 backdrop-blur-sm hover-mini cursor-default shadow-sm transition-all duration-700 ${isRevealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}>
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#D97757] opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#D97757]"></span>
+          </span>
+          <span className="text-[10px] uppercase tracking-widest text-[#5C5C5C] font-semibold">
+            Powered by ElevenLabs Agents
+          </span>
+        </div>
 
-            {/* Hero Subheading */}
-            <p className="font-sans text-gray-200 text-base sm:text-lg lg:text-xl font-light leading-relaxed mb-8 sm:mb-12 max-w-xl">
-              90-Day Agentic Systems Program: Internal tools, external products, and autonomous AI workflows built for your business
-            </p>
+        <h1 className={`text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-serif font-medium text-[#191919] tracking-tight mb-8 max-w-5xl leading-[1] transition-all duration-700 delay-100 ${isRevealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}>
+          Build Smarter with
+          <br />
+          <span className="text-[#D97757] italic">
+            An AI Developer.
+          </span>
+        </h1>
 
-            <button
-              onClick={scrollToContact}
-              className="bg-white text-gray-900 font-sans font-medium px-6 sm:px-8 py-4 sm:py-4 rounded-lg text-sm sm:text-base hover:bg-gray-100 hover:scale-105 hover:shadow-lg transition-all duration-300 w-full sm:w-auto min-h-[48px] active:scale-95 touch-manipulation"
-              aria-label="Schedule discovery call"
-            >
+        <p className={`text-[#5C5C5C] text-sm md:text-base max-w-2xl mx-auto mb-12 leading-relaxed font-normal transition-all duration-700 delay-200 ${isRevealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}>
+          90-Day Agentic Systems Program: Internal tools, external products, and autonomous AI workflows built for your business. An AI developer that codes in your vibe.
+        </p>
+
+        <div className={`flex flex-col sm:flex-row gap-4 w-full sm:w-auto items-center justify-center transition-all duration-700 delay-300 ${isRevealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}>
+          <button
+            onClick={scrollToContact}
+            className="relative group overflow-hidden rounded-full bg-[#191919] hover:bg-[#333] transition-all hover-mini shadow-lg shadow-[#191919]/10 w-full sm:w-auto"
+          >
+            <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full px-8 py-3.5 text-xs font-semibold uppercase tracking-wider text-[#F3F1E7]">
               Schedule Discovery Call
-            </button>
-          </div>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="ml-2">
+                <path d="m9 18 6-6-6-6"></path>
+              </svg>
+            </span>
+          </button>
         </div>
-      </div>
-
-      {/* Footer */}
-      <div className="absolute bottom-6 left-0 right-0 z-10">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex justify-center items-center">
-            <p className="font-sans text-white/70 text-xs font-light">GB Automation</p>
-          </div>
-        </div>
-      </div>
+      </section>
     </div>
   )
 }

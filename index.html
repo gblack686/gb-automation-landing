@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/gb-logo.png" />
@@ -10,17 +10,20 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="GB Automation" />
-    <meta name="theme-color" content="#000000" />
+    <meta name="theme-color" content="#F3F1E7" />
 
     <!-- SEO & Description -->
     <meta name="description" content="GB Automation - 90-Day Agentic Systems Program. Build smarter and faster with AI developers that code in your vibe." />
-    <title>GB Automation - Agentic Systems & Vibe Coding</title>
+    <title>GB Automation | Agentic Systems & Vibe Coding</title>
 
     <!-- Preload critical resources -->
     <link rel="preconnect" href="https://res.cloudinary.com" />
     <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
     <style>
-      /* Customize ElevenLabs widget - FIXED POSITION */
+      /* Customize ElevenLabs widget - FIXED POSITION with cream theme */
       elevenlabs-convai {
         position: fixed !important;
         bottom: 30px !important;
@@ -28,36 +31,37 @@
         transform: none !important;
         z-index: 9999 !important;
         --el-avatar-size: 80px !important;
-        --el-primary-color: #00DCFF !important;
+        --el-primary-color: #D97757 !important;
         --el-background-color: transparent !important;
-        --el-text-color: #ffffff !important;
+        --el-text-color: #191919 !important;
       }
 
-      /* Orb styling with glow */
+      /* Orb styling with terracotta glow */
       elevenlabs-convai::part(avatar) {
         width: 80px !important;
         height: 80px !important;
-        box-shadow: 0 0 30px rgba(0, 220, 255, 0.6) !important;
+        box-shadow: 0 0 30px rgba(217, 119, 87, 0.4) !important;
       }
 
-      /* Button styling - circular, black with white icon */
+      /* Button styling - circular with terracotta accent */
       elevenlabs-convai::part(button) {
         width: 60px !important;
         height: 60px !important;
         border-radius: 50% !important;
-        background: #000000 !important;
-        color: #ffffff !important;
-        border: 2px solid #ffffff !important;
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4) !important;
+        background: #191919 !important;
+        color: #F3F1E7 !important;
+        border: 2px solid #D6D4C8 !important;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2) !important;
         padding: 0 !important;
       }
 
-      /* Chat window styling */
+      /* Chat window styling - cream theme */
       elevenlabs-convai::part(window) {
-        background: rgba(0, 0, 0, 0.95) !important;
+        background: rgba(243, 241, 231, 0.98) !important;
         backdrop-filter: blur(20px) !important;
-        border: 1px solid rgba(0, 220, 255, 0.3) !important;
+        border: 1px solid rgba(214, 212, 200, 0.6) !important;
         border-radius: 20px !important;
+        color: #191919 !important;
       }
 
       /* Transparent container */

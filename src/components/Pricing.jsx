@@ -1,90 +1,127 @@
+import { useEffect, useRef, useState } from 'react';
+
 export default function Pricing() {
+  const sectionRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   const scrollToContact = () => {
     document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const included = [
-    'Fully deployed AI platform (internal + external apps)',
-    'Multi-agent ecosystem trained on your business data',
-    'Reusable AWS kit to scale or replicate environments',
-    'Documentation and test-driven pipelines',
-    'Team trained on agentic development workflow',
-    '20+ hours/week full-time development support'
+  const tiers = [
+    {
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" x2="9" y1="3" y2="18"/><line x1="15" x2="15" y1="6" y2="21"/>
+        </svg>
+      ),
+      title: 'System Blueprint',
+      price: '$500',
+      period: 'One-time',
+      features: ['Vibe Discovery', 'Workflow Mapping', 'Validation Gates', 'Implementation Roadmap'],
+      cta: 'Get Blueprint',
+      primary: false
+    },
+    {
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+        </svg>
+      ),
+      title: 'Agent Implementation',
+      price: '$3,500',
+      period: 'One-time',
+      features: ['Full Implementation Plans', 'Validation Scripts', 'Deployment Guides', 'Agent Architecture'],
+      cta: 'Start Build',
+      primary: true
+    },
+    {
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 12c-2-2.67-4-4-6-4a4 4 0 1 0 0 8c2 0 4-1.33 6-4Zm0 0c2 2.67 4 4 6 4a4 4 0 0 0 0-8c-2 0-4 1.33-6 4Z"/>
+        </svg>
+      ),
+      title: 'Advisory & Support',
+      price: '$1,000',
+      period: '/ Month',
+      features: ['System Monitoring', 'Weekly Code Review', 'Performance Tuning', 'Priority Support', 'Scaling Assistance'],
+      cta: 'Apply Now',
+      primary: false
+    }
   ];
 
+  const visClass = isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5';
+
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-black">
-      <div className="max-w-5xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-white mb-4">Investment</h2>
-          <p className="text-xl text-gray-400">
-            One engagement. Complete transformation.
-          </p>
-        </div>
+    <section id="pricing" ref={sectionRef} className="py-32 px-6 relative overflow-hidden bg-[#F3F1E7]">
+      <div className={`max-w-6xl mx-auto text-center transition-all duration-700 ${visClass}`}>
+        <h2 className="text-4xl md:text-5xl font-serif font-medium text-[#191919] tracking-tighter mb-6">
+          Investment
+        </h2>
+        <p className="text-[#5C5C5C] mb-16 text-sm font-normal">
+          One engagement. Complete transformation.
+        </p>
 
-        <div className="bg-gray-900 rounded-2xl overflow-hidden border-2 border-cyan-400">
-          <div className="bg-gradient-to-r from-cyan-500 to-cyan-600 text-black py-8 px-8 text-center">
-            <h3 className="text-3xl font-bold mb-2">90-Day Agentic Systems Program</h3>
-            <p className="text-gray-900 text-lg mt-4">Full-service development support</p>
-          </div>
-
-          <div className="p-8">
-            <h4 className="text-xl font-bold text-white mb-6">What's Included</h4>
-            <ul className="space-y-4 mb-8">
-              {included.map((item, index) => (
-                <li key={index} className="flex items-start">
-                  <svg className="w-6 h-6 text-cyan-400 mr-3 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span className="text-gray-300">{item}</span>
-                </li>
-              ))}
-            </ul>
-
-            <div className="bg-gray-800 rounded-lg p-6 mb-8 border border-gray-700">
-              <h5 className="font-bold text-white mb-3">After 90 Days, You Own:</h5>
-              <div className="grid md:grid-cols-2 gap-3 text-sm text-gray-300">
-                <div className="flex items-center">
-                  <svg className="w-5 h-5 text-cyan-400 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  Complete AI infrastructure
-                </div>
-                <div className="flex items-center">
-                  <svg className="w-5 h-5 text-cyan-400 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                  Self-running agent systems
-                </div>
-                <div className="flex items-center">
-                  <svg className="w-5 h-5 text-cyan-400 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                  </svg>
-                  Deployment automation
-                </div>
-                <div className="flex items-center">
-                  <svg className="w-5 h-5 text-cyan-400 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
-                  Trained development team
-                </div>
-              </div>
-            </div>
-
-            <button
-              onClick={scrollToContact}
-              className="w-full bg-cyan-400 text-black py-4 px-8 rounded-lg text-lg font-semibold hover:bg-cyan-300 transition-all duration-200 shadow-lg hover:shadow-xl min-h-[52px] active:scale-95 touch-manipulation"
-              aria-label="Start your transformation"
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          {tiers.map((tier, index) => (
+            <div
+              key={index}
+              className={`glass-panel p-8 rounded-3xl border border-[#D6D4C8] hover-shiny flex flex-col items-start text-left bg-[#E6E4D9] transition-all duration-700 ${visClass}`}
+              style={{ transitionDelay: (index * 100) + 'ms' }}
             >
-              Start Your Transformation
-            </button>
-          </div>
+              <div className={`mb-4 p-2 rounded-lg ${tier.primary ? 'bg-[#D97757]/10 border border-[#D97757]/20 text-[#D97757]' : 'bg-white/40 border border-[#D6D4C8] text-[#191919]'}`}>
+                {tier.icon}
+              </div>
+              <h3 className="text-[#191919] font-serif text-xl font-medium mb-1">{tier.title}</h3>
+              <div className="mb-6">
+                <span className="text-3xl font-bold text-[#191919] tracking-tight">
+                  {tier.price}
+                </span>
+                <span className="block text-[10px] text-[#8C8A84] uppercase tracking-widest mt-1">
+                  {tier.period}
+                </span>
+              </div>
+
+              <ul className="text-left text-xs text-[#5C5C5C] space-y-3 mb-8 w-full">
+                {tier.features.map((feature, i) => (
+                  <li key={i} className="flex gap-2 items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#D97757]">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+              <button
+                onClick={scrollToContact}
+                className={`w-full py-3 text-xs font-semibold uppercase tracking-wider rounded-lg transition-all mt-auto shadow-sm hover-mini ${tier.primary ? 'bg-[#191919] border border-transparent hover:bg-[#333] text-[#F3F1E7] shadow-lg' : 'bg-white border border-[#D6D4C8] hover:bg-[#191919] hover:text-[#F3F1E7] text-[#191919]'}`}
+              >
+                {tier.cta}
+              </button>
+            </div>
+          ))}
         </div>
 
-        <div className="mt-8 text-center text-gray-500">
-          <p className="text-sm">Optional add-ons available: Ongoing maintenance, additional specialized agents</p>
-        </div>
+        <p className="text-xs text-[#8C8A84] italic">
+          *After 90 days, you own the complete AI infrastructure, deployment automation, and trained development team.
+        </p>
       </div>
     </section>
   );

@@ -7,7 +7,7 @@ import Footer from '../components/Footer';
 
 function Home() {
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-[#F3F1E7] selection:bg-[#D97757] selection:text-white overflow-x-hidden">
       <VideoHero />
       <Features />
       <Process />

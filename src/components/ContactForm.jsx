@@ -1,25 +1,36 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 
 export default function ContactForm() {
   const [submitStatus, setSubmitStatus] = useState(null);
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
+  const sectionRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   const onSubmit = async (data) => {
     try {
       setSubmitStatus('submitting');
-
-      // For now, we'll just log the data and simulate a successful submission
-      // Later we'll connect this to AWS Amplify Data/API
       console.log('Form submission:', data);
-
-      // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
-
       setSubmitStatus('success');
       reset();
-
-      // Reset success message after 5 seconds
       setTimeout(() => setSubmitStatus(null), 5000);
     } catch (error) {
       console.error('Submission error:', error);
@@ -28,43 +39,40 @@ export default function ContactForm() {
     }
   };
 
-  return (
-    <section id="contact" className="py-12 sm:py-20 px-4 sm:px-6 lg:px-8 bg-gray-950">
-      <div className="max-w-3xl mx-auto">
-        <div className="text-center mb-8 sm:mb-12">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3 sm:mb-4">Let's Build Together</h2>
-          <p className="text-lg sm:text-xl text-gray-400">
-            Ready to transform your business with agentic systems? Tell us about your project.
-          </p>
-        </div>
+  const visClass = isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5';
 
-        <div className="bg-gray-900 rounded-2xl border border-gray-800 p-6 sm:p-8">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 sm:space-y-6">
-            {/* Name */}
-            <div>
-              <label htmlFor="name" className="block text-sm font-semibold text-white mb-2">
+  return (
+    <section id="contact" ref={sectionRef} className="py-24 px-6 border-t border-[#D6D4C8]/60 bg-[#E6E4D9]/30">
+      <div className={`max-w-2xl mx-auto glass-panel p-8 rounded-3xl border border-[#D6D4C8] transition-all duration-700 ${visClass}`}>
+        <h2 className="text-3xl font-serif font-medium text-[#191919] tracking-tight mb-4 text-center">
+          Let's Build Together
+        </h2>
+        <p className="text-[#5C5C5C] text-sm text-center mb-12">
+          Ready to transform your business with agentic systems? Tell us about your project.
+        </p>
+
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <label className="text-[10px] uppercase tracking-wider text-[#8C8A84] font-bold">
                 Name *
               </label>
               <input
-                id="name"
                 type="text"
                 autoComplete="name"
                 {...register('name', { required: 'Name is required' })}
-                className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all duration-200 text-base min-h-[48px]"
                 placeholder="Your full name"
+                className="w-full px-4 py-3 rounded-lg text-sm input-field"
               />
               {errors.name && (
-                <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
+                <p className="text-sm text-red-600">{errors.name.message}</p>
               )}
             </div>
-
-            {/* Email */}
-            <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-white mb-2">
+            <div className="space-y-2">
+              <label className="text-[10px] uppercase tracking-wider text-[#8C8A84] font-bold">
                 Email *
               </label>
               <input
-                id="email"
                 type="email"
                 autoComplete="email"
                 inputMode="email"
@@ -75,102 +83,80 @@ export default function ContactForm() {
                     message: 'Invalid email address'
                   }
                 })}
-                className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all duration-200 text-base min-h-[48px]"
                 placeholder="you@company.com"
+                className="w-full px-4 py-3 rounded-lg text-sm input-field"
               />
               {errors.email && (
-                <p className="mt-1 text-sm text-red-400">{errors.email.message}</p>
+                <p className="text-sm text-red-600">{errors.email.message}</p>
               )}
             </div>
+          </div>
 
-            {/* Company */}
-            <div>
-              <label htmlFor="company" className="block text-sm font-semibold text-white mb-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <label className="text-[10px] uppercase tracking-wider text-[#8C8A84] font-bold">
                 Company
               </label>
               <input
-                id="company"
                 type="text"
                 autoComplete="organization"
                 {...register('company')}
-                className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all duration-200 text-base min-h-[48px]"
                 placeholder="Your company name"
+                className="w-full px-4 py-3 rounded-lg text-sm input-field"
               />
             </div>
-
-            {/* Phone */}
-            <div>
-              <label htmlFor="phone" className="block text-sm font-semibold text-white mb-2">
+            <div className="space-y-2">
+              <label className="text-[10px] uppercase tracking-wider text-[#8C8A84] font-bold">
                 Phone
               </label>
               <input
-                id="phone"
                 type="tel"
                 autoComplete="tel"
                 inputMode="tel"
                 {...register('phone')}
-                className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all duration-200 text-base min-h-[48px]"
                 placeholder="(555) 123-4567"
+                className="w-full px-4 py-3 rounded-lg text-sm input-field"
               />
             </div>
+          </div>
 
-            {/* Project Description */}
-            <div>
-              <label htmlFor="projectDescription" className="block text-sm font-semibold text-white mb-2">
-                What are you looking to build? *
-              </label>
-              <textarea
-                id="projectDescription"
-                {...register('projectDescription', { required: 'Project description is required' })}
-                rows="4"
-                className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all duration-200 text-base"
-                placeholder="Tell us about your project, goals, and challenges..."
-              />
-              {errors.projectDescription && (
-                <p className="mt-1 text-sm text-red-400">{errors.projectDescription.message}</p>
-              )}
-            </div>
-
-            {/* Additional Message */}
-            <div>
-              <label htmlFor="message" className="block text-sm font-semibold text-white mb-2">
-                Additional Information
-              </label>
-              <textarea
-                id="message"
-                {...register('message')}
-                rows="3"
-                className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all duration-200 text-base"
-                placeholder="Any other details you'd like to share..."
-              />
-            </div>
-
-            {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={submitStatus === 'submitting'}
-              className="w-full bg-cyan-400 text-black py-4 px-6 sm:px-8 rounded-lg text-base sm:text-lg font-semibold hover:bg-cyan-300 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed min-h-[52px] active:scale-95 touch-manipulation"
-              aria-label="Submit contact form"
-            >
-              {submitStatus === 'submitting' ? 'Sending...' : 'Schedule Discovery Call'}
-            </button>
-
-            {/* Status Messages */}
-            {submitStatus === 'success' && (
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-green-800">
-                <p className="font-semibold">Thank you for your interest!</p>
-                <p className="text-sm">We'll get back to you within 24 hours.</p>
-              </div>
+          <div className="space-y-2">
+            <label className="text-[10px] uppercase tracking-wider text-[#8C8A84] font-bold">
+              What are you looking to build? *
+            </label>
+            <textarea
+              rows="4"
+              {...register('projectDescription', { required: 'Project description is required' })}
+              placeholder="Tell us about your project, goals, and challenges..."
+              className="w-full px-4 py-3 rounded-lg text-sm input-field resize-none"
+            />
+            {errors.projectDescription && (
+              <p className="text-sm text-red-600">{errors.projectDescription.message}</p>
             )}
+          </div>
 
-            {submitStatus === 'error' && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-800">
-                <p className="font-semibold">Oops! Something went wrong.</p>
-                <p className="text-sm">Please try again or reach out directly.</p>
-              </div>
-            )}
-          </form>
-        </div>
+          <button
+            type="submit"
+            disabled={submitStatus === 'submitting'}
+            className="w-full py-4 mt-8 bg-[#191919] text-[#F3F1E7] font-semibold text-sm uppercase tracking-wider rounded-lg hover:bg-[#333] transition-all shadow-lg hover-mini disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {submitStatus === 'submitting' ? 'Sending...' : 'Schedule Discovery Call'}
+          </button>
+
+          {submitStatus === 'success' && (
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-green-800">
+              <p className="font-semibold">Thank you for your interest!</p>
+              <p className="text-sm">We'll get back to you within 24 hours.</p>
+            </div>
+          )}
+
+          {submitStatus === 'error' && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-800">
+              <p className="font-semibold">Oops! Something went wrong.</p>
+              <p className="text-sm">Please try again or reach out directly.</p>
+            </div>
+          )}
+        </form>
       </div>
     </section>
   );

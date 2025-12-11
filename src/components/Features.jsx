@@ -1,76 +1,116 @@
+import { useEffect, useRef, useState } from 'react';
+
 export default function Features() {
+  const sectionRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   const agents = [
     {
       icon: (
-        <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/>
         </svg>
       ),
       title: 'Orchestrator Agent',
-      description: 'Manages workflows, integrations, and deployments across your entire system'
+      description: 'Manages workflows, integrations, and deployments across your entire system. The project manager of your AI fleet.'
     },
     {
       icon: (
-        <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
         </svg>
       ),
       title: 'Developer Agent',
-      description: 'Codes, tests, and ships features through vibe coding'
+      description: 'Codes, tests, and ships features through vibe coding. Rapidly iterates on internal tools and user-facing products.'
     },
     {
       icon: (
-        <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 7h.01"/><path d="M17 7h.01"/><path d="M7 17h.01"/><path d="M17 17h.01"/>
         </svg>
       ),
       title: 'Specialized Agent',
-      description: 'Custom agent tuned to your domain (analytics, ops, product)'
+      description: 'Custom agent tuned to your specific domain (analytics, ops, product) with deep knowledge graph access.'
     }
   ];
 
   const deliverables = [
-    'Internal AI Application - Custom internal app built around team workflows',
-    'External AI Product - Customer-facing interface with ChatGPT-style chat',
-    'RAG + Knowledge Graph backend - Private data embeddings + relational graph DB',
-    'AWS CloudFormation Kit - Full infrastructure-as-code deployment',
-    'CI/CD Integration - GitHub Actions + Claude Code',
-    'Interface options - Slack, Telegram, or Microsoft Teams'
+    { title: 'Internal AI Application', desc: 'Custom internal app built around workflows.' },
+    { title: 'External AI Product', desc: 'Customer-facing interface with ChatGPT-style chat.' },
+    { title: 'RAG + Knowledge Graph', desc: 'Private data embeddings + relational graph DB.' },
+    { title: 'AWS CloudFormation Kit', desc: 'Full infrastructure-as-code deployment.' },
+    { title: 'CI/CD Integration', desc: 'GitHub Actions + Claude Code.' },
+    { title: 'Interface Options', desc: 'Slack, Telegram, or Microsoft Teams.' }
   ];
 
+  const visClass = isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5';
+
   return (
-    <section id="features" className="py-20 px-4 sm:px-6 lg:px-8 bg-black">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-white mb-4">What You Get</h2>
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-            Three Claude-based agents working together as your autonomous development team
+    <section id="features" ref={sectionRef} className="py-24 px-6 border-y border-[#D6D4C8]/60 relative z-10 bg-[#E6E4D9]/30">
+      <div className="max-w-6xl mx-auto">
+        <div className={`text-center mb-16 transition-all duration-700 ${visClass}`}>
+          <h2 className="text-4xl font-serif font-medium text-[#191919] tracking-tight mb-4">
+            Your Autonomous Team
+          </h2>
+          <p className="text-[#5C5C5C] text-sm font-normal">
+            Three Claude-based agents working together as your development unit.
           </p>
         </div>
 
-        {/* Agents Grid */}
-        <div className="grid md:grid-cols-3 gap-8 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {agents.map((agent, index) => (
-            <div key={index} className="bg-gray-900 p-8 rounded-xl border border-gray-800 hover:border-cyan-400 transition-all duration-300">
-              <div className="text-cyan-400 mb-6">{agent.icon}</div>
-              <h3 className="text-2xl font-bold text-white mb-3">{agent.title}</h3>
-              <p className="text-gray-400">{agent.description}</p>
+            <div
+              key={index}
+              className={`glass-panel p-8 rounded-3xl group hover-shiny border border-[#D6D4C8] transition-all duration-700 ${visClass}`}
+              style={{ transitionDelay: index * 100 + 'ms' }}
+            >
+              <div className="w-12 h-12 rounded-xl bg-white border border-[#D6D4C8] flex items-center justify-center mb-6 text-[#D97757] group-hover:scale-110 transition-transform duration-300">
+                {agent.icon}
+              </div>
+              <h3 className="text-xl font-serif font-medium text-[#191919] mb-3">
+                {agent.title}
+              </h3>
+              <p className="text-sm text-[#5C5C5C] font-normal leading-relaxed">
+                {agent.description}
+              </p>
             </div>
           ))}
         </div>
 
-        {/* Deliverables */}
-        <div className="bg-gray-900 p-8 rounded-xl border border-gray-800">
-          <h3 className="text-2xl font-bold text-white mb-6 text-center">Complete System Includes</h3>
-          <div className="grid md:grid-cols-2 gap-4">
+        <div className={`mt-20 glass-panel p-10 rounded-3xl border border-[#D6D4C8] hover-mini transition-all duration-700 ${visClass}`} style={{ transitionDelay: '400ms' }}>
+          <h3 className="text-xl font-serif font-medium text-[#191919] mb-8 border-b border-[#D6D4C8] pb-4">
+            Complete System Includes
+          </h3>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {deliverables.map((item, index) => (
-              <div key={index} className="flex items-start">
-                <svg className="w-6 h-6 text-cyan-400 mr-3 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              <div key={index} className="flex items-start gap-3 group">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#D97757] shrink-0 group-hover:scale-110 transition-transform mt-0.5">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
                 </svg>
                 <div>
-                  <strong className="text-white">{item.split(' - ')[0]}</strong>
-                  {item.includes(' - ') && <span className="text-gray-400"> - {item.split(' - ')[1]}</span>}
+                  <span className="block text-sm font-semibold text-[#191919]">
+                    {item.title}
+                  </span>
+                  <span className="text-xs text-[#5C5C5C] mt-1">
+                    {item.desc}
+                  </span>
                 </div>
               </div>
             ))}
