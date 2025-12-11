@@ -60,6 +60,16 @@ export default function VideoHero() {
       {/* Video Overlay - cream tint */}
       <div className="absolute inset-0 bg-[#F3F1E7]/70 z-0" />
 
+      {/* Background Logo Watermark */}
+      <div className="absolute inset-0 flex items-center justify-center z-[1] pointer-events-none overflow-hidden">
+        <img
+          src="/gb-signature.png"
+          alt=""
+          className="w-[60%] md:w-[45%] lg:w-[40%] max-w-[600px] opacity-[0.04] select-none"
+          style={{ filter: 'grayscale(100%)' }}
+        />
+      </div>
+
       {/* Navigation Bar */}
       <header className="fixed top-0 w-full z-50 border-b border-[#D6D4C8]/60 bg-[#F3F1E7]/80 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
