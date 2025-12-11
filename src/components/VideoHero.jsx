@@ -73,15 +73,12 @@ export default function VideoHero() {
       {/* Navigation Bar */}
       <header className="fixed top-0 w-full z-50 border-b border-[#D6D4C8]/60 bg-[#F3F1E7]/80 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2 hover-mini cursor-default">
-            <div className="relative w-6 h-6 flex items-center justify-center">
-              <div className="absolute inset-0 bg-[#D97757]/20 blur-md rounded-full"></div>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#D97757] relative z-10">
-                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-                <path d="M2 17l10 5 10-5"></path>
-                <path d="M2 12l10 5 10-5"></path>
-              </svg>
-            </div>
+          <div className="flex items-center gap-3 hover-mini cursor-default">
+            <img
+              src="/gb-signature.png"
+              alt="GB"
+              className="h-8 w-auto opacity-90"
+            />
             <span className="font-serif text-lg font-semibold tracking-tight text-[#191919]">
               GB AUTOMATION
             </span>
