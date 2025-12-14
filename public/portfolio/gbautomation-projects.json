@@ -1,0 +1,328 @@
+{
+  "company": "Agentic Workflows and Sales Operations Engineering",
+  "role": "Founder & Consultant",
+  "period": "Jun 2024 - Present",
+  "location": "Remote",
+  "focus": "Autonomous AI agents, workflow automation, and sales intelligence systems",
+  "projects": [
+    {
+      "id": "workflow_automations",
+      "title": "25+ Workflow Automations & Backend Infrastructures",
+      "category": "automation_infrastructure",
+      "status": "production",
+      "tags": ["n8n", "Zapier", "Supabase", "Python", "FastAPI", "Workflow Automation", "Backend Development"],
+      "description": "Developed 25+ workflow automations (n8n, Zapier) and engineered 5+ production-grade backend infrastructures with Supabase and Python—integrating essential business apps, optimizing processes, and creating reusable templates for efficient handoff and continuous improvement.",
+      "business_value": "Eliminated manual processes across multiple business functions, enabling teams to focus on strategic work while automation handles repetitive tasks",
+      "technical_challenges": [
+        "Cross-platform integration complexity",
+        "Error handling and recovery in distributed workflows",
+        "Scalable backend architecture design",
+        "Template reusability and documentation"
+      ],
+      "impact": {
+        "scope": "Cross-functional business automation",
+        "metrics": {
+          "automations_deployed": "25+",
+          "backend_systems": "5+",
+          "manual_work_reduction": "85%"
+        },
+        "outcomes": [
+          "Seamless business app integration",
+          "Reusable automation templates",
+          "Production-grade backend infrastructure",
+          "Reduced operational overhead"
+        ]
+      },
+      "technologies": {
+        "automation_platforms": ["n8n", "Zapier"],
+        "backend": ["Supabase", "PostgreSQL"],
+        "languages": ["Python"],
+        "frameworks": ["FastAPI"],
+        "integration": ["REST APIs", "Webhooks", "OAuth"]
+      },
+      "deliverables": [
+        "25+ production workflow automations",
+        "5+ backend infrastructure systems",
+        "Reusable automation templates",
+        "Integration documentation and playbooks"
+      ],
+      "agent_scene": {
+        "prompt": "Network of automated workflows connecting business apps, with data flowing through pipelines and Supabase database at center",
+        "description": "Interconnected automation system orchestrating business processes across multiple platforms",
+        "style": "Network diagram with flowing data, robotic assistants managing connections, cream and terracotta palette"
+      }
+    },
+    {
+      "id": "ai_web_scraper_rag",
+      "title": "AI Web Scraper & Agentic RAG Pipeline",
+      "category": "ai_data_extraction",
+      "status": "production",
+      "tags": ["Web Scraping", "RAG", "AI Agents", "Dynamic Rendering", "Lead Generation", "Automation"],
+      "description": "Engineered an agentic web scraper to extract inventory data from 100+ dynamically rendered websites into a Retrieval Augmented Generation (RAG) pipeline. Automated daily reporting and algorithmic client-product matching, enhancing lead engagement and operational efficiency.",
+      "business_value": "Automated competitive intelligence and inventory tracking at scale, with intelligent product-client matching driving lead engagement",
+      "technical_challenges": [
+        "Dynamic website rendering (JavaScript-heavy sites)",
+        "Anti-scraping measures circumvention",
+        "Data normalization from diverse sources",
+        "Real-time RAG pipeline performance",
+        "Algorithmic matching accuracy"
+      ],
+      "impact": {
+        "scope": "Automated data extraction and intelligent matching",
+        "metrics": {
+          "websites_scraped": "100+",
+          "scraping_frequency": "Daily",
+          "data_sources": "Diverse inventory systems"
+        },
+        "outcomes": [
+          "Automated competitive intelligence",
+          "Daily inventory reports",
+          "Intelligent client-product matching",
+          "Enhanced lead engagement"
+        ]
+      },
+      "technologies": {
+        "scraping": ["Python", "Selenium", "Playwright", "BeautifulSoup"],
+        "ai": ["RAG", "Vector Databases (Weaviate/Pinecone)", "LLMs", "Embeddings"],
+        "automation": ["Cron scheduling", "Error recovery", "Rate limiting"],
+        "storage": ["Vector DB", "PostgreSQL"]
+      },
+      "deliverables": [
+        "Agentic web scraper system",
+        "RAG pipeline for inventory data",
+        "Automated reporting system",
+        "Client-product matching algorithm"
+      ],
+      "agent_scene": {
+        "prompt": "AI agent scraping multiple website screens simultaneously, extracting data into knowledge graph, matching products to clients intelligently",
+        "description": "Autonomous scraping system processing dynamic websites and intelligently matching inventory to customer needs",
+        "style": "AI agent with multiple browser windows, data flowing into knowledge graph, matching visualization"
+      }
+    },
+    {
+      "id": "salesforce_ai_agents",
+      "title": "Salesforce CRM AI Agents",
+      "category": "crm_automation",
+      "status": "production",
+      "tags": ["Salesforce", "AI Agents", "CRM", "Lead Enrichment", "Sales Ops", "Automation"],
+      "description": "Built and deployed AI agents integrated with Salesforce CRM to autonomously enrich leads, append data to opportunities, and generate custom reports—streamlining Sales Ops and improving cross-team visibility between Sales and Marketing.",
+      "business_value": "Automated CRM data quality and reporting, eliminating manual data entry and providing real-time sales intelligence to leadership",
+      "technical_challenges": [
+        "Salesforce API rate limit management",
+        "Real-time data enrichment at scale",
+        "Custom report generation automation",
+        "Sales-Marketing data alignment"
+      ],
+      "impact": {
+        "scope": "Sales and marketing automation",
+        "outcomes": [
+          "Autonomous lead enrichment",
+          "Real-time opportunity updates",
+          "Automated custom reporting",
+          "Improved Sales-Marketing alignment",
+          "Eliminated manual CRM data entry"
+        ]
+      },
+      "technologies": {
+        "crm": ["Salesforce"],
+        "ai": ["AI Agents", "LLMs", "Data Enrichment APIs"],
+        "integration": ["Salesforce REST API", "Webhooks", "Apex"],
+        "automation": ["Python", "Serverless functions"]
+      },
+      "deliverables": [
+        "AI-powered lead enrichment agents",
+        "Automated opportunity management system",
+        "Custom reporting dashboards",
+        "Sales-Marketing integration layer"
+      ],
+      "agent_scene": {
+        "prompt": "AI agent working inside Salesforce interface, enriching lead records, updating opportunities, generating reports autonomously",
+        "description": "Intelligent CRM automation with AI agents managing sales data and cross-functional insights",
+        "style": "Salesforce UI with AI agent overlay, data enrichment flows, report generation visualization"
+      }
+    },
+    {
+      "id": "knowledge_graph",
+      "title": "CRM & Sales Intelligence Knowledge Graph",
+      "category": "data_intelligence",
+      "status": "production",
+      "tags": ["Knowledge Graph", "CRM Analytics", "Marketing Intelligence", "NLP", "Agentic Queries"],
+      "description": "Developed a knowledge graph to process all CRM, sales, and marketing campaign events, surfacing actionable insights and trends for leadership. Enabled agentic, natural language queries and automated report generation to drive strategic GTM decisions and optimize outbound campaign performance.",
+      "business_value": "Unified view of all customer interactions enabling natural language business intelligence queries and strategic decision-making",
+      "technical_challenges": [
+        "Multi-source data integration (CRM, sales, marketing)",
+        "Knowledge graph schema design",
+        "Natural language query interpretation",
+        "Real-time insight generation",
+        "Automated report generation"
+      ],
+      "impact": {
+        "scope": "Strategic sales and marketing intelligence",
+        "outcomes": [
+          "Unified customer interaction view",
+          "Natural language business queries",
+          "Automated strategic reports",
+          "Campaign performance optimization",
+          "GTM decision support"
+        ]
+      },
+      "technologies": {
+        "graph": ["Knowledge Graph", "Neo4j/Graph Database"],
+        "ai": ["NLP", "LLMs", "AI Agents", "Semantic Search"],
+        "analytics": ["Campaign Analytics", "Trend Analysis", "Predictive Models"],
+        "integration": ["CRM APIs", "Marketing Platform APIs"]
+      },
+      "deliverables": [
+        "Unified knowledge graph architecture",
+        "Natural language query interface",
+        "Automated GTM reporting system",
+        "Campaign optimization recommendations"
+      ],
+      "agent_scene": {
+        "prompt": "3D knowledge graph with interconnected CRM events, sales data, and marketing campaigns, AI agent querying naturally and surfacing insights",
+        "description": "Intelligent knowledge graph connecting all sales and marketing data with natural language query interface",
+        "style": "3D graph visualization with nodes representing events, AI agent navigating and highlighting insights"
+      }
+    },
+    {
+      "id": "ai_sdr",
+      "title": "AI Sales Development Representative",
+      "category": "sales_automation",
+      "status": "production",
+      "tags": ["AI SDR", "SMS", "Lead Qualification", "LLM", "Appointment Setting", "Conversion Optimization"],
+      "description": "Designed and deployed an AI-powered SDR with integrated SMS appointment setter, leveraging LLMs for automated customer qualification and real-time extraction of prospect details—streamlining inbound/outbound sales processes and boosting conversion rates.",
+      "business_value": "Automated sales development with 24/7 lead qualification and appointment setting, dramatically increasing sales capacity without headcount",
+      "technical_challenges": [
+        "Natural conversation flow with LLMs",
+        "Real-time prospect qualification logic",
+        "SMS integration and compliance",
+        "Calendar integration for appointment setting",
+        "Handoff to human sales team"
+      ],
+      "impact": {
+        "scope": "Automated sales development",
+        "outcomes": [
+          "24/7 automated lead qualification",
+          "Real-time prospect detail extraction",
+          "Automated appointment scheduling",
+          "Improved conversion rates",
+          "Scalable sales capacity"
+        ]
+      },
+      "technologies": {
+        "ai": ["LLMs (GPT-4, Claude)", "AI Agents", "NLP"],
+        "communication": ["SMS APIs (Twilio)", "Appointment Scheduling APIs"],
+        "automation": ["Lead qualification logic", "Prospect data extraction"],
+        "integration": ["CRM integration", "Calendar APIs"]
+      },
+      "deliverables": [
+        "AI-powered SDR conversational agent",
+        "SMS appointment setter integration",
+        "Automated qualification pipeline",
+        "CRM integration layer"
+      ],
+      "agent_scene": {
+        "prompt": "AI SDR agent conversing with prospects via SMS, qualifying leads, extracting details, scheduling appointments autonomously",
+        "description": "Intelligent sales agent handling prospect conversations and appointment setting automatically",
+        "style": "Chat interface with AI agent avatar, conversation bubbles, qualification checkmarks, calendar integration"
+      }
+    },
+    {
+      "id": "lead_enrichment_api",
+      "title": "Lead Enrichment & API Architecture",
+      "category": "data_enrichment",
+      "status": "production",
+      "tags": ["Clay", "API Architecture", "Lead Enrichment", "Middleware", "Data Integration"],
+      "description": "Built custom API wrappers around Clay's enrichment platform to automate data collection across 130+ sources. Engineered middleware services that standardize enrichment responses and integrate with internal systems, achieving 85% reduction in manual data gathering.",
+      "business_value": "Automated lead enrichment at scale with standardized data quality, eliminating manual research and data entry",
+      "technical_challenges": [
+        "130+ data source integration",
+        "API rate limiting and quota management",
+        "Response standardization across diverse sources",
+        "Error handling and data quality validation",
+        "Real-time enrichment performance"
+      ],
+      "impact": {
+        "scope": "Automated data enrichment at enterprise scale",
+        "metrics": {
+          "data_sources": "130+",
+          "manual_work_reduction": "85%",
+          "enrichment_coverage": "Comprehensive"
+        },
+        "outcomes": [
+          "Automated multi-source data collection",
+          "Standardized enrichment responses",
+          "Integrated with internal systems",
+          "Dramatically reduced manual research"
+        ]
+      },
+      "technologies": {
+        "platform": ["Clay"],
+        "development": ["Python", "FastAPI", "API Wrappers"],
+        "middleware": ["Custom middleware layer", "Data normalization"],
+        "integration": ["REST APIs", "Webhooks", "OAuth"],
+        "storage": ["PostgreSQL", "Redis cache"]
+      },
+      "deliverables": [
+        "Custom Clay API wrapper library",
+        "Middleware standardization layer",
+        "Automated enrichment pipeline",
+        "Internal system integrations"
+      ],
+      "agent_scene": {
+        "prompt": "API middleware layer connecting 130+ data sources to internal systems, data flowing through standardization pipeline",
+        "description": "Unified enrichment architecture aggregating data from hundreds of sources into standardized format",
+        "style": "Data pipeline diagram with multiple source nodes flowing through middleware to unified output"
+      }
+    },
+    {
+      "id": "ai_gtm_strategies",
+      "title": "AI-Powered GTM Strategies",
+      "category": "marketing_strategy",
+      "status": "production",
+      "tags": ["GTM", "Predictive Modeling", "Personalization", "Campaign Tracking", "SaaS", "Pipeline Optimization"],
+      "description": "Designed and executed AI-powered GTM strategies for SaaS and AI startups, integrating predictive audience modeling, personalized outreach, and automated campaign tracking to improve pipeline efficiency.",
+      "business_value": "Data-driven GTM execution with predictive targeting and automated optimization, maximizing pipeline efficiency and ROI",
+      "technical_challenges": [
+        "Predictive audience model development",
+        "Personalization at scale",
+        "Multi-channel campaign orchestration",
+        "Real-time campaign optimization",
+        "Pipeline attribution modeling"
+      ],
+      "impact": {
+        "scope": "Strategic go-to-market optimization",
+        "outcomes": [
+          "Predictive audience targeting",
+          "Personalized outreach at scale",
+          "Automated campaign tracking",
+          "Improved pipeline efficiency",
+          "Data-driven GTM decisions"
+        ]
+      },
+      "technologies": {
+        "ai": ["Predictive Modeling", "Personalization AI", "LLMs"],
+        "automation": ["Campaign orchestration", "Outreach automation", "A/B testing"],
+        "analytics": ["Pipeline analytics", "Attribution modeling", "GTM metrics"],
+        "platforms": ["Marketing automation tools", "Analytics platforms"]
+      },
+      "deliverables": [
+        "AI-powered GTM playbooks",
+        "Predictive audience models",
+        "Automated campaign systems",
+        "Pipeline optimization dashboards"
+      ],
+      "agent_scene": {
+        "prompt": "AI analyzing audience data, generating personalized outreach, tracking campaign performance, optimizing pipeline flow",
+        "description": "Intelligent marketing system with predictive modeling driving personalized campaigns and pipeline optimization",
+        "style": "Marketing dashboard with predictive models, personalization engine, campaign performance charts"
+      }
+    }
+  ],
+  "aggregate_impact": {
+    "automation_scale": "25+ workflow automations and 5+ backend systems deployed",
+    "data_reduction": "85% reduction in manual data gathering",
+    "ai_capabilities": "Deployed autonomous AI agents across sales, marketing, and operations",
+    "client_base": "SaaS and AI startups"
+  }
+}

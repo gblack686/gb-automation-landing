@@ -1,0 +1,137 @@
+{
+  "company": "RevStar Consulting - Software Development",
+  "role": "Sr Data and AI Engineer",
+  "period": "Sep 2025 - Present",
+  "location": "Remote",
+  "focus": "Enterprise-scale AWS cloud solutions and AI infrastructure",
+  "projects": [
+    {
+      "id": "revstar_data_lake",
+      "title": "Enterprise-Scale Data Lake Solutions",
+      "category": "data_engineering",
+      "status": "production",
+      "tags": ["AWS", "S3", "Glue", "Athena", "Lake Formation", "Data Governance", "Data Quality"],
+      "description": "Architected and implemented enterprise-scale data lake solutions leveraging AWS native services (S3, Glue, Athena, Lake Formation) with automated data quality checks and governance.",
+      "business_value": "Centralized enterprise data with automated quality controls and governance, enabling data-driven decision making across the organization",
+      "technical_challenges": [
+        "Multi-source data ingestion at scale",
+        "Automated data quality validation",
+        "Governance and access control implementation"
+      ],
+      "impact": {
+        "scope": "Enterprise-wide",
+        "outcomes": [
+          "Automated data quality checks",
+          "Centralized data governance framework",
+          "Scalable multi-source data ingestion",
+          "Self-service analytics capability"
+        ]
+      },
+      "technologies": {
+        "cloud_platform": "AWS",
+        "storage": ["S3"],
+        "processing": ["AWS Glue", "Athena"],
+        "governance": ["Lake Formation"],
+        "practices": ["Data Governance", "ETL", "Data Quality Automation"]
+      },
+      "deliverables": [
+        "Scalable data lake architecture",
+        "Automated data quality pipelines",
+        "Governance framework implementation",
+        "Documentation and runbooks"
+      ],
+      "agent_scene": {
+        "prompt": "Data lake architecture visualization with AWS services (S3, Glue, Athena, Lake Formation) connected by data pipelines, automated quality checks highlighted",
+        "description": "Enterprise data warehouse with flowing data streams, quality checkpoints, and governance controls",
+        "style": "Technical blueprint with warm cream background, terracotta accents for data flows"
+      }
+    },
+    {
+      "id": "revstar_llmops",
+      "title": "LLMOps Frameworks for Production AI",
+      "category": "ai_mlops",
+      "status": "production",
+      "tags": ["AWS Bedrock", "SageMaker", "Lambda", "LLMOps", "GenAI", "Monitoring", "Guardrails"],
+      "description": "Designed and delivered LLMOps frameworks integrating AWS Bedrock, SageMaker, and Lambda for production-grade AI applications with monitoring and guardrails.",
+      "business_value": "Production-ready AI deployment framework enabling rapid, safe, and scalable GenAI application development with built-in governance",
+      "technical_challenges": [
+        "LLM deployment at scale",
+        "Real-time monitoring and observability",
+        "AI safety and guardrails implementation",
+        "Model versioning and rollback"
+      ],
+      "impact": {
+        "scope": "Production AI infrastructure",
+        "outcomes": [
+          "End-to-end LLM deployment framework",
+          "Real-time monitoring and guardrails",
+          "Scalable inference infrastructure",
+          "AI governance and compliance"
+        ]
+      },
+      "technologies": {
+        "cloud_platform": "AWS",
+        "ai_services": ["AWS Bedrock", "SageMaker"],
+        "compute": ["Lambda"],
+        "practices": ["LLMOps", "MLOps", "AI Governance", "Model Monitoring"]
+      },
+      "deliverables": [
+        "LLMOps deployment framework",
+        "Monitoring and observability dashboards",
+        "AI guardrails and safety controls",
+        "Deployment automation pipelines"
+      ],
+      "agent_scene": {
+        "prompt": "AI operations center with LLM models flowing through deployment pipeline, monitoring dashboards showing performance metrics, guardrails protecting outputs",
+        "description": "Production AI infrastructure with automated model deployment, real-time monitoring, and safety controls",
+        "style": "Modern AI dashboard with neural network visualizations, cream background, terracotta warning indicators"
+      }
+    },
+    {
+      "id": "revstar_iac",
+      "title": "Infrastructure as Code (IaC) Solutions",
+      "category": "devops_infrastructure",
+      "status": "production",
+      "tags": ["AWS CDK", "CloudFormation", "IaC", "Security", "Scalability", "Cost Optimization"],
+      "description": "Developed infrastructure as code (IaC) solutions using AWS CDK/CloudFormation, implementing best practices for security, scalability, and cost optimization.",
+      "business_value": "Repeatable, secure, and cost-optimized infrastructure deployment reducing manual errors and deployment time",
+      "technical_challenges": [
+        "Multi-environment infrastructure management",
+        "Security hardening automation",
+        "Cost optimization without sacrificing performance",
+        "Template reusability and modularity"
+      ],
+      "impact": {
+        "scope": "Enterprise infrastructure automation",
+        "outcomes": [
+          "Repeatable infrastructure deployment",
+          "Security-first architecture by default",
+          "Optimized cloud costs",
+          "Reduced deployment time"
+        ]
+      },
+      "technologies": {
+        "cloud_platform": "AWS",
+        "iac_tools": ["AWS CDK", "CloudFormation"],
+        "languages": ["TypeScript", "Python"],
+        "practices": ["Infrastructure as Code", "Security Best Practices", "Cost Optimization", "GitOps"]
+      },
+      "deliverables": [
+        "Reusable IaC templates and constructs",
+        "Security-hardened infrastructure patterns",
+        "Cost-optimized reference architectures",
+        "CI/CD pipeline for infrastructure"
+      ],
+      "agent_scene": {
+        "prompt": "Infrastructure blueprint with AWS CDK code transforming into cloud resources, security shields, and cost optimization indicators",
+        "description": "Automated infrastructure deployment with security and cost controls built-in",
+        "style": "Technical schematic with code transforming into cloud architecture, cream and terracotta color scheme"
+      }
+    }
+  ],
+  "aggregate_impact": {
+    "enterprise_scale": "Delivered production-grade AWS solutions serving enterprise clients",
+    "automation": "Automated infrastructure deployment and AI operations",
+    "best_practices": "Implemented security, governance, and cost optimization best practices"
+  }
+}

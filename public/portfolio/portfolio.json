@@ -1,0 +1,364 @@
+{
+  "meta": {
+    "version": "1.0",
+    "created": "2025-12-13",
+    "description": "Portfolio of projects from RevStar Consulting and GBAutomation/Agentic Workflows",
+    "resume_source": "Greg Black - Sr AI and Data Engineer.pdf"
+  },
+  "professional_info": {
+    "name": "Greg Black",
+    "title": "Senior Tactical Agentic Engineer",
+    "email": "gblack686@gmail.com",
+    "phone": "9732706473",
+    "linkedin": "https://www.linkedin.com/in/gregory-black-gbautomation/",
+    "summary": "Senior tactical agentic engineer with a focus on optimizing complex systems through AI software development. Experience deploying GenAI and ML projects on AWS, building hierarchal RAG pipelines, designing multisource data lakes, and building complex web scrapers."
+  },
+  "companies": [
+    {
+      "id": "revstar",
+      "company_name": "RevStar Consulting - Software Development",
+      "role": "Sr Data and AI Engineer",
+      "location": "Remote",
+      "period": {
+        "start": "2025-09",
+        "end": "Present"
+      },
+      "description": "Enterprise-scale AWS cloud solutions and AI infrastructure",
+      "category": "cloud_ai_engineering",
+      "projects": [
+        {
+          "id": "revstar_data_lake",
+          "title": "Enterprise-Scale Data Lake Solutions",
+          "category": "data_engineering",
+          "tags": ["AWS", "S3", "Glue", "Athena", "Lake Formation", "Data Governance", "Data Quality"],
+          "description": "Architected and implemented enterprise-scale data lake solutions leveraging AWS native services (S3, Glue, Athena, Lake Formation) with automated data quality checks and governance.",
+          "impact": {
+            "scope": "Enterprise-scale",
+            "metrics": [
+              "Automated data quality checks",
+              "Centralized data governance",
+              "Scalable multi-source data ingestion"
+            ]
+          },
+          "technologies": {
+            "cloud": ["AWS"],
+            "services": ["S3", "AWS Glue", "Athena", "Lake Formation"],
+            "practices": ["Data Governance", "ETL", "Data Quality Automation"]
+          },
+          "deliverables": [
+            "Scalable data lake architecture",
+            "Automated data quality pipelines",
+            "Governance framework implementation"
+          ],
+          "agent_scene_prompt": "Data lake architecture visualization with AWS services (S3, Glue, Athena, Lake Formation) connected by data pipelines, automated quality checks highlighted",
+          "scene_description": "Enterprise data warehouse with flowing data streams, quality checkpoints, and governance controls"
+        },
+        {
+          "id": "revstar_llmops",
+          "title": "LLMOps Frameworks for Production AI",
+          "category": "ai_mlops",
+          "tags": ["AWS Bedrock", "SageMaker", "Lambda", "LLMOps", "GenAI", "Monitoring", "Guardrails"],
+          "description": "Designed and delivered LLMOps frameworks integrating AWS Bedrock, SageMaker, and Lambda for production-grade AI applications with monitoring and guardrails.",
+          "impact": {
+            "scope": "Production-grade AI applications",
+            "metrics": [
+              "End-to-end LLM deployment framework",
+              "Real-time monitoring and guardrails",
+              "Scalable inference infrastructure"
+            ]
+          },
+          "technologies": {
+            "cloud": ["AWS"],
+            "services": ["AWS Bedrock", "SageMaker", "Lambda"],
+            "practices": ["LLMOps", "MLOps", "AI Governance", "Model Monitoring"]
+          },
+          "deliverables": [
+            "LLMOps deployment framework",
+            "Monitoring and observability dashboards",
+            "AI guardrails and safety controls"
+          ],
+          "agent_scene_prompt": "AI operations center with LLM models flowing through deployment pipeline, monitoring dashboards showing performance metrics, guardrails protecting outputs",
+          "scene_description": "Production AI infrastructure with automated model deployment, real-time monitoring, and safety controls"
+        },
+        {
+          "id": "revstar_iac",
+          "title": "Infrastructure as Code (IaC) Solutions",
+          "category": "devops_infrastructure",
+          "tags": ["AWS CDK", "CloudFormation", "IaC", "Security", "Scalability", "Cost Optimization"],
+          "description": "Developed infrastructure as code (IaC) solutions using AWS CDK/CloudFormation, implementing best practices for security, scalability, and cost optimization.",
+          "impact": {
+            "scope": "Enterprise infrastructure automation",
+            "metrics": [
+              "Repeatable infrastructure deployment",
+              "Security-first architecture",
+              "Optimized cloud costs"
+            ]
+          },
+          "technologies": {
+            "cloud": ["AWS"],
+            "tools": ["AWS CDK", "CloudFormation"],
+            "practices": ["Infrastructure as Code", "Security Best Practices", "Cost Optimization"]
+          },
+          "deliverables": [
+            "Reusable IaC templates",
+            "Security-hardened infrastructure",
+            "Cost-optimized cloud architecture"
+          ],
+          "agent_scene_prompt": "Infrastructure blueprint with AWS CDK code transforming into cloud resources, security shields, and cost optimization indicators",
+          "scene_description": "Automated infrastructure deployment with security and cost controls built-in"
+        }
+      ]
+    },
+    {
+      "id": "gbautomation",
+      "company_name": "Agentic Workflows and Sales Operations Engineering",
+      "role": "Founder & Consultant",
+      "location": "Remote",
+      "period": {
+        "start": "2024-06",
+        "end": "Present"
+      },
+      "description": "Autonomous AI agents, workflow automation, and sales intelligence systems",
+      "category": "ai_automation_consulting",
+      "projects": [
+        {
+          "id": "workflow_automations",
+          "title": "25+ Workflow Automations & Backend Infrastructures",
+          "category": "automation_infrastructure",
+          "tags": ["n8n", "Zapier", "Supabase", "Python", "FastAPI", "Workflow Automation", "Backend Development"],
+          "description": "Developed 25+ workflow automations (n8n, Zapier) and engineered 5+ production-grade backend infrastructures with Supabase and Python—integrating essential business apps, optimizing processes, and creating reusable templates for efficient handoff and continuous improvement.",
+          "impact": {
+            "scope": "Cross-functional business automation",
+            "metrics": [
+              "25+ workflow automations deployed",
+              "5+ production-grade backend infrastructures",
+              "85% reduction in manual data gathering"
+            ]
+          },
+          "technologies": {
+            "automation": ["n8n", "Zapier"],
+            "backend": ["Supabase", "Python", "FastAPI"],
+            "integration": ["REST APIs", "Webhooks"]
+          },
+          "deliverables": [
+            "Reusable automation templates",
+            "Production backend infrastructures",
+            "Integration documentation"
+          ],
+          "agent_scene_prompt": "Network of automated workflows connecting business apps, with data flowing through pipelines and Supabase database at center",
+          "scene_description": "Interconnected automation system orchestrating business processes across multiple platforms"
+        },
+        {
+          "id": "ai_web_scraper_rag",
+          "title": "AI Web Scraper & Agentic RAG Pipeline",
+          "category": "ai_data_extraction",
+          "tags": ["Web Scraping", "RAG", "AI Agents", "Dynamic Rendering", "Lead Generation", "Automation"],
+          "description": "Engineered an agentic web scraper to extract inventory data from 100+ dynamically rendered websites into a Retrieval Augmented Generation (RAG) pipeline. Automated daily reporting and algorithmic client-product matching, enhancing lead engagement and operational efficiency.",
+          "impact": {
+            "scope": "Automated data extraction and matching",
+            "metrics": [
+              "100+ websites scraped daily",
+              "Automated client-product matching",
+              "Enhanced lead engagement"
+            ]
+          },
+          "technologies": {
+            "scraping": ["Python", "Selenium", "BeautifulSoup"],
+            "ai": ["RAG", "Vector Databases", "LLMs"],
+            "automation": ["Daily scheduling", "Algorithmic matching"]
+          },
+          "deliverables": [
+            "Agentic web scraper system",
+            "RAG pipeline for inventory data",
+            "Automated reporting system"
+          ],
+          "agent_scene_prompt": "AI agent scraping multiple website screens simultaneously, extracting data into knowledge graph, matching products to clients intelligently",
+          "scene_description": "Autonomous scraping system processing dynamic websites and intelligently matching inventory to customer needs"
+        },
+        {
+          "id": "salesforce_ai_agents",
+          "title": "Salesforce CRM AI Agents",
+          "category": "crm_automation",
+          "tags": ["Salesforce", "AI Agents", "CRM", "Lead Enrichment", "Sales Ops", "Automation"],
+          "description": "Built and deployed AI agents integrated with Salesforce CRM to autonomously enrich leads, append data to opportunities, and generate custom reports—streamlining Sales Ops and improving cross-team visibility between Sales and Marketing.",
+          "impact": {
+            "scope": "Sales and marketing automation",
+            "metrics": [
+              "Autonomous lead enrichment",
+              "Real-time opportunity data updates",
+              "Improved Sales-Marketing alignment"
+            ]
+          },
+          "technologies": {
+            "crm": ["Salesforce"],
+            "ai": ["AI Agents", "LLMs"],
+            "integration": ["Salesforce API", "Webhooks"]
+          },
+          "deliverables": [
+            "AI-powered lead enrichment agents",
+            "Automated opportunity management",
+            "Custom reporting dashboards"
+          ],
+          "agent_scene_prompt": "AI agent working inside Salesforce interface, enriching lead records, updating opportunities, generating reports autonomously",
+          "scene_description": "Intelligent CRM automation with AI agents managing sales data and cross-functional insights"
+        },
+        {
+          "id": "knowledge_graph",
+          "title": "CRM & Sales Intelligence Knowledge Graph",
+          "category": "data_intelligence",
+          "tags": ["Knowledge Graph", "CRM Analytics", "Marketing Intelligence", "NLP", "Agentic Queries"],
+          "description": "Developed a knowledge graph to process all CRM, sales, and marketing campaign events, surfacing actionable insights and trends for leadership. Enabled agentic, natural language queries and automated report generation to drive strategic GTM decisions and optimize outbound campaign performance.",
+          "impact": {
+            "scope": "Strategic sales and marketing intelligence",
+            "metrics": [
+              "Unified view of CRM, sales, and marketing data",
+              "Natural language query capability",
+              "Automated strategic reports"
+            ]
+          },
+          "technologies": {
+            "graph": ["Knowledge Graph", "Graph Databases"],
+            "ai": ["NLP", "AI Agents", "LLMs"],
+            "analytics": ["Campaign Analytics", "Trend Analysis"]
+          },
+          "deliverables": [
+            "Unified knowledge graph",
+            "Natural language query interface",
+            "Automated GTM reporting system"
+          ],
+          "agent_scene_prompt": "3D knowledge graph with interconnected CRM events, sales data, and marketing campaigns, AI agent querying naturally and surfacing insights",
+          "scene_description": "Intelligent knowledge graph connecting all sales and marketing data with natural language query interface"
+        },
+        {
+          "id": "ai_sdr",
+          "title": "AI Sales Development Representative",
+          "category": "sales_automation",
+          "tags": ["AI SDR", "SMS", "Lead Qualification", "LLM", "Appointment Setting", "Conversion Optimization"],
+          "description": "Designed and deployed an AI-powered SDR with integrated SMS appointment setter, leveraging LLMs for automated customer qualification and real-time extraction of prospect details—streamlining inbound/outbound sales processes and boosting conversion rates.",
+          "impact": {
+            "scope": "Automated sales development",
+            "metrics": [
+              "Automated customer qualification",
+              "Real-time prospect detail extraction",
+              "Improved conversion rates"
+            ]
+          },
+          "technologies": {
+            "ai": ["LLMs", "AI Agents"],
+            "communication": ["SMS Integration", "Appointment Scheduling"],
+            "automation": ["Lead Qualification", "Prospect Extraction"]
+          },
+          "deliverables": [
+            "AI-powered SDR system",
+            "SMS appointment setter integration",
+            "Automated qualification pipeline"
+          ],
+          "agent_scene_prompt": "AI SDR agent conversing with prospects via SMS, qualifying leads, extracting details, scheduling appointments autonomously",
+          "scene_description": "Intelligent sales agent handling prospect conversations and appointment setting automatically"
+        },
+        {
+          "id": "lead_enrichment_api",
+          "title": "Lead Enrichment & API Architecture",
+          "category": "data_enrichment",
+          "tags": ["Clay", "API Architecture", "Lead Enrichment", "Middleware", "Data Integration"],
+          "description": "Built custom API wrappers around Clay's enrichment platform to automate data collection across 130+ sources. Engineered middleware services that standardize enrichment responses and integrate with internal systems, achieving 85% reduction in manual data gathering.",
+          "impact": {
+            "scope": "Automated data enrichment at scale",
+            "metrics": [
+              "130+ data sources integrated",
+              "85% reduction in manual data gathering",
+              "Standardized enrichment responses"
+            ]
+          },
+          "technologies": {
+            "platform": ["Clay"],
+            "development": ["API Wrappers", "Middleware", "Python"],
+            "integration": ["REST APIs", "Webhooks"]
+          },
+          "deliverables": [
+            "Custom Clay API wrappers",
+            "Middleware standardization layer",
+            "Automated enrichment pipeline"
+          ],
+          "agent_scene_prompt": "API middleware layer connecting 130+ data sources to internal systems, data flowing through standardization pipeline",
+          "scene_description": "Unified enrichment architecture aggregating data from hundreds of sources into standardized format"
+        },
+        {
+          "id": "ai_gtm_strategies",
+          "title": "AI-Powered GTM Strategies",
+          "category": "marketing_strategy",
+          "tags": ["GTM", "Predictive Modeling", "Personalization", "Campaign Tracking", "SaaS", "Pipeline Optimization"],
+          "description": "Designed and executed AI-powered GTM strategies for SaaS and AI startups, integrating predictive audience modeling, personalized outreach, and automated campaign tracking to improve pipeline efficiency.",
+          "impact": {
+            "scope": "Strategic go-to-market optimization",
+            "metrics": [
+              "Predictive audience modeling",
+              "Personalized outreach campaigns",
+              "Improved pipeline efficiency"
+            ]
+          },
+          "technologies": {
+            "ai": ["Predictive Modeling", "Personalization AI", "LLMs"],
+            "automation": ["Campaign Tracking", "Outreach Automation"],
+            "analytics": ["Pipeline Analytics", "GTM Metrics"]
+          },
+          "deliverables": [
+            "AI-powered GTM playbooks",
+            "Predictive audience models",
+            "Automated campaign systems"
+          ],
+          "agent_scene_prompt": "AI analyzing audience data, generating personalized outreach, tracking campaign performance, optimizing pipeline flow",
+          "scene_description": "Intelligent marketing system with predictive modeling driving personalized campaigns and pipeline optimization"
+        }
+      ]
+    },
+    {
+      "id": "claude_code",
+      "company_name": "Claude Code Projects (Future Development)",
+      "role": "Lead Claude Code Engineer",
+      "location": "AWS & Google Cloud",
+      "period": {
+        "start": "2026-Q1",
+        "end": "2026-Q2"
+      },
+      "description": "Advanced Claude Code agents with multi-modal capabilities, voice integration, and autonomous cloud operations",
+      "category": "future_claude_code_agents",
+      "projects_file": "claude-code-projects.json",
+      "projects": 5
+    }
+  ],
+  "project_summary": {
+    "total_projects": 15,
+    "revstar_projects": 3,
+    "gbautomation_projects": 7,
+    "claude_code_projects": 5,
+    "categories": [
+      "data_engineering",
+      "ai_mlops",
+      "devops_infrastructure",
+      "automation_infrastructure",
+      "ai_data_extraction",
+      "crm_automation",
+      "data_intelligence",
+      "sales_automation",
+      "data_enrichment",
+      "marketing_strategy"
+    ],
+    "key_technologies": [
+      "AWS",
+      "AI Agents",
+      "LLMs",
+      "RAG",
+      "Salesforce",
+      "Knowledge Graphs",
+      "n8n",
+      "Zapier",
+      "Supabase",
+      "Python",
+      "AWS Bedrock",
+      "SageMaker",
+      "Lambda",
+      "AWS CDK"
+    ]
+  }
+}

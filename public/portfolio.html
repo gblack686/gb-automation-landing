@@ -1,0 +1,951 @@
+<html lang="en" class="scroll-smooth"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GB Automation | Agentic Systems &amp; Vibe Coding</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<!-- Fonts from your reference -->
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&display=swap');
+:root {
+--cream-bg: #F3F1E7;
+--cream-panel: #E6E4D9;
+--text-main: #191919;
+--text-muted: #5C5C5C;
+--text-light: #8C8A84;
+--border: #D6D4C8;
+--terracotta: #D97757;
+}
+body {
+font-family: 'Inter', sans-serif;
+background-color: var(--cream-bg);
+color: var(--text-main);
+-webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, h4, .font-serif-display {
+font-family: 'Newsreader', serif;
+}
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--cream-bg); }
+::-webkit-scrollbar-thumb { background: #D1CEC3; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #B0ADA5; }
+/* Glass Panel Logic from reference */
+.glass-panel {
+background: rgba(230, 228, 217, 0.6);
+backdrop-filter: blur(12px);
+-webkit-backdrop-filter: blur(12px);
+border: 1px solid rgba(214, 212, 200, 0.6);
+transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+/* Rotating Gradient Border CSS from reference */
+@property --gradient-angle {
+syntax: "<angle>";
+initial-value: 0deg;
+inherits: false;
+}
+.hover-shiny {
+--shiny-bg: #E6E4D9;
+transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.hover-shiny:hover {
+background: linear-gradient(var(--shiny-bg), var(--shiny-bg)) padding-box,
+conic-gradient(from var(--gradient-angle), transparent 20%, #D97757 50%, transparent 80%) border-box !important;
+border-color: transparent !important;
+animation: border-spin 3s linear infinite;
+box-shadow: 0 12px 40px -12px rgba(217, 119, 87, 0.15);
+transform: translateY(-4px);
+}
+@keyframes border-spin {
+from { --gradient-angle: 0deg; }
+to { --gradient-angle: 360deg; }
+}
+/* Mini Animation for smaller elements */
+.hover-mini {
+transition: all 0.2s ease-out;
+}
+.hover-mini:hover {
+transform: translateY(-2px);
+}
+/* Input Fields */
+.input-field {
+background: rgba(255, 255, 255, 0.4);
+border: 1px solid #D6D4C8;
+color: #191919;
+transition: all 0.3s ease;
+}
+.input-field:focus {
+outline: none;
+border-color: var(--terracotta);
+background: white;
+box-shadow: 0 0 0 1px var(--terracotta);
+}
+.input-field::placeholder {
+color: #8C8A84;
+}
+/* Animations */
+.reveal {
+opacity: 0;
+transform: translateY(20px);
+transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.active {
+opacity: 1;
+transform: translateY(0);
+}
+/* Slider Utilities */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+</style></head>
+  <body class="selection:bg-[#D97757] selection:text-white overflow-x-hidden">
+    
+    <!-- Ambient Background Glow (Warm/Terracotta tones) -->
+    <div class="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
+      <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[#D97757]/5 rounded-full blur-[120px]"></div>
+      <div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-[#C26D52]/10 rounded-full blur-[120px]"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="fixed top-0 w-full z-50 border-b border-[#D6D4C8]/60 bg-[#F3F1E7]/80 backdrop-blur-xl">
+      <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+        <div class="flex items-center gap-2 hover-mini cursor-default">
+          <div class="relative w-6 h-6 flex items-center justify-center">
+             <div class="absolute inset-0 bg-[#D97757]/20 blur-md rounded-full"></div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[#D97757] relative z-10">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+              <path d="M2 17l10 5 10-5"></path>
+              <path d="M2 12l10 5 10-5"></path>
+            </svg>
+          </div>
+          <span class="font-serif-display font-semibold tracking-tight text-[#191919] text-lg">
+            GB AUTOMATION
+          </span>
+        </div>
+
+        <nav class="hidden md:flex gap-8 text-[11px] font-medium tracking-widest uppercase text-[#8C8A84]">
+          <a href="#portfolio" class="hover:text-[#D97757] transition-colors hover-mini">
+            Portfolio
+          </a>
+          <a href="#features" class="hover:text-[#D97757] transition-colors hover-mini">
+            Features
+          </a>
+          <a href="#process" class="hover:text-[#D97757] transition-colors hover-mini">
+            90-Day Process
+          </a>
+          <a href="#pricing" class="hover:text-[#D97757] transition-colors hover-mini">
+            Investment
+          </a>
+        </nav>
+
+        <a href="#contact" class="hidden md:flex items-center gap-2 px-4 py-1.5 bg-white border border-[#D6D4C8] text-[#191919] text-[11px] font-medium tracking-wide rounded-full hover:bg-[#191919] hover:text-[#F3F1E7] transition-all shadow-sm hover-mini group">
+          Start Vibe Coding
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="group-hover:translate-x-0.5 transition-transform">
+            <path d="M5 12h14"></path>
+            <path d="m12 5 7 7-7 7"></path>
+          </svg>
+        </a>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative pt-40 pb-20 px-6 overflow-hidden flex flex-col items-center text-center z-10">
+      <!-- Status Indicator -->
+      <div class="mb-8 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#D6D4C8] bg-white/60 backdrop-blur-sm reveal hover-mini cursor-default shadow-sm">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#D97757] opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-[#D97757]"></span>
+        </span>
+        <span class="text-[10px] uppercase tracking-widest text-[#5C5C5C] font-semibold">
+          Powered by ElevenLabs Agents
+        </span>
+      </div>
+
+      <h1 class="text-5xl md:text-7xl lg:text-8xl font-serif-display font-medium text-[#191919] tracking-tight mb-8 max-w-5xl leading-[1] reveal">
+        Build Smarter with
+        <br>
+        <span class="text-[#D97757] italic">
+          An AI Developer.
+        </span>
+      </h1>
+
+      <p class="text-[#5C5C5C] text-sm md:text-base max-w-2xl mx-auto mb-12 leading-relaxed font-normal reveal delay-100">
+        Internal tools, external products, and autonomous AI workflows built for
+        your business. An AI developer that codes in your vibe.
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto items-center justify-center reveal delay-200">
+        <a href="#contact" class="relative group overflow-hidden rounded-full bg-[#191919] hover:bg-[#333] transition-all hover-mini shadow-lg shadow-[#191919]/10">
+          <span class="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full px-8 py-3.5 text-xs font-semibold uppercase tracking-wider text-[#F3F1E7]">
+            Schedule Discovery Call
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="ml-2">
+              <path d="m9 18 6-6-6-6"></path>
+            </svg>
+          </span>
+        </a>
+      </div>
+    </section>
+
+    <!-- SLIDER SECTION: Specialized Agent Portfolio -->
+    <section id="portfolio" class="py-24 border-t border-[#D6D4C8]/60 overflow-hidden relative">
+      <div class="absolute inset-0 bg-[#E6E4D9]/20 -z-10"></div>
+      
+      <!-- Section Header -->
+      <div class="max-w-7xl mx-auto px-6 mb-12 flex items-end justify-between reveal">
+        <div>
+           <span class="text-[#D97757] text-xs font-bold tracking-widest uppercase">
+            Portfolio
+          </span>
+          <h2 class="text-4xl font-serif-display font-medium text-[#191919] tracking-tight mt-2">
+            Deployed Architectures
+          </h2>
+        </div>
+        <!-- Slider Controls -->
+        <div class="hidden md:flex gap-2">
+          <button id="slide-prev" class="w-10 h-10 rounded-full border border-[#D6D4C8] flex items-center justify-center bg-white/50 hover:bg-[#191919] hover:text-[#F3F1E7] transition-all">
+            <svg data-lucide="arrow-left" class="w-4 h-4"></svg>
+          </button>
+          <button id="slide-next" class="w-10 h-10 rounded-full border border-[#D6D4C8] flex items-center justify-center bg-white/50 hover:bg-[#191919] hover:text-[#F3F1E7] transition-all">
+            <svg data-lucide="arrow-right" class="w-4 h-4"></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Slider Container -->
+      <div id="slider-container" class="flex overflow-x-auto snap-x snap-mandatory gap-6 px-6 pb-12 scroll-smooth no-scrollbar reveal delay-100">
+
+                <!-- Slide 1: AWS Operator -->
+        <div class="min-w-[85%] md:min-w-[450px] snap-center glass-panel p-0 rounded-2xl border border-[#D6D4C8] flex flex-col group overflow-hidden">
+          <div class="h-48 bg-[#F3F1E7] relative overflow-hidden flex items-center justify-center border-b border-[#D6D4C8]">
+            <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&h=400&fit=crop" alt="AWS Operator" class="absolute inset-0 w-full h-full object-cover grayscale opacity-90 group-hover:scale-105 transition-transform duration-700">
+            <div class="absolute inset-0 bg-gradient-to-t from-[#E6E4D9] to-transparent opacity-60"></div>
+            <div class="relative z-10 px-4 py-1 bg-white/80 backdrop-blur border border-[#D6D4C8] rounded-full text-[10px] uppercase tracking-widest font-bold text-[#191919]">
+              Future: AWS-Operator
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="flex justify-between items-start mb-6">
+              <h3 class="text-2xl font-serif-display font-medium text-[#191919] underline decoration-[#D6D4C8] decoration-1 underline-offset-4">
+                AWS Operator Agent
+              </h3>
+              <div class="w-8 h-8 rounded-full border border-[#D6D4C8] flex items-center justify-center text-[#D97757]">
+                <svg data-lucide="cloud" class="w-4 h-4"></svg>
+              </div>
+            </div>
+            <div class="space-y-4">
+              <div class="grid grid-cols-3 border-t border-[#D6D4C8] py-2">
+                <span class="text-[10px] uppercase font-bold text-[#8C8A84] tracking-wider col-span-1 pt-1">Role</span>
+                <span class="text-xs text-[#191919] col-span-2 font-medium">Autonomous Cloud Operations</span>
+              </div>
+              <div class="grid grid-cols-3 border-t border-[#D6D4C8] py-2">
+                <span class="text-[10px] uppercase font-bold text-[#8C8A84] tracking-wider col-span-1 pt-1">Stack</span>
+                <span class="text-xs text-[#191919] col-span-2 font-medium">Claude Opus 4.5, AWS Bedrock, MCP</span>
+              </div>
+              <div class="border-t border-[#D6D4C8] pt-3">
+                <span class="text-[10px] uppercase font-bold text-[#8C8A84] tracking-wider block mb-2">Technologies</span>
+                <div class="flex flex-wrap gap-2 mb-3">
+                  <span class="inline-flex items-center px-2 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider bg-[#F3F1E7] text-[#D97757] border border-[#D6D4C8]">Opus 4.5</span>
+                  <span class="inline-flex items-center px-2 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider bg-[#F3F1E7] text-[#D97757] border border-[#D6D4C8]">AWS CDK</span>
+                  <span class="inline-flex items-center px-2 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider bg-[#F3F1E7] text-[#D97757] border border-[#D6D4C8]">CloudWatch</span>
+                  <span class="inline-flex items-center px-2 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider bg-[#F3F1E7] text-[#D97757] border border-[#D6D4C8]">MCP</span>
+                </div>
+              </div>
+              <div class="border-t border-[#D6D4C8] pt-3">
+                <span class="text-[10px] uppercase font-bold text-[#8C8A84] tracking-wider block mb-2">Impact</span>
+                <ul class="space-y-1 text-xs text-[#5C5C5C]">
+                  <li class="flex items-start"><span class="text-[#D97757] mr-2">•</span>35% AWS Cost Reduction</li>
+                  <li class="flex items-start"><span class="text-[#D97757] mr-2">•</span>90% Faster Incident Response</li>
+                  <li class="flex items-start"><span class="text-[#D97757] mr-2">•</span>$26K Dev Cost, $36K/mo Runtime</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 2: AWS Log Analyst -->
+        <div class="min-w-[85%] md:min-w-[450px] snap-center glass-panel p-0 rounded-2xl border border-[#D6D4C8] flex flex-col group overflow-hidden">
+          <div class="h-48 bg-[#F3F1E7] relative overflow-hidden flex items-center justify-center border-b border-[#D6D4C8]">
+            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop" alt="Log Analyst" class="absolute inset-0 w-full h-full object-cover grayscale opacity-90 group-hover:scale-105 transition-transform duration-700">
+            <div class="absolute inset-0 bg-gradient-to-t from-[#E6E4D9] to-transparent opacity-60"></div>
+            <div class="relative z-10 px-4 py-1 bg-white/80 backdrop-blur border border-[#D6D4C8] rounded-full text-[10px] uppercase tracking-widest font-bold text-[#191919]">
+              Future: Log-Analyst
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="flex justify-between items-start mb-6">
+              <h3 class="text-2xl font-serif-display font-medium text-[#191919] underline decoration-[#D6D4C8] decoration-1 underline-offset-4">
+                AWS Log Analyst
+              </h3>
+              <div class="w-8 h-8 rounded-full border border-[#D6D4C8] flex items-center justify-center text-[#D97757]">
+                <svg data-lucide="activity" class="w-4 h-4"></svg>
+              </div>
+            </div>
+            <div class="space-y-4">
+              <div class="grid grid-cols-3 border-t border-[#D6D4C8] py-2">
+                <span class="text-[10px] uppercase font-bold text-[#8C8A84] tracking-wider col-span-1 pt-1">Role</span>
+                <span class="text-xs text-[#191919] col-span-2 font-medium">Intelligent Log Analysis</span>
+              </div>
+              <div class="grid grid-cols-3 border-t border-[#D6D4C8] py-2">
+                <span class="text-[10px] uppercase font-bold text-[#8C8A84] tracking-wider col-span-1 pt-1">Stack</span>
+                <span class="text-xs text-[#191919] col-span-2 font-medium">Sonnet 4.5, CloudWatch, Sentry</span>
+              </div>
+              <div class="border-t border-[#D6D4C8] pt-3">
+                <span class="text-[10px] uppercase font-bold text-[#8C8A84] tracking-wider block mb-2">Technologies</span>
+                <div class="flex flex-wrap gap-2 mb-3">
+                  <span class="inline-flex items-center px-2 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider bg-[#F3F1E7] text-[#D97757] border border-[#D6D4C8]">Sonnet 4.5</span>
+                  <span class="inline-flex items-center px-2 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider bg-[#F3F1E7] text-[#D97757] border border-[#D6D4C8]">CloudWatch</span>
+                  <span class="inline-flex items-center px-2 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider bg-[#F3F1E7] text-[#D97757] border border-[#D6D4C8]">Sentry</span>
+                  <span class="inline-flex items-center px-2 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider bg-[#F3F1E7] text-[#D97757] border border-[#D6D4C8]">OpenSearch</span>
+                </div>
+              </div>
+              <div class="border-t border-[#D6D4C8] pt-3">
+                <span class="text-[10px] uppercase font-bold text-[#8C8A84] tracking-wider block mb-2">Impact</span>
+                <ul class="space-y-1 text-xs text-[#5C5C5C]">
+                  <li class="flex items-start"><span class="text-[#D97757] mr-2">•</span>500M+ Logs Analyzed Daily</li>
+                  <li class="flex items-start"><span class="text-[#D97757] mr-2">•</span>85% Faster MTTR</li>
+                  <li class="flex items-start"><span class="text-[#D97757] mr-2">•</span>$14K Dev Cost, $74K/mo Runtime</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 3: Content Generation Agent -->
+        <div class="min-w-[85%] md:min-w-[450px] snap-center glass-panel p-0 rounded-2xl border border-[#D6D4C8] flex flex-col group overflow-hidden">
+          <div class="h-48 bg-[#F3F1E7] relative overflow-hidden flex items-center justify-center border-b border-[#D6D4C8]">
+            <img src="https://images.unsplash.com/photo-1536240478700-b869070f9279?w=600&h=400&fit=crop" alt="Content Generator" class="absolute inset-0 w-full h-full object-cover grayscale opacity-90 group-hover:scale-105 transition-transform duration-700">
+            <div class="absolute inset-0 bg-gradient-to-t from-[#E6E4D9] to-transparent opacity-60"></div>
+            <div class="relative z-10 px-4 py-1 bg-white/80 backdrop-blur border border-[#D6D4C8] rounded-full text-[10px] uppercase tracking-widest font-bold text-[#191919]">
+              Future: Content-Creator
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="flex justify-between items-start mb-6">
+              <h3 class="text-2xl font-serif-display font-medium text-[#191919] underline decoration-[#D6D4C8] decoration-1 underline-offset-4">
+                Content Generator
+              </h3>
+              <div class="w-8 h-8 rounded-full border border-[#D6D4C8] flex items-center justify-center text-[#D97757]">
+                <svg data-lucide="video" class="w-4 h-4"></svg>
+              </div>
+            </div>
+            <div class="space-y-4">
+              <div class="grid grid-cols-3 border-t border-[#D6D4C8] py-2">
+                <span class="text-[10px] uppercase font-bold text-[#8C8A84] tracking-wider col-span-1 pt-1">Role</span>
+                <span class="text-xs text-[#191919] col-span-2 font-medium">Multi-Modal Content Creation</span>
+              </div>
+              <div class="grid grid-cols-3 border-t border-[#D6D4C8] py-2">
+                <span class="text-[10px] uppercase font-bold text-[#8C8A84] tracking-wider col-span-1 pt-1">Stack</span>
+                <span class="text-xs text-[#191919] col-span-2 font-medium">Google Veo 3.1, Imagen 3, Opus 4.5</span>
+              </div>
+              <div class="border-t border-[#D6D4C8] pt-3">
+                <span class="text-[10px] uppercase font-bold text-[#8C8A84] tracking-wider block mb-2">Technologies</span>
+                <div class="flex flex-wrap gap-2 mb-3">
+                  <span class="inline-flex items-center px-2 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider bg-[#F3F1E7] text-[#D97757] border border-[#D6D4C8]">Veo 3.1</span>
+                  <span class="inline-flex items-center px-2 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider bg-[#F3F1E7] text-[#D97757] border border-[#D6D4C8]">Imagen 3</span>
+                  <span class="inline-flex items-center px-2 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider bg-[#F3F1E7] text-[#D97757] border border-[#D6D4C8]">Opus 4.5</span>
+                  <span class="inline-flex items-center px-2 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider bg-[#F3F1E7] text-[#D97757] border border-[#D6D4C8]">GCP</span>
+                </div>
+              </div>
+              <div class="border-t border-[#D6D4C8] pt-3">
+                <span class="text-[10px] uppercase font-bold text-[#8C8A84] tracking-wider block mb-2">Impact</span>
+                <ul class="space-y-1 text-xs text-[#5C5C5C]">
+                  <li class="flex items-start"><span class="text-[#D97757] mr-2">•</span>25 Videos + 200 Images/Month</li>
+                  <li class="flex items-start"><span class="text-[#D97757] mr-2">•</span>90% Faster Production</li>
+                  <li class="flex items-start"><span class="text-[#D97757] mr-2">•</span>$41K Dev Cost, $94K/mo Runtime</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 4: Website Developer -->
+        <div class="min-w-[85%] md:min-w-[450px] snap-center glass-panel p-0 rounded-2xl border border-[#D6D4C8] flex flex-col group overflow-hidden">
+          <div class="h-48 bg-[#F3F1E7] relative overflow-hidden flex items-center justify-center border-b border-[#D6D4C8]">
+            <img src="https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=600&h=400&fit=crop" alt="Website Developer" class="absolute inset-0 w-full h-full object-cover grayscale opacity-90 group-hover:scale-105 transition-transform duration-700">
+            <div class="absolute inset-0 bg-gradient-to-t from-[#E6E4D9] to-transparent opacity-60"></div>
+            <div class="relative z-10 px-4 py-1 bg-white/80 backdrop-blur border border-[#D6D4C8] rounded-full text-[10px] uppercase tracking-widest font-bold text-[#191919]">
+              Future: Web-Planner
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="flex justify-between items-start mb-6">
+              <h3 class="text-2xl font-serif-display font-medium text-[#191919] underline decoration-[#D6D4C8] decoration-1 underline-offset-4">
+                Website Developer
+              </h3>
+              <div class="w-8 h-8 rounded-full border border-[#D6D4C8] flex items-center justify-center text-[#D97757]">
+                <svg data-lucide="layout" class="w-4 h-4"></svg>
+              </div>
+            </div>
+            <div class="space-y-4">
+              <div class="grid grid-cols-3 border-t border-[#D6D4C8] py-2">
+                <span class="text-[10px] uppercase font-bold text-[#8C8A84] tracking-wider col-span-1 pt-1">Role</span>
+                <span class="text-xs text-[#191919] col-span-2 font-medium">Planning & Scoping Agent</span>
+              </div>
+              <div class="grid grid-cols-3 border-t border-[#D6D4C8] py-2">
+                <span class="text-[10px] uppercase font-bold text-[#8C8A84] tracking-wider col-span-1 pt-1">Stack</span>
+                <span class="text-xs text-[#191919] col-span-2 font-medium">Opus 4.5, Google Veo, Figma API</span>
+              </div>
+              <div class="border-t border-[#D6D4C8] pt-3">
+                <span class="text-[10px] uppercase font-bold text-[#8C8A84] tracking-wider block mb-2">Technologies</span>
+                <div class="flex flex-wrap gap-2 mb-3">
+                  <span class="inline-flex items-center px-2 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider bg-[#F3F1E7] text-[#D97757] border border-[#D6D4C8]">Opus 4.5</span>
+                  <span class="inline-flex items-center px-2 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider bg-[#F3F1E7] text-[#D97757] border border-[#D6D4C8]">Veo</span>
+                  <span class="inline-flex items-center px-2 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider bg-[#F3F1E7] text-[#D97757] border border-[#D6D4C8]">Figma API</span>
+                  <span class="inline-flex items-center px-2 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider bg-[#F3F1E7] text-[#D97757] border border-[#D6D4C8]">Notion</span>
+                </div>
+              </div>
+              <div class="border-t border-[#D6D4C8] pt-3">
+                <span class="text-[10px] uppercase font-bold text-[#8C8A84] tracking-wider block mb-2">Impact</span>
+                <ul class="space-y-1 text-xs text-[#5C5C5C]">
+                  <li class="flex items-start"><span class="text-[#D97757] mr-2">•</span>93% Faster Scoping (2 Days vs 2 Weeks)</li>
+                  <li class="flex items-start"><span class="text-[#D97757] mr-2">•</span>75% Less Scope Creep</li>
+                  <li class="flex items-start"><span class="text-[#D97757] mr-2">•</span>$32K Dev Cost, $6K/Session</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 5: Voice Planning Agent -->
+        <div class="min-w-[85%] md:min-w-[450px] snap-center glass-panel p-0 rounded-2xl border border-[#D6D4C8] flex flex-col group overflow-hidden">
+          <div class="h-48 bg-[#F3F1E7] relative overflow-hidden flex items-center justify-center border-b border-[#D6D4C8]">
+            <img src="https://images.unsplash.com/photo-1589254065878-42c9da997008?w=600&h=400&fit=crop" alt="Voice Agent" class="absolute inset-0 w-full h-full object-cover grayscale opacity-90 group-hover:scale-105 transition-transform duration-700">
+            <div class="absolute inset-0 bg-gradient-to-t from-[#E6E4D9] to-transparent opacity-60"></div>
+            <div class="relative z-10 px-4 py-1 bg-white/80 backdrop-blur border border-[#D6D4C8] rounded-full text-[10px] uppercase tracking-widest font-bold text-[#191919]">
+              Future: Voice-Planner
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="flex justify-between items-start mb-6">
+              <h3 class="text-2xl font-serif-display font-medium text-[#191919] underline decoration-[#D6D4C8] decoration-1 underline-offset-4">
+                Voice Planning Agent
+              </h3>
+              <div class="w-8 h-8 rounded-full border border-[#D6D4C8] flex items-center justify-center text-[#D97757]">
+                <svg data-lucide="mic" class="w-4 h-4"></svg>
+              </div>
+            </div>
+            <div class="space-y-4">
+              <div class="grid grid-cols-3 border-t border-[#D6D4C8] py-2">
+                <span class="text-[10px] uppercase font-bold text-[#8C8A84] tracking-wider col-span-1 pt-1">Role</span>
+                <span class="text-xs text-[#191919] col-span-2 font-medium">Multi-Domain Voice Planning</span>
+              </div>
+              <div class="grid grid-cols-3 border-t border-[#D6D4C8] py-2">
+                <span class="text-[10px] uppercase font-bold text-[#8C8A84] tracking-wider col-span-1 pt-1">Stack</span>
+                <span class="text-xs text-[#191919] col-span-2 font-medium">11Labs, Opus 4.5, AWS Transcribe</span>
+              </div>
+              <div class="border-t border-[#D6D4C8] pt-3">
+                <span class="text-[10px] uppercase font-bold text-[#8C8A84] tracking-wider block mb-2">Technologies</span>
+                <div class="flex flex-wrap gap-2 mb-3">
+                  <span class="inline-flex items-center px-2 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider bg-[#F3F1E7] text-[#D97757] border border-[#D6D4C8]">11Labs</span>
+                  <span class="inline-flex items-center px-2 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider bg-[#F3F1E7] text-[#D97757] border border-[#D6D4C8]">Opus 4.5</span>
+                  <span class="inline-flex items-center px-2 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider bg-[#F3F1E7] text-[#D97757] border border-[#D6D4C8]">Transcribe</span>
+                  <span class="inline-flex items-center px-2 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider bg-[#F3F1E7] text-[#D97757] border border-[#D6D4C8]">WebRTC</span>
+                </div>
+              </div>
+              <div class="border-t border-[#D6D4C8] pt-3">
+                <span class="text-[10px] uppercase font-bold text-[#8C8A84] tracking-wider block mb-2">Impact</span>
+                <ul class="space-y-1 text-xs text-[#5C5C5C]">
+                  <li class="flex items-start"><span class="text-[#D97757] mr-2">•</span>80% Faster Planning (1hr vs 5hrs)</li>
+                  <li class="flex items-start"><span class="text-[#D97757] mr-2">•</span>8 Planning Frameworks</li>
+                  <li class="flex items-start"><span class="text-[#D97757] mr-2">•</span>$49K Dev Cost, $4.5K/Session</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      
+
+
+
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-24 px-6 border-y border-[#D6D4C8]/60 relative z-10 bg-[#E6E4D9]/30">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-16 reveal">
+          <h2 class="text-4xl font-serif-display font-medium text-[#191919] tracking-tight mb-4">
+            Your Autonomous Team
+          </h2>
+          <p class="text-[#5C5C5C] text-sm font-normal">
+            Three Claude-based agents working together as your development unit.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Orchestrator -->
+          <div class="glass-panel p-8 rounded-3xl group reveal hover-shiny border border-[#D6D4C8]">
+            <div class="w-12 h-12 rounded-xl bg-white border border-[#D6D4C8] flex items-center justify-center mb-6 text-[#D97757] group-hover:scale-110 transition-transform duration-300">
+              <svg data-lucide="network" class="w-6 h-6"></svg>
+            </div>
+            <h3 class="text-xl font-serif-display font-medium text-[#191919] mb-3">
+              Orchestrator Agent
+            </h3>
+            <p class="text-sm text-[#5C5C5C] font-normal leading-relaxed">
+              Manages workflows, integrations, and deployments across your
+              entire system. The project manager of your AI fleet.
+            </p>
+          </div>
+
+          <!-- Developer -->
+          <div class="glass-panel p-8 rounded-3xl group reveal delay-100 hover-shiny border border-[#D6D4C8]">
+            <div class="w-12 h-12 rounded-xl bg-white border border-[#D6D4C8] flex items-center justify-center mb-6 text-[#D97757] group-hover:scale-110 transition-transform duration-300">
+              <svg data-lucide="terminal" class="w-6 h-6"></svg>
+            </div>
+            <h3 class="text-xl font-serif-display font-medium text-[#191919] mb-3">
+              Developer Agent
+            </h3>
+            <p class="text-sm text-[#5C5C5C] font-normal leading-relaxed">
+              Codes, tests, and ships features through vibe coding. Rapidly
+              iterates on internal tools and user-facing products.
+            </p>
+          </div>
+
+          <!-- Specialized -->
+          <div class="glass-panel p-8 rounded-3xl group reveal delay-200 hover-shiny border border-[#D6D4C8]">
+            <div class="w-12 h-12 rounded-xl bg-white border border-[#D6D4C8] flex items-center justify-center mb-6 text-[#D97757] group-hover:scale-110 transition-transform duration-300">
+              <svg data-lucide="cpu" class="w-6 h-6"></svg>
+            </div>
+            <h3 class="text-xl font-serif-display font-medium text-[#191919] mb-3">
+              Specialized Agent
+            </h3>
+            <p class="text-sm text-[#5C5C5C] font-normal leading-relaxed">
+              Custom agent tuned to your specific domain (analytics, ops,
+              product) with deep knowledge graph access.
+            </p>
+          </div>
+        </div>
+
+        <!-- System Includes List -->
+        <div class="mt-20 glass-panel p-10 rounded-3xl reveal border border-[#D6D4C8] hover-mini">
+          <h3 class="text-xl font-serif-display font-medium text-[#191919] mb-8 border-b border-[#D6D4C8] pb-4">
+            Complete System Includes
+          </h3>
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="flex items-start gap-3 group">
+              <svg data-lucide="check-circle" class="w-5 h-5 text-[#D97757] shrink-0 group-hover:scale-110 transition-transform"></svg>
+              <div>
+                <span class="block text-sm font-semibold text-[#191919]">
+                  Internal AI Application
+                </span>
+                <span class="text-xs text-[#5C5C5C] mt-1">
+                  Custom internal app built around workflows.
+                </span>
+              </div>
+            </div>
+            <div class="flex items-start gap-3 group">
+              <svg data-lucide="check-circle" class="w-5 h-5 text-[#D97757] shrink-0 group-hover:scale-110 transition-transform"></svg>
+              <div>
+                <span class="block text-sm font-semibold text-[#191919]">
+                  External AI Product
+                </span>
+                <span class="text-xs text-[#5C5C5C] mt-1">
+                  Customer-facing interface with ChatGPT-style chat.
+                </span>
+              </div>
+            </div>
+            <div class="flex items-start gap-3 group">
+              <svg data-lucide="check-circle" class="w-5 h-5 text-[#D97757] shrink-0 group-hover:scale-110 transition-transform"></svg>
+              <div>
+                <span class="block text-sm font-semibold text-[#191919]">
+                  RAG + Knowledge Graph
+                </span>
+                <span class="text-xs text-[#5C5C5C] mt-1">
+                  Private data embeddings + relational graph DB.
+                </span>
+              </div>
+            </div>
+            <div class="flex items-start gap-3 group">
+              <svg data-lucide="check-circle" class="w-5 h-5 text-[#D97757] shrink-0 group-hover:scale-110 transition-transform"></svg>
+              <div>
+                <span class="block text-sm font-semibold text-[#191919]">
+                  AWS CloudFormation Kit
+                </span>
+                <span class="text-xs text-[#5C5C5C] mt-1">
+                  Full infrastructure-as-code deployment.
+                </span>
+              </div>
+            </div>
+            <div class="flex items-start gap-3 group">
+              <svg data-lucide="check-circle" class="w-5 h-5 text-[#D97757] shrink-0 group-hover:scale-110 transition-transform"></svg>
+              <div>
+                <span class="block text-sm font-semibold text-[#191919]">
+                  CI/CD Integration
+                </span>
+                <span class="text-xs text-[#5C5C5C] mt-1">
+                  GitHub Actions + Claude Code.
+                </span>
+              </div>
+            </div>
+            <div class="flex items-start gap-3 group">
+              <svg data-lucide="check-circle" class="w-5 h-5 text-[#D97757] shrink-0 group-hover:scale-110 transition-transform"></svg>
+              <div>
+                <span class="block text-sm font-semibold text-[#191919]">
+                  Interface Options
+                </span>
+                <span class="text-xs text-[#5C5C5C] mt-1">
+                  Slack, Telegram, or Microsoft Teams.
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- The 90-Day Process -->
+    <section id="process" class="py-24 px-6 relative">
+      <div class="max-w-5xl mx-auto">
+        <div class="mb-16 reveal">
+          <span class="text-[#D97757] text-xs font-bold tracking-widest uppercase">
+            Methodology
+          </span>
+          <h2 class="text-4xl font-serif-display font-medium text-[#191919] tracking-tight mt-2">
+            The 90-Day Process
+          </h2>
+          <p class="text-[#5C5C5C] text-sm mt-2">
+            A structured approach to building production-ready AI systems.
+          </p>
+        </div>
+
+        <div class="relative border-l border-[#D6D4C8] ml-4 md:ml-0 space-y-16">
+          <!-- Step 1 -->
+          <div class="relative pl-12 md:pl-0 md:grid md:grid-cols-5 gap-8 items-start reveal group">
+            <div class="md:col-span-1 md:text-right">
+              <span class="text-xs font-mono text-[#8C8A84] uppercase tracking-wider">
+                Phase 01
+              </span>
+              <div class="text-xl font-serif-display text-[#191919] mt-1">2 Weeks</div>
+            </div>
+            <div class="absolute left-[-5px] top-1 md:relative md:left-auto md:top-auto md:flex md:justify-center md:col-span-1">
+              <div class="w-2.5 h-2.5 rounded-full bg-[#D97757] ring-4 ring-[#F3F1E7] group-hover:scale-125 transition-transform"></div>
+            </div>
+            <div class="md:col-span-3 hover-mini p-4 rounded-xl hover:bg-white/50 border border-transparent hover:border-[#D6D4C8] transition-all">
+              <h3 class="text-lg font-semibold text-[#191919] mb-2">
+                Vibe Discovery
+              </h3>
+              <p class="text-sm text-[#5C5C5C] leading-relaxed">
+                Map workflows, define validation gates, and understand your
+                business context deeply to calibrate the agents.
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="relative pl-12 md:pl-0 md:grid md:grid-cols-5 gap-8 items-start reveal delay-75 group">
+            <div class="md:col-span-1 md:text-right">
+              <span class="text-xs font-mono text-[#8C8A84] uppercase tracking-wider">
+                Phase 02
+              </span>
+              <div class="text-xl font-serif-display text-[#191919] mt-1">6 Weeks</div>
+            </div>
+            <div class="absolute left-[-5px] top-1 md:relative md:left-auto md:top-auto md:flex md:justify-center md:col-span-1">
+              <div class="w-2.5 h-2.5 rounded-full bg-[#8C8A84] ring-4 ring-[#F3F1E7] group-hover:scale-125 transition-transform"></div>
+            </div>
+             <div class="md:col-span-3 hover-mini p-4 rounded-xl hover:bg-white/50 border border-transparent hover:border-[#D6D4C8] transition-all">
+              <h3 class="text-lg font-semibold text-[#191919] mb-2">
+                Development Sprint
+              </h3>
+              <p class="text-sm text-[#5C5C5C] leading-relaxed">
+                Build internal + external apps, integrate agents, and establish
+                core functionality using iterative vibe coding sessions.
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="relative pl-12 md:pl-0 md:grid md:grid-cols-5 gap-8 items-start reveal delay-150 group">
+            <div class="md:col-span-1 md:text-right">
+              <span class="text-xs font-mono text-[#8C8A84] uppercase tracking-wider">
+                Phase 03
+              </span>
+              <div class="text-xl font-serif-display text-[#191919] mt-1">2 Weeks</div>
+            </div>
+            <div class="absolute left-[-5px] top-1 md:relative md:left-auto md:top-auto md:flex md:justify-center md:col-span-1">
+              <div class="w-2.5 h-2.5 rounded-full bg-[#8C8A84] ring-4 ring-[#F3F1E7] group-hover:scale-125 transition-transform"></div>
+            </div>
+             <div class="md:col-span-3 hover-mini p-4 rounded-xl hover:bg-white/50 border border-transparent hover:border-[#D6D4C8] transition-all">
+              <h3 class="text-lg font-semibold text-[#191919] mb-2">
+                Agent Orchestration &amp; Training
+              </h3>
+              <p class="text-sm text-[#5C5C5C] leading-relaxed">
+                RAG setup, specialized agent training, and system optimization
+                for autonomy.
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="relative pl-12 md:pl-0 md:grid md:grid-cols-5 gap-8 items-start reveal delay-200 group">
+            <div class="md:col-span-1 md:text-right">
+              <span class="text-xs font-mono text-[#8C8A84] uppercase tracking-wider">
+                Phase 04
+              </span>
+              <div class="text-xl font-serif-display text-[#191919] mt-1">Final Week</div>
+            </div>
+            <div class="absolute left-[-5px] top-1 md:relative md:left-auto md:top-auto md:flex md:justify-center md:col-span-1">
+              <div class="w-2.5 h-2.5 rounded-full bg-[#191919] ring-4 ring-[#F3F1E7] group-hover:scale-125 transition-transform"></div>
+            </div>
+             <div class="md:col-span-3 hover-mini p-4 rounded-xl hover:bg-white/50 border border-transparent hover:border-[#D6D4C8] transition-all">
+              <h3 class="text-lg font-semibold text-[#191919] mb-2">
+                Handoff &amp; Enablement
+              </h3>
+              <p class="text-sm text-[#5C5C5C] leading-relaxed">
+                CloudFormation kit, team training, documentation, and full
+                system transfer. After 90 days, you own the infrastructure.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing / Investment Section -->
+    <section id="pricing" class="py-32 px-6 relative overflow-hidden">
+      <div class="max-w-6xl mx-auto text-center reveal">
+        <h2 class="text-4xl md:text-5xl font-serif-display font-medium text-[#191919] tracking-tighter mb-6">
+          Investment
+        </h2>
+        <p class="text-[#5C5C5C] mb-16 text-sm font-normal">
+          One engagement. Complete transformation.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          <!-- Tier 1: Vibe Planning -->
+          <div class="glass-panel p-8 rounded-3xl border border-[#D6D4C8] hover-shiny flex flex-col items-start text-left bg-[#E6E4D9]">
+            <div class="mb-4 p-2 bg-white/40 border border-[#D6D4C8] rounded-lg text-[#191919]">
+              <svg data-lucide="map" class="w-5 h-5"></svg>
+            </div>
+            <h3 class="text-[#191919] font-serif-display text-xl font-medium mb-1">System Blueprint</h3>
+            <p class="text-xs text-[#5C5C5C] mb-6">
+              <span class="text-3xl font-bold text-[#191919] tracking-tight font-sans">
+                $500
+              </span>
+              <span class="block text-[10px] text-[#8C8A84] uppercase tracking-widest mt-1">
+                One-time
+              </span>
+            </p>
+
+            <ul class="text-left text-xs text-[#5C5C5C] space-y-3 mb-8 w-full">
+              <li class="flex gap-2 items-center">
+                <svg data-lucide="check" class="w-3.5 h-3.5 text-[#D97757]"></svg>
+                Vibe Discovery
+              </li>
+              <li class="flex gap-2 items-center">
+                <svg data-lucide="check" class="w-3.5 h-3.5 text-[#D97757]"></svg>
+                Workflow Mapping
+              </li>
+              <li class="flex gap-2 items-center">
+                <svg data-lucide="check" class="w-3.5 h-3.5 text-[#D97757]"></svg>
+                Validation Gates
+              </li>
+              <li class="flex gap-2 items-center">
+                <svg data-lucide="check" class="w-3.5 h-3.5 text-[#D97757]"></svg>
+                Implementation Roadmap
+              </li>
+            </ul>
+            <button class="w-full py-3 bg-white border border-[#D6D4C8] hover:bg-[#191919] hover:text-[#F3F1E7] text-[#191919] text-xs font-semibold uppercase tracking-wider rounded-lg transition-all mt-auto shadow-sm hover-mini">
+              Get Blueprint
+            </button>
+          </div>
+
+          <!-- Tier 2: $3,500 Offer -->
+          <div class="glass-panel p-8 rounded-3xl border border-[#D6D4C8] hover-shiny flex flex-col items-start text-left relative overflow-hidden bg-[#E6E4D9]">
+            <div class="mb-4 p-2 bg-[#D97757]/10 border border-[#D97757]/20 rounded-lg text-[#D97757]">
+              <svg data-lucide="zap" class="w-5 h-5"></svg>
+            </div>
+            <h3 class="text-[#191919] font-serif-display text-xl font-medium mb-1">Agent Implementation</h3>
+            <div class="mb-6">
+              <span class="text-3xl font-bold text-[#191919] tracking-tight font-sans">
+                $3,500
+              </span>
+              <span class="block text-[10px] text-[#8C8A84] uppercase tracking-widest mt-1">
+                One-time
+              </span>
+            </div>
+            <ul class="text-left text-xs text-[#5C5C5C] space-y-3 mb-8 w-full">
+              <li class="flex gap-2 items-center">
+                <svg data-lucide="check" class="w-3.5 h-3.5 text-[#D97757]"></svg>
+                Full Implementation Plans
+              </li>
+              <li class="flex gap-2 items-center">
+                <svg data-lucide="check" class="w-3.5 h-3.5 text-[#D97757]"></svg>
+                Validation Scripts
+              </li>
+              <li class="flex gap-2 items-center">
+                <svg data-lucide="check" class="w-3.5 h-3.5 text-[#D97757]"></svg>
+                Deployment Guides
+              </li>
+              <li class="flex gap-2 items-center">
+                <svg data-lucide="check" class="w-3.5 h-3.5 text-[#D97757]"></svg>
+                Agent Architecture
+              </li>
+            </ul>
+            <button class="w-full py-3 bg-[#191919] border border-transparent hover:bg-[#333] text-[#F3F1E7] text-xs font-semibold uppercase tracking-wider rounded-lg transition-all mt-auto shadow-lg hover-mini">
+              Start Build
+            </button>
+          </div>
+
+          <!-- Tier 3: Monthly -->
+          <div class="glass-panel p-8 rounded-3xl border border-[#D6D4C8] hover-shiny flex flex-col items-start text-left bg-[#E6E4D9]">
+            <div class="mb-4 p-2 bg-white/40 border border-[#D6D4C8] rounded-lg text-[#191919]">
+              <svg data-lucide="infinity" class="w-5 h-5"></svg>
+            </div>
+            <h3 class="text-[#191919] font-serif-display text-xl font-medium mb-1">Advisory &amp; Support</h3>
+            <div class="mb-6">
+              <span class="text-3xl font-bold text-[#191919] tracking-tight font-sans">
+                $1,000
+              </span>
+              <span class="block text-[10px] text-[#8C8A84] uppercase tracking-widest mt-1">
+                / Month
+              </span>
+            </div>
+            <ul class="text-left text-xs text-[#5C5C5C] space-y-3 mb-8 w-full">
+              <li class="flex gap-2 items-center">
+                <svg data-lucide="check" class="w-3.5 h-3.5 text-[#D97757]"></svg>
+                System Monitoring
+              </li>
+              <li class="flex gap-2 items-center">
+                <svg data-lucide="check" class="w-3.5 h-3.5 text-[#D97757]"></svg>
+                Weekly Code Review
+              </li>
+              <li class="flex gap-2 items-center">
+                <svg data-lucide="check" class="w-3.5 h-3.5 text-[#D97757]"></svg>
+                Performance Tuning
+              </li>
+              <li class="flex gap-2 items-center">
+                <svg data-lucide="check" class="w-3.5 h-3.5 text-[#D97757]"></svg>
+                Priority Support
+              </li>
+              <li class="flex gap-2 items-center">
+                <svg data-lucide="check" class="w-3.5 h-3.5 text-[#D97757]"></svg>
+                Scaling Assistance
+              </li>
+            </ul>
+            <button class="w-full py-3 bg-white border border-[#D6D4C8] hover:bg-[#191919] hover:text-[#F3F1E7] text-[#191919] text-xs font-semibold uppercase tracking-wider rounded-lg transition-all mt-auto shadow-sm hover-mini">
+              Apply Now
+            </button>
+          </div>
+        </div>
+
+        <p class="text-xs text-[#8C8A84] italic">
+          *After 90 days, you own the complete AI infrastructure, deployment
+          automation, and trained development team.
+        </p>
+      </div>
+    </section>
+
+    <!-- Contact Form -->
+    <section id="contact" class="py-24 px-6 border-t border-[#D6D4C8]/60 bg-[#E6E4D9]/30">
+      <div class="max-w-2xl mx-auto reveal glass-panel p-8 rounded-3xl border border-[#D6D4C8]">
+        <h2 class="text-3xl font-serif-display font-medium text-[#191919] tracking-tight mb-4 text-center">
+          Let's Build Together
+        </h2>
+        <p class="text-[#5C5C5C] text-sm text-center mb-12">
+          Ready to transform your business with agentic systems? Tell us about
+          your project.
+        </p>
+
+        <form class="space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-2">
+              <label class="text-[10px] uppercase tracking-wider text-[#8C8A84] font-bold">
+                Name *
+              </label>
+              <input type="text" placeholder="Your full name" class="w-full px-4 py-3 rounded-lg text-sm input-field">
+            </div>
+            <div class="space-y-2">
+              <label class="text-[10px] uppercase tracking-wider text-[#8C8A84] font-bold">
+                Email *
+              </label>
+              <input type="email" placeholder="you@company.com" class="w-full px-4 py-3 rounded-lg text-sm input-field">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-2">
+              <label class="text-[10px] uppercase tracking-wider text-[#8C8A84] font-bold">
+                Company
+              </label>
+              <input type="text" placeholder="Your company name" class="w-full px-4 py-3 rounded-lg text-sm input-field">
+            </div>
+            <div class="space-y-2">
+              <label class="text-[10px] uppercase tracking-wider text-[#8C8A84] font-bold">
+                Phone
+              </label>
+              <input type="tel" placeholder="(555) 123-4567" class="w-full px-4 py-3 rounded-lg text-sm input-field">
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <label class="text-[10px] uppercase tracking-wider text-[#8C8A84] font-bold">
+              What are you looking to build? *
+            </label>
+            <textarea rows="4" placeholder="Tell us about your project, goals, and challenges..." class="w-full px-4 py-3 rounded-lg text-sm input-field resize-none"></textarea>
+          </div>
+
+          <button type="submit" class="w-full py-4 mt-8 bg-[#191919] text-[#F3F1E7] font-semibold text-sm uppercase tracking-wider rounded-lg hover:bg-[#333] transition-all shadow-lg hover-mini">
+            Schedule Discovery Call
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 border-t border-[#D6D4C8]/60 bg-[#F3F1E7] text-center">
+      <div class="flex items-center justify-center gap-2 mb-6 hover-mini cursor-default">
+        <div class="w-4 h-4 bg-[#D97757]/20 rounded-full flex items-center justify-center">
+          <div class="w-2 h-2 bg-[#D97757] rounded-full"></div>
+        </div>
+        <span class="text-xs font-serif-display font-semibold text-[#191919] tracking-widest uppercase">
+          GB Automation
+        </span>
+      </div>
+      <div class="flex flex-col gap-4 mb-8">
+        <a href="mailto:dev@gbautomation.xyz" class="text-sm text-[#5C5C5C] hover:text-[#D97757] transition-colors">
+          dev@gbautomation.xyz
+        </a>
+      </div>
+      <p class="text-[10px] text-[#8C8A84] uppercase tracking-wider">
+        © 2025 GB Automation. All rights reserved.
+      </p>
+      <p class="text-[10px] text-[#8C8A84] mt-2">
+        Powered by ElevenLabs Agents
+      </p>
+    </footer>
+
+    <script>
+      // Initialize Icons
+      lucide.createIcons();
+
+      // Scroll Reveal
+      const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+              if(entry.isIntersecting) {
+                  entry.target.classList.add('active');
+              }
+          });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+      // Slider Logic
+      const slider = document.getElementById('slider-container');
+      const prevBtn = document.getElementById('slide-prev');
+      const nextBtn = document.getElementById('slide-next');
+
+      if(prevBtn && nextBtn && slider) {
+        prevBtn.addEventListener('click', () => {
+          slider.scrollBy({ left: -400, behavior: 'smooth' });
+        });
+        nextBtn.addEventListener('click', () => {
+          slider.scrollBy({ left: 400, behavior: 'smooth' });
+        });
+      }
+    </script>
+  
+</body></html>
