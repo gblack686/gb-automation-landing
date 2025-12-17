@@ -1,6 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 
+// Supabase configuration
+const SUPABASE_URL = 'https://unickqnwfheaczccvgbw.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVuaWNrcW53ZmhlYWN6Y2N2Z2J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzM5NTE2MTAsImV4cCI6MjA0OTUyNzYxMH0.bpXrYHcZFFXgoWTF4euSTLCp_IBouFw5tZo6sp0l588';
+
 export default function ContactForm() {
   const [submitStatus, setSubmitStatus] = useState(null);
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
@@ -27,15 +31,34 @@ export default function ContactForm() {
   const onSubmit = async (data) => {
     try {
       setSubmitStatus('submitting');
-      console.log('Form submission:', data);
-      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Submit to Supabase
+      const response = await fetch(`${SUPABASE_URL}/rest/v1/contact_submissions`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({
+          name: data.name,
+          email: data.email,
+          company: data.company || null,
+          phone: data.phone || null,
+          project_description: data.projectDescription
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit form');
+      }
+
       setSubmitStatus('success');
       reset();
-      setTimeout(() => setSubmitStatus(null), 5000);
     } catch (error) {
       console.error('Submission error:', error);
       setSubmitStatus('error');
-      setTimeout(() => setSubmitStatus(null), 5000);
     }
   };
 
@@ -144,16 +167,42 @@ export default function ContactForm() {
           </button>
 
           {submitStatus === 'success' && (
-            <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-green-800">
-              <p className="font-semibold">Thank you for your interest!</p>
-              <p className="text-sm">We'll get back to you within 24 hours.</p>
+            <div className="bg-[#E6E4D9] border-2 border-[#D97757] rounded-2xl p-6 text-center">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[#D97757]/10 flex items-center justify-center">
+                <svg className="w-8 h-8 text-[#D97757]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-serif font-medium text-[#191919] mb-2">Thank You!</h3>
+              <p className="text-[#5C5C5C] text-sm mb-1">Your message has been received.</p>
+              <p className="text-[#5C5C5C] text-sm">We'll get back to you within 24 hours.</p>
+              <button
+                type="button"
+                onClick={() => setSubmitStatus(null)}
+                className="mt-4 text-[#D97757] text-sm font-medium hover:underline"
+              >
+                Send another message
+              </button>
             </div>
           )}
 
           {submitStatus === 'error' && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-800">
-              <p className="font-semibold">Oops! Something went wrong.</p>
-              <p className="text-sm">Please try again or reach out directly.</p>
+            <div className="bg-red-50 border-2 border-red-300 rounded-2xl p-6 text-center">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-100 flex items-center justify-center">
+                <svg className="w-8 h-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-serif font-medium text-red-800 mb-2">Something went wrong</h3>
+              <p className="text-red-600 text-sm mb-1">We couldn't send your message.</p>
+              <p className="text-red-600 text-sm">Please try again or email us directly.</p>
+              <button
+                type="button"
+                onClick={() => setSubmitStatus(null)}
+                className="mt-4 text-red-600 text-sm font-medium hover:underline"
+              >
+                Try again
+              </button>
             </div>
           )}
         </form>
