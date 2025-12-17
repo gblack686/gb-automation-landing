@@ -1,5 +1,6 @@
 import VideoHero from '../components/VideoHero';
 import Portfolio from '../components/Portfolio';
+import TechMarquee from '../components/TechMarquee';
 import Features from '../components/Features';
 import Process from '../components/Process';
 import Pricing from '../components/Pricing';
@@ -11,6 +12,7 @@ function Home() {
     <div className="min-h-screen bg-[#F3F1E7] selection:bg-[#D97757] selection:text-white overflow-x-hidden">
       <VideoHero />
       <Portfolio />
+      <TechMarquee />
       <Features />
       <Process />
       <Pricing />
