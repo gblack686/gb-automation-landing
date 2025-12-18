@@ -77,7 +77,7 @@ export default function PortfolioModal({ isOpen, onClose, item }) {
       {/* Modal Card */}
       <div
         ref={modalRef}
-        className="glass-panel relative w-full max-w-4xl max-h-[90vh] overflow-hidden rounded-2xl border border-[#D6D4C8] shadow-2xl animate-scaleIn"
+        className="relative w-full max-w-4xl max-h-[90vh] overflow-hidden rounded-2xl border border-[#D6D4C8] shadow-2xl animate-scaleIn bg-[#F3F1E7]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
