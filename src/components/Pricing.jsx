@@ -46,9 +46,9 @@ export default function Pricing() {
         </svg>
       ),
       title: 'Agent Implementation',
-      price: '$3,500',
-      period: 'One-time',
-      features: ['Full Implementation Plans', 'Validation Scripts', 'Deployment Guides', 'Agent Architecture'],
+      price: '$4,999',
+      period: 'Single Agent',
+      features: ['Full Implementation Plan', 'Custom Agent Development', 'Validation & Testing', 'Deployment Guide', 'Knowledge Base Setup'],
       cta: 'Start Build',
       primary: true
     },
@@ -58,10 +58,10 @@ export default function Pricing() {
           <path d="M12 12c-2-2.67-4-4-6-4a4 4 0 1 0 0 8c2 0 4-1.33 6-4Zm0 0c2 2.67 4 4 6 4a4 4 0 0 0 0-8c-2 0-4 1.33-6 4Z"/>
         </svg>
       ),
-      title: 'Advisory & Support',
-      price: '$1,000',
+      title: 'Development Leadership',
+      price: '$9,999',
       period: '/ Month',
-      features: ['System Monitoring', 'Weekly Code Review', 'Performance Tuning', 'Priority Support', 'Scaling Assistance'],
+      features: ['Full Development Leadership', 'Unlimited Agent Support', 'Strategic Planning Sessions', 'Code Review & Optimization', 'Priority Access & Response', '24/7 System Monitoring'],
       cta: 'Apply Now',
       primary: false
     }
