@@ -1,0 +1,62 @@
+stories:
+  - name: "Dashboard 3-panel layout renders"
+    url: "http://localhost:5173/dashboard"
+    workflow: |
+      Navigate to http://localhost:5173/dashboard
+      Verify the dashboard page loads successfully
+      Verify a header bar is visible with "GB Automation" and "Customer Portal" text
+      Verify a 3-panel layout is visible: a left sidebar (Sessions), a center panel (Activity Stream), and a right panel (Chat)
+      Verify the Sessions panel has a "+ New" button
+      Verify the Activity Stream panel shows an "Activity Stream" header with filter buttons
+      Verify the Chat panel has a text input area and a send button
+
+  - name: "Dashboard chat panel has all elements"
+    url: "http://localhost:5173/dashboard"
+    workflow: |
+      Navigate to http://localhost:5173/dashboard
+      Verify the chat panel is visible on the right side
+      Verify a connection status indicator (colored dot) is present in the chat header
+      Verify a "Consultant" label is visible in the chat header
+      Verify an empty state message is shown like "Start a conversation" or similar placeholder text
+      Verify a text input with placeholder text is present at the bottom
+      Verify a send button (arrow icon) is present next to the input
+
+  - name: "Dashboard event stream has filter controls"
+    url: "http://localhost:5173/dashboard"
+    workflow: |
+      Navigate to http://localhost:5173/dashboard
+      Verify the center panel has an "Activity Stream" heading
+      Verify filter buttons are visible: "All", "Tools", "Thinking", "Errors"
+      Click the "Tools" filter button
+      Verify the "Tools" button appears active/highlighted
+      Click the "All" filter button
+      Verify the "All" button appears active/highlighted
+
+  - name: "Dashboard session sidebar has new session button"
+    url: "http://localhost:5173/dashboard"
+    workflow: |
+      Navigate to http://localhost:5173/dashboard
+      Verify the left sidebar has a "Sessions" header
+      Verify a "+ New" button is visible in the sessions panel
+      Verify the sessions area shows either a list of sessions or an empty state with a "Start Planning Session" button
+
+  - name: "Dashboard width toggle works"
+    url: "http://localhost:5173/dashboard"
+    workflow: |
+      Navigate to http://localhost:5173/dashboard
+      Verify the header contains width toggle buttons labeled "SM", "MD", "LG"
+      Verify "MD" appears active/selected by default
+      Click the "LG" button
+      Verify the "LG" button now appears active/selected
+      Click the "SM" button
+      Verify the "SM" button now appears active/selected
+      Verify the chat panel width visibly changes between sizes
+
+  - name: "Dashboard back button navigates home"
+    url: "http://localhost:5173/dashboard"
+    workflow: |
+      Navigate to http://localhost:5173/dashboard
+      Verify a back arrow button is visible in the top-left header area
+      Click the back arrow button
+      Verify the page navigates back to the homepage at /
+      Verify the homepage hero section is visible

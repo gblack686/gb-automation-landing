@@ -1,0 +1,20 @@
+stories:
+  - name: "PRD Generator page loads"
+    url: "http://localhost:5173/plan"
+    workflow: |
+      Navigate to http://localhost:5173/plan
+      Verify the PRD Generator page loads successfully
+      Verify a header with "PRD Generator" text is visible
+      Verify a progress bar is present showing completion percentage
+      Verify a chat panel is visible on the left side
+      Verify a Table of Contents panel is visible on the right side with at least 5 sections listed
+      Verify a Live Preview section is present
+
+  - name: "PRD Generator section navigator"
+    url: "http://localhost:5173/plan"
+    workflow: |
+      Navigate to http://localhost:5173/plan
+      Verify the Table of Contents shows numbered sections
+      Verify at least these sections are listed: Product Overview, User Personas, Core Features
+      Verify each section has a "Start" or "Review" button
+      Verify section icons are visible next to each section title
