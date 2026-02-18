@@ -1,0 +1,28 @@
+stories:
+  - name: "Homepage loads with all sections"
+    url: "http://localhost:5173/"
+    workflow: |
+      Navigate to http://localhost:5173/
+      Verify the homepage loads successfully
+      Verify a hero section is visible with a headline and call-to-action button
+      Scroll down and verify a features/services section is visible
+      Scroll down and verify a portfolio section is visible with project cards
+      Scroll down and verify a pricing section is visible with at least 2 tiers
+      Scroll to the bottom and verify a footer is present
+
+  - name: "Navigation links work"
+    url: "http://localhost:5173/"
+    workflow: |
+      Navigate to http://localhost:5173/
+      Verify the homepage loads with a navigation area
+      Look for a link or button that leads to the PRD Generator or Plan page
+      Click it and verify the URL changes to /plan
+      Verify the PRD Generator page loads with a chat interface
+
+  - name: "Contact form renders"
+    url: "http://localhost:5173/"
+    workflow: |
+      Navigate to http://localhost:5173/
+      Scroll down to find a contact form section
+      Verify the form has fields for name, email, and a project description
+      Verify a submit button is present and visible

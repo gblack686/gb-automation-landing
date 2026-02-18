@@ -1,0 +1,20 @@
+stories:
+  - name: "Dashboard responsive mobile layout"
+    url: "http://localhost:5173/dashboard"
+    workflow: |
+      Navigate to http://localhost:5173/dashboard
+      Resize the browser viewport to 375x812 (mobile)
+      Verify the dashboard adapts to a single-column layout
+      Verify the chat panel is visible and takes the full width
+      Verify the sessions sidebar is hidden on mobile
+      Verify the event stream panel is hidden on mobile
+      Verify the chat input and send button are still usable
+
+  - name: "Dashboard responsive tablet layout"
+    url: "http://localhost:5173/dashboard"
+    workflow: |
+      Navigate to http://localhost:5173/dashboard
+      Resize the browser viewport to 1024x768 (tablet)
+      Verify the dashboard layout adjusts with narrower panels
+      Verify the sessions sidebar, event stream, and chat are still visible
+      Verify text is not overlapping or cut off

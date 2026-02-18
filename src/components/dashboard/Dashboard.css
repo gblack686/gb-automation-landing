@@ -1,0 +1,262 @@
+/* =================================================================
+   Customer Dashboard — 3-Panel Layout
+   Inspired by TAC Orchestrator (OrchestratorChat.vue)
+   Adapted to the cream/terracotta design system
+   ================================================================= */
+
+/* Container */
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
+  background: var(--cream-bg, #F3F1E7);
+  overflow: hidden;
+}
+
+/* Header */
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 48px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--border, #D6D4C8);
+  background: var(--cream-panel, #E6E4D9);
+  flex-shrink: 0;
+}
+
+/* 3-Panel Grid */
+.dashboard-panels {
+  display: grid;
+  flex: 1;
+  min-height: 0;
+  transition: grid-template-columns 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Individual panels */
+.panel {
+  min-height: 0;
+  overflow: hidden;
+  border-right: 1px solid var(--border, #D6D4C8);
+}
+.panel:last-child {
+  border-right: none;
+}
+
+.panel-sessions {
+  background: rgba(230, 228, 217, 0.4);
+}
+
+.panel-events {
+  background: var(--cream-bg, #F3F1E7);
+}
+
+.panel-chat {
+  background: var(--cream-bg, #F3F1E7);
+}
+
+/* ==================== Chat Styles ==================== */
+
+/* Message bubbles */
+.message-bubble {
+  max-width: 85%;
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border, #D6D4C8);
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.message-bubble.user {
+  margin-left: auto;
+  background: rgba(37, 99, 235, 0.06);
+  border-color: rgba(37, 99, 235, 0.15);
+}
+
+.message-bubble.consultant {
+  margin-right: auto;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.msg-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.msg-sender {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.msg-time {
+  font-size: 10px;
+}
+
+.msg-body {
+  line-height: 1.55;
+}
+
+.msg-body p {
+  margin: 0 0 0.5em 0;
+}
+.msg-body p:last-child {
+  margin-bottom: 0;
+}
+
+.msg-body code {
+  font-size: 0.85em;
+  padding: 1px 4px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.msg-body pre {
+  border-radius: 8px;
+  padding: 8px 12px;
+  background: rgba(0, 0, 0, 0.04);
+  overflow-x: auto;
+  font-size: 12px;
+}
+
+.msg-body ul, .msg-body ol {
+  padding-left: 1.2em;
+  margin: 0.4em 0;
+}
+
+.msg-body h1, .msg-body h2, .msg-body h3, .msg-body h4 {
+  font-family: 'Inter', sans-serif;
+  margin: 0.6em 0 0.3em;
+}
+
+/* ==================== Thinking Bubble ==================== */
+
+.thinking-bubble {
+  max-width: 85%;
+  margin-right: auto;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: rgba(139, 92, 246, 0.06);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+/* ==================== Tool Use Bubble ==================== */
+
+.tool-use-bubble {
+  max-width: 85%;
+  margin-right: auto;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: rgba(234, 179, 8, 0.06);
+  border: 1px solid rgba(234, 179, 8, 0.2);
+}
+
+/* ==================== Typing Indicator ==================== */
+
+.typing-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--terracotta, #D97757);
+  animation: typing-bounce 1.2s infinite;
+}
+
+@keyframes typing-bounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-6px); opacity: 1; }
+}
+
+/* ==================== Event Stream ==================== */
+
+.event-row {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  line-height: 1.5;
+}
+
+/* ==================== Scope Preview ==================== */
+
+.scope-preview {
+  flex-shrink: 0;
+}
+
+.scope-content .prose h1,
+.scope-content .prose h2,
+.scope-content .prose h3 {
+  font-family: 'Inter', sans-serif;
+}
+
+.scope-content .prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.scope-content .prose th,
+.scope-content .prose td {
+  padding: 6px 10px;
+  border: 1px solid var(--border, #D6D4C8);
+  text-align: left;
+}
+
+.scope-content .prose th {
+  background: rgba(0, 0, 0, 0.03);
+  font-weight: 600;
+}
+
+/* ==================== Context Window Colors ==================== */
+
+.context-normal { color: #06b4d4; }
+.context-moderate { color: #f59e0b; }
+.context-warning { color: #eab308; }
+.context-critical { color: #ef4444; animation: ctx-pulse 2s ease-in-out infinite; }
+
+@keyframes ctx-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ==================== Responsive ==================== */
+
+@media (max-width: 1200px) {
+  .dashboard-panels {
+    grid-template-columns: 180px 1fr 360px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .dashboard-panels {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto 1fr;
+  }
+
+  .panel-sessions {
+    display: none;
+  }
+
+  .panel-events {
+    display: none;
+  }
+
+  .panel-chat {
+    border-right: none;
+  }
+
+  .scope-content {
+    max-height: 200px;
+  }
+}
+
+@media (max-width: 600px) {
+  .dashboard-header {
+    padding: 0 12px;
+    height: 44px;
+  }
+
+  .message-bubble {
+    max-width: 92%;
+  }
+}
