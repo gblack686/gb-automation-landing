@@ -8,40 +8,44 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 text-white pt-20 pb-32 px-4 sm:px-6 lg:px-8">
+    <section className="relative pt-20 pb-32 px-4 sm:px-6 lg:px-8" style={{ backgroundColor: '#F3F1E7' }}>
       <div className="max-w-7xl mx-auto">
         <div className="text-center">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight" style={{ color: '#191919', fontFamily: "'Newsreader', serif" }}>
             Build Smarter and Faster with an AI Developer<br />
-            <span className="text-yellow-300">That Codes in Your Vibe</span>
+            <span style={{ color: '#D97757' }}>That Codes in Your Vibe</span>
           </h1>
 
-          <p className="text-xl sm:text-2xl mb-8 text-blue-100 max-w-4xl mx-auto">
+          <p className="text-xl sm:text-2xl mb-8 max-w-4xl mx-auto" style={{ color: '#5C5C5C' }}>
             90-Day Agentic Systems Program: Internal tools, external products, and autonomous AI workflows built for your business
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <button
               onClick={scrollToContact}
-              className="bg-yellow-400 text-gray-900 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-yellow-300 transition-colors duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+              className="px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+              style={{ backgroundColor: '#D97757', color: '#F3F1E7' }}
+              onMouseEnter={e => e.target.style.backgroundColor = '#c5653f'}
+              onMouseLeave={e => e.target.style.backgroundColor = '#D97757'}
             >
               Schedule Discovery Call
             </button>
             <button
               onClick={scrollToFeatures}
-              className="bg-white bg-opacity-20 backdrop-blur-sm text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-opacity-30 transition-all duration-200 border-2 border-white border-opacity-40"
+              className="px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-200"
+              style={{ backgroundColor: 'rgba(230, 228, 217, 0.6)', backdropFilter: 'blur(12px)', color: '#191919', border: '1px solid rgba(214, 212, 200, 0.6)' }}
             >
               Learn More
             </button>
           </div>
 
           <div className="mt-12 text-center">
-            <p className="text-blue-100 text-sm uppercase tracking-wide mb-4">Key Deliverables</p>
+            <p className="text-sm uppercase tracking-wide mb-4" style={{ color: '#8C8A84' }}>Key Deliverables</p>
             <div className="flex flex-wrap justify-center gap-4 text-sm">
-              <span className="bg-white text-blue-700 px-4 py-2 rounded-full font-semibold shadow-lg">3 Claude Agents</span>
-              <span className="bg-white text-blue-700 px-4 py-2 rounded-full font-semibold shadow-lg">RAG + Knowledge Graph</span>
-              <span className="bg-white text-blue-700 px-4 py-2 rounded-full font-semibold shadow-lg">AWS CloudFormation Kit</span>
-              <span className="bg-white text-blue-700 px-4 py-2 rounded-full font-semibold shadow-lg">20+ hrs/week Support</span>
+              <span className="px-4 py-2 rounded-full font-semibold shadow-sm" style={{ backgroundColor: '#E6E4D9', color: '#191919', border: '1px solid #D6D4C8' }}>3 Claude Agents</span>
+              <span className="px-4 py-2 rounded-full font-semibold shadow-sm" style={{ backgroundColor: '#E6E4D9', color: '#191919', border: '1px solid #D6D4C8' }}>RAG + Knowledge Graph</span>
+              <span className="px-4 py-2 rounded-full font-semibold shadow-sm" style={{ backgroundColor: '#E6E4D9', color: '#191919', border: '1px solid #D6D4C8' }}>AWS CloudFormation Kit</span>
+              <span className="px-4 py-2 rounded-full font-semibold shadow-sm" style={{ backgroundColor: '#E6E4D9', color: '#191919', border: '1px solid #D6D4C8' }}>20+ hrs/week Support</span>
             </div>
           </div>
         </div>
