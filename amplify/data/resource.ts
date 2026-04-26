@@ -12,6 +12,25 @@ const schema = a.schema({
       status: a.enum(['new', 'contacted', 'qualified', 'closed']),
     })
     .authorization((allow) => [allow.publicApiKey()]),
+
+  // Whitelisted files from the second-brain vault. The GitHub Action in the
+  // gbautomation repo is the only writer; the website reads via Cognito.
+  // Path is the natural key (e.g. "tasks/blockers.md") so re-publishes
+  // upsert by path. Only the whitelist in the publish script controls what
+  // ever gets created here — schema deliberately stays generic.
+  VaultDoc: a
+    .model({
+      path: a.string().required(),
+      title: a.string(),
+      bodyMd: a.string().required(),
+      sha: a.string(),
+      updatedAt: a.datetime(),
+    })
+    .secondaryIndexes((index) => [index('path').queryField('vaultDocByPath')])
+    .authorization((allow) => [
+      allow.publicApiKey(),
+      allow.authenticated().to(['read']),
+    ]),
 });
 
 export type Schema = ClientSchema<typeof schema>;

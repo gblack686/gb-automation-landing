@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Plan from './pages/Plan';
 import Apps from './pages/Apps';
 import Artifacts from './pages/Artifacts';
+import Blockers from './pages/Blockers';
 import Login from './pages/Login';
 import RequireAuth from './components/RequireAuth';
 
@@ -28,6 +29,10 @@ function App() {
           <Route
             path="/artifacts"
             element={<RequireAuth><Artifacts /></RequireAuth>}
+          />
+          <Route
+            path="/blockers"
+            element={<RequireAuth><Blockers /></RequireAuth>}
           />
         </Routes>
       </Router>
