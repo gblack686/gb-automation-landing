@@ -1,0 +1,49 @@
+{
+  "meta": {
+    "version": "1.0",
+    "description": "Flat chronological feed of every artifact across every app. Newest first. Each entry self-describes its render type so ArtifactPlayer can dispatch.",
+    "updated": "2026-04-25"
+  },
+  "artifacts": [
+    {
+      "id": "logo-motion/gbauto-run-004-smoke/v0",
+      "app_slug": "logo-motion",
+      "app_name": "Logo Motion",
+      "type": "video",
+      "title": "GB Automation logo · slow-motion melt",
+      "subtitle": "3 keyframes via gpt-image-2 /v1/images/edits, tweened with ffmpeg minterpolate",
+      "url": "/portfolio/samples/logo-motion/clip.mp4",
+      "poster": "/portfolio/samples/logo-motion/poster.png",
+      "score": 71,
+      "score_label": "Logo recognizability (LLM-judged, threshold ≥ 60)",
+      "tags": ["logo", "melt", "slow-motion", "openai"],
+      "created_at": "2026-04-25T11:53:00Z",
+      "size_bytes": 2602372,
+      "duration_sec": 8.0
+    },
+    {
+      "id": "logo-motion/gbauto-run-003/v0",
+      "app_slug": "logo-motion",
+      "app_name": "Logo Motion",
+      "type": "image",
+      "title": "GB Automation logo · brand-aware variant (run-003)",
+      "subtitle": "First on-brand result after wiring brand.json sidecar (#D97757 terracotta halo)",
+      "url": "/portfolio/samples/logo-motion/poster.png",
+      "score": 80,
+      "score_label": "Logo recognizability",
+      "tags": ["logo", "still", "brand-locked"],
+      "created_at": "2026-04-25T10:30:00Z"
+    },
+    {
+      "id": "claude-html-artifacts/example-placeholder",
+      "app_slug": "claude-html-artifacts",
+      "app_name": "Claude HTML Artifacts",
+      "type": "placeholder",
+      "title": "Awaiting first publish from playground plugin",
+      "subtitle": "HTML artifacts will appear here when the Claude playground plugin or an approved automation path calls gbauto-publish.",
+      "url": null,
+      "tags": ["placeholder"],
+      "created_at": "2026-04-25T00:00:00Z"
+    }
+  ]
+}

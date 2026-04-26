@@ -1,0 +1,16 @@
+{
+  "logo_score": 71,
+  "legibility": 33,
+  "color_fidelity": 12,
+  "scene_coherence": 26,
+  "frame_scores": [
+    68,
+    72,
+    75
+  ],
+  "reasoning": "The original is a black monoline cursive signature (two-glyph monogram) on white. All three generated frames preserve the logo's form and stroke topology clearly \u2014 the 'G' and looping secondary letterform are identifiable in each frame, though Frame 1's neon-glow treatment loses some fine-line detail at the tail strokes. Color fidelity is the main failure: the original is strictly black-on-white with no warm tones, but every frame renders in copper/amber/dark-metallic, a pronounced palette shift even accounting for the melt style. Scene coherence scores high \u2014 the molten-liquid melt treatment is internally consistent across all three frames and the logo is genuinely embedded in the environment (not composited on top), with Frame 3 showing the cleanest integration as the logo rises from a reflective liquid surface.",
+  "pass": true,
+  "job_id": "gbauto-run-004-smoke",
+  "variant_id": "v0",
+  "style_variant": "melt"
+}
