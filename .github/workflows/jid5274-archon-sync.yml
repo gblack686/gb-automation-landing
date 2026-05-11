@@ -83,6 +83,7 @@ jobs:
 
       - name: Copy Archon bundle into landing public assets
         run: |
+          git -C _archon rev-parse --short HEAD > .jid5274-archon-sha
           rm -rf public/clients/jid5274/archon
           mkdir -p public/clients/jid5274/archon
           cp -R _archon/packages/web/dist/. public/clients/jid5274/archon/
@@ -101,7 +102,8 @@ jobs:
             echo "No Archon bundle changes to commit."
             exit 0
           fi
-          SHORT_SHA="$(git -C _archon rev-parse --short HEAD)"
+          SHORT_SHA="$(cat .jid5274-archon-sha)"
+          rm -f .jid5274-archon-sha
           git config user.name "jid5274-archon-sync-bot"
           git config user.email "bot@gbautomation.xyz"
           git commit -m "chore(client): sync jid5274 archon to $SHORT_SHA"
