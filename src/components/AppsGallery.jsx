@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { ExternalLink, ArrowRight } from 'lucide-react';
 
 const STATUS_STYLE = {
@@ -30,7 +31,7 @@ export default function AppsGallery() {
   }, []);
 
   if (loading) {
-    return <p className="text-sm text-[#191919]/60">Loading apps…</p>;
+    return <p className="text-sm text-[#191919]/60">Loading appsâ€¦</p>;
   }
   if (error) {
     return <p className="text-sm text-red-700">Could not load apps: {error}</p>;
@@ -109,17 +110,28 @@ export default function AppsGallery() {
                 <span className="text-xs text-[#191919]/40 italic">No runs yet</span>
               )}
 
-              {app.repo && (
-                <a
-                  href={app.repo}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-xs text-[#191919]/60 hover:text-[#D97757] transition-colors"
-                  aria-label={`Open ${app.name} repo`}
-                >
-                  Repo <ExternalLink className="w-3 h-3" />
-                </a>
-              )}
+              <div className="flex items-center gap-3">
+                {app.app_path && (
+                  <Link
+                    to={app.app_path}
+                    className="inline-flex items-center gap-1 text-xs font-semibold text-[#D97757] hover:text-[#191919] transition-colors"
+                    aria-label={`Launch ${app.name}`}
+                  >
+                    Launch <ArrowRight className="w-3 h-3" />
+                  </Link>
+                )}
+                {app.repo && (
+                  <a
+                    href={app.repo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-xs text-[#191919]/60 hover:text-[#D97757] transition-colors"
+                    aria-label={`Open ${app.name} repo`}
+                  >
+                    Repo <ExternalLink className="w-3 h-3" />
+                  </a>
+                )}
+              </div>
             </div>
           </div>
         </article>
@@ -127,3 +139,4 @@ export default function AppsGallery() {
     </div>
   );
 }
+

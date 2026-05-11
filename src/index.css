@@ -128,6 +128,89 @@
   scrollbar-width: none;
 }
 
+.login-auth-shell {
+  --amplify-colors-background-primary: transparent;
+  --amplify-colors-background-secondary: transparent;
+  --amplify-colors-border-primary: #D6D4C8;
+  --amplify-colors-brand-primary-10: #F3F1E7;
+  --amplify-colors-brand-primary-80: #B75F43;
+  --amplify-colors-brand-primary-90: #D97757;
+  --amplify-colors-brand-primary-100: #191919;
+  --amplify-colors-font-primary: #191919;
+  --amplify-colors-font-secondary: rgba(25, 25, 25, 0.65);
+  --amplify-components-button-primary-background-color: #191919;
+  --amplify-components-button-primary-hover-background-color: #D97757;
+  --amplify-components-button-primary-focus-background-color: #D97757;
+  --amplify-components-fieldcontrol-border-radius: 6px;
+  --amplify-components-fieldcontrol-border-color: #D6D4C8;
+  --amplify-components-fieldcontrol-focus-border-color: #D97757;
+  --amplify-components-fieldcontrol-focus-box-shadow: 0 0 0 1px #D97757;
+  --amplify-components-tabs-item-active-border-color: #D97757;
+  --amplify-radii-small: 6px;
+  --amplify-radii-medium: 6px;
+  border: 1px solid #D6D4C8;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.55);
+  padding: 24px;
+  box-shadow: 0 20px 70px -45px rgba(25, 25, 25, 0.45);
+}
+
+.login-auth-shell [data-amplify-authenticator] {
+  width: 100%;
+}
+
+.login-auth-shell [data-amplify-router] {
+  width: 100%;
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+}
+
+.login-auth-shell [data-amplify-container] {
+  width: 100%;
+}
+
+.login-auth-shell .amplify-card {
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+  padding: 0;
+}
+
+.login-auth-shell .amplify-tabs {
+  display: none;
+}
+
+.login-auth-shell .amplify-button {
+  min-height: 44px;
+  border-radius: 6px;
+  font-weight: 700;
+}
+
+.login-auth-shell .amplify-field__show-password {
+  min-height: 44px;
+}
+
+.login-auth-shell .amplify-input {
+  min-height: 46px;
+  background: rgba(243, 241, 231, 0.75);
+  color: #191919;
+}
+
+.login-auth-shell .amplify-label {
+  color: #191919;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.login-auth-shell .amplify-heading {
+  display: none;
+}
+
+.login-auth-shell .amplify-alert {
+  border-radius: 6px;
+}
+
 /* Tech Marquee Animation */
 @keyframes marquee {
   0% {

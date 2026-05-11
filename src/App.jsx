@@ -1,23 +1,25 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+﻿import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Authenticator } from '@aws-amplify/ui-react';
 import Home from './pages/Home';
 import Plan from './pages/Plan';
 import Apps from './pages/Apps';
 import Artifacts from './pages/Artifacts';
 import Blockers from './pages/Blockers';
+import YouTubeIntel from './pages/YouTubeIntel';
 import Login from './pages/Login';
 import RequireAuth from './components/RequireAuth';
+import GbautomationPortal from './clients/gbautomation/routes';
 
 function App() {
   return (
     <Authenticator.Provider>
       <Router>
         <Routes>
-          {/* Public — only the homepage */}
+          {/* Public â€” only the homepage */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
 
-          {/* Gated — everything behind sign-in */}
+          {/* Gated â€” everything behind sign-in */}
           <Route
             path="/plan"
             element={<RequireAuth><Plan /></RequireAuth>}
@@ -34,6 +36,14 @@ function App() {
             path="/blockers"
             element={<RequireAuth><Blockers /></RequireAuth>}
           />
+          <Route
+            path="/apps/youtube-intel"
+            element={<RequireAuth><YouTubeIntel /></RequireAuth>}
+          />
+          <Route
+            path="/clients/gbautomation/*"
+            element={<RequireAuth><GbautomationPortal /></RequireAuth>}
+          />
         </Routes>
       </Router>
     </Authenticator.Provider>
@@ -41,3 +51,4 @@ function App() {
 }
 
 export default App;
+

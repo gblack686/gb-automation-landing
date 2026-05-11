@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "node test-site.js",
+    "test:tenant": "node scripts/validate-tenant-portal.mjs",
     "amplify:sandbox": "ampx sandbox",
     "amplify:deploy": "ampx sandbox --once"
   },

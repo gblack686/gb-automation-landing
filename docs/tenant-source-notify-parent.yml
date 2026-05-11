@@ -1,0 +1,31 @@
+name: Notify parent website
+
+on:
+  push:
+    branches: [main, preview]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build tenant before dispatch
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+            npm run build
+          else
+            echo "No package-lock.json found; skipping tenant build smoke."
+          fi
+
+      - name: Dispatch parent sync
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.PARENT_REPO_PAT }}
+          repository: gbauto/gb-automation-landing
+          event-type: ${{ github.ref_name == 'main' && 'tenant-update' || 'tenant-preview-update' }}
+          client-payload: >-
+            {
+              "tenant": "REPLACE_WITH_TENANT_SLUG",
+              "sha": "${{ github.sha }}",
+              "ref": "${{ github.ref_name }}"
+            }

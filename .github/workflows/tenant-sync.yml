@@ -1,0 +1,104 @@
+name: Tenant submodule sync
+
+on:
+  repository_dispatch:
+    types: [tenant-update, tenant-preview-update]
+  workflow_dispatch:
+    inputs:
+      tenant:
+        description: Tenant slug under src/clients
+        required: true
+        type: string
+      ref:
+        description: Tenant source ref to fetch
+        required: false
+        default: main
+        type: string
+      sha:
+        description: Exact tenant source SHA to check out
+        required: false
+        type: string
+      parent_branch:
+        description: Parent branch to update
+        required: false
+        default: main
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tenant-sync-${{ github.event.client_payload.tenant || inputs.tenant }}
+  cancel-in-progress: true
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    env:
+      TENANT: ${{ github.event.client_payload.tenant || inputs.tenant }}
+      TENANT_REF: ${{ github.event.client_payload.ref || inputs.ref || 'main' }}
+      TENANT_SHA: ${{ github.event.client_payload.sha || inputs.sha }}
+      PARENT_BRANCH: ${{ inputs.parent_branch || (github.event.action == 'tenant-preview-update' && 'preview' || 'main') }}
+    steps:
+      - name: Validate dispatch payload
+        run: |
+          if ! [[ "$TENANT" =~ ^[a-z0-9][a-z0-9-]{1,48}$ ]]; then
+            echo "::error::Invalid tenant slug: $TENANT"
+            exit 1
+          fi
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.PARENT_BRANCH }}
+          submodules: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update tenant submodule
+        run: |
+          TENANT_DIR="src/clients/$TENANT"
+          if [ ! -d "$TENANT_DIR" ]; then
+            echo "::error::Tenant directory not found: $TENANT_DIR"
+            exit 1
+          fi
+          if ! git -C "$TENANT_DIR" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+            echo "::error::$TENANT_DIR is not a git submodule checkout"
+            exit 1
+          fi
+          git -C "$TENANT_DIR" fetch origin "$TENANT_REF"
+          if [ -n "$TENANT_SHA" ]; then
+            git -C "$TENANT_DIR" checkout "$TENANT_SHA"
+          else
+            git -C "$TENANT_DIR" checkout FETCH_HEAD
+          fi
+
+      - name: Guard tenant boundary
+        run: |
+          git add "src/clients/$TENANT"
+          CHANGED="$(git diff --cached --name-only)"
+          if [ -z "$CHANGED" ]; then
+            echo "No tenant pointer changes to commit."
+            exit 0
+          fi
+          OUTSIDE="$(echo "$CHANGED" | grep -v "^src/clients/$TENANT$" | grep -v "^src/clients/$TENANT/" || true)"
+          if [ -n "$OUTSIDE" ]; then
+            echo "::error::Refusing changes outside src/clients/$TENANT:"
+            echo "$OUTSIDE"
+            exit 1
+          fi
+
+      - name: Build smoke
+        run: |
+          npm ci --cache .npm --prefer-offline
+          npm run build
+
+      - name: Commit and push
+        run: |
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          SHORT_SHA="${TENANT_SHA:-$(git -C "src/clients/$TENANT" rev-parse --short HEAD)}"
+          git config user.name "tenant-sync-bot"
+          git config user.email "bot@gbautomation.xyz"
+          git commit -m "chore(tenant): sync $TENANT to $SHORT_SHA"
+          git push origin "HEAD:$PARENT_BRANCH"

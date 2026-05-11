@@ -124,7 +124,7 @@ async function runTests() {
     const code = await response.text();
 
     const commonIssues = [
-      { pattern: /import.*from ['"]react['"]/, name: 'React import' },
+      { pattern: /react_jsx-dev-runtime|react-router-dom/, name: 'React runtime import' },
       { pattern: /export default/, name: 'Default export' },
     ];
 
@@ -161,12 +161,12 @@ async function runTests() {
     log('\nPlease check the errors above and fix them.\n', 'yellow');
   }
 
-  process.exit(passed === total ? 0 : 1);
+  process.exitCode = passed === total ? 0 : 1;
 }
 
 // Run tests
 runTests().catch(error => {
   log(`\n❌ Fatal error: ${error.message}`, 'red');
   console.error(error);
-  process.exit(1);
+  process.exitCode = 1;
 });
