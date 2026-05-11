@@ -8,7 +8,9 @@ const requiredPaths = [
   'src/clients/gbautomation/pages/DashboardPage.jsx',
   'src/clients/gbautomation/pages/SyncPage.jsx',
   'src/clients/gbautomation/pages/ValidationPage.jsx',
+  'src/clients/jid5274/routes.jsx',
   '.github/workflows/tenant-sync.yml',
+  '.github/workflows/jid5274-archon-sync.yml',
   'docs/tenant-source-notify-parent.yml',
   'docs/tenant-portals.md',
 ];
@@ -26,6 +28,10 @@ if (!app.includes('/clients/gbautomation/*')) {
   failures.push('src/App.jsx does not mount /clients/gbautomation/*');
 }
 
+if (!app.includes('/clients/jid5274/*')) {
+  failures.push('src/App.jsx does not mount /clients/jid5274/*');
+}
+
 const requireAuth = readFileSync(resolve(root, 'src/components/RequireAuth.jsx'), 'utf8');
 if (!requireAuth.includes('allowedGroups')) {
   failures.push('RequireAuth does not expose allowedGroups tenant checks');
@@ -37,6 +43,13 @@ if (!portalEntry) {
   failures.push('apps registry is missing client-portal-gbautomation');
 } else if (portalEntry.app_path !== '/clients/gbautomation') {
   failures.push('client-portal-gbautomation app_path is not /clients/gbautomation');
+}
+
+const jid5274Entry = registry.apps?.find((appEntry) => appEntry.slug === 'client-portal-jid5274');
+if (!jid5274Entry) {
+  failures.push('apps registry is missing client-portal-jid5274');
+} else if (jid5274Entry.app_path !== '/clients/jid5274') {
+  failures.push('client-portal-jid5274 app_path is not /clients/jid5274');
 }
 
 if (failures.length) {

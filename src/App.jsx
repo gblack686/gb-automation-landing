@@ -9,6 +9,7 @@ import YouTubeIntel from './pages/YouTubeIntel';
 import Login from './pages/Login';
 import RequireAuth from './components/RequireAuth';
 import GbautomationPortal from './clients/gbautomation/routes';
+import Jid5274Portal from './clients/jid5274/routes';
 
 function App() {
   return (
@@ -48,6 +49,17 @@ function App() {
                 allowedEmails={['gblack686@gmail.com']}
               >
                 <GbautomationPortal />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/clients/jid5274/*"
+            element={
+              <RequireAuth
+                allowedGroups={['tenant-jid5274']}
+                allowedEmails={['jid5274@gmail.com']}
+              >
+                <Jid5274Portal />
               </RequireAuth>
             }
           />

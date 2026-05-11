@@ -59,6 +59,19 @@
       "tags": ["client-portal", "tenant-sync", "validation", "amplify"]
     },
     {
+      "slug": "client-portal-jid5274",
+      "name": "Jason Diaz Portal",
+      "tagline": "Private PMC/Archon workspace hosted under the reusable client portal route",
+      "description": "A gated client route for Jason Diaz that embeds the synced Archon web bundle and long-lived HTML artifacts under /clients/jid5274.",
+      "repo": "https://github.com/gbauto/jid5274",
+      "app_path": "/clients/jid5274",
+      "tech_stack": ["react", "archon", "github-actions", "aws-amplify"],
+      "thumbnail": null,
+      "latest_run": null,
+      "status": "private",
+      "tags": ["client-portal", "archon", "tenant-sync", "amplify"]
+    },
+    {
       "slug": "youtube-intel",
       "name": "YouTube Intel",
       "tagline": "Channel allowlist, transcript coverage, and artifact reporting for the TAC-backed YouTube pipeline",

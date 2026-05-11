@@ -9,6 +9,18 @@ This site supports private client portal routes under `/clients/<slug>/*`.
 - Source: local app code at `src/clients/gbautomation/`
 - Auth: existing `RequireAuth` sign-in gate.
 
+## Jason / JID5274 Tenant
+
+- Route: `/clients/jid5274`
+- Auth: Cognito group `tenant-jid5274` or Jason's contact email `jid5274@gmail.com`
+- Client repository: `gbauto/jid5274`
+- Embedded app source: `gbauto/Archon` branch `feat/jason-artifacts-tab`
+- Static bundle path: `public/clients/jid5274/archon/`
+- Landing sync workflow: `.github/workflows/jid5274-archon-sync.yml`
+- Archon notification workflow: `gbauto/Archon/.github/workflows/notify-gbautomation-amplify.yml`
+
+Archon pushes dispatch `jid5274-archon-update` to this website repository. The parent workflow builds the Archon web package with base `/clients/jid5274/archon/`, copies the bundle into `public/clients/jid5274/archon/`, commits to `master`, and Amplify deploys the new commit.
+
 ## External Tenant Pattern
 
 External client portals should use a two-repository model:
