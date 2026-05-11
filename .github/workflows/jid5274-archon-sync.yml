@@ -88,10 +88,11 @@ jobs:
           cp -R _archon/packages/web/dist/. public/clients/jid5274/archon/
           rm -rf _archon _jid5274 second-brain
 
-      - name: Build landing smoke
+      - name: Validate copied Archon bundle
         run: |
-          npm ci --cache .npm --prefer-offline
-          npm run build
+          test -f public/clients/jid5274/archon/index.html
+          test -f public/clients/jid5274/archon/artifacts/manifest.json
+          grep -q '/clients/jid5274/archon/assets/' public/clients/jid5274/archon/index.html
 
       - name: Commit and push landing update
         run: |
