@@ -6,29 +6,33 @@ import { fetchAuthSession, getCurrentUser } from 'aws-amplify/auth';
  * Gate a route: if the user has no Cognito session, redirect to /login
  * with the originally requested path stashed in `?next=`.
  */
-export default function RequireAuth({ children, allowedGroups = [] }) {
+export default function RequireAuth({ children, allowedGroups = [], allowedEmails = [] }) {
   const [authState, setAuthState] = useState('checking'); // 'checking' | 'authed' | 'unauthed'
   const location = useLocation();
   const allowedGroupsKey = allowedGroups.join('|');
+  const allowedEmailsKey = allowedEmails.map((email) => email.toLowerCase()).join('|');
 
   useEffect(() => {
     let cancelled = false;
     const requiredGroups = allowedGroupsKey ? allowedGroupsKey.split('|') : [];
+    const requiredEmails = allowedEmailsKey ? allowedEmailsKey.split('|') : [];
     getCurrentUser()
       .then(async () => {
-        if (!requiredGroups.length) {
+        if (!requiredGroups.length && !requiredEmails.length) {
           if (!cancelled) setAuthState('authed');
           return;
         }
 
         const session = await fetchAuthSession();
         const groups = session.tokens?.accessToken?.payload?.['cognito:groups'] || [];
+        const email = String(session.tokens?.idToken?.payload?.email || '').toLowerCase();
         const hasGroup = requiredGroups.some((group) => groups.includes(group));
-        if (!cancelled) setAuthState(hasGroup ? 'authed' : 'forbidden');
+        const hasEmail = requiredEmails.includes(email);
+        if (!cancelled) setAuthState(hasGroup || hasEmail ? 'authed' : 'forbidden');
       })
       .catch(() => { if (!cancelled) setAuthState('unauthed'); });
     return () => { cancelled = true; };
-  }, [allowedGroupsKey, location.pathname]);
+  }, [allowedEmailsKey, allowedGroupsKey, location.pathname]);
 
   if (authState === 'checking') {
     return (

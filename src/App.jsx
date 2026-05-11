@@ -43,7 +43,10 @@ function App() {
           <Route
             path="/clients/gbautomation/*"
             element={
-              <RequireAuth allowedGroups={['tenant-gbautomation']}>
+              <RequireAuth
+                allowedGroups={['tenant-gbautomation']}
+                allowedEmails={['gblack686@gmail.com']}
+              >
                 <GbautomationPortal />
               </RequireAuth>
             }
