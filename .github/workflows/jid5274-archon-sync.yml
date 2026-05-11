@@ -56,6 +56,17 @@ jobs:
           path: _archon
           token: ${{ secrets.GBAUTOMATION_LANDING_PAT || github.token }}
 
+      - name: Checkout JID5274 second-brain context
+        uses: actions/checkout@v4
+        with:
+          repository: gbauto/jid5274
+          ref: main
+          path: _jid5274
+          token: ${{ secrets.GBAUTOMATION_LANDING_PAT || github.token }}
+          sparse-checkout: |
+            second-brain
+          sparse-checkout-cone-mode: true
+
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
@@ -64,6 +75,7 @@ jobs:
       - name: Build Archon web bundle
         working-directory: _archon
         run: |
+          cp -R ../_jid5274/second-brain ../second-brain
           bun install --frozen-lockfile
           bunx tsc --noEmit -p packages/web/tsconfig.json
           cd packages/web
@@ -74,6 +86,7 @@ jobs:
           rm -rf public/clients/jid5274/archon
           mkdir -p public/clients/jid5274/archon
           cp -R _archon/packages/web/dist/. public/clients/jid5274/archon/
+          rm -rf _archon _jid5274 second-brain
 
       - name: Build landing smoke
         run: |
