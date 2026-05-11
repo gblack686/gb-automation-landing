@@ -65,7 +65,9 @@ jobs:
         working-directory: _archon
         run: |
           bun install --frozen-lockfile
-          bun --cwd packages/web run build -- --base="$ARCHON_BASE"
+          bunx tsc --noEmit -p packages/web/tsconfig.json
+          cd packages/web
+          bunx vite build --base="$ARCHON_BASE"
 
       - name: Copy Archon bundle into landing public assets
         run: |
