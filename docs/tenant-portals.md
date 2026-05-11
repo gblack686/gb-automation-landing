@@ -14,7 +14,7 @@ This site supports private client portal routes under `/clients/<slug>/*`.
 - Route: `/clients/jid5274`
 - Auth: Cognito group `tenant-jid5274` or Jason's contact email `jid5274@gmail.com`
 - Client repository: `gbauto/jid5274`
-- Embedded app source: `gbauto/Archon` branch `feat/jason-artifacts-tab`
+- Embedded app source: `gbauto/Archon` branch `dev`
 - Static bundle path: `public/clients/jid5274/archon/`
 - Landing sync workflow: `.github/workflows/jid5274-archon-sync.yml`
 - Archon notification workflow: `gbauto/Archon/.github/workflows/notify-gbautomation-amplify.yml`
