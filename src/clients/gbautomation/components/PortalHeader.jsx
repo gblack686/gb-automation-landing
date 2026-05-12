@@ -50,6 +50,12 @@ export default function PortalHeader() {
             >
               Apps
             </Link>
+            <Link
+              to="/ops"
+              className="inline-flex min-h-0 items-center gap-2 rounded-md border border-[#D6D4C8] px-3 py-2 text-xs font-semibold uppercase tracking-widest text-[#191919]/60 hover:border-[#D97757] hover:text-[#D97757]"
+            >
+              Ops
+            </Link>
             <span className="hidden h-4 w-px bg-[#D6D4C8] sm:block" aria-hidden="true" />
             <div className="inline-flex items-center gap-1">
               <LogOut className="h-3.5 w-3.5 text-[#191919]/40" aria-hidden="true" />
