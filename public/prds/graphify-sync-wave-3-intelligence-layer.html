@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>graphify-sync Wave-3 — Intelligence Layer | GBAutomation</title>
+  <meta name="description" content="graphify-sync Wave-3 — make the graphs themselves intelligent: entity properties, edge weights, embeddings, query API, freshness scoring."/>
+  <meta property="og:title" content="graphify-sync Wave-3 — Intelligence Layer"/>
+  <meta property="og:description" content="graphify-sync Wave-3 — make the graphs themselves intelligent: entity properties, edge weights, embeddings, query API, freshness scoring."/>
+  <meta property="og:url" content="https://gbautomation.xyz/prds/graphify-sync-wave-3-intelligence-layer"/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:image" content="https://gbautomation.xyz/gb-logo.png"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:ital,opsz,wght@1,6..72,600&display=swap" rel="stylesheet"/>
+  <style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #49483e }
+.highlight { background: #272822; color: #F8F8F2 }
+.highlight .c { color: #959077 } /* Comment */
+.highlight .err { color: #ED007E; background-color: #1E0010 } /* Error */
+.highlight .esc { color: #F8F8F2 } /* Escape */
+.highlight .g { color: #F8F8F2 } /* Generic */
+.highlight .k { color: #66D9EF } /* Keyword */
+.highlight .l { color: #AE81FF } /* Literal */
+.highlight .n { color: #F8F8F2 } /* Name */
+.highlight .o { color: #FF4689 } /* Operator */
+.highlight .x { color: #F8F8F2 } /* Other */
+.highlight .p { color: #F8F8F2 } /* Punctuation */
+.highlight .ch { color: #959077 } /* Comment.Hashbang */
+.highlight .cm { color: #959077 } /* Comment.Multiline */
+.highlight .cp { color: #959077 } /* Comment.Preproc */
+.highlight .cpf { color: #959077 } /* Comment.PreprocFile */
+.highlight .c1 { color: #959077 } /* Comment.Single */
+.highlight .cs { color: #959077 } /* Comment.Special */
+.highlight .gd { color: #FF4689 } /* Generic.Deleted */
+.highlight .ge { color: #F8F8F2; font-style: italic } /* Generic.Emph */
+.highlight .ges { color: #F8F8F2; font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #F8F8F2 } /* Generic.Error */
+.highlight .gh { color: #F8F8F2 } /* Generic.Heading */
+.highlight .gi { color: #A6E22E } /* Generic.Inserted */
+.highlight .go { color: #66D9EF } /* Generic.Output */
+.highlight .gp { color: #FF4689; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { color: #F8F8F2; font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #959077 } /* Generic.Subheading */
+.highlight .gt { color: #F8F8F2 } /* Generic.Traceback */
+.highlight .kc { color: #66D9EF } /* Keyword.Constant */
+.highlight .kd { color: #66D9EF } /* Keyword.Declaration */
+.highlight .kn { color: #FF4689 } /* Keyword.Namespace */
+.highlight .kp { color: #66D9EF } /* Keyword.Pseudo */
+.highlight .kr { color: #66D9EF } /* Keyword.Reserved */
+.highlight .kt { color: #66D9EF } /* Keyword.Type */
+.highlight .ld { color: #E6DB74 } /* Literal.Date */
+.highlight .m { color: #AE81FF } /* Literal.Number */
+.highlight .s { color: #E6DB74 } /* Literal.String */
+.highlight .na { color: #A6E22E } /* Name.Attribute */
+.highlight .nb { color: #F8F8F2 } /* Name.Builtin */
+.highlight .nc { color: #A6E22E } /* Name.Class */
+.highlight .no { color: #66D9EF } /* Name.Constant */
+.highlight .nd { color: #A6E22E } /* Name.Decorator */
+.highlight .ni { color: #F8F8F2 } /* Name.Entity */
+.highlight .ne { color: #A6E22E } /* Name.Exception */
+.highlight .nf { color: #A6E22E } /* Name.Function */
+.highlight .nl { color: #F8F8F2 } /* Name.Label */
+.highlight .nn { color: #F8F8F2 } /* Name.Namespace */
+.highlight .nx { color: #A6E22E } /* Name.Other */
+.highlight .py { color: #F8F8F2 } /* Name.Property */
+.highlight .nt { color: #FF4689 } /* Name.Tag */
+.highlight .nv { color: #F8F8F2 } /* Name.Variable */
+.highlight .ow { color: #FF4689 } /* Operator.Word */
+.highlight .pm { color: #F8F8F2 } /* Punctuation.Marker */
+.highlight .w { color: #F8F8F2 } /* Text.Whitespace */
+.highlight .mb { color: #AE81FF } /* Literal.Number.Bin */
+.highlight .mf { color: #AE81FF } /* Literal.Number.Float */
+.highlight .mh { color: #AE81FF } /* Literal.Number.Hex */
+.highlight .mi { color: #AE81FF } /* Literal.Number.Integer */
+.highlight .mo { color: #AE81FF } /* Literal.Number.Oct */
+.highlight .sa { color: #E6DB74 } /* Literal.String.Affix */
+.highlight .sb { color: #E6DB74 } /* Literal.String.Backtick */
+.highlight .sc { color: #E6DB74 } /* Literal.String.Char */
+.highlight .dl { color: #E6DB74 } /* Literal.String.Delimiter */
+.highlight .sd { color: #E6DB74 } /* Literal.String.Doc */
+.highlight .s2 { color: #E6DB74 } /* Literal.String.Double */
+.highlight .se { color: #AE81FF } /* Literal.String.Escape */
+.highlight .sh { color: #E6DB74 } /* Literal.String.Heredoc */
+.highlight .si { color: #E6DB74 } /* Literal.String.Interpol */
+.highlight .sx { color: #E6DB74 } /* Literal.String.Other */
+.highlight .sr { color: #E6DB74 } /* Literal.String.Regex */
+.highlight .s1 { color: #E6DB74 } /* Literal.String.Single */
+.highlight .ss { color: #E6DB74 } /* Literal.String.Symbol */
+.highlight .bp { color: #F8F8F2 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #A6E22E } /* Name.Function.Magic */
+.highlight .vc { color: #F8F8F2 } /* Name.Variable.Class */
+.highlight .vg { color: #F8F8F2 } /* Name.Variable.Global */
+.highlight .vi { color: #F8F8F2 } /* Name.Variable.Instance */
+.highlight .vm { color: #F8F8F2 } /* Name.Variable.Magic */
+.highlight .il { color: #AE81FF } /* Literal.Number.Integer.Long */</style>
+  <style>
+    *{box-sizing:border-box;}
+    body{margin:0;padding:0;background:#F3F1E7;font-family:Inter,system-ui,sans-serif;color:#191919;-webkit-font-smoothing:antialiased;}
+    .prd-layout{display:flex;max-width:1100px;margin:0 auto;padding:32px 24px;gap:40px;align-items:flex-start;}
+    .prd-main{flex:1;min-width:0;}
+    .prd-toc{flex-shrink:0;}
+    @media(max-width:768px){.prd-toc{display:none;}}
+    a{color:#D97757;}
+  </style>
+</head>
+<body>
+<div style="background:linear-gradient(135deg,#D97757 0%,#B85a3e 100%);padding:32px 24px;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+      <a href="/prds" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
+        <div style="width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.2);
+                    display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <span style="font:italic 600 16px Newsreader,Georgia,serif;color:#fff;">gb</span>
+        </div>
+        <span style="font:italic 600 16px Newsreader,Georgia,serif;color:#fff;">GBAutomation</span>
+      </a>
+      <a href="/prds"
+         style="font:400 13px Inter,sans-serif;color:rgba(255,255,255,.8);text-decoration:none;">
+        &larr; All PRDs
+      </a>
+    </div>
+    <h1 style="font:italic 600 36px/1.2 Newsreader,Georgia,serif;
+               color:#fff;margin:24px 0 10px;">graphify-sync Wave-3 — Intelligence Layer</h1>
+    <p style="font:400 16px Inter,sans-serif;color:rgba(255,255,255,.85);margin:0 0 20px;">graphify-sync Wave-3 — make the graphs themselves intelligent: entity properties, edge weights, embeddings, query API, freshness scoring.</p>
+    <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;">
+      <span style="display:inline-block;padding:4px 10px;background:#6b6b6b;color:#fff;border-radius:12px;font:600 11px Inter,system-ui,sans-serif;text-transform:uppercase;letter-spacing:.04em;margin:2px;">running</span><span style="display:inline-block;padding:4px 10px;background:#ec4899;color:#fff;border-radius:12px;font:600 11px Inter,system-ui,sans-serif;text-transform:uppercase;letter-spacing:.04em;margin:2px;">Wave 3</span><span style="display:inline-block;padding:4px 10px;background:#D97757;color:#fff;border-radius:12px;font:600 11px Inter,system-ui,sans-serif;text-transform:uppercase;letter-spacing:.04em;margin:2px;">gbautomation</span><span style="display:inline-block;padding:4px 10px;background:#D97757;color:#fff;border-radius:12px;font:600 11px Inter,system-ui,sans-serif;text-transform:uppercase;letter-spacing:.04em;margin:2px;">tac-build</span><span style="display:inline-block;padding:4px 10px;background:#ef4444;color:#fff;border-radius:12px;font:600 11px Inter,system-ui,sans-serif;text-transform:uppercase;letter-spacing:.04em;margin:2px;">high</span><span style="display:inline-block;padding:4px 10px;background:transparent;color:#D97757;border:1px solid #D97757;border-radius:12px;font:600 11px Inter,system-ui,sans-serif;text-transform:uppercase;letter-spacing:.04em;margin:2px;">GBA-471</span>
+      <span style="font:400 12px Inter,sans-serif;color:rgba(255,255,255,.6);margin-left:8px;">2026-05-18</span>
+    </div>
+  </div>
+</div>
+
+<div class="prd-layout">
+  <div class="prd-main">
+    <h1 id="graphify-sync-wave-3-intelligence-layer" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:28px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">graphify-sync Wave-3 — Intelligence Layer</h1>
+
+<blockquote style="border-left:3px solid #D97757;margin:16px 0;padding:8px 16px;color:#6b6b6b;font-style:italic;">Wave 1 (local execution) and Wave 2 (Supabase lakehouse + 5 YAML taxonomies) ship the <strong style="font-weight:600;">plumbing</strong>. Wave 3 makes the <strong style="font-weight:600;">graphs themselves smarter</strong> so downstream agents (Finn, OpenClaw, weekly-alignment-check) can actually reason over them instead of grep-ing graph.json.</blockquote>
+
+<hr style="border:none;border-top:1px solid rgba(25,25,25,.1);margin:24px 0;">
+
+<h2 id="1-why-now" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">1. Why now</h2>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Wave-2 gave us:</p>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">1 <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">graph_runs</code> row per scan with countable status</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">N <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">graph_entities</code> rows per run (typed via <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">entity_types</code> taxonomy)</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">M <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">graph_edges</code> rows per run (typed via <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">edge_types</code> taxonomy)</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">A 5-file YAML registry under <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">second-brain/knowledge/taxonomies/</code></li>
+</ul>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">But every entity is just <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">{id, type, name}</code> and every edge is <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">{source, target, type}</code>. We can <strong style="font-weight:600;">count</strong> things now. We still can't <strong style="font-weight:600;">rank</strong> them, can't <strong style="font-weight:600;">find</strong> them by similarity, and don't know <strong style="font-weight:600;">which graphs are stale</strong>. Wave-3 fixes those three.</p>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">The repo has shipped <strong style="font-weight:600;">+226K net lines / 249 commits / 759 files</strong> since 2026-05-15, so even the freshest graphs are already drifting. Wave-3 is the layer that lets us notice that.</p>
+
+<hr style="border:none;border-top:1px solid rgba(25,25,25,.1);margin:24px 0;">
+
+<h2 id="2-goals-countable" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">2. Goals (countable)</h2>
+
+<ol style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Every entity carries <strong style="font-weight:600;">structured properties</strong> (line-count, last-modified, author, file-size, language)</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Every edge carries a <strong style="font-weight:600;">numeric weight</strong> (mention-count, co-occurrence-count, last-touched)</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Every entity has an <strong style="font-weight:600;">embedding</strong> in <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">pgvector</code> (768-dim, MiniLM-L6 or bge-small)</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">A single Python entry point <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">graphify_query.py</code> answers 5 question shapes (see §5)</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">A <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">graph_freshness</code> view ranks repos by <strong style="font-weight:600;">staleness score</strong> (commits-since-last-graphify × file-touch-density)</li>
+</ol>
+
+<hr style="border:none;border-top:1px solid rgba(25,25,25,.1);margin:24px 0;">
+
+<h2 id="3-non-goals" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">3. Non-goals</h2>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">LLM-rewriting of graphs (we use embeddings only for retrieval)</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">A web UI (CLI + Python lib only; UI is a later wave if needed)</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Cross-client entity merging (each client repo stays isolated for RLS)</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Replacing graphify itself — we <strong style="font-weight:600;">enrich</strong> its output, never fork it</li>
+</ul>
+
+<hr style="border:none;border-top:1px solid rgba(25,25,25,.1);margin:24px 0;">
+
+<h2 id="4-agent-team-4-specialists" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">4. Agent team (4 specialists)</h2>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Follows TAC convention: each specialist owns one Phase and has a tight Done definition.</p>
+
+<h3 id="41-entity-property-extractor-phase-a" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:18px;color:#191919;margin:24px 0 8px 0;line-height:1.3;">4.1 <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">entity-property-extractor</code> (Phase A)</h3>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Owns: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">resources/lib/graph_entity_enricher.py</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Reads: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">graphify-out/graph.json</code> for a repo</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">For each entity (file, symbol, concept):</li>
+</ul>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">  - If <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">entity_type=&#x27;file&#x27;</code>: run <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">wc -l</code>, <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">git log -1 --format=%aN,%aI</code>, <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">stat</code>, language via extension map</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">  - If <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">entity_type=&#x27;symbol&#x27;</code>: count lines in the symbol's span, owning file's last-author</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">  - If <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">entity_type=&#x27;concept&#x27;</code>: count how many files mention it (from existing edges)</p>
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Writes: enriched entity row with <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">properties JSONB</code> column</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Done when: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">properties</code> non-null for >= 95% of entities across 9 client repos</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Skill citation: extends <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">graph_lake_writer.py</code> from Wave-2 (<code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">resources/lib/graph_lake_writer.py:74-118</code>)</li>
+</ul>
+
+<h3 id="42-edge-weight-scorer-phase-b" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:18px;color:#191919;margin:24px 0 8px 0;line-height:1.3;">4.2 <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">edge-weight-scorer</code> (Phase B)</h3>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Owns: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">resources/lib/graph_edge_weigher.py</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">For each edge <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">(source, target, type)</code>:</li>
+</ul>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">  - <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">mentions</code>: count occurrences of <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">target.name</code> in <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">source.body</code></p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">  - <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">co_touch</code>: count git commits that touched both <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">source.path</code> and <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">target.path</code> in last 90 days</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">  - <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">recency</code>: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">exp(-days_since_last_touch / 30)</code> exponential decay</p>
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Composite weight: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">0.5<em>mentions_z + 0.3</em>co_touch_z + 0.2*recency</code> (z-scores per repo)</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Writes: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">graph_edges.weight FLOAT</code> and <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">graph_edges.weight_components JSONB</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Done when: every edge has <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">weight</code> non-null; weights normalized 0-1 per repo</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Pitfall: don't re-score every edge every run — only edges whose source/target changed since last_run</li>
+</ul>
+
+<h3 id="43-entity-embedder-phase-c" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:18px;color:#191919;margin:24px 0 8px 0;line-height:1.3;">4.3 <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">entity-embedder</code> (Phase C)</h3>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Owns: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">resources/lib/graph_embedder.py</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Embedding model: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">BAAI/bge-small-en-v1.5</code> (384-dim, runs CPU-local, no API cost)</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">For each entity, embed <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">f&quot;{entity_type} {name}\n\n{summary or first 500 chars of body}&quot;</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Storage: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">pgvector</code> column <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">embedding vector(384)</code> on <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">graph_entities</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">HNSW index for cosine similarity, <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">m=16, ef_construction=64</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Done when: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">embedding</code> non-null for >= 95% of entities; similarity query under 50ms p95 on 50K entities</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Pitfall: bge-small needs <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">sentence-transformers</code> on the Mac Mini — pin version, document in <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">requirements.txt</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Migration: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">db/migrations/2026-05-19_pgvector_embeddings.sql</code></li>
+</ul>
+
+<h3 id="44-query-api-author-phase-d" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:18px;color:#191919;margin:24px 0 8px 0;line-height:1.3;">4.4 <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">query-api-author</code> (Phase D)</h3>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Owns: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">resources/skills/graphify-sync/scripts/graphify_query.py</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">5 question shapes (CLI flags + matching Python functions):</li>
+</ul>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">  - <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">--similar &lt;entity_name&gt;</code> → top-k by cosine similarity in same client</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">  - <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">--neighbors &lt;entity_name&gt;</code> → 1-hop outgoing edges sorted by weight desc</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">  - <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">--hottest &lt;client&gt;</code> → entities with most edges touched in last 7 days</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">  - <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">--orphans &lt;client&gt;</code> → entities with degree=0 (graphify thinks they exist but nothing references them)</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">  - <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">--freshness</code> → all clients ranked by staleness score</p>
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Output: pretty Telegram-safe text by default, <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">--json</code> for machine</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Done when: all 5 flags pass smoke tests with real graphify-out data</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Skill citation: reuse <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">outbound_supabase_writer.py</code> urllib pattern (<code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">~/.hermes/lib/outbound_supabase_writer.py</code>)</li>
+</ul>
+
+<hr style="border:none;border-top:1px solid rgba(25,25,25,.1);margin:24px 0;">
+
+<h2 id="5-new-supabase-schema-single-migration" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">5. New Supabase schema (single migration)</h2>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">db/migrations/2026-05-19_graph_intelligence.sql</code>:</p>
+
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%;"><span></span><span style="color: #959077">-- Wave-3 columns on Wave-2 tables (additive only, no breaks)</span>
+
+<span style="color: #66D9EF">alter</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">table</span><span style="color: #F8F8F2"> graph_entities</span>
+<span style="color: #F8F8F2">  </span><span style="color: #66D9EF">add</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">column</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">if</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">not</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">exists</span><span style="color: #F8F8F2"> properties jsonb </span><span style="color: #66D9EF">default</span><span style="color: #F8F8F2"> </span><span style="color: #E6DB74">&#39;{}&#39;</span><span style="color: #F8F8F2">::jsonb,</span>
+<span style="color: #F8F8F2">  </span><span style="color: #66D9EF">add</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">column</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">if</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">not</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">exists</span><span style="color: #F8F8F2"> embedding vector(</span><span style="color: #AE81FF">384</span><span style="color: #F8F8F2">);</span>
+
+<span style="color: #66D9EF">alter</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">table</span><span style="color: #F8F8F2"> graph_edges</span>
+<span style="color: #F8F8F2">  </span><span style="color: #66D9EF">add</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">column</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">if</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">not</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">exists</span><span style="color: #F8F8F2"> weight float </span><span style="color: #66D9EF">default</span><span style="color: #F8F8F2"> </span><span style="color: #AE81FF">0</span><span style="color: #F8F8F2">.</span><span style="color: #AE81FF">0</span><span style="color: #F8F8F2">,</span>
+<span style="color: #F8F8F2">  </span><span style="color: #66D9EF">add</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">column</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">if</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">not</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">exists</span><span style="color: #F8F8F2"> weight_components jsonb </span><span style="color: #66D9EF">default</span><span style="color: #F8F8F2"> </span><span style="color: #E6DB74">&#39;{}&#39;</span><span style="color: #F8F8F2">::jsonb;</span>
+
+<span style="color: #959077">-- HNSW index for vector similarity (cosine distance)</span>
+<span style="color: #66D9EF">create</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">index</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">if</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">not</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">exists</span><span style="color: #F8F8F2"> graph_entities_embedding_idx</span>
+<span style="color: #F8F8F2">  </span><span style="color: #66D9EF">on</span><span style="color: #F8F8F2"> graph_entities </span><span style="color: #66D9EF">using</span><span style="color: #F8F8F2"> hnsw (embedding vector_cosine_ops)</span>
+<span style="color: #F8F8F2">  </span><span style="color: #66D9EF">with</span><span style="color: #F8F8F2"> (m </span><span style="color: #FF4689">=</span><span style="color: #F8F8F2"> </span><span style="color: #AE81FF">16</span><span style="color: #F8F8F2">, ef_construction </span><span style="color: #FF4689">=</span><span style="color: #F8F8F2"> </span><span style="color: #AE81FF">64</span><span style="color: #F8F8F2">);</span>
+
+<span style="color: #959077">-- B-tree index for weight-sorted neighbor queries</span>
+<span style="color: #66D9EF">create</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">index</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">if</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">not</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">exists</span><span style="color: #F8F8F2"> graph_edges_weight_idx</span>
+<span style="color: #F8F8F2">  </span><span style="color: #66D9EF">on</span><span style="color: #F8F8F2"> graph_edges (run_id, source_entity_id, weight </span><span style="color: #66D9EF">desc</span><span style="color: #F8F8F2">);</span>
+
+<span style="color: #959077">-- View: graph freshness per client repo</span>
+<span style="color: #66D9EF">create</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">or</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">replace</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">view</span><span style="color: #F8F8F2"> graph_freshness </span><span style="color: #66D9EF">as</span>
+<span style="color: #66D9EF">select</span>
+<span style="color: #F8F8F2">  r.client_slug,</span>
+<span style="color: #F8F8F2">  r.repo_path,</span>
+<span style="color: #F8F8F2">  </span><span style="color: #66D9EF">max</span><span style="color: #F8F8F2">(r.completed_at) </span><span style="color: #66D9EF">as</span><span style="color: #F8F8F2"> last_graphify_at,</span>
+<span style="color: #F8F8F2">  </span><span style="color: #66D9EF">extract</span><span style="color: #F8F8F2">(epoch </span><span style="color: #66D9EF">from</span><span style="color: #F8F8F2"> (now() </span><span style="color: #FF4689">-</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">max</span><span style="color: #F8F8F2">(r.completed_at))) </span><span style="color: #FF4689">/</span><span style="color: #F8F8F2"> </span><span style="color: #AE81FF">3600</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">as</span><span style="color: #F8F8F2"> hours_since,</span>
+<span style="color: #F8F8F2">  (</span><span style="color: #66D9EF">select</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">count</span><span style="color: #F8F8F2">(</span><span style="color: #FF4689">*</span><span style="color: #F8F8F2">) </span><span style="color: #66D9EF">from</span><span style="color: #F8F8F2"> graph_entities </span><span style="color: #66D9EF">where</span><span style="color: #F8F8F2"> run_id </span><span style="color: #FF4689">=</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">max</span><span style="color: #F8F8F2">(r.id)) </span><span style="color: #66D9EF">as</span><span style="color: #F8F8F2"> entity_count,</span>
+<span style="color: #F8F8F2">  (</span><span style="color: #66D9EF">select</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">count</span><span style="color: #F8F8F2">(</span><span style="color: #FF4689">*</span><span style="color: #F8F8F2">) </span><span style="color: #66D9EF">from</span><span style="color: #F8F8F2"> graph_edges </span><span style="color: #66D9EF">where</span><span style="color: #F8F8F2"> run_id </span><span style="color: #FF4689">=</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">max</span><span style="color: #F8F8F2">(r.id)) </span><span style="color: #66D9EF">as</span><span style="color: #F8F8F2"> edge_count</span>
+<span style="color: #66D9EF">from</span><span style="color: #F8F8F2"> graph_runs r</span>
+<span style="color: #66D9EF">where</span><span style="color: #F8F8F2"> r.status </span><span style="color: #FF4689">=</span><span style="color: #F8F8F2"> </span><span style="color: #E6DB74">&#39;success&#39;</span>
+<span style="color: #66D9EF">group</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">by</span><span style="color: #F8F8F2"> r.client_slug, r.repo_path</span>
+<span style="color: #66D9EF">order</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">by</span><span style="color: #F8F8F2"> hours_since </span><span style="color: #66D9EF">desc</span><span style="color: #F8F8F2">;</span>
+</pre></div>
+
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Pre-req: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">create extension if not exists vector;</code> (already in the Supabase project per Wave-2; verify in §11 step 0).</p>
+
+<hr style="border:none;border-top:1px solid rgba(25,25,25,.1);margin:24px 0;">
+
+<h2 id="6-performance-budget" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">6. Performance budget</h2>
+
+<div style="overflow-x:auto;margin:16px 0;"><table cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;"><thead><tr><th style="padding:8px 12px;text-align:left;border-bottom:2px solid #D97757;font-weight:600;font-size:13px;">Operation</th><th style="padding:8px 12px;text-align:left;border-bottom:2px solid #D97757;font-weight:600;font-size:13px;">Budget</th><th style="padding:8px 12px;text-align:left;border-bottom:2px solid #D97757;font-weight:600;font-size:13px;">Notes</th></tr></thead><tbody><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Property extraction per entity</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">&lt; 5ms</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">wc + stat + git log, all subprocess</td></tr><tr style="background:#f9f8f4;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Edge weighting per edge</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">&lt; 2ms</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">cached git log results per (source, target) pair</td></tr><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Embedding per entity (CPU)</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">&lt; 50ms</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">bge-small on Apple Silicon CPU</td></tr><tr style="background:#f9f8f4;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Similarity query</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">&lt; 50ms p95</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">HNSW, k=10, on 50K entities</td></tr><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`--freshness` full scan</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">&lt; 1s</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">view, indexed</td></tr></tbody></table></div>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Full Wave-3 enrichment pass on the gbautomation repo (~10K entities, ~50K edges) should finish in <strong style="font-weight:600;">under 8 minutes</strong>.</p>
+
+<hr style="border:none;border-top:1px solid rgba(25,25,25,.1);margin:24px 0;">
+
+<h2 id="7-pitfalls-learned-from-wave-12" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">7. Pitfalls (learned from Wave 1+2)</h2>
+
+<ol style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><strong style="font-weight:600;">Don't call <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">record_skill_run()</code> inside Wave-3 scripts</strong> — the GBA-447 Stop hook already does it. Duplicate row trap.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><strong style="font-weight:600;">bge-small needs the venv to have torch + sentence-transformers.</strong> Mac Mini venv at <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">~/.openclaw/workspace/venv/</code> is the right one. Document in <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">requirements.txt</code>.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><strong style="font-weight:600;">pgvector dim mismatches are silent.</strong> <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">vector(384)</code> is the only shape that should ever go in. If we change models, write a migration that drops + recreates the index, never <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">alter type</code>.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><strong style="font-weight:600;">Edge weights drift.</strong> Re-score on every run for changed edges only, full re-score weekly (Sunday 03:00 PT cron tick).</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><strong style="font-weight:600;">Embeddings cost CPU.</strong> Skip re-embedding when entity body hash unchanged (<code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">properties-&gt;&gt;&#x27;body_sha256&#x27;</code> check).</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><strong style="font-weight:600;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">graph_freshness</code> view must use <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">r.completed_at</code>, not <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">r.started_at</code></strong> — otherwise we count failed runs as fresh data.</li>
+</ol>
+
+<hr style="border:none;border-top:1px solid rgba(25,25,25,.1);margin:24px 0;">
+
+<h2 id="8-build-sequence-3-day-vibe-build" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">8. Build sequence (3-day vibe-build)</h2>
+
+<h3 id="day-1-phase-a-b-properties-weights" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:18px;color:#191919;margin:24px 0 8px 0;line-height:1.3;">Day 1: Phase A + B (properties + weights)</h3>
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Morning: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">entity-property-extractor</code> lands on a feature branch</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Afternoon: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">edge-weight-scorer</code> lands on same branch</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Evening: smoke test on <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">greg-trading</code> (smallest repo) — expect 100% property coverage, 100% weight coverage</li>
+</ul>
+
+<h3 id="day-2-phase-c-embeddings" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:18px;color:#191919;margin:24px 0 8px 0;line-height:1.3;">Day 2: Phase C (embeddings)</h3>
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Morning: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">pgvector</code> migration + sanity check</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Afternoon: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">entity-embedder</code> lands, embed <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">greg-trading</code> first</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Evening: similarity query smoke test ("find entities like 'cron'" should return cron-related files)</li>
+</ul>
+
+<h3 id="day-3-phase-d-query-api-roll-out" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:18px;color:#191919;margin:24px 0 8px 0;line-height:1.3;">Day 3: Phase D (query API) + roll-out</h3>
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Morning: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">graphify_query.py</code> lands with all 5 flags</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Afternoon: full enrichment pass on all 9 client repos (gbautomation, fisch-group, eagle-app, sylvan-hills, loren-piretra, pbauer, greg-trading, ceo-agents, jid5274)</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Evening: schedule weekly full re-score (Sunday 03:00 PT) + daily incremental in existing <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">daily-client-logs</code> window</li>
+</ul>
+
+<hr style="border:none;border-top:1px solid rgba(25,25,25,.1);margin:24px 0;">
+
+<h2 id="9-citations-already-shipped-components-to-reuse" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">9. Citations (already-shipped components to reuse)</h2>
+
+<div style="overflow-x:auto;margin:16px 0;"><table cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;"><thead><tr><th style="padding:8px 12px;text-align:left;border-bottom:2px solid #D97757;font-weight:600;font-size:13px;">Reuse</th><th style="padding:8px 12px;text-align:left;border-bottom:2px solid #D97757;font-weight:600;font-size:13px;">From</th><th style="padding:8px 12px;text-align:left;border-bottom:2px solid #D97757;font-weight:600;font-size:13px;">Why</th></tr></thead><tbody><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`record_skill_run()` Stop hook</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">GBA-447, PR #101</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Auto-logs every run; do not duplicate</td></tr><tr style="background:#f9f8f4;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`record_cron_run_to_supabase.py`</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">GBA-454, PR #105</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Wraps the weekly re-score cron</td></tr><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`graph_lake_writer.py` urllib pattern</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Wave-2, commit `0025c846`</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Same retry/JSONL-fallback shape for the new writers</td></tr><tr style="background:#f9f8f4;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`taxonomy.py validate()`</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Wave-2</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Validate any new entity/edge subtypes we introduce</td></tr><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`replay_skill_runs_fallback.py`</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">GBA-449, PR #102</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Drains JSONL fallback into Supabase</td></tr><tr style="background:#f9f8f4;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`check_tests_present.py` Stop hook</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">GBA-453, PR #103</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Will block PR if Wave-3 ships without tests</td></tr></tbody></table></div>
+<hr style="border:none;border-top:1px solid rgba(25,25,25,.1);margin:24px 0;">
+
+<h2 id="10-tests-required-stop-hook-will-enforce" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">10. Tests required (Stop-hook will enforce)</h2>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">tests/test_entity_properties.py</code> — every entity_type has required property keys filled</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">tests/test_edge_weights.py</code> — weights normalized 0-1, no NaN, no nulls after enrichment</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">tests/test_embeddings_dim.py</code> — every embedding is exactly 384-dim</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">tests/test_query_api.py</code> — all 5 flags return non-empty results on <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">greg-trading</code> fixture</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">tests/test_freshness_view.py</code> — view returns ≥ 1 row per registered repo</li>
+</ul>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Target: 25+ new tests, 100% pass before PR opens.</p>
+
+<hr style="border:none;border-top:1px solid rgba(25,25,25,.1);margin:24px 0;">
+
+<h2 id="11-verification-checklist-the-cron-agent-runs-this-before-claiming-done" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">11. Verification checklist (the cron-agent runs this before claiming done)</h2>
+
+<ol style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">psql -c &quot;select extname from pg_extension where extname=&#x27;vector&#x27;;&quot;</code> returns 1 row</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Migration applied: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">select count(*) from information_schema.columns where table_name=&#x27;graph_entities&#x27; and column_name=&#x27;embedding&#x27;;</code> returns 1</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Run Wave-3 enrichment on <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">greg-trading</code>: every entity has non-null <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">properties</code>, every edge has non-null <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">weight</code>, every entity has non-null <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">embedding</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">graphify_query.py --similar &#x27;cron&#x27;</code> returns ≥ 5 results in < 200ms total wall time</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">graphify_query.py --freshness</code> shows all 9 clients with non-null hours_since</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">graphify_query.py --orphans gbautomation</code> returns the list (could be empty, but command exits 0)</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Stop hook auto-wrote a <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">skill_runs</code> row for each subagent — <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">select count(*) from skill_runs where skill_name=&#x27;graphify_query&#x27; and started_at &gt; now() - interval &#x27;1 hour&#x27;;</code> returns ≥ 5</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">All 25+ tests pass: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">pytest resources/skills/graphify-sync/tests/ -q</code></li>
+</ol>
+
+<hr style="border:none;border-top:1px solid rgba(25,25,25,.1);margin:24px 0;">
+
+<h2 id="12-acceptance-criteria" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">12. Acceptance criteria</h2>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><strong style="font-weight:600;">Functional</strong>: all 5 query flags work end-to-end with real client data</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><strong style="font-weight:600;">Coverage</strong>: ≥ 95% of entities enriched (properties + embedding), ≥ 95% of edges weighted</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><strong style="font-weight:600;">Performance</strong>: similarity query < 50ms p95, full enrichment pass < 8 min on gbautomation</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><strong style="font-weight:600;">Observability</strong>: every Wave-3 run lands a row in <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">skill_runs</code> (via existing Stop hook) — no custom logging</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><strong style="font-weight:600;">Tests</strong>: 25+ new tests, 100% pass</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><strong style="font-weight:600;">Docs</strong>: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">SKILL.md</code> updated with Wave-3 section + the 5 new CLI flags</li>
+</ul>
+
+<hr style="border:none;border-top:1px solid rgba(25,25,25,.1);margin:24px 0;">
+
+<h2 id="13-out-of-scope-saved-for-wave-4" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">13. Out of scope (saved for Wave-4)</h2>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">LLM-generated entity summaries (currently we use first-500-chars; later: prompt summary)</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Cross-client entity linking (Greg appears in 4 repos; later: a <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">person:greg</code> super-entity)</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Visual graph rendering (later: ship Excalidraw / Mermaid exporter)</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Real-time graph updates (currently: daily; later: file-watcher trigger)</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Conflict resolution UI when same concept has divergent properties across clients</li>
+</ul>
+
+<hr style="border:none;border-top:1px solid rgba(25,25,25,.1);margin:24px 0;">
+
+<h2 id="14-risk-register" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">14. Risk register</h2>
+
+<div style="overflow-x:auto;margin:16px 0;"><table cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;"><thead><tr><th style="padding:8px 12px;text-align:left;border-bottom:2px solid #D97757;font-weight:600;font-size:13px;">Risk</th><th style="padding:8px 12px;text-align:left;border-bottom:2px solid #D97757;font-weight:600;font-size:13px;">Likelihood</th><th style="padding:8px 12px;text-align:left;border-bottom:2px solid #D97757;font-weight:600;font-size:13px;">Impact</th><th style="padding:8px 12px;text-align:left;border-bottom:2px solid #D97757;font-weight:600;font-size:13px;">Mitigation</th></tr></thead><tbody><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">pgvector not on managed Supabase</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Low</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">High</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Verify in §11 step 0; if absent, file ticket to enable on Supabase dashboard</td></tr><tr style="background:#f9f8f4;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">bge-small CPU is too slow</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Med</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Med</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Batch embed in groups of 64, run overnight, parallel across repos</td></tr><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Embeddings inflate row size</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Med</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Low</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">384-dim float = 1.5KB/row × 100K rows = 150MB. Within Supabase free tier headroom</td></tr><tr style="background:#f9f8f4;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Git log calls are slow on big repos</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Med</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Med</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Cache results by `(source_path, target_path, day)` keys in `.graphify-cache/`</td></tr><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Edge weight z-score breaks on small repos</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Low</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Low</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Fallback to raw counts if repo has &lt; 50 edges</td></tr></tbody></table></div>
+<hr style="border:none;border-top:1px solid rgba(25,25,25,.1);margin:24px 0;">
+
+<h2 id="questions" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">Questions</h2>
+
+<blockquote style="border-left:3px solid #D97757;margin:16px 0;padding:8px 16px;color:#6b6b6b;font-style:italic;"><strong style="font-weight:600;">Status:</strong> `<code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;"> (updated </code>`)</blockquote>
+
+<h3 id="approve-reject-or-request-edits-required" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:18px;color:#191919;margin:24px 0 8px 0;line-height:1.3;">Approve, reject, or request edits? <strong style="font-weight:600;">(required)</strong></h3>
+
+
+
+<h3 id="edit-notes-only-fill-if-you-chose-request-revisions-optional" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:18px;color:#191919;margin:24px 0 8px 0;line-height:1.3;">Edit notes (only fill if you chose 'Request revisions') _(optional)_</h3>
+
+
+
+<hr style="border:none;border-top:1px solid rgba(25,25,25,.1);margin:24px 0;">
+
+<h2 id="submit" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">Submit</h2>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">_The scanner will validate 1 required field on submit. If anything is missing, the form will reopen with a list of what's needed._</p>
+
+
+
+
+<h2 id="audit-log" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">Audit log</h2>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">_Auto-populated by the scanner once the form is submitted and dispatched._</p>
+
+
+    <div style="margin-top:48px;padding-top:24px;border-top:1px solid rgba(25,25,25,.08);">
+      <p style="font:400 13px Inter,sans-serif;color:#6b6b6b;text-align:center;">
+        Built by GBAutomation &middot;
+        <a href="https://gbautomation.xyz" style="color:#D97757;">gbautomation.xyz</a>
+        &middot; <a href="https://linear.app" style="color:#D97757;">GBA-471</a>
+      </p>
+      <p style="font:400 11px Inter,sans-serif;color:rgba(25,25,25,.3);text-align:center;margin-top:4px;">
+        Want to work together?
+        <a href="https://gbautomation.xyz/#contact" style="color:#D97757;">Get in touch &rarr;</a>
+      </p>
+    </div>
+  </div>
+  <div class="prd-toc">
+    
+<div style="position:sticky;top:24px;max-width:220px;width:100%;">
+  <div style="background:#F3F1E7;border:1px solid rgba(25,25,25,.1);
+              border-radius:12px;padding:16px;font-size:13px;">
+    <p style="font:600 11px Inter,sans-serif;text-transform:uppercase;
+              letter-spacing:.06em;color:#6b6b6b;margin:0 0 10px;">Contents</p>
+    <ul style="list-style:none;margin:0;padding:0;"><li style="margin:6px 0;padding-left:0px;"><a href="#1-why-now" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">1. Why now</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#2-goals-countable" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">2. Goals (countable)</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#3-non-goals" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">3. Non-goals</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#4-agent-team-4-specialists" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">4. Agent team (4 specialists)</a></li><li style="margin:6px 0;padding-left:12px;"><a href="#41-entity-property-extractor-phase-a" style="color:#D97757;text-decoration:none;font-size:13px;line-height:1.5;">4.1 `entity-property-extractor` (Phase A)</a></li><li style="margin:6px 0;padding-left:12px;"><a href="#42-edge-weight-scorer-phase-b" style="color:#D97757;text-decoration:none;font-size:13px;line-height:1.5;">4.2 `edge-weight-scorer` (Phase B)</a></li><li style="margin:6px 0;padding-left:12px;"><a href="#43-entity-embedder-phase-c" style="color:#D97757;text-decoration:none;font-size:13px;line-height:1.5;">4.3 `entity-embedder` (Phase C)</a></li><li style="margin:6px 0;padding-left:12px;"><a href="#44-query-api-author-phase-d" style="color:#D97757;text-decoration:none;font-size:13px;line-height:1.5;">4.4 `query-api-author` (Phase D)</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#5-new-supabase-schema-single-migration" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">5. New Supabase schema (single migration)</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#6-performance-budget" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">6. Performance budget</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#7-pitfalls-learned-from-wave-12" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">7. Pitfalls (learned from Wave 1+2)</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#8-build-sequence-3-day-vibe-build" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">8. Build sequence (3-day vibe-build)</a></li><li style="margin:6px 0;padding-left:12px;"><a href="#day-1-phase-a-b-properties-weights" style="color:#D97757;text-decoration:none;font-size:13px;line-height:1.5;">Day 1: Phase A + B (properties + weights)</a></li><li style="margin:6px 0;padding-left:12px;"><a href="#day-2-phase-c-embeddings" style="color:#D97757;text-decoration:none;font-size:13px;line-height:1.5;">Day 2: Phase C (embeddings)</a></li><li style="margin:6px 0;padding-left:12px;"><a href="#day-3-phase-d-query-api-roll-out" style="color:#D97757;text-decoration:none;font-size:13px;line-height:1.5;">Day 3: Phase D (query API) + roll-out</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#9-citations-already-shipped-components-to-reuse" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">9. Citations (already-shipped components to reuse)</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#10-tests-required-stop-hook-will-enforce" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">10. Tests required (Stop-hook will enforce)</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#11-verification-checklist-the-cron-agent-runs-this-before-claiming-done" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">11. Verification checklist (the cron-agent runs this before claiming done)</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#12-acceptance-criteria" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">12. Acceptance criteria</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#13-out-of-scope-saved-for-wave-4" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">13. Out of scope (saved for Wave-4)</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#14-risk-register" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">14. Risk register</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#questions" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">Questions</a></li><li style="margin:6px 0;padding-left:12px;"><a href="#approve-reject-or-request-edits-required" style="color:#D97757;text-decoration:none;font-size:13px;line-height:1.5;">Approve, reject, or request edits? **(required)**</a></li><li style="margin:6px 0;padding-left:12px;"><a href="#edit-notes-only-fill-if-you-chose-request-revisions-optional" style="color:#D97757;text-decoration:none;font-size:13px;line-height:1.5;">Edit notes (only fill if you chose &#x27;Request revisions&#x27;) _(optional)_</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#submit" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">Submit</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#audit-log" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">Audit log</a></li></ul>
+  </div>
+</div>
+  </div>
+</div>
+</body>
+</html>

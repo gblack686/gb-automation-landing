@@ -1,0 +1,30 @@
+[
+  {
+    "slug": "graphify-sync-local-execution-lakehouse-countable-taxonomies",
+    "title": "Graphify-Sync: Local Execution + Lakehouse + Countable Taxonomies",
+    "url": "/prds/graphify-sync-local-execution-lakehouse-countable-taxonomies",
+    "date": "2026-05-18",
+    "size_kb": 256.9
+  },
+  {
+    "slug": "graphify-sync-wave-3-intelligence-layer",
+    "title": "graphify-sync Wave-3 \u2014 Intelligence Layer",
+    "url": "/prds/graphify-sync-wave-3-intelligence-layer",
+    "date": "2026-05-18",
+    "size_kb": 70.6
+  },
+  {
+    "slug": "hourly-job-stats-telegram-ping-1h-24h-rollup-with-linked-prd-titles",
+    "title": "Hourly Job-Stats Telegram Ping \u2014 1h + 24h rollup with linked PRD titles",
+    "url": "/prds/hourly-job-stats-telegram-ping-1h-24h-rollup-with-linked-prd-titles",
+    "date": "2026-05-18",
+    "size_kb": 36.0
+  },
+  {
+    "slug": "prd-render-email-pipeline-branded-delivery-for-every-dispatched-prd",
+    "title": "PRD Render &amp; Email Pipeline \u2014 branded delivery for every dispatched PRD",
+    "url": "/prds/prd-render-email-pipeline-branded-delivery-for-every-dispatched-prd",
+    "date": "2026-05-18",
+    "size_kb": 87.6
+  }
+]

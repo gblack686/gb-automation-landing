@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Hourly Job-Stats Telegram Ping — 1h + 24h rollup with linked PRD titles | GBAutomation</title>
+  <meta name="description" content="Hourly Telegram ping with 1h + 24h job stats. Each PRD/build line is a hyperlinked title pointing to the rendered HTML on gbautomation.xyz/prds/&lt;slug&gt;."/>
+  <meta property="og:title" content="Hourly Job-Stats Telegram Ping — 1h + 24h rollup with linked PRD titles"/>
+  <meta property="og:description" content="Hourly Telegram ping with 1h + 24h job stats. Each PRD/build line is a hyperlinked title pointing to the rendered HTML on gbautomation.xyz/prds/&lt;slug&gt;."/>
+  <meta property="og:url" content="https://gbautomation.xyz/prds/hourly-job-stats-telegram-ping-1h-24h-rollup-with-linked-prd-titles"/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:image" content="https://gbautomation.xyz/gb-logo.png"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:ital,opsz,wght@1,6..72,600&display=swap" rel="stylesheet"/>
+  <style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #49483e }
+.highlight { background: #272822; color: #F8F8F2 }
+.highlight .c { color: #959077 } /* Comment */
+.highlight .err { color: #ED007E; background-color: #1E0010 } /* Error */
+.highlight .esc { color: #F8F8F2 } /* Escape */
+.highlight .g { color: #F8F8F2 } /* Generic */
+.highlight .k { color: #66D9EF } /* Keyword */
+.highlight .l { color: #AE81FF } /* Literal */
+.highlight .n { color: #F8F8F2 } /* Name */
+.highlight .o { color: #FF4689 } /* Operator */
+.highlight .x { color: #F8F8F2 } /* Other */
+.highlight .p { color: #F8F8F2 } /* Punctuation */
+.highlight .ch { color: #959077 } /* Comment.Hashbang */
+.highlight .cm { color: #959077 } /* Comment.Multiline */
+.highlight .cp { color: #959077 } /* Comment.Preproc */
+.highlight .cpf { color: #959077 } /* Comment.PreprocFile */
+.highlight .c1 { color: #959077 } /* Comment.Single */
+.highlight .cs { color: #959077 } /* Comment.Special */
+.highlight .gd { color: #FF4689 } /* Generic.Deleted */
+.highlight .ge { color: #F8F8F2; font-style: italic } /* Generic.Emph */
+.highlight .ges { color: #F8F8F2; font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #F8F8F2 } /* Generic.Error */
+.highlight .gh { color: #F8F8F2 } /* Generic.Heading */
+.highlight .gi { color: #A6E22E } /* Generic.Inserted */
+.highlight .go { color: #66D9EF } /* Generic.Output */
+.highlight .gp { color: #FF4689; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { color: #F8F8F2; font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #959077 } /* Generic.Subheading */
+.highlight .gt { color: #F8F8F2 } /* Generic.Traceback */
+.highlight .kc { color: #66D9EF } /* Keyword.Constant */
+.highlight .kd { color: #66D9EF } /* Keyword.Declaration */
+.highlight .kn { color: #FF4689 } /* Keyword.Namespace */
+.highlight .kp { color: #66D9EF } /* Keyword.Pseudo */
+.highlight .kr { color: #66D9EF } /* Keyword.Reserved */
+.highlight .kt { color: #66D9EF } /* Keyword.Type */
+.highlight .ld { color: #E6DB74 } /* Literal.Date */
+.highlight .m { color: #AE81FF } /* Literal.Number */
+.highlight .s { color: #E6DB74 } /* Literal.String */
+.highlight .na { color: #A6E22E } /* Name.Attribute */
+.highlight .nb { color: #F8F8F2 } /* Name.Builtin */
+.highlight .nc { color: #A6E22E } /* Name.Class */
+.highlight .no { color: #66D9EF } /* Name.Constant */
+.highlight .nd { color: #A6E22E } /* Name.Decorator */
+.highlight .ni { color: #F8F8F2 } /* Name.Entity */
+.highlight .ne { color: #A6E22E } /* Name.Exception */
+.highlight .nf { color: #A6E22E } /* Name.Function */
+.highlight .nl { color: #F8F8F2 } /* Name.Label */
+.highlight .nn { color: #F8F8F2 } /* Name.Namespace */
+.highlight .nx { color: #A6E22E } /* Name.Other */
+.highlight .py { color: #F8F8F2 } /* Name.Property */
+.highlight .nt { color: #FF4689 } /* Name.Tag */
+.highlight .nv { color: #F8F8F2 } /* Name.Variable */
+.highlight .ow { color: #FF4689 } /* Operator.Word */
+.highlight .pm { color: #F8F8F2 } /* Punctuation.Marker */
+.highlight .w { color: #F8F8F2 } /* Text.Whitespace */
+.highlight .mb { color: #AE81FF } /* Literal.Number.Bin */
+.highlight .mf { color: #AE81FF } /* Literal.Number.Float */
+.highlight .mh { color: #AE81FF } /* Literal.Number.Hex */
+.highlight .mi { color: #AE81FF } /* Literal.Number.Integer */
+.highlight .mo { color: #AE81FF } /* Literal.Number.Oct */
+.highlight .sa { color: #E6DB74 } /* Literal.String.Affix */
+.highlight .sb { color: #E6DB74 } /* Literal.String.Backtick */
+.highlight .sc { color: #E6DB74 } /* Literal.String.Char */
+.highlight .dl { color: #E6DB74 } /* Literal.String.Delimiter */
+.highlight .sd { color: #E6DB74 } /* Literal.String.Doc */
+.highlight .s2 { color: #E6DB74 } /* Literal.String.Double */
+.highlight .se { color: #AE81FF } /* Literal.String.Escape */
+.highlight .sh { color: #E6DB74 } /* Literal.String.Heredoc */
+.highlight .si { color: #E6DB74 } /* Literal.String.Interpol */
+.highlight .sx { color: #E6DB74 } /* Literal.String.Other */
+.highlight .sr { color: #E6DB74 } /* Literal.String.Regex */
+.highlight .s1 { color: #E6DB74 } /* Literal.String.Single */
+.highlight .ss { color: #E6DB74 } /* Literal.String.Symbol */
+.highlight .bp { color: #F8F8F2 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #A6E22E } /* Name.Function.Magic */
+.highlight .vc { color: #F8F8F2 } /* Name.Variable.Class */
+.highlight .vg { color: #F8F8F2 } /* Name.Variable.Global */
+.highlight .vi { color: #F8F8F2 } /* Name.Variable.Instance */
+.highlight .vm { color: #F8F8F2 } /* Name.Variable.Magic */
+.highlight .il { color: #AE81FF } /* Literal.Number.Integer.Long */</style>
+  <style>
+    *{box-sizing:border-box;}
+    body{margin:0;padding:0;background:#F3F1E7;font-family:Inter,system-ui,sans-serif;color:#191919;-webkit-font-smoothing:antialiased;}
+    .prd-layout{display:flex;max-width:1100px;margin:0 auto;padding:32px 24px;gap:40px;align-items:flex-start;}
+    .prd-main{flex:1;min-width:0;}
+    .prd-toc{flex-shrink:0;}
+    @media(max-width:768px){.prd-toc{display:none;}}
+    a{color:#D97757;}
+  </style>
+</head>
+<body>
+<div style="background:linear-gradient(135deg,#D97757 0%,#B85a3e 100%);padding:32px 24px;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+      <a href="/prds" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
+        <div style="width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.2);
+                    display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <span style="font:italic 600 16px Newsreader,Georgia,serif;color:#fff;">gb</span>
+        </div>
+        <span style="font:italic 600 16px Newsreader,Georgia,serif;color:#fff;">GBAutomation</span>
+      </a>
+      <a href="/prds"
+         style="font:400 13px Inter,sans-serif;color:rgba(255,255,255,.8);text-decoration:none;">
+        &larr; All PRDs
+      </a>
+    </div>
+    <h1 style="font:italic 600 36px/1.2 Newsreader,Georgia,serif;
+               color:#fff;margin:24px 0 10px;">Hourly Job-Stats Telegram Ping — 1h + 24h rollup with linked PRD titles</h1>
+    <p style="font:400 16px Inter,sans-serif;color:rgba(255,255,255,.85);margin:0 0 20px;">Hourly Telegram ping with 1h + 24h job stats. Each PRD/build line is a hyperlinked title pointing to the rendered HTML on gbautomation.xyz/prds/&lt;slug&gt;.</p>
+    <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;">
+      <span style="display:inline-block;padding:4px 10px;background:#ef4444;color:#fff;border-radius:12px;font:600 11px Inter,system-ui,sans-serif;text-transform:uppercase;letter-spacing:.04em;margin:2px;">failed</span><span style="display:inline-block;padding:4px 10px;background:#D97757;color:#fff;border-radius:12px;font:600 11px Inter,system-ui,sans-serif;text-transform:uppercase;letter-spacing:.04em;margin:2px;">gbautomation</span><span style="display:inline-block;padding:4px 10px;background:#D97757;color:#fff;border-radius:12px;font:600 11px Inter,system-ui,sans-serif;text-transform:uppercase;letter-spacing:.04em;margin:2px;">tac-build</span><span style="display:inline-block;padding:4px 10px;background:#f59e0b;color:#fff;border-radius:12px;font:600 11px Inter,system-ui,sans-serif;text-transform:uppercase;letter-spacing:.04em;margin:2px;">med</span><span style="display:inline-block;padding:4px 10px;background:transparent;color:#D97757;border:1px solid #D97757;border-radius:12px;font:600 11px Inter,system-ui,sans-serif;text-transform:uppercase;letter-spacing:.04em;margin:2px;">GBA-473</span>
+      <span style="font:400 12px Inter,sans-serif;color:rgba(255,255,255,.6);margin-left:8px;">2026-05-18</span>
+    </div>
+  </div>
+</div>
+
+<div class="prd-layout">
+  <div class="prd-main">
+    <h1 id="hourly-job-stats-telegram-ping-1h-24h-rollup-with-linked-prd-titles" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:28px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">Hourly Job-Stats Telegram Ping — 1h + 24h rollup with linked PRD titles</h1>
+
+<blockquote style="border-left:3px solid #D97757;margin:16px 0;padding:8px 16px;color:#6b6b6b;font-style:italic;">One short Telegram message every hour. Shows what shipped, what's building, what failed — last hour and last 24h. Every PRD/build title is a hyperlink to its rendered HTML on <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">gbautomation.xyz/prds/&lt;slug&gt;</code> (from GBA-473).</blockquote>
+
+<hr style="border:none;border-top:1px solid rgba(25,25,25,.1);margin:24px 0;">
+
+<h2 id="1-why" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">1. Why</h2>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">You already get <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">jobs-pulse-15min</code> and the auto-commit pings. Those are operational noise. This ping is a <strong style="font-weight:600;">signal-only digest</strong> — once an hour, what's actually moving. Anything with a title links out to the branded HTML page so you can tap and read on the phone.</p>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">If the hour was silent (zero events), the ping is suppressed entirely — no "nothing happened" pings.</p>
+
+<hr style="border:none;border-top:1px solid rgba(25,25,25,.1);margin:24px 0;">
+
+<h2 id="2-goals-countable" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">2. Goals (countable)</h2>
+
+<ol style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Telegram message fires at <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">:00</code> every hour from 7am to midnight PT</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Message contains <strong style="font-weight:600;">two rolling windows</strong>: last 1h + last 24h</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Every PRD/build title is a tappable hyperlink to <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">gbautomation.xyz/prds/&lt;slug&gt;</code> (or the markdown if not yet rendered)</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Message is <strong style="font-weight:600;">silent</strong> when zero events in last hour</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Total message length under 4096 chars (Telegram cap)</li>
+</ol>
+
+<hr style="border:none;border-top:1px solid rgba(25,25,25,.1);margin:24px 0;">
+
+<h2 id="3-message-shape" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">3. Message shape</h2>
+
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%;"><span></span>📊 GBAuto pulse — 11:00 PM PT
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">⏱ Last 1h</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">• 1 PRD dispatched: <a href="https://gbautomation.xyz/prds/graphify-sync-wave-3" style="color:#D97757;text-decoration:underline;">graphify-sync wave-3</a></p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">• 2 commits to main</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">• 0 builds finished</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">• 0 failures</p>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">📅 Last 24h</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">• 5 PRDs dispatched · 3 shipped · 0 failed</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">• 12 commits to main · 4 Linear issues closed</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">• Top: <a href="https://gbautomation.xyz/prds/prd-render-and-email-pipeline" style="color:#D97757;text-decoration:underline;">PRD render &amp;amp; email pipeline</a></p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">• Top: <a href="https://gbautomation.xyz/prds/graphify-sync-wave-3" style="color:#D97757;text-decoration:underline;">graphify-sync wave-3</a></p>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">🔧 Health: 16 crons OK · 1 erroring (mirror-hermes)</p>
+</pre></div>
+
+
+<hr style="border:none;border-top:1px solid rgba(25,25,25,.1);margin:24px 0;">
+
+<h2 id="4-data-sources" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">4. Data sources</h2>
+
+<div style="overflow-x:auto;margin:16px 0;"><table cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;"><thead><tr><th style="padding:8px 12px;text-align:left;border-bottom:2px solid #D97757;font-weight:600;font-size:13px;">Stat</th><th style="padding:8px 12px;text-align:left;border-bottom:2px solid #D97757;font-weight:600;font-size:13px;">Source</th></tr></thead><tbody><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">PRDs dispatched (1h/24h)</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`skill_outputs` where `output_type=&#x27;prd_dispatch&#x27;`</td></tr><tr style="background:#f9f8f4;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Builds finished</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`cron_runs` + `skill_runs` joined, GBA-454 schema</td></tr><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Failures</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`skill_runs.status=&#x27;failed&#x27;` or GHA conclusion=failure</td></tr><tr style="background:#f9f8f4;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Commits</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`git log --since=1.hour main` in `~/repos/gbautomation`</td></tr><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Linear closed</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Linear GraphQL: issues with `state.type=&#x27;completed&#x27;` updated in window</td></tr><tr style="background:#f9f8f4;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Cron health</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`hermes cronjob list --json`, count last_status==error</td></tr><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">PRD slugs</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`skill_outputs.output_data-&gt;&gt;&#x27;slug&#x27;` joined to `public_url`</td></tr></tbody></table></div>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">All queries run via <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">urllib</code> (no Supabase SDK), 5-second timeout, JSONL fallback if Supabase unreachable.</p>
+
+<hr style="border:none;border-top:1px solid rgba(25,25,25,.1);margin:24px 0;">
+
+<h2 id="5-script-hermesscriptshourly-job-pulsesh" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">5. Script (<code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">~/.hermes/scripts/hourly-job-pulse.sh</code>)</h2>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">no_agent: true</code> cron (no LLM cost)</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Reads SUPABASE_URL + SUPABASE_SERVICE_KEY from AWS Secrets Manager (existing pattern)</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Builds the message using Python (<code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">hourly_pulse.py</code>)</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Exits silent (empty stdout) when hour was zero-event → cron framework suppresses delivery automatically</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Otherwise emits Markdown to stdout, cron framework delivers to Telegram home channel</li>
+</ul>
+
+<hr style="border:none;border-top:1px solid rgba(25,25,25,.1);margin:24px 0;">
+
+<h2 id="6-cron-registration" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">6. Cron registration</h2>
+
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%;"><span></span>schedule: 0 7-23 * * *      # top of every hour, 7am-11pm PT
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">deliver: origin              # Greg&#39;s Telegram home</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">script: hourly-job-pulse.sh</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">no_agent: true</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">name: hourly-job-pulse</p>
+</pre></div>
+
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Quiet hours: midnight to 6am skipped.</p>
+
+<hr style="border:none;border-top:1px solid rgba(25,25,25,.1);margin:24px 0;">
+
+<h2 id="7-hyperlinks" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">7. Hyperlinks</h2>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Markdown links work natively in Telegram (<code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;"><a href="url" style="color:#D97757;text-decoration:underline;">title</a></code>). Two cases:</p>
+
+<ol style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><strong style="font-weight:600;">PRD has been rendered+published</strong> (GBA-473 pipeline ran): link to <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">https://gbautomation.xyz/prds/&lt;slug&gt;</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><strong style="font-weight:600;">PRD not yet rendered</strong> (rendering pending or failed): link to the GitHub raw markdown at <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">https://github.com/gbauto/gbautomation/blob/main/second-brain/inbox/_archive/&lt;date&gt;/&lt;slug&gt;.md</code></li>
+</ol>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">The script checks <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">skill_outputs</code> for a <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">prd_dispatch</code> row matching the slug to decide which URL to use.</p>
+
+<hr style="border:none;border-top:1px solid rgba(25,25,25,.1);margin:24px 0;">
+
+<h2 id="8-pitfalls" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">8. Pitfalls</h2>
+
+<ol style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Telegram strips Markdown if any character in the message confuses its parser — wrap titles in <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">[]()</code> only, no nested formatting</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Long PRD titles get truncated visually but the link still works</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">cron_runs</code> queries that span timezones — always use UTC in SQL, convert for display only</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Skip the ping during builds-in-progress windows that span the hour boundary (don't double-count)</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Silent hours mean <strong style="font-weight:600;">truly silent</strong> — empty stdout, not "no events"; the cron framework treats empty as "skip delivery" when <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">no_agent=true</code></li>
+</ol>
+
+<hr style="border:none;border-top:1px solid rgba(25,25,25,.1);margin:24px 0;">
+
+<h2 id="9-tests" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">9. Tests</h2>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">tests/test_message_shape.py</code> — golden file for 4 scenarios (busy/quiet/all-failing/mixed)</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">tests/test_link_resolution.py</code> — slug → URL resolves correctly in both rendered + raw cases</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">tests/test_silent_hour.py</code> — zero-event hour returns empty string</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">tests/test_under_4096.py</code> — even worst-case (50 events) fits in Telegram limit</li>
+</ul>
+
+<hr style="border:none;border-top:1px solid rgba(25,25,25,.1);margin:24px 0;">
+
+<h2 id="10-build-sequence-1-day-vibe-build" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">10. Build sequence (1-day vibe-build)</h2>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Morning: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">hourly_pulse.py</code> lands with stub data</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Afternoon: wire real Supabase queries + Linear + git</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Evening: register cron, run for 3 cycles, verify</li>
+</ul>
+
+<hr style="border:none;border-top:1px solid rgba(25,25,25,.1);margin:24px 0;">
+
+<h2 id="11-acceptance" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">11. Acceptance</h2>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Pings arrive at <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">:00</code> every hour 7am-11pm PT</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Zero-event hours produce zero pings</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">100% of PRD/build titles render as tappable links</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Tests pass: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">pytest ~/.hermes/scripts/tests/test_hourly_pulse*.py</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">1 week of pings reviewed by Greg, signal-to-noise judged acceptable</li>
+</ul>
+
+<hr style="border:none;border-top:1px solid rgba(25,25,25,.1);margin:24px 0;">
+
+<h2 id="12-out-of-scope" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">12. Out of scope</h2>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Inline charts (text only for now)</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Per-client breakdowns (will add when we ship per-client dashboards)</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Reply-to-ping interactions (no commands yet, read-only)</li>
+</ul>
+
+<hr style="border:none;border-top:1px solid rgba(25,25,25,.1);margin:24px 0;">
+
+<h2 id="questions" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">Questions</h2>
+
+<blockquote style="border-left:3px solid #D97757;margin:16px 0;padding:8px 16px;color:#6b6b6b;font-style:italic;"><strong style="font-weight:600;">Status:</strong> `<code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;"> (updated </code>`)</blockquote>
+
+<h3 id="approve-reject-or-request-edits-required" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:18px;color:#191919;margin:24px 0 8px 0;line-height:1.3;">Approve, reject, or request edits? <strong style="font-weight:600;">(required)</strong></h3>
+
+
+
+<h3 id="edit-notes-only-fill-if-you-chose-request-revisions-optional" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:18px;color:#191919;margin:24px 0 8px 0;line-height:1.3;">Edit notes (only fill if you chose 'Request revisions') _(optional)_</h3>
+
+
+
+<hr style="border:none;border-top:1px solid rgba(25,25,25,.1);margin:24px 0;">
+
+<h2 id="submit" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">Submit</h2>
+
+
+
+<h2 id="audit-log" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">Audit log</h2>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">_Auto-populated by the scanner once the form is submitted and dispatched._</p>
+
+<h2 id="build-report-2026-05-18t230735-0700" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">Build report (2026-05-18T23:07:35-07:00)</h2>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Status: <strong style="font-weight:600;">failed</strong> (exit code 1)</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Turns: 7</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Cost: $0.1246</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Duration: 34.4s</li>
+</ul>
+
+<h3 id="final-report-from-agent" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:18px;color:#191919;margin:24px 0 8px 0;line-height:1.3;">Final report from agent</h3>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;"><strong style="font-weight:600;">HARD STOP -- PLAN.md not found.</strong></p>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">The PRD at <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">/Users/greg/.hermes/scripts/PLAN.md</code> does not exist. I searched the entire <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">.hermes</code> subtree and found nothing. Per the build constraints, I am stopping here rather than proceeding.</p>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Failure report written to:</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">/tmp/tac-build-2026-05-18-hourly-job-pulse-telegram-failure.md</code></p>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;"><strong style="font-weight:600;">To unblock this build:</strong> place <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">PLAN.md</code> in <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">/Users/greg/.hermes/scripts/</code> and re-invoke. The file must contain at minimum sections 4 (Agent Team), 12 (Build Sequence), and 14 (Agent Team Configuration).</p>
+
+    <div style="margin-top:48px;padding-top:24px;border-top:1px solid rgba(25,25,25,.08);">
+      <p style="font:400 13px Inter,sans-serif;color:#6b6b6b;text-align:center;">
+        Built by GBAutomation &middot;
+        <a href="https://gbautomation.xyz" style="color:#D97757;">gbautomation.xyz</a>
+        &middot; <a href="https://linear.app" style="color:#D97757;">GBA-473</a>
+      </p>
+      <p style="font:400 11px Inter,sans-serif;color:rgba(25,25,25,.3);text-align:center;margin-top:4px;">
+        Want to work together?
+        <a href="https://gbautomation.xyz/#contact" style="color:#D97757;">Get in touch &rarr;</a>
+      </p>
+    </div>
+  </div>
+  <div class="prd-toc">
+    
+<div style="position:sticky;top:24px;max-width:220px;width:100%;">
+  <div style="background:#F3F1E7;border:1px solid rgba(25,25,25,.1);
+              border-radius:12px;padding:16px;font-size:13px;">
+    <p style="font:600 11px Inter,sans-serif;text-transform:uppercase;
+              letter-spacing:.06em;color:#6b6b6b;margin:0 0 10px;">Contents</p>
+    <ul style="list-style:none;margin:0;padding:0;"><li style="margin:6px 0;padding-left:0px;"><a href="#1-why" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">1. Why</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#2-goals-countable" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">2. Goals (countable)</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#3-message-shape" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">3. Message shape</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#4-data-sources" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">4. Data sources</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#5-script-hermesscriptshourly-job-pulsesh" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">5. Script (`~/.hermes/scripts/hourly-job-pulse.sh`)</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#6-cron-registration" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">6. Cron registration</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#7-hyperlinks" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">7. Hyperlinks</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#8-pitfalls" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">8. Pitfalls</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#9-tests" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">9. Tests</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#10-build-sequence-1-day-vibe-build" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">10. Build sequence (1-day vibe-build)</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#11-acceptance" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">11. Acceptance</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#12-out-of-scope" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">12. Out of scope</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#questions" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">Questions</a></li><li style="margin:6px 0;padding-left:12px;"><a href="#approve-reject-or-request-edits-required" style="color:#D97757;text-decoration:none;font-size:13px;line-height:1.5;">Approve, reject, or request edits? **(required)**</a></li><li style="margin:6px 0;padding-left:12px;"><a href="#edit-notes-only-fill-if-you-chose-request-revisions-optional" style="color:#D97757;text-decoration:none;font-size:13px;line-height:1.5;">Edit notes (only fill if you chose &#x27;Request revisions&#x27;) _(optional)_</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#submit" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">Submit</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#audit-log" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">Audit log</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#build-report-2026-05-18t230735-0700" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">Build report (2026-05-18T23:07:35-07:00)</a></li><li style="margin:6px 0;padding-left:12px;"><a href="#final-report-from-agent" style="color:#D97757;text-decoration:none;font-size:13px;line-height:1.5;">Final report from agent</a></li></ul>
+  </div>
+</div>
+  </div>
+</div>
+</body>
+</html>

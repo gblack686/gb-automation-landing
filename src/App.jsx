@@ -7,6 +7,8 @@ import Artifacts from './pages/Artifacts';
 import Blockers from './pages/Blockers';
 import YouTubeIntel from './pages/YouTubeIntel';
 import Login from './pages/Login';
+import PRDIndex from './pages/PRDIndex';
+import PRDView from './pages/PRDView';
 import RequireAuth from './components/RequireAuth';
 import GbautomationPortal from './clients/gbautomation/routes';
 import Jid5274Portal from './clients/jid5274/routes';
@@ -17,11 +19,13 @@ function App() {
     <Authenticator.Provider>
       <Router>
         <Routes>
-          {/* Public â€” only the homepage */}
+          {/* Public — homepage + PRDs */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/prds" element={<PRDIndex />} />
+          <Route path="/prds/:slug" element={<PRDView />} />
 
-          {/* Gated â€” everything behind sign-in */}
+          {/* Gated — everything behind sign-in */}
           <Route
             path="/plan"
             element={<RequireAuth><Plan /></RequireAuth>}
@@ -82,4 +86,3 @@ function App() {
 }
 
 export default App;
-
