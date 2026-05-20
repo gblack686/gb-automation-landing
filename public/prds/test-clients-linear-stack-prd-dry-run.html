@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="supported-color-schemes" content="light dark"/>
+  <title>test-clients Linear Stack PRD Dry Run | GBAutomation</title>
+  <meta name="description" content="test-clients Linear Stack PRD Dry Run"/>
+  <meta property="og:title" content="test-clients Linear Stack PRD Dry Run"/>
+  <meta property="og:description" content="test-clients Linear Stack PRD Dry Run"/>
+  <meta property="og:url" content="https://gbautomation.xyz/prds/test-clients-linear-stack-prd-dry-run"/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:image" content="https://gbautomation.xyz/gb-logo.png"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:ital,opsz,wght@1,6..72,600&display=swap" rel="stylesheet"/>
+  <style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #49483e }
+.highlight { background: #272822; color: #F8F8F2 }
+.highlight .c { color: #959077 } /* Comment */
+.highlight .err { color: #ED007E; background-color: #1E0010 } /* Error */
+.highlight .esc { color: #F8F8F2 } /* Escape */
+.highlight .g { color: #F8F8F2 } /* Generic */
+.highlight .k { color: #66D9EF } /* Keyword */
+.highlight .l { color: #AE81FF } /* Literal */
+.highlight .n { color: #F8F8F2 } /* Name */
+.highlight .o { color: #FF4689 } /* Operator */
+.highlight .x { color: #F8F8F2 } /* Other */
+.highlight .p { color: #F8F8F2 } /* Punctuation */
+.highlight .ch { color: #959077 } /* Comment.Hashbang */
+.highlight .cm { color: #959077 } /* Comment.Multiline */
+.highlight .cp { color: #959077 } /* Comment.Preproc */
+.highlight .cpf { color: #959077 } /* Comment.PreprocFile */
+.highlight .c1 { color: #959077 } /* Comment.Single */
+.highlight .cs { color: #959077 } /* Comment.Special */
+.highlight .gd { color: #FF4689 } /* Generic.Deleted */
+.highlight .ge { color: #F8F8F2; font-style: italic } /* Generic.Emph */
+.highlight .ges { color: #F8F8F2; font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #F8F8F2 } /* Generic.Error */
+.highlight .gh { color: #F8F8F2 } /* Generic.Heading */
+.highlight .gi { color: #A6E22E } /* Generic.Inserted */
+.highlight .go { color: #66D9EF } /* Generic.Output */
+.highlight .gp { color: #FF4689; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { color: #F8F8F2; font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #959077 } /* Generic.Subheading */
+.highlight .gt { color: #F8F8F2 } /* Generic.Traceback */
+.highlight .kc { color: #66D9EF } /* Keyword.Constant */
+.highlight .kd { color: #66D9EF } /* Keyword.Declaration */
+.highlight .kn { color: #FF4689 } /* Keyword.Namespace */
+.highlight .kp { color: #66D9EF } /* Keyword.Pseudo */
+.highlight .kr { color: #66D9EF } /* Keyword.Reserved */
+.highlight .kt { color: #66D9EF } /* Keyword.Type */
+.highlight .ld { color: #E6DB74 } /* Literal.Date */
+.highlight .m { color: #AE81FF } /* Literal.Number */
+.highlight .s { color: #E6DB74 } /* Literal.String */
+.highlight .na { color: #A6E22E } /* Name.Attribute */
+.highlight .nb { color: #F8F8F2 } /* Name.Builtin */
+.highlight .nc { color: #A6E22E } /* Name.Class */
+.highlight .no { color: #66D9EF } /* Name.Constant */
+.highlight .nd { color: #A6E22E } /* Name.Decorator */
+.highlight .ni { color: #F8F8F2 } /* Name.Entity */
+.highlight .ne { color: #A6E22E } /* Name.Exception */
+.highlight .nf { color: #A6E22E } /* Name.Function */
+.highlight .nl { color: #F8F8F2 } /* Name.Label */
+.highlight .nn { color: #F8F8F2 } /* Name.Namespace */
+.highlight .nx { color: #A6E22E } /* Name.Other */
+.highlight .py { color: #F8F8F2 } /* Name.Property */
+.highlight .nt { color: #FF4689 } /* Name.Tag */
+.highlight .nv { color: #F8F8F2 } /* Name.Variable */
+.highlight .ow { color: #FF4689 } /* Operator.Word */
+.highlight .pm { color: #F8F8F2 } /* Punctuation.Marker */
+.highlight .w { color: #F8F8F2 } /* Text.Whitespace */
+.highlight .mb { color: #AE81FF } /* Literal.Number.Bin */
+.highlight .mf { color: #AE81FF } /* Literal.Number.Float */
+.highlight .mh { color: #AE81FF } /* Literal.Number.Hex */
+.highlight .mi { color: #AE81FF } /* Literal.Number.Integer */
+.highlight .mo { color: #AE81FF } /* Literal.Number.Oct */
+.highlight .sa { color: #E6DB74 } /* Literal.String.Affix */
+.highlight .sb { color: #E6DB74 } /* Literal.String.Backtick */
+.highlight .sc { color: #E6DB74 } /* Literal.String.Char */
+.highlight .dl { color: #E6DB74 } /* Literal.String.Delimiter */
+.highlight .sd { color: #E6DB74 } /* Literal.String.Doc */
+.highlight .s2 { color: #E6DB74 } /* Literal.String.Double */
+.highlight .se { color: #AE81FF } /* Literal.String.Escape */
+.highlight .sh { color: #E6DB74 } /* Literal.String.Heredoc */
+.highlight .si { color: #E6DB74 } /* Literal.String.Interpol */
+.highlight .sx { color: #E6DB74 } /* Literal.String.Other */
+.highlight .sr { color: #E6DB74 } /* Literal.String.Regex */
+.highlight .s1 { color: #E6DB74 } /* Literal.String.Single */
+.highlight .ss { color: #E6DB74 } /* Literal.String.Symbol */
+.highlight .bp { color: #F8F8F2 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #A6E22E } /* Name.Function.Magic */
+.highlight .vc { color: #F8F8F2 } /* Name.Variable.Class */
+.highlight .vg { color: #F8F8F2 } /* Name.Variable.Global */
+.highlight .vi { color: #F8F8F2 } /* Name.Variable.Instance */
+.highlight .vm { color: #F8F8F2 } /* Name.Variable.Magic */
+.highlight .il { color: #AE81FF } /* Literal.Number.Integer.Long */</style>
+  <style>
+    *{box-sizing:border-box;}
+    body{margin:0;padding:0;background:#F3F1E7;font-family:Inter,system-ui,sans-serif;color:#191919;-webkit-font-smoothing:antialiased;}
+    .prd-layout{display:flex;max-width:1100px;margin:0 auto;padding:32px 24px;gap:40px;align-items:flex-start;}
+    .prd-main{flex:1;min-width:0;}
+    .prd-toc{flex-shrink:0;}
+    @media(max-width:768px){.prd-toc{display:none;}}
+    a{color:#D97757;}
+    /* iOS Safari / Chrome dark-mode pill guard for the public page.
+       Same logic as the email template: lock pill text color so Apple's
+       auto-tint of taxonomy backgrounds doesn't kill contrast. The page
+       chrome itself stays light (the terra hero + cream body are central
+       to the brand identity and we don't ship a full dark theme). */
+    @media (prefers-color-scheme: dark) {
+      .pill.pill-solid {
+        color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
+      }
+      .pill.pill-outline {
+        background-color: transparent !important;
+      }
+    }
+  </style>
+</head>
+<body>
+<div style="background:linear-gradient(135deg,#D97757 0%,#B85a3e 100%);padding:32px 24px;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+      <a href="/prds" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
+        <div style="width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.2);
+                    display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <span style="font:italic 600 16px Newsreader,Georgia,serif;color:#fff;">gb</span>
+        </div>
+        <span style="font:italic 600 16px Newsreader,Georgia,serif;color:#fff;">GBAutomation</span>
+      </a>
+      <a href="/prds"
+         style="font:400 13px Inter,sans-serif;color:rgba(255,255,255,.8);text-decoration:none;">
+        &larr; All PRDs
+      </a>
+    </div>
+    <h1 style="font:italic 600 36px/1.2 Newsreader,Georgia,serif;
+               color:#fff;margin:24px 0 10px;">test-clients Linear Stack PRD Dry Run</h1>
+    
+    <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;">
+      
+      
+    </div>
+  </div>
+</div>
+
+<div class="prd-layout">
+  <div class="prd-main">
+    <h1 id="test-clients-linear-stack-prd-dry-run" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:28px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">test-clients Linear Stack PRD Dry Run</h1>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Date: 2026-05-20</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Target repo: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">gbauto/test-clients</code></p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Client slug: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">test-clients</code></p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Client upper: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">TEST_CLIENTS</code></p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Skill source: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">/Users/greg/.hermes/skills/devops/deploy-linear-stack/SKILL.md</code></p>
+
+<h2 id="goal" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">Goal</h2>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Produce a dry-run provisioning plan for the <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">deploy-linear-stack</code> workflow applied to <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">test-clients</code>, without creating real AWS, GitHub Actions, Supabase, Bitwarden, Hermes, or <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">clients.yaml</code> resources.</p>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">The real run should wire a complete autonomous-build Linear stack for <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">test-clients</code>:</p>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">AWS Secrets Manager entries for OAuth, Linear, GitHub, Telegram, and Supabase credentials.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">GitHub Actions secrets on <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">gbauto/test-clients</code>.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Per-client Supabase tables from the Linear autonomous-build templates.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Hermes profile instructions.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">A proposed <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">clients.yaml</code> registration block.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Smoke tests and rollback guidance.</li>
+</ul>
+
+<h2 id="non-goals" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">Non-Goals</h2>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Do not create, update, or put AWS Secrets Manager secret values during this dry run.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Do not run <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">gh secret set</code>.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Do not run <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">supabase db push</code>, <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">supabase db execute</code>, <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">psql</code>, or any DDL against the gbautomation Supabase project.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Do not modify <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">/Users/greg/.openclaw/workspace/_shared/clients.yaml</code>.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Do not run <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">bw</code> against Bitwarden.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Do not run <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">hermes profile create test-clients</code>.</li>
+</ul>
+
+<h2 id="success-criteria" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">Success Criteria</h2>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">This branch contains a complete PRD and executable dry-run-first provisioning script.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">All destructive operations are represented as proposed commands only.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Missing prerequisites are listed in <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">docs/preflight-gaps.md</code>.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">config/clients-yaml-diff.md</code> contains a proposed unified diff only.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">The branch <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">linear-stack-prd</code> is pushed to <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">gbauto/test-clients</code>.</li>
+</ul>
+
+<h2 id="step-plan-from-deploy-linear-stack" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">Step Plan From deploy-linear-stack</h2>
+
+<h3 id="step-1-validate-prerequisites" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:18px;color:#191919;margin:24px 0 8px 0;line-height:1.3;">Step 1: Validate Prerequisites</h3>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Required tools:</p>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">aws</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">gh</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">bw</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">jq</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">supabase</code> or <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">psql</code> plus <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">DATABASE_URL</code> for a real database apply</li>
+</ul>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Dry-run checks performed for this PRD:</p>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">gh api /repos/gbauto/test-clients</code> succeeded.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">aws sts get-caller-identity</code> succeeded for account <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">274487662938</code>.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">aws secretsmanager list-secrets</code> was used for read-only inventory.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">gh secret list --repo gbauto/test-clients</code> was used for read-only inventory.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">clients.yaml</code> was read but not modified.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">bw</code> was not run by design.</li>
+</ul>
+
+<h3 id="step-2-bitwarden-oauth-to-aws-secrets-manager" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:18px;color:#191919;margin:24px 0 8px 0;line-height:1.3;">Step 2: Bitwarden OAuth to AWS Secrets Manager</h3>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Required Bitwarden item:</p>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Item name: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">test-clients-claude-oauth</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Required field: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">credentials</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Field value format: full Claude Code CLI OAuth JSON blob suitable for <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">~/.claude/.credentials.json</code></li>
+</ul>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Real-run AWS target:</p>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Secret name: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">test-clients/claude-oauth-key</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Tags:</li>
+</ul>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">  - <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">client=test-clients</code></p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">  - <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">managed-by=deploy-linear-stack</code></p>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Dry-run command only:</p>
+
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%;"><span></span>aws<span style="color: #F8F8F2"> </span>secretsmanager<span style="color: #F8F8F2"> </span>create-secret<span style="color: #F8F8F2"> </span><span style="color: #AE81FF">\</span>
+<span style="color: #F8F8F2">  </span>--name<span style="color: #F8F8F2"> </span>test-clients/claude-oauth-key<span style="color: #F8F8F2"> </span><span style="color: #AE81FF">\</span>
+<span style="color: #F8F8F2">  </span>--description<span style="color: #F8F8F2"> </span><span style="color: #E6DB74">&quot;Claude Code CLI OAuth credentials for test-clients&quot;</span><span style="color: #F8F8F2"> </span><span style="color: #AE81FF">\</span>
+<span style="color: #F8F8F2">  </span>--secret-string<span style="color: #F8F8F2"> </span><span style="color: #E6DB74">&#39;&lt;oauth-json-from-bitwarden-field-credentials&gt;&#39;</span><span style="color: #F8F8F2"> </span><span style="color: #AE81FF">\</span>
+<span style="color: #F8F8F2">  </span>--tags<span style="color: #F8F8F2"> Key</span><span style="color: #FF4689">=</span>client,Value<span style="color: #FF4689">=</span>test-clients<span style="color: #F8F8F2"> Key</span><span style="color: #FF4689">=</span>managed-by,Value<span style="color: #FF4689">=</span>deploy-linear-stack
+</pre></div>
+
+
+<h3 id="step-3-create-aws-secrets" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:18px;color:#191919;margin:24px 0 8px 0;line-height:1.3;">Step 3: Create AWS Secrets</h3>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Real-run AWS secret inventory:</p>
+
+<div style="overflow-x:auto;margin:16px 0;"><table cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;"><thead><tr><th style="padding:8px 12px;text-align:left;border-bottom:2px solid #D97757;font-weight:600;font-size:13px;">Secret name</th><th style="padding:8px 12px;text-align:left;border-bottom:2px solid #D97757;font-weight:600;font-size:13px;">Purpose</th><th style="padding:8px 12px;text-align:left;border-bottom:2px solid #D97757;font-weight:600;font-size:13px;">Tags</th></tr></thead><tbody><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`test-clients/claude-oauth-key`</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Claude Code CLI OAuth credentials</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`client=test-clients`, `managed-by=deploy-linear-stack`</td></tr><tr style="background:#f9f8f4;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`test-clients/linear-client-id`</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Linear OAuth client ID</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`client=test-clients`, `managed-by=deploy-linear-stack`</td></tr><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`test-clients/linear-client-secret`</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Linear OAuth client secret</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`client=test-clients`, `managed-by=deploy-linear-stack`</td></tr><tr style="background:#f9f8f4;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`test-clients/github-token`</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">GitHub token for client automation</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`client=test-clients`, `managed-by=deploy-linear-stack`</td></tr><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`test-clients/telegram-bot-token`</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Telegram bot token</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`client=test-clients`, `managed-by=deploy-linear-stack`</td></tr><tr style="background:#f9f8f4;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`test-clients/supabase/service-role`</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Supabase service-role JWT</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`client=test-clients`, `managed-by=deploy-linear-stack`</td></tr></tbody></table></div>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">No values should be recorded in this PRD or committed to git.</p>
+
+<h3 id="step-4-push-secrets-to-github-actions" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:18px;color:#191919;margin:24px 0 8px 0;line-height:1.3;">Step 4: Push Secrets to GitHub Actions</h3>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Target repository: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">gbauto/test-clients</code></p>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Expected GitHub Actions secrets:</p>
+
+<div style="overflow-x:auto;margin:16px 0;"><table cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;"><thead><tr><th style="padding:8px 12px;text-align:left;border-bottom:2px solid #D97757;font-weight:600;font-size:13px;">GitHub secret</th><th style="padding:8px 12px;text-align:left;border-bottom:2px solid #D97757;font-weight:600;font-size:13px;">Source AWS secret</th></tr></thead><tbody><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`TEST_CLIENTS_CLAUDE_OAUTH_CREDS`</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`test-clients/claude-oauth-key`</td></tr><tr style="background:#f9f8f4;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`LINEAR_CLIENT_ID`</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`test-clients/linear-client-id`</td></tr><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`LINEAR_CLIENT_SECRET`</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`test-clients/linear-client-secret`</td></tr><tr style="background:#f9f8f4;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`TELEGRAM_BOT_TOKEN`</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`test-clients/telegram-bot-token`</td></tr><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`SUPABASE_SERVICE_ROLE`</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`test-clients/supabase/service-role`</td></tr></tbody></table></div>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Dry-run command pattern only:</p>
+
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%;"><span></span>aws<span style="color: #F8F8F2"> </span>secretsmanager<span style="color: #F8F8F2"> </span>get-secret-value<span style="color: #F8F8F2"> </span>--secret-id<span style="color: #F8F8F2"> </span>test-clients/linear-client-id<span style="color: #F8F8F2"> </span>--query<span style="color: #F8F8F2"> </span>SecretString<span style="color: #F8F8F2"> </span>--output<span style="color: #F8F8F2"> </span>text<span style="color: #F8F8F2"> |</span>
+<span style="color: #F8F8F2">  </span>gh<span style="color: #F8F8F2"> </span>secret<span style="color: #F8F8F2"> set </span>LINEAR_CLIENT_ID<span style="color: #F8F8F2"> </span>--repo<span style="color: #F8F8F2"> </span>gbauto/test-clients<span style="color: #F8F8F2"> </span>--body<span style="color: #F8F8F2"> </span>-
+</pre></div>
+
+
+<h3 id="step-45-template-repo-initialization" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:18px;color:#191919;margin:24px 0 8px 0;line-height:1.3;">Step 4.5: Template Repo Initialization</h3>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Real run would copy template files from <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">gbauto/hermes-gbauto</code> into <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">gbauto/test-clients</code> on:</p>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Branch: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">chore/deploy-linear-stack-test-clients</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">PR title: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">chore: init Linear build stack for test-clients</code></li>
+</ul>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Template copy scope from the skill:</p>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">.github/</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">hermes/</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Missing top-level template files</li>
+</ul>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">This PRD branch does not perform that template initialization. It only documents the expected real-run behavior.</p>
+
+<h3 id="step-5-apply-supabase-migrations" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:18px;color:#191919;margin:24px 0 8px 0;line-height:1.3;">Step 5: Apply Supabase Migrations</h3>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">The current deploy script delegates to:</p>
+
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%;"><span></span>/Users/greg/.hermes/skills/devops/deploy-linear-stack/scripts/provision-client.sh<span style="color: #F8F8F2"> </span><span style="color: #AE81FF">\</span>
+<span style="color: #F8F8F2">  </span>--client<span style="color: #F8F8F2"> </span>test-clients<span style="color: #F8F8F2"> </span><span style="color: #AE81FF">\</span>
+<span style="color: #F8F8F2">  </span>--templates-dir<span style="color: #F8F8F2"> </span>/Users/greg/repos/gbautomation/resources/templates/linear-autonomous-build-template/supabase/migrations<span style="color: #F8F8F2"> </span><span style="color: #AE81FF">\</span>
+<span style="color: #F8F8F2">  </span>--dry-run
+</pre></div>
+
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Expected rendered migration files matching <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;"><em>_test_clients_</em></code> convention:</p>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">20260520_test_clients_cron_run_outputs.sql</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">20260520_test_clients_tac_build_runs.sql</code></li>
+</ul>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Current template-derived filenames from <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">provision-client.sh</code>:</p>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">test-clients_cron_run_outputs.sql</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">test-clients_tac_build_runs.sql</code></li>
+</ul>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Expected tables:</p>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">public.test-clients_cron_run_outputs</code> as rendered by the current script naming.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">public.test-clients_tac_build_runs</code> as rendered by the current script naming.</li>
+</ul>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Implementation note: the requested <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;"><em>_test_clients_</em></code> migration-file pattern uses underscores, while the client slug uses a hyphen. A real migration generator should normalize the slug for filenames to <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">test_clients</code> while preserving the configured client slug where the application expects it. SQL table names with hyphens require quoting; before a real apply, verify the templates and naming rules are compatible with Postgres identifiers.</p>
+
+<h3 id="step-6-hermes-profile-instructions" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:18px;color:#191919;margin:24px 0 8px 0;line-height:1.3;">Step 6: Hermes Profile Instructions</h3>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Do not run during this dry run.</p>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Operator command for the real run:</p>
+
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%;"><span></span>hermes<span style="color: #F8F8F2"> </span>profile<span style="color: #F8F8F2"> </span>create<span style="color: #F8F8F2"> </span>test-clients
+</pre></div>
+
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Bootstrap alternative if the repo has the expected Hermes bootstrap files:</p>
+
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%;"><span></span><span style="color: #F8F8F2">cd </span>~/repos/test-clients
+<span style="color: #F8F8F2">CLIENT_NAME</span><span style="color: #FF4689">=</span><span style="color: #E6DB74">&quot;Test Clients&quot;</span><span style="color: #F8F8F2"> CLIENT_SLUG</span><span style="color: #FF4689">=</span><span style="color: #E6DB74">&quot;test-clients&quot;</span><span style="color: #F8F8F2"> </span>./hermes/bootstrap.sh
+</pre></div>
+
+
+<h3 id="step-7-activate-clientsyaml-entry" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:18px;color:#191919;margin:24px 0 8px 0;line-height:1.3;">Step 7: Activate clients.yaml Entry</h3>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Do not modify <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">/Users/greg/.openclaw/workspace/_shared/clients.yaml</code> during this dry run.</p>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Proposed diff is in <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">config/clients-yaml-diff.md</code>.</p>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Proposed block follows the skill convention: add it commented out first, then a real deploy can uncomment it.</p>
+
+<h3 id="step-8-smoke-test-checklist" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:18px;color:#191919;margin:24px 0 8px 0;line-height:1.3;">Step 8: Smoke Test Checklist</h3>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">AWS:</p>
+
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%;"><span></span>aws<span style="color: #F8F8F2"> </span>secretsmanager<span style="color: #F8F8F2"> </span>describe-secret<span style="color: #F8F8F2"> </span>--secret-id<span style="color: #F8F8F2"> </span>test-clients/claude-oauth-key
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">aws<span style="color: #F8F8F2"> </span>secretsmanager<span style="color: #F8F8F2"> </span>describe-secret<span style="color: #F8F8F2"> </span>--secret-id<span style="color: #F8F8F2"> </span>test-clients/linear-client-id</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">aws<span style="color: #F8F8F2"> </span>secretsmanager<span style="color: #F8F8F2"> </span>describe-secret<span style="color: #F8F8F2"> </span>--secret-id<span style="color: #F8F8F2"> </span>test-clients/linear-client-secret</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">aws<span style="color: #F8F8F2"> </span>secretsmanager<span style="color: #F8F8F2"> </span>describe-secret<span style="color: #F8F8F2"> </span>--secret-id<span style="color: #F8F8F2"> </span>test-clients/github-token</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">aws<span style="color: #F8F8F2"> </span>secretsmanager<span style="color: #F8F8F2"> </span>describe-secret<span style="color: #F8F8F2"> </span>--secret-id<span style="color: #F8F8F2"> </span>test-clients/telegram-bot-token</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">aws<span style="color: #F8F8F2"> </span>secretsmanager<span style="color: #F8F8F2"> </span>describe-secret<span style="color: #F8F8F2"> </span>--secret-id<span style="color: #F8F8F2"> </span>test-clients/supabase/service-role</p>
+</pre></div>
+
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">GitHub Actions:</p>
+
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%;"><span></span>gh<span style="color: #F8F8F2"> </span>secret<span style="color: #F8F8F2"> </span>list<span style="color: #F8F8F2"> </span>--repo<span style="color: #F8F8F2"> </span>gbauto/test-clients
+</pre></div>
+
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Expect:</p>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">TEST_CLIENTS_CLAUDE_OAUTH_CREDS</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">LINEAR_CLIENT_ID</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">LINEAR_CLIENT_SECRET</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">TELEGRAM_BOT_TOKEN</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">SUPABASE_SERVICE_ROLE</code></li>
+</ul>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Supabase:</p>
+
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%;"><span></span>supabase<span style="color: #F8F8F2"> </span>db<span style="color: #F8F8F2"> </span>query<span style="color: #F8F8F2"> </span><span style="color: #E6DB74">&quot;SELECT table_name FROM information_schema.tables WHERE table_schema = &#39;public&#39; AND table_name LIKE &#39;test%clients%&#39;;&quot;</span>
+</pre></div>
+
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Hermes:</p>
+
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%;"><span></span>hermes<span style="color: #F8F8F2"> </span>profile<span style="color: #F8F8F2"> </span>list<span style="color: #F8F8F2"> | </span>grep<span style="color: #F8F8F2"> </span>test-clients
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">hermes<span style="color: #F8F8F2"> </span>--profile<span style="color: #F8F8F2"> </span>test-clients<span style="color: #F8F8F2"> </span>--version</p>
+</pre></div>
+
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">clients.yaml routing:</p>
+
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%;"><span></span>grep<span style="color: #F8F8F2"> </span>-A<span style="color: #F8F8F2"> </span><span style="color: #AE81FF">10</span><span style="color: #F8F8F2"> </span><span style="color: #E6DB74">&#39;^  test-clients:&#39;</span><span style="color: #F8F8F2"> </span>/Users/greg/.openclaw/workspace/_shared/clients.yaml
+</pre></div>
+
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">OAuth materialization:</p>
+
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%;"><span></span><span style="color: #F8F8F2">CLAUDE_OAUTH_CREDS</span><span style="color: #FF4689">=</span><span style="color: #E6DB74">&quot;</span><span style="color: #66D9EF">$(</span>aws<span style="color: #F8F8F2"> </span>secretsmanager<span style="color: #F8F8F2"> </span>get-secret-value<span style="color: #F8F8F2"> </span>--secret-id<span style="color: #F8F8F2"> </span>test-clients/claude-oauth-key<span style="color: #F8F8F2"> </span>--query<span style="color: #F8F8F2"> </span>SecretString<span style="color: #F8F8F2"> </span>--output<span style="color: #F8F8F2"> </span>text<span style="color: #66D9EF">)</span><span style="color: #E6DB74">&quot;</span>
+<span style="color: #F8F8F2">printf </span><span style="color: #E6DB74">&#39;%s&#39;</span><span style="color: #F8F8F2"> </span><span style="color: #E6DB74">&quot;</span><span style="color: #F8F8F2">$CLAUDE_OAUTH_CREDS</span><span style="color: #E6DB74">&quot;</span><span style="color: #F8F8F2"> </span>&gt;<span style="color: #F8F8F2"> </span>~/.claude/.credentials.json
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">claude<span style="color: #F8F8F2"> </span>--version</p>
+</pre></div>
+
+
+<h2 id="rollback-purge" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">Rollback / Purge</h2>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Dry-run safe preview:</p>
+
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%;"><span></span>bash<span style="color: #F8F8F2"> </span>/Users/greg/.hermes/skills/devops/deploy-linear-stack/scripts/purge.sh<span style="color: #F8F8F2"> </span><span style="color: #AE81FF">\</span>
+<span style="color: #F8F8F2">  </span>--client<span style="color: #F8F8F2"> </span>test-clients<span style="color: #F8F8F2"> </span><span style="color: #AE81FF">\</span>
+<span style="color: #F8F8F2">  </span>--repo<span style="color: #F8F8F2"> </span>gbauto/test-clients<span style="color: #F8F8F2"> </span><span style="color: #AE81FF">\</span>
+<span style="color: #F8F8F2">  </span>--dry-run
+</pre></div>
+
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Real purge requires operator review because it deletes secrets and changes routing:</p>
+
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%;"><span></span>bash<span style="color: #F8F8F2"> </span>/Users/greg/.hermes/skills/devops/deploy-linear-stack/scripts/purge.sh<span style="color: #F8F8F2"> </span><span style="color: #AE81FF">\</span>
+<span style="color: #F8F8F2">  </span>--client<span style="color: #F8F8F2"> </span>test-clients<span style="color: #F8F8F2"> </span><span style="color: #AE81FF">\</span>
+<span style="color: #F8F8F2">  </span>--repo<span style="color: #F8F8F2"> </span>gbauto/test-clients
+</pre></div>
+
+
+    <div style="margin-top:48px;padding-top:24px;border-top:1px solid rgba(25,25,25,.08);">
+      <p style="font:400 13px Inter,sans-serif;color:#6b6b6b;text-align:center;">
+        Built by GBAutomation &middot;
+        <a href="https://gbautomation.xyz" style="color:#D97757;">gbautomation.xyz</a>
+        
+      </p>
+      <p style="font:400 11px Inter,sans-serif;color:rgba(25,25,25,.3);text-align:center;margin-top:4px;">
+        Want to work together?
+        <a href="https://gbautomation.xyz/#contact" style="color:#D97757;">Get in touch &rarr;</a>
+      </p>
+    </div>
+  </div>
+  <div class="prd-toc">
+    
+<div style="position:sticky;top:24px;max-width:220px;width:100%;">
+  <div style="background:#F3F1E7;border:1px solid rgba(25,25,25,.1);
+              border-radius:12px;padding:16px;font-size:13px;">
+    <p style="font:600 11px Inter,sans-serif;text-transform:uppercase;
+              letter-spacing:.06em;color:#6b6b6b;margin:0 0 10px;">Contents</p>
+    <ul style="list-style:none;margin:0;padding:0;"><li style="margin:6px 0;padding-left:0px;"><a href="#goal" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">Goal</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#non-goals" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">Non-Goals</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#success-criteria" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">Success Criteria</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#step-plan-from-deploy-linear-stack" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">Step Plan From deploy-linear-stack</a></li><li style="margin:6px 0;padding-left:12px;"><a href="#step-1-validate-prerequisites" style="color:#D97757;text-decoration:none;font-size:13px;line-height:1.5;">Step 1: Validate Prerequisites</a></li><li style="margin:6px 0;padding-left:12px;"><a href="#step-2-bitwarden-oauth-to-aws-secrets-manager" style="color:#D97757;text-decoration:none;font-size:13px;line-height:1.5;">Step 2: Bitwarden OAuth to AWS Secrets Manager</a></li><li style="margin:6px 0;padding-left:12px;"><a href="#step-3-create-aws-secrets" style="color:#D97757;text-decoration:none;font-size:13px;line-height:1.5;">Step 3: Create AWS Secrets</a></li><li style="margin:6px 0;padding-left:12px;"><a href="#step-4-push-secrets-to-github-actions" style="color:#D97757;text-decoration:none;font-size:13px;line-height:1.5;">Step 4: Push Secrets to GitHub Actions</a></li><li style="margin:6px 0;padding-left:12px;"><a href="#step-45-template-repo-initialization" style="color:#D97757;text-decoration:none;font-size:13px;line-height:1.5;">Step 4.5: Template Repo Initialization</a></li><li style="margin:6px 0;padding-left:12px;"><a href="#step-5-apply-supabase-migrations" style="color:#D97757;text-decoration:none;font-size:13px;line-height:1.5;">Step 5: Apply Supabase Migrations</a></li><li style="margin:6px 0;padding-left:12px;"><a href="#step-6-hermes-profile-instructions" style="color:#D97757;text-decoration:none;font-size:13px;line-height:1.5;">Step 6: Hermes Profile Instructions</a></li><li style="margin:6px 0;padding-left:12px;"><a href="#step-7-activate-clientsyaml-entry" style="color:#D97757;text-decoration:none;font-size:13px;line-height:1.5;">Step 7: Activate clients.yaml Entry</a></li><li style="margin:6px 0;padding-left:12px;"><a href="#step-8-smoke-test-checklist" style="color:#D97757;text-decoration:none;font-size:13px;line-height:1.5;">Step 8: Smoke Test Checklist</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#rollback-purge" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">Rollback / Purge</a></li></ul>
+  </div>
+</div>
+  </div>
+</div>
+</body>
+</html>
