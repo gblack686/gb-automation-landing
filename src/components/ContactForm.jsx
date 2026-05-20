@@ -2,8 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 
 // Supabase configuration
-const SUPABASE_URL = 'https://unickqnwfheaczccvgbw.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVuaWNrcW53ZmhlYWN6Y2N2Z2J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzM5NTE2MTAsImV4cCI6MjA0OTUyNzYxMH0.bpXrYHcZFFXgoWTF4euSTLCp_IBouFw5tZo6sp0l588';
+const SUPABASE_URL = 'https://aejkzyjrlsfryfidwedm.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFlamt6eWpybHNmcnlmaWR3ZWRtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1Mzc5MTUsImV4cCI6MjA5NDExMzkxNX0.UFowowM9b9fkIhrUdQ4B8uGJwbEqGPBr-bPSQe8CKA0';
 
 export default function ContactForm() {
   const [submitStatus, setSubmitStatus] = useState(null);
