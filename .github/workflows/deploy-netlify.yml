@@ -1,0 +1,61 @@
+name: Deploy to Netlify (gbautomation.xyz)
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:  # allow manual re-deploy from Actions tab
+
+concurrency:
+  group: deploy-netlify-prod
+  cancel-in-progress: false  # don't kill an in-flight prod deploy; queue instead
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit
+
+      - name: Write placeholder amplify_outputs.json
+        # The repo's src/main.jsx imports this file but it's gitignored.
+        # Real Cognito values are populated by `npx ampx sandbox` locally;
+        # for the prod build we just need a parseable stub so Rollup
+        # doesn't fail on "Could not resolve". Amplify.configure() with a
+        # placeholder is a no-op until the Authenticator widget mounts.
+        run: |
+          cat > amplify_outputs.json <<'JSON'
+          {
+            "version": "1.4",
+            "auth": {
+              "user_pool_id": "us-east-1_PLACEHOLDER",
+              "aws_region": "us-east-1",
+              "user_pool_client_id": "PLACEHOLDER",
+              "identity_pool_id": "us-east-1:PLACEHOLDER"
+            }
+          }
+          JSON
+
+      - name: Build
+        run: npm run build
+        env:
+          NODE_ENV: production
+
+      - name: Deploy to Netlify (prod)
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: d0f641dd-0228-4dff-b0bb-d5f7f47382cc
+        run: |
+          npx --yes netlify-cli@latest deploy \
+            --prod \
+            --site "$NETLIFY_SITE_ID" \
+            --dir dist \
+            --message "GHA: master @ ${GITHUB_SHA::7}"

@@ -1,8 +1,18 @@
 # Static asset pass-through (must come before SPA catch-all)
 # These are real files in the build output; serve them as-is.
+#
+# Two cases to handle:
+#   A) Request comes in WITH .html  -> /prds/foo.html -> serve /prds/foo.html
+#   B) Request comes in WITHOUT .html -> /prds/foo    -> serve /prds/foo.html
+# Manifest + .json pass-through.
+#
+# IMPORTANT: extensionless rule MUST come before the SPA catch-all, otherwise
+# /prds/foo falls through to /index.html (this was the 2026-05-20 bug).
+
+/prds/prds-manifest.json   /prds/prds-manifest.json       200
 /prds/*.html               /prds/:splat.html              200
 /prds/*.json               /prds/:splat.json              200
-/prds/prds-manifest.json   /prds/prds-manifest.json       200
+/prds/*                    /prds/:splat.html              200!
 
 # SPA fallback for React Router deep links (no extension).
 # Order matters: this rule only applies after the asset rules above miss.
