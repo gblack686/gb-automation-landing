@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="supported-color-schemes" content="light dark"/>
+  <title>test-clients Hermes IaC PRD | GBAutomation</title>
+  <meta name="description" content="test-clients Hermes IaC PRD"/>
+  <meta property="og:title" content="test-clients Hermes IaC PRD"/>
+  <meta property="og:description" content="test-clients Hermes IaC PRD"/>
+  <meta property="og:url" content="https://gbautomation.xyz/prds/test-clients-hermes-iac-prd"/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:image" content="https://gbautomation.xyz/gb-logo.png"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:ital,opsz,wght@1,6..72,600&display=swap" rel="stylesheet"/>
+  <style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #49483e }
+.highlight { background: #272822; color: #F8F8F2 }
+.highlight .c { color: #959077 } /* Comment */
+.highlight .err { color: #ED007E; background-color: #1E0010 } /* Error */
+.highlight .esc { color: #F8F8F2 } /* Escape */
+.highlight .g { color: #F8F8F2 } /* Generic */
+.highlight .k { color: #66D9EF } /* Keyword */
+.highlight .l { color: #AE81FF } /* Literal */
+.highlight .n { color: #F8F8F2 } /* Name */
+.highlight .o { color: #FF4689 } /* Operator */
+.highlight .x { color: #F8F8F2 } /* Other */
+.highlight .p { color: #F8F8F2 } /* Punctuation */
+.highlight .ch { color: #959077 } /* Comment.Hashbang */
+.highlight .cm { color: #959077 } /* Comment.Multiline */
+.highlight .cp { color: #959077 } /* Comment.Preproc */
+.highlight .cpf { color: #959077 } /* Comment.PreprocFile */
+.highlight .c1 { color: #959077 } /* Comment.Single */
+.highlight .cs { color: #959077 } /* Comment.Special */
+.highlight .gd { color: #FF4689 } /* Generic.Deleted */
+.highlight .ge { color: #F8F8F2; font-style: italic } /* Generic.Emph */
+.highlight .ges { color: #F8F8F2; font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #F8F8F2 } /* Generic.Error */
+.highlight .gh { color: #F8F8F2 } /* Generic.Heading */
+.highlight .gi { color: #A6E22E } /* Generic.Inserted */
+.highlight .go { color: #66D9EF } /* Generic.Output */
+.highlight .gp { color: #FF4689; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { color: #F8F8F2; font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #959077 } /* Generic.Subheading */
+.highlight .gt { color: #F8F8F2 } /* Generic.Traceback */
+.highlight .kc { color: #66D9EF } /* Keyword.Constant */
+.highlight .kd { color: #66D9EF } /* Keyword.Declaration */
+.highlight .kn { color: #FF4689 } /* Keyword.Namespace */
+.highlight .kp { color: #66D9EF } /* Keyword.Pseudo */
+.highlight .kr { color: #66D9EF } /* Keyword.Reserved */
+.highlight .kt { color: #66D9EF } /* Keyword.Type */
+.highlight .ld { color: #E6DB74 } /* Literal.Date */
+.highlight .m { color: #AE81FF } /* Literal.Number */
+.highlight .s { color: #E6DB74 } /* Literal.String */
+.highlight .na { color: #A6E22E } /* Name.Attribute */
+.highlight .nb { color: #F8F8F2 } /* Name.Builtin */
+.highlight .nc { color: #A6E22E } /* Name.Class */
+.highlight .no { color: #66D9EF } /* Name.Constant */
+.highlight .nd { color: #A6E22E } /* Name.Decorator */
+.highlight .ni { color: #F8F8F2 } /* Name.Entity */
+.highlight .ne { color: #A6E22E } /* Name.Exception */
+.highlight .nf { color: #A6E22E } /* Name.Function */
+.highlight .nl { color: #F8F8F2 } /* Name.Label */
+.highlight .nn { color: #F8F8F2 } /* Name.Namespace */
+.highlight .nx { color: #A6E22E } /* Name.Other */
+.highlight .py { color: #F8F8F2 } /* Name.Property */
+.highlight .nt { color: #FF4689 } /* Name.Tag */
+.highlight .nv { color: #F8F8F2 } /* Name.Variable */
+.highlight .ow { color: #FF4689 } /* Operator.Word */
+.highlight .pm { color: #F8F8F2 } /* Punctuation.Marker */
+.highlight .w { color: #F8F8F2 } /* Text.Whitespace */
+.highlight .mb { color: #AE81FF } /* Literal.Number.Bin */
+.highlight .mf { color: #AE81FF } /* Literal.Number.Float */
+.highlight .mh { color: #AE81FF } /* Literal.Number.Hex */
+.highlight .mi { color: #AE81FF } /* Literal.Number.Integer */
+.highlight .mo { color: #AE81FF } /* Literal.Number.Oct */
+.highlight .sa { color: #E6DB74 } /* Literal.String.Affix */
+.highlight .sb { color: #E6DB74 } /* Literal.String.Backtick */
+.highlight .sc { color: #E6DB74 } /* Literal.String.Char */
+.highlight .dl { color: #E6DB74 } /* Literal.String.Delimiter */
+.highlight .sd { color: #E6DB74 } /* Literal.String.Doc */
+.highlight .s2 { color: #E6DB74 } /* Literal.String.Double */
+.highlight .se { color: #AE81FF } /* Literal.String.Escape */
+.highlight .sh { color: #E6DB74 } /* Literal.String.Heredoc */
+.highlight .si { color: #E6DB74 } /* Literal.String.Interpol */
+.highlight .sx { color: #E6DB74 } /* Literal.String.Other */
+.highlight .sr { color: #E6DB74 } /* Literal.String.Regex */
+.highlight .s1 { color: #E6DB74 } /* Literal.String.Single */
+.highlight .ss { color: #E6DB74 } /* Literal.String.Symbol */
+.highlight .bp { color: #F8F8F2 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #A6E22E } /* Name.Function.Magic */
+.highlight .vc { color: #F8F8F2 } /* Name.Variable.Class */
+.highlight .vg { color: #F8F8F2 } /* Name.Variable.Global */
+.highlight .vi { color: #F8F8F2 } /* Name.Variable.Instance */
+.highlight .vm { color: #F8F8F2 } /* Name.Variable.Magic */
+.highlight .il { color: #AE81FF } /* Literal.Number.Integer.Long */</style>
+  <style>
+    *{box-sizing:border-box;}
+    body{margin:0;padding:0;background:#F3F1E7;font-family:Inter,system-ui,sans-serif;color:#191919;-webkit-font-smoothing:antialiased;}
+    .prd-layout{display:flex;max-width:1100px;margin:0 auto;padding:32px 24px;gap:40px;align-items:flex-start;}
+    .prd-main{flex:1;min-width:0;}
+    .prd-toc{flex-shrink:0;}
+    @media(max-width:768px){.prd-toc{display:none;}}
+    a{color:#D97757;}
+    /* iOS Safari / Chrome dark-mode pill guard for the public page.
+       Same logic as the email template: lock pill text color so Apple's
+       auto-tint of taxonomy backgrounds doesn't kill contrast. The page
+       chrome itself stays light (the terra hero + cream body are central
+       to the brand identity and we don't ship a full dark theme). */
+    @media (prefers-color-scheme: dark) {
+      .pill.pill-solid {
+        color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
+      }
+      .pill.pill-outline {
+        background-color: transparent !important;
+      }
+    }
+  </style>
+</head>
+<body>
+<div style="background:linear-gradient(135deg,#D97757 0%,#B85a3e 100%);padding:32px 24px;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+      <a href="/prds" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
+        <div style="width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.2);
+                    display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <span style="font:italic 600 16px Newsreader,Georgia,serif;color:#fff;">gb</span>
+        </div>
+        <span style="font:italic 600 16px Newsreader,Georgia,serif;color:#fff;">GBAutomation</span>
+      </a>
+      <a href="/prds"
+         style="font:400 13px Inter,sans-serif;color:rgba(255,255,255,.8);text-decoration:none;">
+        &larr; All PRDs
+      </a>
+    </div>
+    <h1 style="font:italic 600 36px/1.2 Newsreader,Georgia,serif;
+               color:#fff;margin:24px 0 10px;">test-clients Hermes IaC PRD</h1>
+    
+    <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;">
+      
+      
+    </div>
+  </div>
+</div>
+
+<div class="prd-layout">
+  <div class="prd-main">
+    <h1 id="test-clients-hermes-iac-prd" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:28px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">test-clients Hermes IaC PRD</h1>
+
+<h2 id="goal" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">Goal</h2>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Produce a dry-run quality deployment plan for a dedicated Hermes Telegram agent for client slug <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">test-clients</code>. The plan is intentionally executable later, but this PRD branch does not deploy anything.</p>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Proposed runtime identity:</p>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Client slug: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">test-clients</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Agent label: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">test-clients</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Proposed macOS user: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">test-clients-agent</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Runtime home: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">/Users/test-clients-agent</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Hermes home: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">/Users/test-clients-agent/.hermes</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Hermes workspace: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">/Users/test-clients-agent/.openclaw/workspace/hermes-agent</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">LaunchAgent label: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">ai.test-clients.gateway</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">LaunchAgent plist path: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">/Users/test-clients-agent/Library/LaunchAgents/ai.test-clients.gateway.plist</code></li>
+</ul>
+
+<h2 id="non-goals" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">Non-goals</h2>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Do not create the macOS user in this dry run.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Do not install or load a LaunchAgent in this dry run.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Do not write <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">/Users/test-clients-agent/.hermes/.env</code> or any real secret in this dry run.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Do not create or update AWS Secrets Manager secrets.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Do not touch any other client profile or gateway.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Do not start the Hermes gateway.</li>
+</ul>
+
+<h2 id="success-criteria" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">Success Criteria</h2>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">This branch contains a PRD, rendered config, rendered plist, and Mac-portable deploy and verify scripts.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">The deploy script defaults to <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">--dry-run=true</code> and prints every action before any real execution.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">The rendered <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">config.yaml</code> contains no real secrets and keeps <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">CHAT_ID</code> as <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">CHANGEME_TEST_CLIENT_TG_CHAT_ID</code>.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">All runtime paths are scoped under <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">/Users/test-clients-agent/</code>.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Secret inventory names are explicit and use only <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">test-clients</code> scoped resources.</li>
+</ul>
+
+<h2 id="architecture" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">Architecture</h2>
+
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%;"><span></span>flowchart TD
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">  Repo[gbauto/test-clients iac-prd branch] --&gt; Config[templates/config.yaml]</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">  Repo --&gt; Plist[templates/launchd.plist]</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">  Repo --&gt; Deploy[scripts/deploy-test-clients.sh]</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">  Repo --&gt; Verify[scripts/verify-test-clients.sh]</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">  Deploy --&gt; Home[/Users/test-clients-agent/.hermes/]</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">  Deploy --&gt; Workspace[/Users/test-clients-agent/.openclaw/workspace/hermes-agent/]</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">  Deploy --&gt; SM[AWS Secrets Manager read only]</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">  SM --&gt; Tg[gbautomation/telegram/bot-test-clients]</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">  SM --&gt; OAuth[gbautomation/test-clients/anthropic-oauth-token]</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">  SM --&gt; Langfuse[gbautomation/langfuse/cloud]</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">  Home --&gt; Gateway[Hermes gateway]</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">  Workspace --&gt; Context[.hermes.md]</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">  Cron[cron every 30 minutes] --&gt; Context</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">  Launchd[ai.test-clients.gateway plist] --&gt; Gateway</p>
+</pre></div>
+
+
+<h2 id="1-profile-yaml" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">1. Profile YAML</h2>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Runtime layout:</p>
+
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%;"><span></span>/Users/test-clients-agent/.hermes/
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">  config.yaml</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">  .env</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">  auth.json</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">  logs/</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">    gateway.log</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">    gateway.error.log</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">    context-refresh.log</p>
+</pre></div>
+
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Committed config source:</p>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Repository file: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">templates/config.yaml</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Runtime destination: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">/Users/test-clients-agent/.hermes/config.yaml</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Telegram <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">allowedUsers</code>: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">CHANGEME_TEST_CLIENT_TG_CHAT_ID</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Telegram <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">homeChannel</code>: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">CHANGEME_TEST_CLIENT_TG_CHAT_ID</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Telegram bot token source: env var <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">TELEGRAM_BOT_TOKEN</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">AWS SM name for Telegram token: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">gbautomation/telegram/bot-test-clients</code></li>
+</ul>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Credential pool file:</p>
+
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%;"><span></span><span style="color: #F8F8F2">{</span>
+<span style="color: #F8F8F2">  </span><span style="color: #FF4689">&quot;credential_pool&quot;</span><span style="color: #F8F8F2">: [</span>
+<span style="color: #F8F8F2">    {</span>
+<span style="color: #F8F8F2">      </span><span style="color: #FF4689">&quot;id&quot;</span><span style="color: #F8F8F2">: </span><span style="color: #E6DB74">&quot;claude_code&quot;</span><span style="color: #F8F8F2">,</span>
+<span style="color: #F8F8F2">      </span><span style="color: #FF4689">&quot;source&quot;</span><span style="color: #F8F8F2">: </span><span style="color: #E6DB74">&quot;claude_code&quot;</span><span style="color: #F8F8F2">,</span>
+<span style="color: #F8F8F2">      </span><span style="color: #FF4689">&quot;path&quot;</span><span style="color: #F8F8F2">: </span><span style="color: #E6DB74">&quot;/Users/test-clients-agent/.claude/.credentials.json&quot;</span>
+<span style="color: #F8F8F2">    }</span>
+<span style="color: #F8F8F2">  ]</span>
+<span style="color: #F8F8F2">}</span>
+</pre></div>
+
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Runtime destination: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">/Users/test-clients-agent/.hermes/auth.json</code>.</p>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Secrets env file:</p>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Runtime path: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">/Users/test-clients-agent/.hermes/.env</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Do not commit.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Do not write during this dry run.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Required line after approval: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">TELEGRAM_BOT_TOKEN=&lt;from gbautomation/telegram/bot-test-clients&gt;</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">ANTHROPIC_API_KEY</code> must be absent.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Optional OpenRouter source, only if an auxiliary role is deliberately pinned to OpenRouter: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">gbautomation/openrouter/key</code></li>
+</ul>
+
+<h2 id="2-skill-registry-sync" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">2. Skill Registry Sync</h2>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">The profile points Hermes at the shared skill pool:</p>
+
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%;"><span></span><span style="color: #FF4689">skills</span><span style="color: #F8F8F2">:</span>
+<span style="color: #F8F8F2">  </span><span style="color: #FF4689">external_dirs</span><span style="color: #F8F8F2">:</span>
+<span style="color: #F8F8F2">    - </span><span style="color: #AE81FF">~/.hermes/skills</span>
+<span style="color: #F8F8F2">  </span><span style="color: #FF4689">template_vars</span><span style="color: #F8F8F2">: </span><span style="color: #AE81FF">true</span>
+</pre></div>
+
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Optional client overlay path:</p>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">/Users/test-clients-agent/.hermes/skills/clients/test-clients</code></li>
+</ul>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Verification commands:</p>
+
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%;"><span></span>sudo<span style="color: #F8F8F2"> </span>-u<span style="color: #F8F8F2"> </span>test-clients-agent<span style="color: #F8F8F2"> </span>-i<span style="color: #F8F8F2"> </span>hermes<span style="color: #F8F8F2"> </span>skills<span style="color: #F8F8F2"> </span>list<span style="color: #F8F8F2"> | </span>grep<span style="color: #F8F8F2"> </span>hermes-iac
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">sudo<span style="color: #F8F8F2"> </span>-u<span style="color: #F8F8F2"> </span>test-clients-agent<span style="color: #F8F8F2"> </span>-i<span style="color: #F8F8F2"> </span>hermes<span style="color: #F8F8F2"> </span>skills<span style="color: #F8F8F2"> </span>show<span style="color: #F8F8F2"> </span>hermes-iac</p>
+</pre></div>
+
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">No skill registry writes are performed in this dry run.</p>
+
+<h2 id="3-credential-pool-config" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">3. Credential Pool Config</h2>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">The deployment uses Claude Max OAuth through the <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">claude_code</code> credential pool source.</p>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Exact OAuth secret inventory name:</p>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">gbautomation/test-clients/anthropic-oauth-token</code></li>
+</ul>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Expected OAuth credentials path:</p>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">/Users/test-clients-agent/.claude/.credentials.json</code></li>
+</ul>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Auth invariants:</p>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">anthropic.apiKey</code> is an empty string in <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">config.yaml</code>.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">anthropic.baseUrl</code> is an empty string in <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">config.yaml</code>.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">ANTHROPIC_API_KEY</code> is never written to <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">.env</code>.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">auth.json</code> uses the absolute path <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">/Users/test-clients-agent/.claude/.credentials.json</code>.</li>
+</ul>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Read-only inventory command allowed for this planning run:</p>
+
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%;"><span></span>aws<span style="color: #F8F8F2"> </span>secretsmanager<span style="color: #F8F8F2"> </span>list-secrets<span style="color: #F8F8F2"> </span><span style="color: #AE81FF">\</span>
+<span style="color: #F8F8F2">  </span>--region<span style="color: #F8F8F2"> </span>us-east-1<span style="color: #F8F8F2"> </span><span style="color: #AE81FF">\</span>
+<span style="color: #F8F8F2">  </span>--filters<span style="color: #F8F8F2"> Key</span><span style="color: #FF4689">=</span>tag-key,Values<span style="color: #FF4689">=</span>client<span style="color: #F8F8F2"> </span><span style="color: #AE81FF">\</span>
+<span style="color: #F8F8F2">  </span>--query<span style="color: #F8F8F2"> </span><span style="color: #E6DB74">&quot;SecretList[?contains(Name, &#39;test-clients&#39;)].Name&quot;</span><span style="color: #F8F8F2"> </span><span style="color: #AE81FF">\</span>
+<span style="color: #F8F8F2">  </span>--output<span style="color: #F8F8F2"> </span>text
+</pre></div>
+
+
+<h2 id="4-cron-and-launchd-wiring" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">4. Cron and launchd Wiring</h2>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">LaunchAgent:</p>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Label: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">ai.test-clients.gateway</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Path: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">/Users/test-clients-agent/Library/LaunchAgents/ai.test-clients.gateway.plist</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Template source: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">templates/launchd.plist</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">WorkingDirectory: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">/Users/test-clients-agent/.openclaw/workspace/hermes-agent</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">TERMINAL_CWD</code>: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">/Users/test-clients-agent/.openclaw/workspace/hermes-agent</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">HERMES_HOME</code>: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">/Users/test-clients-agent/.hermes</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Stdout: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">/Users/test-clients-agent/.hermes/logs/gateway.log</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Stderr: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">/Users/test-clients-agent/.hermes/logs/gateway.error.log</code></li>
+</ul>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Cron entry:</p>
+
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%;"><span></span>*/30 * * * * /Users/test-clients-agent/repos/gbautomation/scripts/refresh_hermes_context.sh --client test-clients --out /Users/test-clients-agent/.openclaw/workspace/hermes-agent/.hermes.md &gt;&gt; /Users/test-clients-agent/.hermes/logs/context-refresh.log 2&gt;&amp;1
+</pre></div>
+
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">No plist install, launchctl load, or crontab write is performed by this dry run.</p>
+
+<h2 id="5-deploy-script" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">5. Deploy Script</h2>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Script:</p>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Repository path: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">scripts/deploy-test-clients.sh</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Default: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">--dry-run=true</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Non-dry-run requires <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">--dry-run=false</code>.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">It does not create the Unix user.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">It does not call AWS Secrets Manager Put/Create.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">It scopes all paths to <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">/Users/test-clients-agent/</code>.</li>
+</ul>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Planned steps after approval:</p>
+
+<ol style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Verify <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">test-clients-agent</code> exists.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Verify AWS CLI read access and Python 3.11.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Clone or update <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">NousResearch/hermes-agent</code>.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Build the Hermes Python 3.11 venv.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Install OAuth from <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">gbautomation/test-clients/anthropic-oauth-token</code>.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Copy <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">templates/config.yaml</code> to <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">/Users/test-clients-agent/.hermes/config.yaml</code>.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Write <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">/Users/test-clients-agent/.hermes/auth.json</code>.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Write <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">/Users/test-clients-agent/.hermes/.env</code> from <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">gbautomation/telegram/bot-test-clients</code>.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Install <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">hermes-claude-auth</code> v1.4.0+ into the venv.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Render and lint the plist.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Install cron.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Run <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">scripts/verify-test-clients.sh</code>.</li>
+</ol>
+
+<h2 id="6-smoke-test-verification" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">6. Smoke Test Verification</h2>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Script:</p>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Repository path: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">scripts/verify-test-clients.sh</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Agent label: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">test-clients</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Client slug: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">test-clients</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Unix user: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">test-clients-agent</code></li>
+</ul>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Canonical checks:</p>
+
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%;"><span></span><span style="color: #959077"># 1. Bypass patch markers</span>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">sudo<span style="color: #F8F8F2"> </span>-u<span style="color: #F8F8F2"> </span>test-clients-agent<span style="color: #F8F8F2"> </span>tail<span style="color: #F8F8F2"> </span>-500<span style="color: #F8F8F2"> </span>/Users/test-clients-agent/.hermes/logs/gateway.error.log<span style="color: #F8F8F2"> </span><span style="color: #AE81FF">\</span></p>
+<span style="color: #F8F8F2">  | </span>grep<span style="color: #F8F8F2"> </span>-E<span style="color: #F8F8F2"> </span><span style="color: #E6DB74">&#39;Bypass installed|Transport unwrap hook installed&#39;</span>
+
+<span style="color: #959077"># 2. Telegram connected</span>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">sudo<span style="color: #F8F8F2"> </span>-u<span style="color: #F8F8F2"> </span>test-clients-agent<span style="color: #F8F8F2"> </span>grep<span style="color: #F8F8F2"> </span><span style="color: #E6DB74">&quot;telegram connected&quot;</span><span style="color: #F8F8F2"> </span>/Users/test-clients-agent/.hermes/logs/gateway.log<span style="color: #F8F8F2"> | </span>tail<span style="color: #F8F8F2"> </span>-1</p>
+
+<span style="color: #959077"># 3. Direct API smoke</span>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">sudo<span style="color: #F8F8F2"> </span>-u<span style="color: #F8F8F2"> </span>test-clients-agent<span style="color: #F8F8F2"> </span>-i<span style="color: #F8F8F2"> </span>bash<span style="color: #F8F8F2"> </span>-c<span style="color: #F8F8F2"> </span><span style="color: #E6DB74">&quot;</span></p>
+<span style="color: #E6DB74">  /Users/test-clients-agent/.openclaw/workspace/hermes-agent/venv/bin/python -m hermes_cli.main chat \</span>
+<span style="color: #E6DB74">    -q &#39;Reply with exactly: SMOKE OK&#39; \</span>
+<span style="color: #E6DB74">    --provider anthropic -m claude-opus-4-7 \</span>
+<span style="color: #E6DB74">    -Q --max-turns 1 --ignore-user-config&quot;</span>
+
+<span style="color: #959077"># 4. Three-tier model check</span>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">sudo<span style="color: #F8F8F2"> </span>-u<span style="color: #F8F8F2"> </span>test-clients-agent<span style="color: #F8F8F2"> </span>-i<span style="color: #F8F8F2"> </span>bash<span style="color: #F8F8F2"> </span>-c<span style="color: #F8F8F2"> </span><span style="color: #E6DB74">&quot;</span></p>
+<span style="color: #E6DB74">  for model in claude-haiku-4-5 claude-opus-4-7; do</span>
+<span style="color: #E6DB74">    echo \&quot;=== \$model ===\&quot;</span>
+<span style="color: #E6DB74">    /Users/test-clients-agent/.openclaw/workspace/hermes-agent/venv/bin/python -m hermes_cli.main chat \</span>
+<span style="color: #E6DB74">      -q &#39;say PONG&#39; --provider anthropic -m \$model \</span>
+<span style="color: #E6DB74">      -Q --max-turns 1 --ignore-user-config 2&gt;&amp;1 | tail -3</span>
+<span style="color: #E6DB74">  done&quot;</span>
+</pre></div>
+
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Context-loading checks:</p>
+
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%;"><span></span>sudo<span style="color: #F8F8F2"> </span>launchctl<span style="color: #F8F8F2"> </span>print<span style="color: #F8F8F2"> </span><span style="color: #E6DB74">&quot;gui/</span><span style="color: #66D9EF">$(</span>id<span style="color: #F8F8F2"> </span>-u<span style="color: #F8F8F2"> </span>test-clients-agent<span style="color: #66D9EF">)</span><span style="color: #E6DB74">/ai.test-clients.gateway&quot;</span><span style="color: #F8F8F2"> | </span>grep<span style="color: #F8F8F2"> </span>TERMINAL_CWD
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">sudo<span style="color: #F8F8F2"> </span>-u<span style="color: #F8F8F2"> </span>test-clients-agent<span style="color: #F8F8F2"> </span>ls<span style="color: #F8F8F2"> </span>-la<span style="color: #F8F8F2"> </span>/Users/test-clients-agent/repos/gbautomation/scripts/refresh_hermes_context.sh</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">sudo<span style="color: #F8F8F2"> </span>-H<span style="color: #F8F8F2"> </span>-u<span style="color: #F8F8F2"> </span>test-clients-agent<span style="color: #F8F8F2"> </span>/Users/test-clients-agent/repos/gbautomation/scripts/refresh_hermes_context.sh<span style="color: #F8F8F2"> </span>--client<span style="color: #F8F8F2"> </span>test-clients<span style="color: #F8F8F2"> </span>--out<span style="color: #F8F8F2"> </span>/Users/test-clients-agent/.openclaw/workspace/hermes-agent/.hermes.md</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">sudo<span style="color: #F8F8F2"> </span>-u<span style="color: #F8F8F2"> </span>test-clients-agent<span style="color: #F8F8F2"> </span>wc<span style="color: #F8F8F2"> </span>-l<span style="color: #F8F8F2"> </span>/Users/test-clients-agent/.openclaw/workspace/hermes-agent/.hermes.md</p>
+</pre></div>
+
+
+<h2 id="7-langfuse-hookup" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">7. Langfuse Hookup</h2>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Exact secret inventory name:</p>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">gbautomation/langfuse/cloud</code></li>
+</ul>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Runtime env vars:</p>
+
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%;"><span></span><span style="color: #F8F8F2">LANGFUSE_PUBLIC_KEY</span><span style="color: #FF4689">=</span>&lt;from<span style="color: #F8F8F2"> </span>gbautomation/langfuse/cloud&gt;
+<span style="color: #F8F8F2">LANGFUSE_SECRET_KEY</span><span style="color: #FF4689">=</span>&lt;from<span style="color: #F8F8F2"> </span>gbautomation/langfuse/cloud&gt;
+<span style="color: #F8F8F2">LANGFUSE_HOST</span><span style="color: #FF4689">=</span>https://us.cloud.langfuse.com
+</pre></div>
+
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">This PRD does not add Langfuse keys to the committed plist because that would place secret material in process config. After approval, prefer a launch wrapper or approved secret injection path. If direct plist injection is chosen later, keep the plist outside source control.</p>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Validation:</p>
+
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%;"><span></span>sudo<span style="color: #F8F8F2"> </span>-u<span style="color: #F8F8F2"> </span>test-clients-agent<span style="color: #F8F8F2"> </span>-i<span style="color: #F8F8F2"> </span>hermes<span style="color: #F8F8F2"> </span>chat<span style="color: #F8F8F2"> </span>-q<span style="color: #F8F8F2"> </span><span style="color: #E6DB74">&quot;ping&quot;</span><span style="color: #F8F8F2"> </span>--max-turns<span style="color: #F8F8F2"> </span><span style="color: #AE81FF">1</span>
+</pre></div>
+
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Expected Langfuse result: one recent trace with one or more generation spans and token counts.</p>
+
+<h2 id="8-known-traps" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">8. Known Traps</h2>
+
+<div style="overflow-x:auto;margin:16px 0;"><table cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;"><thead><tr><th style="padding:8px 12px;text-align:left;border-bottom:2px solid #D97757;font-weight:600;font-size:13px;">Symptom</th><th style="padding:8px 12px;text-align:left;border-bottom:2px solid #D97757;font-weight:600;font-size:13px;">Cause</th><th style="padding:8px 12px;text-align:left;border-bottom:2px solid #D97757;font-weight:600;font-size:13px;">test-clients fix</th></tr></thead><tbody><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`401 invalid x-api-key`</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`ANTHROPIC_API_KEY` exists in `.env` and overrides credential pool</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Remove it from `/Users/test-clients-agent/.hermes/.env`; restart `ai.test-clients.gateway`</td></tr><tr style="background:#f9f8f4;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`400 &quot;Third-party apps now draw from your extra usage&quot;`</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Anthropic billing salt changed or bypass patch stale</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Re-run `hermes-claude-auth` install from main HEAD; clear pycache; restart</td></tr><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Bypass markers missing</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`sitecustomize.py` not installed into venv or plist points at wrong Python</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Verify plist Python path under `/Users/test-clients-agent/.openclaw/workspace/hermes-agent/venv/bin/python`</td></tr><tr style="background:#f9f8f4;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Empty context</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`TERMINAL_CWD` missing or not equal to WorkingDirectory</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Set both to `/Users/test-clients-agent/.openclaw/workspace/hermes-agent`</td></tr><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Context stale</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Cron script missing, not executable, or installed under wrong user</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Check crontab as `test-clients-agent`; chmod refresh script</td></tr><tr style="background:#f9f8f4;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`.hermes.md` written but ignored</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Cron `--out` differs from `TERMINAL_CWD`</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Use `/Users/test-clients-agent/.openclaw/workspace/hermes-agent/.hermes.md`</td></tr><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">state.db caches old context</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Existing Telegram session has old system prompt</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Bust `system_prompt` for Telegram sessions in `/Users/test-clients-agent/.hermes/state.db`</td></tr><tr style="background:#f9f8f4;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Sonnet 429 on long context</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Compression auxiliary hits Anthropic beta gate</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Keep `compression.threshold: 0.20` and auxiliary providers as `auto`</td></tr><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Telegram not connected</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Missing `TELEGRAM_BOT_TOKEN` or wrong chat id</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Confirm `gbautomation/telegram/bot-test-clients`; replace chat placeholder after client DMs bot</td></tr><tr style="background:#f9f8f4;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Launchd collision</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Reused generic `ai.hermes.gateway` label</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Use only `ai.test-clients.gateway`</td></tr><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Restart loop after intentional stop</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`KeepAlive` set to true</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Use `&lt;dict&gt;&lt;key&gt;SuccessfulExit&lt;/key&gt;&lt;false/&gt;&lt;/dict&gt;`</td></tr><tr style="background:#f9f8f4;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`flock` fails on stock macOS</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Linux-only lock primitive</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Use POSIX `mkdir` lock pattern in scripts</td></tr><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Token leaked into git config</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Remote URL persisted a token</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Use tokenless remotes or per-command auth headers; scrub `.git/config`</td></tr></tbody></table></div>
+<h2 id="rollback-procedure" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">Rollback Procedure</h2>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">This dry-run branch has no runtime rollback because it does not deploy. For an approved future deploy, rollback is:</p>
+
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%;"><span></span>sudo<span style="color: #F8F8F2"> </span>-u<span style="color: #F8F8F2"> </span>test-clients-agent<span style="color: #F8F8F2"> </span>launchctl<span style="color: #F8F8F2"> </span>unload<span style="color: #F8F8F2"> </span>/Users/test-clients-agent/Library/LaunchAgents/ai.test-clients.gateway.plist
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">sudo<span style="color: #F8F8F2"> </span>-u<span style="color: #F8F8F2"> </span>test-clients-agent<span style="color: #F8F8F2"> </span>crontab<span style="color: #F8F8F2"> </span>-l<span style="color: #F8F8F2"> | </span>grep<span style="color: #F8F8F2"> </span>-v<span style="color: #F8F8F2"> </span><span style="color: #E6DB74">&#39;refresh_hermes_context.sh --client test-clients&#39;</span><span style="color: #F8F8F2"> | </span>sudo<span style="color: #F8F8F2"> </span>-u<span style="color: #F8F8F2"> </span>test-clients-agent<span style="color: #F8F8F2"> </span>crontab<span style="color: #F8F8F2"> </span>-</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">sudo<span style="color: #F8F8F2"> </span>-u<span style="color: #F8F8F2"> </span>test-clients-agent<span style="color: #F8F8F2"> </span>mv<span style="color: #F8F8F2"> </span>/Users/test-clients-agent/Library/LaunchAgents/ai.test-clients.gateway.plist<span style="color: #F8F8F2"> </span>/Users/test-clients-agent/Library/LaunchAgents/ai.test-clients.gateway.plist.disabled</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">sudo<span style="color: #F8F8F2"> </span>-u<span style="color: #F8F8F2"> </span>test-clients-agent<span style="color: #F8F8F2"> </span>mv<span style="color: #F8F8F2"> </span>/Users/test-clients-agent/.hermes/config.yaml<span style="color: #F8F8F2"> </span>/Users/test-clients-agent/.hermes/config.yaml.rollback</p>
+</pre></div>
+
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Do not delete OAuth credentials, <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">.env</code>, or logs during rollback unless Greg explicitly approves. Preserve <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">/Users/test-clients-agent/.hermes/logs/</code> and <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">/Users/test-clients-agent/.hermes/state.db</code> for incident review.</p>
+
+    <div style="margin-top:48px;padding-top:24px;border-top:1px solid rgba(25,25,25,.08);">
+      <p style="font:400 13px Inter,sans-serif;color:#6b6b6b;text-align:center;">
+        Built by GBAutomation &middot;
+        <a href="https://gbautomation.xyz" style="color:#D97757;">gbautomation.xyz</a>
+        
+      </p>
+      <p style="font:400 11px Inter,sans-serif;color:rgba(25,25,25,.3);text-align:center;margin-top:4px;">
+        Want to work together?
+        <a href="https://gbautomation.xyz/#contact" style="color:#D97757;">Get in touch &rarr;</a>
+      </p>
+    </div>
+  </div>
+  <div class="prd-toc">
+    
+<div style="position:sticky;top:24px;max-width:220px;width:100%;">
+  <div style="background:#F3F1E7;border:1px solid rgba(25,25,25,.1);
+              border-radius:12px;padding:16px;font-size:13px;">
+    <p style="font:600 11px Inter,sans-serif;text-transform:uppercase;
+              letter-spacing:.06em;color:#6b6b6b;margin:0 0 10px;">Contents</p>
+    <ul style="list-style:none;margin:0;padding:0;"><li style="margin:6px 0;padding-left:0px;"><a href="#goal" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">Goal</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#non-goals" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">Non-goals</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#success-criteria" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">Success Criteria</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#architecture" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">Architecture</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#1-profile-yaml" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">1. Profile YAML</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#2-skill-registry-sync" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">2. Skill Registry Sync</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#3-credential-pool-config" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">3. Credential Pool Config</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#4-cron-and-launchd-wiring" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">4. Cron and launchd Wiring</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#5-deploy-script" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">5. Deploy Script</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#6-smoke-test-verification" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">6. Smoke Test Verification</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#7-langfuse-hookup" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">7. Langfuse Hookup</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#8-known-traps" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">8. Known Traps</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#rollback-procedure" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">Rollback Procedure</a></li></ul>
+  </div>
+</div>
+  </div>
+</div>
+</body>
+</html>

@@ -40,5 +40,19 @@
     "category": "devops",
     "description": "",
     "public_url": "https://gbautomation.xyz/prds/template-improvements-discovered-during-test-clients-dry-run"
+  },
+  {
+    "slug": "test-clients-hermes-iac-prd",
+    "title": "test-clients Hermes IaC PRD",
+    "date": "",
+    "status": "",
+    "wave": null,
+    "client": "",
+    "purpose": "",
+    "priority": "",
+    "linear_id": "",
+    "category": "devops",
+    "description": "",
+    "public_url": "https://gbautomation.xyz/prds/test-clients-hermes-iac-prd"
   }
 ]
