@@ -26,5 +26,19 @@
     "url": "/prds/prd-render-email-pipeline-branded-delivery-for-every-dispatched-prd",
     "date": "2026-05-18",
     "size_kb": 87.6
+  },
+  {
+    "slug": "template-improvements-discovered-during-test-clients-dry-run",
+    "title": "Template Improvements \u2014 discovered during test-clients dry-run",
+    "date": "",
+    "status": "",
+    "wave": null,
+    "client": "",
+    "purpose": "",
+    "priority": "",
+    "linear_id": "",
+    "category": "devops",
+    "description": "",
+    "public_url": "https://gbautomation.xyz/prds/template-improvements-discovered-during-test-clients-dry-run"
   }
 ]

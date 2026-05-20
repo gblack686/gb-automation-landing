@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="supported-color-schemes" content="light dark"/>
+  <title>Template Improvements — discovered during test-clients dry-run | GBAutomation</title>
+  <meta name="description" content="Template Improvements — discovered during test-clients dry-run"/>
+  <meta property="og:title" content="Template Improvements — discovered during test-clients dry-run"/>
+  <meta property="og:description" content="Template Improvements — discovered during test-clients dry-run"/>
+  <meta property="og:url" content="https://gbautomation.xyz/prds/template-improvements-discovered-during-test-clients-dry-run"/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:image" content="https://gbautomation.xyz/gb-logo.png"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:ital,opsz,wght@1,6..72,600&display=swap" rel="stylesheet"/>
+  <style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #49483e }
+.highlight { background: #272822; color: #F8F8F2 }
+.highlight .c { color: #959077 } /* Comment */
+.highlight .err { color: #ED007E; background-color: #1E0010 } /* Error */
+.highlight .esc { color: #F8F8F2 } /* Escape */
+.highlight .g { color: #F8F8F2 } /* Generic */
+.highlight .k { color: #66D9EF } /* Keyword */
+.highlight .l { color: #AE81FF } /* Literal */
+.highlight .n { color: #F8F8F2 } /* Name */
+.highlight .o { color: #FF4689 } /* Operator */
+.highlight .x { color: #F8F8F2 } /* Other */
+.highlight .p { color: #F8F8F2 } /* Punctuation */
+.highlight .ch { color: #959077 } /* Comment.Hashbang */
+.highlight .cm { color: #959077 } /* Comment.Multiline */
+.highlight .cp { color: #959077 } /* Comment.Preproc */
+.highlight .cpf { color: #959077 } /* Comment.PreprocFile */
+.highlight .c1 { color: #959077 } /* Comment.Single */
+.highlight .cs { color: #959077 } /* Comment.Special */
+.highlight .gd { color: #FF4689 } /* Generic.Deleted */
+.highlight .ge { color: #F8F8F2; font-style: italic } /* Generic.Emph */
+.highlight .ges { color: #F8F8F2; font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #F8F8F2 } /* Generic.Error */
+.highlight .gh { color: #F8F8F2 } /* Generic.Heading */
+.highlight .gi { color: #A6E22E } /* Generic.Inserted */
+.highlight .go { color: #66D9EF } /* Generic.Output */
+.highlight .gp { color: #FF4689; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { color: #F8F8F2; font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #959077 } /* Generic.Subheading */
+.highlight .gt { color: #F8F8F2 } /* Generic.Traceback */
+.highlight .kc { color: #66D9EF } /* Keyword.Constant */
+.highlight .kd { color: #66D9EF } /* Keyword.Declaration */
+.highlight .kn { color: #FF4689 } /* Keyword.Namespace */
+.highlight .kp { color: #66D9EF } /* Keyword.Pseudo */
+.highlight .kr { color: #66D9EF } /* Keyword.Reserved */
+.highlight .kt { color: #66D9EF } /* Keyword.Type */
+.highlight .ld { color: #E6DB74 } /* Literal.Date */
+.highlight .m { color: #AE81FF } /* Literal.Number */
+.highlight .s { color: #E6DB74 } /* Literal.String */
+.highlight .na { color: #A6E22E } /* Name.Attribute */
+.highlight .nb { color: #F8F8F2 } /* Name.Builtin */
+.highlight .nc { color: #A6E22E } /* Name.Class */
+.highlight .no { color: #66D9EF } /* Name.Constant */
+.highlight .nd { color: #A6E22E } /* Name.Decorator */
+.highlight .ni { color: #F8F8F2 } /* Name.Entity */
+.highlight .ne { color: #A6E22E } /* Name.Exception */
+.highlight .nf { color: #A6E22E } /* Name.Function */
+.highlight .nl { color: #F8F8F2 } /* Name.Label */
+.highlight .nn { color: #F8F8F2 } /* Name.Namespace */
+.highlight .nx { color: #A6E22E } /* Name.Other */
+.highlight .py { color: #F8F8F2 } /* Name.Property */
+.highlight .nt { color: #FF4689 } /* Name.Tag */
+.highlight .nv { color: #F8F8F2 } /* Name.Variable */
+.highlight .ow { color: #FF4689 } /* Operator.Word */
+.highlight .pm { color: #F8F8F2 } /* Punctuation.Marker */
+.highlight .w { color: #F8F8F2 } /* Text.Whitespace */
+.highlight .mb { color: #AE81FF } /* Literal.Number.Bin */
+.highlight .mf { color: #AE81FF } /* Literal.Number.Float */
+.highlight .mh { color: #AE81FF } /* Literal.Number.Hex */
+.highlight .mi { color: #AE81FF } /* Literal.Number.Integer */
+.highlight .mo { color: #AE81FF } /* Literal.Number.Oct */
+.highlight .sa { color: #E6DB74 } /* Literal.String.Affix */
+.highlight .sb { color: #E6DB74 } /* Literal.String.Backtick */
+.highlight .sc { color: #E6DB74 } /* Literal.String.Char */
+.highlight .dl { color: #E6DB74 } /* Literal.String.Delimiter */
+.highlight .sd { color: #E6DB74 } /* Literal.String.Doc */
+.highlight .s2 { color: #E6DB74 } /* Literal.String.Double */
+.highlight .se { color: #AE81FF } /* Literal.String.Escape */
+.highlight .sh { color: #E6DB74 } /* Literal.String.Heredoc */
+.highlight .si { color: #E6DB74 } /* Literal.String.Interpol */
+.highlight .sx { color: #E6DB74 } /* Literal.String.Other */
+.highlight .sr { color: #E6DB74 } /* Literal.String.Regex */
+.highlight .s1 { color: #E6DB74 } /* Literal.String.Single */
+.highlight .ss { color: #E6DB74 } /* Literal.String.Symbol */
+.highlight .bp { color: #F8F8F2 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #A6E22E } /* Name.Function.Magic */
+.highlight .vc { color: #F8F8F2 } /* Name.Variable.Class */
+.highlight .vg { color: #F8F8F2 } /* Name.Variable.Global */
+.highlight .vi { color: #F8F8F2 } /* Name.Variable.Instance */
+.highlight .vm { color: #F8F8F2 } /* Name.Variable.Magic */
+.highlight .il { color: #AE81FF } /* Literal.Number.Integer.Long */</style>
+  <style>
+    *{box-sizing:border-box;}
+    body{margin:0;padding:0;background:#F3F1E7;font-family:Inter,system-ui,sans-serif;color:#191919;-webkit-font-smoothing:antialiased;}
+    .prd-layout{display:flex;max-width:1100px;margin:0 auto;padding:32px 24px;gap:40px;align-items:flex-start;}
+    .prd-main{flex:1;min-width:0;}
+    .prd-toc{flex-shrink:0;}
+    @media(max-width:768px){.prd-toc{display:none;}}
+    a{color:#D97757;}
+    /* iOS Safari / Chrome dark-mode pill guard for the public page.
+       Same logic as the email template: lock pill text color so Apple's
+       auto-tint of taxonomy backgrounds doesn't kill contrast. The page
+       chrome itself stays light (the terra hero + cream body are central
+       to the brand identity and we don't ship a full dark theme). */
+    @media (prefers-color-scheme: dark) {
+      .pill.pill-solid {
+        color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
+      }
+      .pill.pill-outline {
+        background-color: transparent !important;
+      }
+    }
+  </style>
+</head>
+<body>
+<div style="background:linear-gradient(135deg,#D97757 0%,#B85a3e 100%);padding:32px 24px;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+      <a href="/prds" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
+        <div style="width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.2);
+                    display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <span style="font:italic 600 16px Newsreader,Georgia,serif;color:#fff;">gb</span>
+        </div>
+        <span style="font:italic 600 16px Newsreader,Georgia,serif;color:#fff;">GBAutomation</span>
+      </a>
+      <a href="/prds"
+         style="font:400 13px Inter,sans-serif;color:rgba(255,255,255,.8);text-decoration:none;">
+        &larr; All PRDs
+      </a>
+    </div>
+    <h1 style="font:italic 600 36px/1.2 Newsreader,Georgia,serif;
+               color:#fff;margin:24px 0 10px;">Template Improvements — discovered during test-clients dry-run</h1>
+    
+    <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;">
+      
+      
+    </div>
+  </div>
+</div>
+
+<div class="prd-layout">
+  <div class="prd-main">
+    <h1 id="template-improvements-discovered-during-test-clients-dry-run" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:28px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">Template Improvements — discovered during test-clients dry-run</h1>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Date: 2026-05-20</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Source: dry-run bootstrap of <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">gbauto/test-clients</code> via <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">hermes-gbauto-bootstrap</code></p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Caught by: Codex <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">--full-auto</code> agent (2 runs) + Claude follow-up audit</p>
+
+<hr style="border:none;border-top:1px solid rgba(25,25,25,.1);margin:24px 0;">
+
+<h2 id="real-template-bugs-need-fixes-in-gbautohermes-gbauto" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">REAL TEMPLATE BUGS (need fixes in <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">gbauto/hermes-gbauto</code>)</h2>
+
+<h3 id="bug-1-configexampleyaml-points-skills-at-non-existent-path" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:18px;color:#191919;margin:24px 0 8px 0;line-height:1.3;">Bug #1: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">config.example.yaml</code> points skills at non-existent path</h3>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;"><strong style="font-weight:600;">File:</strong> <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">gbauto/hermes-gbauto/config/hermes.example.yaml</code> (or wherever config template lives)</p>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">After bootstrap, the rendered <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">config.yaml</code> contains:</p>
+
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%;"><span></span><span style="color: #FF4689">skills</span><span style="color: #F8F8F2">:</span>
+<span style="color: #F8F8F2">  </span><span style="color: #FF4689">external_dirs</span><span style="color: #F8F8F2">:</span>
+<span style="color: #F8F8F2">    - </span><span style="color: #AE81FF">~/repos/hermes-gbauto/skills</span>
+</pre></div>
+
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">But <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">hermes-gbauto</code> is only ever a <strong style="font-weight:600;">submodule inside the client repo</strong> (e.g.</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">~/repos/test-clients/hermes/skills</code>). There's no standalone <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">~/repos/hermes-gbauto/</code></p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">on Greg's machine. This means the Carlos profile loads <strong style="font-weight:600;">zero skills</strong> until the</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">operator manually fixes the path.</p>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;"><strong style="font-weight:600;">Proposed patch:</strong> change the example to use the <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">{{CLIENT_SLUG}}</code> token:</p>
+
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%;"><span></span>skills:
+<span style="color: #F8F8F2"> </span>  external_dirs:
+<span style="color: #FF4689">-    - ~/repos/hermes-gbauto/skills</span>
+<span style="color: #A6E22E">+    - ~/repos/{{CLIENT_SLUG}}/hermes/skills</span>
+</pre></div>
+
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">This already substitutes correctly because <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">{{CLIENT_SLUG}}</code> is in</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">bootstrap.sh</code>'s token vocabulary.</p>
+
+<h3 id="bug-2-bootstrapsh-says-it-copies-skills-but-only-prints-a-hint" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:18px;color:#191919;margin:24px 0 8px 0;line-height:1.3;">Bug #2: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">bootstrap.sh</code> says it copies skills but only prints a hint</h3>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;"><strong style="font-weight:600;">File:</strong> <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">gbauto/hermes-gbauto/bootstrap.sh</code> (lines ~147-152)</p>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Current logic:</p>
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%;"><span></span><span style="color: #F8F8F2">SKILLS_PATH</span><span style="color: #FF4689">=</span><span style="color: #E6DB74">&quot;${</span><span style="color: #F8F8F2">REPO_DIR</span><span style="color: #E6DB74">}/skills&quot;</span>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">info<span style="color: #F8F8F2"> </span><span style="color: #E6DB74">&quot;Skills available at: ${</span><span style="color: #F8F8F2">SKILLS_PATH</span><span style="color: #E6DB74">}&quot;</span></p>
+<span style="color: #F8F8F2">echo </span><span style="color: #E6DB74">&quot;    Add this path to &#39;skills.external_dirs&#39; in ${</span><span style="color: #F8F8F2">PROFILE_DIR</span><span style="color: #E6DB74">}/config.yaml to enable.&quot;</span>
+</pre></div>
+
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">But the <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">hermes-gbauto-bootstrap</code> SKILL.md (in this Hermes deployment) says</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">"step 6: copy <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">skills/*</code> to <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">~/.hermes/profiles/&lt;slug&gt;-carlos/skills/</code>."</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Either the skill doc is wrong OR the script should actually do the copy.</p>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">The cleaner fix is <strong style="font-weight:600;">template + skill agree</strong>: keep the script's "link, don't</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">copy" approach (cleaner — one source of truth, easier updates via</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">git submodule update --remote hermes</code>) and update the SKILL.md to say "link</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">via external_dirs in config.yaml" instead of "copy."</p>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">(The skill-side fix is in this Hermes installation already — see <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">hermes-gbauto-bootstrap</code> skill patches below.)</p>
+
+<h3 id="bug-3-auxiliary-providers-pinned-to-openrouter-without-openrouter-api-key" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:18px;color:#191919;margin:24px 0 8px 0;line-height:1.3;">Bug #3: Auxiliary providers pinned to OpenRouter without OPENROUTER_API_KEY</h3>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;"><strong style="font-weight:600;">File:</strong> <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">gbauto/hermes-gbauto/config/hermes.example.yaml</code></p>
+
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%;"><span></span><span style="color: #FF4689">auxiliary</span><span style="color: #F8F8F2">:</span>
+<span style="color: #F8F8F2">  </span><span style="color: #FF4689">compression</span><span style="color: #F8F8F2">:</span>
+<span style="color: #F8F8F2">    </span><span style="color: #FF4689">provider</span><span style="color: #F8F8F2">: </span><span style="color: #AE81FF">openrouter</span><span style="color: #F8F8F2">   </span><span style="color: #959077"># ← will leak &quot;No aux provider&quot; warnings</span>
+<span style="color: #F8F8F2">    </span><span style="color: #FF4689">model</span><span style="color: #F8F8F2">: </span><span style="color: #AE81FF">google/gemini-2.5-flash</span>
+<span style="color: #F8F8F2">    </span><span style="color: #FF4689">api_key</span><span style="color: #F8F8F2">: </span><span style="color: #E6DB74">&#39;&#39;</span>
+<span style="color: #F8F8F2">  </span><span style="color: #FF4689">title_generation</span><span style="color: #F8F8F2">:</span>
+<span style="color: #F8F8F2">    </span><span style="color: #FF4689">provider</span><span style="color: #F8F8F2">: </span><span style="color: #AE81FF">openrouter</span><span style="color: #F8F8F2">   </span><span style="color: #959077"># ← same</span>
+<span style="color: #F8F8F2">    </span><span style="color: #FF4689">model</span><span style="color: #F8F8F2">: </span><span style="color: #AE81FF">google/gemini-2.5-flash</span>
+<span style="color: #F8F8F2">    </span><span style="color: #FF4689">api_key</span><span style="color: #F8F8F2">: </span><span style="color: #E6DB74">&#39;&#39;</span>
+</pre></div>
+
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Per <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">hermes-iac</code> skill's trap table:</p>
+
+<blockquote style="border-left:3px solid #D97757;margin:16px 0;padding:8px 16px;color:#6b6b6b;font-style:italic;">Chat reply leaks "⚠️ No auxiliary LLM provider configured … set OPENROUTER_API_KEY"</blockquote>
+<blockquote style="border-left:3px solid #D97757;margin:16px 0;padding:8px 16px;color:#6b6b6b;font-style:italic;">— <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">auxiliary.compression.provider: openrouter</code> in <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">config.yaml</code> but no</blockquote>
+<blockquote style="border-left:3px solid #D97757;margin:16px 0;padding:8px 16px;color:#6b6b6b;font-style:italic;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">OPENROUTER_API_KEY</code> in profile <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">.env</code>.</blockquote>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Every new client will hit this on first long-context turn unless the operator</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">either (a) flips to <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">provider: auto</code> (inherits Anthropic main) or (b) wires</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">OPENROUTER_API_KEY</code> into the profile <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">.env</code>.</p>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;"><strong style="font-weight:600;">Proposed patch:</strong> default to <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">auto</code> so new clients work out of the box:</p>
+
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%;"><span></span>auxiliary:
+<span style="color: #F8F8F2"> </span>  compression:
+<span style="color: #FF4689">-    provider: openrouter</span>
+<span style="color: #FF4689">-    model: google/gemini-2.5-flash</span>
+<span style="color: #A6E22E">+    provider: auto</span>
+<span style="color: #A6E22E">+    # Falls back to main provider (Anthropic). Override to openrouter only if</span>
+<span style="color: #A6E22E">+    # you&#39;ve wired OPENROUTER_API_KEY in this profile&#39;s .env.</span>
+<span style="color: #F8F8F2"> </span>    timeout: 120
+<span style="color: #F8F8F2"> </span>  title_generation:
+<span style="color: #FF4689">-    provider: openrouter</span>
+<span style="color: #FF4689">-    model: google/gemini-2.5-flash</span>
+<span style="color: #A6E22E">+    provider: auto</span>
+<span style="color: #F8F8F2"> </span>    timeout: 30
+</pre></div>
+
+
+<hr style="border:none;border-top:1px solid rgba(25,25,25,.1);margin:24px 0;">
+
+<h2 id="skillmd-doc-fixes-already-applied-to-this-hermes-deployment" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">SKILL.md DOC FIXES (already applied to this Hermes deployment)</h2>
+
+<h3 id="fix-1-token-cleanup-verification-grep-was-too-aggressive" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:18px;color:#191919;margin:24px 0 8px 0;line-height:1.3;">Fix #1: Token cleanup verification grep was too aggressive</h3>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">The skill said:</p>
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%;"><span></span>grep<span style="color: #F8F8F2"> </span>-r<span style="color: #F8F8F2"> </span><span style="color: #E6DB74">&#39;{{CLIENT&#39;</span><span style="color: #F8F8F2"> </span>hermes/<span style="color: #F8F8F2"> </span><span style="color: #AE81FF">2</span>&gt;/dev/null<span style="color: #F8F8F2"> | </span>grep<span style="color: #F8F8F2"> </span>-v<span style="color: #F8F8F2"> </span>.git/<span style="color: #F8F8F2"> | </span>head<span style="color: #F8F8F2"> </span>-5
+<span style="color: #959077"># Expected: 0 lines</span>
+</pre></div>
+
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">But this fires false positives on <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">bootstrap.sh</code> self-references (pitfall #2)</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">and <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">.claude/agents/template-curator.md</code> (documents the token grammar).</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;"><strong style="font-weight:600;">Applied patch</strong> to widen the exclusion list.</p>
+
+<h3 id="fix-2-skillmd-claimed-step-6-copies-skills-but-bootstrapsh-links-instead" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:18px;color:#191919;margin:24px 0 8px 0;line-height:1.3;">Fix #2: SKILL.md claimed "step 6 copies skills" but bootstrap.sh links instead</h3>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">The "What <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">bootstrap.sh</code> does (under the hood)" section in the skill says:</p>
+
+<blockquote style="border-left:3px solid #D97757;margin:16px 0;padding:8px 16px;color:#6b6b6b;font-style:italic;">6. <strong style="font-weight:600;">Install skills</strong>: copy <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">skills/*</code> to <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">~/.hermes/profiles/&lt;slug&gt;-carlos/skills/</code>.</blockquote>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Reality: it just prints <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">info &quot;Skills available at: ${REPO_DIR}/skills&quot;</code> and</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">relies on <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">external_dirs</code> in <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">config.yaml</code>. <strong style="font-weight:600;">TODO:</strong> patch skill text to</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">match reality.</p>
+
+<hr style="border:none;border-top:1px solid rgba(25,25,25,.1);margin:24px 0;">
+
+<h2 id="autonomous-agent-compatibility-additions" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">AUTONOMOUS-AGENT COMPATIBILITY ADDITIONS</h2>
+
+<h3 id="codex-full-auto-sandbox-blocks-outbound-network" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:18px;color:#191919;margin:24px 0 8px 0;line-height:1.3;">Codex <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">--full-auto</code> sandbox blocks outbound network</h3>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">This bit us twice on this dry-run. <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">codex exec --full-auto</code> defaults to</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">--sandbox workspace-write</code> which has no network egress. The skill should add</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">a "Running under autonomous agents" section noting:</p>
+
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%;"><span></span><span style="color: #959077"># Bad (blocks network):</span>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">codex<span style="color: #F8F8F2"> exec </span>--full-auto<span style="color: #F8F8F2"> </span><span style="color: #E6DB74">&quot;bootstrap test-clients...&quot;</span></p>
+
+<span style="color: #959077"># Good (full machine access — only on trusted machines like Greg&#39;s Mac mini):</span>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">codex<span style="color: #F8F8F2"> exec </span>--dangerously-bypass-approvals-and-sandbox<span style="color: #F8F8F2"> </span><span style="color: #E6DB74">&quot;bootstrap test-clients...&quot;</span></p>
+</pre></div>
+
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">This has been added to the <strong style="font-weight:600;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">codex</code> skill</strong> in this Hermes deployment.</p>
+
+<h3 id="gh-auth-validity-check-via-positive-api-call-not-stderr-parsing" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:18px;color:#191919;margin:24px 0 8px 0;line-height:1.3;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">gh auth</code> validity check via positive API call, not stderr parsing</h3>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Codex's first run flagged <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">gh auth status</code> stderr as a failure even though</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">gh api user</code> returned 200. Recommend: any autonomous bootstrap runs use</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">gh api user --jq .login</code> as the auth-validity probe, not <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">gh auth status</code>.</p>
+
+<h3 id="hermes-version-can-hang-in-fresh-shells" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:18px;color:#191919;margin:24px 0 8px 0;line-height:1.3;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">hermes --version</code> can hang in fresh shells</h3>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Observed during preflight. Wrap with <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">timeout 10s</code> and continue on timeout —</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">the version check is informational, not a blocker.</p>
+
+<hr style="border:none;border-top:1px solid rgba(25,25,25,.1);margin:24px 0;">
+
+<h2 id="status" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">STATUS</h2>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">✅ <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">gbauto/test-clients</code> repo created (private, <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">main</code> branch)</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">✅ Submodule <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">hermes/</code> pinned to current <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">hermes-gbauto</code> HEAD</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">✅ Profile <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">~/.hermes/profiles/test-clients-carlos/</code> created</li>
+</ul>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">  (config.yaml, mcp.json, SOUL.md — but no skills/ dir; see Bug #2)</p>
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">⚠️  config.yaml has 3 known issues (Bug #1 + #3 above)</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">⚠️  No <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">OPENROUTER_API_KEY</code> in profile <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">.env</code> → first long-context turn will</li>
+</ul>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">  emit aux-provider warning unless config.yaml patched per Bug #3</p>
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">🛑 Gateway NOT started, cron NOT registered, Telegram NOT DM'd (per dry-run rules)</li>
+</ul>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">None of these block making the template usable — they make it cleaner for the</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;"><em>next</em> client to be onboarded without manual fixups.</p>
+
+    <div style="margin-top:48px;padding-top:24px;border-top:1px solid rgba(25,25,25,.08);">
+      <p style="font:400 13px Inter,sans-serif;color:#6b6b6b;text-align:center;">
+        Built by GBAutomation &middot;
+        <a href="https://gbautomation.xyz" style="color:#D97757;">gbautomation.xyz</a>
+        
+      </p>
+      <p style="font:400 11px Inter,sans-serif;color:rgba(25,25,25,.3);text-align:center;margin-top:4px;">
+        Want to work together?
+        <a href="https://gbautomation.xyz/#contact" style="color:#D97757;">Get in touch &rarr;</a>
+      </p>
+    </div>
+  </div>
+  <div class="prd-toc">
+    
+<div style="position:sticky;top:24px;max-width:220px;width:100%;">
+  <div style="background:#F3F1E7;border:1px solid rgba(25,25,25,.1);
+              border-radius:12px;padding:16px;font-size:13px;">
+    <p style="font:600 11px Inter,sans-serif;text-transform:uppercase;
+              letter-spacing:.06em;color:#6b6b6b;margin:0 0 10px;">Contents</p>
+    <ul style="list-style:none;margin:0;padding:0;"><li style="margin:6px 0;padding-left:0px;"><a href="#real-template-bugs-need-fixes-in-gbautohermes-gbauto" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">REAL TEMPLATE BUGS (need fixes in `gbauto/hermes-gbauto`)</a></li><li style="margin:6px 0;padding-left:12px;"><a href="#bug-1-configexampleyaml-points-skills-at-non-existent-path" style="color:#D97757;text-decoration:none;font-size:13px;line-height:1.5;">Bug #1: `config.example.yaml` points skills at non-existent path</a></li><li style="margin:6px 0;padding-left:12px;"><a href="#bug-2-bootstrapsh-says-it-copies-skills-but-only-prints-a-hint" style="color:#D97757;text-decoration:none;font-size:13px;line-height:1.5;">Bug #2: `bootstrap.sh` says it copies skills but only prints a hint</a></li><li style="margin:6px 0;padding-left:12px;"><a href="#bug-3-auxiliary-providers-pinned-to-openrouter-without-openrouter-api-key" style="color:#D97757;text-decoration:none;font-size:13px;line-height:1.5;">Bug #3: Auxiliary providers pinned to OpenRouter without OPENROUTER_API_KEY</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#skillmd-doc-fixes-already-applied-to-this-hermes-deployment" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">SKILL.md DOC FIXES (already applied to this Hermes deployment)</a></li><li style="margin:6px 0;padding-left:12px;"><a href="#fix-1-token-cleanup-verification-grep-was-too-aggressive" style="color:#D97757;text-decoration:none;font-size:13px;line-height:1.5;">Fix #1: Token cleanup verification grep was too aggressive</a></li><li style="margin:6px 0;padding-left:12px;"><a href="#fix-2-skillmd-claimed-step-6-copies-skills-but-bootstrapsh-links-instead" style="color:#D97757;text-decoration:none;font-size:13px;line-height:1.5;">Fix #2: SKILL.md claimed &quot;step 6 copies skills&quot; but bootstrap.sh links instead</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#autonomous-agent-compatibility-additions" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">AUTONOMOUS-AGENT COMPATIBILITY ADDITIONS</a></li><li style="margin:6px 0;padding-left:12px;"><a href="#codex-full-auto-sandbox-blocks-outbound-network" style="color:#D97757;text-decoration:none;font-size:13px;line-height:1.5;">Codex `--full-auto` sandbox blocks outbound network</a></li><li style="margin:6px 0;padding-left:12px;"><a href="#gh-auth-validity-check-via-positive-api-call-not-stderr-parsing" style="color:#D97757;text-decoration:none;font-size:13px;line-height:1.5;">`gh auth` validity check via positive API call, not stderr parsing</a></li><li style="margin:6px 0;padding-left:12px;"><a href="#hermes-version-can-hang-in-fresh-shells" style="color:#D97757;text-decoration:none;font-size:13px;line-height:1.5;">`hermes --version` can hang in fresh shells</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#status" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">STATUS</a></li></ul>
+  </div>
+</div>
+  </div>
+</div>
+</body>
+</html>
