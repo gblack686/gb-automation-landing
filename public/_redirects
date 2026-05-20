@@ -1,1 +1,9 @@
-/*    /index.html   200
+# Static asset pass-through (must come before SPA catch-all)
+# These are real files in the build output; serve them as-is.
+/prds/*.html               /prds/:splat.html              200
+/prds/*.json               /prds/:splat.json              200
+/prds/prds-manifest.json   /prds/prds-manifest.json       200
+
+# SPA fallback for React Router deep links (no extension).
+# Order matters: this rule only applies after the asset rules above miss.
+/*                         /index.html                    200
