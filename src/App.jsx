@@ -40,6 +40,10 @@ function App() {
             element={<RequireAuth><Artifacts /></RequireAuth>}
           />
           <Route
+            path="/artifacts/archive"
+            element={<RequireAuth><Artifacts /></RequireAuth>}
+          />
+          <Route
             path="/artifacts/:client/:artifactId"
             element={<RequireAuth><ArtifactView /></RequireAuth>}
           />

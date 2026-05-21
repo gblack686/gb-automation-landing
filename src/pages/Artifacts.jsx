@@ -1,14 +1,20 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import ArtifactsGallery from '../components/ArtifactsGallery';
 import Footer from '../components/Footer';
 import SignOutButton from '../components/SignOutButton';
 
-function RegistryArtifacts() {
+function commandFor(action, artifact) {
+  return `artifact-registry ${action} --client ${artifact.client} --artifact-id ${artifact.artifact_id}`;
+}
+
+function RegistryArtifacts({ archivedOnly = false }) {
   const [manifest, setManifest] = useState(null);
   const [error, setError] = useState('');
   const [visibleCount, setVisibleCount] = useState(12);
   const [query, setQuery] = useState('');
+  const [kindFilter, setKindFilter] = useState('all');
+  const [actionMessage, setActionMessage] = useState('');
 
   useEffect(() => {
     let cancelled = false;
@@ -24,7 +30,9 @@ function RegistryArtifacts() {
   }, []);
 
   const artifacts = useMemo(() => {
-    return [...(manifest?.artifacts || [])].sort((a, b) => String(b.created_at || '').localeCompare(String(a.created_at || '')));
+    return [...(manifest?.artifacts || [])]
+      .filter((artifact) => Boolean(artifact.archived) === archivedOnly)
+      .sort((a, b) => String(b.created_at || '').localeCompare(String(a.created_at || '')));
   }, [manifest]);
 
   if (error) {
@@ -36,8 +44,11 @@ function RegistryArtifacts() {
   }
 
   const filteredArtifacts = artifacts.filter((artifact) => {
-    const haystack = [artifact.client, artifact.project, artifact.artifact_id, artifact.filename, artifact.drive?.status].filter(Boolean).join(' ').toLowerCase();
-    return haystack.includes(query.trim().toLowerCase());
+    const tags = artifact.tags || [];
+    const kind = artifact.artifact_kind || '';
+    const matchesKind = kindFilter === 'all' || tags.includes(kindFilter) || kind === kindFilter;
+    const haystack = [artifact.client, artifact.project, artifact.artifact_id, artifact.filename, artifact.drive?.status, kind, ...tags].filter(Boolean).join(' ').toLowerCase();
+    return matchesKind && haystack.includes(query.trim().toLowerCase());
   });
   const visibleArtifacts = filteredArtifacts.slice(0, visibleCount);
 
@@ -54,7 +65,14 @@ function RegistryArtifacts() {
           placeholder="Search client, file, project..."
           className="w-full rounded-full border border-[#D6D4C8] bg-white/80 px-5 py-3 text-sm text-[#191919] outline-none focus:border-[#D97757] sm:max-w-md"
         />
-        <p className="text-xs uppercase tracking-widest text-[#191919]/45">Showing {visibleArtifacts.length} of {filteredArtifacts.length}</p>
+        <div className="flex flex-wrap items-center gap-3">
+          <select value={kindFilter} onChange={(event) => { setKindFilter(event.target.value); setVisibleCount(12); }} className="rounded-full border border-[#D6D4C8] bg-white/80 px-4 py-3 text-xs uppercase tracking-widest text-[#191919] outline-none focus:border-[#D97757]">
+            <option value="all">All kinds</option>
+            <option value="template">Templates</option>
+            <option value="improved-template">Improved templates</option>
+          </select>
+          <p className="text-xs uppercase tracking-widest text-[#191919]/45">Showing {visibleArtifacts.length} of {filteredArtifacts.length}</p>
+        </div>
       </div>
       <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-5">
       {visibleArtifacts.map((artifact) => (
@@ -67,6 +85,13 @@ function RegistryArtifacts() {
             <span className="text-[#D97757] text-[11px] font-bold tracking-widest uppercase">{artifact.client}</span>
             <span className="rounded-full bg-[#D97757]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-[#D97757]">{artifact.type}</span>
           </div>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {artifact.artifact_kind && <span className="rounded-full bg-[#191919]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-[#191919]/70">{artifact.artifact_kind}</span>}
+            {(artifact.tags || []).filter((tag) => tag !== artifact.artifact_kind).slice(0, 3).map((tag) => (
+              <span key={tag} className="rounded-full bg-[#D6D4C8]/60 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-[#191919]/60">{tag}</span>
+            ))}
+            {artifact.archived && <span className="rounded-full bg-red-100 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-red-700">Archived</span>}
+          </div>
           <h3 className="mt-4 text-xl font-serif font-medium text-[#191919] group-hover:text-[#D97757]">
             {artifact.filename?.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ')}
           </h3>
@@ -75,9 +100,21 @@ function RegistryArtifacts() {
             <span>{artifact.created_at || 'Published artifact'}</span>
             {artifact.drive?.url && <span className="text-[#D97757]">Drive</span>}
           </div>
+          <button
+            type="button"
+            onClick={(event) => { event.preventDefault(); setActionMessage(commandFor(artifact.archived ? 'restore' : 'archive', artifact)); }}
+            className="mt-4 rounded-full border border-[#D6D4C8] px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-[#191919]/60 hover:border-[#D97757] hover:text-[#D97757]"
+          >
+            {artifact.archived ? 'Restore' : 'Archive'}
+          </button>
         </Link>
       ))}
       </div>
+      {actionMessage && (
+        <div className="mt-6 rounded-2xl border border-[#D97757]/30 bg-[#D97757]/10 p-4 text-sm text-[#191919]">
+          Static manifest is read-only here. Run or wire this API contract: <code className="font-mono">{actionMessage}</code>
+        </div>
+      )}
       {visibleArtifacts.length < filteredArtifacts.length && (
         <div className="mt-8 flex justify-center">
           <button type="button" onClick={() => setVisibleCount((count) => count + 12)} className="rounded-full border border-[#D97757] px-6 py-3 text-xs font-bold uppercase tracking-widest text-[#D97757] hover:bg-[#D97757] hover:text-white">Load more</button>
@@ -88,6 +125,8 @@ function RegistryArtifacts() {
 }
 
 export default function Artifacts() {
+  const location = useLocation();
+  const archivedOnly = location.pathname.endsWith('/archive');
   return (
     <div className="min-h-screen bg-[#F3F1E7] selection:bg-[#D97757] selection:text-white">
       <header className="py-10 border-b border-[#D6D4C8]/60">
@@ -101,7 +140,8 @@ export default function Artifacts() {
 
           <nav className="flex items-center gap-4 text-xs uppercase tracking-widest">
             <Link to="/apps" className="text-[#191919]/60 hover:text-[#D97757]">Apps</Link>
-            <Link to="/artifacts" className="text-[#191919] font-bold border-b border-[#D97757] pb-0.5">Artifacts</Link>
+            <Link to="/artifacts" className={`${archivedOnly ? 'text-[#191919]/60 hover:text-[#D97757]' : 'text-[#191919] font-bold border-b border-[#D97757] pb-0.5'}`}>Artifacts</Link>
+            <Link to="/artifacts/archive" className={`${archivedOnly ? 'text-[#191919] font-bold border-b border-[#D97757] pb-0.5' : 'text-[#191919]/60 hover:text-[#D97757]'}`}>Archive</Link>
             <Link to="/plan" className="text-[#191919]/60 hover:text-[#D97757]">Plan</Link>
             <span className="w-px h-3 bg-[#D6D4C8]" aria-hidden="true" />
             <SignOutButton />
@@ -111,9 +151,9 @@ export default function Artifacts() {
 
       <main className="max-w-7xl mx-auto px-6 py-16">
         <div className="mb-12">
-          <span className="text-[#D97757] text-xs font-bold tracking-widest uppercase">Artifacts Feed</span>
-          <h1 className="text-4xl md:text-5xl font-serif font-medium text-[#191919] tracking-tight mt-2 mb-4">Everything the Agents Have Generated</h1>
-          <p className="text-base text-[#191919]/70 max-w-2xl leading-relaxed">A unified feed of artifacts produced across apps and the production artifact registry.</p>
+          <span className="text-[#D97757] text-xs font-bold tracking-widest uppercase">{archivedOnly ? 'Artifact Archive' : 'Artifacts Feed'}</span>
+          <h1 className="text-4xl md:text-5xl font-serif font-medium text-[#191919] tracking-tight mt-2 mb-4">{archivedOnly ? 'Bring Items Back From the Dead' : 'Everything the Agents Have Generated'}</h1>
+          <p className="text-base text-[#191919]/70 max-w-2xl leading-relaxed">{archivedOnly ? 'Archived artifacts stay discoverable here with restore affordances for the future registry write endpoint.' : 'A unified feed of active artifacts produced across apps and the production artifact registry.'}</p>
         </div>
 
         <section className="mb-16">
@@ -123,16 +163,16 @@ export default function Artifacts() {
               <h2 className="mt-2 text-2xl font-serif text-[#191919]">Published client artifacts</h2>
             </div>
           </div>
-          <RegistryArtifacts />
+          <RegistryArtifacts archivedOnly={archivedOnly} />
         </section>
 
-        <section>
+        {!archivedOnly && <section>
           <div className="mb-6">
             <span className="text-[#D97757] text-xs font-bold tracking-widest uppercase">Gallery</span>
             <h2 className="mt-2 text-2xl font-serif text-[#191919]">Generated media feed</h2>
           </div>
           <ArtifactsGallery />
-        </section>
+        </section>}
       </main>
 
       <Footer />
