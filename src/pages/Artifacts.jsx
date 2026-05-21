@@ -7,6 +7,8 @@ import SignOutButton from '../components/SignOutButton';
 function RegistryArtifacts() {
   const [manifest, setManifest] = useState(null);
   const [error, setError] = useState('');
+  const [visibleCount, setVisibleCount] = useState(12);
+  const [query, setQuery] = useState('');
 
   useEffect(() => {
     let cancelled = false;
@@ -33,13 +35,29 @@ function RegistryArtifacts() {
     return <p className="text-sm text-[#191919]/60">Loading registry artifacts...</p>;
   }
 
+  const filteredArtifacts = artifacts.filter((artifact) => {
+    const haystack = [artifact.client, artifact.project, artifact.artifact_id, artifact.filename, artifact.drive?.status].filter(Boolean).join(' ').toLowerCase();
+    return haystack.includes(query.trim().toLowerCase());
+  });
+  const visibleArtifacts = filteredArtifacts.slice(0, visibleCount);
+
   if (!artifacts.length) {
     return <p className="text-sm text-[#191919]/60">No registry artifacts have been mirrored to the site yet.</p>;
   }
 
   return (
-    <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-5">
-      {artifacts.map((artifact) => (
+    <div>
+      <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <input
+          value={query}
+          onChange={(event) => { setQuery(event.target.value); setVisibleCount(12); }}
+          placeholder="Search client, file, project..."
+          className="w-full rounded-full border border-[#D6D4C8] bg-white/80 px-5 py-3 text-sm text-[#191919] outline-none focus:border-[#D97757] sm:max-w-md"
+        />
+        <p className="text-xs uppercase tracking-widest text-[#191919]/45">Showing {visibleArtifacts.length} of {filteredArtifacts.length}</p>
+      </div>
+      <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-5">
+      {visibleArtifacts.map((artifact) => (
         <Link
           key={`${artifact.client}-${artifact.artifact_id}`}
           to={`/artifacts/${encodeURIComponent(artifact.client)}/${encodeURIComponent(artifact.artifact_id)}`}
@@ -53,9 +71,18 @@ function RegistryArtifacts() {
             {artifact.filename?.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ')}
           </h3>
           <p className="mt-3 line-clamp-2 text-sm text-[#191919]/60">{artifact.project || artifact.artifact_id}</p>
-          <div className="mt-5 text-[11px] uppercase tracking-widest text-[#191919]/40">{artifact.created_at || 'Published artifact'}</div>
+          <div className="mt-5 flex items-center justify-between gap-3 text-[11px] uppercase tracking-widest text-[#191919]/40">
+            <span>{artifact.created_at || 'Published artifact'}</span>
+            {artifact.drive?.url && <span className="text-[#D97757]">Drive</span>}
+          </div>
         </Link>
       ))}
+      </div>
+      {visibleArtifacts.length < filteredArtifacts.length && (
+        <div className="mt-8 flex justify-center">
+          <button type="button" onClick={() => setVisibleCount((count) => count + 12)} className="rounded-full border border-[#D97757] px-6 py-3 text-xs font-bold uppercase tracking-widest text-[#D97757] hover:bg-[#D97757] hover:text-white">Load more</button>
+        </div>
+      )}
     </div>
   );
 }

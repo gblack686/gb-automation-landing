@@ -105,8 +105,17 @@ export default function ArtifactView() {
                   <h1 className="mt-2 text-3xl md:text-5xl font-serif font-medium text-[#191919] capitalize">{title}</h1>
                   <p className="mt-3 text-sm text-[#191919]/60">Artifact ID: {artifact.artifact_id}</p>
                 </div>
-                <a href={assetPath} className="rounded-full bg-[#191919] px-5 py-3 text-xs font-bold uppercase tracking-widest text-[#F3F1E7] hover:bg-[#D97757]">Open raw</a>
+                <div className="flex flex-wrap gap-3">
+                  <a href={assetPath} className="rounded-full bg-[#191919] px-5 py-3 text-xs font-bold uppercase tracking-widest text-[#F3F1E7] hover:bg-[#D97757]">Open raw</a>
+                  {artifact.drive?.url && (
+                    <a href={artifact.drive.url} target="_blank" rel="noopener noreferrer" className="rounded-full border border-[#D97757] px-5 py-3 text-xs font-bold uppercase tracking-widest text-[#D97757] hover:bg-[#D97757] hover:text-white">Open in Drive</a>
+                  )}
+                </div>
               </div>
+              <p className="mt-4 text-xs uppercase tracking-widest text-[#191919]/45">Website renders the mirrored public copy; Drive is linked as the canonical synced file when available.</p>
+              {artifact.drive?.status && (
+                <p className="mt-2 text-xs text-[#191919]/55">Drive status: {artifact.drive.status}{artifact.drive.folder_name ? ` in ${artifact.drive.folder_name}` : ''}</p>
+              )}
             </div>
 
             {artifact.type === 'html' && (

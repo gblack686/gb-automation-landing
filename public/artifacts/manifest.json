@@ -11,15 +11,38 @@
       },
       "filename": "tac-build-report-1fafe5cb.html",
       "project": null,
-      "public_path": "/Users/greg/repos/gb-automation-landing/public/artifacts/gbautomation/tac-build-report-1fafe5cb-b44c85d929e9/tac-build-report-1fafe5cb.html",
       "registry_path": "/Users/greg/repos/gbautomation/second-brain/intelligence/artifact-registry/gbautomation/tac-build-report-1fafe5cb-b44c85d929e9/tac-build-report-1fafe5cb.html",
       "sha256": "b44c85d929e91880d01a8877b75432026ce1b358cea8b5d1f748862379318de2",
       "size": 67446,
       "source_path": "/Users/greg/repos/gbautomation/second-brain/intelligence/reports/2026-05-12/tac-build-report-1fafe5cb/tac-build-report-1fafe5cb.html",
       "type": "html",
       "web_route": "/artifacts/gbautomation/tac-build-report-1fafe5cb-b44c85d929e9"
+    },
+    {
+      "artifact_id": "instagram-profile-59c11831fec0",
+      "asset_url": "/artifacts/sylvan-hills/instagram-profile-59c11831fec0/instagram-profile.md",
+      "client": "sylvan-hills",
+      "created_at": "2026-05-21T20:29:57Z",
+      "drive": {
+        "enabled": true,
+        "file_id": "1WOaqQap6kYHZ45-3j65m4INlEwDHIn-P",
+        "folder_id": "1Czsj7LOeFEwr1DaZvw93yls-jG-2YN1x",
+        "folder_name": "sylvan-hills",
+        "root_folder_id": null,
+        "status": "uploaded",
+        "url": "https://drive.google.com/file/d/1WOaqQap6kYHZ45-3j65m4INlEwDHIn-P/view"
+      },
+      "filename": "instagram-profile.md",
+      "project": null,
+      "public_path": "/Users/greg/repos/gb-automation-landing/public/artifacts/sylvan-hills/instagram-profile-59c11831fec0/instagram-profile.md",
+      "registry_path": "/Users/greg/repos/gbautomation/second-brain/intelligence/artifact-registry/sylvan-hills/instagram-profile-59c11831fec0/instagram-profile.md",
+      "sha256": "59c11831fec09f336bcf78d8e9180b7d016ede3a83d1c13fd2c44f3a5a0aebce",
+      "size": 9937,
+      "source_path": "/Users/greg/.openclaw/workspace/gbauto/sylvan-hills/outputs/instagram-profile.md",
+      "type": "md",
+      "web_route": "/artifacts/sylvan-hills/instagram-profile-59c11831fec0"
     }
   ],
   "schema_version": 1,
-  "updated_at": "2026-05-21T20:25:21Z"
+  "updated_at": "2026-05-21T20:30:00Z"
 }
