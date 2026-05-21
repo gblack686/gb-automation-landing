@@ -36,6 +36,7 @@ export default function ArtifactView() {
   const { client, artifactId } = useParams();
   const [manifest, setManifest] = useState(null);
   const [markdown, setMarkdown] = useState('');
+  const [jsonText, setJsonText] = useState('');
   const [status, setStatus] = useState({ loading: true, error: '' });
 
   useEffect(() => {
@@ -78,6 +79,30 @@ export default function ArtifactView() {
       .catch((err) => { if (!cancelled) setMarkdown(`Unable to load markdown artifact: ${err.message}`); });
     return () => { cancelled = true; };
   }, [artifact, assetPath]);
+
+
+
+  useEffect(() => {
+    if (!artifact || artifact.type !== 'json') return;
+    let cancelled = false;
+    fetch(assetPath)
+      .then((res) => {
+        if (!res.ok) throw new Error(`JSON returned ${res.status}`);
+        return res.text();
+      })
+      .then((text) => {
+        if (cancelled) return;
+        try {
+          setJsonText(JSON.stringify(JSON.parse(text), null, 2));
+        } catch {
+          setJsonText(text);
+        }
+      })
+      .catch((err) => { if (!cancelled) setJsonText(`Unable to load JSON artifact: ${err.message}`); });
+    return () => { cancelled = true; };
+  }, [artifact, assetPath]);
+
+  const isImage = ['png', 'jpg', 'jpeg', 'gif', 'svg'].includes(artifact?.type);
 
   const title = artifact?.filename?.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ') || 'Artifact';
 
@@ -131,6 +156,29 @@ export default function ArtifactView() {
             {artifact.type === 'md' && (
               <div className="prose prose-neutral max-w-none rounded-3xl border border-[#D6D4C8] bg-white/80 p-8 text-[#191919] shadow-lg">
                 {ReactMarkdown ? <ReactMarkdown>{markdown}</ReactMarkdown> : <pre className="whitespace-pre-wrap">{markdown}</pre>}
+              </div>
+            )}
+
+            {artifact.type === 'mp4' && (
+              <video controls preload="metadata" className="max-h-[78vh] w-full rounded-3xl border border-[#D6D4C8] bg-black shadow-lg">
+                <source src={assetPath} type={artifact.mime_type || 'video/mp4'} />
+                Your browser cannot play this video. <a className="text-[#D97757] underline" href={assetPath}>Download it instead</a>.
+              </video>
+            )}
+
+            {isImage && (
+              <div className="rounded-3xl border border-[#D6D4C8] bg-white/80 p-4 shadow-lg">
+                <img src={assetPath} alt={title} className="mx-auto max-h-[78vh] rounded-2xl object-contain" />
+              </div>
+            )}
+
+            {artifact.type === 'json' && (
+              <pre className="max-h-[78vh] overflow-auto rounded-3xl border border-[#D6D4C8] bg-[#191919] p-6 text-sm text-[#F3F1E7] shadow-lg"><code>{jsonText}</code></pre>
+            )}
+
+            {!['html', 'pdf', 'md', 'mp4', 'json'].includes(artifact.type) && !isImage && (
+              <div className="rounded-3xl border border-[#D6D4C8] bg-white/80 p-8 text-[#191919]/70 shadow-lg">
+                Preview unavailable for this file type. <a className="text-[#D97757] underline" href={assetPath}>Open or download the raw artifact</a>.
               </div>
             )}
           </article>
