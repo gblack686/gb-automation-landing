@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Plan from './pages/Plan';
 import Apps from './pages/Apps';
 import Artifacts from './pages/Artifacts';
+import ArtifactView from './pages/ArtifactView';
 import Blockers from './pages/Blockers';
 import YouTubeIntel from './pages/YouTubeIntel';
 import Login from './pages/Login';
@@ -37,6 +38,10 @@ function App() {
           <Route
             path="/artifacts"
             element={<RequireAuth><Artifacts /></RequireAuth>}
+          />
+          <Route
+            path="/artifacts/:client/:artifactId"
+            element={<RequireAuth><ArtifactView /></RequireAuth>}
           />
           <Route
             path="/blockers"

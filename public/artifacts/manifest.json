@@ -1,0 +1,25 @@
+{
+  "artifacts": [
+    {
+      "artifact_id": "tac-build-report-1fafe5cb-b44c85d929e9",
+      "asset_url": "/artifacts/gbautomation/tac-build-report-1fafe5cb-b44c85d929e9/tac-build-report-1fafe5cb.html",
+      "client": "gbautomation",
+      "created_at": "2026-05-21T19:55:49Z",
+      "drive": {
+        "enabled": false,
+        "status": "dry-run"
+      },
+      "filename": "tac-build-report-1fafe5cb.html",
+      "project": null,
+      "public_path": "/Users/greg/repos/gb-automation-landing/public/artifacts/gbautomation/tac-build-report-1fafe5cb-b44c85d929e9/tac-build-report-1fafe5cb.html",
+      "registry_path": "/Users/greg/repos/gbautomation/second-brain/intelligence/artifact-registry/gbautomation/tac-build-report-1fafe5cb-b44c85d929e9/tac-build-report-1fafe5cb.html",
+      "sha256": "b44c85d929e91880d01a8877b75432026ce1b358cea8b5d1f748862379318de2",
+      "size": 67446,
+      "source_path": "/Users/greg/repos/gbautomation/second-brain/intelligence/reports/2026-05-12/tac-build-report-1fafe5cb/tac-build-report-1fafe5cb.html",
+      "type": "html",
+      "web_route": "/artifacts/gbautomation/tac-build-report-1fafe5cb-b44c85d929e9"
+    }
+  ],
+  "schema_version": 1,
+  "updated_at": "2026-05-21T20:25:21Z"
+}
