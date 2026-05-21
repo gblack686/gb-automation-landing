@@ -14,6 +14,10 @@
 /prds/*.json               /prds/:splat.json              200
 /prds/*                    /prds/:splat.html              200!
 
+# Preview artifacts are standalone static HTML, not React routes.
+/previews/*.html           /previews/:splat.html          200
+/previews/*                /previews/:splat               200!
+
 # SPA fallback for React Router deep links (no extension).
 # Order matters: this rule only applies after the asset rules above miss.
 /*                         /index.html                    200
