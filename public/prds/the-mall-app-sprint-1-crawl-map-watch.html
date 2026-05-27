@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>The Mall App: Sprint 1 -- Crawl, Map, Watch | GBAutomation</title>
+  <meta name="description" content="Sprint 1 PRD for The Mall App (Sreya Halder + Ellie). Mid-sprint collaborative draft sent for client remarks ahead of the 2026-06-01 review session. Scope: agent that crawls + maps target brand surfac"/>
+  <meta property="og:title" content="The Mall App: Sprint 1 -- Crawl, Map, Watch"/>
+  <meta property="og:description" content="Sprint 1 PRD for The Mall App (Sreya Halder + Ellie). Mid-sprint collaborative draft sent for client remarks ahead of the 2026-06-01 review session. Scope: agent that crawls + maps target brand surfac"/>
+  <meta property="og:url" content="https://gbautomation.xyz/prds/the-mall-app-sprint-1-crawl-map-watch"/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:image" content="https://gbautomation.xyz/gb-logo.png"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:ital,opsz,wght@1,6..72,600&display=swap" rel="stylesheet"/>
+  <style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.highlight .hll { background-color: #49483e }
+.highlight { background: #272822; color: #F8F8F2 }
+.highlight .c { color: #959077 } /* Comment */
+.highlight .err { color: #ED007E; background-color: #1E0010 } /* Error */
+.highlight .esc { color: #F8F8F2 } /* Escape */
+.highlight .g { color: #F8F8F2 } /* Generic */
+.highlight .k { color: #66D9EF } /* Keyword */
+.highlight .l { color: #AE81FF } /* Literal */
+.highlight .n { color: #F8F8F2 } /* Name */
+.highlight .o { color: #FF4689 } /* Operator */
+.highlight .x { color: #F8F8F2 } /* Other */
+.highlight .p { color: #F8F8F2 } /* Punctuation */
+.highlight .ch { color: #959077 } /* Comment.Hashbang */
+.highlight .cm { color: #959077 } /* Comment.Multiline */
+.highlight .cp { color: #959077 } /* Comment.Preproc */
+.highlight .cpf { color: #959077 } /* Comment.PreprocFile */
+.highlight .c1 { color: #959077 } /* Comment.Single */
+.highlight .cs { color: #959077 } /* Comment.Special */
+.highlight .gd { color: #FF4689 } /* Generic.Deleted */
+.highlight .ge { color: #F8F8F2; font-style: italic } /* Generic.Emph */
+.highlight .ges { color: #F8F8F2; font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #F8F8F2 } /* Generic.Error */
+.highlight .gh { color: #F8F8F2 } /* Generic.Heading */
+.highlight .gi { color: #A6E22E } /* Generic.Inserted */
+.highlight .go { color: #66D9EF } /* Generic.Output */
+.highlight .gp { color: #FF4689; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { color: #F8F8F2; font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #959077 } /* Generic.Subheading */
+.highlight .gt { color: #F8F8F2 } /* Generic.Traceback */
+.highlight .kc { color: #66D9EF } /* Keyword.Constant */
+.highlight .kd { color: #66D9EF } /* Keyword.Declaration */
+.highlight .kn { color: #FF4689 } /* Keyword.Namespace */
+.highlight .kp { color: #66D9EF } /* Keyword.Pseudo */
+.highlight .kr { color: #66D9EF } /* Keyword.Reserved */
+.highlight .kt { color: #66D9EF } /* Keyword.Type */
+.highlight .ld { color: #E6DB74 } /* Literal.Date */
+.highlight .m { color: #AE81FF } /* Literal.Number */
+.highlight .s { color: #E6DB74 } /* Literal.String */
+.highlight .na { color: #A6E22E } /* Name.Attribute */
+.highlight .nb { color: #F8F8F2 } /* Name.Builtin */
+.highlight .nc { color: #A6E22E } /* Name.Class */
+.highlight .no { color: #66D9EF } /* Name.Constant */
+.highlight .nd { color: #A6E22E } /* Name.Decorator */
+.highlight .ni { color: #F8F8F2 } /* Name.Entity */
+.highlight .ne { color: #A6E22E } /* Name.Exception */
+.highlight .nf { color: #A6E22E } /* Name.Function */
+.highlight .nl { color: #F8F8F2 } /* Name.Label */
+.highlight .nn { color: #F8F8F2 } /* Name.Namespace */
+.highlight .nx { color: #A6E22E } /* Name.Other */
+.highlight .py { color: #F8F8F2 } /* Name.Property */
+.highlight .nt { color: #FF4689 } /* Name.Tag */
+.highlight .nv { color: #F8F8F2 } /* Name.Variable */
+.highlight .ow { color: #FF4689 } /* Operator.Word */
+.highlight .pm { color: #F8F8F2 } /* Punctuation.Marker */
+.highlight .w { color: #F8F8F2 } /* Text.Whitespace */
+.highlight .mb { color: #AE81FF } /* Literal.Number.Bin */
+.highlight .mf { color: #AE81FF } /* Literal.Number.Float */
+.highlight .mh { color: #AE81FF } /* Literal.Number.Hex */
+.highlight .mi { color: #AE81FF } /* Literal.Number.Integer */
+.highlight .mo { color: #AE81FF } /* Literal.Number.Oct */
+.highlight .sa { color: #E6DB74 } /* Literal.String.Affix */
+.highlight .sb { color: #E6DB74 } /* Literal.String.Backtick */
+.highlight .sc { color: #E6DB74 } /* Literal.String.Char */
+.highlight .dl { color: #E6DB74 } /* Literal.String.Delimiter */
+.highlight .sd { color: #E6DB74 } /* Literal.String.Doc */
+.highlight .s2 { color: #E6DB74 } /* Literal.String.Double */
+.highlight .se { color: #AE81FF } /* Literal.String.Escape */
+.highlight .sh { color: #E6DB74 } /* Literal.String.Heredoc */
+.highlight .si { color: #E6DB74 } /* Literal.String.Interpol */
+.highlight .sx { color: #E6DB74 } /* Literal.String.Other */
+.highlight .sr { color: #E6DB74 } /* Literal.String.Regex */
+.highlight .s1 { color: #E6DB74 } /* Literal.String.Single */
+.highlight .ss { color: #E6DB74 } /* Literal.String.Symbol */
+.highlight .bp { color: #F8F8F2 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #A6E22E } /* Name.Function.Magic */
+.highlight .vc { color: #F8F8F2 } /* Name.Variable.Class */
+.highlight .vg { color: #F8F8F2 } /* Name.Variable.Global */
+.highlight .vi { color: #F8F8F2 } /* Name.Variable.Instance */
+.highlight .vm { color: #F8F8F2 } /* Name.Variable.Magic */
+.highlight .il { color: #AE81FF } /* Literal.Number.Integer.Long */</style>
+  <style>
+    *{box-sizing:border-box;}
+    body{margin:0;padding:0;background:#F3F1E7;font-family:Inter,system-ui,sans-serif;color:#191919;-webkit-font-smoothing:antialiased;}
+    .prd-layout{display:flex;max-width:1100px;margin:0 auto;padding:32px 24px;gap:40px;align-items:flex-start;}
+    .prd-main{flex:1;min-width:0;}
+    .prd-toc{flex-shrink:0;}
+    @media(max-width:768px){.prd-toc{display:none;}}
+    a{color:#D97757;}
+  </style>
+</head>
+<body>
+<div style="background:linear-gradient(135deg,#D97757 0%,#B85a3e 100%);padding:32px 24px;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+      <a href="/prds" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
+        <div style="width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.2);
+                    display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <span style="font:italic 600 16px Newsreader,Georgia,serif;color:#fff;">gb</span>
+        </div>
+        <span style="font:italic 600 16px Newsreader,Georgia,serif;color:#fff;">GBAutomation</span>
+      </a>
+      <a href="/prds"
+         style="font:400 13px Inter,sans-serif;color:rgba(255,255,255,.8);text-decoration:none;">
+        &larr; All PRDs
+      </a>
+    </div>
+    <h1 style="font:italic 600 36px/1.2 Newsreader,Georgia,serif;
+               color:#fff;margin:24px 0 10px;">The Mall App: Sprint 1 -- Crawl, Map, Watch</h1>
+    <p style="font:400 16px Inter,sans-serif;color:rgba(255,255,255,.85);margin:0 0 20px;">Sprint 1 PRD for The Mall App (Sreya Halder + Ellie). Mid-sprint collaborative draft sent for client remarks ahead of the 2026-06-01 review session. Scope: agent that crawls + maps target brand surfaces, lands canonical rows in Supabase, runs periodically, and alerts on sale + net-price changes. What we already have (mall-scraper profile, social-catalog-scraper skill, IG + Shopify adapters, baseline scrape) vs. what we need from Sreya (data fields, photo handling, alert types, brand list, cadence).</p>
+    <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;">
+      <span style="display:inline-block;padding:4px 10px;background:#6b6b6b;color:#fff;border-radius:12px;font:600 11px Inter,system-ui,sans-serif;text-transform:uppercase;letter-spacing:.04em;margin:2px;">proposed</span><span style="display:inline-block;padding:4px 10px;background:#10b981;color:#fff;border-radius:12px;font:600 11px Inter,system-ui,sans-serif;text-transform:uppercase;letter-spacing:.04em;margin:2px;">the-mall</span><span style="display:inline-block;padding:4px 10px;background:#ef4444;color:#fff;border-radius:12px;font:600 11px Inter,system-ui,sans-serif;text-transform:uppercase;letter-spacing:.04em;margin:2px;">high</span>
+      <span style="font:400 12px Inter,sans-serif;color:rgba(255,255,255,.6);margin-left:8px;">2026-05-26</span>
+    </div>
+  </div>
+</div>
+
+<div class="prd-layout">
+  <div class="prd-main">
+    <h1 id="prd-the-mall-app-sprint-1-crawl-map-watch" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:28px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">PRD: The Mall App -- Sprint 1 (Crawl, Map, Watch)</h1>
+
+<h2 id="1-product-thesis" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">§ 1 Product Thesis</h2>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">The Mall App is a personal-mall consumer app -- users curate their own feed of indie brands they love. To make that feed alive (not stale), the app needs a backend that <strong style="font-weight:600;">continuously knows what those brands are doing</strong>: new drops, price changes, sales, sellouts. Sprint 1 ships the first half of that backend: an agent that <strong style="font-weight:600;">crawls and maps</strong> brand surfaces (Instagram + Shopify storefronts to start), <strong style="font-weight:600;">lands canonical data in Supabase</strong>, <strong style="font-weight:600;">runs on a schedule</strong>, and <strong style="font-weight:600;">alerts</strong> when something interesting changes.</p>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">By Day 14 (Monday 2026-06-01, 5pm ET review), we expect to demo a live Supabase view showing 3-5 of Sreya's tracked brands with full catalogs + a real price-change alert firing through the chosen channel. Day 14 also locks the <strong style="font-weight:600;">data schema and alert taxonomy</strong> with Sreya's input -- the proposed v0 in §§ 5-6 is for her remarks, not sign-off.</p>
+
+<h2 id="2-sprint-goal" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">§ 2 Sprint Goal</h2>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Stand up the "agent + watch loop" half of The Mall App backend in 14 days.</p>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;"><strong style="font-weight:600;">Acceptance:</strong></p>
+<ol style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Agent runs unattended for 48 hours on Mac Mini without crashes or manual reset</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">≥3 brands tracked end-to-end (catalog ingested, history retained, current-state queryable in Supabase Studio)</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">≥1 real price-change or sale event fires an alert through the channel Sreya picks</li>
+</ol>
+
+<h2 id="3-what-we-already-have-days-1-8" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">§ 3 What We Already Have (Days 1-8)</h2>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Sprint started Monday 2026-05-18 -- the same day the Hermes <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">mall-scraper</code> profile was birthed and the first IG baseline scrape ran. Mid-sprint state as of 2026-05-26:</p>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><strong style="font-weight:600;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">mall-scraper</code> Hermes profile</strong> on the Mac Mini (<code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">~/.hermes/profiles/mall-scraper/</code>) -- pivoted client-dedicated 2026-05-26; reads SOUL/MEMORY/BOOTSTRAP/.hermes.md from the vault canonical source</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><strong style="font-weight:600;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">social-catalog-scraper</code> skill</strong> (<code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">~/.hermes/skills/research/social-catalog-scraper/</code>) -- the actual scraping engine</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><strong style="font-weight:600;">Two working adapters:</strong> Instagram public-profile + Shopify <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">/products.json</code>; detection logic for WooCommerce, BigCommerce, Squarespace, generic</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><strong style="font-weight:600;">Canonical 12-column schema</strong> every adapter emits (<code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">source_url</code>, <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">source_platform</code>, <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">source_handle</code>, <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">item_id</code>, <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">item_type</code>, <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">title</code>, <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">url</code>, <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">image</code>, <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">price</code>, <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">available</code>, <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">created_at</code>, <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">raw_json</code>)</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><strong style="font-weight:600;">Baseline IG scrape</strong> of @themall.app (2026-05-18) -- 12 posts, avg 63.2 likes, top 207 (the founder-reveal post). Archived at <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">~/.openclaw/workspace/mall-scraper/themall.app/2026-05-18/</code> + vault stub at <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">clients/the-mall/deliverables/_baseline-ig-scrape-2026-05-18.md</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><strong style="font-weight:600;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">gbauto/the-mall</code> GitHub repo</strong> (private, created 2026-05-26) -- contains the agent profile snapshot, the skill, and the baseline scrape. Cloned at <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">~/repos/the-mall</code> on Mac Mini</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><strong style="font-weight:600;">Vault wiring</strong> -- engagement profile, knowledge entities (Sreya, Ellie), engagement concept, dashboard registration, auto-memory</li>
+</ul>
+
+<h2 id="4-what-were-building-days-9-14" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">§ 4 What We're Building (Days 9-14)</h2>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Two surfaces ship by Day 14:</p>
+
+<h3 id="surface-a-mall-scraper-agent-v2-build" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:18px;color:#191919;margin:24px 0 8px 0;line-height:1.3;">Surface A: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">mall-scraper</code> agent v2 (build)</h3>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Upgrades on top of the v1 already running:</p>
+
+<div style="overflow-x:auto;margin:16px 0;"><table cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;"><thead><tr><th style="padding:8px 12px;text-align:left;border-bottom:2px solid #D97757;font-weight:600;font-size:13px;">Capability</th><th style="padding:8px 12px;text-align:left;border-bottom:2px solid #D97757;font-weight:600;font-size:13px;">v1 (have)</th><th style="padding:8px 12px;text-align:left;border-bottom:2px solid #D97757;font-weight:600;font-size:13px;">v2 (build)</th></tr></thead><tbody><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Detect platform from URL</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">✓ (IG + Shopify implemented; others detection-only)</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Same + add **WooCommerce** adapter</td></tr><tr style="background:#f9f8f4;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Walk paginated catalogs</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">✓ (Shopify)</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">+ **IG pagination past the 12-post cap** via the `timeline_media` GraphQL cursor pattern documented in `references/ig-full-pagination.md`</td></tr><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Emit canonical CSV/JSON locally</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">✓</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Same (kept as ground-truth)</td></tr><tr style="background:#f9f8f4;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Emit reproducible standalone script</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">✓</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Same</td></tr><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">**Write rows to Supabase per scrape**</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">--</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">**NEW** (3-4 tables, see § 5)</td></tr><tr style="background:#f9f8f4;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">**Download images locally**</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">--</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">**NEW** (Supabase Storage bucket OR link-only -- pending Sreya)</td></tr><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">**Run on a schedule**</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">--</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">**NEW** launchd job + `Invoke-WithReceipt`-style wrapper</td></tr><tr style="background:#f9f8f4;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">**Detect sale + price changes vs. last run**</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">--</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">**NEW** diff logic against `mall_price_history`</td></tr><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">**Fire alerts**</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">--</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">**NEW** at least one path (Telegram default, configurable)</td></tr></tbody></table></div>
+<h3 id="surface-b-read-view-demo" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:18px;color:#191919;margin:24px 0 8px 0;line-height:1.3;">Surface B: Read view (demo)</h3>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">For Sprint 1, the "app side" is <strong style="font-weight:600;">a queryable Supabase</strong>, not a mobile UI. Sreya + Greg hit Supabase Studio (or a <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">gbauto-supabase query</code> CLI) to see:</p>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">"Show me everything @vaincourt_paris has, with current price and availability"</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">"Which items went on sale this week?"</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">"Which items got cheaper than they were last Monday?"</li>
+</ul>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">A dedicated dashboard / mobile-app view is <strong style="font-weight:600;">out of scope for Sprint 1</strong> -- that's a Sprint 2 (or later) conversation once the schema is settled.</p>
+
+<h2 id="5-proposed-data-schema-v0-for-sreya-to-refine" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">§ 5 Proposed Data Schema (v0 -- for Sreya to refine)</h2>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Four tables. DDL below is the <strong style="font-weight:600;">starting point</strong>; Sreya's answer to § 7 Q1 will refine <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">mall_items</code> columns. <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">raw_json</code> columns kept everywhere so we can replay/migrate when the schema changes.</p>
+
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%;"><span></span><span style="color: #959077">-- 001_mall_brands.sql</span>
+<span style="color: #66D9EF">create</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">table</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">if</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">not</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">exists</span><span style="color: #F8F8F2"> mall_brands (</span>
+<span style="color: #F8F8F2">  brand_id        uuid </span><span style="color: #66D9EF">primary</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">key</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">default</span><span style="color: #F8F8F2"> gen_random_uuid(),</span>
+<span style="color: #F8F8F2">  handle          text </span><span style="color: #66D9EF">not</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">null</span><span style="color: #F8F8F2">,                   </span><span style="color: #959077">-- &#39;vaincourt_paris&#39;, &#39;themall.app&#39;</span>
+<span style="color: #F8F8F2">  platform        text </span><span style="color: #66D9EF">not</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">null</span><span style="color: #F8F8F2">,                   </span><span style="color: #959077">-- &#39;instagram&#39; | &#39;shopify&#39; | &#39;woocommerce&#39; | ...</span>
+<span style="color: #F8F8F2">  source_url      text </span><span style="color: #66D9EF">not</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">null</span><span style="color: #F8F8F2">,                   </span><span style="color: #959077">-- canonical scrape URL</span>
+<span style="color: #F8F8F2">  display_name    text,</span>
+<span style="color: #F8F8F2">  status          text </span><span style="color: #66D9EF">not</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">null</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">default</span><span style="color: #F8F8F2"> </span><span style="color: #E6DB74">&#39;active&#39;</span><span style="color: #F8F8F2">,  </span><span style="color: #959077">-- &#39;active&#39; | &#39;paused&#39; | &#39;errored&#39;</span>
+<span style="color: #F8F8F2">  scrape_cadence  text </span><span style="color: #66D9EF">not</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">null</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">default</span><span style="color: #F8F8F2"> </span><span style="color: #E6DB74">&#39;daily&#39;</span><span style="color: #F8F8F2">,   </span><span style="color: #959077">-- &#39;hourly&#39; | &#39;6h&#39; | &#39;daily&#39; (Sreya picks)</span>
+<span style="color: #F8F8F2">  last_scraped_at timestamptz,</span>
+<span style="color: #F8F8F2">  created_at      timestamptz </span><span style="color: #66D9EF">not</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">null</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">default</span><span style="color: #F8F8F2"> now(),</span>
+<span style="color: #F8F8F2">  </span><span style="color: #66D9EF">unique</span><span style="color: #F8F8F2"> (handle, platform)</span>
+<span style="color: #F8F8F2">);</span>
+
+<span style="color: #959077">-- 002_mall_items.sql -- v0 schema, expect to evolve after Sreya&#39;s input</span>
+<span style="color: #66D9EF">create</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">table</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">if</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">not</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">exists</span><span style="color: #F8F8F2"> mall_items (</span>
+<span style="color: #F8F8F2">  item_id            uuid </span><span style="color: #66D9EF">primary</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">key</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">default</span><span style="color: #F8F8F2"> gen_random_uuid(),</span>
+<span style="color: #F8F8F2">  brand_id           uuid </span><span style="color: #66D9EF">not</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">null</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">references</span><span style="color: #F8F8F2"> mall_brands(brand_id),</span>
+<span style="color: #F8F8F2">  source_item_id     text </span><span style="color: #66D9EF">not</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">null</span><span style="color: #F8F8F2">,                </span><span style="color: #959077">-- platform-stable id (Shopify product id, IG post id)</span>
+<span style="color: #F8F8F2">  item_type          text </span><span style="color: #66D9EF">not</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">null</span><span style="color: #F8F8F2">,                </span><span style="color: #959077">-- &#39;product&#39; | &#39;variant&#39; | &#39;post&#39; | &#39;reel&#39;</span>
+<span style="color: #F8F8F2">  title              text,</span>
+<span style="color: #F8F8F2">  description        text,</span>
+<span style="color: #F8F8F2">  url                text,</span>
+<span style="color: #F8F8F2">  image_urls         jsonb,                        </span><span style="color: #959077">-- array of URLs (or local paths once we download)</span>
+<span style="color: #F8F8F2">  price              numeric(</span><span style="color: #AE81FF">10</span><span style="color: #F8F8F2">,</span><span style="color: #AE81FF">2</span><span style="color: #F8F8F2">),</span>
+<span style="color: #F8F8F2">  currency           text </span><span style="color: #66D9EF">default</span><span style="color: #F8F8F2"> </span><span style="color: #E6DB74">&#39;USD&#39;</span><span style="color: #F8F8F2">,</span>
+<span style="color: #F8F8F2">  sale_price         numeric(</span><span style="color: #AE81FF">10</span><span style="color: #F8F8F2">,</span><span style="color: #AE81FF">2</span><span style="color: #F8F8F2">),</span>
+<span style="color: #F8F8F2">  compare_at_price   numeric(</span><span style="color: #AE81FF">10</span><span style="color: #F8F8F2">,</span><span style="color: #AE81FF">2</span><span style="color: #F8F8F2">),</span>
+<span style="color: #F8F8F2">  available          boolean,</span>
+<span style="color: #F8F8F2">  raw_json           jsonb,                        </span><span style="color: #959077">-- full source-platform record (so we can re-derive)</span>
+<span style="color: #F8F8F2">  first_seen_at      timestamptz </span><span style="color: #66D9EF">not</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">null</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">default</span><span style="color: #F8F8F2"> now(),</span>
+<span style="color: #F8F8F2">  last_seen_at       timestamptz </span><span style="color: #66D9EF">not</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">null</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">default</span><span style="color: #F8F8F2"> now(),</span>
+<span style="color: #F8F8F2">  removed_at         timestamptz,                  </span><span style="color: #959077">-- set when an item disappears from a brand&#39;s catalog</span>
+<span style="color: #F8F8F2">  </span><span style="color: #66D9EF">unique</span><span style="color: #F8F8F2"> (brand_id, source_item_id)</span>
+<span style="color: #F8F8F2">);</span>
+
+<span style="color: #66D9EF">create</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">index</span><span style="color: #F8F8F2"> idx_mall_items_brand </span><span style="color: #66D9EF">on</span><span style="color: #F8F8F2"> mall_items (brand_id, last_seen_at </span><span style="color: #66D9EF">desc</span><span style="color: #F8F8F2">);</span>
+<span style="color: #66D9EF">create</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">index</span><span style="color: #F8F8F2"> idx_mall_items_on_sale </span><span style="color: #66D9EF">on</span><span style="color: #F8F8F2"> mall_items (sale_price) </span><span style="color: #66D9EF">where</span><span style="color: #F8F8F2"> sale_price </span><span style="color: #66D9EF">is</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">not</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">null</span><span style="color: #F8F8F2">;</span>
+
+<span style="color: #959077">-- 003_mall_price_history.sql -- append-only, drives sale + price-drop detection</span>
+<span style="color: #66D9EF">create</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">table</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">if</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">not</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">exists</span><span style="color: #F8F8F2"> mall_price_history (</span>
+<span style="color: #F8F8F2">  history_id   uuid </span><span style="color: #66D9EF">primary</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">key</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">default</span><span style="color: #F8F8F2"> gen_random_uuid(),</span>
+<span style="color: #F8F8F2">  item_id      uuid </span><span style="color: #66D9EF">not</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">null</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">references</span><span style="color: #F8F8F2"> mall_items(item_id),</span>
+<span style="color: #F8F8F2">  price        numeric(</span><span style="color: #AE81FF">10</span><span style="color: #F8F8F2">,</span><span style="color: #AE81FF">2</span><span style="color: #F8F8F2">),</span>
+<span style="color: #F8F8F2">  sale_price   numeric(</span><span style="color: #AE81FF">10</span><span style="color: #F8F8F2">,</span><span style="color: #AE81FF">2</span><span style="color: #F8F8F2">),</span>
+<span style="color: #F8F8F2">  available    boolean,</span>
+<span style="color: #F8F8F2">  scraped_at   timestamptz </span><span style="color: #66D9EF">not</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">null</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">default</span><span style="color: #F8F8F2"> now()</span>
+<span style="color: #F8F8F2">);</span>
+
+<span style="color: #66D9EF">create</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">index</span><span style="color: #F8F8F2"> idx_price_history_item </span><span style="color: #66D9EF">on</span><span style="color: #F8F8F2"> mall_price_history (item_id, scraped_at </span><span style="color: #66D9EF">desc</span><span style="color: #F8F8F2">);</span>
+
+<span style="color: #959077">-- 004_scrape_runs.sql -- mirrors the outbound_runs telemetry pattern</span>
+<span style="color: #66D9EF">create</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">table</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">if</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">not</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">exists</span><span style="color: #F8F8F2"> scrape_runs (</span>
+<span style="color: #F8F8F2">  run_id          uuid </span><span style="color: #66D9EF">primary</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">key</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">default</span><span style="color: #F8F8F2"> gen_random_uuid(),</span>
+<span style="color: #F8F8F2">  brand_id        uuid </span><span style="color: #66D9EF">references</span><span style="color: #F8F8F2"> mall_brands(brand_id),</span>
+<span style="color: #F8F8F2">  source_handle   text </span><span style="color: #66D9EF">not</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">null</span><span style="color: #F8F8F2">,</span>
+<span style="color: #F8F8F2">  source_platform text </span><span style="color: #66D9EF">not</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">null</span><span style="color: #F8F8F2">,</span>
+<span style="color: #F8F8F2">  status          text </span><span style="color: #66D9EF">not</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">null</span><span style="color: #F8F8F2">,                   </span><span style="color: #959077">-- &#39;ok&#39; | &#39;partial&#39; | &#39;failed&#39;</span>
+<span style="color: #F8F8F2">  item_count      integer,</span>
+<span style="color: #F8F8F2">  duration_ms     integer,</span>
+<span style="color: #F8F8F2">  output_dir      text,                            </span><span style="color: #959077">-- ~/.openclaw/workspace/mall-scraper/&lt;handle&gt;/&lt;YYYY-MM-DD&gt;/</span>
+<span style="color: #F8F8F2">  error_tail      text,                            </span><span style="color: #959077">-- truncated stderr if failed</span>
+<span style="color: #F8F8F2">  payload         jsonb,                           </span><span style="color: #959077">-- extensible per-run metadata</span>
+<span style="color: #F8F8F2">  scraped_at      timestamptz </span><span style="color: #66D9EF">not</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">null</span><span style="color: #F8F8F2"> </span><span style="color: #66D9EF">default</span><span style="color: #F8F8F2"> now()</span>
+<span style="color: #F8F8F2">);</span>
+</pre></div>
+
+
+<h2 id="6-proposed-alert-taxonomy-v0-for-sreya-to-refine" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">§ 6 Proposed Alert Taxonomy (v0 -- for Sreya to refine)</h2>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Five event types. v0 candidate -- Sreya picks which matter and where they land.</p>
+
+<div style="overflow-x:auto;margin:16px 0;"><table cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;"><thead><tr><th style="padding:8px 12px;text-align:left;border-bottom:2px solid #D97757;font-weight:600;font-size:13px;">Event</th><th style="padding:8px 12px;text-align:left;border-bottom:2px solid #D97757;font-weight:600;font-size:13px;">Trigger</th><th style="padding:8px 12px;text-align:left;border-bottom:2px solid #D97757;font-weight:600;font-size:13px;">Default Channel</th></tr></thead><tbody><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`item.new`</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`mall_items` insert for an existing brand</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Daily digest</td></tr><tr style="background:#f9f8f4;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`item.removed`</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`removed_at` set (item disappeared from brand&#x27;s catalog)</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Daily digest</td></tr><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`item.on_sale`</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`sale_price` first appears for an item</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Telegram (instant)</td></tr><tr style="background:#f9f8f4;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`item.price_drop`</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`price` dropped &gt; X% vs. baseline (X = 10% default)</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Telegram (instant)</td></tr><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`item.restocked`</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`available` goes `false` → `true`</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Daily digest</td></tr></tbody></table></div>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Per the existing <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">@gbauto_hermes_bot</code> Telegram bot pattern, alerts fire to the chat Sreya designates. Email digest is the alternative if she prefers (less noisy, daily roll-up).</p>
+
+<h2 id="7-open-questions-for-sreya" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">§ 7 Open Questions for Sreya</h2>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">The five we need answered before Friday (2026-05-29) to land everything by Monday's review:</p>
+
+<ol style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><strong style="font-weight:600;">Data fields</strong> -- Beyond what's in v0 (title, description, price, image, available, sale_price), which fields matter? Candidates: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">sizes[]</code>, <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">colors[]</code>, <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">materials</code>, <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">vendor_url</code>, <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">in_stock_count</code>, <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">shipping_notes</code>, <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">tags[]</code>, <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">product_type</code>. Tell us which to add and which to skip.</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><strong style="font-weight:600;">Photos</strong> -- How many per item (1 hero / 3-5 / all variants / all)? Max resolution? Where do they live: Supabase Storage (we host), link-only (we just store the brand's CDN URL), or both (link-only at first, download on-demand)?</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><strong style="font-weight:600;">Alert types</strong> -- Which of the five events in § 6 matter? Where do they land -- Telegram (<code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">@gbauto_hermes_bot</code> in a chat you join), email digest to you + Ellie, in-app push later, or somewhere else? What's the price-drop threshold % that's worth a notification?</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><strong style="font-weight:600;">Brand list (v1)</strong> -- What's the starting set of brands the agent should track? The five from your 2026-05-16 reel (<code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">@vaincourt_paris</code>, <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">@amanustudio</code>, <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">@dehanche__</code>, <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">@blowthebelt</code>, <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">@streetsaheadusa</code>) or a different shortlist? Have direct storefront URLs (Shopify is cheaper to scrape than IG)?</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><strong style="font-weight:600;">Cadence</strong> -- How fresh do prices need to be: daily, every 6 hours, or hourly? (Hourly is fine technically; the only constraint is being respectful to brand sites.)</li>
+</ol>
+
+<h2 id="8-architecture" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">§ 8 Architecture</h2>
+
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%;"><span></span>+---------------------------------------------------------------+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">|                                                               |</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">|   launchd: com.gbautomation.mall-scraper-daily.plist          |</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">|     -- runs at &lt;cadence&gt;, wrapped in Invoke-WithReceipt       |</p>
+<div style="overflow-x:auto;margin:16px 0;"><table cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;"><thead><tr><th style="padding:8px 12px;text-align:left;border-bottom:2px solid #D97757;font-weight:600;font-size:13px;">-- emits host_job_runs receipt + Telegram on failure</th></tr></thead><tbody><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">v</td></tr><tr style="background:#f9f8f4;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">hermes -p mall-scraper exec &amp;quot;scrape &amp;lt;next-due-brand-url&amp;gt;&amp;quot;</td></tr><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);"></td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);"></td></tr><tr style="background:#f9f8f4;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">v</td></tr><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">social-catalog-scraper skill</td></tr><tr style="background:#f9f8f4;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">-&amp;gt; URL routing (IG / Shopify / WC / generic)</td></tr><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">-&amp;gt; walk catalog (with full IG pagination past 12)</td></tr><tr style="background:#f9f8f4;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">-&amp;gt; emit 5 local artifacts (CSV, JSON, raw, summary, .py)</td></tr><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">-&amp;gt; **insert into mall_items + mall_price_history**</td></tr><tr style="background:#f9f8f4;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">-&amp;gt; **insert row into scrape_runs**</td></tr><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">-&amp;gt; **compute diffs vs. previous run**</td></tr><tr style="background:#f9f8f4;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">-&amp;gt; **fire alert(s) via TG bot if thresholds tripped**</td></tr><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);"></td></tr></tbody></table></div>+---------------------------------------------------------------+
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">+---------------------------------------------------------------+</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">|                                                               |</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">|   Supabase (gbauto project, schema: public)                   |</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">|     mall_brands       -- one per tracked brand                |</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">|     mall_items        -- current state per item               |</p>
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">|     mall_price_history-- append-only, drives diffs            |</p>
+<div style="overflow-x:auto;margin:16px 0;"><table cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;"><thead><tr><th style="padding:8px 12px;text-align:left;border-bottom:2px solid #D97757;font-weight:600;font-size:13px;">scrape_runs       -- per-run telemetry</th></tr></thead><tbody><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Storage bucket: mall-images/ (if Sreya wants downloads)</td></tr><tr style="background:#f9f8f4;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);"></td></tr></tbody></table></div>+---------------------------------------------------------------+
+</pre></div>
+
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">Existing canonical patterns we reuse (no reinvention):</p>
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">scripts/launchd_secrets_wrapper.sh</code> -- env-var materialization for the cron</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">Invoke-WithReceipt.ps1</code> pattern -- host_job_runs receipt + Telegram-on-failure (Mac Mini equivalent)</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">~/.hermes/lib/outbound_supabase_writer.py</code> -- sed-rename → <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">scrape_supabase_writer.py</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">gbauto-supabase</code> CLI -- all migrations + inserts route through here per standing policy</li>
+</ul>
+
+<h2 id="9-timeline" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">§ 9 Timeline</h2>
+
+<div style="overflow-x:auto;margin:16px 0;"><table cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;"><thead><tr><th style="padding:8px 12px;text-align:left;border-bottom:2px solid #D97757;font-weight:600;font-size:13px;">Days</th><th style="padding:8px 12px;text-align:left;border-bottom:2px solid #D97757;font-weight:600;font-size:13px;">Date range</th><th style="padding:8px 12px;text-align:left;border-bottom:2px solid #D97757;font-weight:600;font-size:13px;">Work</th></tr></thead><tbody><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">1-8 (done)</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">05-18 → 05-26</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">mall-scraper profile + skill + baseline scrape + repo + vault wiring</td></tr><tr style="background:#f9f8f4;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">9-11</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">05-27 → 05-29</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Supabase schema migration (4 tables), `scrape_supabase_writer.py`, agent inserts per run, IG full-pagination, image-download adapter, launchd cron landed</td></tr><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">12-13</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">05-30 → 05-31</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Sale + net-price-change diff logic, 3-5 brand initial set tracked, Telegram alert wired, **48h unattended dry-run**</td></tr><tr style="background:#f9f8f4;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">14</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">06-01 (5pm ET)</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">**Sprint review session with Sreya** -- live demo against Supabase, walkthrough of a real alert firing, lock schema + alert taxonomy, scope Sprint 2</td></tr></tbody></table></div>
+<h2 id="10-out-of-scope-explicit" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">§ 10 Out of Scope (Explicit)</h2>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Native mobile app UI (Sprint 2+)</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Auth / RBAC / multi-user (Sreya + Ellie + Greg manually for now)</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">Multi-tenant brand subscriptions (one brand list, no per-user views yet)</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">WooCommerce / BigCommerce / Squarespace adapters beyond detection (Sprint 2+, only if Sreya's brand list needs them)</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">App Store assets, marketing site copy, App Store launch coordination</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">TikTok scraping (browser-only, expensive, skipped until Sreya asks)</li>
+</ul>
+
+<h2 id="11-success-criteria" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">§ 11 Success Criteria</h2>
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;">By 2026-06-01 5pm ET:</p>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">[ ] Agent ran unattended for ≥48 consecutive hours through Day 12-13 dry-run with zero crashes / manual restarts</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">[ ] ≥3 brands tracked end-to-end -- catalogs fully ingested, history retained, querable in Supabase Studio</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">[ ] ≥1 real <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">item.on_sale</code> or <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">item.price_drop</code> event detected from a real brand's actual change and fired through the chosen alert channel</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">[ ] Sreya can hit a Supabase view (or <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">gbauto-supabase query</code> CLI) and answer "what's @vaincourt_paris currently selling, with prices, in stock?" in one shot</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">[ ] Sprint 2 scope locked in the review session based on the demo + Sreya's reactions</li>
+</ul>
+
+<h2 id="12-risks-mitigations" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">§ 12 Risks + Mitigations</h2>
+
+<div style="overflow-x:auto;margin:16px 0;"><table cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;"><thead><tr><th style="padding:8px 12px;text-align:left;border-bottom:2px solid #D97757;font-weight:600;font-size:13px;">Risk</th><th style="padding:8px 12px;text-align:left;border-bottom:2px solid #D97757;font-weight:600;font-size:13px;">Likelihood</th><th style="padding:8px 12px;text-align:left;border-bottom:2px solid #D97757;font-weight:600;font-size:13px;">Mitigation</th></tr></thead><tbody><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">IG cookie expires mid-sprint -&gt; scraper goes blind</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Medium</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Cookie refresh procedure documented in `references/ig-cookie-extraction.md`; heartbeat alerts on `scrape_runs.status = &#x27;failed&#x27;` so we catch it within an hour, not a day</td></tr><tr style="background:#f9f8f4;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Shopify storefront blocks our user-agent</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Low</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Respectful headers + 0.3s page sleeps; if blocked, fall back to browser harness (still works, just slower)</td></tr><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Schema churn after Sreya&#x27;s response invalidates Days 9-11 work</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Medium</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">`raw_json` in every row -- can re-derive any column we add later. Day 10-11 inserts won&#x27;t be lost; we just `UPDATE ... SET new_col = raw_json-&gt;&gt;...`</td></tr><tr style="background:#f9f8f4;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Sreya doesn&#x27;t respond by Friday -&gt; we ship the v0 defaults</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Medium</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Build against v0 defaults from Day 9; Friday-Saturday is for absorbing her remarks. Worst case we ship defaults + iterate on Monday</td></tr><tr style="background:#fff;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Launchd cron secrets foot-gun (per existing memory)</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Low</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Use `scripts/launchd_secrets_wrapper.sh` (canonical standard per 2026-05-04 ADR); never inline secrets in the plist</td></tr><tr style="background:#f9f8f4;"><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">48h dry-run hits IG rate-limit</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Medium</td><td style="padding:8px 12px;font-size:13px;border-bottom:1px solid rgba(25,25,25,.06);">Build in jitter (sleep 5s between handles, 0.3s between pages); if rate-limited, lower cadence to `6h` for IG brands and keep Shopify `hourly`</td></tr></tbody></table></div>
+<h2 id="13-acceptance-checklist-verify-day-14" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">§ 13 Acceptance Checklist (verify Day 14)</h2>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">[ ] <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">~/.hermes/profiles/mall-scraper/</code> v2 SOUL.md reflects multi-brand + Supabase-aware mission</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">[ ] <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">social-catalog-scraper</code> skill has <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">scrape_supabase_writer.py</code> + IG pagination + image adapter</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">[ ] Migrations <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">001_mall_brands.sql</code> through <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">004_scrape_runs.sql</code> applied to Supabase via <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">gbauto-supabase migrate apply</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">[ ] launchd plist <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">com.gbautomation.mall-scraper-daily.plist</code> loaded; first cron run completed</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">[ ] 3-5 brands in <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">mall_brands</code> with <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">status = &#x27;active&#x27;</code>; full catalogs in <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">mall_items</code>; history accumulating in <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">mall_price_history</code></li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">[ ] At least one row in <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">scrape_runs</code> with <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">status = &#x27;ok&#x27;</code> per brand</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">[ ] Telegram alert demo wires to a chat Sreya joins</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">[ ] Sreya's Q1-Q5 answers captured in the engagement concept + reflected in v2 schema migrations if any</li>
+</ul>
+
+<h2 id="14-references" style="font-family:Newsreader,Georgia,serif;font-style:italic;font-weight:600;font-size:22px;color:#191919;margin:32px 0 8px 0;line-height:1.3;">§ 14 References</h2>
+
+<ul style="margin:12px 0;padding-left:24px;color:#191919;">
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">[[clients/the-mall/profile|The Mall App client profile]]</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">[[knowledge/concepts/the-mall-engagement|engagement concept]]</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">[[knowledge/entities/sreya-halder]] / [[knowledge/entities/ellie]]</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">gbauto/the-mall</code> repo: agent + skill + baseline data</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">~/.hermes/skills/research/social-catalog-scraper/references/ig-full-pagination.md</code> -- IG pagination pattern (12 cap workaround)</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;"><code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">~/.hermes/skills/devops/hermes-profiles/references/multi-skill-profile-supabase-telemetry.md</code> -- <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">scrape_runs</code> table pattern</li>
+<li style="margin:4px 0;font-size:15px;line-height:1.6;">2026-05-18 baseline scrape: <code style="background:rgba(25,25,25,.06);padding:2px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:13px;">~/.openclaw/workspace/mall-scraper/themall.app/2026-05-18/</code></li>
+</ul>
+
+<hr style="border:none;border-top:1px solid rgba(25,25,25,.1);margin:24px 0;">
+
+<p style="font-size:15px;line-height:1.7;color:#191919;margin:8px 0;"><em>This PRD is a collaborative mid-sprint draft. Sreya's remarks on §§ 5-7 directly shape what ships by 2026-06-01. Send remarks to greg@gbautomation.xyz or just hit reply to the email this PRD arrived in.</em></p>
+
+    <div style="margin-top:48px;padding-top:24px;border-top:1px solid rgba(25,25,25,.08);">
+      <p style="font:400 13px Inter,sans-serif;color:#6b6b6b;text-align:center;">
+        Built by GBAutomation &middot;
+        <a href="https://gbautomation.xyz" style="color:#D97757;">gbautomation.xyz</a>
+        
+      </p>
+      <p style="font:400 11px Inter,sans-serif;color:rgba(25,25,25,.3);text-align:center;margin-top:4px;">
+        Want to work together?
+        <a href="https://gbautomation.xyz/#contact" style="color:#D97757;">Get in touch &rarr;</a>
+      </p>
+    </div>
+  </div>
+  <div class="prd-toc">
+    
+<div style="position:sticky;top:24px;max-width:220px;width:100%;">
+  <div style="background:#F3F1E7;border:1px solid rgba(25,25,25,.1);
+              border-radius:12px;padding:16px;font-size:13px;">
+    <p style="font:600 11px Inter,sans-serif;text-transform:uppercase;
+              letter-spacing:.06em;color:#6b6b6b;margin:0 0 10px;">Contents</p>
+    <ul style="list-style:none;margin:0;padding:0;"><li style="margin:6px 0;padding-left:0px;"><a href="#1-product-thesis" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">§ 1 Product Thesis</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#2-sprint-goal" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">§ 2 Sprint Goal</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#3-what-we-already-have-days-1-8" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">§ 3 What We Already Have (Days 1-8)</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#4-what-were-building-days-9-14" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">§ 4 What We&#x27;re Building (Days 9-14)</a></li><li style="margin:6px 0;padding-left:12px;"><a href="#surface-a-mall-scraper-agent-v2-build" style="color:#D97757;text-decoration:none;font-size:13px;line-height:1.5;">Surface A: `mall-scraper` agent v2 (build)</a></li><li style="margin:6px 0;padding-left:12px;"><a href="#surface-b-read-view-demo" style="color:#D97757;text-decoration:none;font-size:13px;line-height:1.5;">Surface B: Read view (demo)</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#5-proposed-data-schema-v0-for-sreya-to-refine" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">§ 5 Proposed Data Schema (v0 -- for Sreya to refine)</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#6-proposed-alert-taxonomy-v0-for-sreya-to-refine" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">§ 6 Proposed Alert Taxonomy (v0 -- for Sreya to refine)</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#7-open-questions-for-sreya" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">§ 7 Open Questions for Sreya</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#8-architecture" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">§ 8 Architecture</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#9-timeline" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">§ 9 Timeline</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#10-out-of-scope-explicit" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">§ 10 Out of Scope (Explicit)</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#11-success-criteria" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">§ 11 Success Criteria</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#12-risks-mitigations" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">§ 12 Risks + Mitigations</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#13-acceptance-checklist-verify-day-14" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">§ 13 Acceptance Checklist (verify Day 14)</a></li><li style="margin:6px 0;padding-left:0px;"><a href="#14-references" style="color:#D97757;text-decoration:none;font-size:14px;line-height:1.5;">§ 14 References</a></li></ul>
+  </div>
+</div>
+  </div>
+</div>
+</body>
+</html>
