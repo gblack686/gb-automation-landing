@@ -45,6 +45,13 @@ export function getBrandItems(brandSlug) {
   return request(`/api/mall-scanner/brands/${brandSlug}/items`);
 }
 
+export function addCrawlTarget(sourceUrl) {
+  return request('/api/mall-scanner/crawl-targets', {
+    method: 'POST',
+    body: JSON.stringify({ source_url: sourceUrl }),
+  });
+}
+
 export function getRecentEvents() {
   return request('/api/mall-scanner/events');
 }
