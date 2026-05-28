@@ -58,4 +58,5 @@ jobs:
             --prod \
             --site "$NETLIFY_SITE_ID" \
             --dir dist \
+            --functions netlify/functions \
             --message "GHA: master @ ${GITHUB_SHA::7}"
