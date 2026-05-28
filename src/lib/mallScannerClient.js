@@ -35,6 +35,33 @@ Production wiring:
 - The API can forward to MALL_SCANNER_RUN_WEBHOOK_URL when that env var is set.
 - Without a live runner webhook, Run Now returns a dry-run receipt.`;
 
+const FALLBACK_BRANDS = [
+  { id: 'brand-vaincourt', slug: 'vaincourt_paris', handle: 'vaincourt_paris', name: 'Vaincourt Paris', platform: 'instagram', item_count: 2, last_scraped_at: '2026-05-28T19:45:05Z', active: true },
+  { id: 'brand-amanu', slug: 'amanustudio', handle: 'amanustudio', name: 'Amanu Studio', platform: 'shopify', item_count: 2, last_scraped_at: '2026-05-28T19:45:05Z', active: true },
+  { id: 'brand-themall', slug: 'themall.app', handle: 'themall.app', name: 'The Mall App', platform: 'instagram', item_count: 1, last_scraped_at: '2026-05-28T19:45:05Z', active: true },
+];
+
+const FALLBACK_ITEMS = {
+  vaincourt_paris: [
+    { item_id: 'item-vaincourt-classic-belt', source_item_id: 'ig-vaincourt-001', item_type: 'product', title: 'Classic belt', description: 'Polished leather belt with gold hardware.', url: 'https://www.instagram.com/vaincourt_paris/', image_urls: [], price: 340, currency: 'USD', sale_price: 285, compare_at_price: 340, available: true, first_seen_at: '2026-05-28T19:45:05Z', last_seen_at: '2026-05-28T19:45:05Z', raw_json: { platform: 'instagram', handle: 'vaincourt_paris', source: 'client-fallback' } },
+    { item_id: 'item-vaincourt-wrap-belt', source_item_id: 'ig-vaincourt-002', item_type: 'product', title: 'Wrap waist belt', description: 'Long wrap silhouette in black calfskin.', url: 'https://www.instagram.com/vaincourt_paris/', image_urls: [], price: 410, currency: 'USD', sale_price: null, compare_at_price: null, available: true, first_seen_at: '2026-05-28T19:45:05Z', last_seen_at: '2026-05-28T19:45:05Z', raw_json: { platform: 'instagram', handle: 'vaincourt_paris', source: 'client-fallback' } },
+  ],
+  amanustudio: [
+    { item_id: 'item-amanu-sandal', source_item_id: 'shopify-amanu-001', item_type: 'product', title: 'Made-to-order sandal', description: 'Custom leather sandal with natural sole.', url: 'https://amanustudio.com/', image_urls: [], price: 220, currency: 'USD', sale_price: 176, compare_at_price: 220, available: true, first_seen_at: '2026-05-28T19:45:05Z', last_seen_at: '2026-05-28T19:45:05Z', raw_json: { platform: 'shopify', handle: 'amanustudio', source: 'client-fallback' } },
+    { item_id: 'item-amanu-wrap-slide', source_item_id: 'shopify-amanu-002', item_type: 'product', title: 'Wrap slide', description: 'Minimal slide with hand-tied straps.', url: 'https://amanustudio.com/', image_urls: [], price: 190, currency: 'USD', sale_price: null, compare_at_price: null, available: true, first_seen_at: '2026-05-28T19:45:05Z', last_seen_at: '2026-05-28T19:45:05Z', raw_json: { platform: 'shopify', handle: 'amanustudio', source: 'client-fallback' } },
+  ],
+  'themall.app': [
+    { item_id: 'item-themall-watchlist', source_item_id: 'ig-themall-001', item_type: 'post', title: 'Editorial watchlist', description: 'Tracked social catalog post for The Mall app.', url: 'https://www.instagram.com/themall.app/', image_urls: [], price: null, currency: 'USD', sale_price: null, compare_at_price: null, available: true, first_seen_at: '2026-05-28T19:45:05Z', last_seen_at: '2026-05-28T19:45:05Z', raw_json: { platform: 'instagram', handle: 'themall.app', source: 'client-fallback' } },
+  ],
+};
+
+const FALLBACK_EVENTS = [
+  { id: 'evt-vaincourt-drop', brand_name: 'Vaincourt Paris', item_title: 'Classic belt', event_type: 'price_drop', previous_price: 340, current_price: 285, detected_at: '2026-05-28T19:45:05Z' },
+  { id: 'evt-amanu-sale', brand_name: 'Amanu Studio', item_title: 'Made-to-order sandal', event_type: 'sale_start', previous_price: 220, current_price: 176, detected_at: '2026-05-28T19:45:05Z' },
+];
+
+const FALLBACK_LATEST_RUN = { run_id: 'dryrun-2026-05-28', source_handle: 'client-fallback', source_platform: 'fixture', status: 'dry_run', item_count: 5, scraped_at: '2026-05-28T19:45:05Z' };
+
 function apiBaseUrl() {
   return (import.meta.env.VITE_MALL_SCANNER_API_URL || DEFAULT_BASE_URL).replace(/\/$/, '');
 }
@@ -67,15 +94,25 @@ async function request(path, options = {}) {
 }
 
 export function getDashboard() {
-  return request('/api/mall-scanner/dashboard');
+  return request('/api/mall-scanner/dashboard').catch(() => ({
+    brands_tracked: FALLBACK_BRANDS.length,
+    items_indexed: Object.values(FALLBACK_ITEMS).reduce((sum, rows) => sum + rows.length, 0),
+    sale_events: FALLBACK_EVENTS.length,
+    latest_run: FALLBACK_LATEST_RUN,
+    source: 'client-fallback',
+  }));
 }
 
 export function getBrands() {
-  return request('/api/mall-scanner/brands');
+  return request('/api/mall-scanner/brands').catch(() => ({ brands: FALLBACK_BRANDS, source: 'client-fallback' }));
 }
 
 export function getBrandItems(brandSlug) {
-  return request(`/api/mall-scanner/brands/${brandSlug}/items`);
+  return request(`/api/mall-scanner/brands/${brandSlug}/items`).catch(() => ({
+    brand: brandSlug,
+    items: FALLBACK_ITEMS[brandSlug] || [],
+    source: 'client-fallback',
+  }));
 }
 
 export function addCrawlTarget(sourceUrl) {
@@ -115,9 +152,9 @@ export function getCrawlerCode() {
 }
 
 export function getRecentEvents() {
-  return request('/api/mall-scanner/events');
+  return request('/api/mall-scanner/events').catch(() => ({ events: FALLBACK_EVENTS, source: 'client-fallback' }));
 }
 
 export function getLatestRun() {
-  return request('/api/mall-scanner/latest-run');
+  return request('/api/mall-scanner/latest-run').catch(() => ({ latest_run: FALLBACK_LATEST_RUN, source: 'client-fallback' }));
 }
