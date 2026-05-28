@@ -1,6 +1,6 @@
 import { fetchAuthSession } from 'aws-amplify/auth';
 
-const DEFAULT_BASE_URL = '';
+const DEFAULT_BASE_URL = 'https://gbautoxyz.netlify.app';
 
 function apiBaseUrl() {
   return (import.meta.env.VITE_MALL_SCANNER_API_URL || DEFAULT_BASE_URL).replace(/\/$/, '');

@@ -18,6 +18,9 @@ function json(statusCode, body) {
   return {
     statusCode,
     headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      'Access-Control-Allow-Methods': 'GET, OPTIONS',
       'Content-Type': 'application/json',
       'Cache-Control': 'no-store',
     },
@@ -54,6 +57,10 @@ async function liveLatestRun() {
 }
 
 export async function handler(event) {
+  if (event.httpMethod === 'OPTIONS') {
+    return json(204, {});
+  }
+
   const originalPath = event.path || '';
   const route = originalPath.replace(/^.*\/api\/mall-scanner\/?/, '').replace(/^.*\/mall-scanner\/?/, '');
 
