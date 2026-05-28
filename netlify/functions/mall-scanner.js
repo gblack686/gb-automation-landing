@@ -1,5 +1,45 @@
 const SUPABASE_URL = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || '';
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+const RUN_WEBHOOK_URL = process.env.MALL_SCANNER_RUN_WEBHOOK_URL || '';
+
+const crawlerCode = `# Mall Scanner crawler
+
+Runtime:
+- Host: Mac Mini
+- Agent profile: mall-scraper
+- Skill: ~/.hermes/skills/research/social-catalog-scraper/
+- Command shape:
+  hermes -p mall-scraper exec "scrape <brand-source-url>"
+
+Flow:
+1. Read due brand from mall_brands.
+2. Route by platform:
+   - instagram -> social post/catalog crawl with full pagination
+   - shopify -> storefront product crawl
+   - woocommerce/generic website -> catalog page discovery
+3. Normalize each record to mall_items:
+   item_id, brand_id, source_item_id, item_type, title, description, url,
+   image_urls, price, currency, sale_price, compare_at_price, available,
+   raw_json, first_seen_at, last_seen_at, removed_at
+4. Append observations to mall_price_history.
+5. Insert scrape_runs receipt with status, item_count, output_dir, error, raw_json.
+6. Diff vs previous run and emit sale / price-drop / restock / removal events.
+
+On-demand run payload:
+{
+  "brand": {
+    "handle": "brand-handle",
+    "platform": "instagram|shopify|website",
+    "source_url": "https://..."
+  },
+  "requested_at": "ISO-8601 timestamp",
+  "source": "mall-scanner-ui"
+}
+
+Production wiring:
+- Set MALL_SCANNER_RUN_WEBHOOK_URL on Netlify to call the Mac Mini/Hermes runner.
+- The webhook should execute the Hermes command above and persist the scrape_runs row.
+- Without that env var, this API returns a dry_run receipt so the UI remains testable.`;
 
 const fixture = {
   brands: [
@@ -154,6 +194,19 @@ async function supabaseInsert(path, body) {
   return response.json();
 }
 
+async function postRunWebhook(payload) {
+  if (!RUN_WEBHOOK_URL) return null;
+  const response = await fetch(RUN_WEBHOOK_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  if (!response.ok) {
+    throw new Error(`Run webhook ${response.status}: ${await response.text()}`);
+  }
+  return response.json().catch(() => ({}));
+}
+
 function inferTarget(sourceUrl) {
   let parsed;
   try {
@@ -216,6 +269,15 @@ export async function handler(event) {
   const route = originalPath.replace(/^.*\/api\/mall-scanner\/?/, '').replace(/^.*\/mall-scanner\/?/, '');
 
   try {
+    if (route === 'crawler-code') {
+      return json(200, {
+        title: 'Mall Scanner crawler',
+        language: 'text',
+        entrypoint: 'hermes -p mall-scraper exec "scrape <brand-source-url>"',
+        code: crawlerCode,
+      });
+    }
+
     if (event.httpMethod === 'POST' && route === 'crawl-targets') {
       const body = event.body ? JSON.parse(event.body) : {};
       const sourceUrl = String(body.source_url || body.url || '').trim();
@@ -227,6 +289,41 @@ export async function handler(event) {
         ? await supabaseInsert('mall_brands', target)
         : [{ ...target, id: `queued-${Date.now()}`, queued: true }];
       return json(201, { target: rows[0] || target, source: SUPABASE_URL && SUPABASE_SERVICE_KEY ? 'supabase' : 'fixture' });
+    }
+
+    if (event.httpMethod === 'POST' && route === 'runs') {
+      const body = event.body ? JSON.parse(event.body) : {};
+      const brand = body.brand || {};
+      const handle = String(brand.handle || brand.slug || brand.name || '').trim();
+      if (!handle) {
+        return json(400, { error: 'brand.handle is required' });
+      }
+      const requestedAt = new Date().toISOString();
+      const payload = {
+        brand: {
+          handle,
+          platform: brand.platform || 'website',
+          source_url: brand.source_url || brand.url || '',
+          display_name: brand.display_name || brand.name || handle,
+        },
+        requested_at: requestedAt,
+        source: 'mall-scanner-ui',
+      };
+      const webhookResult = await postRunWebhook(payload);
+      const receipt = webhookResult?.receipt || {
+        run_id: `manual-${handle}-${Date.now()}`,
+        source_handle: handle,
+        source_platform: payload.brand.platform,
+        source_url: payload.brand.source_url,
+        status: webhookResult ? 'queued' : 'dry_run',
+        requested_at: requestedAt,
+        command: `hermes -p mall-scraper exec "scrape ${payload.brand.source_url || handle}"`,
+        item_count: 0,
+      };
+      return json(202, {
+        receipt,
+        source: webhookResult ? 'webhook' : 'fixture',
+      });
     }
 
     if (route === 'dashboard' || route === '') {

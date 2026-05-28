@@ -52,6 +52,17 @@ export function addCrawlTarget(sourceUrl) {
   });
 }
 
+export function runCrawlNow(brand) {
+  return request('/api/mall-scanner/runs', {
+    method: 'POST',
+    body: JSON.stringify({ brand }),
+  });
+}
+
+export function getCrawlerCode() {
+  return request('/api/mall-scanner/crawler-code');
+}
+
 export function getRecentEvents() {
   return request('/api/mall-scanner/events');
 }

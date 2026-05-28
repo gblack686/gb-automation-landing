@@ -1,15 +1,17 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Clock, ExternalLink, Package, Plus, RefreshCw, Search, ShoppingBag, Store, Tag } from 'lucide-react';
+import { Clock, Code2, ExternalLink, Package, Play, Plus, RefreshCw, Search, ShoppingBag, Store, Tag } from 'lucide-react';
 import Footer from '../components/Footer';
 import SignOutButton from '../components/SignOutButton';
 import {
   addCrawlTarget,
+  getCrawlerCode,
   getBrandItems,
   getBrands,
   getDashboard,
   getLatestRun,
   getRecentEvents,
+  runCrawlNow,
 } from '../lib/mallScannerClient';
 
 function Metric({ icon: Icon, label, value }) {
@@ -141,10 +143,14 @@ export default function MallScanner() {
   const [loading, setLoading] = useState(true);
   const [itemsLoading, setItemsLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [codeLoading, setCodeLoading] = useState(false);
+  const [runLoading, setRunLoading] = useState(false);
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
   const [newSiteUrl, setNewSiteUrl] = useState('');
   const [search, setSearch] = useState('');
+  const [crawlerCode, setCrawlerCode] = useState(null);
+  const [showCrawlerCode, setShowCrawlerCode] = useState(false);
 
   async function load() {
     setLoading(true);
@@ -203,6 +209,42 @@ export default function MallScanner() {
       setError(err.message || 'Could not add crawl target');
     } finally {
       setSubmitting(false);
+    }
+  }
+
+  async function openCrawlerCode() {
+    setShowCrawlerCode((current) => !current);
+    if (crawlerCode) return;
+    setCodeLoading(true);
+    setError('');
+    try {
+      const data = await getCrawlerCode();
+      setCrawlerCode(data);
+    } catch (err) {
+      setError(err.message || 'Could not load crawler code');
+    } finally {
+      setCodeLoading(false);
+    }
+  }
+
+  async function runSelectedShop() {
+    if (!selectedBrandRecord) return;
+    setRunLoading(true);
+    setError('');
+    setNotice('');
+    try {
+      const result = await runCrawlNow({
+        ...selectedBrandRecord,
+        handle: selectedBrandRecord.handle || selectedBrandRecord.slug || selectedBrand,
+      });
+      const receipt = result.receipt || {};
+      setNotice(`${selectedBrandRecord.name || selectedBrandRecord.display_name || selectedBrand} run ${receipt.status || 'queued'}: ${receipt.run_id || 'receipt pending'}`);
+      await load();
+      await loadItems(selectedBrand);
+    } catch (err) {
+      setError(err.message || 'Could not start crawler run');
+    } finally {
+      setRunLoading(false);
     }
   }
 
@@ -356,6 +398,41 @@ export default function MallScanner() {
           </div>
         </section>
 
+        <section className="mb-8 rounded-lg border border-[#D6D4C8] bg-white">
+          <div className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest text-[#191919]/50">Crawler code</p>
+              <p className="mt-1 text-sm text-[#191919]/60">Inspect the command path, schema contract, and on-demand run payload.</p>
+            </div>
+            <button
+              type="button"
+              onClick={openCrawlerCode}
+              disabled={codeLoading}
+              className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md border border-[#D6D4C8] px-4 text-sm font-semibold text-[#191919] hover:border-[#D97757] hover:text-[#D97757] disabled:opacity-50"
+            >
+              <Code2 className="h-4 w-4" />
+              {showCrawlerCode ? 'Hide code' : 'View code'}
+            </button>
+          </div>
+          {showCrawlerCode && (
+            <div className="border-t border-[#D6D4C8] bg-[#191919] p-4">
+              {codeLoading ? (
+                <p className="text-sm text-white/60">Loading crawler code...</p>
+              ) : (
+                <>
+                  <div className="mb-3 flex flex-col gap-1 text-xs text-white/60 sm:flex-row sm:items-center sm:justify-between">
+                    <span>{crawlerCode?.title || 'Mall Scanner crawler'}</span>
+                    <code>{crawlerCode?.entrypoint || 'hermes -p mall-scraper exec "scrape <brand-source-url>"'}</code>
+                  </div>
+                  <pre className="max-h-[440px] overflow-auto whitespace-pre-wrap rounded-md bg-black/35 p-4 font-mono text-xs leading-6 text-white">
+                    {crawlerCode?.code || 'No crawler code available.'}
+                  </pre>
+                </>
+              )}
+            </div>
+          )}
+        </section>
+
         <div className="grid gap-6 lg:grid-cols-[420px_minmax(0,1fr)]">
           <section className="bg-white border border-[#D6D4C8] rounded-lg overflow-hidden">
             <div className="p-5 border-b border-[#D6D4C8] flex items-center gap-2">
@@ -405,9 +482,20 @@ export default function MallScanner() {
                   {selectedBrandRecord?.name || selectedBrandRecord?.display_name || selectedBrandRecord?.handle || selectedBrand || 'No shop selected'}
                 </h2>
               </div>
-              <p className="text-sm text-[#191919]/55">
-                {itemsLoading ? 'Loading items...' : `${visibleItems.length} of ${items.length} items`}
-              </p>
+              <div className="flex flex-col items-start gap-2 sm:items-end">
+                <button
+                  type="button"
+                  onClick={runSelectedShop}
+                  disabled={!selectedBrandRecord || runLoading}
+                  className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md bg-[#191919] px-4 text-sm font-semibold text-white hover:bg-[#D97757] disabled:opacity-50"
+                >
+                  <Play className="h-4 w-4" />
+                  {runLoading ? 'Running...' : 'Run now'}
+                </button>
+                <p className="text-sm text-[#191919]/55">
+                  {itemsLoading ? 'Loading items...' : `${visibleItems.length} of ${items.length} items`}
+                </p>
+              </div>
             </div>
 
             {itemsLoading ? (
