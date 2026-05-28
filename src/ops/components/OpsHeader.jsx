@@ -8,6 +8,7 @@ const navItems = [
   { label: 'Runs', to: '/ops/runs' },
   { label: 'Kanban', to: '/ops/kanban' },
   { label: 'Data', to: '/ops/data' },
+  { label: 'Supabase', to: '/ops/supabase' },
 ];
 
 export default function OpsHeader() {
