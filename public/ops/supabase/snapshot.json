@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-27T21:23:38-07:00",
+  "generated_at": "2026-05-27T22:36:12-07:00",
   "window_days": 30,
   "row_limit": 120,
   "live": true,
@@ -31,6 +31,71 @@
       "status_col": null,
       "group_col": "cron_name",
       "rows": [
+        {
+          "tick_id": "6362ea84-52ef-4e4b-989d-cb7e1fe5dc4b",
+          "cron_name": "linear-cron",
+          "started_at": "2026-05-28T05:24:50.754161+00:00",
+          "ended_at": "2026-05-28T05:24:50.754161+00:00",
+          "elapsed_ms": 0,
+          "picked_count": 0,
+          "ok_count": 0,
+          "fail_count": 0,
+          "skipped_count": 0,
+          "total_cost_usd": null,
+          "host": "mac-mini"
+        },
+        {
+          "tick_id": "44ab3760-908a-4045-a097-98b22ef5b1ed",
+          "cron_name": "linear-cron",
+          "started_at": "2026-05-28T05:09:42.398309+00:00",
+          "ended_at": "2026-05-28T05:09:42.398309+00:00",
+          "elapsed_ms": 0,
+          "picked_count": 0,
+          "ok_count": 0,
+          "fail_count": 0,
+          "skipped_count": 0,
+          "total_cost_usd": null,
+          "host": "mac-mini"
+        },
+        {
+          "tick_id": "e3ff92d7-c679-4e62-b352-84daa7d04d8e",
+          "cron_name": "linear-cron",
+          "started_at": "2026-05-28T04:54:35.160714+00:00",
+          "ended_at": "2026-05-28T04:54:35.160714+00:00",
+          "elapsed_ms": 0,
+          "picked_count": 0,
+          "ok_count": 0,
+          "fail_count": 0,
+          "skipped_count": 0,
+          "total_cost_usd": null,
+          "host": "mac-mini"
+        },
+        {
+          "tick_id": "25925482-b842-4911-816b-1fd77656a652",
+          "cron_name": "linear-cron",
+          "started_at": "2026-05-28T04:39:28.777405+00:00",
+          "ended_at": "2026-05-28T04:39:28.777405+00:00",
+          "elapsed_ms": 0,
+          "picked_count": 0,
+          "ok_count": 0,
+          "fail_count": 0,
+          "skipped_count": 0,
+          "total_cost_usd": null,
+          "host": "mac-mini"
+        },
+        {
+          "tick_id": "fed6f2f8-0d17-46c3-9297-c846863c595a",
+          "cron_name": "linear-cron",
+          "started_at": "2026-05-28T04:24:23.557841+00:00",
+          "ended_at": "2026-05-28T04:24:23.557841+00:00",
+          "elapsed_ms": 0,
+          "picked_count": 1,
+          "ok_count": 0,
+          "fail_count": 1,
+          "skipped_count": 0,
+          "total_cost_usd": null,
+          "host": "mac-mini"
+        },
         {
           "tick_id": "f96d6e74-8860-471a-ac82-40f49801814d",
           "cron_name": "linear-cron",
@@ -1525,71 +1590,6 @@
           "skipped_count": 0,
           "total_cost_usd": null,
           "host": "mac-mini"
-        },
-        {
-          "tick_id": "42744ab1-1b7a-42de-a7b4-6ab4363cd768",
-          "cron_name": "linear-cron",
-          "started_at": "2026-05-26T23:05:57.334977+00:00",
-          "ended_at": "2026-05-26T23:05:57.334977+00:00",
-          "elapsed_ms": 0,
-          "picked_count": 0,
-          "ok_count": 0,
-          "fail_count": 0,
-          "skipped_count": 0,
-          "total_cost_usd": null,
-          "host": "mac-mini"
-        },
-        {
-          "tick_id": "8125fb71-75f1-42be-a591-8e3b6b4ce70f",
-          "cron_name": "linear-cron",
-          "started_at": "2026-05-26T22:50:51.957972+00:00",
-          "ended_at": "2026-05-26T22:50:51.957972+00:00",
-          "elapsed_ms": 0,
-          "picked_count": 0,
-          "ok_count": 0,
-          "fail_count": 0,
-          "skipped_count": 0,
-          "total_cost_usd": null,
-          "host": "mac-mini"
-        },
-        {
-          "tick_id": "00667e89-76ef-4119-85ba-1592a1ed8f63",
-          "cron_name": "linear-cron",
-          "started_at": "2026-05-26T22:35:45.634071+00:00",
-          "ended_at": "2026-05-26T22:35:45.634071+00:00",
-          "elapsed_ms": 0,
-          "picked_count": 0,
-          "ok_count": 0,
-          "fail_count": 0,
-          "skipped_count": 0,
-          "total_cost_usd": null,
-          "host": "mac-mini"
-        },
-        {
-          "tick_id": "fa54488d-4cee-42a7-b5c1-20d49c9ceb05",
-          "cron_name": "linear-cron",
-          "started_at": "2026-05-26T22:20:37.878342+00:00",
-          "ended_at": "2026-05-26T22:20:37.878342+00:00",
-          "elapsed_ms": 0,
-          "picked_count": 0,
-          "ok_count": 0,
-          "fail_count": 0,
-          "skipped_count": 0,
-          "total_cost_usd": null,
-          "host": "mac-mini"
-        },
-        {
-          "tick_id": "9301ad50-bc69-4690-8c60-afefabe0adf9",
-          "cron_name": "linear-cron",
-          "started_at": "2026-05-26T22:05:32.710117+00:00",
-          "ended_at": "2026-05-26T22:05:32.710117+00:00",
-          "elapsed_ms": 0,
-          "picked_count": 0,
-          "ok_count": 0,
-          "fail_count": 0,
-          "skipped_count": 0,
-          "total_cost_usd": null,
-          "host": "mac-mini"
         }
       ],
       "summary": {
@@ -1598,7 +1598,7 @@
         "top_groups": {
           "linear-cron": 120
         },
-        "latest": "2026-05-28T04:08:42+00:00"
+        "latest": "2026-05-28T05:24:50+00:00"
       },
       "error": null
     },
@@ -2464,6 +2464,18 @@
           "agent_summary": "All deliverables are in place. Here's the summary:\n\n**What was built:**\n\n- **Supabase migrations** (`gbautomation`, branch `auto/gba-487-jid5274-tables`): `jid5274_cron_runs`, `jid5274_cron_run_outputs`, `jid5274_tac_build_runs` - ready for `supabase db push`\n- **deploy-linear-stack Hermes skill** (`~/.hermes/skills/devops/deploy-linear-stack/`): SKILL.md + deploy.sh + purge.sh - Phase 2 was missing, created fresh..."
         },
         {
+          "output_id": "42599d56-0aa6-49b0-83de-8aadd1c4e0e7",
+          "tick_id": "fed6f2f8-0d17-46c3-9297-c846863c595a",
+          "issue_id": "GBA-2300",
+          "status": "failed_silent",
+          "branch": "auto/gba-2300-sysadmin-cron-sysadmin-triage",
+          "pr_url": null,
+          "cost_usd": 0.0,
+          "turns": 1,
+          "duration_s": null,
+          "agent_summary": "Invalid API key · Fix external API key"
+        },
+        {
           "output_id": "40968dba-3170-4541-8c2e-e32bb081c617",
           "tick_id": "47750ada-0ff4-451c-9e2f-0c0ce7e5f558",
           "issue_id": "GBA-722",
@@ -2837,16 +2849,16 @@
         }
       ],
       "summary": {
-        "row_count": 102,
+        "row_count": 103,
         "status_counts": {
-          "failed_silent": 65,
+          "failed_silent": 66,
           "pr_opened": 20,
           "pushed_no_pr": 7,
           "noop": 7,
           "error": 3
         },
         "top_groups": {
-          "failed_silent": 65,
+          "failed_silent": 66,
           "pr_opened": 20,
           "pushed_no_pr": 7,
           "noop": 7,
@@ -3112,6 +3124,22 @@
       "group_col": "suite",
       "rows": [
         {
+          "test_key": "ops-dashboard-snapshot.focused",
+          "suite": "ops-dashboard-snapshot",
+          "status": "pass",
+          "last_run_at": "2026-05-28T05:34:44+00:00",
+          "branch": "main",
+          "commit_sha": "97b88c0080dda9b40b5fae15b5ae69634a74cb93",
+          "source": "codex-local",
+          "command": "pytest tests/test_save_supabase_dashboard_snapshot.py tests/test_sync_supabase_dashboard_to_website.py",
+          "duration_sec": null,
+          "tests_total": 7,
+          "tests_passed": 7,
+          "tests_failed": 0,
+          "report_path": "tests/test_save_supabase_dashboard_snapshot.py",
+          "report_url": null
+        },
+        {
           "test_key": "tac-observability.smoke.20260522",
           "suite": "tac-observability",
           "status": "pass",
@@ -3241,21 +3269,21 @@
         }
       ],
       "summary": {
-        "row_count": 8,
+        "row_count": 9,
         "status_counts": {
-          "pass": 8
+          "pass": 9
         },
         "top_groups": {
+          "ops-dashboard-snapshot": 1,
           "tac-observability": 1,
           "trace-coverage": 1,
           "inbox-netlify-publish": 1,
           "tac-build-report": 1,
           "runtime-context": 1,
           "supabase-admin-real-data": 1,
-          "supabase-admin-skills": 1,
-          "tac-verifier": 1
+          "supabase-admin-skills": 1
         },
-        "latest": "2026-05-22T07:10:42+00:00"
+        "latest": "2026-05-28T05:34:44+00:00"
       },
       "error": null
     },
@@ -3268,6 +3296,30 @@
       "status_col": null,
       "group_col": "source",
       "rows": [
+        {
+          "retrieval_id": "tac-20260528T045704Z-2026-05-27-tac-component-build-lineage-observabi-components",
+          "retrieval_created_at": "2026-05-28T04:57:05+00:00",
+          "query_count": 12,
+          "components_scanned": 1518,
+          "match_count": 505,
+          "returned_count": 20,
+          "inventory_dir": "tac-inventory",
+          "retrieval_path": "second-brain/intelligence/tac-retrievals/tac-20260528T045704Z-2026-05-27-tac-component-build-lineage-observabi-components.json",
+          "source": "tac-lineage-build",
+          "runtime": {
+            "host": "windows",
+            "repo": "gbautomation",
+            "branch": "main",
+            "hostname": "Gregs_Laptop",
+            "platform": "windows",
+            "workspace": "C:\\Users\\gblac\\OneDrive\\Desktop\\gbauto\\gbautomation",
+            "commit_sha": "97b88c0080dda9b40b5fae15b5ae69634a74cb93",
+            "host_source": "platform",
+            "agent_harness": "codex",
+            "harness_source": "path",
+            "dispatch_source": "manual"
+          }
+        },
         {
           "retrieval_id": "supabase-insert-smoke-retrieval",
           "retrieval_created_at": "2026-05-22T07:09:50+00:00",
@@ -3286,6 +3338,30 @@
             "platform": "windows",
             "workspace": "C:\\Users\\gblac\\OneDrive\\Desktop\\gbauto\\gbautomation",
             "commit_sha": "5aa4be217997022428884597837b089e5cf52c67",
+            "host_source": "platform",
+            "agent_harness": "codex",
+            "harness_source": "path",
+            "dispatch_source": "manual"
+          }
+        },
+        {
+          "retrieval_id": "2026-05-22-supabase-data-pipeline",
+          "retrieval_created_at": "2026-05-22T05:25:23+00:00",
+          "query_count": 8,
+          "components_scanned": 1219,
+          "match_count": 281,
+          "returned_count": 25,
+          "inventory_dir": "tac-inventory",
+          "retrieval_path": "second-brain/intelligence/tac-retrievals/2026-05-22-supabase-data-pipeline.json",
+          "source": "retrieval-benchmark-diversified",
+          "runtime": {
+            "host": "windows",
+            "repo": "gbautomation",
+            "branch": "feat/contact-form-supabase-notifier",
+            "hostname": "Gregs_Laptop",
+            "platform": "windows",
+            "workspace": "C:\\Users\\gblac\\OneDrive\\Desktop\\gbauto\\gbautomation",
+            "commit_sha": "3454c5b9728e8c5b492a26fa4eff3e16fa9b46a6",
             "host_source": "platform",
             "agent_harness": "codex",
             "harness_source": "path",
@@ -3317,14 +3393,14 @@
           }
         },
         {
-          "retrieval_id": "2026-05-22-supabase-data-pipeline",
-          "retrieval_created_at": "2026-05-22T05:25:23+00:00",
+          "retrieval_id": "2026-05-22-fastapi-app",
+          "retrieval_created_at": "2026-05-22T05:25:22+00:00",
           "query_count": 8,
           "components_scanned": 1219,
-          "match_count": 281,
+          "match_count": 416,
           "returned_count": 25,
           "inventory_dir": "tac-inventory",
-          "retrieval_path": "second-brain/intelligence/tac-retrievals/2026-05-22-supabase-data-pipeline.json",
+          "retrieval_path": "second-brain/intelligence/tac-retrievals/2026-05-22-fastapi-app.json",
           "source": "retrieval-benchmark-diversified",
           "runtime": {
             "host": "windows",
@@ -3389,30 +3465,6 @@
           }
         },
         {
-          "retrieval_id": "2026-05-22-fastapi-app",
-          "retrieval_created_at": "2026-05-22T05:25:22+00:00",
-          "query_count": 8,
-          "components_scanned": 1219,
-          "match_count": 416,
-          "returned_count": 25,
-          "inventory_dir": "tac-inventory",
-          "retrieval_path": "second-brain/intelligence/tac-retrievals/2026-05-22-fastapi-app.json",
-          "source": "retrieval-benchmark-diversified",
-          "runtime": {
-            "host": "windows",
-            "repo": "gbautomation",
-            "branch": "feat/contact-form-supabase-notifier",
-            "hostname": "Gregs_Laptop",
-            "platform": "windows",
-            "workspace": "C:\\Users\\gblac\\OneDrive\\Desktop\\gbauto\\gbautomation",
-            "commit_sha": "3454c5b9728e8c5b492a26fa4eff3e16fa9b46a6",
-            "host_source": "platform",
-            "agent_harness": "codex",
-            "harness_source": "path",
-            "dispatch_source": "manual"
-          }
-        },
-        {
           "retrieval_id": "tac-20260512-runtime-schema-components",
           "retrieval_created_at": "2026-05-12T03:07:10+00:00",
           "query_count": 4,
@@ -3438,14 +3490,15 @@
         }
       ],
       "summary": {
-        "row_count": 7,
+        "row_count": 8,
         "status_counts": {},
         "top_groups": {
           "retrieval-benchmark-diversified": 5,
+          "tac-lineage-build": 1,
           "tac-observability-smoke": 1,
           "local-codex": 1
         },
-        "latest": "2026-05-22T07:09:50+00:00"
+        "latest": "2026-05-28T04:57:05+00:00"
       },
       "error": null
     },
@@ -4526,11 +4579,11 @@
           "source_host": "mac-mini",
           "path": "/Users/greg/.openclaw/logs/gateway.log",
           "basename": "gateway.log",
-          "file_size_bytes": 18006317,
-          "modified_at": "2026-05-28T04:10:38+00:00",
+          "file_size_bytes": 18172772,
+          "modified_at": "2026-05-28T05:27:22+00:00",
           "content_mode": "tail",
           "captured_bytes": 32768,
-          "last_synced_at": "2026-05-28T04:10:39+00:00"
+          "last_synced_at": "2026-05-28T05:27:24+00:00"
         },
         {
           "source_id": "mac-mini:ec433ffbcdb1b78ff9e9265a",
@@ -4541,26 +4594,11 @@
           "source_host": "mac-mini",
           "path": "/Users/greg/Library/Logs/gbautomation/agent-log-sync-2026-05-27.log",
           "basename": "agent-log-sync-2026-05-27.log",
-          "file_size_bytes": 162493,
-          "modified_at": "2026-05-28T04:10:36+00:00",
+          "file_size_bytes": 172378,
+          "modified_at": "2026-05-28T05:27:22+00:00",
           "content_mode": "tail",
           "captured_bytes": 32768,
-          "last_synced_at": "2026-05-28T04:10:39+00:00"
-        },
-        {
-          "source_id": "mac-mini:a0d219d8994e4b7096605c90",
-          "client_slug": "openclaw",
-          "repo_slug": "openclaw",
-          "agent": "openclaw",
-          "category": "runtime-log",
-          "source_host": "mac-mini",
-          "path": "/Users/greg/.openclaw/logs/morning-brief-callback.log",
-          "basename": "morning-brief-callback.log",
-          "file_size_bytes": 784109,
-          "modified_at": "2026-05-28T04:10:33+00:00",
-          "content_mode": "tail",
-          "captured_bytes": 32768,
-          "last_synced_at": "2026-05-28T04:10:39+00:00"
+          "last_synced_at": "2026-05-28T05:27:24+00:00"
         },
         {
           "source_id": "mac-mini:d270d46da59e488887465f70",
@@ -4571,11 +4609,11 @@
           "source_host": "mac-mini",
           "path": "/Users/greg/repos/gbautomation/second-brain/intelligence/heartbeats/cron-error-heartbeat/2026-05-28.jsonl",
           "basename": "2026-05-28.jsonl",
-          "file_size_bytes": 304411,
-          "modified_at": "2026-05-28T04:10:00+00:00",
+          "file_size_bytes": 456507,
+          "modified_at": "2026-05-28T05:27:10+00:00",
           "content_mode": "tail",
           "captured_bytes": 32768,
-          "last_synced_at": "2026-05-28T04:10:39+00:00"
+          "last_synced_at": "2026-05-28T05:27:24+00:00"
         },
         {
           "source_id": "mac-mini:abb9f378c104fee2d7eed043",
@@ -4586,11 +4624,11 @@
           "source_host": "mac-mini",
           "path": "/Users/greg/Library/Logs/gbautomation/cron-error-heartbeat-2026-05-27.log",
           "basename": "cron-error-heartbeat-2026-05-27.log",
-          "file_size_bytes": 2085442,
-          "modified_at": "2026-05-28T04:10:00+00:00",
+          "file_size_bytes": 2277070,
+          "modified_at": "2026-05-28T05:27:10+00:00",
           "content_mode": "tail",
           "captured_bytes": 32768,
-          "last_synced_at": "2026-05-28T04:10:39+00:00"
+          "last_synced_at": "2026-05-28T05:27:24+00:00"
         },
         {
           "source_id": "mac-mini:75d601045e6a5c942c1df54d",
@@ -4601,11 +4639,26 @@
           "source_host": "mac-mini",
           "path": "/Users/greg/.hermes/logs/agent.log",
           "basename": "agent.log",
-          "file_size_bytes": 2533459,
-          "modified_at": "2026-05-28T04:09:45+00:00",
+          "file_size_bytes": 2600238,
+          "modified_at": "2026-05-28T05:27:07+00:00",
           "content_mode": "tail",
           "captured_bytes": 32768,
-          "last_synced_at": "2026-05-28T04:10:39+00:00"
+          "last_synced_at": "2026-05-28T05:27:24+00:00"
+        },
+        {
+          "source_id": "mac-mini:a0d219d8994e4b7096605c90",
+          "client_slug": "openclaw",
+          "repo_slug": "openclaw",
+          "agent": "openclaw",
+          "category": "runtime-log",
+          "source_host": "mac-mini",
+          "path": "/Users/greg/.openclaw/logs/morning-brief-callback.log",
+          "basename": "morning-brief-callback.log",
+          "file_size_bytes": 789307,
+          "modified_at": "2026-05-28T05:27:04+00:00",
+          "content_mode": "tail",
+          "captured_bytes": 32768,
+          "last_synced_at": "2026-05-28T05:27:24+00:00"
         },
         {
           "source_id": "mac-mini:8e2608aa074db0a1a32d7032",
@@ -4616,11 +4669,11 @@
           "source_host": "mac-mini",
           "path": "/Users/greg/.openclaw/logs/gmail-monitor.log",
           "basename": "gmail-monitor.log",
-          "file_size_bytes": 2897944,
-          "modified_at": "2026-05-28T04:09:36+00:00",
+          "file_size_bytes": 2916679,
+          "modified_at": "2026-05-28T05:24:55+00:00",
           "content_mode": "tail",
           "captured_bytes": 32768,
-          "last_synced_at": "2026-05-28T04:10:39+00:00"
+          "last_synced_at": "2026-05-28T05:27:24+00:00"
         },
         {
           "source_id": "mac-mini:046ae5c2f06c3dc2e0e76677",
@@ -4631,11 +4684,11 @@
           "source_host": "mac-mini",
           "path": "/Users/greg/Library/Logs/gbautomation/linear-cron-2026-05-27.log",
           "basename": "linear-cron-2026-05-27.log",
-          "file_size_bytes": 274099,
-          "modified_at": "2026-05-28T04:08:43+00:00",
+          "file_size_bytes": 290746,
+          "modified_at": "2026-05-28T05:24:50+00:00",
           "content_mode": "tail",
           "captured_bytes": 32768,
-          "last_synced_at": "2026-05-28T04:10:39+00:00"
+          "last_synced_at": "2026-05-28T05:27:24+00:00"
         },
         {
           "source_id": "mac-mini:84868a791c232b4fddea89e9",
@@ -4646,26 +4699,11 @@
           "source_host": "mac-mini",
           "path": "/Users/greg/repos/gbautomation/second-brain/intelligence/cron-runs/2026-05-27.jsonl",
           "basename": "2026-05-27.jsonl",
-          "file_size_bytes": 93071,
-          "modified_at": "2026-05-28T04:08:42+00:00",
+          "file_size_bytes": 102915,
+          "modified_at": "2026-05-28T05:24:49+00:00",
           "content_mode": "tail",
           "captured_bytes": 32768,
-          "last_synced_at": "2026-05-28T04:10:39+00:00"
-        },
-        {
-          "source_id": "mac-mini:2bf3061c4e407550b86402ae",
-          "client_slug": "hermes",
-          "repo_slug": "hermes",
-          "agent": "dbforge",
-          "category": "runtime-log",
-          "source_host": "mac-mini",
-          "path": "/Users/greg/.hermes/profiles/dbforge/logs/agent.log",
-          "basename": "agent.log",
-          "file_size_bytes": 924782,
-          "modified_at": "2026-05-28T04:08:41+00:00",
-          "content_mode": "tail",
-          "captured_bytes": 32768,
-          "last_synced_at": "2026-05-28T04:10:39+00:00"
+          "last_synced_at": "2026-05-28T05:27:24+00:00"
         },
         {
           "source_id": "mac-mini:7cac7c125a1d677885aecf43",
@@ -4676,10 +4714,325 @@
           "source_host": "mac-mini",
           "path": "/Users/greg/.hermes/profiles/dbforge/logs/gateway.log",
           "basename": "gateway.log",
-          "file_size_bytes": 276498,
-          "modified_at": "2026-05-28T04:08:41+00:00",
+          "file_size_bytes": 278183,
+          "modified_at": "2026-05-28T05:23:42+00:00",
           "content_mode": "tail",
           "captured_bytes": 32768,
+          "last_synced_at": "2026-05-28T05:27:24+00:00"
+        },
+        {
+          "source_id": "mac-mini:2bf3061c4e407550b86402ae",
+          "client_slug": "hermes",
+          "repo_slug": "hermes",
+          "agent": "dbforge",
+          "category": "runtime-log",
+          "source_host": "mac-mini",
+          "path": "/Users/greg/.hermes/profiles/dbforge/logs/agent.log",
+          "basename": "agent.log",
+          "file_size_bytes": 926467,
+          "modified_at": "2026-05-28T05:23:42+00:00",
+          "content_mode": "tail",
+          "captured_bytes": 32768,
+          "last_synced_at": "2026-05-28T05:27:24+00:00"
+        },
+        {
+          "source_id": "mac-mini:6ddf919f1f779ce753f3e278",
+          "client_slug": "gbautomation",
+          "repo_slug": "gbautomation",
+          "agent": "gbautomation",
+          "category": "runtime-log",
+          "source_host": "mac-mini",
+          "path": "/Users/greg/Library/Logs/gbautomation/transcript-poll.err",
+          "basename": "transcript-poll.err",
+          "file_size_bytes": 14540448,
+          "modified_at": "2026-05-28T05:23:38+00:00",
+          "content_mode": "tail",
+          "captured_bytes": 32768,
+          "last_synced_at": "2026-05-28T05:27:24+00:00"
+        },
+        {
+          "source_id": "mac-mini:363fb42986e987bc73b29a7e",
+          "client_slug": "gbautomation",
+          "repo_slug": "gbautomation",
+          "agent": "caddy-jid5274",
+          "category": "gateway",
+          "source_host": "mac-mini",
+          "path": "/Users/greg/Library/Logs/gbautomation/caddy-jid5274-hermes.log",
+          "basename": "caddy-jid5274-hermes.log",
+          "file_size_bytes": 3237082,
+          "modified_at": "2026-05-28T05:23:32+00:00",
+          "content_mode": "tail",
+          "captured_bytes": 32768,
+          "last_synced_at": "2026-05-28T05:27:24+00:00"
+        },
+        {
+          "source_id": "mac-mini:2b00f469cbecc8f61a276882",
+          "client_slug": "hermes",
+          "repo_slug": "hermes",
+          "agent": "outbound",
+          "category": "runtime-log",
+          "source_host": "mac-mini",
+          "path": "/Users/greg/.hermes/profiles/outbound/logs/agent.log",
+          "basename": "agent.log",
+          "file_size_bytes": 717354,
+          "modified_at": "2026-05-28T05:23:11+00:00",
+          "content_mode": "tail",
+          "captured_bytes": 32768,
+          "last_synced_at": "2026-05-28T05:27:24+00:00"
+        },
+        {
+          "source_id": "mac-mini:9b0f58b9702a4fad23f7ef01",
+          "client_slug": "hermes",
+          "repo_slug": "hermes",
+          "agent": "outbound",
+          "category": "runtime-log",
+          "source_host": "mac-mini",
+          "path": "/Users/greg/.hermes/profiles/outbound/logs/gateway.log",
+          "basename": "gateway.log",
+          "file_size_bytes": 319084,
+          "modified_at": "2026-05-28T05:23:11+00:00",
+          "content_mode": "tail",
+          "captured_bytes": 32768,
+          "last_synced_at": "2026-05-28T05:27:24+00:00"
+        },
+        {
+          "source_id": "mac-mini:c589aeaea89059c76fe83f26",
+          "client_slug": "hermes",
+          "repo_slug": "hermes",
+          "agent": "hermes",
+          "category": "runtime-log",
+          "source_host": "mac-mini",
+          "path": "/Users/greg/.hermes/logs/gateway.log",
+          "basename": "gateway.log",
+          "file_size_bytes": 2252639,
+          "modified_at": "2026-05-28T05:23:08+00:00",
+          "content_mode": "tail",
+          "captured_bytes": 32768,
+          "last_synced_at": "2026-05-28T05:27:24+00:00"
+        },
+        {
+          "source_id": "mac-mini:ad88992196c240dcb770dbf6",
+          "client_slug": "gbautomation",
+          "repo_slug": "gbautomation",
+          "agent": "jason-agent",
+          "category": "tirith",
+          "source_host": "mac-mini",
+          "path": "/Users/jason-agent/.local/share/tirith/log.jsonl",
+          "basename": "log.jsonl",
+          "file_size_bytes": 1064690,
+          "modified_at": "2026-05-28T05:21:58+00:00",
+          "content_mode": "error",
+          "captured_bytes": 0,
+          "last_synced_at": "2026-05-28T05:27:24+00:00"
+        },
+        {
+          "source_id": "mac-mini:22df79ec38e87c427d809305",
+          "client_slug": "gbautomation",
+          "repo_slug": "gbautomation",
+          "agent": "jason-va",
+          "category": "hermes-gateway",
+          "source_host": "mac-mini",
+          "path": "/Users/greg/.hermes/profiles/jason-va/logs/gateway.log",
+          "basename": "gateway.log",
+          "file_size_bytes": 465870,
+          "modified_at": "2026-05-28T05:12:14+00:00",
+          "content_mode": "tail",
+          "captured_bytes": 32768,
+          "last_synced_at": "2026-05-28T05:27:24+00:00"
+        },
+        {
+          "source_id": "mac-mini:0d83abcde8b8dacfa7727be9",
+          "client_slug": "gbautomation",
+          "repo_slug": "gbautomation",
+          "agent": "jason-va",
+          "category": "hermes-agent",
+          "source_host": "mac-mini",
+          "path": "/Users/greg/.hermes/profiles/jason-va/logs/agent.log",
+          "basename": "agent.log",
+          "file_size_bytes": 630387,
+          "modified_at": "2026-05-28T05:12:13+00:00",
+          "content_mode": "tail",
+          "captured_bytes": 32768,
+          "last_synced_at": "2026-05-28T05:27:24+00:00"
+        },
+        {
+          "source_id": "mac-mini:33b315584f72510aafba9d6f",
+          "client_slug": "gbautomation",
+          "repo_slug": "gbautomation",
+          "agent": "jason-va",
+          "category": "hermes-error",
+          "source_host": "mac-mini",
+          "path": "/Users/greg/.hermes/profiles/jason-va/logs/errors.log",
+          "basename": "errors.log",
+          "file_size_bytes": 239913,
+          "modified_at": "2026-05-28T05:12:09+00:00",
+          "content_mode": "tail",
+          "captured_bytes": 32768,
+          "last_synced_at": "2026-05-28T05:27:24+00:00"
+        },
+        {
+          "source_id": "mac-mini:90f804bb76a05716617e362f",
+          "client_slug": "gbautomation",
+          "repo_slug": "gbautomation",
+          "agent": "jason-va",
+          "category": "hermes-error",
+          "source_host": "mac-mini",
+          "path": "/Users/greg/.hermes/profiles/jason-va/logs/gateway.error.log",
+          "basename": "gateway.error.log",
+          "file_size_bytes": 232679,
+          "modified_at": "2026-05-28T05:12:09+00:00",
+          "content_mode": "tail",
+          "captured_bytes": 32768,
+          "last_synced_at": "2026-05-28T05:27:24+00:00"
+        },
+        {
+          "source_id": "mac-mini:90fa69ca944ab83b2cabb372",
+          "client_slug": "hermes",
+          "repo_slug": "hermes",
+          "agent": "hermes",
+          "category": "runtime-log",
+          "source_host": "mac-mini",
+          "path": "/Users/greg/.hermes/logs/gateway.error.log",
+          "basename": "gateway.error.log",
+          "file_size_bytes": 1136241,
+          "modified_at": "2026-05-28T05:11:36+00:00",
+          "content_mode": "tail",
+          "captured_bytes": 32768,
+          "last_synced_at": "2026-05-28T05:12:03+00:00"
+        },
+        {
+          "source_id": "mac-mini:61f5a798223269c4e07e8a26",
+          "client_slug": "hermes",
+          "repo_slug": "hermes",
+          "agent": "hermes",
+          "category": "runtime-log",
+          "source_host": "mac-mini",
+          "path": "/Users/greg/.hermes/logs/errors.log",
+          "basename": "errors.log",
+          "file_size_bytes": 1588775,
+          "modified_at": "2026-05-28T05:11:36+00:00",
+          "content_mode": "tail",
+          "captured_bytes": 32768,
+          "last_synced_at": "2026-05-28T05:12:03+00:00"
+        },
+        {
+          "source_id": "mac-mini:c01fb51f594e6c43d2aa1990",
+          "client_slug": "hermes",
+          "repo_slug": "hermes",
+          "agent": "hermes",
+          "category": "conversation",
+          "source_host": "mac-mini",
+          "path": "/Users/greg/.hermes/sessions/sessions.json",
+          "basename": "sessions.json",
+          "file_size_bytes": 2197,
+          "modified_at": "2026-05-28T05:11:14+00:00",
+          "content_mode": "full",
+          "captured_bytes": 2197,
+          "last_synced_at": "2026-05-28T05:12:03+00:00"
+        },
+        {
+          "source_id": "mac-mini:dfa320bff8e9e1654855adcf",
+          "client_slug": "openclaw",
+          "repo_slug": "openclaw",
+          "agent": "openclaw",
+          "category": "runtime-log",
+          "source_host": "mac-mini",
+          "path": "/Users/greg/.openclaw/logs/watchdog.log",
+          "basename": "watchdog.log",
+          "file_size_bytes": 604476,
+          "modified_at": "2026-05-28T05:05:44+00:00",
+          "content_mode": "tail",
+          "captured_bytes": 32768,
+          "last_synced_at": "2026-05-28T05:27:24+00:00"
+        },
+        {
+          "source_id": "mac-mini:70dd399b53ba3bb42a74ffb9",
+          "client_slug": "openclaw",
+          "repo_slug": "openclaw",
+          "agent": "openclaw",
+          "category": "runtime-log",
+          "source_host": "mac-mini",
+          "path": "/Users/greg/.openclaw/logs/tui-server.err.log",
+          "basename": "tui-server.err.log",
+          "file_size_bytes": 2623,
+          "modified_at": "2026-05-28T05:03:30+00:00",
+          "content_mode": "full",
+          "captured_bytes": 2623,
+          "last_synced_at": "2026-05-28T05:27:24+00:00"
+        },
+        {
+          "source_id": "mac-mini:adc0e5851c1d5020eb36f073",
+          "client_slug": "gbautomation",
+          "repo_slug": "gbautomation",
+          "agent": "jason-va",
+          "category": "conversation-index",
+          "source_host": "mac-mini",
+          "path": "/Users/greg/.hermes/profiles/jason-va/sessions/sessions.json",
+          "basename": "sessions.json",
+          "file_size_bytes": 2171,
+          "modified_at": "2026-05-28T05:02:10+00:00",
+          "content_mode": "full",
+          "captured_bytes": 2171,
+          "last_synced_at": "2026-05-28T05:27:24+00:00"
+        },
+        {
+          "source_id": "mac-mini:4a1a60e7790c80a3997f3924",
+          "client_slug": "openclaw",
+          "repo_slug": "openclaw",
+          "agent": "openclaw",
+          "category": "agent-team-log",
+          "source_host": "mac-mini",
+          "path": "/Users/greg/.openclaw/workspace/gbauto/agent-team-logs/2026-05-27-GBA-2300-212350-a3.jsonl",
+          "basename": "2026-05-27-GBA-2300-212350-a3.jsonl",
+          "file_size_bytes": 19557,
+          "modified_at": "2026-05-28T04:24:19+00:00",
+          "content_mode": "full",
+          "captured_bytes": 19557,
+          "last_synced_at": "2026-05-28T04:26:01+00:00"
+        },
+        {
+          "source_id": "mac-mini:fc6c5320100ce37fbc50b24a",
+          "client_slug": "openclaw",
+          "repo_slug": "openclaw",
+          "agent": "openclaw",
+          "category": "agent-team-log",
+          "source_host": "mac-mini",
+          "path": "/Users/greg/.openclaw/workspace/gbauto/agent-team-logs/2026-05-27-GBA-2300-212350.jsonl",
+          "basename": "2026-05-27-GBA-2300-212350.jsonl",
+          "file_size_bytes": 19557,
+          "modified_at": "2026-05-28T04:24:19+00:00",
+          "content_mode": "full",
+          "captured_bytes": 19557,
+          "last_synced_at": "2026-05-28T05:27:24+00:00"
+        },
+        {
+          "source_id": "mac-mini:7aa93d94e8d63cf6ed12bd49",
+          "client_slug": "openclaw",
+          "repo_slug": "openclaw",
+          "agent": "openclaw",
+          "category": "agent-team-log",
+          "source_host": "mac-mini",
+          "path": "/Users/greg/.openclaw/workspace/gbauto/agent-team-logs/2026-05-27-GBA-2300-212350-a2.jsonl",
+          "basename": "2026-05-27-GBA-2300-212350-a2.jsonl",
+          "file_size_bytes": 19557,
+          "modified_at": "2026-05-28T04:24:01+00:00",
+          "content_mode": "full",
+          "captured_bytes": 19557,
+          "last_synced_at": "2026-05-28T04:26:01+00:00"
+        },
+        {
+          "source_id": "mac-mini:1a0bbaf20cf4dfc2ad205a43",
+          "client_slug": "openclaw",
+          "repo_slug": "openclaw",
+          "agent": "openclaw",
+          "category": "agent-team-log",
+          "source_host": "mac-mini",
+          "path": "/Users/greg/.openclaw/workspace/gbauto/agent-team-logs/2026-05-27-GBA-3074-210810.jsonl",
+          "basename": "2026-05-27-GBA-3074-210810.jsonl",
+          "file_size_bytes": 19558,
+          "modified_at": "2026-05-28T04:08:39+00:00",
+          "content_mode": "full",
+          "captured_bytes": 19558,
           "last_synced_at": "2026-05-28T04:10:39+00:00"
         },
         {
@@ -4698,36 +5051,6 @@
           "last_synced_at": "2026-05-28T04:10:39+00:00"
         },
         {
-          "source_id": "mac-mini:1a0bbaf20cf4dfc2ad205a43",
-          "client_slug": "openclaw",
-          "repo_slug": "openclaw",
-          "agent": "openclaw",
-          "category": "agent-team-log",
-          "source_host": "mac-mini",
-          "path": "/Users/greg/.openclaw/workspace/gbauto/agent-team-logs/2026-05-27-GBA-3074-210810.jsonl",
-          "basename": "2026-05-27-GBA-3074-210810.jsonl",
-          "file_size_bytes": 19558,
-          "modified_at": "2026-05-28T04:08:39+00:00",
-          "content_mode": "full",
-          "captured_bytes": 19558,
-          "last_synced_at": "2026-05-28T04:10:39+00:00"
-        },
-        {
-          "source_id": "mac-mini:6ddf919f1f779ce753f3e278",
-          "client_slug": "gbautomation",
-          "repo_slug": "gbautomation",
-          "agent": "gbautomation",
-          "category": "runtime-log",
-          "source_host": "mac-mini",
-          "path": "/Users/greg/Library/Logs/gbautomation/transcript-poll.err",
-          "basename": "transcript-poll.err",
-          "file_size_bytes": 14478408,
-          "modified_at": "2026-05-28T04:08:34+00:00",
-          "content_mode": "tail",
-          "captured_bytes": 32768,
-          "last_synced_at": "2026-05-28T04:10:39+00:00"
-        },
-        {
           "source_id": "mac-mini:109185240708e48e79d746d7",
           "client_slug": "openclaw",
           "repo_slug": "openclaw",
@@ -4743,96 +5066,6 @@
           "last_synced_at": "2026-05-28T04:10:39+00:00"
         },
         {
-          "source_id": "mac-mini:22df79ec38e87c427d809305",
-          "client_slug": "gbautomation",
-          "repo_slug": "gbautomation",
-          "agent": "jason-va",
-          "category": "hermes-gateway",
-          "source_host": "mac-mini",
-          "path": "/Users/greg/.hermes/profiles/jason-va/logs/gateway.log",
-          "basename": "gateway.log",
-          "file_size_bytes": 461336,
-          "modified_at": "2026-05-28T04:08:19+00:00",
-          "content_mode": "tail",
-          "captured_bytes": 32768,
-          "last_synced_at": "2026-05-28T04:10:39+00:00"
-        },
-        {
-          "source_id": "mac-mini:0d83abcde8b8dacfa7727be9",
-          "client_slug": "gbautomation",
-          "repo_slug": "gbautomation",
-          "agent": "jason-va",
-          "category": "hermes-agent",
-          "source_host": "mac-mini",
-          "path": "/Users/greg/.hermes/profiles/jason-va/logs/agent.log",
-          "basename": "agent.log",
-          "file_size_bytes": 625524,
-          "modified_at": "2026-05-28T04:08:19+00:00",
-          "content_mode": "tail",
-          "captured_bytes": 32768,
-          "last_synced_at": "2026-05-28T04:10:39+00:00"
-        },
-        {
-          "source_id": "mac-mini:9b0f58b9702a4fad23f7ef01",
-          "client_slug": "hermes",
-          "repo_slug": "hermes",
-          "agent": "outbound",
-          "category": "runtime-log",
-          "source_host": "mac-mini",
-          "path": "/Users/greg/.hermes/profiles/outbound/logs/gateway.log",
-          "basename": "gateway.log",
-          "file_size_bytes": 317393,
-          "modified_at": "2026-05-28T04:08:09+00:00",
-          "content_mode": "tail",
-          "captured_bytes": 32768,
-          "last_synced_at": "2026-05-28T04:10:39+00:00"
-        },
-        {
-          "source_id": "mac-mini:dfa320bff8e9e1654855adcf",
-          "client_slug": "openclaw",
-          "repo_slug": "openclaw",
-          "agent": "openclaw",
-          "category": "runtime-log",
-          "source_host": "mac-mini",
-          "path": "/Users/greg/.openclaw/logs/watchdog.log",
-          "basename": "watchdog.log",
-          "file_size_bytes": 604356,
-          "modified_at": "2026-05-28T03:35:40+00:00",
-          "content_mode": "tail",
-          "captured_bytes": 32768,
-          "last_synced_at": "2026-05-28T03:55:18+00:00"
-        },
-        {
-          "source_id": "mac-mini:2b00f469cbecc8f61a276882",
-          "client_slug": "hermes",
-          "repo_slug": "hermes",
-          "agent": "outbound",
-          "category": "runtime-log",
-          "source_host": "mac-mini",
-          "path": "/Users/greg/.hermes/profiles/outbound/logs/agent.log",
-          "basename": "agent.log",
-          "file_size_bytes": 713977,
-          "modified_at": "2026-05-28T02:53:07+00:00",
-          "content_mode": "tail",
-          "captured_bytes": 32768,
-          "last_synced_at": "2026-05-28T02:53:54+00:00"
-        },
-        {
-          "source_id": "mac-mini:c589aeaea89059c76fe83f26",
-          "client_slug": "hermes",
-          "repo_slug": "hermes",
-          "agent": "hermes",
-          "category": "runtime-log",
-          "source_host": "mac-mini",
-          "path": "/Users/greg/.hermes/logs/gateway.log",
-          "basename": "gateway.log",
-          "file_size_bytes": 2239910,
-          "modified_at": "2026-05-28T02:38:05+00:00",
-          "content_mode": "tail",
-          "captured_bytes": 32768,
-          "last_synced_at": "2026-05-28T02:38:32+00:00"
-        },
-        {
           "source_id": "mac-mini:e7c76a7442c18c3d76ef04c2",
           "client_slug": "gbautomation",
           "repo_slug": "gbautomation",
@@ -4843,36 +5076,6 @@
           "basename": "cron-health-watchdog-2026-05-27.log",
           "file_size_bytes": 100456,
           "modified_at": "2026-05-28T02:21:49+00:00",
-          "content_mode": "tail",
-          "captured_bytes": 32768,
-          "last_synced_at": "2026-05-28T02:23:11+00:00"
-        },
-        {
-          "source_id": "mac-mini:61f5a798223269c4e07e8a26",
-          "client_slug": "hermes",
-          "repo_slug": "hermes",
-          "agent": "hermes",
-          "category": "runtime-log",
-          "source_host": "mac-mini",
-          "path": "/Users/greg/.hermes/logs/errors.log",
-          "basename": "errors.log",
-          "file_size_bytes": 1577693,
-          "modified_at": "2026-05-28T02:21:26+00:00",
-          "content_mode": "tail",
-          "captured_bytes": 32768,
-          "last_synced_at": "2026-05-28T02:23:11+00:00"
-        },
-        {
-          "source_id": "mac-mini:90fa69ca944ab83b2cabb372",
-          "client_slug": "hermes",
-          "repo_slug": "hermes",
-          "agent": "hermes",
-          "category": "runtime-log",
-          "source_host": "mac-mini",
-          "path": "/Users/greg/.hermes/logs/gateway.error.log",
-          "basename": "gateway.error.log",
-          "file_size_bytes": 1127232,
-          "modified_at": "2026-05-28T02:21:26+00:00",
           "content_mode": "tail",
           "captured_bytes": 32768,
           "last_synced_at": "2026-05-28T02:23:11+00:00"
@@ -4968,21 +5171,6 @@
           "last_synced_at": "2026-05-27T23:49:42+00:00"
         },
         {
-          "source_id": "mac-mini:ad88992196c240dcb770dbf6",
-          "client_slug": "gbautomation",
-          "repo_slug": "gbautomation",
-          "agent": "jason-agent",
-          "category": "tirith",
-          "source_host": "mac-mini",
-          "path": "/Users/jason-agent/.local/share/tirith/log.jsonl",
-          "basename": "log.jsonl",
-          "file_size_bytes": 1051605,
-          "modified_at": "2026-05-27T22:19:50+00:00",
-          "content_mode": "error",
-          "captured_bytes": 0,
-          "last_synced_at": "2026-05-28T04:10:39+00:00"
-        },
-        {
           "source_id": "mac-mini:f49b9a88ebfbfd629367ac57",
           "client_slug": "gbautomation",
           "repo_slug": "gbautomation",
@@ -4995,7 +5183,7 @@
           "modified_at": "2026-05-27T22:05:24+00:00",
           "content_mode": "full",
           "captured_bytes": 8640,
-          "last_synced_at": "2026-05-28T04:10:39+00:00"
+          "last_synced_at": "2026-05-28T05:27:24+00:00"
         },
         {
           "source_id": "mac-mini:798d625a4b152fb534b16a93",
@@ -5058,21 +5246,6 @@
           "last_synced_at": "2026-05-27T13:20:24+00:00"
         },
         {
-          "source_id": "mac-mini:766701c4b5fe6a164dc5838e",
-          "client_slug": "openclaw",
-          "repo_slug": "openclaw",
-          "agent": "openclaw",
-          "category": "runtime-log",
-          "source_host": "mac-mini",
-          "path": "/Users/greg/.openclaw/logs/gelby-context-refresh.log",
-          "basename": "gelby-context-refresh.log",
-          "file_size_bytes": 2244,
-          "modified_at": "2026-05-27T13:00:01+00:00",
-          "content_mode": "full",
-          "captured_bytes": 2244,
-          "last_synced_at": "2026-05-27T13:51:06+00:00"
-        },
-        {
           "source_id": "mac-mini:62829ebaf345713c604460ca",
           "client_slug": "openclaw",
           "repo_slug": "openclaw",
@@ -5086,6 +5259,21 @@
           "content_mode": "full",
           "captured_bytes": 3687,
           "last_synced_at": "2026-05-28T00:05:03+00:00"
+        },
+        {
+          "source_id": "mac-mini:766701c4b5fe6a164dc5838e",
+          "client_slug": "openclaw",
+          "repo_slug": "openclaw",
+          "agent": "openclaw",
+          "category": "runtime-log",
+          "source_host": "mac-mini",
+          "path": "/Users/greg/.openclaw/logs/gelby-context-refresh.log",
+          "basename": "gelby-context-refresh.log",
+          "file_size_bytes": 2244,
+          "modified_at": "2026-05-27T13:00:01+00:00",
+          "content_mode": "full",
+          "captured_bytes": 2244,
+          "last_synced_at": "2026-05-27T13:51:06+00:00"
         },
         {
           "source_id": "mac-mini:a5f48880eb5c11c59ee6331f",
@@ -5103,21 +5291,6 @@
           "last_synced_at": "2026-05-27T13:05:03+00:00"
         },
         {
-          "source_id": "mac-mini:d4ca861955214206871c7877",
-          "client_slug": "claude",
-          "repo_slug": "claude",
-          "agent": "claude",
-          "category": "conversation",
-          "source_host": "mac-mini",
-          "path": "/Users/greg/.claude/projects/-Users-greg-repos-jid5274/6e602c58-2e9f-4bb8-90b1-44c8eff234ec.jsonl",
-          "basename": "6e602c58-2e9f-4bb8-90b1-44c8eff234ec.jsonl",
-          "file_size_bytes": 67379,
-          "modified_at": "2026-05-27T10:00:28+00:00",
-          "content_mode": "tail",
-          "captured_bytes": 32768,
-          "last_synced_at": "2026-05-28T04:10:39+00:00"
-        },
-        {
           "source_id": "mac-mini:052a2d868fa5c7478a9bd6e5",
           "client_slug": "openclaw",
           "repo_slug": "openclaw",
@@ -5133,6 +5306,21 @@
           "last_synced_at": "2026-05-27T12:49:42+00:00"
         },
         {
+          "source_id": "mac-mini:d4ca861955214206871c7877",
+          "client_slug": "claude",
+          "repo_slug": "claude",
+          "agent": "claude",
+          "category": "conversation",
+          "source_host": "mac-mini",
+          "path": "/Users/greg/.claude/projects/-Users-greg-repos-jid5274/6e602c58-2e9f-4bb8-90b1-44c8eff234ec.jsonl",
+          "basename": "6e602c58-2e9f-4bb8-90b1-44c8eff234ec.jsonl",
+          "file_size_bytes": 67379,
+          "modified_at": "2026-05-27T10:00:28+00:00",
+          "content_mode": "tail",
+          "captured_bytes": 32768,
+          "last_synced_at": "2026-05-28T05:27:24+00:00"
+        },
+        {
           "source_id": "mac-mini:eaeac2423b826cdedac3cf5c",
           "client_slug": "claude",
           "repo_slug": "claude",
@@ -5145,7 +5333,7 @@
           "modified_at": "2026-05-27T10:00:24+00:00",
           "content_mode": "tail",
           "captured_bytes": 32768,
-          "last_synced_at": "2026-05-28T04:10:39+00:00"
+          "last_synced_at": "2026-05-28T05:27:24+00:00"
         },
         {
           "source_id": "mac-mini:c67589fb8c1e58bc8dde0878",
@@ -5418,21 +5606,6 @@
           "last_synced_at": "2026-05-27T04:23:21+00:00"
         },
         {
-          "source_id": "mac-mini:1b6406f41158a9167296e9a3",
-          "client_slug": "openclaw",
-          "repo_slug": "openclaw",
-          "agent": "openclaw",
-          "category": "agent-team-log",
-          "source_host": "mac-mini",
-          "path": "/Users/greg/.openclaw/workspace/gbauto/agent-team-logs/2026-05-26-GBA-2300-170620.jsonl",
-          "basename": "2026-05-26-GBA-2300-170620.jsonl",
-          "file_size_bytes": 17399,
-          "modified_at": "2026-05-27T00:06:51+00:00",
-          "content_mode": "full",
-          "captured_bytes": 17399,
-          "last_synced_at": "2026-05-27T04:08:00+00:00"
-        },
-        {
           "source_id": "mac-mini:05d8bb299ff23a342282c2be",
           "client_slug": "openclaw",
           "repo_slug": "openclaw",
@@ -5441,6 +5614,21 @@
           "source_host": "mac-mini",
           "path": "/Users/greg/.openclaw/workspace/gbauto/agent-team-logs/2026-05-26-GBA-2300-170620-a3.jsonl",
           "basename": "2026-05-26-GBA-2300-170620-a3.jsonl",
+          "file_size_bytes": 17399,
+          "modified_at": "2026-05-27T00:06:51+00:00",
+          "content_mode": "full",
+          "captured_bytes": 17399,
+          "last_synced_at": "2026-05-27T04:08:00+00:00"
+        },
+        {
+          "source_id": "mac-mini:1b6406f41158a9167296e9a3",
+          "client_slug": "openclaw",
+          "repo_slug": "openclaw",
+          "agent": "openclaw",
+          "category": "agent-team-log",
+          "source_host": "mac-mini",
+          "path": "/Users/greg/.openclaw/workspace/gbauto/agent-team-logs/2026-05-26-GBA-2300-170620.jsonl",
+          "basename": "2026-05-26-GBA-2300-170620.jsonl",
           "file_size_bytes": 17399,
           "modified_at": "2026-05-27T00:06:51+00:00",
           "content_mode": "full",
@@ -5478,21 +5666,6 @@
           "last_synced_at": "2026-05-26T23:47:10+00:00"
         },
         {
-          "source_id": "mac-mini:6e8c962e945f8c478ab92d0f",
-          "client_slug": "openclaw",
-          "repo_slug": "openclaw",
-          "agent": "openclaw",
-          "category": "agent-team-log",
-          "source_host": "mac-mini",
-          "path": "/Users/greg/.openclaw/workspace/gbauto/agent-team-logs/2026-05-26-GBA-2300-130414.jsonl",
-          "basename": "2026-05-26-GBA-2300-130414.jsonl",
-          "file_size_bytes": 17143,
-          "modified_at": "2026-05-26T20:04:43+00:00",
-          "content_mode": "full",
-          "captured_bytes": 17143,
-          "last_synced_at": "2026-05-26T20:27:48+00:00"
-        },
-        {
           "source_id": "mac-mini:5c4d838b7bbe159447049ae6",
           "client_slug": "openclaw",
           "repo_slug": "openclaw",
@@ -5501,6 +5674,21 @@
           "source_host": "mac-mini",
           "path": "/Users/greg/.openclaw/workspace/gbauto/agent-team-logs/2026-05-26-GBA-2300-130414-a3.jsonl",
           "basename": "2026-05-26-GBA-2300-130414-a3.jsonl",
+          "file_size_bytes": 17143,
+          "modified_at": "2026-05-26T20:04:43+00:00",
+          "content_mode": "full",
+          "captured_bytes": 17143,
+          "last_synced_at": "2026-05-26T20:27:48+00:00"
+        },
+        {
+          "source_id": "mac-mini:6e8c962e945f8c478ab92d0f",
+          "client_slug": "openclaw",
+          "repo_slug": "openclaw",
+          "agent": "openclaw",
+          "category": "agent-team-log",
+          "source_host": "mac-mini",
+          "path": "/Users/greg/.openclaw/workspace/gbauto/agent-team-logs/2026-05-26-GBA-2300-130414.jsonl",
+          "basename": "2026-05-26-GBA-2300-130414.jsonl",
           "file_size_bytes": 17143,
           "modified_at": "2026-05-26T20:04:43+00:00",
           "content_mode": "full",
@@ -5583,21 +5771,6 @@
           "last_synced_at": "2026-05-26T19:26:27+00:00"
         },
         {
-          "source_id": "mac-mini:c01fb51f594e6c43d2aa1990",
-          "client_slug": "hermes",
-          "repo_slug": "hermes",
-          "agent": "hermes",
-          "category": "conversation",
-          "source_host": "mac-mini",
-          "path": "/Users/greg/.hermes/sessions/sessions.json",
-          "basename": "sessions.json",
-          "file_size_bytes": 2200,
-          "modified_at": "2026-05-26T19:24:58+00:00",
-          "content_mode": "full",
-          "captured_bytes": 2200,
-          "last_synced_at": "2026-05-26T19:26:27+00:00"
-        },
-        {
           "source_id": "mac-mini:d0555bb96fe4caf3954acd62",
           "client_slug": "openclaw",
           "repo_slug": "openclaw",
@@ -5655,7 +5828,7 @@
           "modified_at": "2026-05-26T10:00:29+00:00",
           "content_mode": "tail",
           "captured_bytes": 32768,
-          "last_synced_at": "2026-05-28T04:10:39+00:00"
+          "last_synced_at": "2026-05-28T05:27:24+00:00"
         },
         {
           "source_id": "mac-mini:216fadb0bc7e0213480df052",
@@ -5670,7 +5843,7 @@
           "modified_at": "2026-05-26T10:00:25+00:00",
           "content_mode": "tail",
           "captured_bytes": 32768,
-          "last_synced_at": "2026-05-28T04:10:39+00:00"
+          "last_synced_at": "2026-05-28T05:27:24+00:00"
         },
         {
           "source_id": "mac-mini:e4659a3e9ef3d763149e9e69",
@@ -5970,7 +6143,7 @@
           "modified_at": "2026-05-25T10:00:26+00:00",
           "content_mode": "tail",
           "captured_bytes": 32768,
-          "last_synced_at": "2026-05-28T04:10:39+00:00"
+          "last_synced_at": "2026-05-28T05:27:24+00:00"
         },
         {
           "source_id": "mac-mini:7e03f3a520ee3c68b19b725f",
@@ -5985,7 +6158,7 @@
           "modified_at": "2026-05-25T10:00:22+00:00",
           "content_mode": "tail",
           "captured_bytes": 32768,
-          "last_synced_at": "2026-05-28T04:10:39+00:00"
+          "last_synced_at": "2026-05-28T05:27:24+00:00"
         },
         {
           "source_id": "mac-mini:6776270652a427797be59cac",
@@ -6196,146 +6369,60 @@
           "content_mode": "full",
           "captured_bytes": 17072,
           "last_synced_at": "2026-05-25T04:04:11+00:00"
-        },
-        {
-          "source_id": "mac-mini:3f9317ba15ab6a868343ca62",
-          "client_slug": "gbautomation",
-          "repo_slug": "gbautomation",
-          "agent": "gbautomation",
-          "category": "artifact-log",
-          "source_host": "mac-mini",
-          "path": "/Users/greg/repos/gbautomation/second-brain/intelligence/heartbeats/cron-error-heartbeat/2026-05-24.jsonl",
-          "basename": "2026-05-24.jsonl",
-          "file_size_bytes": 184415,
-          "modified_at": "2026-05-24T23:58:07+00:00",
-          "content_mode": "tail",
-          "captured_bytes": 32768,
-          "last_synced_at": "2026-05-24T23:58:38+00:00"
-        },
-        {
-          "source_id": "mac-mini:3288272a28115b763332b8a4",
-          "client_slug": "claude",
-          "repo_slug": "claude",
-          "agent": "claude",
-          "category": "conversation",
-          "source_host": "mac-mini",
-          "path": "/Users/greg/.claude/projects/-Users-greg-repos-jid5274/459e0284-523f-42f5-ad1e-3acbed94f405.jsonl",
-          "basename": "459e0284-523f-42f5-ad1e-3acbed94f405.jsonl",
-          "file_size_bytes": 67379,
-          "modified_at": "2026-05-24T10:00:26+00:00",
-          "content_mode": "tail",
-          "captured_bytes": 32768,
-          "last_synced_at": "2026-05-27T09:45:31+00:00"
-        },
-        {
-          "source_id": "mac-mini:0cde8e6785223bb95c1ce874",
-          "client_slug": "claude",
-          "repo_slug": "claude",
-          "agent": "claude",
-          "category": "conversation",
-          "source_host": "mac-mini",
-          "path": "/Users/greg/.claude/projects/-Users-greg-repos-gbautomation-second-brain/be82a254-6d3b-48b8-bbee-82623c06405d.jsonl",
-          "basename": "be82a254-6d3b-48b8-bbee-82623c06405d.jsonl",
-          "file_size_bytes": 69132,
-          "modified_at": "2026-05-24T10:00:22+00:00",
-          "content_mode": "tail",
-          "captured_bytes": 32768,
-          "last_synced_at": "2026-05-27T09:45:31+00:00"
-        },
-        {
-          "source_id": "mac-mini:52345412143ed7bceff7baff",
-          "client_slug": "gbautomation",
-          "repo_slug": "gbautomation",
-          "agent": "gbautomation",
-          "category": "runtime-log",
-          "source_host": "mac-mini",
-          "path": "/Users/greg/Library/Logs/gbautomation/agent-log-sync-2026-05-23.log",
-          "basename": "agent-log-sync-2026-05-23.log",
-          "file_size_bytes": 184244,
-          "modified_at": "2026-05-24T06:50:58+00:00",
-          "content_mode": "tail",
-          "captured_bytes": 32768,
-          "last_synced_at": "2026-05-24T06:51:00+00:00"
-        },
-        {
-          "source_id": "mac-mini:a9f3be52dd0dff5877bc01e6",
-          "client_slug": "gbautomation",
-          "repo_slug": "gbautomation",
-          "agent": "gbautomation",
-          "category": "runtime-log",
-          "source_host": "mac-mini",
-          "path": "/Users/greg/Library/Logs/gbautomation/cron-error-heartbeat-2026-05-23.log",
-          "basename": "cron-error-heartbeat-2026-05-23.log",
-          "file_size_bytes": 612083,
-          "modified_at": "2026-05-24T06:50:54+00:00",
-          "content_mode": "tail",
-          "captured_bytes": 32768,
-          "last_synced_at": "2026-05-24T06:51:00+00:00"
-        },
-        {
-          "source_id": "mac-mini:fd473151ac894bbfdb5a018f",
-          "client_slug": "gbautomation",
-          "repo_slug": "gbautomation",
-          "agent": "gbautomation",
-          "category": "runtime-log",
-          "source_host": "mac-mini",
-          "path": "/Users/greg/Library/Logs/gbautomation/cron-health-watchdog-2026-05-23.log",
-          "basename": "cron-health-watchdog-2026-05-23.log",
-          "file_size_bytes": 132110,
-          "modified_at": "2026-05-24T06:48:33+00:00",
-          "content_mode": "tail",
-          "captured_bytes": 32768,
-          "last_synced_at": "2026-05-24T06:51:00+00:00"
-        },
-        {
-          "source_id": "mac-mini:c315d7d2033c85f7afcc63f2",
-          "client_slug": "openclaw",
-          "repo_slug": "openclaw",
-          "agent": "openclaw",
-          "category": "agent-team-log",
-          "source_host": "mac-mini",
-          "path": "/Users/greg/.openclaw/workspace/gbauto/agent-team-logs/2026-05-23-GBA-701-212416.jsonl",
-          "basename": "2026-05-23-GBA-701-212416.jsonl",
-          "file_size_bytes": 18255,
-          "modified_at": "2026-05-24T04:24:48+00:00",
-          "content_mode": "full",
-          "captured_bytes": 18255,
-          "last_synced_at": "2026-05-24T09:55:03+00:00"
-        },
-        {
-          "source_id": "mac-mini:018f34588995ddb1a7abce6c",
-          "client_slug": "openclaw",
-          "repo_slug": "openclaw",
-          "agent": "openclaw",
-          "category": "agent-team-log",
-          "source_host": "mac-mini",
-          "path": "/Users/greg/.openclaw/workspace/gbauto/agent-team-logs/2026-05-23-GBA-706-210822.jsonl",
-          "basename": "2026-05-23-GBA-706-210822.jsonl",
-          "file_size_bytes": 18429,
-          "modified_at": "2026-05-24T04:08:54+00:00",
-          "content_mode": "full",
-          "captured_bytes": 18429,
-          "last_synced_at": "2026-05-24T04:17:27+00:00"
         }
       ],
       "summary": {
         "row_count": 120,
         "status_counts": {
-          "full": 60,
-          "tail": 59,
+          "full": 63,
+          "tail": 56,
           "error": 1
         },
         "top_groups": {
-          "openclaw": 58,
-          "gbautomation": 31,
-          "claude": 8,
+          "openclaw": 60,
+          "gbautomation": 27,
           "hermes": 7,
+          "claude": 6,
+          "jason-va": 5,
           "outbound": 3,
           "sysadmin": 3,
-          "dbforge": 2,
-          "jason-va": 2
+          "dbforge": 2
         },
-        "latest": "2026-05-28T04:10:38+00:00"
+        "latest": "2026-05-28T05:27:22+00:00"
+      },
+      "error": null
+    },
+    {
+      "name": "ops_dashboard_snapshots",
+      "label": "Dashboard Snapshots",
+      "dashboard": "observability",
+      "description": "Sanitized dashboard snapshots saved back to Supabase with readback validation.",
+      "time_col": "generated_at",
+      "status_col": "live",
+      "group_col": "source",
+      "rows": [
+        {
+          "snapshot_key": "latest",
+          "generated_at": "2026-05-28T05:33:34+00:00",
+          "source": "build_supabase_dashboard_series.py",
+          "window_days": 30,
+          "row_limit": 120,
+          "live": true,
+          "table_count": 15,
+          "total_rows": 416,
+          "unavailable_count": 4,
+          "updated_at": "2026-05-28T05:33:49.059614+00:00"
+        }
+      ],
+      "summary": {
+        "row_count": 1,
+        "status_counts": {
+          "True": 1
+        },
+        "top_groups": {
+          "build_supabase_dashboard_series.py": 1
+        },
+        "latest": "2026-05-28T05:33:34+00:00"
       },
       "error": null
     }
