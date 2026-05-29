@@ -165,7 +165,7 @@ export function getBrandItems(brandSlug) {
 export function addCrawlTarget(sourceUrl) {
   const target = inferTarget(sourceUrl);
   const client = getAmplifyClient();
-  return client.models.MallCrawlTarget.create(target).then(({ data, errors }) => {
+  return client.models.MallCrawlTarget.create(target, { authMode: 'userPool' }).then(({ data, errors }) => {
     if (errors && errors.length) throw new Error(errors[0].message);
     return {
       target: data,
