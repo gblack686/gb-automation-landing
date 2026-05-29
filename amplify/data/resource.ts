@@ -31,6 +31,23 @@ const schema = a.schema({
       allow.publicApiKey(),
       allow.authenticated().to(['read']),
     ]),
+
+  MallCrawlTarget: a
+    .model({
+      sourceUrl: a.url().required(),
+      handle: a.string().required(),
+      displayName: a.string(),
+      platform: a.string(),
+      status: a.enum(['queued', 'active', 'paused', 'errored']),
+      submittedAt: a.datetime(),
+      lastRunAt: a.datetime(),
+      lastRunStatus: a.string(),
+    })
+    .secondaryIndexes((index) => [index('handle').queryField('mallCrawlTargetByHandle')])
+    .authorization((allow) => [
+      allow.authenticated(),
+      allow.publicApiKey().to(['read']),
+    ]),
 });
 
 export type Schema = ClientSchema<typeof schema>;

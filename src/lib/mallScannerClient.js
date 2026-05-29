@@ -1,4 +1,5 @@
 import { fetchAuthSession } from 'aws-amplify/auth';
+import { generateClient } from 'aws-amplify/data';
 
 const DEFAULT_BASE_URL = 'https://gbautoxyz.netlify.app';
 
@@ -62,6 +63,52 @@ const FALLBACK_EVENTS = [
 
 const FALLBACK_LATEST_RUN = { run_id: 'dryrun-2026-05-28', source_handle: 'client-fallback', source_platform: 'fixture', status: 'dry_run', item_count: 5, scraped_at: '2026-05-28T19:45:05Z' };
 
+function inferTarget(sourceUrl) {
+  let parsed;
+  try {
+    parsed = new URL(sourceUrl);
+  } catch {
+    throw new Error('Enter a valid crawl URL');
+  }
+  const host = parsed.hostname.replace(/^www\./, '').toLowerCase();
+  const pathParts = parsed.pathname.split('/').filter(Boolean);
+  const platform = host.includes('instagram.com')
+    ? 'instagram'
+    : host.includes('shopify.com') || host.includes('myshopify.com')
+      ? 'shopify'
+      : 'website';
+  const handle = platform === 'instagram' ? (pathParts[0] || host) : host;
+  return {
+    sourceUrl: parsed.toString(),
+    handle: handle.toLowerCase(),
+    displayName: handle.replace(/[._-]+/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase()),
+    platform,
+    status: 'queued',
+    submittedAt: new Date().toISOString(),
+  };
+}
+
+function targetToBrand(target) {
+  return {
+    id: target.id,
+    slug: target.handle,
+    handle: target.handle,
+    name: target.displayName || target.handle,
+    display_name: target.displayName || target.handle,
+    platform: target.platform || 'website',
+    status: target.status || 'queued',
+    source_url: target.sourceUrl,
+    active: target.status !== 'paused',
+    item_count: 0,
+    last_scraped_at: target.lastRunAt || target.submittedAt,
+    pending: target.status === 'queued',
+  };
+}
+
+function getAmplifyClient() {
+  return generateClient();
+}
+
 function apiBaseUrl() {
   return (import.meta.env.VITE_MALL_SCANNER_API_URL || DEFAULT_BASE_URL).replace(/\/$/, '');
 }
@@ -116,9 +163,27 @@ export function getBrandItems(brandSlug) {
 }
 
 export function addCrawlTarget(sourceUrl) {
-  return request('/api/mall-scanner/crawl-targets', {
-    method: 'POST',
-    body: JSON.stringify({ source_url: sourceUrl }),
+  const target = inferTarget(sourceUrl);
+  const client = getAmplifyClient();
+  return client.models.MallCrawlTarget.create(target).then(({ data, errors }) => {
+    if (errors && errors.length) throw new Error(errors[0].message);
+    return {
+      target: data,
+      brand: targetToBrand(data || target),
+      source: 'amplify',
+    };
+  });
+}
+
+export function listCrawlTargets() {
+  const client = getAmplifyClient();
+  return client.models.MallCrawlTarget.list().then(({ data, errors }) => {
+    if (errors && errors.length) throw new Error(errors[0].message);
+    return {
+      targets: data || [],
+      brands: (data || []).map(targetToBrand),
+      source: 'amplify',
+    };
   });
 }
 

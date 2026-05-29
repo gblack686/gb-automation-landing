@@ -11,6 +11,7 @@ import {
   getDashboard,
   getLatestRun,
   getRecentEvents,
+  listCrawlTargets,
   runCrawlNow,
 } from '../lib/mallScannerClient';
 
@@ -60,6 +61,16 @@ function formatPrice(value, currency = 'USD') {
 
 function brandSlug(brand) {
   return brand.slug || brand.handle || brand.id || brand.brand_id;
+}
+
+function mergeBrands(baseBrands, submittedBrands) {
+  const bySlug = new Map();
+  [...submittedBrands, ...baseBrands].forEach((brand) => {
+    const slug = brandSlug(brand);
+    if (!slug) return;
+    bySlug.set(slug, { ...bySlug.get(slug), ...brand });
+  });
+  return Array.from(bySlug.values());
 }
 
 function itemJson(item) {
@@ -158,11 +169,17 @@ export default function MallScanner() {
     try {
       const [dash, brandsData, eventsData, runData] = await Promise.all([
         getDashboard(),
-        getBrands(),
+        Promise.all([
+          getBrands(),
+          listCrawlTargets().catch(() => ({ brands: [] })),
+        ]),
         getRecentEvents(),
         getLatestRun(),
       ]);
-      const nextBrands = Array.isArray(brandsData) ? brandsData : (brandsData.brands || []);
+      const [apiBrandsData, targetBrandsData] = brandsData;
+      const apiBrands = Array.isArray(apiBrandsData) ? apiBrandsData : (apiBrandsData.brands || []);
+      const submittedBrands = targetBrandsData.brands || [];
+      const nextBrands = mergeBrands(apiBrands, submittedBrands);
       setDashboard(dash);
       setBrands(nextBrands);
       setEvents(Array.isArray(eventsData) ? eventsData : (eventsData.events || []));
@@ -202,7 +219,7 @@ export default function MallScanner() {
     try {
       const result = await addCrawlTarget(sourceUrl);
       const target = result.target || {};
-      setNotice(`${target.display_name || target.handle || sourceUrl} queued for crawling.`);
+      setNotice(`${target.displayName || target.display_name || target.handle || sourceUrl} registered and queued for crawling.`);
       setNewSiteUrl('');
       await load();
     } catch (err) {
