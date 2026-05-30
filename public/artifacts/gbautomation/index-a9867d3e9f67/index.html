@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>2026 04 28 Vault Audit Skill</title>
+<style>
+body{font-family:sans-serif;max-width:860px;margin:40px auto;padding:0 20px;line-height:1.6;color:#1a1a1a}
+h1,h2,h3{color:#111}
+pre{background:#f4f4f4;padding:16px;overflow-x:auto;border-radius:4px}
+code{background:#f4f4f4;padding:2px 4px;border-radius:3px;font-size:0.92em}
+table{border-collapse:collapse;width:100%}
+th,td{border:1px solid #ddd;padding:8px;text-align:left}
+th{background:#f0f0f0}
+blockquote{border-left:4px solid #ccc;margin:0;padding-left:16px;color:#555}
+a{color:#0066cc}
+</style>
+</head>
+<body>
+<hr />
+<p>date: 2026-04-28
+tags: [plan, skill, obsidian, vault-audit, graph-hygiene]
+status: proposed
+type: plan
+description: Plan for a /vault-audit skill that classifies orphans (six-label taxonomy), detects missing _<folder>.md MOCs, flags convention violations, and suggests QMD-backed links — read-only report, mutations live in separate scripts. Supersedes the too-lenient v1 classifier from outputs/orphan-audit.md.
+related:
+  - "[[2026-04-28-graph-hygiene-tactics]]"
+  - "[[2026-04-28-no-index-md-convention]]"
+  - "[[2026-04-28-obsidian-mind-vendor]]"
+  - "[[obsidian]]"</p>
+<hr />
+<h1>Plan — <code>vault-audit</code> skill (graph hygiene + orphan curation)</h1>
+<h2>Why this exists</h2>
+<p>[[2026-04-28-graph-hygiene-tactics]] adopted six tactics for keeping the graph readable and explicitly listed <code>/vault-audit</code> as a planned-but-not-built sixth. A first-pass classifier produced <code>outputs/orphan-audit.md</code> with 201 candidates, but the rules were too lenient — the report wasn't actionable. We also now have two new pieces of intelligence the v1 classifier didn't have:</p>
+<ol>
+<li><strong>QMD is indexed</strong> ([[2026-04-28-obsidian-mind-vendor]]) — we can ask "what are the top-3 semantic neighbors of this orphan?" and emit them as <code>[[suggested-link]]</code> candidates in the report.</li>
+<li><strong>MOC convention is locked</strong> ([[2026-04-28-no-index-md-convention]]) — every topical folder either has <code>_&lt;folder&gt;.md</code> or shouldn't have a folder at all. The audit can detect both regressions.</li>
+</ol>
+<p><code>validate-write.ts</code> (PostToolUse) covers per-file hygiene at write time. <code>vault-audit</code> is the periodic vault-wide sweep — different scope, different cadence. The two are complements, not duplicates.</p>
+<h2>Scope</h2>
+<p>A skill (invokable as <code>/vault-audit</code>) that runs four sub-audits and emits a single remediation report. Read-only by default — never mutates the vault. Mutations happen via separate, explicit follow-up scripts (already proven pattern: <code>outputs/index_cleanup.py</code>).</p>
+<table>
+<thead>
+<tr>
+<th>Sub-audit</th>
+<th>Question it answers</th>
+<th>Output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>orphans</code></td>
+<td>Which notes have zero inbound + zero outbound <code>[[…]]</code>? Why?</td>
+<td>Classified table — stub / archive / missing-link / artifact / unclassified</td>
+</tr>
+<tr>
+<td><code>mocs</code></td>
+<td>Which non-trivial folders lack <code>_&lt;folder&gt;.md</code>? Which have <code>_index.md</code> regressions?</td>
+<td>Folder list with recommendation (create MOC / promote to flat / delete)</td>
+</tr>
+<tr>
+<td><code>conventions</code></td>
+<td>Which notes violate frontmatter / tag / wikilink rules vault-wide?</td>
+<td>Per-rule violation count + sample paths</td>
+</tr>
+<tr>
+<td><code>excludes</code></td>
+<td>Which paths are in the graph but should be excluded? Which are excluded but shouldn't be?</td>
+<td>Diff against <code>[[2026-04-28-graph-hygiene-tactics]]</code> exclude list</td>
+</tr>
+</tbody>
+</table>
+<p>Sub-audits run independently; <code>full</code> runs all four.</p>
+<h2>TAC-first reuse audit</h2>
+<p>Per non-negotiable reuse policy. What exists, what we extend, what's genuinely new:</p>
+<table>
+<thead>
+<tr>
+<th>Existing artifact</th>
+<th>Reuse decision</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>outputs/orphan-audit.md</code> (first-pass report)</td>
+<td>Read on first run as baseline; classifier rewrite supersedes it</td>
+</tr>
+<tr>
+<td><code>outputs/index_cleanup.py</code></td>
+<td>Pattern reference for re-runnable migrations; orphan-fix script will mirror its shape</td>
+</tr>
+<tr>
+<td><code>validate-write.ts</code> (PostToolUse hook)</td>
+<td>Skill imports its frontmatter validator + wikilink detector — single source of truth for per-file hygiene rules</td>
+</tr>
+<tr>
+<td><code>classify-message.ts</code> matcher pattern</td>
+<td>Reuse <code>compileMatcher</code> + Latin-boundary lookarounds for "stub" / "archive" / "auto-gen" detection in note bodies</td>
+</tr>
+<tr>
+<td><code>qmd-mcp.mjs</code> / <code>npx qmd query</code></td>
+<td>Source of <code>[[suggested-link]]</code> candidates per orphan</td>
+</tr>
+<tr>
+<td><code>update-wiki/scripts/detectors/rule1_missing_entity.py</code>, <code>rule2_concept_hub.py</code></td>
+<td>Pattern reference for classifier rules — they already encode "is this an auto-gen stub?" detection</td>
+</tr>
+<tr>
+<td><code>enforce-linear-frontmatter.py</code></td>
+<td>Different scope (Linear gating). No reuse, no conflict — <code>vault-audit</code> does not touch <code>tasks/*.md</code> Linear validation.</td>
+</tr>
+<tr>
+<td><code>graphify-sync</code> skill</td>
+<td>Different scope (external <code>graphify</code> tool for client repo code graphs). No overlap with Obsidian vault graph.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>No TAC-no-match note required</strong> — every component has a reuse target. The skill is glue + classifier rules, not new infrastructure.</p>
+<h2>Architecture</h2>
+<p>Skill lives at the <strong>gbautomation root</strong> — we work from <code>gbautomation/</code>, not from inside <code>second-brain/</code>, so the skill belongs alongside other root-level tooling. Vault path is configured, not implicit.</p>
+<pre><code>gbautomation/.claude/skills/vault-audit/
+├── SKILL.md                    # Skill manifest (frontmatter + invocation guide)
+├── audit.ts                    # Main entry; subcommand dispatcher
+├── classifiers/
+│   ├── orphan.ts               # Orphan taxonomy + per-note classification
+│   ├── moc.ts                  # _&lt;folder&gt;.md presence + _index.md regression check
+│   ├── convention.ts           # Reuses validate-write.ts rules vault-wide
+│   └── excludes.ts             # Diffs .obsidian/app.json against ADR exclude list
+├── lib/
+│   ├── qmd-suggest.ts          # Top-N semantic neighbors via qmd CLI
+│   ├── vault-root.ts           # Resolve VAULT_ROOT (env override → default `second-brain/`)
+│   └── report.ts               # Markdown report writer
+└── tests/
+    └── classifier.test.ts      # Locks classifier rules — re-runnable on every PR
+</code></pre>
+<ul>
+<li><strong>Vault root resolution.</strong> <code>lib/vault-root.ts</code> returns <code>process.env.VAULT_ROOT</code> if set, else <code>&lt;gbautomation-root&gt;/second-brain</code>. Required because the skill is one level above the vault and can't use <code>import.meta.url</code>-relative paths the way <code>second-brain/.claude/scripts/</code> does.</li>
+<li><strong>Reusing obsidian-mind validators.</strong> <code>classifiers/convention.ts</code> imports from <code>second-brain/.claude/scripts/lib/</code> via relative path (<code>../../../second-brain/.claude/scripts/lib/...</code>). When a second client vault adopts this skill, the import path becomes the configurable bit — but for now, gbautomation's vault is the only consumer.</li>
+<li><strong>Report output.</strong> <code>outputs/vault-audit/&lt;YYYY-MM-DD&gt;-report.md</code> at the gbautomation root (matches how <code>outputs/orphan-audit.md</code> already lives).</li>
+<li><strong>Runtime.</strong> bun (matches <code>second-brain/.claude/scripts/</code>, sidesteps the OneDrive + Node 23 libuv issue).</li>
+</ul>
+<h2>Orphan taxonomy (the v1 was "too lenient")</h2>
+<p>A note is an orphan if it has <strong>zero inbound wikilinks AND zero outbound wikilinks</strong>. The classifier then assigns one of these labels:</p>
+<table>
+<thead>
+<tr>
+<th>Label</th>
+<th>Detection rule</th>
+<th>Recommended action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>auto-gen-stub</code></td>
+<td>Body contains <code>_TBD_</code> / <code>Auto-generated</code> / <code>## Files Referencing</code> markers AND no human edit since last <code>update-wiki</code> run</td>
+<td>Delete on next <code>update-wiki</code> regen; ignore in report unless count balloons</td>
+</tr>
+<tr>
+<td><code>archive</code></td>
+<td>Path matches one of the exclude folders from [[2026-04-28-graph-hygiene-tactics]] (<code>_archive/</code>, <code>drafts/sent/</code>, <code>intelligence/correspondence/…</code>)</td>
+<td>Already excluded from graph; ignore</td>
+</tr>
+<tr>
+<td><code>missing-link</code></td>
+<td>Has frontmatter, has body, was edited by a human (commit author ≠ generator), but lacks any <code>[[…]]</code></td>
+<td><strong>Actionable.</strong> Emit with top-3 QMD neighbors as suggested links</td>
+</tr>
+<tr>
+<td><code>dead-end-leaf</code></td>
+<td>Has body content, but is the deepest leaf in a chain that nothing links to</td>
+<td>Suggest backlinking from <code>_&lt;folder&gt;.md</code> MOC</td>
+</tr>
+<tr>
+<td><code>artifact</code></td>
+<td>Filename matches <code>*-backup-*</code>, <code>*.brain-backup-*</code>, <code>**/2026-*-lint-report.md</code></td>
+<td>Recommend File Ignore plugin pattern; not a real orphan</td>
+</tr>
+<tr>
+<td><code>unclassified</code></td>
+<td>None of the above</td>
+<td>Surface for human review — these are the ambiguous ones</td>
+</tr>
+</tbody>
+</table>
+<p>The lenience bug in v1 was treating <code>auto-gen-stub</code> and <code>missing-link</code> the same. The new rules separate them so the report only highlights what a human can act on.</p>
+<h2>Phased plan</h2>
+<h3>Phase 0 — TAC-first intake + spec lock</h3>
+<ol>
+<li>Re-read [[2026-04-28-graph-hygiene-tactics]], [[2026-04-28-no-index-md-convention]], <code>validate-write.ts</code>, <code>classify-message.ts</code>, <code>qmd-mcp.mjs</code>. Confirm the reuse audit table above survives contact with the actual code.</li>
+<li>Run a single QMD query end-to-end (<code>npx qmd query "fish-group billing"</code>) to confirm latency budget — if P95 &gt; 500ms per query, <code>qmd-suggest.ts</code> becomes batched (one query per 10 orphans, not one per orphan).</li>
+<li>Lock the orphan taxonomy. Anything ambiguous after the spec lock either gets a <code>unclassified</code> bucket or a TAC-no-match note before code ships.</li>
+</ol>
+<h3>Phase 1 — Classifier core (read-only, no QMD yet)</h3>
+<ol>
+<li><code>audit.ts</code> skeleton with subcommand dispatcher (<code>orphans</code>, <code>mocs</code>, <code>conventions</code>, <code>excludes</code>, <code>full</code>).</li>
+<li><code>classifiers/orphan.ts</code> — implements the six-label taxonomy above. Walks the vault, parses frontmatter (reuses <code>validate-write.ts</code> parser), counts inbound/outbound <code>[[…]]</code>.</li>
+<li><code>classifiers/moc.ts</code> — for every directory under <code>second-brain/</code>, checks for <code>_&lt;dirname&gt;.md</code>; flags any <code>_index.md</code> (defensive — they're all gone, but generator regressions are real).</li>
+<li><code>lib/report.ts</code> — emits <code>outputs/vault-audit/&lt;YYYY-MM-DD&gt;-report.md</code> with one section per sub-audit. Frontmatter includes audit hash so two consecutive runs over the same vault produce identical reports (testable).</li>
+<li><strong>Verification:</strong> report on current vault matches the manually-curated subset of <code>outputs/orphan-audit.md</code> for the obvious cases (every <code>auto-gen-stub</code> and <code>archive</code> is correctly labeled).</li>
+</ol>
+<h3>Phase 2 — QMD link suggestions</h3>
+<ol>
+<li><code>lib/qmd-suggest.ts</code> — invokes <code>qmd query "&lt;note basename + first-paragraph keywords&gt;"</code> per <code>missing-link</code> orphan. Returns top-3 neighbors above a similarity threshold (start at 0.55, tune).</li>
+<li>Threshold below 0.55 → emit suggestion as "weak — review before linking" (we want false positives over false negatives in suggestions; the human curates).</li>
+<li>Cache results keyed by file path + mtime so re-running the audit doesn't re-query QMD for unchanged files.</li>
+<li><strong>Verification:</strong> for 10 known-good orphans (notes a human can identify the correct link for), QMD top-3 must contain the correct link in ≥ 7 cases. If miss rate &gt; 30%, threshold or query construction needs adjustment before shipping.</li>
+</ol>
+<h3>Phase 3 — Convention + excludes audits</h3>
+<ol>
+<li><code>classifiers/convention.ts</code> — runs <code>validate-write.ts</code>'s rule set across every <code>.md</code> in the vault (not just one file). Aggregates counts per rule, lists top-N offenders.</li>
+<li><code>classifiers/excludes.ts</code> — reads <code>.obsidian/app.json</code> <code>userIgnoreFilters</code>, diffs against the ADR's exclude list. Reports adds + drops.</li>
+<li><strong>Verification:</strong> running on a vault with a known convention violation injected (e.g., a frontmatter-less note in <code>os/</code>) produces a report that surfaces it.</li>
+</ol>
+<h3>Phase 4 — <code>/vault-audit</code> slash command + skill manifest</h3>
+<ol>
+<li><code>SKILL.md</code> written following the existing skills' frontmatter pattern. <code>name: vault-audit</code>, <code>description: Vault-wide audit — classify orphans, detect missing MOCs, flag convention violations, suggest QMD-backed links. Read-only, emits report to outputs/</code>.</li>
+<li>Wire as <code>/vault-audit [orphans|mocs|conventions|excludes|full]</code>. Default: <code>full</code>.</li>
+<li>Add to <code>capabilities/skills-index.md</code> (auto-populated, but a manual entry survives the next regen).</li>
+</ol>
+<h3>Phase 5 — First-run curation + ADR closeout</h3>
+<ol>
+<li>Run <code>/vault-audit full</code> against the live vault.</li>
+<li>Triage the <code>missing-link</code> and <code>unclassified</code> buckets manually — fix in batches of 20.</li>
+<li>Update [[2026-04-28-graph-hygiene-tactics]] application checklist: mark "Re-run orphan audit with stricter rules" as complete; link to first-run report.</li>
+<li>Decide: do we want a weekly cron to re-run? Probably yes once the report is actionable. Defer to <code>/schedule</code> after first-run curation proves the rules hold.</li>
+</ol>
+<h2>Verification (end-to-end)</h2>
+<ul>
+<li>Skill invocation: <code>/vault-audit full</code> exits 0, writes <code>outputs/vault-audit/&lt;date&gt;-report.md</code>, no vault mutations.</li>
+<li>Determinism: two consecutive runs against the same vault produce identical report bodies (hash check).</li>
+<li>Reuse: every classifier component imports from existing <code>.claude/scripts/lib/</code> — no new frontmatter parser, no new wikilink detector, no new matcher.</li>
+<li>Test coverage: <code>tests/classifier.test.ts</code> locks the six-label taxonomy with known fixtures.</li>
+</ul>
+<h2>Risks + mitigations</h2>
+<ul>
+<li><strong>QMD latency on full-vault sweep.</strong> 1,594 notes × N queries could be slow. Mitigation: only the <code>missing-link</code> bucket gets QMD (typically &lt;&lt; 200 notes), and <code>qmd-suggest.ts</code> caches by path+mtime.</li>
+<li><strong>Classifier still too lenient.</strong> The fix for v1 lenience is the explicit six-label taxonomy + Phase 1 verification against manual curation. If the report after Phase 1 still has &gt; 10% noise, taxonomy gets another rule before Phase 2 ships.</li>
+<li><strong>Skill scope creep into mutation territory.</strong> Hard line: this skill never writes to vault notes. Fixes ride on separate scripts (mirroring <code>outputs/index_cleanup.py</code>'s pattern). If the temptation to add <code>--auto-fix</code> arises, that's a different skill.</li>
+<li><strong>Generator regression.</strong> <code>update-wiki</code> could re-emit <code>_index.md</code> files. Mitigation: <code>classifiers/moc.ts</code> flags any new <code>_index.md</code> as a hard violation; running <code>/vault-audit</code> weekly catches regressions within 7 days.</li>
+<li><strong>Convention drift across client vaults.</strong> Other client repos (<code>fisch-group</code>, <code>jid5274</code>, <code>greg-trading</code>) have their own vaults. This skill is gbautomation-vault-shaped today; client vaults adopt by copying <code>SKILL.md</code> + classifier files into their own <code>.claude/skills/vault-audit/</code>. Cross-vault sharing is a Phase-N concern, not Phase 0.</li>
+</ul>
+<h2>Open questions for spec lock</h2>
+<ol>
+<li>~~Skill location~~ — <strong>LOCKED 2026-04-29: root.</strong> Lives at <code>gbautomation/.claude/skills/vault-audit/</code>, vault path configured via <code>VAULT_ROOT</code> env (default <code>second-brain/</code>). Rationale: we work from <code>gbautomation/</code>, not from inside the vault.</li>
+<li>Does <code>/vault-audit orphans</code> ignore the auto-generated <code>_archive/</code> and <code>intelligence/claude-sessions/</code> folders by default, or report them with a "filtered out" note? Default proposal: ignore by default (matches the graph-hygiene exclude list); add <code>--include-excluded</code> flag for forensic runs.</li>
+<li>Threshold for QMD-suggested links — start at 0.55 or 0.60? Default proposal: 0.55 + "weak — review before linking" tag below 0.65. Tune in Phase 2 verification.</li>
+</ol>
+</body>
+</html>

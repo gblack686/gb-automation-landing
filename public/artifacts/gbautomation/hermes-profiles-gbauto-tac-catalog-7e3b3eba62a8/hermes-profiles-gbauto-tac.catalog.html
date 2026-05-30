@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hermes profiles — abstract architecture (gbautomation)</title>
+  <style>
+    :root {
+      --bg: #faf8f5;
+      --ink: #292524;
+      --muted: #78716c;
+      --line: #e7e5e4;
+      --accent: #b45309;
+      --card: #fffefb;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.55;
+      color: var(--ink);
+      background: var(--bg);
+    }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 2rem 1.25rem 3rem; }
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 650;
+      letter-spacing: -0.03em;
+      margin: 0 0 0.5rem;
+    }
+    .lede {
+      color: var(--muted);
+      font-size: 1rem;
+      max-width: 72ch;
+      margin: 0 0 1.5rem;
+    }
+    .lede a { color: var(--accent); }
+    .meta {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 2rem;
+      font-size: 0.92rem;
+    }
+    .meta dl {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 0.25rem 1rem;
+      margin: 0;
+    }
+    .meta dt { color: var(--muted); }
+    .meta dd { margin: 0; }
+    ul.meta-notes { margin: 0.75rem 0 0; padding-left: 1.2rem; color: var(--muted); font-size: 0.9rem; }
+    section.tier { margin-bottom: 2.5rem; }
+    .tier-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 0.5rem;
+      margin: 0 0 1rem;
+    }
+    .tier-key { color: var(--accent); }
+    .grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 720px) {
+      .grid { grid-template-columns: 1fr 1fr; }
+    }
+    article.card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 1rem 1.1rem;
+    }
+    article.card header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.5rem 0.75rem;
+      margin-bottom: 0.6rem;
+    }
+    code.id {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #0c4a6e;
+      background: #e0f2fe;
+      padding: 0.15rem 0.45rem;
+      border-radius: 6px;
+    }
+    .pin {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .pin code { font-size: 0.75rem; background: #f5f5f4; padding: 0.1rem 0.3rem; border-radius: 4px; }
+    .summary { margin: 0 0 0.5rem; font-weight: 500; }
+    .scope, .signal {
+      margin: 0.35rem 0 0;
+      font-size: 0.88rem;
+      color: #44403c;
+    }
+    .scope strong, .signal strong { color: var(--muted); font-weight: 600; }
+    footer {
+      margin-top: 2rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Hermes profile architecture (abstract)</h1>
+    <p class="lede">
+      25 <strong>role archetypes</strong> for gbautomation — not one Hermes profile per gbauto-tac repo.
+      Each card is a <em>separation boundary</em> you might implement as <code>hermes profile create …</code> when runtime posture,
+      tokens, or blast radius warrant it. Official reference:
+      <a href="https://hermes-agent.nousresearch.com/docs/user-guide/profiles">Hermes profiles</a>.
+    </p>
+
+    <div class="meta">
+      <dl>
+        <dt>Source file</dt><dd><code>specs/hermes-profiles-gbauto-tac.catalog.yaml</code> (schema v2, <code>abstract_hermes_profile_architecture</code>)</dd>
+        <dt>Generated</dt><dd>2026-05-15</dd>
+        <dt>Repo context</dt><dd>gbautomation</dd>
+        <dt>TAC corpus</dt><dd><code>gbauto-tac</code> — pattern library, not profile name list</dd>
+      </dl>
+      <ul class="meta-notes">
+        <li>Collapse dozens of TAC learning mirrors into a few *runtime postures* (planner vs executor vs auditor).</li>
+        <li>Client-facing traffic should stay on isolated gateways + distinct bot tokens (Hermes token lock).</li>
+        <li>Prefer fewer live profiles than rows here; rows are *separation boundaries*, not a mandate to run all.</li>
+      </ul>
+    </div>
+
+    <section class="tier">
+      <h2 class="tier-title"><span class="tier-key">strategic</span> — North-star, planning, governance</h2>
+      <div class="grid">
+        <article class="card">
+          <header><code class="id">core-operator</code><span class="pin">maps: <code>default</code></span></header>
+          <p class="summary">Canonical internal operator — vault map, AGENTS.md harness, session routing.</p>
+          <p class="scope"><strong>Scope.</strong> second-brain entrypoint, non-client GBAutomation ops narrative.</p>
+          <p class="signal"><strong>TAC / corpus signal.</strong> TAC KB + tactical-agentic-coder workflow (aggregate of tac org intent).</p>
+        </article>
+        <article class="card">
+          <header><code class="id">tac-planner</code></header>
+          <p class="summary">PRD / agent-team design gates before implementation; consumes tac-kb-query + validate.</p>
+          <p class="scope"><strong>Scope.</strong> Plans, ROADMAP alignment, dispatch policy; avoids touching prod secrets casually.</p>
+          <p class="signal"><strong>TAC / corpus signal.</strong> tac-validate, forge-tac-scan, forge-tac-grounding posture.</p>
+        </article>
+        <article class="card">
+          <header><code class="id">skill-librarian</code></header>
+          <p class="summary">ai-library /library pattern — catalog pointers, sync-skill-registry, version drift across devices.</p>
+          <p class="scope"><strong>Scope.</strong> .codex/library.yaml, capabilities/* indexes, skill install paths.</p>
+          <p class="signal"><strong>TAC / corpus signal.</strong> the-library distribution meta-skill, abstracted from the GitHub fork name.</p>
+        </article>
+        <article class="card">
+          <header><code class="id">decision-scribe</code></header>
+          <p class="summary">ADRs, intelligence/decisions/*, knowledge entities — durable rationale capture.</p>
+          <p class="scope"><strong>Scope.</strong> second-brain/intelligence/decisions, knowledge/entities; links over orphans.</p>
+          <p class="signal"><strong>TAC / corpus signal.</strong> ADW / documentation-heavy modules from TAC, consolidated.</p>
+        </article>
+      </div>
+    </section>
+    <section class="tier">
+      <h2 class="tier-title"><span class="tier-key">delivery</span> — Client work, builds, artifacts</h2>
+      <div class="grid">
+        <article class="card">
+          <header><code class="id">client-gateway</code><span class="pin">maps: <code>jason-va</code></span></header>
+          <p class="summary">Per-client or per-engagement chat surface with strict allowlists and isolated state.</p>
+          <p class="scope"><strong>Scope.</strong> Telegram/Discord gateways; one token per profile; no shared SOUL with core-operator.</p>
+          <p class="signal"><strong>TAC / corpus signal.</strong> Client delivery + comms skills (consulting pipeline), not a single repo.</p>
+        </article>
+        <article class="card">
+          <header><code class="id">build-executor</code><span class="pin">maps: <code>coder</code></span></header>
+          <p class="summary">Implementation sweeps — branches, tests, focused diffs under an approved plan.</p>
+          <p class="scope"><strong>Scope.</strong> Repo edits, skills, scripts; assumes plan already passed TAC.</p>
+          <p class="signal"><strong>TAC / corpus signal.</strong> Executor lane of multi-agent TAC (not &quot;one repo == one profile&quot;).</p>
+        </article>
+        <article class="card">
+          <header><code class="id">quality-reviewer</code><span class="pin">maps: <code>reviewer</code></span></header>
+          <p class="summary">Diff-centric review — security, correctness, style match; no primary implementation duty.</p>
+          <p class="scope"><strong>Scope.</strong> PRs, phase artifacts, hook outputs; may run read-only tools aggressively.</p>
+          <p class="signal"><strong>TAC / corpus signal.</strong> Verifier / review agent systems in TAC corpus, abstracted.</p>
+        </article>
+        <article class="card">
+          <header><code class="id">browser-runtime</code></header>
+          <p class="summary">Headless Chrome and UI acceptance — Bowser/playwright class validation loops.</p>
+          <p class="scope"><strong>Scope.</strong> resources/lib/browser.py consumers, screenshot evidence, QA stories.</p>
+          <p class="signal"><strong>TAC / corpus signal.</strong> Browser automation posture across TAC mirrors.</p>
+        </article>
+        <article class="card">
+          <header><code class="id">consulting-delivery</code></header>
+          <p class="summary">Client-facing deliverables — Drive folders, session recaps, proposals; human-in-loop sends.</p>
+          <p class="scope"><strong>Scope.</strong> clients/*, drafts/active, departments/delivery; respects auto_send flags in profiles.</p>
+          <p class="signal"><strong>TAC / corpus signal.</strong> consulting-admin / intake posture, merged lane.</p>
+        </article>
+        <article class="card">
+          <header><code class="id">multi-agent-conductor</code></header>
+          <p class="summary">Parallel sub-agent fan-out under one orchestration prompt — team-runner / pi class routing.</p>
+          <p class="scope"><strong>Scope.</strong> Max-plan billing awareness; --no-session-persistence subprocess contract per CLAUDE.md.</p>
+          <p class="signal"><strong>TAC / corpus signal.</strong> multi-agent orchestration course material as *playbook*, not one process per lesson repo.</p>
+        </article>
+      </div>
+    </section>
+    <section class="tier">
+      <h2 class="tier-title"><span class="tier-key">platform</span> — Host, CI, secrets, observability</h2>
+      <div class="grid">
+        <article class="card">
+          <header><code class="id">platform-ops</code><span class="pin">maps: <code>ops</code></span></header>
+          <p class="summary">Always-on posture — launchd, drift, backup, health checks, mm.sh diagnostics, plus narrow secrets hydration for jobs.</p>
+          <p class="scope"><strong>Scope.</strong> Mac Mini jobs, Hermes gateway health, notify-only paths to Telegram; AWS Secrets Manager → env for scripts (no secret echo in chat).</p>
+          <p class="signal"><strong>TAC / corpus signal.</strong> install-and-maintain + mac-mini-agent *patterns*, merged into one ops runtime.</p>
+        </article>
+        <article class="card">
+          <header><code class="id">observability-analyst</code></header>
+          <p class="summary">Langfuse traces, agent-team log review, cron vs Mac trace splits, cost/latency narratives.</p>
+          <p class="scope"><strong>Scope.</strong> read APIs, reports under second-brain/intelligence/observability; no secret materialization in chat.</p>
+          <p class="signal"><strong>TAC / corpus signal.</strong> Hooks + multi-agent observability *ideas*, folded into one analyst profile.</p>
+        </article>
+        <article class="card">
+          <header><code class="id">mcp-bridge-client</code></header>
+          <p class="summary">IDE-facing MCP — Hermes read-only bridge, Path B auth; Codex/Claude attach here.</p>
+          <p class="scope"><strong>Scope.</strong> stdio MCP servers, connection validation; never broad filesystem write in same profile as gateway.</p>
+          <p class="signal"><strong>TAC / corpus signal.</strong> beyond-mcp conceptual layer — tool gateway discipline, not vendor lock-in to one repo.</p>
+        </article>
+        <article class="card">
+          <header><code class="id">cron-linear-runner</code></header>
+          <p class="summary">Label-routed autonomous coding loop — GHA + OAuth Claude, TAC-build label discipline.</p>
+          <p class="scope"><strong>Scope.</strong> .github/workflows/linear-*, scripts/cron_linear_agent.py class entrypoints.</p>
+          <p class="signal"><strong>TAC / corpus signal.</strong> Orchestrator-with-ADWs *shape* without requiring a dedicated Hermes per ADW.</p>
+        </article>
+        <article class="card">
+          <header><code class="id">mac-mini-remote</code></header>
+          <p class="summary">Consumer of mm.sh / SSH wrapper — remote probes, launchctl print, Hermes CLI via full path.</p>
+          <p class="scope"><strong>Scope.</strong> resources/skills/mac-mini-ssh; non-interactive PATH fixes on remote host.</p>
+          <p class="signal"><strong>TAC / corpus signal.</strong> Mac-mini-agent operational runbook, abstracted.</p>
+        </article>
+        <article class="card">
+          <header><code class="id">alert-responder</code></header>
+          <p class="summary">Telegram-first triage — GHA failures, drift detector, inbox signals; terse operator replies.</p>
+          <p class="scope"><strong>Scope.</strong> hermes-telegram-gateway, gha-running-jobs-monitor class alerts.</p>
+          <p class="signal"><strong>TAC / corpus signal.</strong> CEO/lead agent *personas* from TAC collapsed into on-call comms, not executive strategy.</p>
+        </article>
+        <article class="card">
+          <header><code class="id">data-receipts</code></header>
+          <p class="summary">tac-data-output-patterns — schemas, manifests, receipts, Supabase via gbauto-supabase CLI only.</p>
+          <p class="scope"><strong>Scope.</strong> services/gbauto_supabase, run-with-receipt wrappers; no SQL bypass branches.</p>
+          <p class="signal"><strong>TAC / corpus signal.</strong> Data layer ADRs + Printing Press pattern references.</p>
+        </article>
+        <article class="card">
+          <header><code class="id">harness-hooks</code></header>
+          <p class="summary">Claude Code / Codex hooks — PostToolUse ordering, enforce-linear-frontmatter, test-archiver.</p>
+          <p class="scope"><strong>Scope.</strong> .claude/hooks, resources/skills/test-archiver; policy as code in markdown + scripts.</p>
+          <p class="signal"><strong>TAC / corpus signal.</strong> claude-code-hooks *corpus* as one operational profile.</p>
+        </article>
+      </div>
+    </section>
+    <section class="tier">
+      <h2 class="tier-title"><span class="tier-key">intelligence</span> — Research, vault, intel pipelines</h2>
+      <div class="grid">
+        <article class="card">
+          <header><code class="id">research-scout</code><span class="pin">maps: <code>researcher</code></span></header>
+          <p class="summary">Open-ended discovery — docs, upstream issues, competitor repos, web synthesis.</p>
+          <p class="scope"><strong>Scope.</strong> Read-heavy; outputs structured notes or Kanban-ready findings, not production edits.</p>
+          <p class="signal"><strong>TAC / corpus signal.</strong> Domain discovery + context engineering modules, abstracted.</p>
+        </article>
+        <article class="card">
+          <header><code class="id">vault-keeper</code></header>
+          <p class="summary">Obsidian graph hygiene — wikilinks, MOCs, client profile consistency, validate-write hooks; Linear ↔ task markdown sync.</p>
+          <p class="scope"><strong>Scope.</strong> second-brain/clients/*, decisions, plans, tasks with linear frontmatter fields; coordinates with graphify outputs and gelby-linear-sync concepts.</p>
+          <p class="signal"><strong>TAC / corpus signal.</strong> align-vault / update-wiki / sync-linear class behaviors from OpenClaw workspace skills.</p>
+        </article>
+        <article class="card">
+          <header><code class="id">intel-pipeline</code></header>
+          <p class="summary">Ingest pipelines — transcripts, YouTube intel, morning brief inputs, session logs.</p>
+          <p class="scope"><strong>Scope.</strong> intelligence/*, daily/*, cron-produced artifacts; bounded writes to agreed paths.</p>
+          <p class="signal"><strong>TAC / corpus signal.</strong> Media + intel automation (aggregate TAC media skills), not one course repo each.</p>
+        </article>
+        <article class="card">
+          <header><code class="id">external-corpus-miner</code></header>
+          <p class="summary">gbauto-tac and public upstream as *read-only pattern mines* — grep, summarize, file issues; no auto-push.</p>
+          <p class="scope"><strong>Scope.</strong> Pattern extraction into tac-kb.md via tac-process; outbound PRs only with human gate.</p>
+          <p class="signal"><strong>TAC / corpus signal.</strong> Whole gbauto-tac org as library, not 19 Hermes homes named after repos.</p>
+        </article>
+      </div>
+    </section>
+    <section class="tier">
+      <h2 class="tier-title"><span class="tier-key">experimental</span> — Spikes, sandboxes, read-only forensics</h2>
+      <div class="grid">
+        <article class="card">
+          <header><code class="id">spike-sandbox</code></header>
+          <p class="summary">Disposable Hermes home for one-off probes — safe to delete; no production tokens.</p>
+          <p class="scope"><strong>Scope.</strong> throwaway Kanban workspaces, scratch scripts; short TTL mentally.</p>
+          <p class="signal"><strong>TAC / corpus signal.</strong> agent-sandboxes *idea* without binding profile id to that repo name.</p>
+        </article>
+        <article class="card">
+          <header><code class="id">trading-lane</code></header>
+          <p class="summary">Isolated trading posture — Discord signals, Hyperliquid class tools; must not share workspace with Gelby.</p>
+          <p class="scope"><strong>Scope.</strong> clients/greg-trading, Sebastian split per CLAUDE.md; optional Hermes profile if you put bots there.</p>
+          <p class="signal"><strong>TAC / corpus signal.</strong> Trading modules in TAC where present; strict isolation is the design point.</p>
+        </article>
+        <article class="card">
+          <header><code class="id">read-only-auditor</code></header>
+          <p class="summary">Forensics — read-only MCP, trace inspection, repo archaeology; no write tools, no sends.</p>
+          <p class="scope"><strong>Scope.</strong> Incident review, external repo triage; pairs with observability-analyst for narrative.</p>
+          <p class="signal"><strong>TAC / corpus signal.</strong> Verifier-agent posture + Hermes read-only bridge consumer.</p>
+        </article>
+      </div>
+    </section>
+
+    <footer>
+      Filename <code>hermes-profiles-gbauto-tac.catalog.yaml</code> is kept for continuity; content is org-agnostic role architecture.
+    </footer>
+  </div>
+</body>
+</html>

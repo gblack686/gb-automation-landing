@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1280, height=720" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1280px; height: 720px; overflow: hidden;
+        background: #F3F1E7;
+        font-family: 'Inter', -apple-system, system-ui, sans-serif;
+        color: #191919;
+      }
+      /* subtle swirl decoration approximating the hero signature */
+      .swirl {
+        position: absolute;
+        left: 50%; top: 50%;
+        transform: translate(-50%, -50%);
+        width: 720px; height: 720px;
+        border: 2px solid #D97757;
+        border-radius: 50%;
+        opacity: 0.06;
+        border-style: dotted;
+      }
+      .swirl::before {
+        content: '';
+        position: absolute;
+        left: 25%; top: 25%;
+        width: 50%; height: 50%;
+        border: 2px solid #D97757;
+        border-radius: 50%;
+        border-style: dashed;
+      }
+
+      .clip { position: absolute; left: 0; right: 0; text-align: center; }
+
+      #wordmark {
+        top: 60px;
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: 6px;
+        color: #191919;
+      }
+      #wordmark span { color: #D97757; }
+
+      #badge {
+        top: 130px;
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 4px;
+        color: #8C8A84;
+        text-transform: uppercase;
+      }
+
+      #line1 {
+        top: 240px;
+        font-size: 78px;
+        font-weight: 700;
+        letter-spacing: -2px;
+        color: #191919;
+      }
+      #line2 {
+        top: 330px;
+        font-family: 'Newsreader', Georgia, serif;
+        font-size: 96px;
+        font-style: italic;
+        font-weight: 400;
+        letter-spacing: -3px;
+        color: #D97757;
+        line-height: 1;
+      }
+
+      #tagline {
+        top: 490px;
+        font-size: 24px;
+        font-weight: 400;
+        color: #191919;
+        opacity: 0.78;
+        max-width: 900px; left: 50%; transform: translateX(-50%);
+        letter-spacing: 0.2px;
+      }
+
+      #cta {
+        bottom: 80px; left: 0; right: 0; text-align: center;
+      }
+      .pill {
+        display: inline-block;
+        padding: 14px 36px;
+        background: #191919;
+        color: #F3F1E7;
+        border-radius: 999px;
+        font-size: 18px;
+        font-weight: 600;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+      }
+      .pill .arrow {
+        margin-left: 10px;
+        color: #D97757;
+        font-weight: 700;
+      }
+
+      #url {
+        bottom: 28px;
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 3px;
+        color: #8C8A84;
+        text-transform: uppercase;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"
+         data-composition-id="main"
+         data-start="0"
+         data-duration="7"
+         data-width="1280"
+         data-height="720">
+
+      <div class="swirl clip" data-start="0" data-duration="7" data-track-index="0" id="swirl"></div>
+
+      <div id="wordmark" class="clip" data-start="0" data-duration="7" data-track-index="1">
+        GB&nbsp;<span>&times;</span>&nbsp;AUTOMATION
+      </div>
+
+      <div id="badge" class="clip" data-start="0" data-duration="7" data-track-index="2">
+        AI Consulting &middot; Los Angeles
+      </div>
+
+      <div id="line1" class="clip" data-start="0" data-duration="7" data-track-index="3">
+        Build smarter with
+      </div>
+
+      <div id="line2" class="clip" data-start="0" data-duration="7" data-track-index="4">
+        An AI Developer.
+      </div>
+
+      <div id="tagline" class="clip" data-start="0" data-duration="7" data-track-index="5">
+        Internal tools, external products, and autonomous AI workflows &mdash; built for your business.
+      </div>
+
+      <div id="cta" class="clip" data-start="0" data-duration="7" data-track-index="6">
+        <span class="pill">Schedule Discovery Call <span class="arrow">&rarr;</span></span>
+      </div>
+
+      <div id="url" class="clip" data-start="0" data-duration="7" data-track-index="7">
+        gbautomation.xyz
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      tl.from("#swirl",    { opacity: 0, scale: 0.7, duration: 1.2, ease: "power2.out" }, 0.1);
+      tl.from("#wordmark", { opacity: 0, y: -20, duration: 0.7, ease: "power2.out" }, 0.2);
+      tl.from("#badge",    { opacity: 0, y: -10, duration: 0.6, ease: "power2.out" }, 0.55);
+
+      tl.from("#line1",    { opacity: 0, y: 30, duration: 0.7, ease: "power3.out" }, 1.0);
+      tl.from("#line2",    { opacity: 0, y: 40, duration: 0.9, ease: "power3.out" }, 1.55);
+
+      tl.from("#tagline",  { opacity: 0, y: 20, duration: 0.7, ease: "power2.out" }, 3.2);
+      tl.from("#cta",      { opacity: 0, scale: 0.9, duration: 0.6, ease: "back.out(1.4)" }, 4.4);
+      tl.from("#url",      { opacity: 0, duration: 0.5, ease: "power1.out" }, 5.1);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

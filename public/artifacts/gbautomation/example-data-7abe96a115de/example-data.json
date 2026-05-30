@@ -1,6 +1,0 @@
-{
-  "client": "gbautomation",
-  "project": "Artifact Examples",
-  "formats": ["html", "pdf", "md", "mp4", "json"],
-  "purpose": "Production artifact rendering smoke test"
-}

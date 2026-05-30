@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TAC Workload Sample Analysis</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #1b1f23;
+      --muted: #5d6673;
+      --line: #d9dee7;
+      --paper: #ffffff;
+      --band: #f4f6f9;
+      --accent: #146c63;
+      --warn: #a45b00;
+      --fail: #b42318;
+    }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--band);
+      color: var(--ink);
+      line-height: 1.45;
+    }
+    header {
+      padding: 32px 40px 20px;
+      background: var(--paper);
+      border-bottom: 1px solid var(--line);
+    }
+    h1 { margin: 0; font-size: 28px; letter-spacing: 0; }
+    header p { margin: 8px 0 0; color: var(--muted); max-width: 900px; }
+    main { max-width: 1180px; margin: 0 auto; padding: 24px; }
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .summary div, .event, .synthesis {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .synthesis { margin-bottom: 18px; }
+    .synthesis h2 { margin: 0 0 8px; font-size: 18px; }
+    .synthesis p { margin: 8px 0; color: var(--ink); }
+    .summary strong { display: block; font-size: 20px; overflow-wrap: anywhere; }
+    .summary span, dt, .event-head p { color: var(--muted); font-size: 13px; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .event-head { display: flex; justify-content: space-between; gap: 12px; align-items: start; }
+    h2 { margin: 0; font-size: 18px; letter-spacing: 0; }
+    h3 { margin: 14px 0 6px; font-size: 14px; letter-spacing: 0; }
+    dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 14px 0; }
+    dt { margin-bottom: 2px; }
+    dd { margin: 0; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 12px; overflow-wrap: anywhere; }
+    .status { border: 1px solid var(--line); border-radius: 999px; padding: 4px 8px; white-space: nowrap; font-size: 12px; }
+    .status.dry_run_warn { color: var(--warn); border-color: #e4b36f; background: #fff7e8; }
+    .status.dry_run_fail { color: var(--fail); border-color: #f0a19a; background: #fff1f0; }
+    .bar { height: 8px; background: #e7ebf0; border-radius: 999px; overflow: hidden; }
+    .bar span { display: block; height: 100%; background: var(--accent); }
+    .interpretation { border-left: 3px solid var(--accent); padding-left: 10px; margin: 12px 0; }
+    .interpretation p { margin: 6px 0; }
+    ul { margin: 0; padding-left: 18px; }
+    li { margin: 5px 0; }
+    @media (max-width: 760px) {
+      header { padding: 24px; }
+      .summary, .grid, dl { grid-template-columns: 1fr; }
+      main { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>TAC Workload Sample Analysis</h1>
+    <p>Analysis of five TAC workload shapes: prompt, hook PRD, full app build, multi-tenant build stack, and GitHub-canonical TAC self-improve loop. The focus is why each sample warns or fails before dispatch, and what the issue-triage to TAC PRD pipeline should optimize next.</p>
+  </header>
+  <main>
+    
+      <section class="summary">
+        <div><strong>5</strong><span>sample events</span></div>
+        <div><strong>{&#x27;dry_run_warn&#x27;: 3, &#x27;dry_run_fail&#x27;: 2}</strong><span>status mix</span></div>
+        <div><strong>17</strong><span>gate findings</span></div>
+      </section>
+    
+    
+      <section class="synthesis">
+        <h2>What This Says About The Pipeline</h2>
+        <p><strong>2 of 5</strong> samples hard-failed pre-dispatch. Both failures share the same root cause: the work is high-risk enough for team-runner, but the input is still prompt/plan shaped rather than a complete TAC PRD bundle.</p>
+        <p><strong>2 of 5</strong> samples are missing explicit team-bundle markers. That is the clearest automation target: issue triage should upgrade high and very-high work into full TAC PRD structure before any build worker sees it.</p>
+        <p><strong>4 of 5</strong> samples lack a `tac_validate` sidecar. That should become the mandatory bridge between PRD creation and dispatch.</p>
+      </section>
+    
+    <section class="grid">
+      
+          <article class="event">
+            <div class="event-head">
+              <div>
+                <h2>self-improve-loop-prd</h2>
+                <p>github-canonical-tac-self-improve</p>
+              </div>
+              <span class="status dry_run_warn">dry_run_warn</span>
+            </div>
+            <dl>
+              <div><dt>Run</dt><dd>tac-20260522T045753Z-2026-05-13-tac-self-improve-loop-prd</dd></div>
+              <div><dt>Complexity</dt><dd>very_high</dd></div>
+              <div><dt>Execution</dt><dd>team_runner_required</dd></div>
+              <div><dt>Gate pressure</dt><dd>2 warn/fail/pending</dd></div>
+            </dl>
+            <section class="interpretation">
+              <p><strong>Diagnosis:</strong> Team bundle present. Validation evidence present. Touches secrets/database/archive.</p>
+              <p><strong>Optimization:</strong> Add missing validation/readback receipts before dispatch.</p>
+            </section>
+            <div class="bar" aria-label="recommendation count"><span style="width:33%"></span></div>
+            <h3>Gate Findings (2)</h3>
+            <ul><li>tighten secret-gate: status=warn; evidence=[&#x27;secret surface detected&#x27;]</li><li>tighten supabase-database-gate: status=pending; evidence=[&#x27;dry run never writes Supabase/Postgres/SQLite&#x27;]</li></ul>
+          </article>
+        
+          <article class="event">
+            <div class="event-head">
+              <div>
+                <h2>multi-tenant-build-stack</h2>
+                <p>linear-autonomous-build-stack</p>
+              </div>
+              <span class="status dry_run_fail">dry_run_fail</span>
+            </div>
+            <dl>
+              <div><dt>Run</dt><dd>tac-20260522T045754Z-2026-05-19-multi-tenant-linear-build-stack</dd></div>
+              <div><dt>Complexity</dt><dd>very_high</dd></div>
+              <div><dt>Execution</dt><dd>team_runner_required</dd></div>
+              <div><dt>Gate pressure</dt><dd>4 warn/fail/pending</dd></div>
+            </dl>
+            <section class="interpretation">
+              <p><strong>Diagnosis:</strong> Missing TAC team bundle. Needs tac_validate sidecar. Touches secrets/database/archive.</p>
+              <p><strong>Optimization:</strong> Route through full TAC PRD expansion before dispatch.</p>
+            </section>
+            <div class="bar" aria-label="recommendation count"><span style="width:83%"></span></div>
+            <h3>Gate Findings (5)</h3>
+            <ul><li>tighten team-runner-gate: status=fail; evidence=[&#x27;complexity=very_high&#x27;, &#x27;recommended_execution=team_runner_required&#x27;, &#x27;TAC plan lacks teams.yaml/scaffold-agent/docs-research-agent bundle&#x27;]</li><li>tighten validation-gate: status=warn; evidence=[&#x27;no tac-validate sidecar found for identifier&#x27;]</li><li>tighten secret-gate: status=warn; evidence=[&#x27;secret surface detected&#x27;]</li><li>tighten supabase-database-gate: status=pending; evidence=[&#x27;dry run never writes Supabase/Postgres/SQLite&#x27;]</li><li>upgrade TAC PRD template to include teams.yaml, scaffold-agent, docs-research-agent, and validator hooks</li></ul>
+          </article>
+        
+          <article class="event">
+            <div class="event-head">
+              <div>
+                <h2>full-app-build</h2>
+                <p>logo-motion-app</p>
+              </div>
+              <span class="status dry_run_warn">dry_run_warn</span>
+            </div>
+            <dl>
+              <div><dt>Run</dt><dd>tac-20260522T045814Z-readme</dd></div>
+              <div><dt>Complexity</dt><dd>high</dd></div>
+              <div><dt>Execution</dt><dd>team_runner_multi_team</dd></div>
+              <div><dt>Gate pressure</dt><dd>1 warn/fail/pending</dd></div>
+            </dl>
+            <section class="interpretation">
+              <p><strong>Diagnosis:</strong> Team bundle present. Needs tac_validate sidecar. Lower data-plane risk.</p>
+              <p><strong>Optimization:</strong> Add missing validation/readback receipts before dispatch.</p>
+            </section>
+            <div class="bar" aria-label="recommendation count"><span style="width:16%"></span></div>
+            <h3>Gate Findings (1)</h3>
+            <ul><li>tighten validation-gate: status=warn; evidence=[&#x27;no tac-validate sidecar found for identifier&#x27;]</li></ul>
+          </article>
+        
+          <article class="event">
+            <div class="event-head">
+              <div>
+                <h2>prompt</h2>
+                <p>nightly-session-dream-prd</p>
+              </div>
+              <span class="status dry_run_fail">dry_run_fail</span>
+            </div>
+            <dl>
+              <div><dt>Run</dt><dd>tac-20260522T045754Z-nightly-session-dream-prd</dd></div>
+              <div><dt>Complexity</dt><dd>very_high</dd></div>
+              <div><dt>Execution</dt><dd>team_runner_required</dd></div>
+              <div><dt>Gate pressure</dt><dd>5 warn/fail/pending</dd></div>
+            </dl>
+            <section class="interpretation">
+              <p><strong>Diagnosis:</strong> Missing TAC team bundle. Needs tac_validate sidecar. Touches secrets/database/archive.</p>
+              <p><strong>Optimization:</strong> Route through full TAC PRD expansion before dispatch.</p>
+            </section>
+            <div class="bar" aria-label="recommendation count"><span style="width:100%"></span></div>
+            <h3>Gate Findings (6)</h3>
+            <ul><li>tighten team-runner-gate: status=fail; evidence=[&#x27;complexity=very_high&#x27;, &#x27;recommended_execution=team_runner_required&#x27;, &#x27;TAC plan lacks teams.yaml/scaffold-agent/docs-research-agent bundle&#x27;]</li><li>tighten validation-gate: status=warn; evidence=[&#x27;no tac-validate sidecar found for identifier&#x27;]</li><li>tighten secret-gate: status=warn; evidence=[&#x27;secret surface detected&#x27;]</li><li>tighten archive-deletion-gate: status=pending; evidence=[&#x27;archive must verify object, manifest, row count, checksum, and smoke restore&#x27;]</li><li>tighten supabase-database-gate: status=pending; evidence=[&#x27;dry run never writes Supabase/Postgres/SQLite&#x27;]</li><li>upgrade TAC PRD template to include teams.yaml, scaffold-agent, docs-research-agent, and validator hooks</li></ul>
+          </article>
+        
+          <article class="event">
+            <div class="event-head">
+              <div>
+                <h2>hook-prd</h2>
+                <p>universal-skill-hook-auto-register</p>
+              </div>
+              <span class="status dry_run_warn">dry_run_warn</span>
+            </div>
+            <dl>
+              <div><dt>Run</dt><dd>tac-20260522T045753Z-2026-05-17-universal-skill-hook-auto-register-pr</dd></div>
+              <div><dt>Complexity</dt><dd>very_high</dd></div>
+              <div><dt>Execution</dt><dd>team_runner_required</dd></div>
+              <div><dt>Gate pressure</dt><dd>3 warn/fail/pending</dd></div>
+            </dl>
+            <section class="interpretation">
+              <p><strong>Diagnosis:</strong> Team bundle present. Needs tac_validate sidecar. Touches secrets/database/archive.</p>
+              <p><strong>Optimization:</strong> Add missing validation/readback receipts before dispatch.</p>
+            </section>
+            <div class="bar" aria-label="recommendation count"><span style="width:50%"></span></div>
+            <h3>Gate Findings (3)</h3>
+            <ul><li>tighten validation-gate: status=warn; evidence=[&#x27;no tac-validate sidecar found for identifier&#x27;]</li><li>tighten secret-gate: status=warn; evidence=[&#x27;secret surface detected&#x27;]</li><li>tighten supabase-database-gate: status=pending; evidence=[&#x27;dry run never writes Supabase/Postgres/SQLite&#x27;]</li></ul>
+          </article>
+        
+    </section>
+  </main>
+</body>
+</html>

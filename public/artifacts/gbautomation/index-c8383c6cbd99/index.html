@@ -1,0 +1,636 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TAC PRD: Component-to-Build Lineage Observability | GBAutomation</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&display=swap');
+    :root {
+      --cream-bg: #F3F1E7;
+      --cream-panel: #E6E4D9;
+      --text-main: #191919;
+      --text-muted: #5C5C5C;
+      --text-light: #8C8A84;
+      --border: #D6D4C8;
+      --terracotta: #D97757;
+      --paper: #FFFFFF;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text-main);
+      background: var(--cream-bg);
+      font-size: 14px;
+      line-height: 1.58;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+    a { color: var(--text-main); text-decoration-color: var(--terracotta); text-underline-offset: 3px; }
+    button { font: inherit; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(214, 212, 200, .7);
+      background: rgba(243, 241, 231, .93);
+      backdrop-filter: blur(12px);
+    }
+    .topbar-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 13px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .brand-lockup { display: inline-flex; align-items: center; gap: 9px; min-height: 28px; }
+    .brand-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(217, 119, 87, .18);
+    }
+    .brand-dot::after { content: ""; width: 8px; height: 8px; border-radius: 999px; background: var(--terracotta); }
+    .brand-text {
+      font-family: Newsreader, serif;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-size: 12px;
+    }
+    .source-name { color: var(--text-muted); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    header {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 34px 24px 26px;
+    }
+    .eyebrow {
+      color: var(--terracotta);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    h1 {
+      max-width: 920px;
+      margin: 10px 0 18px;
+      font-family: Newsreader, serif;
+      font-size: clamp(30px, 4vw, 48px);
+      font-weight: 500;
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+    .summary-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+    .summary-meta li {
+      min-height: 30px;
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, .45);
+      padding: 5px 9px;
+      border-radius: 6px;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .taxonomy-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0 0 14px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      min-height: 23px;
+      padding: 2px 8px;
+      border: 1px solid;
+      border-radius: 999px;
+      line-height: 1;
+    }
+    .pill-facet {
+      font-size: 8.5px;
+      font-weight: 700;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+    .pill-value {
+      color: var(--text-main);
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .layout {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 22px 24px 56px;
+      display: grid;
+      grid-template-columns: 252px minmax(0, 1fr);
+      gap: 22px;
+      align-items: start;
+    }
+    .section-menu {
+      position: sticky;
+      top: 64px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(230, 228, 217, .62);
+      backdrop-filter: blur(12px);
+      padding: 12px;
+    }
+    .menu-title {
+      margin: 0 0 10px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .menu-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+    .menu-actions button,
+    .section-menu nav button {
+      min-height: 34px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .46);
+      color: rgba(25, 25, 25, .72);
+      cursor: pointer;
+      transition: border-color .18s ease, color .18s ease, background .18s ease;
+    }
+    .menu-actions button { padding: 0 8px; font-size: 11px; font-weight: 700; }
+    .section-menu nav { display: grid; gap: 5px; }
+    .section-menu nav button {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 30px 1fr;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      text-align: left;
+      font-size: 12px;
+      line-height: 1.25;
+    }
+    .section-menu nav button span { color: var(--terracotta); font-size: 10px; font-weight: 700; letter-spacing: .08em; }
+    .menu-actions button:hover,
+    .section-menu nav button:hover,
+    .section-menu nav button.active {
+      border-color: var(--terracotta);
+      background: rgba(255, 255, 255, .72);
+      color: var(--text-main);
+    }
+    .sections { display: grid; gap: 10px; }
+    details.section {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .5);
+      overflow: hidden;
+    }
+    details.section[open] { background: rgba(255, 255, 255, .68); }
+    details.section summary {
+      min-height: 52px;
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 12px 14px;
+      cursor: pointer;
+      list-style: none;
+    }
+    details.section summary::-webkit-details-marker { display: none; }
+    .section-index {
+      color: var(--terracotta);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+    }
+    .section-title {
+      font-family: Newsreader, serif;
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.18;
+    }
+    .section-count {
+      color: var(--text-light);
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .section-body {
+      border-top: 1px solid rgba(214, 212, 200, .75);
+      padding: 4px 18px 18px 68px;
+    }
+    .section-body h2,
+    .section-body h3,
+    .section-body h4,
+    .section-body h5 {
+      margin: 18px 0 8px;
+      color: var(--text-main);
+      font-family: Newsreader, serif;
+      font-weight: 500;
+      line-height: 1.2;
+    }
+    .section-body h2 { font-size: 19px; }
+    .section-body h3 { font-size: 17px; }
+    .section-body h4,
+    .section-body h5 {
+      font-family: Inter, sans-serif;
+      color: var(--text-light);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+    .section-body p,
+    .section-body li { color: var(--text-muted); font-size: 14px; line-height: 1.66; }
+    .section-body p { margin: 10px 0; }
+    .section-body ul,
+    .section-body ol { margin: 10px 0 10px 18px; padding: 0; }
+    .section-body li { margin: 5px 0; padding-left: 2px; }
+    .section-body .task { list-style: none; margin-left: -18px; display: flex; gap: 8px; align-items: flex-start; }
+    .section-body input[type="checkbox"] { margin-top: 4px; accent-color: var(--terracotta); }
+    code {
+      border: 1px solid rgba(217, 119, 87, .22);
+      border-radius: 4px;
+      background: rgba(217, 119, 87, .10);
+      padding: 1px 4px;
+      color: var(--text-main);
+      font-size: .92em;
+    }
+    pre {
+      overflow: auto;
+      margin: 12px 0;
+      border-radius: 8px;
+      background: #191919;
+      color: #F3F1E7;
+      padding: 14px;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+    pre code { border: 0; background: transparent; color: inherit; padding: 0; }
+    blockquote {
+      margin: 12px 0;
+      padding: 10px 12px;
+      border-left: 3px solid var(--terracotta);
+      background: rgba(230, 228, 217, .5);
+    }
+    hr { border: 0; border-top: 1px solid var(--border); margin: 18px 0; }
+    .table-wrap { overflow-x: auto; margin: 12px 0; border: 1px solid var(--border); border-radius: 8px; }
+    table { width: 100%; border-collapse: collapse; min-width: 560px; background: rgba(255, 255, 255, .5); }
+    th,
+    td { border-bottom: 1px solid rgba(214, 212, 200, .75); padding: 8px 10px; text-align: left; font-size: 12px; vertical-align: top; }
+    th { color: var(--text-main); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; }
+    tr:last-child td { border-bottom: 0; }
+    .empty { color: var(--text-light); font-style: italic; }
+    footer {
+      border-top: 1px solid rgba(214, 212, 200, .78);
+      background: rgba(230, 228, 217, .45);
+    }
+    .footer-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    .footer-label {
+      margin-bottom: 12px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .metadata-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .meta-item {
+      min-width: 0;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .42);
+      padding: 9px 10px;
+    }
+    .meta-item span {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .meta-item strong {
+      display: block;
+      overflow-wrap: anywhere;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.35;
+    }
+    @media (max-width: 860px) {
+      .topbar-inner,
+      header,
+      .layout,
+      .footer-inner { padding-left: 16px; padding-right: 16px; }
+      .layout { display: block; }
+      .section-menu { position: static; margin-bottom: 14px; }
+      .section-body { padding-left: 18px; }
+      .metadata-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 540px) {
+      .topbar-inner { align-items: flex-start; flex-direction: column; gap: 6px; }
+      details.section summary { grid-template-columns: 34px 1fr; }
+      .section-count { grid-column: 2; }
+      h1 { font-size: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand-lockup"><span class="brand-dot"></span><span class="brand-text">GBAutomation</span></div>
+      <div class="source-name">2026-05-27-tac-component-build-lineage-observability-prd.md</div>
+    </div>
+  </div>
+  <header>
+    <div class="eyebrow">Plan Brief</div>
+    <h1>TAC PRD: Component-to-Build Lineage Observability</h1>
+    <div class="taxonomy-pills"><span class="pill" style="background:rgba(90, 125, 140, 0.12);border-color:rgba(90, 125, 140, 0.42);"><span class="pill-facet" style="color:#5A7D8C;">domain</span><span class="pill-value">observability</span></span><span class="pill" style="background:rgba(79, 157, 105, 0.12);border-color:rgba(79, 157, 105, 0.42);"><span class="pill-facet" style="color:#4F9D69;">service</span><span class="pill-value">supabase</span></span></div>
+    <ul class="summary-meta">
+      <li>Client: gbautomation</li><li>Priority: high</li><li>Status: draft</li><li>domain/tac</li><li>tac-prd</li><li>report</li>
+      <li>Owner: Greg Black</li>
+      <li>Created: 2026-05-27</li>
+      <li>11 sections</li>
+      <li>848 words</li>
+    </ul>
+  </header>
+  <main class="layout">
+    <aside class="section-menu" aria-label="Plan sections">
+  <div class="menu-title">Sections</div>
+  <div class="menu-actions">
+    <button type="button" data-action="expand">Expand all</button>
+    <button type="button" data-action="collapse">Collapse all</button>
+  </div>
+  <nav><button type="button" data-target="overview"><span>01</span>Overview</button>
+<button type="button" data-target="1-summary"><span>02</span>1. Summary</button>
+<button type="button" data-target="2-problem-the-edge-does-not-exist-yet"><span>03</span>2. Problem (the edge does not exist yet)</button>
+<button type="button" data-target="3-goal"><span>04</span>3. Goal</button>
+<button type="button" data-target="4-locked-decisions"><span>05</span>4. Locked decisions</button>
+<button type="button" data-target="5-non-goals"><span>06</span>5. Non-goals</button>
+<button type="button" data-target="6-architecture-phases"><span>07</span>6. Architecture / Phases</button>
+<button type="button" data-target="7-data-contract-the-edge"><span>08</span>7. Data contract (the edge)</button>
+<button type="button" data-target="8-reuse-citations-tac-first-policy"><span>09</span>8. Reuse citations (TAC-first policy)</button>
+<button type="button" data-target="9-acceptance-criteria"><span>10</span>9. Acceptance criteria</button>
+<button type="button" data-target="10-constraints"><span>11</span>10. Constraints</button></nav>
+</aside>
+    <div class="sections">
+      <details class="section" id="overview" open>
+  <summary>
+    <span class="section-index">01</span>
+    <span class="section-title">Overview</span>
+    <span class="section-count">0 words</span>
+  </summary>
+  <div class="section-body">
+    <p class="empty">No section notes yet.</p>
+  </div>
+</details>
+<details class="section" id="1-summary">
+  <summary>
+    <span class="section-index">02</span>
+    <span class="section-title">1. Summary</span>
+    <span class="section-count">48 words</span>
+  </summary>
+  <div class="section-body">
+    <p>Give the operator a traceable view of <strong>which TAC components were retrieved and which builds they led to</strong>. This is provenance/observability, not metrics — no scoring, no coverage percentages. The goal is to open a build and see its components, or open a component and see its builds.</p>
+  </div>
+</details>
+<details class="section" id="2-problem-the-edge-does-not-exist-yet">
+  <summary>
+    <span class="section-index">03</span>
+    <span class="section-title">2. Problem (the edge does not exist yet)</span>
+    <span class="section-count">102 words</span>
+  </summary>
+  <div class="section-body">
+    <p>Three receipt stores, zero linkage between them:</p>
+<ul>
+<li><code>second-brain/intelligence/tac-retrievals/*.json</code> (<code>tac-component-retrieval.v1</code>) lists <code>matched_components[]</code> (repo / path / primitive / score) but carries <strong>no <code>run_id</code>, no PRD reference</strong>. A retrieval does not know which build consumed it.</li>
+<li><code>second-brain/intelligence/tac-validations/tac-*.json</code> (<code>tac-build-run.v1</code>) carries <code>run_id</code> + <code>source.identifier</code> (the PRD) + <code>skills[]</code>, but <strong>never names the retrieved components</strong> or the retrieval artifact that fed it.</li>
+<li>Supabase <code>tac_component_retrievals</code> is keyed on <code>retrieval_id</code> (filename stem); there is <strong>no build foreign-key column</strong>.</li>
+</ul>
+<p>So &quot;which components → which builds&quot; cannot be answered today because nobody writes that edge. The work is to mint the edge at write-time, then browse it.</p>
+  </div>
+</details>
+<details class="section" id="3-goal">
+  <summary>
+    <span class="section-index">04</span>
+    <span class="section-title">3. Goal</span>
+    <span class="section-count">49 words</span>
+  </summary>
+  <div class="section-body">
+    <ol>
+<li>Stamp a durable, exact edge between each retrieval and the build that consumed it, at write-time.</li>
+<li>Make the edge queryable in Supabase <strong>and</strong> browsable as a local HTML lineage view.</li>
+<li>Fold the reverse lookup (&quot;also pulled by builds X, Y&quot;) into the existing Build Review report.</li>
+</ol>
+  </div>
+</details>
+<details class="section" id="4-locked-decisions">
+  <summary>
+    <span class="section-index">05</span>
+    <span class="section-title">4. Locked decisions</span>
+    <span class="section-count">45 words</span>
+  </summary>
+  <div class="section-body">
+    <ul>
+<li><strong>Forward-only.</strong> Stamp the edge starting with the next build. Existing receipts stay unlinked — no fuzzy timestamp/query reconstruction. (Decided 2026-05-27.)</li>
+<li><strong>Both surfaces.</strong> Local HTML artifact for offline browsing now + a Supabase column so the edge is queryable and feeds a future weekly cron. (Decided 2026-05-27.)</li>
+</ul>
+  </div>
+</details>
+<details class="section" id="5-non-goals">
+  <summary>
+    <span class="section-index">06</span>
+    <span class="section-title">5. Non-goals</span>
+    <span class="section-count">55 words</span>
+  </summary>
+  <div class="section-body">
+    <ul>
+<li>No utilization metrics, coverage scores, or effectiveness ranking — <code>build_tac_retrieval_effectiveness.py</code> already owns scoring and is explicitly out of scope here.</li>
+<li>No backfill of historical receipts.</li>
+<li>No new retrieval engine — reuse <code>resources/lib/tac_retrieval.py</code> and the existing receipt stores.</li>
+<li>No change to how components are selected; this only records and surfaces what was already chosen.</li>
+</ul>
+  </div>
+</details>
+<details class="section" id="6-architecture-phases">
+  <summary>
+    <span class="section-index">07</span>
+    <span class="section-title">6. Architecture / Phases</span>
+    <span class="section-count">256 words</span>
+  </summary>
+  <div class="section-body">
+    <h4>Phase 1 — Mint the edge at write-time</h4>
+<ul>
+<li><code>scripts/retrieve_tac_components.py</code>: add <code>--build-run-id</code> and <code>--prd</code> arguments; write <code>build_run_id</code> and <code>prd_identifier</code> into the emitted artifact (default <code>null</code> when run standalone).</li>
+<li>Build path (<code>scripts/tac_build_dry_run.py</code> and any orchestrator that triggers retrieval during a build): record a reciprocal <code>retrieval_ref</code> (artifact path) plus a compact <code>components[]</code> summary (repo, path, primitive, score) into the <code>tac-build-run.v1</code> receipt.</li>
+<li>Contracts: add <code>build_run_id</code> + <code>prd_identifier</code> to <code>resources/skills/tac-data-output-patterns/references/tac-build-run.schema.json</code>; create a sibling <code>tac-component-retrieval.schema.json</code> so the edge is contract-locked rather than implicit in code.</li>
+</ul>
+<h4>Phase 2 — Supabase column (queryable half of &quot;both&quot;)</h4>
+<ul>
+<li>Additive, nullable migration via the <code>gbauto-supabase</code> CLI: add <code>build_run_id</code> + <code>prd_identifier</code> to <code>tac_component_retrievals</code>.</li>
+<li><code>scripts/upsert_tac_component_retrieval_to_supabase.py</code>: send the two new fields so <code>tac_component_retrievals</code> joins <code>tac_build_runs</code> on <code>build_run_id</code>.</li>
+</ul>
+<h4>Phase 3 — Local lineage HTML (browse-now half of &quot;both&quot;)</h4>
+<ul>
+<li>New <code>scripts/tac_lineage.py</code> (reuses <code>resources/lib/tac_retrieval.py</code> + receipt walkers): join <code>tac-retrievals/</code> with <code>tac-builds/</code> and <code>tac-validations/</code> on <code>build_run_id</code>; emit a bipartite view at <code>artifacts/tac-lineage/index.html</code> — open a build to see its components (each linked to its inventory entry), open a component to see its builds.</li>
+<li>Surface the two orphan lists that reveal pipeline leaks: <strong>retrieved-never-built</strong> and <strong>built-with-no-retrieval</strong>.</li>
+<li>Style follows the Build Review surface (blue eyebrow + pills, cream canvas) so it slots into the same review reflex.</li>
+</ul>
+<h4>Phase 4 — Fold into Build Review + cadence</h4>
+<ul>
+<li><code>scripts/render_tac_report_package.py</code> &quot;TAC components&quot; section: link each component row to its inventory source and show &quot;also pulled by builds X, Y.&quot;</li>
+<li>Weekly cron: read the Supabase join, refresh <code>artifacts/tac-lineage/</code>, and send a Telegram one-line summary.</li>
+</ul>
+  </div>
+</details>
+<details class="section" id="7-data-contract-the-edge">
+  <summary>
+    <span class="section-index">08</span>
+    <span class="section-title">7. Data contract (the edge)</span>
+    <span class="section-count">34 words</span>
+  </summary>
+  <div class="section-body">
+    <p><code>tac-component-retrieval.v1</code> gains:</p>
+<pre><code>{
+  &quot;build_run_id&quot;: &quot;tac-20260527T... | null&quot;,
+  &quot;prd_identifier&quot;: &quot;2026-05-27-... | null&quot;
+}</code></pre>
+<p><code>tac-build-run.v1</code> gains:</p>
+<pre><code>{
+  &quot;retrieval_ref&quot;: &quot;second-brain/intelligence/tac-retrievals/&lt;file&gt;.json | null&quot;,
+  &quot;components&quot;: [
+    {&quot;repo&quot;: &quot;string&quot;, &quot;path&quot;: &quot;string&quot;, &quot;primitive&quot;: &quot;schema&quot;, &quot;score&quot;: 12}
+  ]
+}</code></pre>
+<p>Join key everywhere: <code>build_run_id</code>.</p>
+  </div>
+</details>
+<details class="section" id="8-reuse-citations-tac-first-policy">
+  <summary>
+    <span class="section-index">09</span>
+    <span class="section-title">8. Reuse citations (TAC-first policy)</span>
+    <span class="section-count">103 words</span>
+  </summary>
+  <div class="section-body">
+    <div class="table-wrap"><table><thead><tr><th>Component</th><th>Source</th><th>Why</th></tr></thead><tbody><tr><td>Retrieval scoring + primitives</td><td><code>resources/lib/tac_retrieval.py</code></td><td>Shared retrieval lib; <code>tac_lineage.py</code> reuses, does not reimplement.</td></tr>
+<tr><td>Retrieval writer</td><td><code>scripts/retrieve_tac_components.py</code></td><td>Already emits <code>matched_components[]</code>; only adds two fields.</td></tr>
+<tr><td>Receipt shape</td><td><code>resources/skills/tac-data-output-patterns/references/tac-build-run.schema.json</code></td><td>Canonical receipt; edge fields are additive.</td></tr>
+<tr><td>Supabase writer</td><td><code>scripts/upsert_tac_component_retrieval_to_supabase.py</code></td><td>Existing PostgREST upsert; two new columns.</td></tr>
+<tr><td>Report surface</td><td><code>scripts/render_tac_report_package.py</code></td><td>Build Review HTML already lists per-build components.</td></tr>
+<tr><td>Supabase access</td><td><code>gbauto-supabase</code> CLI</td><td>All DDL/migration/query routes through the CLI per repo convention.</td></tr></tbody></table></div>
+<p><code>build_tac_retrieval_effectiveness.py</code> is scoring, not lineage — no overlap. Log a <code>tac-no-match</code> for the net-new <code>tac_lineage.py</code> when it lands.</p>
+  </div>
+</details>
+<details class="section" id="9-acceptance-criteria">
+  <summary>
+    <span class="section-index">10</span>
+    <span class="section-title">9. Acceptance criteria</span>
+    <span class="section-count">75 words</span>
+  </summary>
+  <div class="section-body">
+    <ul>
+<li class="task"><input type="checkbox" disabled> <span>A build run produces a retrieval artifact stamped with its <code>build_run_id</code> + <code>prd_identifier</code>.</span></li>
+<li class="task"><input type="checkbox" disabled> <span>The build receipt names <code>retrieval_ref</code> and embeds a compact <code>components[]</code> summary.</span></li>
+<li class="task"><input type="checkbox" disabled> <span><code>tac-component-retrieval.schema.json</code> exists and validates a stamped artifact.</span></li>
+<li class="task"><input type="checkbox" disabled> <span>New Supabase <code>tac_component_retrievals</code> rows carry <code>build_run_id</code>; the join to <code>tac_build_runs</code> returns matched edges.</span></li>
+<li class="task"><input type="checkbox" disabled> <span><code>python scripts/tac_lineage.py</code> opens <code>artifacts/tac-lineage/index.html</code> showing build-to-component and component-to-build, plus the two orphan lists.</span></li>
+<li class="task"><input type="checkbox" disabled> <span>Build Review &quot;TAC components&quot; rows link to inventory and show reverse builds.</span></li>
+</ul>
+  </div>
+</details>
+<details class="section" id="10-constraints">
+  <summary>
+    <span class="section-index">11</span>
+    <span class="section-title">10. Constraints</span>
+    <span class="section-count">41 words</span>
+  </summary>
+  <div class="section-body">
+    <ul>
+<li>Supabase migration and all reads route through the <code>gbauto-supabase</code> CLI — no PostgREST/psycopg2 bypass.</li>
+<li>Migration must be additive and nullable (no rewrite of existing rows).</li>
+<li>No secrets in rendered output; scrubber on the HTML.</li>
+<li>Commit per phase, only on Greg&#x27;s request.</li>
+</ul>
+  </div>
+</details>
+    </div>
+  </main>
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-label">Metadata</div>
+      <div class="metadata-grid">
+        <div class="meta-item"><span>Source</span><strong>C:\Users\gblac\OneDrive\Desktop\gbauto\gbautomation\second-brain\inbox\plans\2026-05-27-tac-component-build-lineage-observability-prd.md</strong></div>
+<div class="meta-item"><span>Generated</span><strong>2026-05-27T21:20:44-07:00</strong></div>
+<div class="meta-item"><span>Source modified</span><strong>2026-05-27T21:20:43-07:00</strong></div>
+<div class="meta-item"><span>Source size</span><strong>7,694 bytes</strong></div>
+<div class="meta-item"><span>Word count</span><strong>848</strong></div>
+<div class="meta-item"><span>Sections</span><strong>11</strong></div>
+<div class="meta-item"><span>Renderer</span><strong>resources/skills/netlify-cli/scripts/render_plan_page.py</strong></div>
+<div class="meta-item"><span>Kind</span><strong>plan</strong></div>
+<div class="meta-item"><span>Description</span><strong>Mint and surface the missing edge between TAC component retrievals and the builds that consumed them, so an operator can trace which components were retrieved and which builds they led to.</strong></div>
+<div class="meta-item"><span>Date</span><strong>2026-05-27</strong></div>
+<div class="meta-item"><span>Status</span><strong>draft</strong></div>
+<div class="meta-item"><span>Client</span><strong>gbautomation</strong></div>
+<div class="meta-item"><span>Priority</span><strong>high</strong></div>
+<div class="meta-item"><span>Roadmap Ref</span><strong>streams/infrastructure/infra-3</strong></div>
+<div class="meta-item"><span>Owner</span><strong>Greg Black</strong></div>
+<div class="meta-item"><span>Tac Pathway</span><strong>issue-triage-tac-prd</strong></div>
+<div class="meta-item"><span>Data Surface</span><strong>schema, receipt, database, migration, report</strong></div>
+<div class="meta-item"><span>Team Runner Required</span><strong>false</strong></div>
+<div class="meta-item"><span>Source Issue</span><strong>manual-2026-05-27-tac-lineage-observability</strong></div>
+<div class="meta-item"><span>Tags</span><strong>domain/tac, tac-prd, observability, supabase, report</strong></div>
+<div class="meta-item"><span>Related</span><strong>[[2026-05-22-full-tac-build-pipeline-agent-team-prd]], [[2026-05-26-tac-pipeline-review-handoff]], [[tac-build-review-runbook]], [[2026-05-22-tac-consolidation-supabase-verification]]</strong></div>
+      </div>
+    </div>
+  </footer>
+  <script>
+    const sections = Array.from(document.querySelectorAll('details.section'));
+    const menuButtons = Array.from(document.querySelectorAll('[data-target]'));
+    const setActive = (id) => {
+      menuButtons.forEach((button) => button.classList.toggle('active', button.dataset.target === id));
+    };
+    menuButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const section = document.getElementById(button.dataset.target);
+        if (!section) return;
+        section.open = true;
+        setActive(section.id);
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+    document.querySelector('[data-action="expand"]').addEventListener('click', () => sections.forEach((section) => section.open = true));
+    document.querySelector('[data-action="collapse"]').addEventListener('click', () => sections.forEach((section, index) => section.open = index === 0));
+    sections.forEach((section) => {
+      section.addEventListener('toggle', () => {
+        if (section.open) setActive(section.id);
+      });
+    });
+    if (sections[0]) setActive(sections[0].id);
+  </script>
+</body>
+</html>

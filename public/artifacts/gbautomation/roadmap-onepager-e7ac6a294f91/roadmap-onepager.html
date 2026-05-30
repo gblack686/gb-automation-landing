@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GBAutomation Roadmap 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+  <style>:root {
+  --terracotta: #D97757;
+  --terracotta-hover: #B75F43;
+  --ink: #191919;
+  --cream-bg: #F3F1E7;
+  --cream-2: #E6E4D9;
+  --stone: #D6D4C8;
+  --text-mute: #8C8A84;
+  --text-muted-2: #5C5C5C;
+}
+
+@page { size: A4 landscape; margin: 6mm; }
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  background: var(--cream-bg);
+  color: var(--ink);
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Header band */
+
+.band {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 6px 16px;
+}
+
+.logo-side .logo {
+  font-family: 'Newsreader', serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.tagline {
+  font-size: 8px;
+  color: var(--text-mute);
+  letter-spacing: 0.05em;
+  margin-top: 1px;
+}
+
+.title-side .title {
+  font-family: 'Newsreader', serif;
+  font-style: italic;
+  font-weight: 600;
+  font-size: 17px;
+  margin: 0;
+  color: var(--ink);
+}
+
+/* Divider */
+
+.divider {
+  border: 0;
+  border-top: 2px solid var(--terracotta);
+  margin: 0 16px;
+}
+
+/* Lane grid */
+
+.lane {
+  padding: 4px 16px 6px;
+}
+
+.lane-header {
+  display: grid;
+  grid-template-columns: 120px repeat(4, 1fr);
+  gap: 4px;
+  margin-bottom: 2px;
+  border-bottom: 2px solid var(--stone);
+  padding-bottom: 3px;
+}
+
+.lane-header .stream-label-spacer { /* empty */ }
+
+.quarter-label {
+  font-weight: 700;
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-mute);
+  text-align: center;
+}
+
+.lane-row {
+  display: grid;
+  grid-template-columns: 120px repeat(4, 1fr);
+  gap: 4px;
+  padding: 3px 0;
+  border-bottom: 1px solid var(--stone);
+  align-items: start;
+}
+
+.stream-label {
+  font-weight: 700;
+  font-size: 8px;
+  color: var(--ink);
+  padding-top: 2px;
+  line-height: 1.2;
+}
+
+.cell {
+  min-height: 14px;
+}
+
+/* Milestone bars */
+
+.bar {
+  background: var(--terracotta);
+  color: var(--cream-bg);
+  padding: 1px 5px;
+  border-radius: 3px;
+  margin-bottom: 2px;
+  font-size: 8px;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+}
+
+.bar-name {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.bar-date {
+  opacity: 0.8;
+  font-size: 7px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Status variants */
+
+.bar.status-in_progress {
+  opacity: 0.6;
+}
+
+.bar.status-completed {
+  background: var(--cream-2);
+  color: var(--ink);
+  border: 1px solid var(--stone);
+}
+
+.bar.status-completed .bar-name::after {
+  content: " \2713";
+  font-size: 7px;
+}
+
+.bar.status-blocked {
+  background: var(--stone);
+  color: var(--ink);
+}
+
+/* Pill badges */
+
+.pill {
+  background: var(--cream-2);
+  color: var(--text-mute);
+  font-size: 7px;
+  padding: 0 3px;
+  border-radius: 2px;
+  border: 1px solid var(--stone);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Client commitments row */
+
+.clients-row .stream-label {
+  color: var(--text-mute);
+  font-style: italic;
+}
+
+.client-item {
+  background: var(--cream-2);
+  color: var(--ink);
+  border: 1px solid var(--stone);
+  padding: 1px 5px;
+  border-radius: 3px;
+  margin-bottom: 2px;
+  font-size: 7px;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+}
+
+.client-name {
+  font-weight: 700;
+  color: var(--text-mute);
+  flex-shrink: 0;
+}
+
+/* Footer band */
+
+.band.footer {
+  border-top: 1px solid var(--stone);
+  font-size: 8px;
+  color: var(--text-mute);
+  margin-top: 4px;
+  padding: 4px 16px;
+  align-items: center;
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.swatch {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.swatch.planned    { background: var(--terracotta); }
+.swatch.in_progress { background: var(--terracotta); opacity: 0.6; }
+.swatch.completed  { background: var(--cream-2); border: 1px solid var(--stone); }
+.swatch.blocked    { background: var(--stone); }
+.swatch.client     { background: var(--terracotta); width: 6px; height: 6px; }
+
+.updated {
+  text-align: center;
+  color: var(--text-mute);
+}
+
+.url {
+  text-align: right;
+  color: var(--text-mute);
+}
+
+/* Responsive fallback */
+
+@media (max-width: 768px) {
+  .lane-header, .lane-row {
+    grid-template-columns: 1fr;
+  }
+  .lane-header .stream-label-spacer {
+    display: none;
+  }
+}
+</style>
+</head>
+<body>
+
+  
+  <div class="band header">
+    <div class="logo-side">
+      <span class="logo">GBAutomation</span>
+    </div>
+    <div class="title-side">
+      <h1 class="title">Roadmap 2026</h1>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  
+  <div class="lane">
+
+    
+    <div class="lane-header">
+      <div class="stream-label-spacer"></div>
+      
+      <div class="quarter-label">Q2 2026</div>
+      
+      <div class="quarter-label">Q3 2026</div>
+      
+      <div class="quarter-label">Q4 2026</div>
+      
+      <div class="quarter-label">Q1 2027</div>
+      
+    </div>
+
+    
+    
+    <div class="lane-row">
+      <div class="stream-label">Infrastructure & Platform</div>
+      
+      <div class="cell">
+        
+        <div class="bar bar-sm status-in_progress">
+          <span class="bar-name">Google Workspace auth  --  hardening</span>
+          <span class="bar-date">May 2026</span>
+          
+        </div>
+        
+        <div class="bar bar-sm status-completed">
+          <span class="bar-name">Gmail + Calendar REST helpers</span>
+          <span class="bar-date">Apr 2026</span>
+          
+        </div>
+        
+        <div class="bar bar-sm status-completed">
+          <span class="bar-name">prep-client-meeting skill (generalized)</span>
+          <span class="bar-date">Apr 2026</span>
+          
+        </div>
+        
+        <div class="bar bar-sm status-planned">
+          <span class="bar-name">Vault layout standardization</span>
+          <span class="bar-date">May 2026</span>
+          
+        </div>
+        
+        <div class="bar bar-sm status-planned">
+          <span class="bar-name">Client-repo placement cleanup</span>
+          <span class="bar-date">May 2026</span>
+          
+        </div>
+        
+        <div class="bar bar-sm status-planned">
+          <span class="bar-name">Credential setup automation per client</span>
+          <span class="bar-date">Jun 2026</span>
+          
+        </div>
+        
+        <div class="bar bar-sm status-planned">
+          <span class="bar-name">1Password as default for client secret management</span>
+          <span class="bar-date">Jun 2026</span>
+          
+        </div>
+        
+      </div>
+      
+      <div class="cell">
+        
+      </div>
+      
+      <div class="cell">
+        
+      </div>
+      
+      <div class="cell">
+        
+      </div>
+      
+    </div>
+    
+    <div class="lane-row">
+      <div class="stream-label">Sales & Outreach</div>
+      
+      <div class="cell">
+        
+        <div class="bar bar-sm status-in_progress">
+          <span class="bar-name">LinkedIn Outreach Engine</span>
+          <span class="bar-date">Apr 2026</span>
+          
+        </div>
+        
+        <div class="bar bar-sm status-planned">
+          <span class="bar-name">Cold Email Campaigns</span>
+          <span class="bar-date">May 2026</span>
+          
+        </div>
+        
+        <div class="bar bar-sm status-planned">
+          <span class="bar-name">Job Board & Ad Prospecting</span>
+          <span class="bar-date">May 2026</span>
+          
+        </div>
+        
+        <div class="bar bar-sm status-planned">
+          <span class="bar-name">Ad Campaigns</span>
+          <span class="bar-date">Jun 2026</span>
+          
+        </div>
+        
+      </div>
+      
+      <div class="cell">
+        
+      </div>
+      
+      <div class="cell">
+        
+      </div>
+      
+      <div class="cell">
+        
+      </div>
+      
+    </div>
+    
+    <div class="lane-row">
+      <div class="stream-label">Domain Expert Library</div>
+      
+      <div class="cell">
+        
+        <div class="bar bar-sm status-in_progress">
+          <span class="bar-name">Core Expert Catalog</span>
+          <span class="bar-date">Apr 2026</span>
+          
+        </div>
+        
+        <div class="bar bar-sm status-planned">
+          <span class="bar-name">Expert Marketplace</span>
+          <span class="bar-date">Jun 2026</span>
+          
+        </div>
+        
+      </div>
+      
+      <div class="cell">
+        
+      </div>
+      
+      <div class="cell">
+        
+      </div>
+      
+      <div class="cell">
+        
+      </div>
+      
+    </div>
+    
+    <div class="lane-row">
+      <div class="stream-label">Content & Brand</div>
+      
+      <div class="cell">
+        
+        <div class="bar bar-sm status-planned">
+          <span class="bar-name">Case Study Library</span>
+          <span class="bar-date">May 2026</span>
+          
+        </div>
+        
+        <div class="bar bar-sm status-planned">
+          <span class="bar-name">Outreach Content Calendar</span>
+          <span class="bar-date">May 2026</span>
+          
+        </div>
+        
+        <div class="bar bar-sm status-planned">
+          <span class="bar-name">Lead Magnets</span>
+          <span class="bar-date">Jun 2026</span>
+          
+        </div>
+        
+      </div>
+      
+      <div class="cell">
+        
+      </div>
+      
+      <div class="cell">
+        
+      </div>
+      
+      <div class="cell">
+        
+      </div>
+      
+    </div>
+    
+    <div class="lane-row">
+      <div class="stream-label">Delivery & Operations</div>
+      
+      <div class="cell">
+        
+        <div class="bar bar-sm status-in_progress">
+          <span class="bar-name">Generalized Intelligence Pull</span>
+          <span class="bar-date">Apr 2026</span>
+          
+        </div>
+        
+        <div class="bar bar-sm status-planned">
+          <span class="bar-name">Client Discord Servers</span>
+          <span class="bar-date">May 2026</span>
+          
+        </div>
+        
+        <div class="bar bar-sm status-in_progress">
+          <span class="bar-name">Pre-meeting brief pipeline</span>
+          <span class="bar-date">May 2026</span>
+          
+        </div>
+        
+      </div>
+      
+      <div class="cell">
+        
+      </div>
+      
+      <div class="cell">
+        
+      </div>
+      
+      <div class="cell">
+        
+      </div>
+      
+    </div>
+    
+    <div class="lane-row">
+      <div class="stream-label">Product Development</div>
+      
+      <div class="cell">
+        
+        <div class="bar bar-sm status-planned">
+          <span class="bar-name">Pricing Packages</span>
+          <span class="bar-date">May 2026</span>
+          
+        </div>
+        
+      </div>
+      
+      <div class="cell">
+        
+        <div class="bar bar-sm status-planned">
+          <span class="bar-name">Self-Serve Agent Builder</span>
+          <span class="bar-date">Jul 2026</span>
+          
+        </div>
+        
+      </div>
+      
+      <div class="cell">
+        
+      </div>
+      
+      <div class="cell">
+        
+      </div>
+      
+    </div>
+    
+    <div class="lane-row">
+      <div class="stream-label">Hermes Platform</div>
+      
+      <div class="cell">
+        
+        <div class="bar bar-sm status-completed">
+          <span class="bar-name">Profile template library for six agent roles</span>
+          <span class="bar-date">May 2026</span>
+          
+        </div>
+        
+        <div class="bar bar-sm status-in_progress">
+          <span class="bar-name">Multi-tenant chat surface</span>
+          <span class="bar-date">Jun 2026</span>
+          
+        </div>
+        
+        <div class="bar bar-sm status-in_progress">
+          <span class="bar-name">Observability  --  OTel traces + Langfuse</span>
+          <span class="bar-date">Jun 2026</span>
+          
+        </div>
+        
+      </div>
+      
+      <div class="cell">
+        
+        <div class="bar bar-sm status-planned">
+          <span class="bar-name">IaC for Hermes runtime</span>
+          <span class="bar-date">Jul 2026</span>
+          
+        </div>
+        
+        <div class="bar bar-sm status-planned">
+          <span class="bar-name">Client onboarding flow</span>
+          <span class="bar-date">Aug 2026</span>
+          
+        </div>
+        
+      </div>
+      
+      <div class="cell">
+        
+      </div>
+      
+      <div class="cell">
+        
+      </div>
+      
+    </div>
+    
+
+    
+    <div class="lane-row clients-row">
+      <div class="stream-label">Client commitments</div>
+      
+      <div class="cell">
+        
+        <div class="client-item">
+          
+          <span class="client-name">Fish Group:</span>
+          
+          <span>Phase 1 workflows (WF-001 to WF-005)</span>
+        </div>
+        
+        <div class="client-item">
+          
+          <span class="client-name">Jason Diaz (PMC / BioReg / TTTS):</span>
+          
+          <span>TTTS (Therapeutic Technology Showcase)</span>
+        </div>
+        
+        <div class="client-item">
+          
+          <span class="client-name">Jason Diaz (PMC / BioReg / TTTS):</span>
+          
+          <span>Intake session</span>
+        </div>
+        
+      </div>
+      
+      <div class="cell">
+        
+        <div class="client-item">
+          
+          <span class="client-name">Fish Group:</span>
+          
+          <span>WF-002 Daily Cash Position prototype</span>
+        </div>
+        
+        <div class="client-item">
+          
+          <span class="client-name">Jason Diaz (PMC / BioReg / TTTS):</span>
+          
+          <span>Archon push access for gblack686</span>
+        </div>
+        
+        <div class="client-item">
+          
+          <span class="client-name">Patrick Bauer:</span>
+          
+          <span>Move checkout from gbauto/clients/pbauer to gbauto/pbauer</span>
+        </div>
+        
+      </div>
+      
+      <div class="cell">
+        
+      </div>
+      
+      <div class="cell">
+        
+      </div>
+      
+    </div>
+
+  </div>
+
+  
+  <div class="band footer">
+
+    <div class="legend">
+      <span class="legend-item">
+        <span class="swatch planned"></span> Planned
+      </span>
+      <span class="legend-item">
+        <span class="swatch in_progress"></span> In progress
+      </span>
+      <span class="legend-item">
+        <span class="swatch completed"></span> Completed
+      </span>
+      <span class="legend-item">
+        <span class="swatch blocked"></span> Blocked
+      </span>
+      <span class="legend-item">
+        <span class="swatch client"></span> Client
+      </span>
+    </div>
+
+    <div class="updated">Last updated: 2026-05-18</div>
+
+    <div class="url">gbautomation.xyz/roadmap (planned)</div>
+
+  </div>
+
+</body>
+</html>

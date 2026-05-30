@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 1180" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#c47553"/>
+    </marker>
+    <style>
+      .box     { fill: #fdf6ec; stroke: #c47553; stroke-width: 1.6; }
+      .box-alt { fill: #ecf2f5; stroke: #5a8aa6; stroke-width: 1.6; }
+      .box-end { fill: #efe5da; stroke: #7a6a55; stroke-width: 1.6; stroke-dasharray: 4 3; }
+      .lane    { fill: none; stroke: #b9b0a3; stroke-width: 1; stroke-dasharray: 3 4; }
+      .title   { font-weight: 700; font-size: 13px; fill: #2c2c2c; }
+      .meta    { font-size: 11px; fill: #6a6a6a; }
+      .lanetag { font-size: 11px; font-weight: 700; fill: #8a7a60; letter-spacing: 1px; }
+      .arrow   { stroke: #c47553; stroke-width: 1.6; fill: none; marker-end: url(#arrow); }
+      .branch  { stroke: #5a8aa6; stroke-width: 1.4; fill: none; marker-end: url(#arrow); }
+      @media (prefers-color-scheme: dark) {
+        .box     { fill: #2a241d; stroke: #d68763; }
+        .box-alt { fill: #1f2a31; stroke: #6fa0bd; }
+        .box-end { fill: #2c261d; stroke: #b6a385; }
+        .title   { fill: #f0e8dc; }
+        .meta    { fill: #b8ad9c; }
+        .lane    { stroke: #6a5f4f; }
+        .lanetag { fill: #d6c4a0; }
+        .arrow   { stroke: #d68763; }
+        .branch  { stroke: #6fa0bd; }
+      }
+    </style>
+  </defs>
+
+  <!-- Lane separators -->
+  <line class="lane" x1="380" y1="40"   x2="380" y2="280"/>
+  <line class="lane" x1="380" y1="320"  x2="380" y2="560"/>
+  <line class="lane" x1="380" y1="600"  x2="380" y2="1100"/>
+  <text class="lanetag" x="20"  y="36">LOCAL · OBSIDIAN</text>
+  <text class="lanetag" x="20"  y="316">BRIDGE · GIT</text>
+  <text class="lanetag" x="20"  y="596">MAC MINI · LAUNCHD</text>
+
+  <!-- 1. Session transcript -->
+  <rect class="box" x="180" y="50" width="400" height="56" rx="6"/>
+  <text class="title" x="380" y="72" text-anchor="middle">Session transcript</text>
+  <text class="meta"  x="380" y="92" text-anchor="middle">intelligence/transcripts/sessions/&lt;date&gt;-&lt;client&gt;-&lt;sid&gt;.md</text>
+
+  <!-- 2. extract-session-todos -->
+  <rect class="box" x="180" y="130" width="400" height="56" rx="6"/>
+  <text class="title" x="380" y="152" text-anchor="middle">extract-session-todos (skill)</text>
+  <text class="meta"  x="380" y="172" text-anchor="middle">scripts/extract.py · classifies tac_complexity + audience + recommended_answer</text>
+
+  <!-- 3. Task files emitted -->
+  <rect class="box" x="180" y="210" width="400" height="56" rx="6"/>
+  <text class="title" x="380" y="232" text-anchor="middle">tasks/sessions/&lt;sid&gt;/*.md</text>
+  <text class="meta"  x="380" y="252" text-anchor="middle">inbox_status: pending · linear: pending · tac_status: pending</text>
+
+  <!-- 4. User opens Obsidian -->
+  <rect class="box" x="180" y="330" width="400" height="56" rx="6"/>
+  <text class="title" x="380" y="352" text-anchor="middle">Inbox.md  (Dataview, 9 facets)</text>
+  <text class="meta"  x="380" y="372" text-anchor="middle">user picks an item · flips internal_status → accepted_recommended</text>
+
+  <!-- 5. File save -->
+  <rect class="box" x="180" y="410" width="400" height="56" rx="6"/>
+  <text class="title" x="380" y="432" text-anchor="middle">Obsidian save  →  PostToolUse hooks (local edits skip)</text>
+  <text class="meta"  x="380" y="452" text-anchor="middle">enforce-linear-frontmatter · validate-write · qmd-refresh</text>
+
+  <!-- 6. Obsidian Git plugin -->
+  <rect class="box-alt" x="180" y="490" width="400" height="56" rx="6"/>
+  <text class="title" x="380" y="512" text-anchor="middle">obsidian-git plugin  (60s loop)</text>
+  <text class="meta"  x="380" y="532" text-anchor="middle">auto-pull → auto-commit → auto-push  ·  syncMethod: merge</text>
+
+  <!-- 7. GitHub origin -->
+  <rect class="box-alt" x="180" y="610" width="400" height="56" rx="6"/>
+  <text class="title" x="380" y="632" text-anchor="middle">GitHub  origin/main</text>
+  <text class="meta"  x="380" y="652" text-anchor="middle">single source of truth · the bridge between Windows ↔ Mac Mini</text>
+
+  <!-- 8. launchd -->
+  <rect class="box" x="180" y="730" width="400" height="56" rx="6"/>
+  <text class="title" x="380" y="752" text-anchor="middle">launchd  com.gbautomation.inbox-poll  (StartInterval 60)</text>
+  <text class="meta"  x="380" y="772" text-anchor="middle">/opt/homebrew/bin/python3  scripts/inbox_poll.py</text>
+
+  <!-- 9. inbox_poll.py -->
+  <rect class="box" x="180" y="810" width="400" height="56" rx="6"/>
+  <text class="title" x="380" y="832" text-anchor="middle">inbox_poll.py</text>
+  <text class="meta"  x="380" y="852" text-anchor="middle">git pull → walk vault → detect approval (first-action-wins)</text>
+
+  <!-- 10. inbox_approve.py -->
+  <rect class="box" x="180" y="890" width="400" height="56" rx="6"/>
+  <text class="title" x="380" y="912" text-anchor="middle">inbox_approve.py</text>
+  <text class="meta"  x="380" y="932" text-anchor="middle">flips inbox_status → approved · stamps inbox_dispatched_at</text>
+
+  <!-- 11. Branches -->
+  <rect class="box-end" x="20"  y="990" width="170" height="56" rx="6"/>
+  <text class="title" x="105" y="1012" text-anchor="middle">Linear issue</text>
+  <text class="meta"  x="105" y="1032" text-anchor="middle">team via client slug</text>
+
+  <rect class="box-end" x="200" y="990" width="170" height="56" rx="6"/>
+  <text class="title" x="285" y="1012" text-anchor="middle">Executor</text>
+  <text class="meta"  x="285" y="1032" text-anchor="middle">write_file · noop</text>
+
+  <rect class="box-end" x="380" y="990" width="170" height="56" rx="6"/>
+  <text class="title" x="465" y="1012" text-anchor="middle">Telegram ping</text>
+  <text class="meta"  x="465" y="1032" text-anchor="middle">sanitized markdown</text>
+
+  <rect class="box-end" x="560" y="990" width="180" height="56" rx="6"/>
+  <text class="title" x="650" y="1012" text-anchor="middle">Run report</text>
+  <text class="meta"  x="650" y="1032" text-anchor="middle">intelligence/agent-runs/</text>
+
+  <!-- Loop-back caption -->
+  <text class="meta" x="380" y="1090" text-anchor="middle">↺  next poll sees inbox_dispatched_at · skips file · idempotent</text>
+  <text class="meta" x="380" y="1108" text-anchor="middle">if audience = internal → personal-vault only · client_status field never propagates to client vault</text>
+
+  <!-- Vertical arrows down the spine -->
+  <path class="arrow" d="M 380 106 L 380 128"/>
+  <path class="arrow" d="M 380 186 L 380 208"/>
+  <path class="arrow" d="M 380 266 L 380 328"/>
+  <path class="arrow" d="M 380 386 L 380 408"/>
+  <path class="arrow" d="M 380 466 L 380 488"/>
+  <path class="arrow" d="M 380 546 L 380 608"/>
+  <path class="arrow" d="M 380 666 L 380 728"/>
+  <path class="arrow" d="M 380 786 L 380 808"/>
+  <path class="arrow" d="M 380 866 L 380 888"/>
+
+  <!-- Branch arrows from inbox_approve.py to the four outputs -->
+  <path class="branch" d="M 280 946 C 200 970, 140 970, 105 988"/>
+  <path class="branch" d="M 340 946 C 320 970, 300 970, 285 988"/>
+  <path class="branch" d="M 420 946 C 440 970, 460 970, 465 988"/>
+  <path class="branch" d="M 480 946 C 560 970, 620 970, 650 988"/>
+</svg>

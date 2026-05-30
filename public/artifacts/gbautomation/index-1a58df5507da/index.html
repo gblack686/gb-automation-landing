@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ECOM TAC PRD Sample Retrieval Review</title>
+  <style>
+    body { margin:0; font-family: Inter, system-ui, sans-serif; background:#f5f7fa; color:#17212b; }
+    header.page { padding:28px 36px; background:#fff; border-bottom:1px solid #d8dee8; }
+    h1 { margin:0; font-size:26px; letter-spacing:0; }
+    main { max-width:1180px; margin:0 auto; padding:22px; }
+    .summary { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin-bottom:18px; }
+    .summary div, .card { background:#fff; border:1px solid #d8dee8; border-radius:8px; padding:16px; }
+    .summary strong { display:block; font-size:24px; }
+    .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+    .card header { display:flex; justify-content:space-between; gap:16px; align-items:start; }
+    .card h2 { margin:0; font-size:18px; }
+    .card header strong { font-size:24px; }
+    .card p, dt { color:#5d6978; }
+    dl { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+    dd { margin:0; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; overflow-wrap:anywhere; }
+    code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+    li { margin:6px 0; }
+    @media (max-width:780px) { .summary, .grid, dl { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <header class="page">
+    <h1>ECOM TAC PRD Sample Retrieval Review</h1>
+    <p>Seven Linear ecom issues rewritten as TAC PRD samples, then scored against the current TAC component inventory.</p>
+  </header>
+  <main>
+    <section class="summary">
+      <div><strong>7</strong><span>samples</span></div>
+      <div><strong>88.3</strong><span>average retrieval score</span></div>
+      <div><strong>{&#x27;strong&#x27;: 7}</strong><span>verdict mix</span></div>
+    </section>
+    <section class="grid">
+        <article class="card strong">
+          <header><h2>GBA-490</h2><strong>90.0</strong></header>
+          <p>ECOM-1 Shop intelligence orchestrator PRD and dry-run contract</p>
+          <dl>
+            <div><dt>Verdict</dt><dd>strong</dd></div>
+            <div><dt>Matches</dt><dd>771 / 1518</dd></div>
+            <div><dt>Expected hits</dt><dd>agent, command, orchestrator, schema, skill</dd></div>
+            <div><dt>Misses</dt><dd>none</dd></div>
+          </dl>
+          <h3>Top repos</h3><p>agent-experts (4), multi-agent-orchestration (4), building-specialized-agents (3), multi-agent-orchestration-the-o-agent (3), tac-7 (2)</p>
+          <h3>Primitive mix</h3><p>schema (8), reference (4), agent (3), adw (3), command (3), hook (1), mcp-server (1), permissions-profile (1)</p>
+          <h3>Top components</h3><ol><li><code>agent-experts:apps/orchestrator_3_stream/.claude/agents/planner.md</code> <span>agent</span> <b>41</b></li><li><code>building-specialized-agents:.claude/commands/plan_w_docs.md</code> <span>command</span> <b>66</b></li><li><code>claude-code-hooks-multi-agent-observability:.claude/hooks/validators/validate_new_file.py</code> <span>hook</span> <b>20</b></li><li><code>multi-agent-orchestration:apps/orchestrator_3_stream/.claude/skills/meta-prompt/SKILL.md</code> <span>skill</span> <b>58</b></li><li><code>multi-agent-orchestration:apps/orchestrator_db/migrations/0_orchestrator_agents.sql</code> <span>migration</span> <b>63</b></li><li><code>orchestrator-agent-with-adws:adws/adw_modules/orch_database_models.py</code> <span>adw</span> <b>44</b></li><li><code>tac-7:.mcp.json</code> <span>mcp-server</span> <b>4</b></li></ol>
+        </article>
+        
+        <article class="card strong">
+          <header><h2>GBA-491</h2><strong>87.5</strong></header>
+          <p>ECOM-2 Browser-harness shop mapper dry-run</p>
+          <dl>
+            <div><dt>Verdict</dt><dd>strong</dd></div>
+            <div><dt>Matches</dt><dd>318 / 1518</dd></div>
+            <div><dt>Expected hits</dt><dd>agent, command, schema, skill</dd></div>
+            <div><dt>Misses</dt><dd>none</dd></div>
+          </dl>
+          <h3>Top repos</h3><p>multi-agent-orchestration (4), agentic-prompt-engineering (4), building-specialized-agents (4), elite-context-engineering (3), agent-experts (2)</p>
+          <h3>Primitive mix</h3><p>schema (11), hook (6), agent (5), adw (1), mcp-server (1), machine-readable-output (1)</p>
+          <h3>Top components</h3><ol><li><code>multi-agent-orchestration:.claude/agents/build-agent.md</code> <span>agent</span> <b>18</b></li><li><code>agentic-prompt-engineering:.claude/commands/experts/cc_hook_expert/cc_hook_expert_plan.md</code> <span>command</span> <b>28</b></li><li><code>agentic-prompt-engineering:.claude/hooks/context_bundle_builder.py</code> <span>hook</span> <b>19</b></li><li><code>multi-agent-orchestration:.claude/skills/meta-agent/SKILL.md</code> <span>skill</span> <b>18</b></li><li><code>multi-agent-orchestration:apps/orchestrator_db/migrations/0_orchestrator_agents.sql</code> <span>migration</span> <b>18</b></li><li><code>tac-6:adws/adw_tests/test_adw_test_e2e.py</code> <span>adw</span> <b>6</b></li><li><code>tac-5:.mcp.json</code> <span>mcp-server</span> <b>5</b></li></ol>
+        </article>
+        
+        <article class="card strong">
+          <header><h2>GBA-492</h2><strong>90.0</strong></header>
+          <p>ECOM-3 Scraper profile builder from shop map</p>
+          <dl>
+            <div><dt>Verdict</dt><dd>strong</dd></div>
+            <div><dt>Matches</dt><dd>596 / 1518</dd></div>
+            <div><dt>Expected hits</dt><dd>agent, command, hook, schema</dd></div>
+            <div><dt>Misses</dt><dd>none</dd></div>
+          </dl>
+          <h3>Top repos</h3><p>multi-agent-orchestration (4), building-specialized-agents (4), agentic-finance-review (4), agentic-prompt-engineering (2), multi-agent-orchestration-the-o-agent (2)</p>
+          <h3>Primitive mix</h3><p>schema (12), hook (5), agent (4), adw (1), mcp-server (1), permissions-profile (1), machine-readable-output (1)</p>
+          <h3>Top components</h3><ol><li><code>multi-agent-orchestration:.claude/agents/playwright-validator.md</code> <span>agent</span> <b>78</b></li><li><code>building-specialized-agents:.claude/commands/experts/cc_hook_expert/cc_hook_expert_build.md</code> <span>command</span> <b>104</b></li><li><code>agentic-finance-review:.claude/hooks/validators/normalized-balance-validator.py</code> <span>hook</span> <b>65</b></li><li><code>multi-agent-orchestration:apps/orchestrator_3_stream/.claude/skills/meta-prompt/SKILL.md</code> <span>skill</span> <b>94</b></li><li><code>building-specialized-agents:apps/custom_7_micro_sdlc_agent/backend/db/database.py</code> <span>data-component</span> <b>113</b></li><li><code>tac-4:adws/data_types.py</code> <span>adw</span> <b>43</b></li><li><code>tac-5:.mcp.json</code> <span>mcp-server</span> <b>46</b></li></ol>
+        </article>
+        
+        <article class="card strong">
+          <header><h2>GBA-493</h2><strong>80.6</strong></header>
+          <p>ECOM-4 Supabase job queue schema and watcher design</p>
+          <dl>
+            <div><dt>Verdict</dt><dd>strong</dd></div>
+            <div><dt>Matches</dt><dd>214 / 1518</dd></div>
+            <div><dt>Expected hits</dt><dd>agent, command, hook, schema</dd></div>
+            <div><dt>Misses</dt><dd>none</dd></div>
+          </dl>
+          <h3>Top repos</h3><p>multi-agent-orchestration (4), building-specialized-agents (4), agentic-prompt-engineering (4), tac-collection (3), agent-experts (2)</p>
+          <h3>Primitive mix</h3><p>schema (17), adw (4), reference (2), permissions-profile (1), output-style (1)</p>
+          <h3>Top components</h3><ol><li><code>multi-agent-orchestration:.claude/agents/build-agent.md</code> <span>agent</span> <b>9</b></li><li><code>building-specialized-agents:.claude/commands/plan_vite_vue.md</code> <span>command</span> <b>11</b></li><li><code>multi-agent-orchestration:.claude/hooks/user_prompt_submit.py</code> <span>hook</span> <b>9</b></li><li><code>multi-agent-orchestration:.claude/skills/meta-agent/SKILL.md</code> <span>skill</span> <b>9</b></li><li><code>building-specialized-agents:apps/custom_7_micro_sdlc_agent/backend/db/database.py</code> <span>data-component</span> <b>13</b></li><li><code>orchestrator-agent-with-adws:adws/adw_workflows/helpers/animate_frames.py</code> <span>adw</span> <b>6</b></li><li><code>claude-code-hooks-multi-agent-observability:.claude/settings.json</code> <span>permissions-profile</span> <b>3</b></li></ol>
+        </article>
+        
+        <article class="card strong">
+          <header><h2>GBA-494</h2><strong>89.4</strong></header>
+          <p>ECOM-5 Price observation and change detector</p>
+          <dl>
+            <div><dt>Verdict</dt><dd>strong</dd></div>
+            <div><dt>Matches</dt><dd>308 / 1518</dd></div>
+            <div><dt>Expected hits</dt><dd>agent, command, hook, schema</dd></div>
+            <div><dt>Misses</dt><dd>none</dd></div>
+          </dl>
+          <h3>Top repos</h3><p>multi-agent-orchestration (4), agentic-prompt-engineering (4), tac-5 (3), building-specialized-agents (3), tac-collection (3)</p>
+          <h3>Primitive mix</h3><p>schema (16), adw (5), command (1), mcp-server (1), permissions-profile (1), hook (1)</p>
+          <h3>Top components</h3><ol><li><code>multi-agent-orchestration:.claude/agents/build-agent.md</code> <span>agent</span> <b>19</b></li><li><code>tac-8:tac8_app5__nlq_to_sql_aea/.claude/commands/resolve_failed_e2e_test.md</code> <span>command</span> <b>24</b></li><li><code>multi-agent-orchestration:.claude/hooks/user_prompt_submit.py</code> <span>hook</span> <b>19</b></li><li><code>multi-agent-orchestration:.claude/skills/meta-agent/SKILL.md</code> <span>skill</span> <b>19</b></li><li><code>multi-agent-orchestration:apps/orchestrator_db/migrations/0_orchestrator_agents.sql</code> <span>migration</span> <b>19</b></li><li><code>tac-5:adws/adw_tests/test_agents.py</code> <span>adw</span> <b>19</b></li><li><code>tac-5:.mcp.json</code> <span>mcp-server</span> <b>3</b></li></ol>
+        </article>
+        
+        <article class="card strong">
+          <header><h2>GBA-495</h2><strong>90.6</strong></header>
+          <p>ECOM-6 Telegram sales alert agent dry-run</p>
+          <dl>
+            <div><dt>Verdict</dt><dd>strong</dd></div>
+            <div><dt>Matches</dt><dd>184 / 1518</dd></div>
+            <div><dt>Expected hits</dt><dd>agent, command, hook, schema</dd></div>
+            <div><dt>Misses</dt><dd>none</dd></div>
+          </dl>
+          <h3>Top repos</h3><p>multi-agent-orchestration (4), agentic-prompt-engineering (4), building-specialized-agents (4), elite-context-engineering (4), tac-collection (3)</p>
+          <h3>Primitive mix</h3><p>schema (14), hook (6), agent (2), adw (1), permissions-profile (1), machine-readable-output (1)</p>
+          <h3>Top components</h3><ol><li><code>multi-agent-orchestration:.claude/agents/build-agent.md</code> <span>agent</span> <b>9</b></li><li><code>agentic-prompt-engineering:.claude/commands/experts/cc_hook_expert/cc_hook_expert_build.md</code> <span>command</span> <b>19</b></li><li><code>agentic-prompt-engineering:.claude/hooks/context_bundle_builder.py</code> <span>hook</span> <b>10</b></li><li><code>multi-agent-orchestration:apps/orchestrator_3_stream/.claude/skills/meta-prompt/SKILL.md</code> <span>skill</span> <b>19</b></li><li><code>building-specialized-agents:apps/custom_7_micro_sdlc_agent/backend/db/database.py</code> <span>data-component</span> <b>25</b></li><li><code>tac-4:adws/data_types.py</code> <span>adw</span> <b>5</b></li><li><code>tac-2:.claude/settings.json</code> <span>permissions-profile</span> <b>2</b></li></ol>
+        </article>
+        
+        <article class="card strong">
+          <header><h2>GBA-496</h2><strong>90.0</strong></header>
+          <p>ECOM-7 End-to-end fixture smoke test</p>
+          <dl>
+            <div><dt>Verdict</dt><dd>strong</dd></div>
+            <div><dt>Matches</dt><dd>568 / 1518</dd></div>
+            <div><dt>Expected hits</dt><dd>agent, command, hook, schema, skill</dd></div>
+            <div><dt>Misses</dt><dd>none</dd></div>
+          </dl>
+          <h3>Top repos</h3><p>multi-agent-orchestration (4), building-specialized-agents (4), agentic-prompt-engineering (3), tac-collection (3), elite-context-engineering (2)</p>
+          <h3>Primitive mix</h3><p>schema (17), permissions-profile (5), adw (1), mcp-server (1), machine-readable-output (1)</p>
+          <h3>Top components</h3><ol><li><code>multi-agent-orchestration:.claude/agents/build-agent.md</code> <span>agent</span> <b>56</b></li><li><code>building-specialized-agents:.claude/commands/experts/cc_hook_expert/cc_hook_expert_build.md</code> <span>command</span> <b>86</b></li><li><code>multi-agent-orchestration:.claude/hooks/user_prompt_submit.py</code> <span>hook</span> <b>56</b></li><li><code>multi-agent-orchestration:apps/orchestrator_3_stream/.claude/skills/meta-prompt/SKILL.md</code> <span>skill</span> <b>76</b></li><li><code>building-specialized-agents:apps/custom_7_micro_sdlc_agent/backend/db/database.py</code> <span>data-component</span> <b>76</b></li><li><code>tac-8:tac8_app5__nlq_to_sql_aea/adws/adw_plan_build_test_review_iso.py</code> <span>adw</span> <b>38</b></li><li><code>tac-5:.mcp.json</code> <span>mcp-server</span> <b>30</b></li></ol>
+        </article>
+        </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenClaw Workspace Wizard</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --tc:#D97757;--tc-h:#c06840;--tc-s:rgba(217,119,87,0.12);
+  --bg0:#12141a;--bg1:#14161d;--bg2:#1a1d25;--bg3:#262a35;
+  --bd:#27272a;--bd2:#3f3f46;
+  --tx:#e4e4e7;--tx2:#a1a1aa;--tx3:#71717a;
+  --ok:#22c55e;--warn:#f59e0b;--err:#ef4444;
+  --chrome:#0d0e12;
+  --font:system-ui,-apple-system,sans-serif;
+  --mono:'Fira Code','Cascadia Code',monospace;
+}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--font);background:var(--chrome);color:var(--tx);display:flex;flex-direction:column}
+
+/* ── Header ── */
+.hdr{height:42px;background:#111;border-bottom:1px solid #1e1e1e;display:flex;align-items:center;padding:0 16px;gap:10px;flex-shrink:0}
+.hdr-title{font-size:13px;font-weight:600;color:#ccc}
+.hdr-badge{font-size:10px;background:var(--tc-s);color:var(--tc);padding:2px 8px;border-radius:99px;border:1px solid rgba(217,119,87,.25)}
+.hdr-presets{margin-left:auto;display:flex;align-items:center;gap:5px}
+.hdr-plbl{font-size:10px;color:#444;margin-right:2px}
+.pb{font-size:10px;padding:3px 9px;border-radius:99px;border:1px solid #252525;cursor:pointer;color:#777;background:transparent;transition:all .12s;white-space:nowrap}
+.pb:hover{border-color:var(--tc);color:var(--tc)}
+.pb.active{border-color:var(--tc);background:var(--tc-s);color:var(--tc)}
+
+/* ── Body ── */
+.body{display:flex;flex:1;overflow:hidden}
+
+/* ── Left ── */
+.left{width:210px;flex-shrink:0;background:#111;border-right:1px solid #1e1e1e;display:flex;flex-direction:column;overflow:hidden}
+.left-sec{padding:8px 12px 5px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#444;flex-shrink:0}
+.steps{padding:4px 0;flex-shrink:0}
+.si{display:flex;align-items:center;gap:7px;padding:5px 10px;cursor:pointer;transition:background .1s}
+.si:hover{background:rgba(255,255,255,.03)}
+.si.active{background:var(--tc-s)}
+.sn{width:17px;height:17px;border-radius:50%;background:#1e1e1e;border:1px solid #2a2a2a;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#555;flex-shrink:0;transition:all .15s}
+.sn.done{background:var(--ok);border-color:var(--ok);color:#000}
+.si.active .sn{background:var(--tc);border-color:var(--tc);color:#000}
+.si-info{flex:1;min-width:0}
+.si-name{font-size:11px;font-weight:500;color:#aaa}
+.si.active .si-name{color:var(--tc)}
+.si-sub{font-size:9px;color:#444;margin-top:1px}
+
+/* ── Pipeline ── */
+.pipe{padding:8px 10px;border-top:1px solid #1a1a1a;flex-shrink:0}
+.pipe-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#444;margin-bottom:6px}
+.pipe-chips{display:flex;flex-direction:column;gap:2px}
+.pc{display:flex;align-items:center;gap:4px;padding:4px 6px;border-radius:4px;border:1px solid #1a1a1a;cursor:pointer;font-size:9px;transition:all .1s}
+.pc:hover{border-color:#2a2a2a;background:rgba(255,255,255,.02)}
+.pc.on{border-color:rgba(217,119,87,.25)}
+.pc-dot{width:4px;height:4px;border-radius:50%;background:#2a2a2a;flex-shrink:0}
+.pc.on .pc-dot{background:var(--tc)}
+.pc-cmd{color:#555;font-family:var(--mono)}
+.pc.on .pc-cmd{color:var(--tc)}
+.pc-ok{font-size:9px;color:var(--ok);margin-left:auto;display:none}
+.pc:hover .pc-ok{display:block}
+
+/* ── Center ── */
+.center{width:380px;flex-shrink:0;display:flex;flex-direction:column;border-right:1px solid #1e1e1e;overflow:hidden;background:var(--bg0)}
+.ctr-hdr{padding:13px 16px 9px;border-bottom:1px solid var(--bd);flex-shrink:0}
+.ctr-title{font-size:14px;font-weight:700;color:var(--tx)}
+.ctr-desc{font-size:11px;color:var(--tx3);margin-top:3px;line-height:1.5}
+.ctr-body{flex:1;overflow-y:auto;padding:13px 16px}
+.ctr-foot{padding:9px 16px;border-top:1px solid var(--bd);flex-shrink:0;display:flex;align-items:center;gap:7px}
+.nb{padding:5px 13px;border-radius:5px;font-size:11px;cursor:pointer;border:1px solid var(--bd);background:var(--bg2);color:var(--tx2);transition:all .15s}
+.nb:hover{border-color:var(--bd2);color:var(--tx)}
+.nb.pri{border-color:var(--tc);background:var(--tc-s);color:var(--tc)}
+.nb.pri:hover{background:rgba(217,119,87,.2)}
+.step-ctr{font-size:10px;color:#444;margin-left:auto}
+
+/* ── Form elements ── */
+.field{margin-bottom:12px}
+.fl{font-size:10px;font-weight:600;color:var(--tx2);margin-bottom:4px;display:flex;justify-content:space-between;align-items:center}
+.fl small{font-weight:400;color:#444;font-size:9px}
+input[type=text],textarea,select{width:100%;background:var(--bg2);border:1px solid var(--bd);border-radius:5px;padding:5px 8px;font-size:11px;color:var(--tx);outline:none;font-family:var(--font);transition:border-color .15s}
+textarea{resize:vertical;min-height:56px;line-height:1.5}
+input[type=text]:focus,textarea:focus,select:focus{border-color:var(--tc)}
+select option{background:var(--bg2)}
+.fsec{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#444;margin:13px 0 7px;border-top:1px solid var(--bd);padding-top:10px}
+.fsec:first-child{margin-top:0;border-top:none;padding-top:0}
+
+/* Emoji grid */
+.eg{display:flex;gap:4px;flex-wrap:wrap}
+.eo{width:28px;height:28px;border-radius:5px;border:1.5px solid var(--bd);background:var(--bg2);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .1s}
+.eo:hover{border-color:var(--bd2)}
+.eo.sel{border-color:var(--tc);background:var(--tc-s)}
+.eo-custom{width:52px;font-size:11px;text-align:center}
+
+/* Tier cards */
+.tc-cards{display:flex;flex-direction:column;gap:6px}
+.tc-card{padding:9px 11px;border-radius:7px;border:1.5px solid var(--bd);cursor:pointer;background:var(--bg2);transition:all .12s}
+.tc-card:hover{border-color:var(--bd2)}
+.tc-card.sel{border-color:var(--tc);background:var(--tc-s)}
+.tc-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px}
+.tc-name{font-size:12px;font-weight:700;color:var(--tx)}
+.tc-cost{font-size:10px;color:var(--ok);font-family:var(--mono)}
+.tc-models{font-size:9px;color:#555;font-family:var(--mono);line-height:1.6}
+
+/* Heartbeat slider */
+.hbs{display:flex;flex-direction:column;gap:4px}
+.hbs-lbls{display:flex;justify-content:space-between;font-size:9px;color:#555}
+input[type=range]{width:100%;accent-color:var(--tc)}
+
+/* Channel cards */
+.ch-cards{display:flex;flex-direction:column;gap:6px}
+.ch-card{border-radius:7px;border:1.5px solid var(--bd);background:var(--bg2);overflow:hidden;transition:border-color .15s}
+.ch-card.on{border-color:var(--tc)}
+.ch-hdr{display:flex;align-items:center;gap:7px;padding:7px 10px;cursor:pointer}
+.ch-ico{font-size:14px}
+.ch-name{font-size:12px;font-weight:600;color:#aaa;flex:1}
+.tog{width:26px;height:14px;background:#2a2a2a;border-radius:99px;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0}
+.tog.on{background:var(--tc)}
+.tog::after{content:'';position:absolute;width:8px;height:8px;background:#fff;border-radius:50%;top:3px;left:3px;transition:left .2s}
+.tog.on::after{left:15px}
+.ch-body{padding:0 10px 9px;border-top:1px solid var(--bd)}
+.ch-body.hide{display:none}
+.pol-row{display:flex;gap:4px;margin-top:7px}
+.pol-opt{flex:1;padding:4px;border-radius:4px;border:1px solid var(--bd);cursor:pointer;font-size:9px;text-align:center;color:#777;background:var(--bg0);transition:all .1s}
+.pol-opt:hover{border-color:#3a3a3a;color:#aaa}
+.pol-opt.sel{border-color:var(--tc);background:var(--tc-s);color:var(--tc)}
+
+/* Pattern cards */
+.pat-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.pat-card{padding:8px 10px;border-radius:6px;border:1.5px solid var(--bd);cursor:pointer;background:var(--bg2);transition:all .12s}
+.pat-card:hover{border-color:var(--bd2)}
+.pat-card.sel{border-color:var(--tc);background:var(--tc-s)}
+.pat-tag{font-size:10px;font-weight:800;color:var(--tc);font-family:var(--mono);margin-bottom:2px}
+.pat-name{font-size:11px;font-weight:600;color:#ccc}
+.pat-desc{font-size:9px;color:#555;margin-top:2px;line-height:1.4}
+
+/* Domain builder */
+.dom-list{display:flex;flex-direction:column;gap:5px;margin-bottom:7px}
+.dom-row{background:var(--bg2);border:1px solid var(--bd);border-radius:6px;padding:7px}
+.dom-top{display:flex;gap:4px;align-items:center;margin-bottom:5px}
+.dom-emoji{width:32px;text-align:center;font-size:13px}
+.dom-name{flex:1}
+.dom-model{width:75px;font-size:10px}
+.dom-kw{width:100%;font-size:10px}
+.dom-kw::placeholder{color:#333}
+.rm-btn{width:20px;height:20px;border-radius:4px;border:1px solid #2a2a2a;background:transparent;color:#555;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1;transition:all .1s;padding:0}
+.rm-btn:hover{border-color:var(--err);color:var(--err)}
+.add-btn{width:100%;padding:6px;border-radius:5px;border:1px dashed #222;background:transparent;color:#555;font-size:11px;cursor:pointer;transition:all .15s}
+.add-btn:hover{border-color:var(--tc);color:var(--tc)}
+#domain-builder{display:none}
+#domain-builder.show{display:block}
+
+/* Skills */
+.sk-list{display:flex;flex-direction:column;gap:3px;margin-bottom:7px}
+.sk-row{display:flex;align-items:center;gap:6px;padding:5px 7px;background:var(--bg2);border-radius:4px;border:1px solid var(--bd)}
+.sk-name{flex:1;font-size:11px;color:#bbb;font-family:var(--mono)}
+.sk-inv{font-size:9px;padding:2px 7px;border-radius:3px;border:1px solid var(--bd);cursor:pointer;color:#555;background:transparent;transition:all .1s;white-space:nowrap}
+.sk-inv.on{border-color:rgba(34,197,94,.4);color:var(--ok);background:rgba(34,197,94,.07)}
+.sk-add{display:flex;gap:5px}
+.sk-add input{flex:1}
+
+/* Pi patterns */
+.pi-list{display:flex;flex-direction:column;gap:5px}
+.pi-row{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg2);border-radius:6px;border:1px solid var(--bd);cursor:pointer;transition:border-color .15s}
+.pi-row:hover{border-color:var(--bd2)}
+.pi-row.on{border-color:var(--tc);background:var(--tc-s)}
+.pi-ico{font-size:14px;flex-shrink:0}
+.pi-info{flex:1}
+.pi-name{font-size:11px;font-weight:600;color:#aaa}
+.pi-row.on .pi-name{color:var(--tc)}
+.pi-desc{font-size:9px;color:#555;margin-top:1px}
+
+/* WS step tabs */
+.ws-tabs{display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap}
+.wst{padding:3px 9px;border-radius:4px;border:1px solid var(--bd);font-size:10px;cursor:pointer;color:#555;background:var(--bg2);transition:all .1s}
+.wst:hover{color:#999;border-color:#333}
+.wst.active{border-color:var(--tc);color:var(--tc);background:var(--tc-s)}
+.ws-pane{display:none}
+.ws-pane.show{display:block}
+
+/* HB rows */
+.hbr-list{display:flex;flex-direction:column;gap:4px;margin-bottom:7px}
+.hbr{display:flex;gap:5px;align-items:center}
+.hbr-time{width:62px;font-size:10px;font-family:var(--mono)}
+.hbr-task{flex:1;font-size:11px}
+
+/* ── Right ── */
+.right{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg0)}
+.rgt-hdr{display:flex;align-items:center;border-bottom:1px solid var(--bd);flex-shrink:0;background:var(--bg1)}
+.rt{padding:7px 13px;font-size:11px;font-weight:500;color:#666;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;white-space:nowrap}
+.rt:hover{color:#aaa}
+.rt.active{color:var(--tc);border-bottom-color:var(--tc)}
+.rgt-acts{margin-left:auto;padding:0 12px;display:flex;gap:6px;align-items:center}
+.act-btn{font-size:10px;padding:3px 10px;border-radius:4px;border:1px solid var(--bd);background:transparent;color:#777;cursor:pointer;transition:all .15s}
+.act-btn:hover{border-color:var(--tc);color:var(--tc)}
+.rgt-body{flex:1;overflow:auto;padding:16px}
+pre.code{margin:0;font-family:var(--mono);font-size:10.5px;line-height:1.75;white-space:pre-wrap;word-break:break-word}
+
+/* Prompt output */
+.prompt-area{border-top:1px solid var(--bd);padding:9px 14px;display:flex;gap:10px;align-items:flex-start;flex-shrink:0;background:#0c0d10}
+.prompt-txt{flex:1;font-size:11px;color:#666;line-height:1.7}
+.prompt-txt strong{color:#aaa}
+.copy-btn{flex-shrink:0;padding:5px 12px;border-radius:5px;border:1px solid var(--tc);background:transparent;color:var(--tc);font-size:11px;cursor:pointer;transition:all .15s}
+.copy-btn:hover{background:var(--tc-s)}
+
+/* Syntax colors */
+.ck{color:#D97757}
+.cs{color:#7ec8a0}
+.cn{color:#a8c0ff}
+.cc{color:#484848;font-style:italic}
+.cm{color:#c6a0f6;font-weight:700}
+.cbold{color:var(--tx);font-weight:600}
+.ctick{color:var(--tc)}
+
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-thumb{background:#2a2a2a;border-radius:2px}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-title">OpenClaw Workspace Wizard</div>
+  <div class="hdr-badge">consulting-intake</div>
+  <div class="hdr-presets">
+    <span class="hdr-plbl">Preset:</span>
+    <button class="pb active" onclick="applyPreset('greg')">🦁 Greg Trading</button>
+    <button class="pb" onclick="applyPreset('content')">✨ Content Creator</button>
+    <button class="pb" onclick="applyPreset('dev')">🔨 Dev Assistant</button>
+    <button class="pb" onclick="applyPreset('personal')">🌟 Personal</button>
+  </div>
+</div>
+
+<div class="body">
+
+<!-- LEFT -->
+<div class="left">
+  <div class="left-sec">Wizard Steps</div>
+  <div class="steps">
+    <div class="si active" onclick="goStep(1)" id="si1">
+      <div class="sn" id="sn1">1</div>
+      <div class="si-info"><div class="si-name">Persona</div><div class="si-sub">Name, emoji, vibe</div></div>
+    </div>
+    <div class="si" onclick="goStep(2)" id="si2">
+      <div class="sn" id="sn2">2</div>
+      <div class="si-info"><div class="si-name">Model Tier</div><div class="si-sub">Cheap / Mid / Pro</div></div>
+    </div>
+    <div class="si" onclick="goStep(3)" id="si3">
+      <div class="sn" id="sn3">3</div>
+      <div class="si-info"><div class="si-name">Channels</div><div class="si-sub">Telegram, Discord…</div></div>
+    </div>
+    <div class="si" onclick="goStep(4)" id="si4">
+      <div class="sn" id="sn4">4</div>
+      <div class="si-info"><div class="si-name">Agent Pattern</div><div class="si-sub">Single / Multi-domain</div></div>
+    </div>
+    <div class="si" onclick="goStep(5)" id="si5">
+      <div class="sn" id="sn5">5</div>
+      <div class="si-info"><div class="si-name">Skills & Pi</div><div class="si-sub">Skills + safety plugins</div></div>
+    </div>
+    <div class="si" onclick="goStep(6)" id="si6">
+      <div class="sn" id="sn6">6</div>
+      <div class="si-info"><div class="si-name">Workspace Files</div><div class="si-sub">SOUL, USER, HEARTBEAT</div></div>
+    </div>
+  </div>
+
+  <div class="pipe">
+    <div class="pipe-lbl">Consulting-Intake Pipeline</div>
+    <div class="pipe-chips">
+      <div class="pc" onclick="copyPipe('parse-transcript')"><div class="pc-dot"></div><div class="pc-cmd">parse-transcript</div><div class="pc-ok">copy</div></div>
+      <div class="pc on" onclick="copyPipe('build-workspace')"><div class="pc-dot"></div><div class="pc-cmd">build-workspace</div><div class="pc-ok">copy</div></div>
+      <div class="pc on" onclick="copyPipe('build-domain')"><div class="pc-dot"></div><div class="pc-cmd">build-domain</div><div class="pc-ok">copy</div></div>
+      <div class="pc" onclick="copyPipe('validate')"><div class="pc-dot"></div><div class="pc-cmd">validate</div><div class="pc-ok">copy</div></div>
+      <div class="pc" onclick="copyPipe('repo-setup')"><div class="pc-dot"></div><div class="pc-cmd">repo-setup</div><div class="pc-ok">copy</div></div>
+      <div class="pc" onclick="copyPipe('deploy')"><div class="pc-dot"></div><div class="pc-cmd">deploy</div><div class="pc-ok">copy</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- CENTER -->
+<div class="center">
+  <div class="ctr-hdr">
+    <div class="ctr-title" id="step-title">Step 1 — Persona</div>
+    <div class="ctr-desc" id="step-desc">Define your agent's identity. This populates IDENTITY.md and gives the agent its name and personality.</div>
+  </div>
+
+  <div class="ctr-body" id="ctr-body">
+
+    <!-- STEP 1 -->
+    <div id="step1" class="step-form">
+      <div class="field">
+        <div class="fl">Agent Name</div>
+        <input type="text" id="agentName" placeholder="e.g. Sebastian" oninput="readState();updatePreview()">
+      </div>
+      <div class="field">
+        <div class="fl">Emoji</div>
+        <div class="eg">
+          <div class="eo sel" onclick="pickEmoji(this,'🦁')">🦁</div>
+          <div class="eo" onclick="pickEmoji(this,'✨')">✨</div>
+          <div class="eo" onclick="pickEmoji(this,'🔨')">🔨</div>
+          <div class="eo" onclick="pickEmoji(this,'🌟')">🌟</div>
+          <div class="eo" onclick="pickEmoji(this,'🤖')">🤖</div>
+          <div class="eo" onclick="pickEmoji(this,'🦅')">🦅</div>
+          <div class="eo" onclick="pickEmoji(this,'🐉')">🐉</div>
+          <div class="eo" onclick="pickEmoji(this,'⚡')">⚡</div>
+          <input type="text" class="eo eo-custom" id="emojiCustom" placeholder="✏️" maxlength="2" oninput="cfg.agentEmoji=this.value;updatePreview()">
+        </div>
+      </div>
+      <div class="field">
+        <div class="fl">Personality / Vibe <small>2–3 sentences</small></div>
+        <textarea id="agentVibe" rows="3" placeholder="Disciplined and data-driven. Never emotional about market moves…" oninput="readState();updatePreview()"></textarea>
+      </div>
+      <div class="field">
+        <div class="fl">Timezone</div>
+        <select id="agentTimezone" onchange="readState();updatePreview()">
+          <option>America/New_York</option>
+          <option>America/Chicago</option>
+          <option>America/Denver</option>
+          <option>America/Los_Angeles</option>
+          <option>Europe/London</option>
+          <option>Europe/Berlin</option>
+          <option>Asia/Tokyo</option>
+          <option>Asia/Singapore</option>
+          <option>Australia/Sydney</option>
+          <option>UTC</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div id="step2" class="step-form" style="display:none">
+      <div class="tc-cards">
+        <div class="tc-card sel" id="tier-cheap" onclick="pickTier('cheap')">
+          <div class="tc-head"><span class="tc-name">Cheap</span><span class="tc-cost">~$2–15/mo</span></div>
+          <div class="tc-models">Brain: openrouter/deepseek/deepseek-chat-v3<br>Coder: z-ai/glm-4.7-20251222 ($0.06/M)</div>
+        </div>
+        <div class="tc-card" id="tier-mid" onclick="pickTier('mid')">
+          <div class="tc-head"><span class="tc-name">Mid</span><span class="tc-cost">~$20–60/mo</span></div>
+          <div class="tc-models">Brain: openrouter/google/gemini-2.0-flash-001<br>Coder: openrouter/deepseek/deepseek-chat-v3</div>
+        </div>
+        <div class="tc-card" id="tier-pro" onclick="pickTier('pro')">
+          <div class="tc-head"><span class="tc-name">Pro</span><span class="tc-cost">~$50–200/mo</span></div>
+          <div class="tc-models">Orch: openrouter/google/gemini-2.5-pro-preview<br>Reason: openrouter/deepseek/deepseek-r1<br>Code: openrouter/deepseek/deepseek-chat-v3</div>
+        </div>
+      </div>
+      <div class="fsec">Heartbeat Interval</div>
+      <div class="hbs">
+        <input type="range" id="hbSlider" min="0" max="3" step="1" value="1" oninput="cfg.hbInterval=+this.value;document.getElementById('hbVal').textContent=HB_VALS[cfg.hbInterval];updatePreview()">
+        <div class="hbs-lbls"><span>5m</span><span id="hbVal">15m</span><span>30m</span><span>1h</span></div>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div id="step3" class="step-form" style="display:none">
+      <div class="ch-cards">
+        <div class="ch-card on" id="ch-telegram">
+          <div class="ch-hdr" onclick="toggleChannel('telegram')">
+            <span class="ch-ico">💬</span>
+            <span class="ch-name">Telegram</span>
+            <div class="tog on" id="tog-telegram"></div>
+          </div>
+          <div class="ch-body" id="chb-telegram">
+            <div class="pol-row">
+              <div class="pol-opt sel" onclick="pickPolicy('telegram','allowlist',this)">allowlist</div>
+              <div class="pol-opt" onclick="pickPolicy('telegram','pairing',this)">pairing</div>
+              <div class="pol-opt" onclick="pickPolicy('telegram','open',this)">open</div>
+            </div>
+            <div id="telegram-ids-wrap" style="margin-top:6px">
+              <input type="text" id="telegramIds" placeholder="TELEGRAM_USER_ID" oninput="cfg.chTelegramIds=this.value;updatePreview()">
+            </div>
+          </div>
+        </div>
+        <div class="ch-card on" id="ch-discord">
+          <div class="ch-hdr" onclick="toggleChannel('discord')">
+            <span class="ch-ico">🎮</span>
+            <span class="ch-name">Discord</span>
+            <div class="tog on" id="tog-discord"></div>
+          </div>
+          <div class="ch-body" id="chb-discord">
+            <div class="pol-row">
+              <div class="pol-opt" onclick="pickPolicy('discord','allowlist',this)">allowlist</div>
+              <div class="pol-opt" onclick="pickPolicy('discord','pairing',this)">pairing</div>
+              <div class="pol-opt sel" onclick="pickPolicy('discord','open',this)">open</div>
+            </div>
+          </div>
+        </div>
+        <div class="ch-card" id="ch-whatsapp">
+          <div class="ch-hdr" onclick="toggleChannel('whatsapp')">
+            <span class="ch-ico">📱</span>
+            <span class="ch-name">WhatsApp</span>
+            <div class="tog" id="tog-whatsapp"></div>
+          </div>
+          <div class="ch-body hide" id="chb-whatsapp">
+            <div class="pol-row">
+              <div class="pol-opt sel" onclick="pickPolicy('whatsapp','allowlist',this)">allowlist</div>
+              <div class="pol-opt" onclick="pickPolicy('whatsapp','pairing',this)">pairing</div>
+              <div class="pol-opt" onclick="pickPolicy('whatsapp','open',this)">open</div>
+            </div>
+            <div style="margin-top:6px">
+              <input type="text" id="whatsappIds" placeholder="+15550001234" oninput="cfg.chWhatsappIds=this.value;updatePreview()">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div id="step4" class="step-form" style="display:none">
+      <div class="pat-grid">
+        <div class="pat-card" id="pat-A" onclick="pickPattern('A')">
+          <div class="pat-tag">A</div><div class="pat-name">Single Agent</div>
+          <div class="pat-desc">One agent, many skills. 1–2 domains.</div>
+        </div>
+        <div class="pat-card sel" id="pat-B" onclick="pickPattern('B')">
+          <div class="pat-tag">B</div><div class="pat-name">By Domain</div>
+          <div class="pat-desc">One agent per domain. Main orchestrates.</div>
+        </div>
+        <div class="pat-card" id="pat-C" onclick="pickPattern('C')">
+          <div class="pat-tag">C</div><div class="pat-name">By Context</div>
+          <div class="pat-desc">Personal / work split. Route by channel.</div>
+        </div>
+        <div class="pat-card" id="pat-D" onclick="pickPattern('D')">
+          <div class="pat-tag">D</div><div class="pat-name">Orchestrator</div>
+          <div class="pat-desc">Main delegates to specialized workers.</div>
+        </div>
+      </div>
+      <div id="domain-builder" class="show" style="margin-top:12px">
+        <div class="fsec" style="margin-top:0;border-top:none;padding-top:0">Domain Agents</div>
+        <div class="dom-list" id="dom-list"></div>
+        <button class="add-btn" onclick="addDomain()">+ Add Domain Agent</button>
+      </div>
+    </div>
+
+    <!-- STEP 5 -->
+    <div id="step5" class="step-form" style="display:none">
+      <div class="fl">Skills</div>
+      <div class="sk-list" id="sk-list"></div>
+      <div class="sk-add">
+        <input type="text" id="sk-input" placeholder="skill-name" onkeydown="if(event.key==='Enter')addSkill()">
+        <button class="nb" onclick="addSkill()">Add</button>
+      </div>
+      <div class="fsec">Pi Patterns</div>
+      <div class="pi-list">
+        <div class="pi-row on" id="pi-chain" onclick="togglePi('piAgentChain','pi-chain')">
+          <span class="pi-ico">🔗</span>
+          <div class="pi-info"><div class="pi-name">agent-chain</div><div class="pi-desc">Sequential plan-build-review workflows</div></div>
+          <div class="tog on" id="tog-chain"></div>
+        </div>
+        <div class="pi-row on" id="pi-pipi" onclick="togglePi('piPiPi','pi-pipi')">
+          <span class="pi-ico">🧠</span>
+          <div class="pi-info"><div class="pi-name">pi-pi</div><div class="pi-desc">Parallel expert meta-agent — builds new agents</div></div>
+          <div class="tog on" id="tog-pipi"></div>
+        </div>
+        <div class="pi-row on" id="pi-dmg" onclick="togglePi('piDamageControl','pi-dmg')">
+          <span class="pi-ico">🛡️</span>
+          <div class="pi-info"><div class="pi-name">damage-control</div><div class="pi-desc">Blocks dangerous commands + protects secrets</div></div>
+          <div class="tog on" id="tog-dmg"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 6 -->
+    <div id="step6" class="step-form" style="display:none">
+      <div class="ws-tabs">
+        <div class="wst active" onclick="pickWsTab('soul',this)">SOUL.md</div>
+        <div class="wst" onclick="pickWsTab('user',this)">USER.md</div>
+        <div class="wst" onclick="pickWsTab('hb',this)">HEARTBEAT.md</div>
+      </div>
+
+      <div class="ws-pane show" id="ws-soul">
+        <div class="field"><div class="fl">Core Truths <small>one per line</small></div>
+          <textarea id="soulTruths" rows="4" oninput="readState();updatePreview()"></textarea></div>
+        <div class="field"><div class="fl">Never Without Approval <small>one per line</small></div>
+          <textarea id="soulNever" rows="3" oninput="readState();updatePreview()"></textarea></div>
+        <div class="field"><div class="fl">Vibe (one line)</div>
+          <input type="text" id="soulVibe" oninput="readState();updatePreview()"></div>
+      </div>
+
+      <div class="ws-pane" id="ws-user">
+        <div class="field"><div class="fl">Name</div><input type="text" id="userName" oninput="readState();updatePreview()"></div>
+        <div class="field"><div class="fl">Pronouns</div><input type="text" id="userPronouns" placeholder="he/him" oninput="readState();updatePreview()"></div>
+        <div class="field"><div class="fl">Working Hours</div><input type="text" id="userHours" placeholder="7am–10pm ET" oninput="readState();updatePreview()"></div>
+        <div class="field"><div class="fl">Communication Style</div><textarea id="userStyle" rows="2" oninput="readState();updatePreview()"></textarea></div>
+      </div>
+
+      <div class="ws-pane" id="ws-hb">
+        <div class="fl" style="margin-bottom:7px">Scheduled Checks</div>
+        <div class="hbr-list" id="hbr-list"></div>
+        <button class="add-btn" onclick="addHbRow()">+ Add Heartbeat Task</button>
+      </div>
+    </div>
+
+  </div><!-- /ctr-body -->
+
+  <div class="ctr-foot">
+    <button class="nb" id="btn-prev" onclick="goStep(currentStep-1)" style="display:none">← Back</button>
+    <button class="nb pri" id="btn-next" onclick="goStep(currentStep+1)">Next →</button>
+    <span class="step-ctr" id="step-ctr">Step 1 of 6</span>
+  </div>
+</div><!-- /center -->
+
+<!-- RIGHT -->
+<div class="right">
+  <div class="rgt-hdr">
+    <div class="rt active" onclick="pickPreviewTab('openclaw.json',this)">openclaw.json</div>
+    <div class="rt" onclick="pickPreviewTab('SOUL.md',this)">SOUL.md</div>
+    <div class="rt" onclick="pickPreviewTab('IDENTITY.md',this)">IDENTITY.md</div>
+    <div class="rt" onclick="pickPreviewTab('HEARTBEAT.md',this)">HEARTBEAT.md</div>
+    <div class="rt" onclick="pickPreviewTab('AGENTS.md',this)">AGENTS.md</div>
+    <div class="rgt-acts">
+      <button class="act-btn" onclick="copyPreview()">Copy</button>
+      <button class="act-btn" onclick="exportAll()">Export All</button>
+    </div>
+  </div>
+  <div class="rgt-body"><pre class="code" id="preview-code"></pre></div>
+  <div class="prompt-area">
+    <div class="prompt-txt" id="prompt-txt"></div>
+    <button class="copy-btn" onclick="copyPrompt()">Copy Prompt</button>
+  </div>
+</div>
+
+</div><!-- /body -->
+
+<script>
+const HB_VALS = ['5m','15m','30m','1h'];
+
+const TIERS = {
+  cheap:{primary:'openrouter/deepseek/deepseek-chat-v3',fallbacks:['z-ai/glm-4.7-20251222'],subagent:'z-ai/glm-4.7-20251222',brain:'openrouter/deepseek/deepseek-chat-v3',muscle:'z-ai/glm-4.7-20251222',cost:'~$2–15/mo'},
+  mid:{primary:'openrouter/google/gemini-2.0-flash-001',fallbacks:['openrouter/deepseek/deepseek-chat-v3'],subagent:'openrouter/deepseek/deepseek-chat-v3',brain:'openrouter/google/gemini-2.0-flash-001',muscle:'openrouter/deepseek/deepseek-chat-v3',cost:'~$20–60/mo'},
+  pro:{primary:'openrouter/google/gemini-2.5-pro-preview',fallbacks:['openrouter/deepseek/deepseek-r1','openrouter/google/gemini-2.0-flash-001'],subagent:'openrouter/deepseek/deepseek-chat-v3',brain:'openrouter/google/gemini-2.5-pro-preview',muscle:'openrouter/deepseek/deepseek-chat-v3',cost:'~$50–200/mo'}
+};
+
+const PRESETS = {
+  greg:{agentName:'Sebastian',agentEmoji:'🦁',agentVibe:'Disciplined trading assistant. Concise and data-driven. Never emotional about market moves. Always shows both sides of a trade.',agentTimezone:'America/New_York',tier:'mid',hbInterval:1,chTelegram:true,chTelegramPolicy:'allowlist',chTelegramIds:'GREG_TELEGRAM_ID',chDiscord:true,chDiscordPolicy:'open',chDiscordIds:'',chWhatsapp:false,chWhatsappPolicy:'allowlist',chWhatsappIds:'',pattern:'B',domains:[{id:'discord-scraping',name:'Signal Scout',emoji:'📡',model:'muscle',keywords:'scrape,signal,discord,youtube'},{id:'portfolio-manager',name:'Risk Guard',emoji:'🛡️',model:'brain',keywords:'position,risk,stop-loss,drawdown'},{id:'back-tester',name:'Quant',emoji:'📊',model:'brain',keywords:'backtest,optimize,strategy,historical'},{id:'charting',name:'Chart Maker',emoji:'📈',model:'muscle',keywords:'chart,generate chart,visualize'}],skills:['scrape-discord','morning-brief','monitor-positions','manage-risk','run-backtest','generate-chart'],skillsInvocable:{'run-backtest':true,'generate-chart':true},piAgentChain:true,piPiPi:true,piDamageControl:true,soulTruths:"Never place trades autonomously — analysis only.\nQuality bar: if the signal isn't clear, say so.\nAlways show risk alongside reward.",soulNever:"Place orders without explicit human confirmation\nShare position sizes or account balances\nMake predictions with false certainty",soulVibe:'Concise. Data-first. Disciplined.',userName:'Greg',userTimezone:'America/New_York',userPronouns:'he/him',userHours:'7am–10pm ET',userStyle:'Direct, technical, prefers numbers over narrative',hbRows:[{time:'07:00',task:'Morning market brief — overnight moves, key levels for today'},{time:'16:30',task:'Post-close review — P&L summary, position changes'},{time:'*/15m',task:'Check open positions vs stop-loss levels'}]},
+  content:{agentName:'Muse',agentEmoji:'✨',agentVibe:'Creative research and writing assistant. Curious and expressive. Finds the angle that makes a story interesting — never just summarizes.',agentTimezone:'America/Los_Angeles',tier:'mid',hbInterval:2,chTelegram:true,chTelegramPolicy:'allowlist',chTelegramIds:'MY_TELEGRAM_ID',chDiscord:false,chDiscordPolicy:'open',chDiscordIds:'',chWhatsapp:false,chWhatsappPolicy:'allowlist',chWhatsappIds:'',pattern:'A',domains:[],skills:['research-trends','draft-newsletter','schedule-post','analyze-engagement'],skillsInvocable:{'research-trends':true,'draft-newsletter':true},piAgentChain:true,piPiPi:false,piDamageControl:true,soulTruths:"Lead with curiosity — what's surprising about this?\nNever publish without an explicit approval gate.\nOne strong angle beats three mediocre ones.",soulNever:"Publish or schedule content without approval\nReference people by name without verification\nGenerate filler content without a real angle",soulVibe:'Curious, expressive, opinionated when asked.',userName:'Creator',userTimezone:'America/Los_Angeles',userPronouns:'they/them',userHours:'9am–6pm PT',userStyle:'Collaborative, prefers options rather than single drafts',hbRows:[{time:'09:00',task:'Check trending topics in niche'},{time:'17:00',task:"Content performance review — what landed this week?"}]},
+  dev:{agentName:'Forge',agentEmoji:'🔨',agentVibe:'Systematic software engineering assistant. Plans before building, reviews everything, never commits shortcuts. Thinks in tests and interfaces.',agentTimezone:'America/New_York',tier:'pro',hbInterval:2,chTelegram:false,chTelegramPolicy:'allowlist',chTelegramIds:'',chDiscord:true,chDiscordPolicy:'allowlist',chDiscordIds:'DEV_DISCORD_ID',chWhatsapp:false,chWhatsappPolicy:'allowlist',chWhatsappIds:'',pattern:'B',domains:[{id:'planner',name:'Planner',emoji:'📋',model:'brain',keywords:'plan,design,architect,spec'},{id:'builder',name:'Builder',emoji:'⚙️',model:'muscle',keywords:'build,implement,code,write'},{id:'reviewer',name:'Reviewer',emoji:'🔍',model:'brain',keywords:'review,check,test,verify'}],skills:['agent-chain','pi-pi','create-pr','review-pr','run-tests'],skillsInvocable:{'agent-chain':true,'pi-pi':true,'create-pr':true,'review-pr':true,'run-tests':true},piAgentChain:true,piPiPi:true,piDamageControl:true,soulTruths:"Write minimal code — the best code is no code.\nNever commit directly to main.\nTests are not optional for business logic.",soulNever:"Push to main without a PR\nIgnore failing tests\nAdd dependencies without asking",soulVibe:'Precise, methodical, terse in responses.',userName:'Dev',userTimezone:'America/New_York',userPronouns:'he/him',userHours:'8am–8pm ET',userStyle:'Prefers structured output, code blocks, numbered steps',hbRows:[{time:'09:00',task:'Check open PRs and failing CI'},{time:'17:30',task:"EOD summary — what was built, what's blocked"}]},
+  personal:{agentName:'Aria',agentEmoji:'🌟',agentVibe:'Calm, proactive personal assistant. Helps organize thoughts, research topics, and stay on top of the day without being intrusive.',agentTimezone:'America/Chicago',tier:'cheap',hbInterval:3,chTelegram:true,chTelegramPolicy:'allowlist',chTelegramIds:'MY_TELEGRAM_ID',chDiscord:false,chDiscordPolicy:'open',chDiscordIds:'',chWhatsapp:false,chWhatsappPolicy:'allowlist',chWhatsappIds:'',pattern:'A',domains:[],skills:['morning-brief','task-manager','research-topic','summarize-docs'],skillsInvocable:{'task-manager':true,'research-topic':true,'summarize-docs':true},piAgentChain:true,piPiPi:false,piDamageControl:false,soulTruths:"Proactive but never intrusive — ask before doing.\nAlways surface options, not just recommendations.\nKeep it brief unless asked to elaborate.",soulNever:"Send messages to other people on my behalf\nSchedule events without confirmation\nAccess files outside the workspace",soulVibe:'Warm, calm, concise.',userName:'User',userTimezone:'America/Chicago',userPronouns:'',userHours:'8am–9pm CT',userStyle:'Conversational, prefers natural language',hbRows:[{time:'08:00',task:"Morning brief — top 3 priorities for today"},{time:'20:00',task:"Evening check — did we hit today's goals?"}]}
+};
+
+let cfg = JSON.parse(JSON.stringify(PRESETS.greg));
+let currentStep = 1;
+let previewTab = 'openclaw.json';
+
+// ── Generators ──────────────────────────────────────────────────────────────
+
+function generateOcJson(c) {
+  const t = TIERS[c.tier];
+  const hbVal = HB_VALS[c.hbInterval] || '15m';
+  const fallStr = t.fallbacks.map(f=>`"${f}"`).join(', ');
+  const domIds = c.domains.map(d=>`"${d.id}"`).join(', ');
+
+  let agentList = `      {
+        id: "main", default: true,
+        name: "${c.agentName}",
+        workspace: "~/.openclaw/workspace-main",
+        agentDir: "~/.openclaw/agents/main/agent",
+        model: "${t.brain}",
+        identity: { name: "${c.agentName}", emoji: "${c.agentEmoji}" },` +
+    (c.pattern==='B' && c.domains.length ? `\n        subagents: { allowAgents: [${domIds}] },` : '') + `\n      }`;
+
+  if (c.pattern==='B') {
+    c.domains.forEach(d => {
+      const m = d.model==='brain' ? t.brain : t.muscle;
+      agentList += `,\n      {\n        id: "${d.id}",\n        name: "${d.emoji} ${d.name}",\n        workspace: "~/.openclaw/workspace-${d.id}",\n        agentDir: "~/.openclaw/agents/${d.id}/agent",\n        model: "${m}",\n        identity: { name: "${d.name}" },\n      }`;
+    });
+  }
+
+  let bindings = '';
+  if (c.pattern==='B' && c.domains.length) {
+    const lines = c.domains.map(d=>{
+      const kws = d.keywords.split(',').map(k=>`"${k.trim()}"`).join(', ');
+      return `    { from: "main", to: "${d.id}", on: [${kws}] }`;
+    }).join(',\n');
+    bindings = `\n${lines}\n  `;
+  }
+
+  let channels = '';
+  if (c.chTelegram) channels += `    telegram: {\n      enabled: true,\n      dmPolicy: "${c.chTelegramPolicy}",` + (c.chTelegramPolicy==='allowlist'?`\n      allowFrom: ["${c.chTelegramIds||'TELEGRAM_ID'}"],`:'') + `\n    },\n`;
+  if (c.chDiscord)  channels += `    discord: {\n      enabled: true,\n      dmPolicy: "${c.chDiscordPolicy}",\n      guilds: { "*": { requireMention: false } },\n    },\n`;
+  if (c.chWhatsapp) channels += `    whatsapp: {\n      enabled: true,\n      dmPolicy: "${c.chWhatsappPolicy}",` + (c.chWhatsappPolicy==='allowlist'?`\n      allowFrom: ["${c.chWhatsappIds||'WHATSAPP_NUM'}"],`:'') + `\n    },\n`;
+
+  const skillParts = c.skills.map(s=>`      "${s}": { enabled: true${c.skillsInvocable[s]?', user_invocable: true':''} }`);
+  if (c.piAgentChain) skillParts.push(`      "agent-chain": { enabled: true, user_invocable: true }`);
+  if (c.piPiPi)       skillParts.push(`      "pi-pi": { enabled: true, user_invocable: true }`);
+
+  const plugParts = [];
+  if (c.piDamageControl) plugParts.push(`      "damage-control": { enabled: true }`);
+  if (c.chTelegram) plugParts.push(`      "telegram": { enabled: true }`);
+  if (c.chDiscord)  plugParts.push(`      "discord": { enabled: true }`);
+  if (c.chWhatsapp) plugParts.push(`      "whatsapp": { enabled: true }`);
+
+  return `// OpenClaw Configuration — ${c.agentName} ${c.agentEmoji}
+// Pattern ${c.pattern}: ${patLabel(c.pattern)}
+// Model tier: ${c.tier} (${t.cost})
+// Generated by OpenClaw Workspace Wizard
+
+{
+  // --- Gateway ---
+  gateway: {
+    port: 18789,
+    reload: { mode: "hybrid", debounceMs: 300 },
+    controlUi: { allowInsecureAuth: true },
+    auth: { mode: "token" },
+    tailscale: { mode: "off", resetOnExit: false },
+  },
+
+  // --- Logging (security) ---
+  logging: { redactSensitive: "tools" },
+
+  // --- Models: OpenRouter ---
+  models: { mode: "merge" },
+
+  // --- Environment ---
+  env: {
+    OPENROUTER_API_KEY: "set via: openclaw secrets set OPENROUTER_API_KEY <key>",
+    // Add domain secrets: openclaw secrets set KEY value
+  },
+
+  // --- Agents ---
+  agents: {
+    defaults: {
+      model: {
+        primary: "${t.primary}",
+        fallbacks: [${fallStr}],
+      },
+      heartbeat: {
+        every: "${hbVal}",
+        target: "main",
+        ackMaxChars: 300,
+      },
+      subagents: {
+        model: "${t.subagent}",
+        archiveAfterMinutes: 60,
+        maxSpawnDepth: 2,
+        maxChildrenPerAgent: 5,
+        maxConcurrent: 8,
+      },
+      contextPruning: {
+        mode: "cache-ttl",
+        ttl: "1h",
+        keepLastAssistants: 3,
+        softTrimRatio: 0.3,
+        minPrunableToolChars: 50000,
+      },
+      compaction: {
+        mode: "safeguard",
+        memoryFlush: { enabled: true, softThresholdTokens: 6000 },
+      },
+    },
+    list: [${agentList}
+    ],
+  },
+
+  // --- Bindings ---
+  bindings: [${bindings}],
+
+  // --- Channels ---
+  channels: {
+${channels}  },
+
+  // --- Sessions ---
+  session: {
+    dmScope: "per-channel-peer",
+    reset: { mode: "daily", atHour: 4 },
+    maintenance: { mode: "enforce", pruneAfter: "30d", maxEntries: 500 },
+  },
+
+  // --- Safety ---
+  tools: {
+    loopDetection: {
+      enabled: true,
+      historySize: 30,
+      warningThreshold: 10,
+      criticalThreshold: 20,
+      globalCircuitBreakerThreshold: 30,
+    },
+  },
+
+  // --- Commands ---
+  commands: { native: "auto", nativeSkills: "auto", restart: true },
+
+  // --- Plugins ---
+  plugins: {
+    entries: {
+${plugParts.join(',\n')},
+    },
+  },
+
+  // --- Skills ---
+  skills: {
+    entries: {
+${skillParts.join(',\n')},
+    },
+    load: { watch: true },
+  },
+
+  // --- Cron ---
+  cron: { enabled: true },
+}`;
+}
+
+function generateIdentityMd(c) {
+  const domSection = c.pattern==='B' && c.domains.length
+    ? `\n## Domain Team\n\n${c.domains.map(d=>`- **${d.emoji} ${d.name}** (\`${d.id}\`) — routes: ${d.keywords}`).join('\n')}`
+    : '';
+  return `# ${c.agentEmoji} ${c.agentName}
+
+## Identity
+
+- **Name**: ${c.agentName}
+- **Emoji**: ${c.agentEmoji}
+- **Timezone**: ${c.agentTimezone}
+- **Pattern**: ${c.pattern} — ${patLabel(c.pattern)}
+
+## Personality
+
+${c.agentVibe}
+
+## Communication Style
+
+${c.userStyle || 'Adaptive to user preferences.'}
+${domSection}
+`;
+}
+
+function generateSoulMd(c) {
+  const truths = c.soulTruths.split('\n').filter(Boolean).map(t=>`- ${t}`).join('\n');
+  const never  = c.soulNever.split('\n').filter(Boolean).map(n=>`- ${n}`).join('\n');
+  return `# Core Truths
+
+${truths}
+
+---
+
+# Never Without Explicit Approval
+
+${never}
+
+---
+
+# Vibe
+
+${c.soulVibe}
+
+---
+
+# Quality Bar
+
+If uncertain, say so clearly. Never fabricate to sound confident.
+Prefer brief, accurate responses over long, hedged ones.
+`;
+}
+
+function generateHeartbeatMd(c) {
+  const hbVal = HB_VALS[c.hbInterval] || '15m';
+  const rows = c.hbRows.map(r=>`| \`${r.time}\` | ${r.task} |`).join('\n');
+  return `# Heartbeat Schedule
+
+Agent checks in every **${hbVal}**. Scheduled tasks:
+
+| Time | Task |
+|------|------|
+${rows}
+
+## On Each Heartbeat
+
+1. Check pending messages or queued tasks
+2. Run scheduled task if time matches
+3. If nothing new, skip or send brief: "All clear — {datetime}"
+4. Never spam — omit status if last two were routine
+`;
+}
+
+function generateAgentsMd(c) {
+  const chans = [c.chTelegram&&`Telegram (${c.chTelegramPolicy})`,c.chDiscord&&`Discord (${c.chDiscordPolicy})`,c.chWhatsapp&&`WhatsApp (${c.chWhatsappPolicy})`].filter(Boolean).join(', ');
+  const domSec = c.pattern==='B' && c.domains.length
+    ? `\n## Domain Agents\n\n${c.domains.map(d=>`### ${d.emoji} ${d.name} (\`${d.id}\`)\n- **Model**: ${d.model==='brain'?'Brain (quality)':'Muscle (fast/cheap)'}\n- **Routes on**: ${d.keywords}\n- Can act autonomously within domain. Cannot initiate external comms.`).join('\n\n')}`
+    : '';
+  const piSec = [
+    c.piAgentChain && '- **agent-chain** — Sequential multi-step workflows (plan-build-review, scout-flow)',
+    c.piPiPi && '- **pi-pi** — Parallel expert meta-agent for building new agents on demand',
+    c.piDamageControl && '- **damage-control** — Blocks dangerous bash patterns, protects secret paths'
+  ].filter(Boolean).join('\n');
+
+  return `# Agent Configuration
+
+## Autonomy Level
+
+Pattern ${c.pattern}: ${patLabel(c.pattern)}
+
+The agent operates with **supervised autonomy**:
+- Can research, analyze, and draft without asking
+- Must ask before: sending external messages, spending money, modifying files outside workspace
+- Can spawn subagents and use tools freely within its domain
+${domSec}
+
+## Active Channels
+
+${chans || 'None configured'}
+
+## Session Behavior
+
+- Daily reset at 4am
+- Idle timeout: 7 days
+- Manual reset: \`/new\`, \`/reset\`, \`/clean\`
+
+## Pi Pattern Skills
+
+${piSec || '*(none enabled)*'}
+`;
+}
+
+function patLabel(p) {
+  return {A:'Single Agent, Many Skills',B:'Multi-Agent by Domain',C:'Multi-Agent by Context',D:'Orchestrator + Workers'}[p]||p;
+}
+
+// ── Syntax Highlight ─────────────────────────────────────────────────────────
+
+function hlJson(src) {
+  let s = src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  s = s.replace(/(\/\/[^\n]*)/g,'<span class="cc">$1</span>');
+  s = s.replace(/("[\w-]+")\s*:/g,'<span class="ck">$1</span>:');
+  s = s.replace(/:\s*("[^"]*")/g,': <span class="cs">$1</span>');
+  s = s.replace(/\b(true|false|null)\b/g,'<span class="cn">$1</span>');
+  s = s.replace(/:\s*(\d+)/g,': <span class="cn">$1</span>');
+  return s;
+}
+
+function hlMd(src) {
+  let lines = src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').split('\n');
+  return lines.map(l => {
+    if (/^#{1,3} /.test(l)) return `<span class="cm">${l}</span>`;
+    if (/^\|/.test(l)) return `<span style="color:#555">${l}</span>`;
+    if (/^---$/.test(l)) return `<span style="color:#333">${l}</span>`;
+    l = l.replace(/\*\*([^*]+)\*\*/g,'<span class="cbold">**$1**</span>');
+    l = l.replace(/`([^`]+)`/g,'<span class="ctick">`$1`</span>');
+    return l;
+  }).join('\n');
+}
+
+// ── Preview ───────────────────────────────────────────────────────────────────
+
+function getPreviewContent(tab) {
+  if (tab==='openclaw.json') return generateOcJson(cfg);
+  if (tab==='SOUL.md')       return generateSoulMd(cfg);
+  if (tab==='IDENTITY.md')   return generateIdentityMd(cfg);
+  if (tab==='HEARTBEAT.md')  return generateHeartbeatMd(cfg);
+  if (tab==='AGENTS.md')     return generateAgentsMd(cfg);
+  return '';
+}
+
+function updatePreview() {
+  const raw = getPreviewContent(previewTab);
+  const el = document.getElementById('preview-code');
+  const isJson = previewTab === 'openclaw.json';
+  el.innerHTML = isJson ? hlJson(raw) : hlMd(raw);
+  updatePrompt();
+}
+
+function updatePrompt() {
+  const chans = [cfg.chTelegram&&'Telegram',cfg.chDiscord&&'Discord',cfg.chWhatsapp&&'WhatsApp'].filter(Boolean).join('+');
+  const piList = [cfg.piAgentChain&&'agent-chain',cfg.piPiPi&&'pi-pi',cfg.piDamageControl&&'damage-control'].filter(Boolean).join(', ');
+  const slug = cfg.agentName.toLowerCase().replace(/[^a-z0-9]+/g,'-');
+  const today = new Date().toISOString().slice(0,10).replace(/-/g,'');
+  const txt = document.getElementById('prompt-txt');
+  txt.innerHTML = `Configure OpenClaw for <strong>${cfg.agentName}</strong> ${cfg.agentEmoji} — <strong>${cfg.tier}</strong> tier, Pattern <strong>${cfg.pattern}</strong> (${patLabel(cfg.pattern)}), ${chans||'no channels'}, ${cfg.skills.length} domain skills${piList?', Pi: '+piList:''}. Then run: <strong>/consulting-intake build-workspace ./session_output/${today}-${slug}/</strong>`;
+}
+
+// ── Step nav ──────────────────────────────────────────────────────────────────
+
+const STEP_META = [
+  {title:'Step 1 — Persona',desc:'Define your agent\'s identity. Populates IDENTITY.md and gives the agent its name and personality.'},
+  {title:'Step 2 — Model Tier',desc:'Choose a cost tier. Configures brain and muscle models, heartbeat interval, and subagent defaults.'},
+  {title:'Step 3 — Channels',desc:'Enable communication channels and set access policies for each.'},
+  {title:'Step 4 — Agent Pattern',desc:'Choose single or multi-agent architecture. Add domain agents for Pattern B.'},
+  {title:'Step 5 — Skills & Pi Patterns',desc:'Add domain skills and enable Pi infrastructure patterns (agent-chain, pi-pi, damage-control).'},
+  {title:'Step 6 — Workspace Files',desc:'Author SOUL.md (values + constraints), USER.md (profile), and HEARTBEAT.md (schedule).'}
+];
+
+function goStep(n) {
+  if (n<1||n>6) return;
+  readState();
+  document.getElementById('step'+currentStep).style.display='none';
+  document.getElementById('si'+currentStep).classList.remove('active');
+  document.getElementById('sn'+currentStep).classList.add('done');
+
+  currentStep = n;
+  document.getElementById('step'+n).style.display='block';
+  document.getElementById('si'+n).classList.add('active');
+
+  const m = STEP_META[n-1];
+  document.getElementById('step-title').textContent = m.title;
+  document.getElementById('step-desc').textContent = m.desc;
+  document.getElementById('step-ctr').textContent = `Step ${n} of 6`;
+  document.getElementById('btn-prev').style.display = n>1?'':'none';
+  document.getElementById('btn-next').textContent = n<6?'Next →':'✓ Done';
+
+  if (n===5) renderSkills();
+  if (n===6) renderHbRows();
+  updatePreview();
+}
+
+// ── State read/write ──────────────────────────────────────────────────────────
+
+function readState() {
+  const g = id => document.getElementById(id);
+  cfg.agentName = g('agentName').value || cfg.agentName;
+  cfg.agentVibe = g('agentVibe').value;
+  cfg.agentTimezone = g('agentTimezone').value;
+  cfg.soulTruths = g('soulTruths').value;
+  cfg.soulNever  = g('soulNever').value;
+  cfg.soulVibe   = g('soulVibe').value;
+  cfg.userName   = g('userName').value;
+  cfg.userPronouns = g('userPronouns').value;
+  cfg.userHours  = g('userHours').value;
+  cfg.userStyle  = g('userStyle').value;
+  readDomains();
+  readHbRows();
+}
+
+function populateForms() {
+  const s = (id,v)=>{ const el=document.getElementById(id); if(el) el.value=v; };
+  s('agentName', cfg.agentName);
+  s('agentVibe', cfg.agentVibe);
+  s('agentTimezone', cfg.agentTimezone);
+  s('soulTruths', cfg.soulTruths);
+  s('soulNever',  cfg.soulNever);
+  s('soulVibe',   cfg.soulVibe);
+  s('userName',   cfg.userName);
+  s('userPronouns', cfg.userPronouns);
+  s('userHours',  cfg.userHours);
+  s('userStyle',  cfg.userStyle);
+
+  // Emoji
+  document.querySelectorAll('.eo').forEach(e => {
+    e.classList.toggle('sel', e.textContent===cfg.agentEmoji);
+  });
+
+  // Tier
+  ['cheap','mid','pro'].forEach(t => document.getElementById('tier-'+t).classList.toggle('sel', t===cfg.tier));
+  document.getElementById('hbSlider').value = cfg.hbInterval;
+  document.getElementById('hbVal').textContent = HB_VALS[cfg.hbInterval];
+
+  // Channels
+  ['telegram','discord','whatsapp'].forEach(ch => {
+    const on = cfg['ch'+ch.charAt(0).toUpperCase()+ch.slice(1)];
+    document.getElementById('ch-'+ch).classList.toggle('on',on);
+    document.getElementById('tog-'+ch).classList.toggle('on',on);
+    const body = document.getElementById('chb-'+ch);
+    body.classList.toggle('hide',!on);
+    const pol = cfg['ch'+ch.charAt(0).toUpperCase()+ch.slice(1)+'Policy'];
+    body.querySelectorAll('.pol-opt').forEach(o => o.classList.toggle('sel', o.textContent===pol));
+  });
+  const tids=document.getElementById('telegramIds'); if(tids) tids.value=cfg.chTelegramIds||'';
+  const wids=document.getElementById('whatsappIds'); if(wids) wids.value=cfg.chWhatsappIds||'';
+
+  // Pattern
+  ['A','B','C','D'].forEach(p => document.getElementById('pat-'+p).classList.toggle('sel',p===cfg.pattern));
+  const db = document.getElementById('domain-builder');
+  db.classList.toggle('show', cfg.pattern==='B');
+  renderDomains();
+
+  // Pi toggles
+  setPiToggle('piAgentChain','pi-chain','tog-chain');
+  setPiToggle('piPiPi','pi-pipi','tog-pipi');
+  setPiToggle('piDamageControl','pi-dmg','tog-dmg');
+
+  renderSkills();
+  renderHbRows();
+}
+
+// ── Interactions ──────────────────────────────────────────────────────────────
+
+function pickEmoji(el,e) {
+  document.querySelectorAll('.eo').forEach(x=>x.classList.remove('sel'));
+  el.classList.add('sel');
+  cfg.agentEmoji = e;
+  updatePreview();
+}
+
+function pickTier(t) {
+  cfg.tier = t;
+  ['cheap','mid','pro'].forEach(x=>document.getElementById('tier-'+x).classList.toggle('sel',x===t));
+  updatePreview();
+}
+
+function toggleChannel(ch) {
+  const key = 'ch'+ch.charAt(0).toUpperCase()+ch.slice(1);
+  cfg[key] = !cfg[key];
+  const on = cfg[key];
+  document.getElementById('ch-'+ch).classList.toggle('on',on);
+  document.getElementById('tog-'+ch).classList.toggle('on',on);
+  document.getElementById('chb-'+ch).classList.toggle('hide',!on);
+  updatePreview();
+}
+
+function pickPolicy(ch,pol,el) {
+  const key = 'ch'+ch.charAt(0).toUpperCase()+ch.slice(1)+'Policy';
+  cfg[key] = pol;
+  el.closest('.pol-row').querySelectorAll('.pol-opt').forEach(o=>o.classList.toggle('sel',o===el));
+  const idsWrap = document.getElementById(ch+'-ids-wrap');
+  if(idsWrap) idsWrap.style.display = pol==='allowlist'?'':'none';
+  updatePreview();
+}
+
+function pickPattern(p) {
+  cfg.pattern = p;
+  ['A','B','C','D'].forEach(x=>document.getElementById('pat-'+x).classList.toggle('sel',x===p));
+  document.getElementById('domain-builder').classList.toggle('show',p==='B');
+  updatePreview();
+}
+
+function togglePi(key,rowId,togId) {
+  cfg[key] = !cfg[key];
+  document.getElementById(rowId).classList.toggle('on',cfg[key]);
+  document.getElementById(togId).classList.toggle('on',cfg[key]);
+  updatePreview();
+}
+
+function setPiToggle(key,rowId,togId) {
+  document.getElementById(rowId).classList.toggle('on',cfg[key]);
+  document.getElementById(togId).classList.toggle('on',cfg[key]);
+}
+
+// ── Domain builder ─────────────────────────────────────────────────────────────
+
+function renderDomains() {
+  const list = document.getElementById('dom-list');
+  if (!list) return;
+  list.innerHTML = cfg.domains.map((d,i) => `
+    <div class="dom-row" data-i="${i}">
+      <div class="dom-top">
+        <input class="eo-custom dom-emoji" type="text" value="${d.emoji}" maxlength="2" placeholder="📡" onchange="cfg.domains[${i}].emoji=this.value;updatePreview()">
+        <input class="dom-name" type="text" value="${d.name}" placeholder="Agent name" onchange="cfg.domains[${i}].name=this.value;cfg.domains[${i}].id=this.value.toLowerCase().replace(/[^a-z0-9]+/g,'-');updatePreview()">
+        <select class="dom-model" onchange="cfg.domains[${i}].model=this.value;updatePreview()">
+          <option value="brain" ${d.model==='brain'?'selected':''}>brain</option>
+          <option value="muscle" ${d.model==='muscle'?'selected':''}>muscle</option>
+        </select>
+        <button class="rm-btn" onclick="removeDomain(${i})">×</button>
+      </div>
+      <input class="dom-kw" type="text" value="${d.keywords}" placeholder="keywords,comma,separated" onchange="cfg.domains[${i}].keywords=this.value;updatePreview()">
+    </div>`).join('');
+}
+
+function addDomain() {
+  cfg.domains.push({id:'new-agent',name:'New Agent',emoji:'🤖',model:'muscle',keywords:'keyword1,keyword2'});
+  renderDomains();
+  updatePreview();
+}
+
+function removeDomain(i) {
+  cfg.domains.splice(i,1);
+  renderDomains();
+  updatePreview();
+}
+
+function readDomains() {
+  document.querySelectorAll('.dom-row').forEach((row,i) => {
+    if (!cfg.domains[i]) return;
+    const inputs = row.querySelectorAll('input[type=text]');
+    cfg.domains[i].emoji = inputs[0].value;
+    cfg.domains[i].name  = inputs[1].value;
+    cfg.domains[i].id    = inputs[1].value.toLowerCase().replace(/[^a-z0-9]+/g,'-');
+    cfg.domains[i].keywords = inputs[2].value;
+    const sel = row.querySelector('select');
+    if(sel) cfg.domains[i].model = sel.value;
+  });
+}
+
+// ── Skills ─────────────────────────────────────────────────────────────────────
+
+function renderSkills() {
+  const list = document.getElementById('sk-list');
+  if(!list) return;
+  list.innerHTML = cfg.skills.map(s => `
+    <div class="sk-row">
+      <span class="sk-name">${s}</span>
+      <button class="sk-inv ${cfg.skillsInvocable[s]?'on':''}" onclick="toggleInvocable('${s}',this)">${cfg.skillsInvocable[s]?'invocable':'user only'}</button>
+      <button class="rm-btn" onclick="removeSkill('${s}')">×</button>
+    </div>`).join('');
+}
+
+function addSkill() {
+  const inp = document.getElementById('sk-input');
+  const name = inp.value.trim().replace(/\s+/g,'-').toLowerCase();
+  if(!name || cfg.skills.includes(name)) return;
+  cfg.skills.push(name);
+  inp.value='';
+  renderSkills();
+  updatePreview();
+}
+
+function removeSkill(s) {
+  cfg.skills = cfg.skills.filter(x=>x!==s);
+  delete cfg.skillsInvocable[s];
+  renderSkills();
+  updatePreview();
+}
+
+function toggleInvocable(s,btn) {
+  cfg.skillsInvocable[s] = !cfg.skillsInvocable[s];
+  btn.classList.toggle('on',cfg.skillsInvocable[s]);
+  btn.textContent = cfg.skillsInvocable[s]?'invocable':'user only';
+  updatePreview();
+}
+
+// ── Heartbeat rows ──────────────────────────────────────────────────────────────
+
+function renderHbRows() {
+  const list = document.getElementById('hbr-list');
+  if(!list) return;
+  list.innerHTML = cfg.hbRows.map((r,i)=>`
+    <div class="hbr">
+      <input class="hbr-time" type="text" value="${r.time}" placeholder="07:00" onchange="cfg.hbRows[${i}].time=this.value;updatePreview()">
+      <input class="hbr-task" type="text" value="${r.task}" placeholder="Task description" onchange="cfg.hbRows[${i}].task=this.value;updatePreview()">
+      <button class="rm-btn" onclick="removeHbRow(${i})">×</button>
+    </div>`).join('');
+}
+
+function addHbRow() {
+  cfg.hbRows.push({time:'09:00',task:'New scheduled check'});
+  renderHbRows();
+  updatePreview();
+}
+
+function removeHbRow(i) {
+  cfg.hbRows.splice(i,1);
+  renderHbRows();
+  updatePreview();
+}
+
+function readHbRows() {
+  document.querySelectorAll('.hbr').forEach((row,i) => {
+    if(!cfg.hbRows[i]) return;
+    const inps = row.querySelectorAll('input[type=text]');
+    cfg.hbRows[i].time = inps[0].value;
+    cfg.hbRows[i].task = inps[1].value;
+  });
+}
+
+// ── Preview tabs ───────────────────────────────────────────────────────────────
+
+function pickPreviewTab(tab, el) {
+  previewTab = tab;
+  document.querySelectorAll('.rt').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  updatePreview();
+}
+
+// ── Workspace step tabs ────────────────────────────────────────────────────────
+
+function pickWsTab(tab, el) {
+  document.querySelectorAll('.wst').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.ws-pane').forEach(p=>p.classList.remove('show'));
+  document.getElementById('ws-'+tab).classList.add('show');
+}
+
+// ── Presets ────────────────────────────────────────────────────────────────────
+
+function applyPreset(name) {
+  cfg = JSON.parse(JSON.stringify(PRESETS[name]));
+  document.querySelectorAll('.pb').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+  populateForms();
+  updatePreview();
+}
+
+// ── Clipboard ──────────────────────────────────────────────────────────────────
+
+function copyPreview() {
+  navigator.clipboard.writeText(getPreviewContent(previewTab)).then(()=>{
+    const btn = event.target;
+    const orig = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(()=>btn.textContent=orig,1500);
+  });
+}
+
+function exportAll() {
+  const all = ['openclaw.json','SOUL.md','IDENTITY.md','HEARTBEAT.md','AGENTS.md']
+    .map(t=>`\n${'='.repeat(60)}\n// ${t}\n${'='.repeat(60)}\n\n${getPreviewContent(t)}`)
+    .join('\n');
+  navigator.clipboard.writeText(all.trim()).then(()=>{
+    const btn = event.target;
+    btn.textContent='Exported!';
+    setTimeout(()=>btn.textContent='Export All',1500);
+  });
+}
+
+function copyPrompt() {
+  const txt = document.getElementById('prompt-txt').textContent;
+  navigator.clipboard.writeText(txt).then(()=>{
+    const btn = event.target;
+    btn.textContent='Copied!';
+    setTimeout(()=>btn.textContent='Copy Prompt',1500);
+  });
+}
+
+function copyPipe(cmd) {
+  const slug = cfg.agentName.toLowerCase().replace(/[^a-z0-9]+/g,'-');
+  const today = new Date().toISOString().slice(0,10).replace(/-/g,'');
+  const map = {
+    'parse-transcript':  `/consulting-intake parse-transcript ./transcripts/${today}-${slug}.md`,
+    'build-workspace':   `/consulting-intake build-workspace ./session_output/${today}-${slug}/`,
+    'build-domain':      `/consulting-intake build-domain ./session_output/${today}-${slug}/domains/`,
+    'validate':          `/consulting-intake validate ./client-sessions/${today}-${slug}/`,
+    'repo-setup':        `/consulting-intake repo-setup ./client-sessions/${today}-${slug}/`,
+    'deploy':            `/consulting-intake deploy ./client-sessions/${today}-${slug}/`
+  };
+  navigator.clipboard.writeText(map[cmd]||cmd).then(()=>{
+    // Brief visual feedback
+    const chips = document.querySelectorAll('.pc');
+    chips.forEach(c => { if(c.querySelector('.pc-cmd').textContent===cmd) { c.style.borderColor='var(--ok)'; setTimeout(()=>c.style.borderColor='',1200); }});
+  });
+}
+
+// ── Init ───────────────────────────────────────────────────────────────────────
+
+populateForms();
+updatePreview();
+</script>
+</body>
+</html>

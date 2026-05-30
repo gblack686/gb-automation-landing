@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenClaw Markdown Viewer — Catalog Playground</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --tc: #D97757; --tc-h: #c06840; --tc-s: rgba(217,119,87,0.12);
+  --cr: #F3F1E7; --cr-d: #e8e6d9;
+  --bg0: #12141a; --bg1: #14161d; --bg2: #1a1d25; --bg3: #262a35;
+  --bd: #27272a; --bd2: #3f3f46;
+  --tx: #e4e4e7; --tx2: #a1a1aa; --tx3: #71717a;
+  --ok: #22c55e;
+  --chrome: #0d0e12; --cb: #1e1e1e;
+  --font: system-ui,-apple-system,sans-serif;
+  --mono: 'Fira Code','Cascadia Code',monospace;
+}
+body { font-family: var(--font); background: var(--chrome); color: var(--tx); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+/* HEADER */
+.hdr { height: 42px; background: #111; border-bottom: 1px solid #222; display: flex; align-items: center; padding: 0 16px; gap: 12px; flex-shrink: 0; }
+.hdr-title { font-size: 13px; font-weight: 600; color: #bbb; }
+.hdr-badge { font-size: 10px; background: var(--tc-s); color: var(--tc); padding: 2px 8px; border-radius: 99px; border: 1px solid rgba(217,119,87,0.25); }
+.hdr-sub { font-size: 11px; color: #555; margin-left: auto; }
+
+/* BODY */
+.body { display: flex; flex: 1; overflow: hidden; }
+
+/* CONTROLS */
+.ctrl { width: 252px; flex-shrink: 0; background: #111; border-right: 1px solid #222; overflow-y: auto; padding: 14px 12px; display: flex; flex-direction: column; gap: 18px; }
+.cs { display: flex; flex-direction: column; gap: 8px; }
+.cl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: #555; margin-bottom: 2px; }
+
+/* Variant cards */
+.vc-cards { display: flex; flex-direction: column; gap: 5px; }
+.vc-card { padding: 9px 10px; border-radius: 7px; border: 1.5px solid #2a2a2a; cursor: pointer; background: #0d0d0d; transition: all .12s; }
+.vc-card:hover { border-color: #444; }
+.vc-card.active { border-color: var(--tc); background: var(--tc-s); }
+.vc-tag { font-size: 9px; font-weight: 800; color: var(--tc); font-family: var(--mono); letter-spacing: .08em; }
+.vc-name { font-size: 12px; font-weight: 600; color: #ccc; margin: 1px 0; }
+.vc-desc { font-size: 10px; color: #666; line-height: 1.4; }
+.vc-diag { margin-top: 7px; display: flex; gap: 2px; height: 22px; border-radius: 3px; overflow: hidden; border: 1px solid #2a2a2a; }
+.vd { background: #1a1a1a; display: flex; align-items: center; justify-content: center; font-size: 7px; color: #444; font-family: var(--mono); border-right: 1px solid #222; }
+.vd:last-child { border-right: none; }
+
+/* Presets */
+.presets { display: flex; flex-wrap: wrap; gap: 5px; }
+.preset { font-size: 10px; padding: 3px 9px; border-radius: 99px; border: 1px solid #2a2a2a; cursor: pointer; color: #888; background: transparent; transition: all .12s; }
+.preset:hover { border-color: var(--tc); color: var(--tc); }
+.preset.active { border-color: var(--tc); background: var(--tc-s); color: var(--tc); }
+
+/* Toggle */
+.trow { display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: #999; }
+.tog { width: 30px; height: 16px; background: #333; border-radius: 99px; position: relative; cursor: pointer; transition: background .2s; flex-shrink: 0; }
+.tog.on { background: var(--tc); }
+.tog::after { content: ''; position: absolute; width: 10px; height: 10px; background: #fff; border-radius: 50%; top: 3px; left: 3px; transition: left .2s; }
+.tog.on::after { left: 17px; }
+
+/* Slider */
+.srow { display: flex; flex-direction: column; gap: 3px; }
+.slbl { display: flex; justify-content: space-between; font-size: 10px; color: #888; }
+input[type=range] { width: 100%; accent-color: var(--tc); }
+
+/* MAIN */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.prev-wrap { flex: 1; padding: 14px; display: flex; flex-direction: column; gap: 0; overflow: hidden; }
+.prev-lbl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: #444; margin-bottom: 7px; }
+.prev-frame { flex: 1; border-radius: 10px; border: 1px solid #2a2a2a; overflow: hidden; background: var(--bg0); min-height: 0; position: relative; }
+
+/* PROMPT */
+.prompt-area { border-top: 1px solid #1e1e1e; padding: 10px 14px; display: flex; gap: 10px; align-items: flex-start; flex-shrink: 0; background: #0e0e0e; }
+.prompt-txt { flex: 1; font-size: 11px; color: #888; line-height: 1.7; }
+.prompt-txt strong { color: #bbb; }
+.copy-btn { flex-shrink: 0; padding: 5px 12px; border-radius: 5px; border: 1px solid var(--tc); background: transparent; color: var(--tc); font-size: 11px; cursor: pointer; white-space: nowrap; transition: all .15s; }
+.copy-btn:hover { background: var(--tc-s); }
+
+/* ========== DASHBOARD INTERNALS ========== */
+.oc { width: 100%; height: 100%; display: flex; flex-direction: column; font-family: 'Space Grotesk',system-ui,sans-serif; background: var(--bg0); color: var(--tx); overflow: hidden; font-size: 12px; }
+
+/* Topbar */
+.oc-top { height: 38px; background: var(--bg1); border-bottom: 1px solid var(--bd); display: flex; align-items: center; padding: 0 10px; gap: 10px; flex-shrink: 0; }
+.oc-logo { font-size: 11px; font-weight: 700; color: var(--tc); display: flex; align-items: center; gap: 5px; }
+.oc-logo small { color: #666; font-weight: 400; }
+.oc-srch { height: 22px; background: var(--bg2); border: 1px solid var(--bd); border-radius: 5px; padding: 0 7px; font-size: 10px; color: var(--tx); outline: none; width: 180px; }
+.oc-srch::placeholder { color: var(--tx3); }
+.oc-scan { margin-left: auto; font-size: 10px; color: var(--tx3); display: flex; align-items: center; gap: 4px; }
+.sdot { width: 5px; height: 5px; border-radius: 50%; background: var(--ok); animation: sdot 2s infinite; }
+@keyframes sdot { 0%,100%{opacity:1}50%{opacity:.3} }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 3px; height: 3px; }
+::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+
+/* ── Variant A: 3-panel ── */
+.va { display: grid; grid-template-columns: 160px 200px 1fr; flex: 1; overflow: hidden; min-height: 0; }
+.va-tree { background: var(--bg1); border-right: 1px solid var(--bd); overflow-y: auto; padding: 6px 0; }
+.va-cat { border-right: 1px solid var(--bd); overflow-y: auto; padding: 6px; display: flex; flex-direction: column; gap: 3px; }
+.va-prev { overflow-y: auto; padding: 14px; }
+
+.ti { display: flex; align-items: center; gap: 4px; padding: 2px 6px; cursor: pointer; border-radius: 3px; margin: 0 3px; color: #aaa; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 10px; }
+.ti:hover { background: rgba(255,255,255,.04); }
+.ti.sel { background: var(--tc-s); color: var(--tc); }
+.ti.dir { color: #c4a265; font-weight: 600; }
+.ti-ind { padding-left: 10px; }
+.ti-ind2 { padding-left: 18px; }
+
+.cc { padding: 7px 8px; border-radius: 5px; border: 1px solid var(--bd); cursor: pointer; background: var(--bg2); transition: all .1s; }
+.cc:hover { border-color: var(--bd2); }
+.cc.sel { border-color: var(--tc); background: var(--tc-s); }
+.cc-n { font-size: 11px; font-weight: 600; color: var(--tx); margin-bottom: 1px; }
+.cc-p { font-size: 9px; color: #555; font-family: var(--mono); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cc-m { display: flex; gap: 6px; margin-top: 3px; font-size: 9px; color: #666; }
+.cc-tag { font-size: 8px; background: var(--tc-s); color: var(--tc); padding: 0 4px; border-radius: 2px; }
+
+/* ── Variant B: 2-panel ── */
+.vb { display: grid; grid-template-columns: 260px 1fr; flex: 1; overflow: hidden; min-height: 0; }
+.vb-side { background: var(--bg1); border-right: 1px solid var(--bd); display: flex; flex-direction: column; overflow: hidden; }
+.vb-sec { padding: 5px 10px; border-bottom: 1px solid var(--bd); font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: #555; }
+.vb-treewrap { max-height: 160px; overflow-y: auto; padding: 3px 0; }
+.vb-list { flex: 1; overflow-y: auto; }
+.vb-row { display: flex; align-items: center; gap: 7px; padding: 5px 10px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,.02); transition: background .1s; }
+.vb-row:hover { background: rgba(255,255,255,.03); }
+.vb-row.sel { background: var(--tc-s); border-left: 2px solid var(--tc); }
+.vb-ri { flex: 1; min-width: 0; }
+.vb-rn { font-size: 11px; font-weight: 500; color: #d4d4d8; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vb-rp { font-size: 9px; color: #555; font-family: var(--mono); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vb-rm { font-size: 9px; color: #555; white-space: nowrap; }
+.vb-main { overflow-y: auto; padding: 18px 24px; }
+.vb-bc { font-size: 10px; color: #555; margin-bottom: 14px; font-family: var(--mono); display: flex; align-items: center; gap: 3px; }
+.vb-bc .act { color: var(--tc); }
+
+/* ── Variant C: Tabs ── */
+.vct { display: flex; flex-direction: column; flex: 1; overflow: hidden; min-height: 0; }
+.vct-tabs { display: flex; border-bottom: 1px solid var(--bd); background: var(--bg1); flex-shrink: 0; }
+.vct-tab { padding: 7px 14px; font-size: 11px; font-weight: 500; color: #777; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all .15s; display: flex; align-items: center; gap: 4px; }
+.vct-tab:hover { color: #bbb; }
+.vct-tab.active { color: var(--tc); border-bottom-color: var(--tc); }
+.vct-body { flex: 1; overflow-y: auto; padding: 10px; }
+
+/* C grid */
+.cg { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 7px; }
+.cg-tile { padding: 10px 8px; border-radius: 7px; border: 1px solid var(--bd); background: var(--bg2); cursor: pointer; text-align: center; transition: all .12s; }
+.cg-tile:hover { border-color: var(--bd2); transform: translateY(-1px); }
+.cg-tile.sel { border-color: var(--tc); background: var(--tc-s); }
+.cg-ico { font-size: 20px; margin-bottom: 5px; }
+.cg-n { font-size: 10px; font-weight: 600; color: #ccc; word-break: break-word; line-height: 1.3; }
+.cg-m { font-size: 8px; color: #555; margin-top: 2px; }
+
+/* C tree */
+.ct-folder { margin-bottom: 2px; }
+.ct-fhdr { display: flex; align-items: center; gap: 5px; padding: 4px 7px; cursor: pointer; border-radius: 5px; color: #c4a265; font-weight: 600; font-size: 11px; }
+.ct-fhdr:hover { background: rgba(255,255,255,.04); }
+.ct-fch { padding-left: 16px; border-left: 1px solid var(--bd); margin-left: 10px; margin-top: 2px; }
+.ct-file { display: flex; align-items: center; gap: 5px; padding: 3px 7px; cursor: pointer; border-radius: 5px; color: #aaa; font-size: 10px; }
+.ct-file:hover { background: rgba(255,255,255,.04); color: #ddd; }
+.ct-file.sel { color: var(--tc); background: var(--tc-s); }
+
+/* Agent buttons */
+.agent-btn { padding: 6px 10px; border-radius: 6px; border: 1.5px solid #2a2a2a; cursor: pointer; background: #0d0d0d; font-size: 11px; color: #888; transition: all .12s; display: flex; align-items: center; gap: 5px; }
+.agent-btn:hover { border-color: #444; color: #ccc; }
+.agent-btn.active { border-color: var(--tc); background: var(--tc-s); color: var(--cr); }
+
+/* Agent badge in topbar */
+.oc-agent-badge { font-size: 9px; padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(217,119,87,.25); background: var(--tc-s); color: var(--tc); font-weight: 700; }
+.oc-agent-badge.yt { border-color: rgba(99,173,255,.25); background: rgba(99,173,255,.1); color: #63adff; }
+
+/* Markdown renderer */
+.md { font-size: 11px; line-height: 1.75; color: #ccc; }
+.md h1 { font-size: 16px; font-weight: 700; color: var(--tx); margin-bottom: 10px; border-bottom: 1px solid var(--bd); padding-bottom: 7px; }
+.md h2 { font-size: 13px; font-weight: 700; color: #d4d4d8; margin: 14px 0 6px; }
+.md h3 { font-size: 12px; font-weight: 600; color: var(--tx2); margin: 10px 0 4px; }
+.md p { margin-bottom: 8px; }
+.md code { font-family: var(--mono); font-size: 10px; background: rgba(255,255,255,.06); padding: 1px 4px; border-radius: 3px; color: var(--tc); }
+.md pre { background: rgba(0,0,0,.4); border: 1px solid var(--bd); border-radius: 5px; padding: 8px; margin: 8px 0; overflow-x: auto; }
+.md pre code { background: none; color: #a8c0ff; font-size: 10px; padding: 0; }
+.md ul,.md ol { margin-left: 16px; margin-bottom: 8px; }
+.md li { margin-bottom: 3px; }
+.md blockquote { border-left: 2px solid var(--tc); padding-left: 10px; color: #888; margin: 8px 0; font-style: italic; }
+.md hr { border: none; border-top: 1px solid var(--bd); margin: 12px 0; }
+.md strong { color: var(--tx); font-weight: 600; }
+.md a { color: var(--tc); text-decoration: none; }
+.md table { border-collapse: collapse; width: 100%; margin: 8px 0; font-size: 10px; }
+.md th { background: var(--bg2); padding: 5px 8px; text-align: left; border: 1px solid var(--bd); color: var(--tx2); }
+.md td { padding: 4px 8px; border: 1px solid var(--bd); }
+.md .badge { display: inline-block; font-size: 9px; background: var(--tc-s); color: var(--tc); padding: 1px 5px; border-radius: 3px; border: 1px solid rgba(217,119,87,.25); }
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-title">OpenClaw Workspace Viewer</div>
+  <div class="hdr-badge">Catalog Playground</div>
+  <div class="hdr-sub">Pick a layout variant → copy the prompt</div>
+</div>
+
+<div class="body">
+  <!-- CONTROLS -->
+  <div class="ctrl">
+
+    <div class="cs">
+      <div class="cl">Layout Variant</div>
+      <div class="vc-cards" id="variant-cards"></div>
+    </div>
+
+    <div class="cs">
+      <div class="cl">Presets</div>
+      <div class="presets" id="presets"></div>
+    </div>
+
+    <div class="cs">
+      <div class="cl">Display</div>
+      <div style="display:flex;flex-direction:column;gap:7px">
+        <div class="trow">
+          <span>Search bar</span>
+          <div class="tog on" id="tog-search" onclick="toggleState('showSearch',this)"></div>
+        </div>
+        <div class="trow">
+          <span>Scan indicator</span>
+          <div class="tog on" id="tog-scan" onclick="toggleState('showScan',this)"></div>
+        </div>
+        <div class="trow">
+          <span>File metadata</span>
+          <div class="tog on" id="tog-meta" onclick="toggleState('showMeta',this)"></div>
+        </div>
+        <div class="trow">
+          <span>Folder counts</span>
+          <div class="tog" id="tog-counts" onclick="toggleState('showCounts',this)"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="cl">Scan Interval</div>
+      <div class="srow">
+        <div class="slbl"><span>Auto-refresh</span><span id="lbl-interval">30s</span></div>
+        <input type="range" min="5" max="120" step="5" value="30" oninput="setScanInterval(this.value)">
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="cl">Agent Filter</div>
+      <div style="display:flex;flex-direction:column;gap:5px">
+        <div class="agent-btn active" id="af-all" onclick="setAgentFilter('all')">🌐 All Agents</div>
+        <div class="agent-btn" id="af-main" onclick="setAgentFilter('main')">📊 Sebastian <span style="color:#555;font-size:9px">/ main</span></div>
+        <div class="agent-btn" id="af-youtube" onclick="setAgentFilter('youtube')">📺 Scout <span style="color:#555;font-size:9px">/ youtube</span></div>
+      </div>
+    </div>
+
+    <div class="cs">
+      <div class="cl">Active File</div>
+      <select id="file-select" style="width:100%;background:#111;border:1px solid #2a2a2a;color:#bbb;padding:4px 6px;border-radius:5px;font-size:11px;outline:none" onchange="state.selectedFile=this.value;updateAll()"></select>
+    </div>
+
+    <div class="cs">
+      <div class="cl">Active Tab (Variant C)</div>
+      <div style="display:flex;gap:5px">
+        <div class="preset" id="tab-files" onclick="setTab('files')" style="flex:1;text-align:center">Files</div>
+        <div class="preset" id="tab-tree" onclick="setTab('tree')" style="flex:1;text-align:center">Tree</div>
+        <div class="preset" id="tab-preview" onclick="setTab('preview')" style="flex:1;text-align:center">Preview</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="prev-wrap">
+      <div class="prev-lbl" id="prev-lbl">VARIANT A — THREE-PANEL (TREE | CATALOG | PREVIEW)</div>
+      <div class="prev-frame" id="preview-frame"></div>
+    </div>
+    <div class="prompt-area">
+      <div class="prompt-txt" id="prompt-txt"></div>
+      <button class="copy-btn" id="copy-btn" onclick="copyPrompt()">Copy Prompt</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════
+const state = {
+  variant: 'A',
+  selectedFile: 'SOUL.md',
+  activeTab: 'files',
+  agentFilter: 'all',
+  showSearch: true,
+  showScan: true,
+  showMeta: true,
+  showCounts: false,
+  scanInterval: 30,
+  scanAge: 4,
+  searchQuery: '',
+};
+
+// ═══════════════════════════════════════════════════════════
+// MOCK WORKSPACE DATA
+// ═══════════════════════════════════════════════════════════
+const FILES = [
+  { name:'SOUL.md', path:'SOUL.md', size:'2.1 KB', modified:'2 min ago', tag:'workspace', agent:'main',
+    content:`# Soul\n\n## Core Truths\n1. **Proactive intelligence** — Don't wait to be asked. If you spot an edge case, flag it.\n2. **Quality bar** — 94/100 or better. Never send draft-quality output.\n3. **Observable** — Log decisions. Explain reasoning when asked.\n4. **Edge-first** — Always handle the unhappy path before shipping.\n\n## Boundaries\n- **Never execute a trade** without explicit approval\n- **Never reset session memory** without being explicitly asked\n- **Never expose API keys** in any output or log\n\n## Vibe\nProfessional, sharp, data-driven. No filler words. Direct answers with supporting data.\n\n> "The best analysis is the one that changes the decision."`
+  },
+  { name:'USER.md', path:'USER.md', size:'1.4 KB', modified:'2 min ago', tag:'workspace', agent:'main',
+    content:`# User Profile\n\n**Name:** Greg  \n**Timezone:** PST (Los Angeles)  \n**Pronouns:** he/him  \n**Working Hours:** 8am–11pm PST  \n**Primary Channel:** Telegram\n\n## Communication Preferences\n- Concise bullet points over long paragraphs\n- Python code preferred\n- Markdown tables for data\n- Emojis: yes, tastefully\n\n## Current Focus\n- Hyper Liquid perpetuals trading\n- Discord signal scraping\n- Strategy backtesting`
+  },
+  { name:'IDENTITY.md', path:'IDENTITY.md', size:'0.8 KB', modified:'2 min ago', tag:'workspace',
+    content:`# Identity\n\n**Agent Name:** Sebastian  \n**Role:** AI Trading Analyst  \n**Emoji:** 📊  \n**Creature:** Octopus (multi-armed, always watching)\n\n## Personality\n- Sharp and data-driven\n- Proactively surfaces edge cases\n- Celebrates wins with precision\n\n## Introduction\n*"Hey — I'm Sebastian, your AI trading analyst. I watch markets, scrape signals, and run backtests so you can make sharper decisions. Let's make some alpha."*`
+  },
+  { name:'MEMORY.md', path:'MEMORY.md', size:'3.2 KB', modified:'5 min ago', tag:'workspace',
+    content:`# Memory\n\n## Mission\nHelp Greg build a consistently profitable trading operation on Hyper Liquid perpetuals within 90 days.\n\n## 90-Day Milestones\n| Week | Goal |\n|------|------|\n| 1–2 | Discord scraper live, morning brief running |\n| 3–4 | First backtest suite, strategy validated |\n| 5–8 | Live paper trading, risk system active |\n| 9–12 | Live trading, automated journal |\n\n## Key Decisions\n- **Manual trade execution** — Sebastian proposes, Greg executes\n- **Model routing** — glm47 for reasoning, glm47-lite for data tasks\n- **Long-term memory** by default`
+  },
+  { name:'AGENTS.md', path:'AGENTS.md', size:'2.6 KB', modified:'2 min ago', tag:'workspace',
+    content:`# Agents\n\n## Autonomy Level: 9/10 — Just Get It Done\n\n### Safe to do without asking\n- Read any file in workspace\n- Run backtests and analysis\n- Send Telegram messages (Greg's number only)\n- Scrape Discord channels on allowlist\n- Generate charts and reports\n\n### Always ask first\n- Execute any trade on Hyper Liquid\n- Send messages to external parties\n- Delete or archive any data\n- Change openclaw.json settings\n\n## Hard Boundary\n> **Trade execution is ALWAYS manual.** Sebastian proposes. Greg executes.`
+  },
+  { name:'TOOLS.md', path:'TOOLS.md', size:'1.9 KB', modified:'2 min ago', tag:'workspace',
+    content:`# Tools\n\n## Device\n- **Machine:** Lenovo Windows laptop (local)\n- **OS:** Windows 11\n- **Runtime:** Node.js via WSL2\n\n## APIs\n| Tool | Status | Env Var |\n|------|--------|----------|\n| Hyper Liquid REST | ⏳ pending | \`HYPERLIQUID_API_KEY\` |\n| Discord Bot | ⏳ pending | \`DISCORD_BOT_TOKEN\` |\n| Telegram | ✅ configured | \`TELEGRAM_BOT_TOKEN\` |\n| GitHub | ✅ configured | \`GITHUB_TOKEN\` |\n\n## Budget\n~$50/month AI costs`
+  },
+  { name:'HEARTBEAT.md', path:'HEARTBEAT.md', size:'1.1 KB', modified:'2 min ago', tag:'workspace',
+    content:`# Heartbeat\n\n## Schedule\nEvery **15 minutes** during trading hours (6am–midnight PST):\n1. Scrape Discord signal channels\n2. Check open positions on Hyper Liquid\n3. Alert if volume spike > 2σ\n\n## Quiet Hours\n**00:00–06:00 PST** — silent mode, critical alerts only\n\n## Critical Alert Triggers\n- Position drawdown > 5%\n- Liquidation risk detected\n- Discord signal score ≥ 9/10`
+  },
+  { name:'SKILL.md', path:'skills/discord-scraping/scrape-discord/SKILL.md', size:'3.4 KB', modified:'8 min ago', tag:'discord',
+    content:`---\nname: scrape-discord\ndescription: "Poll configured Discord channels for trading signals. Score each signal 0-10 using NLP heuristics. Send Telegram alert when score ≥ 7."\n---\n\n# Scrape Discord\n\n## Trigger\nCron: every 15 minutes\n\n## Workflow\n1. Poll each channel via Discord REST API\n2. Extract messages since last scan\n3. Score signal quality (0–10):\n   - **7–10**: Alert via Telegram immediately\n   - **4–6**: Log to journal\n   - **0–3**: Discard\n4. Update scan timestamp\n\n## Output\n\`\`\`json\n{ "channel": "alpha-calls", "score": 8.2, "signal": "...", "alerted": true }\n\`\`\``
+  },
+  { name:'SKILL.md', path:'skills/discord-scraping/morning-brief/SKILL.md', size:'2.1 KB', modified:'8 min ago', tag:'discord',
+    content:`---\nname: morning-brief\ndescription: "Deliver a 5-source morning brief at 7AM PST via Telegram. Covers overnight Discord signals, BTC/ETH sentiment, macro news, Hyper Liquid funding rates, and top opportunities."\n---\n\n# Morning Brief\n\n## Trigger\nCron: daily at 7:00 AM PST\n\n## Sources\n1. Overnight Discord signal digest\n2. BTC/ETH 24h price action\n3. Hyper Liquid funding rates\n4. Macro news headlines (top 3)\n5. Recommended watchlist for today\n\n## Format\nTelegram message, Markdown, max 400 words.`
+  },
+  { name:'SKILL.md', path:'skills/discord-scraping/monitor-feeds/SKILL.md', size:'1.8 KB', modified:'8 min ago', tag:'discord',
+    content:`---\nname: monitor-feeds\ndescription: "Monitor volume spikes, RSI divergence, and unusual open interest across Hyper Liquid. Alert on anomalies."\n---\n\n# Monitor Feeds\n\n## Trigger\nHeartbeat: every 15 minutes\n\n## Indicators Monitored\n- Volume spike > 2σ above 20-period average\n- RSI divergence (price up, RSI down)\n- Open interest change > 10% in 15min\n- Funding rate extremes (> 0.1% or < -0.05%)\n\n## Alert Format\n\`🔔 ALERT: BTC volume spike +180% | Price: $98,420 | OI: +12%\``
+  },
+  { name:'SKILL.md', path:'skills/portfolio-manager/monitor-positions/SKILL.md', size:'2.8 KB', modified:'12 min ago', tag:'portfolio',
+    content:`---\nname: monitor-positions\ndescription: "Real-time position monitoring on Hyper Liquid. Enforce stop-loss rules. Alert on drawdown thresholds: 5%, 10%, 15%."\n---\n\n# Monitor Positions\n\n## Trigger\nHeartbeat: every 15 minutes\n\n## Checks\n1. Fetch open positions via Hyper Liquid API\n2. Calculate unrealized P&L\n3. Check drawdown thresholds:\n   - **5%**: Warning alert\n   - **10%**: Strong warning\n   - **15%**: Recommend closing\n\n## [APPROVAL GATE]\n> Position closing requires Greg's explicit confirmation.\n> Sebastian alerts → Greg decides → Sebastian executes if approved.`
+  },
+  { name:'SKILL.md', path:'skills/portfolio-manager/manage-risk/SKILL.md', size:'2.2 KB', modified:'12 min ago', tag:'portfolio',
+    content:`---\nname: manage-risk\ndescription: "Full portfolio risk analysis on demand. Calculates correlation, concentration risk, and max drawdown. Proposes position adjustments for approval."\n---\n\n# Manage Risk\n\n## Trigger\nOn-demand (user invoked)\n\n## Analysis\n1. Portfolio correlation matrix\n2. Concentration risk (max single position %)\n3. Aggregate beta to BTC\n4. Scenario analysis (BTC -10%, -20%, -30%)\n\n## Output\nRisk report + proposed adjustments → **[APPROVAL GATE]** before any action.`
+  },
+  { name:'SKILL.md', path:'skills/portfolio-manager/trade-journal/SKILL.md', size:'1.5 KB', modified:'12 min ago', tag:'portfolio',
+    content:`---\nname: trade-journal\ndescription: "Log all closed trades automatically. Generate weekly P&L summary with win rate, average R:R, and lessons learned."\n---\n\n# Trade Journal\n\n## Trigger\nCron: Monday 7AM PST (weekly summary)\n\n## Per Trade\n- Entry/exit price, size, duration\n- P&L in USD and %\n- Trade thesis (pre-entry notes)\n- Post-mortem (what worked/didn't)\n\n## Weekly Summary Format\n| Metric | Value |\n|--------|-------|\n| Trades | 12 |\n| Win Rate | 58% |\n| Avg R:R | 1.8:1 |\n| Net P&L | +$840 |`
+  },
+  { name:'SKILL.md', path:'skills/back-tester/run-backtest/SKILL.md', size:'3.1 KB', modified:'18 min ago', tag:'backtest',
+    content:`---\nname: run-backtest\ndescription: "Run a backtest on Hyper Liquid OHLCV data. Simulates 0.045% fees. Returns Sharpe, MaxDD, Win Rate. Verdict: PROMISING/NEEDS_WORK/AVOID."\n---\n\n# Run Backtest\n\n## Trigger\nOn-demand or cron: nightly at 2AM\n\n## Metrics\n- **Sharpe Ratio** (annualized)\n- **Max Drawdown %**\n- **Win Rate %**\n- **Profit Factor**\n- **Fee-adjusted returns**\n\n## Verdict\n| Score | Verdict |\n|-------|---------|\n| Sharpe > 1.5, DD < 15% | 🟢 PROMISING |\n| Sharpe 0.8–1.5 | 🟡 NEEDS_WORK |\n| Sharpe < 0.8 | 🔴 AVOID |`
+  },
+  { name:'SKILL.md', path:'skills/back-tester/optimize-strategy/SKILL.md', size:'2.0 KB', modified:'18 min ago', tag:'backtest',
+    content:`---\nname: optimize-strategy\ndescription: "Grid search over strategy parameters using 70/30 in-sample/OOS split. Detects overfitting via OOS degradation.\n---\n\n# Optimize Strategy\n\n## Method\n1. 70% data: in-sample grid search\n2. Best params → test on 30% OOS\n3. Flag if OOS Sharpe < 60% of IS Sharpe (overfit)\n\n## Parameter Grid\nConfigured per strategy in \`strategy_config.json\``
+  },
+  { name:'SKILL.md', path:'skills/back-tester/scout-datasets/SKILL.md', size:'1.3 KB', modified:'18 min ago', tag:'backtest',
+    content:`---\nname: scout-datasets\ndescription: "Nightly WebSearch for new alternative data sources: sentiment feeds, on-chain data, options flow, social mentions."\n---\n\n# Scout Datasets\n\n## Trigger\nCron: Sunday 10PM PST\n\n## Search Targets\n- Crypto sentiment APIs (new/free tier)\n- On-chain data feeds (Glassnode alternatives)\n- Options flow services\n- Social mention trackers\n\n## Output\nWeekly dataset report → Telegram Sunday night.`
+  },
+  { name:'SKILL.md', path:'skills/charting/generate-chart/SKILL.md', size:'2.4 KB', modified:'22 min ago', tag:'charting',
+    content:`---\nname: generate-chart\ndescription: "User-invocable command to generate a dark-theme OHLCV chart with technical indicators for any Hyper Liquid pair."\n---\n\n# Generate Chart\n\n## Trigger\nUser command: \`/generate-chart BTC 4h\`\n\n## Output\n- Dark theme (bg #12141a, accent #D97757)\n- OHLCV candlesticks via mplfinance\n- Overlays: EMA 20/50, volume\n- Optional: RSI, MACD panels\n\n## Format\nPNG sent via Telegram`
+  },
+  { name:'SKILL.md', path:'skills/charting/generate-equity-curve/SKILL.md', size:'1.7 KB', modified:'22 min ago', tag:'charting', agent:'main',
+    content:`---\nname: generate-equity-curve\ndescription: "Plot equity curve + drawdown overlay from backtest results. Identifies peak-to-trough periods."\n---\n\n# Generate Equity Curve\n\n## Input\nBacktest results JSON from run-backtest\n\n## Output\nDual panel chart:\n1. **Top**: Equity curve (cumulative returns)\n2. **Bottom**: Drawdown % overlay\n\nHighlights max drawdown period in red.`
+  },
+  // ── Scout (YouTube Agent) workspace ──────────────────────
+  { name:'IDENTITY.md', path:'[yt] IDENTITY.md', size:'0.6 KB', modified:'just now', tag:'scout', agent:'youtube',
+    content:`# Identity\n\n**Agent Name:** Scout\n**Role:** YouTube Research Agent\n**Emoji:** 📺\n**Creature:** Browser spider — crawls, clips, transcribes\n**Vibe:** quick, curious, relentless\n\n## Introduction\n*"Hey — I'm Scout, your YouTube research agent. Point me at a video or a channel and I'll pull the transcript, extract the key ideas, and archive everything so you never lose a good insight again."*`
+  },
+  { name:'SOUL.md', path:'[yt] SOUL.md', size:'0.9 KB', modified:'just now', tag:'scout', agent:'youtube',
+    content:`# Soul — Scout (YouTube Agent)\n\n## Core Truths\n1. **Accuracy first** — A bad transcript is worse than no transcript. Verify before saving.\n2. **Complete coverage** — Scan every video in range. Do not skip silently.\n3. **Quiet by default** — Run headlessly, log results, alert only on meaningful finds.\n4. **Archive everything** — Transcripts are permanent. Never overwrite without confirmation.\n\n## Boundaries\n- **Never sign in to YouTube** without explicit user approval\n- **Never post comments** or interact with YouTube on the user's behalf\n- **Never discard a transcript** — if extraction fails, log the failure\n\n## Vibe\nMethodical and fast. No commentary. Output structured data. Flag anomalies concisely.`
+  },
+  { name:'AGENTS.md', path:'[yt] AGENTS.md', size:'1.2 KB', modified:'just now', tag:'scout', agent:'youtube',
+    content:`# Agents — Scout (YouTube Agent)\n\n## Execution Model\nScout runs in \`isolated\` mode — fresh session per invocation, no memory bleed.\n\n## Whitelisted Channels (Greg Trading)\n| Handle | Topic | Frequency |\n|--------|-------|-----------|\n| **Channel** | Kyle Doops Trading Show | |\n| **Playlist ID** | \`PLmOv2_vzOoGcDGeu-HHfifExgbvmPLO3l\` | |\n| **Scan** | Daily at 2:00 AM PST | |\n\n## Safe to do autonomously\n- Extract transcripts via browser automation\n- Summarize and archive video content\n- Scan whitelisted channels (read-only)\n- Write to \`transcripts/\`, \`summaries/\`, \`digests/\`\n\n## Never do\n- Scan channels NOT on the whitelist\n- Post comments, likes, or shares\n- Subscribe to channels\n- Modify or delete existing transcripts`
+  },
+  { name:'HEARTBEAT.md', path:'[yt] HEARTBEAT.md', size:'1.4 KB', modified:'just now', tag:'scout', agent:'youtube',
+    content:`# HEARTBEAT.md — Scout 📺 Periodic Tasks (Greg Trading)\n\n## Every 6 Hours — New Content Check\n1. For each whitelisted channel: check for videos published in the last 6 hours\n2. Cross-reference with \`scan-log.md\` → extract transcripts for new videos only\n3. Summarize each new video (relevance score 0–10 for Hyper Liquid perps)\n4. If any video scores >= 7/10: append \`[HIGH_RELEVANCE]\` entry to \`digests/latest.md\`\n5. Update \`scan-log.md\` with latest scanned video ID per channel\n6. If nothing new: respond HEARTBEAT_OK\n\n## Daily Digest — 06:30 AM PST\n1. Compile all new content from past 24h across all channels\n2. Write to \`digests/digest-{YYYY-MM-DD}.md\`\n3. Write \`digests/latest.md\` — Sebastian reads this during morning brief\n\n## Weekly Deep Scan — Sunday 11:00 PM PST\nFull scan of all whitelisted channels (last 7 days). Write weekly digest.\n\n# Quiet hours: 00:00 - 06:00 America/Los_Angeles`
+  },
+  { name:'latest.md', path:'[yt] digests/latest.md', size:'2.8 KB', modified:'2:04 AM', tag:'digest', agent:'youtube',
+    content:`# YouTube Digest — Kyle Doops Trading Show — 2026-02-22 02:04 AM PST\n\nPlaylist: PLmOv2_vzOoGcDGeu-HHfifExgbvmPLO3l\nNew episodes: 1 | Transcribed: 1 | High relevance: 1\n\n---\n\n## [HIGH_RELEVANCE 9/10] You're Running Out Of Time To Get Rich In Trading!\n**Video ID:** wStOp8IWhHc | Published: today\n- **TL;DR:** Urgency-focused episode on why most traders delay too long and what concrete steps to take now.\n- **Key insight:** Kyle emphasizes building a repeatable process over chasing big wins — consistency is the edge\n- **Trade insight:** Define your entry criteria before market open, not during — removes emotion from execution\n- Transcript: transcripts/2026-02-22-wStOp8IWhHc.md\n\n---\n\n*Previous episodes already archived:*\n- transcripts/2026-02-22-34Dzv0IaYuE.md — Geopolitical Tensions Will Affect Markets\n- transcripts/2026-02-22-QP-rSbSNd_o.md — WARNING: The Next Few Days Will Be Critical`
+  },
+  { name:'SKILL.md', path:'[yt] skills/youtube/extract-transcript/SKILL.md', size:'2.3 KB', modified:'just now', tag:'youtube', agent:'youtube',
+    content:`---\nname: youtube-extract-transcript\ndescription: "YouTube: Extract Transcript - Pull full transcript via headless Chrome. Saves to transcripts/{date}-{id}.md"\nuser-invocable: true\n---\n\n# YouTube: Extract Transcript\n\nExtract the full transcript from a YouTube video using browser automation.\n\n## Trigger\nUser command: \`/youtube-extract-transcript dQw4w9WgXcQ\`\n\n## Workflow\n1. Check if transcript already exists → skip if so\n2. Navigate to video in headless Chrome\n3. Click "..." → "Show transcript"\n4. Extract all segments with timestamps\n5. Save to \`transcripts/{date}-{video_id}.md\`\n\n## Output\n\`\`\`\n✅ Transcript saved: transcripts/2026-02-21-dQw4w9WgXcQ.md\n   Video: "Never Gonna Give You Up"\n   Segments: 42\n\`\`\``
+  },
+  { name:'SKILL.md', path:'[yt] skills/youtube/scan-channel/SKILL.md', size:'2.1 KB', modified:'just now', tag:'youtube', agent:'youtube',
+    content:`---\nname: youtube-scan-channel\ndescription: "YouTube: Scan Channel - Find new videos in last N days, extract transcripts, output digest"\nuser-invocable: true\n---\n\n# YouTube: Scan Channel\n\nScan a YouTube channel for videos published in the last N days.\nExtracts transcripts for new content only. Outputs a digest.\n\n## Trigger\nUser command: \`/youtube-scan @IndyDevDan 7\`\n\n## Workflow\n1. Load channel → Videos tab → sort Latest\n2. Collect videos published within N days\n3. Cross-reference with \`scan-log.md\` → new only\n4. For each new video: extract transcript + summarize\n5. Write digest to \`summaries/digest-{date}-{channel}.md\`\n\n## Output\n\`\`\`\n📺 Scan complete: @IndyDevDan\n   New videos: 3 / 12 checked\n   Digest: summaries/digest-2026-02-21-IndyDevDan.md\n\`\`\``
+  },
+  { name:'SKILL.md', path:'[yt] skills/youtube/summarize-video/SKILL.md', size:'1.9 KB', modified:'just now', tag:'youtube', agent:'youtube',
+    content:`---\nname: youtube-summarize-video\ndescription: "YouTube: Summarize Video - Generate structured summary with key points, quotes, and insights"\nuser-invocable: true\n---\n\n# YouTube: Summarize Video\n\nGenerate a structured summary from a saved transcript.\n\n## Trigger\nUser command: \`/youtube-summarize dQw4w9WgXcQ\`\n\n## Output\n1. **TL;DR** — one sentence\n2. **Key points** (5–10 bullets with timestamps)\n3. **Notable quotes** (2–3 with timestamps)\n4. **Actionable insights** (3–5)\n5. **Relevance score** (0–10)\n\nSaved to \`summaries/{date}-{video_id}.md\``
+  },
+];
+
+// Tree is now an array of root workspaces (multi-agent)
+const TREES = [
+  {
+    name: 'workspace', label: '📊 Sebastian', agent: 'main',
+    type: 'dir',
+    children: [
+      { name:'SOUL.md', type:'file' },
+      { name:'USER.md', type:'file' },
+      { name:'IDENTITY.md', type:'file' },
+      { name:'MEMORY.md', type:'file' },
+      { name:'AGENTS.md', type:'file' },
+      { name:'TOOLS.md', type:'file' },
+      { name:'HEARTBEAT.md', type:'file' },
+      {
+        name:'skills', type:'dir',
+        children: [
+          { name:'discord-scraping', type:'dir', children:[
+            { name:'scrape-discord', type:'dir', children:[{name:'SKILL.md',type:'file',fp:'skills/discord-scraping/scrape-discord/SKILL.md'}]},
+            { name:'morning-brief', type:'dir', children:[{name:'SKILL.md',type:'file',fp:'skills/discord-scraping/morning-brief/SKILL.md'}]},
+            { name:'monitor-feeds', type:'dir', children:[{name:'SKILL.md',type:'file',fp:'skills/discord-scraping/monitor-feeds/SKILL.md'}]},
+          ]},
+          { name:'portfolio-manager', type:'dir', children:[
+            { name:'monitor-positions', type:'dir', children:[{name:'SKILL.md',type:'file',fp:'skills/portfolio-manager/monitor-positions/SKILL.md'}]},
+            { name:'manage-risk', type:'dir', children:[{name:'SKILL.md',type:'file',fp:'skills/portfolio-manager/manage-risk/SKILL.md'}]},
+            { name:'trade-journal', type:'dir', children:[{name:'SKILL.md',type:'file',fp:'skills/portfolio-manager/trade-journal/SKILL.md'}]},
+          ]},
+          { name:'back-tester', type:'dir', children:[
+            { name:'run-backtest', type:'dir', children:[{name:'SKILL.md',type:'file',fp:'skills/back-tester/run-backtest/SKILL.md'}]},
+            { name:'optimize-strategy', type:'dir', children:[{name:'SKILL.md',type:'file',fp:'skills/back-tester/optimize-strategy/SKILL.md'}]},
+            { name:'scout-datasets', type:'dir', children:[{name:'SKILL.md',type:'file',fp:'skills/back-tester/scout-datasets/SKILL.md'}]},
+          ]},
+          { name:'charting', type:'dir', children:[
+            { name:'generate-chart', type:'dir', children:[{name:'SKILL.md',type:'file',fp:'skills/charting/generate-chart/SKILL.md'}]},
+            { name:'generate-equity-curve', type:'dir', children:[{name:'SKILL.md',type:'file',fp:'skills/charting/generate-equity-curve/SKILL.md'}]},
+          ]},
+        ]
+      }
+    ]
+  },
+  {
+    name: 'workspace-youtube', label: '📺 Scout', agent: 'youtube',
+    type: 'dir',
+    children: [
+      { name:'IDENTITY.md',  type:'file', fp:'[yt] IDENTITY.md' },
+      { name:'SOUL.md',      type:'file', fp:'[yt] SOUL.md' },
+      { name:'AGENTS.md',   type:'file', fp:'[yt] AGENTS.md' },
+      { name:'HEARTBEAT.md',type:'file', fp:'[yt] HEARTBEAT.md' },
+      { name:'transcripts',  type:'dir', children:[] },
+      { name:'summaries',    type:'dir', children:[] },
+      { name:'digests',      type:'dir', children:[{name:'latest.md', type:'file', fp:'[yt] digests/latest.md'}] },
+      { name:'scan-log.md',  type:'file', fp:'[yt] IDENTITY.md' },
+      {
+        name:'skills', type:'dir',
+        children:[
+          { name:'youtube', type:'dir', children:[
+            { name:'extract-transcript', type:'dir', children:[{name:'SKILL.md',type:'file',fp:'[yt] skills/youtube/extract-transcript/SKILL.md'}]},
+            { name:'scan-channel',       type:'dir', children:[{name:'SKILL.md',type:'file',fp:'[yt] skills/youtube/scan-channel/SKILL.md'}]},
+            { name:'summarize-video',    type:'dir', children:[{name:'SKILL.md',type:'file',fp:'[yt] skills/youtube/summarize-video/SKILL.md'}]},
+          ]}
+        ]
+      }
+    ]
+  }
+];
+
+// Keep backward compat alias pointing to main workspace children
+const TREE = { children: TREES[0].children };
+
+// Collapsed state for tree dirs
+const collapsed = {};
+
+// ═══════════════════════════════════════════════════════════
+// MARKDOWN RENDERER (no dependencies)
+// ═══════════════════════════════════════════════════════════
+function md(text) {
+  if (!text) return '';
+  let h = text
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    // code blocks
+    .replace(/```(\w*)\n?([\s\S]*?)```/g, (_,lang,code)=>`<pre><code>${code.trim()}</code></pre>`)
+    // frontmatter strip
+    .replace(/^---[\s\S]*?---\n?/,'')
+    // headings
+    .replace(/^### (.+)$/gm,'<h3>$1</h3>')
+    .replace(/^## (.+)$/gm,'<h2>$1</h2>')
+    .replace(/^# (.+)$/gm,'<h1>$1</h1>')
+    // hr
+    .replace(/^---$/gm,'<hr>')
+    // blockquote
+    .replace(/^&gt; (.+)$/gm,'<blockquote>$1</blockquote>')
+    // tables
+    .replace(/\|(.+)\|\n\|[-| :]+\|\n((?:\|.+\|\n?)+)/g, (_, hdr, rows)=>{
+      const ths = hdr.split('|').filter(c=>c.trim()).map(c=>`<th>${c.trim()}</th>`).join('');
+      const trs = rows.trim().split('\n').map(r=>{
+        const tds = r.split('|').filter(c=>c.trim()).map(c=>`<td>${c.trim()}</td>`).join('');
+        return `<tr>${tds}</tr>`;
+      }).join('');
+      return `<table><tr>${ths}</tr>${trs}</table>`;
+    })
+    // lists
+    .replace(/^- (.+)$/gm,'<li>$1</li>')
+    .replace(/^\d+\. (.+)$/gm,'<li>$1</li>')
+    .replace(/(<li>.*<\/li>)/gs, s=>`<ul>${s}</ul>`)
+    // inline
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g,'<em>$1</em>')
+    .replace(/`([^`]+)`/g,'<code>$1</code>')
+    .replace(/\[(.+?)\]\((.+?)\)/g,'<a href="$2">$1</a>')
+    // paragraphs
+    .replace(/\n\n+/g,'</p><p>')
+  ;
+  return `<div class="md"><p>${h}</p></div>`;
+}
+
+// ═══════════════════════════════════════════════════════════
+// TREE BUILDERS
+// ═══════════════════════════════════════════════════════════
+function buildTreeA(nodes, indent=0) {
+  let html = '';
+  for (const n of nodes) {
+    const cls = `ti ${indent>0?'ti-ind':''}${indent>1?'ti-ind2':''}`;
+    if (n.type==='dir') {
+      const cid = 'c_'+n.name+indent;
+      const icon = collapsed[cid] ? '▶' : '▼';
+      html += `<div class="${cls} dir" onclick="toggleTree('${cid}',event)">${icon} 📁 ${n.name}${state.showCounts&&n.children?' <span style="color:#555;font-size:9px">(${countFiles(n)})</span>':''}</div>`;
+      if (!collapsed[cid] && n.children) {
+        html += `<div id="${cid}">${buildTreeA(n.children, indent+1)}</div>`;
+      }
+    } else {
+      const fp = n.fp || n.name;
+      const sel = state.selectedFile === fp ? 'sel' : '';
+      html += `<div class="${cls} ${sel}" onclick="selectFile('${fp}')" title="${fp}">📄 ${n.name}</div>`;
+    }
+  }
+  return html;
+}
+
+function buildTreeB(nodes, indent=0) { return buildTreeA(nodes, indent); }
+
+function buildTreeC(nodes) {
+  let html = '';
+  for (const n of nodes) {
+    if (n.type==='dir') {
+      const cid = 'cc_'+n.name;
+      const open = !collapsed[cid];
+      html += `<div class="ct-folder">
+        <div class="ct-fhdr" onclick="toggleTree('${cid}',event)">${open?'▼':'▶'} 📁 ${n.name}</div>
+        ${open&&n.children?`<div class="ct-fch">${buildTreeC(n.children)}</div>`:''}
+      </div>`;
+    } else {
+      const fp = n.fp||n.name;
+      html += `<div class="ct-file ${state.selectedFile===fp?'sel':''}" onclick="selectFile('${fp}')" title="${fp}">📄 ${n.name}</div>`;
+    }
+  }
+  return html;
+}
+
+function countFiles(node) {
+  if (node.type==='file') return 1;
+  return (node.children||[]).reduce((s,c)=>s+countFiles(c),0);
+}
+
+// ═══════════════════════════════════════════════════════════
+// VARIANTS
+// ═══════════════════════════════════════════════════════════
+function getSelectedFile() {
+  return FILES.find(f=>f.path===state.selectedFile) || FILES[0];
+}
+
+function filteredFiles() {
+  const q = state.searchQuery.toLowerCase();
+  let files = FILES;
+  if (state.agentFilter !== 'all') {
+    files = files.filter(f=>(f.agent||'main') === state.agentFilter);
+  }
+  if (!q) return files;
+  return files.filter(f=>f.name.toLowerCase().includes(q)||f.path.toLowerCase().includes(q));
+}
+
+function activeTreeRoots() {
+  if (state.agentFilter === 'all') return TREES;
+  return TREES.filter(t=>t.agent === state.agentFilter);
+}
+
+function topbar(searchPlaceholder='Search files...') {
+  const f = FILES.find(x=>x.path===state.selectedFile) || FILES[0];
+  const isYT = (f.agent||'main') === 'youtube';
+  const agentLabel = isYT ? '📺 Scout' : '📊 Sebastian';
+  const wsLabel = isYT ? 'workspace-youtube' : 'workspace';
+  const badgeCls = isYT ? 'oc-agent-badge yt' : 'oc-agent-badge';
+  const scan = state.showScan ? `<div class="oc-scan"><div class="sdot"></div>Scanned ${state.scanAge}s ago</div>` : '';
+  const search = state.showSearch ? `<input class="oc-srch" placeholder="${searchPlaceholder}" value="${state.searchQuery}" oninput="state.searchQuery=this.value;updateAll()">` : '';
+  return `<div class="oc-top">
+    <div class="oc-logo">🦞 <span style="opacity:.6;font-size:10px">~/.openclaw/</span>${wsLabel}</div>
+    <span class="${badgeCls}">${agentLabel}</span>
+    ${search}
+    ${scan}
+  </div>`;
+}
+
+function buildMultiRootTree(builderFn) {
+  const roots = activeTreeRoots();
+  if (roots.length === 1) return builderFn(roots[0].children, 0);
+  return roots.map(r=>{
+    const cid = 'root_'+r.name;
+    const open = !collapsed[cid];
+    const icon = open ? '▼' : '▶';
+    const lbl = r.label || r.name;
+    return `<div class="ti dir" onclick="toggleTree('${cid}',event)">${icon} 📁 ${lbl}</div>
+      ${open ? `<div id="${cid}">${builderFn(r.children, 1)}</div>` : ''}`;
+  }).join('');
+}
+
+function renderVariantA() {
+  const f = getSelectedFile();
+  const files = filteredFiles();
+  const treeHtml = buildMultiRootTree(buildTreeA);
+  const catalogHtml = files.map(fi=>`
+    <div class="cc ${fi.path===state.selectedFile?'sel':''}" onclick="selectFile('${fi.path}')">
+      <div class="cc-n">📄 ${fi.name}</div>
+      <div class="cc-p">${fi.path}</div>
+      ${state.showMeta?`<div class="cc-m"><span>${fi.modified}</span><span>${fi.size}</span><span class="cc-tag">${fi.tag}</span></div>`:''}
+    </div>`).join('');
+  return `<div class="oc">
+    ${topbar('Filter catalog...')}
+    <div class="va">
+      <div class="va-tree">${treeHtml}</div>
+      <div class="va-cat">${catalogHtml}</div>
+      <div class="va-prev">${md(f.content)}</div>
+    </div>
+  </div>`;
+}
+
+function renderVariantB() {
+  const f = getSelectedFile();
+  const files = filteredFiles();
+  const treeHtml = buildMultiRootTree(buildTreeB);
+  const listHtml = files.map(fi=>`
+    <div class="vb-row ${fi.path===state.selectedFile?'sel':''}" onclick="selectFile('${fi.path}')">
+      <span style="font-size:14px">📄</span>
+      <div class="vb-ri">
+        <div class="vb-rn">${fi.name}</div>
+        <div class="vb-rp">${fi.path}</div>
+      </div>
+      ${state.showMeta?`<div class="vb-rm">${fi.modified}</div>`:''}
+    </div>`).join('');
+  const pathParts = f.path.split('/');
+  const bc = pathParts.map((p,i)=>i===pathParts.length-1?`<span class="act">${p}</span>`:`<span>${p}</span>`).join(' / ');
+  return `<div class="oc">
+    ${topbar('Search files...')}
+    <div class="vb">
+      <div class="vb-side">
+        <div class="vb-sec">Folder Tree</div>
+        <div class="vb-treewrap">${treeHtml}</div>
+        <div class="vb-sec" style="margin-top:0">Files (${files.length})</div>
+        <div class="vb-list">${listHtml}</div>
+      </div>
+      <div class="vb-main">
+        <div class="vb-bc">~/.openclaw/workspace / ${bc}</div>
+        ${md(f.content)}
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderVariantC() {
+  const f = getSelectedFile();
+  const files = filteredFiles();
+  const tabs = [
+    {id:'files', icon:'📋', label:'Files'},
+    {id:'tree', icon:'🌳', label:'Tree'},
+    {id:'preview', icon:'👁', label:'Preview'},
+  ];
+  const tabBar = tabs.map(t=>`<div class="vct-tab ${state.activeTab===t.id?'active':''}" onclick="setTab('${t.id}')">${t.icon} ${t.label}</div>`).join('');
+
+  let body = '';
+  if (state.activeTab==='files') {
+    const grid = files.map(fi=>`
+      <div class="cg-tile ${fi.path===state.selectedFile?'sel':''}" onclick="selectFile('${fi.path}');setTab('preview')">
+        <div class="cg-ico">📄</div>
+        <div class="cg-n">${fi.name}</div>
+        ${state.showMeta?`<div class="cg-m">${fi.tag} · ${fi.size}</div>`:''}
+      </div>`).join('');
+    body = `<div class="cg">${grid}</div>`;
+  } else if (state.activeTab==='tree') {
+    const roots = activeTreeRoots();
+    const treeContent = roots.length === 1
+      ? buildTreeC(roots[0].children)
+      : roots.map(r=>{
+          const cid='cc_root_'+r.name; const open=!collapsed[cid];
+          return `<div class="ct-folder"><div class="ct-fhdr" onclick="toggleTree('${cid}',event)">${open?'▼':'▶'} 📁 ${r.label||r.name}</div>${open?`<div class="ct-fch">${buildTreeC(r.children)}</div>`:''}</div>`;
+        }).join('');
+    body = `<div class="vc-tree-view">${treeContent}</div>`;
+  } else {
+    body = md(f.content);
+  }
+
+  return `<div class="oc">
+    ${topbar('Search...')}
+    <div class="vct">
+      <div class="vct-tabs">${tabBar}</div>
+      <div class="vct-body">${body}</div>
+    </div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════════
+function renderPreview() {
+  const frame = document.getElementById('preview-frame');
+  if (state.variant==='A') frame.innerHTML = renderVariantA();
+  else if (state.variant==='B') frame.innerHTML = renderVariantB();
+  else frame.innerHTML = renderVariantC();
+}
+
+function updatePrompt() {
+  const vmap = {
+    A: { name:'Three-Panel', desc:'tree | catalog | preview' },
+    B: { name:'Two-Panel GitHub-style', desc:'tree+list | full preview' },
+    C: { name:'Tabbed Single-Panel', desc:'Files | Tree | Preview tabs' },
+  };
+  const v = vmap[state.variant];
+  const f = getSelectedFile();
+  const opts = [];
+  if (!state.showSearch) opts.push('no search bar');
+  if (!state.showScan) opts.push('no scan indicator');
+  if (!state.showMeta) opts.push('no file metadata');
+  if (state.showCounts) opts.push('folder file counts visible');
+  if (state.scanInterval !== 30) opts.push(`${state.scanInterval}s scan interval`);
+
+  const agentCtx = state.agentFilter === 'all'
+    ? 'Show both the main workspace (<code>~/.openclaw/workspace/</code>, agent: <strong>📊 Sebastian</strong>) and the YouTube agent workspace (<code>~/.openclaw/workspace-youtube/</code>, agent: <strong>📺 Scout</strong>) as separate collapsible tree roots.'
+    : state.agentFilter === 'youtube'
+      ? 'Scope the viewer to the YouTube agent workspace only (<code>~/.openclaw/workspace-youtube/</code>, agent: <strong>📺 Scout</strong>).'
+      : 'Scope the viewer to the main workspace only (<code>~/.openclaw/workspace/</code>, agent: <strong>📊 Sebastian</strong>).';
+
+  const txt = document.getElementById('prompt-txt');
+  txt.innerHTML = `Build the OpenClaw workspace markdown viewer using <strong>Variant ${state.variant} — ${v.name}</strong> layout (${v.desc}).
+    Use GB Automation brand colors: terracotta <code>#D97757</code> for selected/active states, cream <code>#F3F1E7</code> for light backgrounds, dark <code>#12141a</code> for the main bg.
+    ${agentCtx}
+    Include a scan indicator showing "Scanned Xs ago" with a pulsing green dot, auto-refreshing every <strong>${state.scanInterval}s</strong>.
+    Currently previewing: <strong>${f.name}</strong> (${f.path}).${opts.length ? ` Options: ${opts.join(', ')}.` : ''}
+    Implement as a Lit Web Component in the <code>ui/</code> directory of the gblack686/openclaw fork, using the existing CSS variable system and Tailwind classes.`;
+}
+
+// ═══════════════════════════════════════════════════════════
+// CONTROLS & INIT
+// ═══════════════════════════════════════════════════════════
+const VARIANTS = [
+  { id:'A', name:'Three-Panel', desc:'Tree · Catalog · Preview', diag:[{w:'18%',l:'TREE'},{w:'28%',l:'CATALOG'},{w:'54%',l:'PREVIEW'}] },
+  { id:'B', name:'Two-Panel', desc:'Tree+List · Full Preview', diag:[{w:'35%',l:'TREE\n+LIST'},{w:'65%',l:'PREVIEW'}] },
+  { id:'C', name:'Tabbed', desc:'Files | Tree | Preview', diag:[{w:'33%',l:'FILES'},{w:'34%',l:'TREE'},{w:'33%',l:'PRV'}] },
+];
+
+const PRESETS = [
+  { id:'dense', label:'Dense', s:{variant:'A',showSearch:true,showScan:true,showMeta:true,showCounts:true,scanInterval:15} },
+  { id:'reader', label:'Reader', s:{variant:'B',showSearch:true,showScan:true,showMeta:false,showCounts:false,scanInterval:60} },
+  { id:'mobile', label:'Mobile', s:{variant:'C',showSearch:false,showScan:true,showMeta:true,showCounts:false,scanInterval:30} },
+  { id:'minimal', label:'Minimal', s:{variant:'C',showSearch:false,showScan:false,showMeta:false,showCounts:false,scanInterval:60} },
+];
+
+function initControls() {
+  // Variant cards
+  const vc = document.getElementById('variant-cards');
+  vc.innerHTML = VARIANTS.map(v=>`
+    <div class="vc-card ${state.variant===v.id?'active':''}" id="vcard-${v.id}" onclick="setVariant('${v.id}')">
+      <div class="vc-tag">VARIANT ${v.id}</div>
+      <div class="vc-name">${v.name}</div>
+      <div class="vc-desc">${v.desc}</div>
+      <div class="vc-diag">${v.diag.map(d=>`<div class="vd" style="flex:${d.w===undefined?1:0};width:${d.w||'auto'};min-width:${d.w||'auto'}">${d.l}</div>`).join('')}</div>
+    </div>`).join('');
+
+  // Presets
+  const pr = document.getElementById('presets');
+  pr.innerHTML = PRESETS.map(p=>`<div class="preset" id="preset-${p.id}" onclick="applyPreset('${p.id}')">${p.label}</div>`).join('');
+
+  // File select (respects agentFilter)
+  const fs = document.getElementById('file-select');
+  fs.innerHTML = filteredFiles().map(f=>`<option value="${f.path}"${f.path===state.selectedFile?' selected':''}>${f.path}</option>`).join('');
+
+  updateTabButtons();
+}
+
+function setVariant(v) {
+  state.variant = v;
+  document.querySelectorAll('.vc-card').forEach(el=>el.classList.remove('active'));
+  document.getElementById('vcard-'+v)?.classList.add('active');
+  const labels = {A:'VARIANT A — THREE-PANEL (TREE | CATALOG | PREVIEW)', B:'VARIANT B — TWO-PANEL (TREE+LIST | FULL PREVIEW)', C:'VARIANT C — TABBED SINGLE-PANEL (FILES | TREE | PREVIEW)'};
+  document.getElementById('prev-lbl').textContent = labels[v];
+  updateAll();
+}
+
+function applyPreset(id) {
+  const p = PRESETS.find(x=>x.id===id);
+  if (!p) return;
+  Object.assign(state, p.s);
+  document.querySelectorAll('.preset').forEach(el=>el.classList.remove('active'));
+  document.getElementById('preset-'+id)?.classList.add('active');
+  // Sync toggles
+  ['showSearch','showScan','showMeta','showCounts'].forEach(k=>{
+    const el = document.getElementById('tog-'+k.replace('show','').toLowerCase());
+    if(el) el.className = 'tog '+(state[k]?'on':'');
+  });
+  document.getElementById('lbl-interval').textContent = state.scanInterval+'s';
+  setVariant(state.variant);
+  updateTabButtons();
+}
+
+function toggleState(key, el) {
+  state[key] = !state[key];
+  el.className = 'tog '+(state[key]?'on':'');
+  updateAll();
+}
+
+function setScanInterval(v) {
+  state.scanInterval = parseInt(v);
+  document.getElementById('lbl-interval').textContent = v+'s';
+  updateAll();
+}
+
+function selectFile(fp) {
+  state.selectedFile = fp;
+  document.getElementById('file-select').value = fp;
+  updateAll();
+}
+
+function setTab(t) {
+  state.activeTab = t;
+  updateTabButtons();
+  updateAll();
+}
+
+function updateTabButtons() {
+  ['files','tree','preview'].forEach(t=>{
+    const el = document.getElementById('tab-'+t);
+    if(el) el.className = 'preset'+(state.activeTab===t?' active':'');
+  });
+}
+
+function setAgentFilter(af) {
+  state.agentFilter = af;
+  document.querySelectorAll('.agent-btn').forEach(el=>el.classList.remove('active'));
+  document.getElementById('af-'+af)?.classList.add('active');
+  // Reset selected file if current selection is outside the new filter scope
+  const filtered = filteredFiles();
+  if (!filtered.find(f=>f.path===state.selectedFile)) {
+    state.selectedFile = filtered[0]?.path || FILES[0].path;
+  }
+  // Rebuild file-select options
+  const fs = document.getElementById('file-select');
+  if (fs) {
+    fs.innerHTML = filtered.map(f=>`<option value="${f.path}"${f.path===state.selectedFile?' selected':''}>${f.path}</option>`).join('');
+  }
+  updateAll();
+}
+
+function toggleTree(id, e) {
+  e.stopPropagation();
+  collapsed[id] = !collapsed[id];
+  updateAll();
+}
+
+function copyPrompt() {
+  const txt = document.getElementById('prompt-txt').innerText;
+  navigator.clipboard.writeText(txt).then(()=>{
+    const btn = document.getElementById('copy-btn');
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(()=>{ btn.textContent='Copy Prompt'; btn.classList.remove('copied'); }, 1500);
+  });
+}
+
+function updateAll() {
+  renderPreview();
+  updatePrompt();
+}
+
+// Scan age ticker
+setInterval(()=>{ state.scanAge++; if(state.scanAge>state.scanInterval) state.scanAge=0; updateAll(); }, 1000);
+
+// Init
+initControls();
+updateAll();
+</script>
+</body>
+</html>

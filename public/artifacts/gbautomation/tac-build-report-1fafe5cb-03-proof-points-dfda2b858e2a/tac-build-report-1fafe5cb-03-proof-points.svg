@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1080" viewBox="0 0 1080 1080" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif">
+<title>GBAutomation TAC build readiness hypeframe 03 — Proof Points</title>
+<desc>Verifier, Supabase, observability, report, and Gmail draft evidence</desc>
+<defs>
+<linearGradient id="fbg" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0%" stop-color="#F3F1E7"/>
+<stop offset="100%" stop-color="#E6E4D9"/>
+</linearGradient>
+</defs>
+<rect width="1080" height="1080" fill="url(#fbg)"/>
+<rect x="48" y="48" width="984" height="984" rx="20" fill="none" stroke="then decide PR and production route" stroke-width="1.2"/>
+<text x="96" y="142" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="22" font-weight="700" fill="#D97757" text-anchor="start" letter-spacing="4.0">GBAUTOMATION</text>
+<text x="96" y="174" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="13" font-weight="400" fill="rgba(25,25,25,0.55)" text-anchor="start" letter-spacing="1.2">TAC build readiness · hypeframe</text>
+<g>
+<circle cx="930" cy="158" r="56" fill="rgba(255,255,255,0.55)" stroke="#191919" stroke-width="1.6"><animate attributeName="stroke-width" values="1.6;1.6;3.4;1.6;1.6" keyTimes="0;0.45;0.5;0.55;1" dur="6s" repeatCount="indefinite"/></circle>
+<text x="930" y="172" font-family="'Newsreader',Georgia,'Times New Roman',serif" font-size="38" font-weight="500" fill="#191919" text-anchor="middle">03</text>
+</g>
+<text x="96" y="470" font-family="'Newsreader',Georgia,'Times New Roman',serif" font-size="88" font-weight="500" fill="#191919" text-anchor="start">Proof Points</text>
+<text x="96" y="600" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif" font-size="26" font-weight="400" fill="rgba(25,25,25,0.55)" text-anchor="start">Verifier, Supabase, observability,</text>
+<text x="96" y="636" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif" font-size="26" font-weight="400" fill="rgba(25,25,25,0.55)" text-anchor="start">report, and Gmail draft evidence</text>
+<rect x="96" y="840" width="240" height="6" rx="3" fill="#D97757"/>
+<text x="96" y="900" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="18" font-weight="600" fill="#191919" text-anchor="start" letter-spacing="0.6">run · 1fafe5cb</text>
+<text x="96" y="932" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="14" font-weight="400" fill="rgba(25,25,25,0.55)" text-anchor="start" letter-spacing="0.6">started · 2026-05-12</text>
+<text x="96" y="960" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="14" font-weight="400" fill="rgba(25,25,25,0.55)" text-anchor="start" letter-spacing="0.6">status · OK</text>
+<text x="984" y="960" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="12" font-weight="400" fill="rgba(25,25,25,0.40)" text-anchor="end">gbautomation.xyz</text>
+</svg>

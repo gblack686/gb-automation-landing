@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1080" viewBox="0 0 1080 1080">
+<rect width="1080" height="1080" fill="#171717"/>
+<rect x="72" y="72" width="936" height="936" rx="24" fill="#ffffff"/>
+<text x="118" y="152" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="28" font-weight="800" fill="#4f46e5">GBAutomation</text>
+<text x="118" y="446" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="66" font-weight="900" fill="#171717">How The Team Uses It</text>
+<text x="118" y="510" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="30" font-weight="500" fill="#5f6368">Review the DAG, inspect the report, then decide PR and production route</text>
+<rect x="118" y="760" width="844" height="8" fill="#14b8a6"/>
+<text x="118" y="834" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#171717">Run dcae88ee</text>
+<text x="118" y="878" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="22" font-weight="400" fill="#5f6368">2026-05-11T22:34:00+00:00</text>
+</svg>

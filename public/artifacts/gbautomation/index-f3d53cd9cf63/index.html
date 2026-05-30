@@ -1,0 +1,804 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Mall App: Sprint 1 -- Crawl, Map, Watch | GBAutomation</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&display=swap');
+    :root {
+      --cream-bg: #F3F1E7;
+      --cream-panel: #E6E4D9;
+      --text-main: #191919;
+      --text-muted: #5C5C5C;
+      --text-light: #8C8A84;
+      --border: #D6D4C8;
+      --terracotta: #D97757;
+      --paper: #FFFFFF;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text-main);
+      background: var(--cream-bg);
+      font-size: 14px;
+      line-height: 1.58;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+    a { color: var(--text-main); text-decoration-color: var(--terracotta); text-underline-offset: 3px; }
+    button { font: inherit; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(214, 212, 200, .7);
+      background: rgba(243, 241, 231, .93);
+      backdrop-filter: blur(12px);
+    }
+    .topbar-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 13px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .brand-lockup { display: inline-flex; align-items: center; gap: 9px; min-height: 28px; }
+    .brand-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(217, 119, 87, .18);
+    }
+    .brand-dot::after { content: ""; width: 8px; height: 8px; border-radius: 999px; background: var(--terracotta); }
+    .brand-text {
+      font-family: Newsreader, serif;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-size: 12px;
+    }
+    .source-name { color: var(--text-muted); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    header {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 34px 24px 26px;
+    }
+    .eyebrow {
+      color: var(--terracotta);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    h1 {
+      max-width: 920px;
+      margin: 10px 0 18px;
+      font-family: Newsreader, serif;
+      font-size: clamp(30px, 4vw, 48px);
+      font-weight: 500;
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+    .summary-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+    .summary-meta li {
+      min-height: 30px;
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, .45);
+      padding: 5px 9px;
+      border-radius: 6px;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .taxonomy-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0 0 14px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      min-height: 23px;
+      padding: 2px 8px;
+      border: 1px solid;
+      border-radius: 999px;
+      line-height: 1;
+    }
+    .pill-facet {
+      font-size: 8.5px;
+      font-weight: 700;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+    .pill-value {
+      color: var(--text-main);
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .layout {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 22px 24px 56px;
+      display: grid;
+      grid-template-columns: 252px minmax(0, 1fr);
+      gap: 22px;
+      align-items: start;
+    }
+    .section-menu {
+      position: sticky;
+      top: 64px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(230, 228, 217, .62);
+      backdrop-filter: blur(12px);
+      padding: 12px;
+    }
+    .menu-title {
+      margin: 0 0 10px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .menu-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+    .menu-actions button,
+    .section-menu nav button {
+      min-height: 34px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .46);
+      color: rgba(25, 25, 25, .72);
+      cursor: pointer;
+      transition: border-color .18s ease, color .18s ease, background .18s ease;
+    }
+    .menu-actions button { padding: 0 8px; font-size: 11px; font-weight: 700; }
+    .section-menu nav { display: grid; gap: 5px; }
+    .section-menu nav button {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 30px 1fr;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      text-align: left;
+      font-size: 12px;
+      line-height: 1.25;
+    }
+    .section-menu nav button span { color: var(--terracotta); font-size: 10px; font-weight: 700; letter-spacing: .08em; }
+    .menu-actions button:hover,
+    .section-menu nav button:hover,
+    .section-menu nav button.active {
+      border-color: var(--terracotta);
+      background: rgba(255, 255, 255, .72);
+      color: var(--text-main);
+    }
+    .sections { display: grid; gap: 10px; }
+    details.section {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .5);
+      overflow: hidden;
+    }
+    details.section[open] { background: rgba(255, 255, 255, .68); }
+    details.section summary {
+      min-height: 52px;
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 12px 14px;
+      cursor: pointer;
+      list-style: none;
+    }
+    details.section summary::-webkit-details-marker { display: none; }
+    .section-index {
+      color: var(--terracotta);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+    }
+    .section-title {
+      font-family: Newsreader, serif;
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.18;
+    }
+    .section-count {
+      color: var(--text-light);
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .section-body {
+      border-top: 1px solid rgba(214, 212, 200, .75);
+      padding: 4px 18px 18px 68px;
+    }
+    .section-body h2,
+    .section-body h3,
+    .section-body h4,
+    .section-body h5 {
+      margin: 18px 0 8px;
+      color: var(--text-main);
+      font-family: Newsreader, serif;
+      font-weight: 500;
+      line-height: 1.2;
+    }
+    .section-body h2 { font-size: 19px; }
+    .section-body h3 { font-size: 17px; }
+    .section-body h4,
+    .section-body h5 {
+      font-family: Inter, sans-serif;
+      color: var(--text-light);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+    .section-body p,
+    .section-body li { color: var(--text-muted); font-size: 14px; line-height: 1.66; }
+    .section-body p { margin: 10px 0; }
+    .section-body ul,
+    .section-body ol { margin: 10px 0 10px 18px; padding: 0; }
+    .section-body li { margin: 5px 0; padding-left: 2px; }
+    .section-body .task { list-style: none; margin-left: -18px; display: flex; gap: 8px; align-items: flex-start; }
+    .section-body input[type="checkbox"] { margin-top: 4px; accent-color: var(--terracotta); }
+    code {
+      border: 1px solid rgba(217, 119, 87, .22);
+      border-radius: 4px;
+      background: rgba(217, 119, 87, .10);
+      padding: 1px 4px;
+      color: var(--text-main);
+      font-size: .92em;
+    }
+    pre {
+      overflow: auto;
+      margin: 12px 0;
+      border-radius: 8px;
+      background: #191919;
+      color: #F3F1E7;
+      padding: 14px;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+    pre code { border: 0; background: transparent; color: inherit; padding: 0; }
+    blockquote {
+      margin: 12px 0;
+      padding: 10px 12px;
+      border-left: 3px solid var(--terracotta);
+      background: rgba(230, 228, 217, .5);
+    }
+    hr { border: 0; border-top: 1px solid var(--border); margin: 18px 0; }
+    .table-wrap { overflow-x: auto; margin: 12px 0; border: 1px solid var(--border); border-radius: 8px; }
+    table { width: 100%; border-collapse: collapse; min-width: 560px; background: rgba(255, 255, 255, .5); }
+    th,
+    td { border-bottom: 1px solid rgba(214, 212, 200, .75); padding: 8px 10px; text-align: left; font-size: 12px; vertical-align: top; }
+    th { color: var(--text-main); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; }
+    tr:last-child td { border-bottom: 0; }
+    .empty { color: var(--text-light); font-style: italic; }
+    footer {
+      border-top: 1px solid rgba(214, 212, 200, .78);
+      background: rgba(230, 228, 217, .45);
+    }
+    .footer-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    .footer-label {
+      margin-bottom: 12px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .metadata-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .meta-item {
+      min-width: 0;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .42);
+      padding: 9px 10px;
+    }
+    .meta-item span {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .meta-item strong {
+      display: block;
+      overflow-wrap: anywhere;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.35;
+    }
+    @media (max-width: 860px) {
+      .topbar-inner,
+      header,
+      .layout,
+      .footer-inner { padding-left: 16px; padding-right: 16px; }
+      .layout { display: block; }
+      .section-menu { position: static; margin-bottom: 14px; }
+      .section-body { padding-left: 18px; }
+      .metadata-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 540px) {
+      .topbar-inner { align-items: flex-start; flex-direction: column; gap: 6px; }
+      details.section summary { grid-template-columns: 34px 1fr; }
+      .section-count { grid-column: 2; }
+      h1 { font-size: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand-lockup"><span class="brand-dot"></span><span class="brand-text">GBAutomation</span></div>
+      <div class="source-name">2026-05-26-the-mall-sprint-1-prd.md</div>
+    </div>
+  </div>
+  <header>
+    <div class="eyebrow">Plan Brief</div>
+    <h1>The Mall App: Sprint 1 -- Crawl, Map, Watch</h1>
+    <div class="taxonomy-pills"><span class="pill" style="background:rgba(217, 119, 87, 0.12);border-color:rgba(217, 119, 87, 0.42);"><span class="pill-facet" style="color:#D97757;">domain</span><span class="pill-value">consulting</span></span><span class="pill" style="background:rgba(194, 138, 45, 0.12);border-color:rgba(194, 138, 45, 0.42);"><span class="pill-facet" style="color:#C28A2D;">domain</span><span class="pill-value">build</span></span><span class="pill" style="background:rgba(79, 157, 105, 0.12);border-color:rgba(79, 157, 105, 0.42);"><span class="pill-facet" style="color:#4F9D69;">service</span><span class="pill-value">supabase</span></span></div>
+    <ul class="summary-meta">
+      <li>Client: the-mall</li><li>Priority: high</li><li>Status: proposed</li><li>prd</li><li>sprint-1</li><li>client/the-mall</li><li>status/proposed</li><li>service/instagram</li>
+      <li>Owner: GBAutomation</li>
+      <li>Created: 2026-05-26</li>
+      <li>15 sections</li>
+      <li>2,022 words</li>
+    </ul>
+  </header>
+  <main class="layout">
+    <aside class="section-menu" aria-label="Plan sections">
+  <div class="menu-title">Sections</div>
+  <div class="menu-actions">
+    <button type="button" data-action="expand">Expand all</button>
+    <button type="button" data-action="collapse">Collapse all</button>
+  </div>
+  <nav><button type="button" data-target="overview"><span>01</span>Overview</button>
+<button type="button" data-target="1-product-thesis"><span>02</span>§ 1 Product Thesis</button>
+<button type="button" data-target="2-sprint-goal"><span>03</span>§ 2 Sprint Goal</button>
+<button type="button" data-target="3-what-we-already-have-days-1-8"><span>04</span>§ 3 What We Already Have (Days 1-8)</button>
+<button type="button" data-target="4-what-we-re-building-days-9-14"><span>05</span>§ 4 What We&#x27;re Building (Days 9-14)</button>
+<button type="button" data-target="5-proposed-data-schema-v0-for-sreya-to-refine"><span>06</span>§ 5 Proposed Data Schema (v0 -- for Sreya to refine)</button>
+<button type="button" data-target="6-proposed-alert-taxonomy-v0-for-sreya-to-refine"><span>07</span>§ 6 Proposed Alert Taxonomy (v0 -- for Sreya to refine)</button>
+<button type="button" data-target="7-open-questions-for-sreya"><span>08</span>§ 7 Open Questions for Sreya</button>
+<button type="button" data-target="8-architecture"><span>09</span>§ 8 Architecture</button>
+<button type="button" data-target="9-timeline"><span>10</span>§ 9 Timeline</button>
+<button type="button" data-target="10-out-of-scope-explicit"><span>11</span>§ 10 Out of Scope (Explicit)</button>
+<button type="button" data-target="11-success-criteria"><span>12</span>§ 11 Success Criteria</button>
+<button type="button" data-target="12-risks-mitigations"><span>13</span>§ 12 Risks + Mitigations</button>
+<button type="button" data-target="13-acceptance-checklist-verify-day-14"><span>14</span>§ 13 Acceptance Checklist (verify Day 14)</button>
+<button type="button" data-target="14-references"><span>15</span>§ 14 References</button></nav>
+</aside>
+    <div class="sections">
+      <details class="section" id="overview" open>
+  <summary>
+    <span class="section-index">01</span>
+    <span class="section-title">Overview</span>
+    <span class="section-count">0 words</span>
+  </summary>
+  <div class="section-body">
+    <p class="empty">No section notes yet.</p>
+  </div>
+</details>
+<details class="section" id="1-product-thesis">
+  <summary>
+    <span class="section-index">02</span>
+    <span class="section-title">§ 1 Product Thesis</span>
+    <span class="section-count">139 words</span>
+  </summary>
+  <div class="section-body">
+    <p>The Mall App is a personal-mall consumer app -- users curate their own feed of indie brands they love. To make that feed alive (not stale), the app needs a backend that <strong>continuously knows what those brands are doing</strong>: new drops, price changes, sales, sellouts. Sprint 1 ships the first half of that backend: an agent that <strong>crawls and maps</strong> brand surfaces (Instagram + Shopify storefronts to start), <strong>lands canonical data in Supabase</strong>, <strong>runs on a schedule</strong>, and <strong>alerts</strong> when something interesting changes.</p>
+<p>By Day 14 (Monday 2026-06-01, 5pm ET review), we expect to demo a live Supabase view showing 3-5 of Sreya&#x27;s tracked brands with full catalogs + a real price-change alert firing through the chosen channel. Day 14 also locks the <strong>data schema and alert taxonomy</strong> with Sreya&#x27;s input -- the proposed v0 in §§ 5-6 is for her remarks, not sign-off.</p>
+  </div>
+</details>
+<details class="section" id="2-sprint-goal">
+  <summary>
+    <span class="section-index">03</span>
+    <span class="section-title">§ 2 Sprint Goal</span>
+    <span class="section-count">60 words</span>
+  </summary>
+  <div class="section-body">
+    <p>Stand up the &quot;agent + watch loop&quot; half of The Mall App backend in 14 days.</p>
+<p><strong>Acceptance:</strong></p>
+<ol>
+<li>Agent runs unattended for 48 hours on Mac Mini without crashes or manual reset</li>
+<li>≥3 brands tracked end-to-end (catalog ingested, history retained, current-state queryable in Supabase Studio)</li>
+<li>≥1 real price-change or sale event fires an alert through the channel Sreya picks</li>
+</ol>
+  </div>
+</details>
+<details class="section" id="3-what-we-already-have-days-1-8">
+  <summary>
+    <span class="section-index">04</span>
+    <span class="section-title">§ 3 What We Already Have (Days 1-8)</span>
+    <span class="section-count">164 words</span>
+  </summary>
+  <div class="section-body">
+    <p>Sprint started Monday 2026-05-18 -- the same day the Hermes <code>mall-scraper</code> profile was birthed and the first IG baseline scrape ran. Mid-sprint state as of 2026-05-26:</p>
+<ul>
+<li><strong><code>mall-scraper</code> Hermes profile</strong> on the Mac Mini (<code>~/.hermes/profiles/mall-scraper/</code>) -- pivoted client-dedicated 2026-05-26; reads SOUL/MEMORY/BOOTSTRAP/.hermes.md from the vault canonical source</li>
+<li><strong><code>social-catalog-scraper</code> skill</strong> (<code>~/.hermes/skills/research/social-catalog-scraper/</code>) -- the actual scraping engine</li>
+<li><strong>Two working adapters:</strong> Instagram public-profile + Shopify <code>/products.json</code>; detection logic for WooCommerce, BigCommerce, Squarespace, generic</li>
+<li><strong>Canonical 12-column schema</strong> every adapter emits (<code>source_url</code>, <code>source_platform</code>, <code>source_handle</code>, <code>item_id</code>, <code>item_type</code>, <code>title</code>, <code>url</code>, <code>image</code>, <code>price</code>, <code>available</code>, <code>created_at</code>, <code>raw_json</code>)</li>
+<li><strong>Baseline IG scrape</strong> of @themall.app (2026-05-18) -- 12 posts, avg 63.2 likes, top 207 (the founder-reveal post). Archived at <code>~/.openclaw/workspace/mall-scraper/themall.app/2026-05-18/</code> + vault stub at <code>clients/the-mall/deliverables/_baseline-ig-scrape-2026-05-18.md</code></li>
+<li><strong><code>gbauto/the-mall</code> GitHub repo</strong> (private, created 2026-05-26) -- contains the agent profile snapshot, the skill, and the baseline scrape. Cloned at <code>~/repos/the-mall</code> on Mac Mini</li>
+<li><strong>Vault wiring</strong> -- engagement profile, knowledge entities (Sreya, Ellie), engagement concept, dashboard registration, auto-memory</li>
+</ul>
+  </div>
+</details>
+<details class="section" id="4-what-we-re-building-days-9-14">
+  <summary>
+    <span class="section-index">05</span>
+    <span class="section-title">§ 4 What We&#x27;re Building (Days 9-14)</span>
+    <span class="section-count">208 words</span>
+  </summary>
+  <div class="section-body">
+    <p>Two surfaces ship by Day 14:</p>
+<h4>Surface A: <code>mall-scraper</code> agent v2 (build)</h4>
+<p>Upgrades on top of the v1 already running:</p>
+<div class="table-wrap"><table><thead><tr><th>Capability</th><th>v1 (have)</th><th>v2 (build)</th></tr></thead><tbody><tr><td>Detect platform from URL</td><td>✓ (IG + Shopify implemented; others detection-only)</td><td>Same + add <strong>WooCommerce</strong> adapter</td></tr>
+<tr><td>Walk paginated catalogs</td><td>✓ (Shopify)</td><td>+ <strong>IG pagination past the 12-post cap</strong> via the <code>timeline_media</code> GraphQL cursor pattern documented in <code>references/ig-full-pagination.md</code></td></tr>
+<tr><td>Emit canonical CSV/JSON locally</td><td>✓</td><td>Same (kept as ground-truth)</td></tr>
+<tr><td>Emit reproducible standalone script</td><td>✓</td><td>Same</td></tr>
+<tr><td><strong>Write rows to Supabase per scrape</strong></td><td>--</td><td><strong>NEW</strong> (3-4 tables, see § 5)</td></tr>
+<tr><td><strong>Download images locally</strong></td><td>--</td><td><strong>NEW</strong> (Supabase Storage bucket OR link-only -- pending Sreya)</td></tr>
+<tr><td><strong>Run on a schedule</strong></td><td>--</td><td><strong>NEW</strong> launchd job + <code>Invoke-WithReceipt</code>-style wrapper</td></tr>
+<tr><td><strong>Detect sale + price changes vs. last run</strong></td><td>--</td><td><strong>NEW</strong> diff logic against <code>mall_price_history</code></td></tr>
+<tr><td><strong>Fire alerts</strong></td><td>--</td><td><strong>NEW</strong> at least one path (Telegram default, configurable)</td></tr></tbody></table></div>
+<h4>Surface B: Read view (demo)</h4>
+<p>For Sprint 1, the &quot;app side&quot; is <strong>a queryable Supabase</strong>, not a mobile UI. Sreya + Greg hit Supabase Studio (or a <code>gbauto-supabase query</code> CLI) to see:</p>
+<ul>
+<li>&quot;Show me everything @vaincourt_paris has, with current price and availability&quot;</li>
+<li>&quot;Which items went on sale this week?&quot;</li>
+<li>&quot;Which items got cheaper than they were last Monday?&quot;</li>
+</ul>
+<p>A dedicated dashboard / mobile-app view is <strong>out of scope for Sprint 1</strong> -- that&#x27;s a Sprint 2 (or later) conversation once the schema is settled.</p>
+  </div>
+</details>
+<details class="section" id="5-proposed-data-schema-v0-for-sreya-to-refine">
+  <summary>
+    <span class="section-index">06</span>
+    <span class="section-title">§ 5 Proposed Data Schema (v0 -- for Sreya to refine)</span>
+    <span class="section-count">354 words</span>
+  </summary>
+  <div class="section-body">
+    <p>Four tables. DDL below is the <strong>starting point</strong>; Sreya&#x27;s answer to § 7 Q1 will refine <code>mall_items</code> columns. <code>raw_json</code> columns kept everywhere so we can replay/migrate when the schema changes.</p>
+<pre><code>-- 001_mall_brands.sql
+create table if not exists mall_brands (
+  brand_id        uuid primary key default gen_random_uuid(),
+  handle          text not null,                   -- &#x27;vaincourt_paris&#x27;, &#x27;themall.app&#x27;
+  platform        text not null,                   -- &#x27;instagram&#x27; | &#x27;shopify&#x27; | &#x27;woocommerce&#x27; | ...
+  source_url      text not null,                   -- canonical scrape URL
+  display_name    text,
+  status          text not null default &#x27;active&#x27;,  -- &#x27;active&#x27; | &#x27;paused&#x27; | &#x27;errored&#x27;
+  scrape_cadence  text not null default &#x27;daily&#x27;,   -- &#x27;hourly&#x27; | &#x27;6h&#x27; | &#x27;daily&#x27; (Sreya picks)
+  last_scraped_at timestamptz,
+  created_at      timestamptz not null default now(),
+  unique (handle, platform)
+);
+
+-- 002_mall_items.sql -- v0 schema, expect to evolve after Sreya&#x27;s input
+create table if not exists mall_items (
+  item_id            uuid primary key default gen_random_uuid(),
+  brand_id           uuid not null references mall_brands(brand_id),
+  source_item_id     text not null,                -- platform-stable id (Shopify product id, IG post id)
+  item_type          text not null,                -- &#x27;product&#x27; | &#x27;variant&#x27; | &#x27;post&#x27; | &#x27;reel&#x27;
+  title              text,
+  description        text,
+  url                text,
+  image_urls         jsonb,                        -- array of URLs (or local paths once we download)
+  price              numeric(10,2),
+  currency           text default &#x27;USD&#x27;,
+  sale_price         numeric(10,2),
+  compare_at_price   numeric(10,2),
+  available          boolean,
+  raw_json           jsonb,                        -- full source-platform record (so we can re-derive)
+  first_seen_at      timestamptz not null default now(),
+  last_seen_at       timestamptz not null default now(),
+  removed_at         timestamptz,                  -- set when an item disappears from a brand&#x27;s catalog
+  unique (brand_id, source_item_id)
+);
+
+create index idx_mall_items_brand on mall_items (brand_id, last_seen_at desc);
+create index idx_mall_items_on_sale on mall_items (sale_price) where sale_price is not null;
+
+-- 003_mall_price_history.sql -- append-only, drives sale + price-drop detection
+create table if not exists mall_price_history (
+  history_id   uuid primary key default gen_random_uuid(),
+  item_id      uuid not null references mall_items(item_id),
+  price        numeric(10,2),
+  sale_price   numeric(10,2),
+  available    boolean,
+  scraped_at   timestamptz not null default now()
+);
+
+create index idx_price_history_item on mall_price_history (item_id, scraped_at desc);
+
+-- 004_scrape_runs.sql -- mirrors the outbound_runs telemetry pattern
+create table if not exists scrape_runs (
+  run_id          uuid primary key default gen_random_uuid(),
+  brand_id        uuid references mall_brands(brand_id),
+  source_handle   text not null,
+  source_platform text not null,
+  status          text not null,                   -- &#x27;ok&#x27; | &#x27;partial&#x27; | &#x27;failed&#x27;
+  item_count      integer,
+  duration_ms     integer,
+  output_dir      text,                            -- ~/.openclaw/workspace/mall-scraper/&lt;handle&gt;/&lt;YYYY-MM-DD&gt;/
+  error_tail      text,                            -- truncated stderr if failed
+  payload         jsonb,                           -- extensible per-run metadata
+  scraped_at      timestamptz not null default now()
+);</code></pre>
+  </div>
+</details>
+<details class="section" id="6-proposed-alert-taxonomy-v0-for-sreya-to-refine">
+  <summary>
+    <span class="section-index">07</span>
+    <span class="section-title">§ 6 Proposed Alert Taxonomy (v0 -- for Sreya to refine)</span>
+    <span class="section-count">94 words</span>
+  </summary>
+  <div class="section-body">
+    <p>Five event types. v0 candidate -- Sreya picks which matter and where they land.</p>
+<div class="table-wrap"><table><thead><tr><th>Event</th><th>Trigger</th><th>Default Channel</th></tr></thead><tbody><tr><td><code>item.new</code></td><td><code>mall_items</code> insert for an existing brand</td><td>Daily digest</td></tr>
+<tr><td><code>item.removed</code></td><td><code>removed_at</code> set (item disappeared from brand&#x27;s catalog)</td><td>Daily digest</td></tr>
+<tr><td><code>item.on_sale</code></td><td><code>sale_price</code> first appears for an item</td><td>Telegram (instant)</td></tr>
+<tr><td><code>item.price_drop</code></td><td><code>price</code> dropped &gt; X% vs. baseline (X = 10% default)</td><td>Telegram (instant)</td></tr>
+<tr><td><code>item.restocked</code></td><td><code>available</code> goes <code>false</code> → <code>true</code></td><td>Daily digest</td></tr></tbody></table></div>
+<p>Per the existing <code>@gbauto_hermes_bot</code> Telegram bot pattern, alerts fire to the chat Sreya designates. Email digest is the alternative if she prefers (less noisy, daily roll-up).</p>
+  </div>
+</details>
+<details class="section" id="7-open-questions-for-sreya">
+  <summary>
+    <span class="section-index">08</span>
+    <span class="section-title">§ 7 Open Questions for Sreya</span>
+    <span class="section-count">194 words</span>
+  </summary>
+  <div class="section-body">
+    <p>The five we need answered before Friday (2026-05-29) to land everything by Monday&#x27;s review:</p>
+<ol>
+<li><strong>Data fields</strong> -- Beyond what&#x27;s in v0 (title, description, price, image, available, sale_price), which fields matter? Candidates: <code>sizes[]</code>, <code>colors[]</code>, <code>materials</code>, <code>vendor_url</code>, <code>in_stock_count</code>, <code>shipping_notes</code>, <code>tags[]</code>, <code>product_type</code>. Tell us which to add and which to skip.</li>
+<li><strong>Photos</strong> -- How many per item (1 hero / 3-5 / all variants / all)? Max resolution? Where do they live: Supabase Storage (we host), link-only (we just store the brand&#x27;s CDN URL), or both (link-only at first, download on-demand)?</li>
+<li><strong>Alert types</strong> -- Which of the five events in § 6 matter? Where do they land -- Telegram (<code>@gbauto_hermes_bot</code> in a chat you join), email digest to you + Ellie, in-app push later, or somewhere else? What&#x27;s the price-drop threshold % that&#x27;s worth a notification?</li>
+<li><strong>Brand list (v1)</strong> -- What&#x27;s the starting set of brands the agent should track? The five from your 2026-05-16 reel (<code>@vaincourt_paris</code>, <code>@amanustudio</code>, <code>@dehanche__</code>, <code>@blowthebelt</code>, <code>@streetsaheadusa</code>) or a different shortlist? Have direct storefront URLs (Shopify is cheaper to scrape than IG)?</li>
+<li><strong>Cadence</strong> -- How fresh do prices need to be: daily, every 6 hours, or hourly? (Hourly is fine technically; the only constraint is being respectful to brand sites.)</li>
+</ol>
+  </div>
+</details>
+<details class="section" id="8-architecture">
+  <summary>
+    <span class="section-index">09</span>
+    <span class="section-title">§ 8 Architecture</span>
+    <span class="section-count">143 words</span>
+  </summary>
+  <div class="section-body">
+    <pre><code>+---------------------------------------------------------------+
+|                                                               |
+|   launchd: com.gbautomation.mall-scraper-daily.plist          |
+|     -- runs at &lt;cadence&gt;, wrapped in Invoke-WithReceipt       |
+|     -- emits host_job_runs receipt + Telegram on failure      |
+|         |                                                     |
+|         v                                                     |
+|   hermes -p mall-scraper exec &quot;scrape &lt;next-due-brand-url&gt;&quot;   |
+|         |                                                     |
+|         v                                                     |
+|   social-catalog-scraper skill                                |
+|     -&gt; URL routing (IG / Shopify / WC / generic)              |
+|     -&gt; walk catalog (with full IG pagination past 12)         |
+|     -&gt; emit 5 local artifacts (CSV, JSON, raw, summary, .py)  |
+|     -&gt; **insert into mall_items + mall_price_history**        |
+|     -&gt; **insert row into scrape_runs**                        |
+|     -&gt; **compute diffs vs. previous run**                     |
+|     -&gt; **fire alert(s) via TG bot if thresholds tripped**     |
+|                                                               |
++---------------------------------------------------------------+
+
++---------------------------------------------------------------+
+|                                                               |
+|   Supabase (gbauto project, schema: public)                   |
+|     mall_brands       -- one per tracked brand                |
+|     mall_items        -- current state per item               |
+|     mall_price_history-- append-only, drives diffs            |
+|     scrape_runs       -- per-run telemetry                    |
+|                                                               |
+|   Storage bucket: mall-images/ (if Sreya wants downloads)     |
+|                                                               |
++---------------------------------------------------------------+</code></pre>
+<p>Existing canonical patterns we reuse (no reinvention):</p>
+<ul>
+<li><code>scripts/launchd_secrets_wrapper.sh</code> -- env-var materialization for the cron</li>
+<li><code>Invoke-WithReceipt.ps1</code> pattern -- host_job_runs receipt + Telegram-on-failure (Mac Mini equivalent)</li>
+<li><code>~/.hermes/lib/outbound_supabase_writer.py</code> -- sed-rename → <code>scrape_supabase_writer.py</code></li>
+<li><code>gbauto-supabase</code> CLI -- all migrations + inserts route through here per standing policy</li>
+</ul>
+  </div>
+</details>
+<details class="section" id="9-timeline">
+  <summary>
+    <span class="section-index">10</span>
+    <span class="section-title">§ 9 Timeline</span>
+    <span class="section-count">81 words</span>
+  </summary>
+  <div class="section-body">
+    <div class="table-wrap"><table><thead><tr><th>Days</th><th>Date range</th><th>Work</th></tr></thead><tbody><tr><td>1-8 (done)</td><td>05-18 → 05-26</td><td>mall-scraper profile + skill + baseline scrape + repo + vault wiring</td></tr>
+<tr><td>9-11</td><td>05-27 → 05-29</td><td>Supabase schema migration (4 tables), <code>scrape_supabase_writer.py</code>, agent inserts per run, IG full-pagination, image-download adapter, launchd cron landed</td></tr>
+<tr><td>12-13</td><td>05-30 → 05-31</td><td>Sale + net-price-change diff logic, 3-5 brand initial set tracked, Telegram alert wired, <strong>48h unattended dry-run</strong></td></tr>
+<tr><td>14</td><td>06-01 (5pm ET)</td><td><strong>Sprint review session with Sreya</strong> -- live demo against Supabase, walkthrough of a real alert firing, lock schema + alert taxonomy, scope Sprint 2</td></tr></tbody></table></div>
+  </div>
+</details>
+<details class="section" id="10-out-of-scope-explicit">
+  <summary>
+    <span class="section-index">11</span>
+    <span class="section-title">§ 10 Out of Scope (Explicit)</span>
+    <span class="section-count">58 words</span>
+  </summary>
+  <div class="section-body">
+    <ul>
+<li>Native mobile app UI (Sprint 2+)</li>
+<li>Auth / RBAC / multi-user (Sreya + Ellie + Greg manually for now)</li>
+<li>Multi-tenant brand subscriptions (one brand list, no per-user views yet)</li>
+<li>WooCommerce / BigCommerce / Squarespace adapters beyond detection (Sprint 2+, only if Sreya&#x27;s brand list needs them)</li>
+<li>App Store assets, marketing site copy, App Store launch coordination</li>
+<li>TikTok scraping (browser-only, expensive, skipped until Sreya asks)</li>
+</ul>
+  </div>
+</details>
+<details class="section" id="11-success-criteria">
+  <summary>
+    <span class="section-index">12</span>
+    <span class="section-title">§ 11 Success Criteria</span>
+    <span class="section-count">92 words</span>
+  </summary>
+  <div class="section-body">
+    <p>By 2026-06-01 5pm ET:</p>
+<ul>
+<li class="task"><input type="checkbox" disabled> <span>Agent ran unattended for ≥48 consecutive hours through Day 12-13 dry-run with zero crashes / manual restarts</span></li>
+<li class="task"><input type="checkbox" disabled> <span>≥3 brands tracked end-to-end -- catalogs fully ingested, history retained, querable in Supabase Studio</span></li>
+<li class="task"><input type="checkbox" disabled> <span>≥1 real <code>item.on_sale</code> or <code>item.price_drop</code> event detected from a real brand&#x27;s actual change and fired through the chosen alert channel</span></li>
+<li class="task"><input type="checkbox" disabled> <span>Sreya can hit a Supabase view (or <code>gbauto-supabase query</code> CLI) and answer &quot;what&#x27;s @vaincourt_paris currently selling, with prices, in stock?&quot; in one shot</span></li>
+<li class="task"><input type="checkbox" disabled> <span>Sprint 2 scope locked in the review session based on the demo + Sreya&#x27;s reactions</span></li>
+</ul>
+  </div>
+</details>
+<details class="section" id="12-risks-mitigations">
+  <summary>
+    <span class="section-index">13</span>
+    <span class="section-title">§ 12 Risks + Mitigations</span>
+    <span class="section-count">176 words</span>
+  </summary>
+  <div class="section-body">
+    <div class="table-wrap"><table><thead><tr><th>Risk</th><th>Likelihood</th><th>Mitigation</th></tr></thead><tbody><tr><td>IG cookie expires mid-sprint -&gt; scraper goes blind</td><td>Medium</td><td>Cookie refresh procedure documented in <code>references/ig-cookie-extraction.md</code>; heartbeat alerts on <code>scrape_runs.status = &#x27;failed&#x27;</code> so we catch it within an hour, not a day</td></tr>
+<tr><td>Shopify storefront blocks our user-agent</td><td>Low</td><td>Respectful headers + 0.3s page sleeps; if blocked, fall back to browser harness (still works, just slower)</td></tr>
+<tr><td>Schema churn after Sreya&#x27;s response invalidates Days 9-11 work</td><td>Medium</td><td><code>raw_json</code> in every row -- can re-derive any column we add later. Day 10-11 inserts won&#x27;t be lost; we just <code>UPDATE ... SET new_col = raw_json-&gt;&gt;...</code></td></tr>
+<tr><td>Sreya doesn&#x27;t respond by Friday -&gt; we ship the v0 defaults</td><td>Medium</td><td>Build against v0 defaults from Day 9; Friday-Saturday is for absorbing her remarks. Worst case we ship defaults + iterate on Monday</td></tr>
+<tr><td>Launchd cron secrets foot-gun (per existing memory)</td><td>Low</td><td>Use <code>scripts/launchd_secrets_wrapper.sh</code> (canonical standard per 2026-05-04 ADR); never inline secrets in the plist</td></tr>
+<tr><td>48h dry-run hits IG rate-limit</td><td>Medium</td><td>Build in jitter (sleep 5s between handles, 0.3s between pages); if rate-limited, lower cadence to <code>6h</code> for IG brands and keep Shopify <code>hourly</code></td></tr></tbody></table></div>
+  </div>
+</details>
+<details class="section" id="13-acceptance-checklist-verify-day-14">
+  <summary>
+    <span class="section-index">14</span>
+    <span class="section-title">§ 13 Acceptance Checklist (verify Day 14)</span>
+    <span class="section-count">93 words</span>
+  </summary>
+  <div class="section-body">
+    <ul>
+<li class="task"><input type="checkbox" disabled> <span><code>~/.hermes/profiles/mall-scraper/</code> v2 SOUL.md reflects multi-brand + Supabase-aware mission</span></li>
+<li class="task"><input type="checkbox" disabled> <span><code>social-catalog-scraper</code> skill has <code>scrape_supabase_writer.py</code> + IG pagination + image adapter</span></li>
+<li class="task"><input type="checkbox" disabled> <span>Migrations <code>001_mall_brands.sql</code> through <code>004_scrape_runs.sql</code> applied to Supabase via <code>gbauto-supabase migrate apply</code></span></li>
+<li class="task"><input type="checkbox" disabled> <span>launchd plist <code>com.gbautomation.mall-scraper-daily.plist</code> loaded; first cron run completed</span></li>
+<li class="task"><input type="checkbox" disabled> <span>3-5 brands in <code>mall_brands</code> with <code>status = &#x27;active&#x27;</code>; full catalogs in <code>mall_items</code>; history accumulating in <code>mall_price_history</code></span></li>
+<li class="task"><input type="checkbox" disabled> <span>At least one row in <code>scrape_runs</code> with <code>status = &#x27;ok&#x27;</code> per brand</span></li>
+<li class="task"><input type="checkbox" disabled> <span>Telegram alert demo wires to a chat Sreya joins</span></li>
+<li class="task"><input type="checkbox" disabled> <span>Sreya&#x27;s Q1-Q5 answers captured in the engagement concept + reflected in v2 schema migrations if any</span></li>
+</ul>
+  </div>
+</details>
+<details class="section" id="14-references">
+  <summary>
+    <span class="section-index">15</span>
+    <span class="section-title">§ 14 References</span>
+    <span class="section-count">92 words</span>
+  </summary>
+  <div class="section-body">
+    <ul>
+<li>The Mall App client profile</li>
+<li>engagement concept</li>
+<li>knowledge/entities/sreya-halder / knowledge/entities/ellie</li>
+<li><code>gbauto/the-mall</code> repo: agent + skill + baseline data</li>
+<li><code>~/.hermes/skills/research/social-catalog-scraper/references/ig-full-pagination.md</code> -- IG pagination pattern (12 cap workaround)</li>
+<li><code>~/.hermes/skills/devops/hermes-profiles/references/multi-skill-profile-supabase-telemetry.md</code> -- <code>scrape_runs</code> table pattern</li>
+<li>2026-05-18 baseline scrape: <code>~/.openclaw/workspace/mall-scraper/themall.app/2026-05-18/</code></li>
+</ul>
+<hr>
+<p><em>This PRD is a collaborative mid-sprint draft. Sreya&#x27;s remarks on §§ 5-7 directly shape what ships by 2026-06-01. Send remarks to greg@gbautomation.xyz or just hit reply to the email this PRD arrived in.</em></p>
+  </div>
+</details>
+    </div>
+  </main>
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-label">Metadata</div>
+      <div class="metadata-grid">
+        <div class="meta-item"><span>Source</span><strong>C:\Users\gblac\OneDrive\Desktop\gbauto\gbautomation\second-brain\plans\2026-05-26-the-mall-sprint-1-prd.md</strong></div>
+<div class="meta-item"><span>Generated</span><strong>2026-05-26T17:49:18-07:00</strong></div>
+<div class="meta-item"><span>Source modified</span><strong>2026-05-26T17:49:17-07:00</strong></div>
+<div class="meta-item"><span>Source size</span><strong>18,561 bytes</strong></div>
+<div class="meta-item"><span>Word count</span><strong>2,022</strong></div>
+<div class="meta-item"><span>Sections</span><strong>15</strong></div>
+<div class="meta-item"><span>Renderer</span><strong>resources/skills/netlify-cli/scripts/render_plan_page.py</strong></div>
+<div class="meta-item"><span>Type</span><strong>plan</strong></div>
+<div class="meta-item"><span>Kind</span><strong>prd</strong></div>
+<div class="meta-item"><span>Slug</span><strong>the-mall-sprint-1</strong></div>
+<div class="meta-item"><span>Client</span><strong>the-mall</strong></div>
+<div class="meta-item"><span>Status</span><strong>proposed</strong></div>
+<div class="meta-item"><span>Created</span><strong>2026-05-26</strong></div>
+<div class="meta-item"><span>Updated</span><strong>2026-05-26</strong></div>
+<div class="meta-item"><span>Date</span><strong>2026-05-26</strong></div>
+<div class="meta-item"><span>Priority</span><strong>high</strong></div>
+<div class="meta-item"><span>Estimate Days</span><strong>14</strong></div>
+<div class="meta-item"><span>Domain</span><strong>consulting</strong></div>
+<div class="meta-item"><span>Services</span><strong>supabase, instagram, shopify</strong></div>
+<div class="meta-item"><span>Description</span><strong>Sprint 1 PRD for The Mall App (Sreya Halder + Ellie). Mid-sprint collaborative draft sent for client remarks ahead of the 2026-06-01 review session. Scope: agent that crawls + maps target brand surfaces, lands canonical rows in Supabase, runs periodically, and alerts on sale + net-price changes. What we already have (mall-scraper profile, social-catalog-scraper skill, IG + Shopify adapters, baseline scrape) vs. what we need from Sreya (data fields, photo handling, alert types, brand list, cadence).</strong></div>
+<div class="meta-item"><span>Tags</span><strong>prd, sprint-1, client/the-mall, phase/build, status/proposed, domain/consulting, service/supabase, service/instagram</strong></div>
+<div class="meta-item"><span>Related</span><strong>[[clients/the-mall/profile]], [[knowledge/concepts/the-mall-engagement]], [[knowledge/entities/sreya-halder]], [[knowledge/entities/ellie]]</strong></div>
+      </div>
+    </div>
+  </footer>
+  <script>
+    const sections = Array.from(document.querySelectorAll('details.section'));
+    const menuButtons = Array.from(document.querySelectorAll('[data-target]'));
+    const setActive = (id) => {
+      menuButtons.forEach((button) => button.classList.toggle('active', button.dataset.target === id));
+    };
+    menuButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const section = document.getElementById(button.dataset.target);
+        if (!section) return;
+        section.open = true;
+        setActive(section.id);
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+    document.querySelector('[data-action="expand"]').addEventListener('click', () => sections.forEach((section) => section.open = true));
+    document.querySelector('[data-action="collapse"]').addEventListener('click', () => sections.forEach((section, index) => section.open = index === 0));
+    sections.forEach((section) => {
+      section.addEventListener('toggle', () => {
+        if (section.open) setActive(section.id);
+      });
+    });
+    if (sections[0]) setActive(sections[0].id);
+  </script>
+</body>
+</html>

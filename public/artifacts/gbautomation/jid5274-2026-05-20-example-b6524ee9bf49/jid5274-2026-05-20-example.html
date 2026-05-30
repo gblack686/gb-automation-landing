@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Hermes Configuration Walkthrough — Carlos × Jason</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@1,8..60,300;1,8..60,400;1,8..60,500&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: #191919;
+    color: #F3F1E7;
+    line-height: 1.6;
+    font-weight: 300;
+    padding: 0;
+}
+.deck-shell { max-width: 920px; margin: 0 auto; padding: 40px 24px 80px; }
+
+.cover {
+    padding: 100px 60px;
+    background: linear-gradient(135deg, #191919 0%, #2a2422 100%);
+    border: 1px solid rgba(217, 119, 87, 0.3);
+    border-radius: 8px;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+}
+.cover::before {
+    content: '';
+    position: absolute; top: -40px; right: -40px; width: 240px; height: 240px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(217,119,87,0.18), transparent 70%);
+}
+.cover h1 {
+    font-family: 'Newsreader', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 60px;
+    line-height: 1.1;
+    color: #F3F1E7;
+    margin-bottom: 18px;
+}
+.cover .subtitle {
+    font-family: 'Newsreader', serif;
+    font-style: italic;
+    font-size: 22px;
+    color: #D97757;
+    margin-bottom: 28px;
+}
+.cover .meta {
+    font-size: 13px;
+    color: #888;
+    letter-spacing: 0.5px;
+}
+
+.slide {
+    background: #1f1c1b;
+    border: 1px solid rgba(243, 241, 231, 0.08);
+    border-radius: 6px;
+    padding: 44px 48px;
+    margin-bottom: 28px;
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+.slide-num {
+    font-family: 'Newsreader', serif;
+    font-style: italic;
+    color: #D97757;
+    font-size: 13px;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+.slide h2 {
+    font-family: 'Newsreader', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 38px;
+    color: #F3F1E7;
+    margin-bottom: 16px;
+    line-height: 1.15;
+}
+.slide h3 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 17px;
+    color: #D97757;
+    margin: 24px 0 10px;
+    letter-spacing: 0.3px;
+}
+.slide p { margin-bottom: 12px; color: #d4cfc1; font-size: 15px; }
+.slide ul, .slide ol { margin: 8px 0 12px 20px; }
+.slide li { margin-bottom: 8px; color: #d4cfc1; font-size: 14.5px; }
+.slide li strong { color: #F3F1E7; font-weight: 500; }
+.slide code, .slide .code {
+    font-family: 'SFMono-Regular', Menlo, monospace;
+    font-size: 13px;
+    background: #131110;
+    color: #D97757;
+    padding: 2px 6px;
+    border-radius: 3px;
+    border: 1px solid rgba(217,119,87,0.15);
+}
+.slide pre {
+    background: #131110;
+    color: #d4cfc1;
+    padding: 16px 20px;
+    border-radius: 4px;
+    overflow-x: auto;
+    font-size: 12.5px;
+    line-height: 1.55;
+    border-left: 3px solid #D97757;
+    margin: 12px 0;
+}
+.slide pre code { background: transparent; color: inherit; padding: 0; border: 0; }
+
+.callout {
+    background: rgba(217, 119, 87, 0.08);
+    border-left: 3px solid #D97757;
+    padding: 14px 18px;
+    margin: 16px 0;
+    border-radius: 0 4px 4px 0;
+}
+.callout-title { font-family: 'Newsreader', serif; font-style: italic; color: #D97757; font-weight: 500; margin-bottom: 4px; font-size: 14px; letter-spacing: 0.3px; }
+
+.questions {
+    background: rgba(217, 119, 87, 0.05);
+    border: 1px dashed rgba(217, 119, 87, 0.35);
+    padding: 18px 22px;
+    margin: 20px 0 4px;
+    border-radius: 4px;
+}
+.questions h3 { color: #D97757; margin-top: 0; font-size: 15px; }
+.questions ol { margin-left: 18px; }
+.questions li { color: #c8c3b5; font-style: italic; font-family: 'Newsreader', serif; font-size: 15px; line-height: 1.5; }
+
+.kv { display: grid; grid-template-columns: 200px 1fr; gap: 8px 18px; margin: 8px 0 14px; font-size: 14px; }
+.kv .k { color: #888; font-family: 'SFMono-Regular', monospace; font-size: 12.5px; }
+.kv .v { color: #d4cfc1; }
+
+.pills { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+.pill {
+    background: rgba(243, 241, 231, 0.04);
+    border: 1px solid rgba(243, 241, 231, 0.1);
+    color: #d4cfc1;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+}
+.pill-active { background: rgba(217, 119, 87, 0.18); border-color: #D97757; color: #F3F1E7; }
+.pill-off { color: #666; text-decoration: line-through; }
+.pill-new { background: #D97757; color: #191919; font-weight: 500; border-color: #D97757; }
+
+table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13.5px; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid rgba(243, 241, 231, 0.08); color: #d4cfc1; }
+th { color: #D97757; font-weight: 500; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+.footer {
+    text-align: center;
+    color: #666;
+    font-size: 12px;
+    font-family: 'Newsreader', serif;
+    font-style: italic;
+    margin-top: 40px;
+}
+
+@media print {
+    body { background: white; color: #191919; }
+    .slide, .cover { page-break-after: always; background: white; color: #191919; border-color: #ddd; }
+    .slide h2, .cover h1 { color: #191919; }
+    .slide p, .slide li { color: #333; }
+    .pill, .pill-active, .pill-off, .pill-new { color: #191919; }
+}
+</style>
+</head>
+<body>
+<div class="deck-shell">
+
+<!-- ============== COVER ============== -->
+<div class="cover">
+    <div class="slide-num">GBAutomation × Jason Diaz · 2026-05-20</div>
+    <h1>Hermes Agent <em>Configuration</em>Walkthrough</h1>
+    <div class="subtitle">Choosing what Carlos becomes — feature-by-feature</div>
+    <div class="meta">For: Greg Black × Jason Diaz · Joint working session · v1.0</div>
+</div>
+
+<!-- ============== SLIDE 1 ============== -->
+<div class="slide">
+    <div class="slide-num">Slide 1 of 15 · Framing</div>
+    <h2>Why we're doing this today</h2>
+    <p>Carlos is Jason's AI agent. He's been running on the Mac mini for ~3 weeks. His config is a mirror of Greg's setup as of 2026-05-01 — works, but never tailored to Jason or to the new features Hermes has shipped since.</p>
+    <p>This session does <strong>three things</strong>:</p>
+    <ol>
+        <li><strong>Audit what's on by default</strong> — does Jason actually want what Greg has?</li>
+        <li><strong>Decide on new features</strong> — Hermes shipped &gt;40 features in the last 60 days. Pick the keepers.</li>
+        <li><strong>Plan the hosting move</strong> — Mac mini today, possibly DigitalOcean later. We'll scope that at the end.</li>
+    </ol>
+    <div class="callout">
+        <div class="callout-title">Working method</div>
+        <p style="margin-bottom:0">Each slide shows what GBAuto currently runs. Yellow boxes hold the discussion questions. We answer together, write the answers in the margin, and the result becomes Carlos's new <code>config.yaml</code>.</p>
+    </div>
+</div>
+
+<!-- ============== SLIDE 2 ============== -->
+<div class="slide">
+    <div class="slide-num">Slide 2 · Identity & Personality</div>
+    <h2>Who is Carlos?</h2>
+    <h3>What GBAuto has today</h3>
+    <div class="kv">
+        <div class="k">display.personality</div><div class="v"><span class="code">kawaii</span> (Carlos inherits from Greg's setup — TBD with Jason)</div>
+        <div class="k">display.tui_status_indicator</div><div class="v"><span class="code">kaomoji</span> ( ◕‿◕ instead of plain spinners)</div>
+        <div class="k">SOUL.md</div><div class="v">Each profile has its own SOUL — Carlos's is the Jason-VA voice</div>
+        <div class="k">IDENTITY.md</div><div class="v">Gelby = capybara. Carlos = TBD.</div>
+    </div>
+    <h3>What's new in Hermes</h3>
+    <ul>
+        <li><strong>Personality presets</strong> — <span class="code">kawaii</span>, <span class="code">professional</span>, <span class="code">cynical</span>, <span class="code">terse</span>, plus custom prompts. Docs: <span class="code">features/personality.md</span></li>
+        <li><strong>Skins</strong> <span class="pill pill-new">May 2026</span> — visual themes for the TUI. <span class="code">features/skins.md</span></li>
+        <li><strong>Voice mode</strong> — push-to-talk, 20 languages. Currently OFF for Carlos.</li>
+    </ul>
+    <div class="questions">
+        <h3>Discussion</h3>
+        <ol>
+            <li>What's Carlos's <em>vibe</em>? Same as Gelby (kawaii capybara) or his own thing? Should Jason name an animal?</li>
+            <li>Does Jason want emoji-heavy or all-business? Determines <code>kaomoji</code> vs. <code>spinner</code>.</li>
+            <li>Should we draft a SOUL.md for Carlos together this session? (Greg has Gelby's as a reference.)</li>
+        </ol>
+    </div>
+</div>
+
+<!-- ============== SLIDE 3 ============== -->
+<div class="slide">
+    <div class="slide-num">Slide 3 · Memory & Knowledge</div>
+    <h2>What does Carlos remember?</h2>
+    <h3>What GBAuto has today</h3>
+    <table>
+        <tr><th>System</th><th>Greg's config</th><th>Carlos today</th></tr>
+        <tr><td>MEMORY.md</td><td>4,400 chars cap · 99% full</td><td>Default 2,200 chars cap</td></tr>
+        <tr><td>USER.md</td><td>1,375 chars · 95% full</td><td>Default · empty</td></tr>
+        <tr><td><strong>Holographic memory (fact_store)</strong></td><td>✓ <strong>ON</strong> — 72 facts stored, entity resolution, trust scoring</td><td>✗ <strong>OFF</strong> — no fact store DB</td></tr>
+        <tr><td>Session search (FTS5)</td><td>✓ On — all past sessions queryable</td><td>✓ On — same default</td></tr>
+        <tr><td>Honcho (AI-native memory)</td><td>✗ Off</td><td>✗ Off</td></tr>
+    </table>
+    <h3>What's new in Hermes</h3>
+    <ul>
+        <li><strong>Memory providers plugin system</strong> <span class="pill pill-new">May 2026</span> — swap built-in MEMORY.md for Honcho, Mem0, custom. <span class="code">features/memory-providers.md</span></li>
+        <li><strong>Holographic memory</strong> — entity-aware fact store with compositional queries. Greg has this; Carlos doesn't.</li>
+        <li><strong>Honcho integration</strong> — dialectic reasoning, multi-pass user modeling, semantic search over derived conclusions. <span class="code">features/honcho.md</span></li>
+    </ul>
+    <div class="questions">
+        <h3>Discussion</h3>
+        <ol>
+            <li>Does Carlos need holographic memory? It's powerful but it's another sub-DB to maintain. (Greg recommends yes — entity recall is a step-change.)</li>
+            <li>Try Honcho? It's the heaviest-weight option (external server, API key, $$). Worth it if Jason wants Carlos to <em>actually learn his patterns</em>, overkill for task execution.</li>
+            <li>Bigger MEMORY.md cap? Greg's at 99% full — character-limited memory bites you fast. Recommend 4,400 like Greg.</li>
+            <li>What goes in Jason's USER.md on day one? Greg can pre-populate the template (preferences, communication style, time zone, etc.)</li>
+        </ol>
+    </div>
+</div>
+
+<!-- ============== SLIDE 4 ============== -->
+<div class="slide">
+    <div class="slide-num">Slide 4 · Model & Providers</div>
+    <h2>What brain is Carlos using?</h2>
+    <h3>What GBAuto has today</h3>
+    <div class="kv">
+        <div class="k">model.default</div><div class="v"><span class="code">anthropic/claude-opus-4-7</span> (Opus, 1M context)</div>
+        <div class="k">model.provider</div><div class="v"><span class="code">anthropic</span> via OAuth (Max plan), not API keys</div>
+        <div class="k">OAuth wrapper</div><div class="v"><span class="code">~/.hermes/bin/claude-with-jid5274-auth.sh</span> (Carlos's own OAuth ID)</div>
+        <div class="k">Aux providers</div><div class="v">All set to <span class="code">provider: auto</span> — inherit main</div>
+        <div class="k">Fallback providers</div><div class="v">Empty (no failover configured)</div>
+    </div>
+    <h3>What's new in Hermes</h3>
+    <ul>
+        <li><strong>Credential pools</strong> <span class="pill pill-active">used by Greg</span> — round-robin between multiple keys/OAuth tokens. Reduces rate-limit surface. <span class="code">features/credential-pools.md</span></li>
+        <li><strong>Fallback providers</strong> <span class="pill pill-new">expanded</span> — auto-failover to a different model/provider when primary is overloaded. <span class="code">features/fallback-providers.md</span></li>
+        <li><strong>Provider routing</strong> — per-task provider selection. <span class="code">features/provider-routing.md</span></li>
+        <li><strong>xAI Web Search backend</strong> <span class="pill pill-new">May 2026</span> — search inside Grok responses, no SerpAPI bill.</li>
+    </ul>
+    <div class="questions">
+        <h3>Discussion</h3>
+        <ol>
+            <li>Stick with Opus 4-7 as default, or downgrade Carlos to Sonnet (~5× cheaper, ~80% as capable)? Greg uses Opus everywhere; Jason may not need it for VA tasks.</li>
+            <li>Add a fallback provider so Carlos doesn't stall when Anthropic is overloaded? OpenRouter is the easy pick.</li>
+            <li>Set up Carlos with his own credential pool, or share Greg's? (Sharing = simpler, but rate-limit pressure on both.)</li>
+            <li>Different model for aux tasks (compression, title-gen)? Use cheap Haiku to save spend.</li>
+        </ol>
+    </div>
+</div>
+
+<!-- ============== SLIDE 5 ============== -->
+<div class="slide">
+    <div class="slide-num">Slide 5 · Tools & Skills</div>
+    <h2>What can Carlos do?</h2>
+    <h3>What GBAuto has today</h3>
+    <p>Greg currently has 200+ skills installed. Carlos inherits a pruned set:</p>
+    <div class="pills">
+        <span class="pill pill-active">google-workspace</span><span class="pill pill-active">gmail</span><span class="pill pill-active">calendar</span><span class="pill pill-active">linear</span><span class="pill pill-active">github-pr-workflow</span><span class="pill pill-active">telegram</span><span class="pill pill-active">supabase</span><span class="pill pill-active">stripe-billing-ops</span><span class="pill pill-active">claude-code-via-hermes-auth</span><span class="pill pill-active">hiringcafe-apply</span><span class="pill pill-active">browser</span>
+    </div>
+    <p style="margin-top:14px"><strong>Greg's macOS-only skills</strong> Carlos shares today (via shared Mac mini):</p>
+    <div class="pills">
+        <span class="pill">imessage</span><span class="pill">apple-notes</span><span class="pill">apple-reminders</span><span class="pill">findmy</span><span class="pill">macos-computer-use</span><span class="pill">steer</span><span class="pill">drive</span>
+    </div>
+    <h3>What's new in Hermes</h3>
+    <ul>
+        <li><strong>Skill bundles</strong> <span class="pill pill-new">May 2026</span> — alias <code>/jason-va</code> loads multiple skills at once. <span class="code">features/skills.md</span></li>
+        <li><strong>BrowseShSource adapter</strong> <span class="pill pill-new">May 2026</span> — pull skills from browse.sh community catalog at runtime.</li>
+        <li><strong>Skill modification preservation</strong> — user-modified skills survive bundled-skill sync.</li>
+        <li><strong>Toolsets</strong> — group tools by category (web, terminal, file, browser); load only what's needed per task.</li>
+    </ul>
+    <div class="questions">
+        <h3>Discussion</h3>
+        <ol>
+            <li>Which of Jason's workflows need skills Carlos doesn't have today? List them — we'll author / install in the session.</li>
+            <li>Should Carlos have access to <em>Greg's</em> macOS skills (iMessage, Apple Notes)? Right now he doesn't — those are scoped to Greg's user. Easy to grant per-skill.</li>
+            <li>Create a Jason-specific bundle: <code>/jason-va</code> that loads exactly the 8-10 skills Carlos uses daily?</li>
+            <li>Want browse.sh community skills enabled? Lots of options but variable quality.</li>
+        </ol>
+    </div>
+</div>
+
+<!-- ============== SLIDE 6 ============== -->
+<div class="slide">
+    <div class="slide-num">Slide 6 · Cron Jobs</div>
+    <h2>What does Carlos do on autopilot?</h2>
+    <h3>Carlos's 16 cron jobs today</h3>
+    <table>
+        <tr><th>State</th><th>Job</th><th>Purpose</th></tr>
+        <tr><td>✅ on</td><td>jid5274-workflow-detector</td><td>Watches inbox folder, kicks off workflows</td></tr>
+        <tr><td>✅ on</td><td>Calendly booking alerts</td><td>Telegram ping when Jason gets booked</td></tr>
+        <tr><td>✅ on</td><td>Reply triage (Apollo + LinkedIn + Slack)</td><td>Surfaces inbound messages needing reply</td></tr>
+        <tr><td>✅ on</td><td>Pre-meeting prep email drafter</td><td>30 min before each meeting, drafts a prep email</td></tr>
+        <tr><td>✅ on</td><td>dial-queue-morning-digest</td><td>Morning Telegram brief of the day's calls</td></tr>
+        <tr><td>✅ on</td><td>dial-tracker-watcher</td><td>Tracks outgoing calls + outcomes</td></tr>
+        <tr><td>✅ on</td><td>carlos-state-snapshot</td><td>Hourly Hermes state backup</td></tr>
+        <tr><td>✅ on</td><td>carlos-morning-brief</td><td>7am ET daily summary to Jason</td></tr>
+        <tr><td>✅ on</td><td>carlos-morning-research-brief</td><td>News + RSS digest</td></tr>
+        <tr><td>✅ on</td><td>mirror-jason-hermes</td><td>Backs up Carlos's config to GitHub</td></tr>
+        <tr><td>✅ on</td><td>browser-hygiene-jason</td><td>Closes stale browser tabs, restarts Chrome</td></tr>
+        <tr><td>✅ on</td><td>Friday week-in-review digest</td><td>Friday EOD recap email</td></tr>
+        <tr><td>✅ on</td><td>soma-health-followup-reminder</td><td>One-time reminder</td></tr>
+        <tr><td>❌ off</td><td>auto-commit-sidecar-jid5274</td><td><em>Paused: git stash conflicts</em></td></tr>
+        <tr><td>❌ off</td><td>tcc-health-check-jason</td><td><em>Paused: Finder access issues</em></td></tr>
+        <tr><td>❌ off</td><td>PMC mailbox watcher (Outlook)</td><td><em>Paused: probably needs reconfig</em></td></tr>
+    </table>
+    <h3>What's new in Hermes</h3>
+    <ul>
+        <li><strong>Telegram cron topic routing</strong> <span class="pill pill-new">May 2026</span> — cron deliveries can land in a dedicated chat topic instead of cluttering the main DM. Set <code>TELEGRAM_CRON_THREAD_ID</code>.</li>
+        <li><strong>Cron emoji ZWJ support</strong> — emoji-rich prompts no longer break the parser.</li>
+        <li><strong>Job context chaining</strong> — pass output from job A into job B as context.</li>
+        <li><strong>Per-job model override</strong> — cheap Haiku for digest jobs, save Opus budget for real work.</li>
+    </ul>
+    <div class="questions">
+        <h3>Discussion</h3>
+        <ol>
+            <li>Fix the 3 paused jobs in this session, or kill them? (auto-commit, tcc-health-check, PMC mailbox.)</li>
+            <li>Any cron jobs missing? What does Jason wish was automated but isn't?</li>
+            <li>Move cron output to a dedicated Telegram topic so Jason's main thread isn't 100 cron pings/day?</li>
+            <li>Cost-tune: do digest cron jobs need Opus, or can they run on Haiku?</li>
+        </ol>
+    </div>
+</div>
+
+<!-- ============== SLIDE 7 ============== -->
+<div class="slide">
+    <div class="slide-num">Slide 7 · Kanban</div>
+    <h2>How does Carlos track work?</h2>
+    <h3>What GBAuto has today</h3>
+    <div class="kv">
+        <div class="k">Kanban DB</div><div class="v">Carlos has <code>kanban.db</code> · schema initialized · <strong>0 cards</strong></div>
+        <div class="k">Web dashboard</div><div class="v">Greg has dashboard-server + vite + auth-proxy plists running for Carlos already (but unused — no work tracked)</div>
+        <div class="k">Linear sync</div><div class="v">Carlos has a Linear team (JID), workspace exists, but no Kanban↔Linear sync wired</div>
+    </div>
+    <h3>What's new in Hermes</h3>
+    <ul>
+        <li><strong>Drag-to-delete trash zone + bulk delete</strong> <span class="pill pill-new">May 2026</span></li>
+        <li><strong>Scheduled status</strong> <span class="pill pill-new">May 2026</span> — cards can be "scheduled for follow-up" instead of just "to do"</li>
+        <li><strong>Worktree paths + branches per card</strong> — each card gets its own git worktree automatically</li>
+        <li><strong>Worker lanes</strong> <span class="pill pill-new">May 2026</span> — assign cards to specialized agents (codex, claude-code, custom)</li>
+        <li><strong>Sticky blocks</strong> — worker-initiated blocks no longer auto-promote, prevents work churning</li>
+        <li><strong>Cross-profile cron visibility</strong> — see Greg + Carlos + Gelby cron jobs in one dashboard view</li>
+        <li><strong>Korean localization</strong> (irrelevant but new!)</li>
+    </ul>
+    <div class="questions">
+        <h3>Discussion</h3>
+        <ol>
+            <li>Does Jason actually want a Kanban workflow, or does he prefer to live in Linear/email/calendar?</li>
+            <li>Set up the Linear ↔ Kanban bidirectional sync? (Greg has this skill working: <code>kanban-linear-sync</code>.)</li>
+            <li>Expose Carlos's dashboard publicly? Options: Cloudflare Tunnel (free, email gate), or stay localhost-only.</li>
+            <li>Try worker lanes — let Carlos delegate sub-tasks to a Codex agent for coding work?</li>
+        </ol>
+    </div>
+</div>
+
+<!-- ============== SLIDE 8 ============== -->
+<div class="slide">
+    <div class="slide-num">Slide 8 · Integrations</div>
+    <h2>What is Carlos connected to?</h2>
+    <h3>Active integrations today</h3>
+    <table>
+        <tr><th>Service</th><th>How Carlos uses it</th><th>Auth path</th></tr>
+        <tr><td>Telegram</td><td>Primary DM channel · 16 cron deliveries</td><td><code>TELEGRAM_BOT_TOKEN</code> in .env</td></tr>
+        <tr><td>Google Workspace</td><td>Gmail send/search, Calendar events</td><td>AWS Secrets: <code>workspace-god-token</code></td></tr>
+        <tr><td>Linear</td><td>JID team, issues, projects</td><td>AWS Secrets: <code>linear-api-key</code></td></tr>
+        <tr><td>GitHub</td><td>jid5274 repo, mirror backup</td><td>Per-user PAT in keychain</td></tr>
+        <tr><td>Anthropic</td><td>Carlos's brain (Opus 4-7)</td><td>OAuth via <code>claude-with-jid5274-auth.sh</code> (Max plan)</td></tr>
+        <tr><td>Calendly</td><td>Booking alerts (read-only)</td><td>API token in .env</td></tr>
+        <tr><td>Apollo + LinkedIn + Slack</td><td>Reply triage cron</td><td>Per-platform tokens</td></tr>
+        <tr><td>AWS Secrets Manager</td><td>Central credential store</td><td>IAM role <code>mac-mini-automation</code></td></tr>
+    </table>
+    <h3>What's new in Hermes</h3>
+    <ul>
+        <li><strong>Telegram audio 2GB cap + skip-STT</strong> <span class="pill pill-new">May 2026</span> — bigger voice notes, optional transcribe-skip</li>
+        <li><strong>Discord/DingTalk native voice transcription</strong> <span class="pill pill-new">May 2026</span></li>
+        <li><strong>Telegram ignore_root_dm</strong> — system commands route to a lobby, keeps DM clean</li>
+        <li><strong>Signal: require_mention for groups</strong> — only respond when @-mentioned</li>
+        <li><strong>Tool gateway</strong> — expose Hermes tools to other agents via API. <span class="code">features/tool-gateway.md</span></li>
+        <li><strong>API server mode</strong> — Carlos becomes callable via HTTP. <span class="code">features/api-server.md</span></li>
+    </ul>
+    <div class="questions">
+        <h3>Discussion</h3>
+        <ol>
+            <li>Any integration Jason needs that's missing? (Notion, Airtable, Stripe, HubSpot, Discord, WhatsApp?)</li>
+            <li>Carlos uses Greg's AWS Secrets Manager today. Should Jason have his own AWS account, or stay on Greg's? (Greg pays $3/mo for the secrets layer either way.)</li>
+            <li>Turn on Hermes' API server mode so Jason can hit Carlos from his own scripts/Zapier/n8n?</li>
+            <li>Want Carlos in Discord too, not just Telegram?</li>
+        </ol>
+    </div>
+</div>
+
+<!-- ============== SLIDE 9 ============== -->
+<div class="slide">
+    <div class="slide-num">Slide 9 · Delegation & Subagents</div>
+    <h2>Can Carlos spawn workers?</h2>
+    <h3>What GBAuto has today</h3>
+    <ul>
+        <li>Greg uses <strong>delegate_task</strong> for parallel work (max 3 concurrent children).</li>
+        <li>Pattern: research A + research B + research C in parallel, parent collates.</li>
+        <li>Carlos has the toolset enabled but no patterns / skills hooked up to it yet.</li>
+    </ul>
+    <h3>What's new in Hermes</h3>
+    <ul>
+        <li><strong>Codex CLI delegation</strong> <span class="pill pill-active">Greg uses</span> — delegate to OpenAI Codex with full network sandbox bypass</li>
+        <li><strong>Claude Code CLI delegation</strong> <span class="pill pill-active">Greg uses</span> — delegate to Claude Code CLI for multi-file coding</li>
+        <li><strong>OpenCode CLI</strong> <span class="pill pill-new">new option</span> — third autonomous coding agent</li>
+        <li><strong>Subagent role types</strong> — <code>leaf</code> (focused worker, no nesting) vs <code>orchestrator</code> (can spawn its own workers)</li>
+        <li><strong>Codex App Server runtime</strong> <span class="pill pill-new">May 2026</span> — long-running Codex instance, faster spinup</li>
+    </ul>
+    <div class="questions">
+        <h3>Discussion</h3>
+        <ol>
+            <li>Does Jason want Carlos to delegate coding tasks to Codex/Claude Code, or keep him email/calendar/admin focused?</li>
+            <li>If yes — which coding agent? Greg uses Claude Code + Codex in parallel; OpenCode is the new option.</li>
+            <li>Set Carlos's <code>max_concurrent_children</code> default? (Greg's at 3.)</li>
+            <li>Should Carlos be allowed to spawn orchestrators (recursive delegation), or leaf only?</li>
+        </ol>
+    </div>
+</div>
+
+<!-- ============== SLIDE 10 ============== -->
+<div class="slide">
+    <div class="slide-num">Slide 10 · Safety, Permissions, Approvals</div>
+    <h2>Where does Carlos need to ask?</h2>
+    <h3>What GBAuto has today</h3>
+    <div class="kv">
+        <div class="k">Pre-write guard</div><div class="v">CJK chars blocked, em-dash rule sunset 2026-05-14</div>
+        <div class="k">Tool approvals</div><div class="v"><strong>Currently auto-approve</strong> for most tools (no human gating)</div>
+        <div class="k">Network sandbox</div><div class="v">Off — Carlos has full internet</div>
+        <div class="k">Subprocess env scrub</div><div class="v">Default off — credentials may leak into subprocesses</div>
+        <div class="k">Inbox routing</div><div class="v">Plans require <code>client:</code> frontmatter; unknown clients quarantined</div>
+    </div>
+    <h3>What's new in Hermes</h3>
+    <ul>
+        <li><strong>Hooks</strong> <span class="pill pill-active">Greg uses</span> — pre/post-tool gates (e.g. block <code>rm -rf</code>, lint after writes). <span class="code">features/hooks.md</span></li>
+        <li><strong>Checkpoints + rollback</strong> — auto-snapshot before destructive operations, restore on demand. Default 50 snapshots / 7 days.</li>
+        <li><strong>Plan mode</strong> — write a markdown plan to <code>~/.hermes/plans/</code> before executing.</li>
+        <li><strong>Goals</strong> <span class="pill pill-new">May 2026</span> — long-running outcomes Carlos tracks across sessions. <span class="code">features/goals.md</span></li>
+        <li><strong>Curator</strong> — periodic memory hygiene (consolidate, deduplicate, prune). <span class="code">features/curator.md</span></li>
+    </ul>
+    <div class="questions">
+        <h3>Discussion</h3>
+        <ol>
+            <li>Which tools should Carlos NEVER use without Jason's approval? (Sending emails? Calendar invites? Anything &gt; $X?)</li>
+            <li>Turn on checkpoint snapshots? Insurance against Carlos's mistakes — but adds disk usage.</li>
+            <li>Set a spending cap per cron run? (Hermes can hard-cap budget via <code>--max-budget-usd</code>.)</li>
+            <li>Should Carlos draft email replies and let Jason approve, or send directly? (Greg lets Carlos send directly with strict guards.)</li>
+            <li>Wire up the Curator to keep MEMORY.md tidy over time?</li>
+        </ol>
+    </div>
+</div>
+
+<!-- ============== SLIDE 11 ============== -->
+<div class="slide">
+    <div class="slide-num">Slide 11 · Hosting & Infrastructure</div>
+    <h2>Where does Carlos live?</h2>
+    <h3>What GBAuto has today</h3>
+    <div class="kv">
+        <div class="k">Host</div><div class="v">Greg's Mac mini (M2, 16GB) · <code>/Users/jason-agent/</code></div>
+        <div class="k">Runtime</div><div class="v">Python 3.11 + Hermes via system Python · launchd-managed</div>
+        <div class="k">Cost</div><div class="v"><strong>$0/mo direct</strong> — Carlos rides on Greg's hardware</div>
+        <div class="k">Daemons</div><div class="v">3 system-level plists (gateway, context-refresh, stopper) + 7 user-level (dashboards, inbox, repo-sync)</div>
+        <div class="k">Network</div><div class="v">Greg's home internet · Tailscale-accessible · no public IP</div>
+    </div>
+    <h3>Migration options</h3>
+    <table>
+        <tr><th>Option</th><th>Cost</th><th>What Carlos loses</th><th>Effort</th></tr>
+        <tr><td><strong>Stay on Mac mini</strong></td><td>$0/mo</td><td>Nothing</td><td>None</td></tr>
+        <tr><td><strong>Stay + Cloudflare Tunnel</strong></td><td>$0/mo</td><td>Nothing</td><td>~1 hour (just dashboard exposure)</td></tr>
+        <tr><td>DigitalOcean droplet (4GB)</td><td>~$24/mo</td><td>All Apple skills (iMessage, Notes, Reminders, FindMy, macOS computer-use, steer)</td><td>6-10 hours</td></tr>
+        <tr><td>Hybrid: Mac mini for Apple, DO for the rest</td><td>~$24/mo</td><td>Cross-host RPC complexity</td><td>10-15 hours</td></tr>
+    </table>
+    <h3>What's new in Hermes</h3>
+    <ul>
+        <li><strong>Profile templates</strong> <span class="pill pill-new">May 2026</span> — bootstrap a new Hermes instance from a starter profile. <span class="code">profiles.md</span> + skill <code>hermes-profile-templates</code></li>
+        <li><strong>Profile distributions</strong> — ship a profile as a portable package.</li>
+        <li><strong>Subscription proxy</strong> <span class="pill pill-new">May 2026</span> — OAuth subscription billing centralized. <span class="code">features/subscription-proxy.md</span></li>
+        <li><strong>Windows native + WSL support</strong> — Carlos could run on a Windows VM if needed.</li>
+    </ul>
+    <div class="questions">
+        <h3>Discussion</h3>
+        <ol>
+            <li><strong>Greg's recommendation:</strong> stay on Mac mini + Cloudflare Tunnel. Keeps all Apple skills, $0/mo. Revisit DO only if Mac mini becomes a single-point-of-failure problem.</li>
+            <li>Does Jason agree, or does he have a specific reason to want Carlos on his own infrastructure? (Ownership concerns? Data isolation? Reliability?)</li>
+            <li>If Cloudflare Tunnel: which URL? <code>carlos.gbautomation.xyz</code>? Or under Jason's own domain?</li>
+            <li>Want Tailscale set up so Jason can SSH into Carlos's user account directly?</li>
+        </ol>
+    </div>
+</div>
+
+<!-- ============== SLIDE 12 ============== -->
+<div class="slide">
+    <div class="slide-num">Slide 12 · Routing & Multi-Tenancy</div>
+    <h2>How does Carlos talk to Greg's stack?</h2>
+    <h3>What GBAuto has today</h3>
+    <p>Carlos and Greg are already wired for cross-talk via the <strong>client registry</strong>:</p>
+    <pre><code># ~/.openclaw/workspace/_shared/clients.yaml
+clients:
+  gbautomation:
+    repo_path: /Users/greg/repos/gbautomation
+    telegram_chat: "6777263736"        # Greg
+    branch: main
+  jid5274:
+    repo_path: /Users/jason-agent/gbauto/jid5274
+    telegram_chat: "&lt;jason-tg&gt;"   # TODO: fill in
+    sudo_user: jason-agent
+    branch: main</code></pre>
+    <ul>
+        <li><strong>Carlos → Greg:</strong> drops files in <code>~/.carlos-outbox/</code> with <code>client: &lt;slug&gt;</code> frontmatter · picked up every 5 min by <code>carlos-inbox-pickup</code> cron · routed to the correct repo · quarantined if frontmatter missing.</li>
+        <li><strong>Greg → Carlos:</strong> copy file into <code>/Users/jason-agent/repos/jid5274/second-brain/inbox/</code> · Carlos's workflow-detector picks it up.</li>
+        <li><strong>Telegram allowlists:</strong> Carlos accepts DMs from Greg (6777263736), Jason (8253376283), Gelby bot (8605440169, added today).</li>
+    </ul>
+    <h3>What's new in Hermes</h3>
+    <ul>
+        <li><strong>Webhook subscriptions</strong> <span class="pill pill-new">May 2026</span> — Carlos can react to external events (Linear webhook, GitHub PR, Stripe charge). <span class="code">webhook-subscriptions</span> skill</li>
+        <li><strong>Honcho multi-agent peer profiles</strong> — Carlos + Gelby can share knowledge about a common user without contaminating each other's context</li>
+        <li><strong>Tool gateway</strong> — Gelby can call Carlos's tools and vice versa, scoped per agent</li>
+    </ul>
+    <div class="questions">
+        <h3>Discussion</h3>
+        <ol>
+            <li>Should Gelby and Carlos share user/conversation context (via Honcho), or stay isolated? (Privacy vs. continuity tradeoff.)</li>
+            <li>What's Jason's actual Telegram chat ID? — needed to fill in <code>telegram_chat</code> for the JID client entry.</li>
+            <li>Set up webhook subscriptions so Carlos reacts to Linear status changes, GitHub PR reviews, etc. in real-time instead of cron polling?</li>
+            <li>Should the Greg ↔ Carlos relay be bidirectional Telegram (DMs through their bots) or stay file-based?</li>
+        </ol>
+    </div>
+</div>
+
+<!-- ============== SLIDE 13 ============== -->
+<div class="slide">
+    <div class="slide-num">Slide 13 · Agent Teams & Credential Store</div>
+    <h2>What Carlos is good <em>at</em> — by lane</h2>
+    <h3>What GBAuto has today (Greg/Gelby)</h3>
+    <div class="kv">
+        <div class="k">Default lane</div><div class="v">Executive assistant (Gelby IS Greg's EA)</div>
+        <div class="k">Other lanes</div><div class="v">Ops manager, Research assistant</div>
+        <div class="k">Credential store</div><div class="v">AWS Secrets Manager · IAM <code>mac-mini-automation</code> · read-only on <code>gbautomation/*</code></div>
+    </div>
+    <h3>What Carlos should become (Jason's stated needs)</h3>
+    <table>
+        <tr><th>Lane</th><th>Invocation</th><th>Skill bundle</th><th>Cron jobs</th></tr>
+        <tr><td><strong>Outbound manager</strong> <span class="pill pill-new">PRIMARY</span></td><td><code>/outbound</code></td><td>Apollo, LinkedIn Sales Nav, Calendly, dial-tracker, reply-triage, pre-meeting-prep</td><td>Reply triage, Pre-meeting prep, Dial queue digest, Calendly alerts</td></tr>
+        <tr><td><strong>Content manager</strong> <span class="pill pill-new">PRIMARY</span></td><td><code>/content</code></td><td>LinkedIn post, X/Twitter, humanizer, content calendar, YouTube research</td><td>Daily content-idea digest, LinkedIn post queue, Performance recap</td></tr>
+        <tr><td>Executive assistant <span class="pill">default lane</span></td><td>(no command)</td><td>Google Workspace, Obsidian, Apple Reminders/Notes, iMessage</td><td>Morning brief, Soma Health followup</td></tr>
+        <tr><td>Ops manager</td><td><code>/ops</code></td><td>Stripe billing, Linear, Teams meetings, Airtable</td><td>Friday week-in-review, Billing reconcile, Meeting digest</td></tr>
+        <tr><td>Research assistant</td><td><code>/research</code></td><td>Blogwatcher, arXiv, YouTube content, llm-wiki, social scrape, Polymarket, Maps</td><td>Morning research brief, Trend digest</td></tr>
+    </table>
+    <h3>Credential store: Bitwarden Secrets Manager (NOT AWS)</h3>
+    <ul>
+        <li>Jason already has a Bitwarden vault. Setup doc exists at <code>second-brain/clients/jason-diaz/agents/carlos/bitwarden-service-account-setup.md</code></li>
+        <li>Jason creates a Bitwarden Machine Account → gives Carlos a scoped access token (starts with <code>0.</code>) → Carlos fetches secrets via <code>bws</code> CLI at runtime</li>
+        <li>Jason owns the vault. One-click revoke when engagement ends. Greg never holds the actual keys.</li>
+        <li><strong>Smoke test:</strong> <code>bws project list</code> returns the <code>carlos-agent</code> project; tier_3 reads a known secret successfully</li>
+    </ul>
+    <div class="questions">
+        <h3>Discussion</h3>
+        <ol>
+            <li>Confirm both primary lanes — outbound manager and content manager — are correct? Or did Jason say something different?</li>
+            <li>Should Carlos's <strong>default</strong> lane be EA (warm chief-of-staff voice) or outbound (work-first)? Affects what happens when Jason DMs without a slash command.</li>
+            <li>Bitwarden Machine Account: has Jason set this up yet? If not — this is a blocker for Carlos's reconfiguration. <code>~/repos/gbautomation/second-brain/clients/jason-diaz/agents/carlos/bitwarden-service-account-setup.md</code> has the steps.</li>
+            <li>Should the content-manager lane use a cheaper model (Sonnet) since drafting/humanizing doesn't need Opus? Saves ~5× on content cron costs.</li>
+            <li>Any lane Jason wants that's NOT in this list? (Personal finance? Travel? Legal review? Coding manager? Health/fitness coach?)</li>
+        </ol>
+    </div>
+</div>
+
+<!-- ============== SLIDE 14 ============== -->
+<div class="slide">
+    <div class="slide-num">Slide 14 · Free Slide</div>
+    <h2>What else?</h2>
+    <p style="font-family:'Newsreader',serif;font-style:italic;color:#D97757;font-size:18px;margin:8px 0 24px">Reserved for whatever comes up during the session.</p>
+
+    <div class="questions">
+        <h3>Common topics to consider</h3>
+        <ol>
+            <li>Specific workflows Jason wants Carlos to automate that aren't in the cron list yet</li>
+            <li>What Jason's been doing manually that's been bugging him</li>
+            <li>Carlos failures you've noticed — error patterns, dropped tasks, things not happening</li>
+            <li>Goals for the next 30 / 60 / 90 days — what does "Carlos working great" look like?</li>
+            <li>Pricing / ownership / handoff conversations — at what point is Carlos "Jason's", not "Greg's"?</li>
+        </ol>
+    </div>
+
+    <h3>Open questions to write down here</h3>
+    <pre style="min-height:160px;background:#131110">                                                                                          
+                                                                                          
+                                                                                          
+                                                                                          
+                                                                                          
+                                                                                          
+                                                                                          </pre>
+</div>
+
+<!-- ============== SLIDE 14 ============== -->
+<div class="slide">
+    <div class="slide-num">Slide 15 · Next Steps</div>
+    <h2>What we'll do after the call</h2>
+    <ol>
+        <li><strong>Greg writes the new config.yaml</strong> based on every decision made above. Pushed to <code>gbauto/test-clients</code> as a PR for review before applying.</li>
+        <li><strong>Backup Carlos's current state</strong> (<code>~/.hermes/state.db</code>, <code>kanban.db</code>, <code>cron/jobs.json</code>) before any changes.</li>
+        <li><strong>Apply changes in a single window</strong> with Carlos's gateway in maintenance mode (no inbound work missed).</li>
+        <li><strong>Smoke test:</strong> trigger one of each cron, send Carlos a DM, verify dashboard, check Telegram delivery.</li>
+        <li><strong>Cloudflare Tunnel</strong> (if approved) — provision in a separate session to keep this one scoped.</li>
+        <li><strong>Save the config-walkthrough pattern as a reusable skill</strong> so the next client onboarding is faster.</li>
+    </ol>
+
+    <h3>Reference links (read after if curious)</h3>
+    <ul>
+        <li>Hermes docs (full feature list): <code>~/.openclaw/workspace/hermes-agent/website/docs/user-guide/features/</code></li>
+        <li>Public: <code>https://claude-code.nousresearch.com/docs/</code></li>
+        <li>Carlos's current config: <code>/Users/jason-agent/.hermes/config.yaml</code></li>
+        <li>Cron jobs JSON: <code>/Users/jason-agent/.hermes/cron/jobs.json</code></li>
+        <li>Client registry: <code>~/.openclaw/workspace/_shared/clients.yaml</code></li>
+    </ul>
+
+    <div class="callout" style="margin-top:24px">
+        <div class="callout-title">A note on cost expectations</div>
+        <p style="margin-bottom:0">Carlos's monthly run cost today is <strong>~$0 in infra</strong> (rides Greg's Mac mini) + <strong>OAuth-only Anthropic Max plan</strong> (so no per-token API bill). The only meaningful spend is Greg's existing AWS SM ($3/mo) and any new APIs you add (Honcho if elected, Linear paid tier if Jason wants advanced features). If you go DigitalOcean later: add ~$24/mo droplet.</p>
+    </div>
+</div>
+
+<div class="footer">
+    GBAutomation · Hermes Configuration Walkthrough v1.0 · 2026-05-20<br>
+    Print to PDF: ⌘P → "Save as PDF" → Layout: Portrait
+</div>
+
+</div>
+</body>
+</html>

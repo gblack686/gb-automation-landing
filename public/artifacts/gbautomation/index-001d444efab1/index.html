@@ -1,0 +1,772 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Plan: Capture token usage + 4 adjacent dimensions in cc-otel bootstrap.js | GBAutomation</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&display=swap');
+    :root {
+      --cream-bg: #F3F1E7;
+      --cream-panel: #E6E4D9;
+      --text-main: #191919;
+      --text-muted: #5C5C5C;
+      --text-light: #8C8A84;
+      --border: #D6D4C8;
+      --terracotta: #D97757;
+      --paper: #FFFFFF;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text-main);
+      background: var(--cream-bg);
+      font-size: 14px;
+      line-height: 1.58;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+    a { color: var(--text-main); text-decoration-color: var(--terracotta); text-underline-offset: 3px; }
+    button { font: inherit; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(214, 212, 200, .7);
+      background: rgba(243, 241, 231, .93);
+      backdrop-filter: blur(12px);
+    }
+    .topbar-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 13px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .brand-lockup { display: inline-flex; align-items: center; gap: 9px; min-height: 28px; }
+    .brand-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(217, 119, 87, .18);
+    }
+    .brand-dot::after { content: ""; width: 8px; height: 8px; border-radius: 999px; background: var(--terracotta); }
+    .brand-text {
+      font-family: Newsreader, serif;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-size: 12px;
+    }
+    .source-name { color: var(--text-muted); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    header {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 34px 24px 26px;
+    }
+    .eyebrow {
+      color: var(--terracotta);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    h1 {
+      max-width: 920px;
+      margin: 10px 0 18px;
+      font-family: Newsreader, serif;
+      font-size: clamp(30px, 4vw, 48px);
+      font-weight: 500;
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+    .summary-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+    .summary-meta li {
+      min-height: 30px;
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, .45);
+      padding: 5px 9px;
+      border-radius: 6px;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .layout {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 22px 24px 56px;
+      display: grid;
+      grid-template-columns: 252px minmax(0, 1fr);
+      gap: 22px;
+      align-items: start;
+    }
+    .section-menu {
+      position: sticky;
+      top: 64px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(230, 228, 217, .62);
+      backdrop-filter: blur(12px);
+      padding: 12px;
+    }
+    .menu-title {
+      margin: 0 0 10px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .menu-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+    .menu-actions button,
+    .section-menu nav button {
+      min-height: 34px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .46);
+      color: rgba(25, 25, 25, .72);
+      cursor: pointer;
+      transition: border-color .18s ease, color .18s ease, background .18s ease;
+    }
+    .menu-actions button { padding: 0 8px; font-size: 11px; font-weight: 700; }
+    .section-menu nav { display: grid; gap: 5px; }
+    .section-menu nav button {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 30px 1fr;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      text-align: left;
+      font-size: 12px;
+      line-height: 1.25;
+    }
+    .section-menu nav button span { color: var(--terracotta); font-size: 10px; font-weight: 700; letter-spacing: .08em; }
+    .menu-actions button:hover,
+    .section-menu nav button:hover,
+    .section-menu nav button.active {
+      border-color: var(--terracotta);
+      background: rgba(255, 255, 255, .72);
+      color: var(--text-main);
+    }
+    .sections { display: grid; gap: 10px; }
+    details.section {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .5);
+      overflow: hidden;
+    }
+    details.section[open] { background: rgba(255, 255, 255, .68); }
+    details.section summary {
+      min-height: 52px;
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 12px 14px;
+      cursor: pointer;
+      list-style: none;
+    }
+    details.section summary::-webkit-details-marker { display: none; }
+    .section-index {
+      color: var(--terracotta);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+    }
+    .section-title {
+      font-family: Newsreader, serif;
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.18;
+    }
+    .section-count {
+      color: var(--text-light);
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .section-body {
+      border-top: 1px solid rgba(214, 212, 200, .75);
+      padding: 4px 18px 18px 68px;
+    }
+    .section-body h2,
+    .section-body h3,
+    .section-body h4,
+    .section-body h5 {
+      margin: 18px 0 8px;
+      color: var(--text-main);
+      font-family: Newsreader, serif;
+      font-weight: 500;
+      line-height: 1.2;
+    }
+    .section-body h2 { font-size: 19px; }
+    .section-body h3 { font-size: 17px; }
+    .section-body h4,
+    .section-body h5 {
+      font-family: Inter, sans-serif;
+      color: var(--text-light);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+    .section-body p,
+    .section-body li { color: var(--text-muted); font-size: 14px; line-height: 1.66; }
+    .section-body p { margin: 10px 0; }
+    .section-body ul,
+    .section-body ol { margin: 10px 0 10px 18px; padding: 0; }
+    .section-body li { margin: 5px 0; padding-left: 2px; }
+    .section-body .task { list-style: none; margin-left: -18px; display: flex; gap: 8px; align-items: flex-start; }
+    .section-body input[type="checkbox"] { margin-top: 4px; accent-color: var(--terracotta); }
+    code {
+      border: 1px solid rgba(217, 119, 87, .22);
+      border-radius: 4px;
+      background: rgba(217, 119, 87, .10);
+      padding: 1px 4px;
+      color: var(--text-main);
+      font-size: .92em;
+    }
+    pre {
+      overflow: auto;
+      margin: 12px 0;
+      border-radius: 8px;
+      background: #191919;
+      color: #F3F1E7;
+      padding: 14px;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+    pre code { border: 0; background: transparent; color: inherit; padding: 0; }
+    blockquote {
+      margin: 12px 0;
+      padding: 10px 12px;
+      border-left: 3px solid var(--terracotta);
+      background: rgba(230, 228, 217, .5);
+    }
+    hr { border: 0; border-top: 1px solid var(--border); margin: 18px 0; }
+    .table-wrap { overflow-x: auto; margin: 12px 0; border: 1px solid var(--border); border-radius: 8px; }
+    table { width: 100%; border-collapse: collapse; min-width: 560px; background: rgba(255, 255, 255, .5); }
+    th,
+    td { border-bottom: 1px solid rgba(214, 212, 200, .75); padding: 8px 10px; text-align: left; font-size: 12px; vertical-align: top; }
+    th { color: var(--text-main); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; }
+    tr:last-child td { border-bottom: 0; }
+    .empty { color: var(--text-light); font-style: italic; }
+    footer {
+      border-top: 1px solid rgba(214, 212, 200, .78);
+      background: rgba(230, 228, 217, .45);
+    }
+    .footer-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    .footer-label {
+      margin-bottom: 12px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .metadata-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .meta-item {
+      min-width: 0;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .42);
+      padding: 9px 10px;
+    }
+    .meta-item span {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .meta-item strong {
+      display: block;
+      overflow-wrap: anywhere;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.35;
+    }
+    @media (max-width: 860px) {
+      .topbar-inner,
+      header,
+      .layout,
+      .footer-inner { padding-left: 16px; padding-right: 16px; }
+      .layout { display: block; }
+      .section-menu { position: static; margin-bottom: 14px; }
+      .section-body { padding-left: 18px; }
+      .metadata-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 540px) {
+      .topbar-inner { align-items: flex-start; flex-direction: column; gap: 6px; }
+      details.section summary { grid-template-columns: 34px 1fr; }
+      .section-count { grid-column: 2; }
+      h1 { font-size: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand-lockup"><span class="brand-dot"></span><span class="brand-text">GBAutomation</span></div>
+      <div class="source-name">2026-05-16-cc-otel-token-instrumentation.md</div>
+    </div>
+  </div>
+  <header>
+    <div class="eyebrow">Plan Brief</div>
+    <h1>Plan: Capture token usage + 4 adjacent dimensions in cc-otel bootstrap.js</h1>
+    <ul class="summary-meta">
+      <li>Status: ready-to-execute</li>
+      <li>Owner: GBAutomation</li>
+      <li>Priority: high</li>
+      <li>Created: 2026-05-16</li>
+      <li>13 sections</li>
+      <li>2,652 words</li>
+    </ul>
+  </header>
+  <main class="layout">
+    <aside class="section-menu" aria-label="Plan sections">
+  <div class="menu-title">Sections</div>
+  <div class="menu-actions">
+    <button type="button" data-action="expand">Expand all</button>
+    <button type="button" data-action="collapse">Collapse all</button>
+  </div>
+  <nav><button type="button" data-target="overview"><span>01</span>Overview</button>
+<button type="button" data-target="context"><span>02</span>Context</button>
+<button type="button" data-target="scope"><span>03</span>Scope</button>
+<button type="button" data-target="assumptions-locked-during-phase-0-intake"><span>04</span>Assumptions (locked during Phase 0 intake)</button>
+<button type="button" data-target="phase-1-ground-tac-scan-results"><span>05</span>Phase 1 — Ground (TAC scan results)</button>
+<button type="button" data-target="phase-2-plan-file-by-file"><span>06</span>Phase 2 — Plan (file-by-file)</button>
+<button type="button" data-target="phase-3-build-implementation-notes"><span>07</span>Phase 3 — Build (implementation notes)</button>
+<button type="button" data-target="phase-4-validate"><span>08</span>Phase 4 — Validate</button>
+<button type="button" data-target="phase-5-commit"><span>09</span>Phase 5 — Commit</button>
+<button type="button" data-target="risk-register"><span>10</span>Risk register</button>
+<button type="button" data-target="rollback"><span>11</span>Rollback</button>
+<button type="button" data-target="follow-up-phase-out-of-scope-for-this-pr-separate-plan-when-ready"><span>12</span>Follow-up phase (out of scope for this PR — separate plan when ready)</button>
+<button type="button" data-target="execution"><span>13</span>Execution</button></nav>
+</aside>
+    <div class="sections">
+      <details class="section" id="overview" open>
+  <summary>
+    <span class="section-index">01</span>
+    <span class="section-title">Overview</span>
+    <span class="section-count">38 words</span>
+  </summary>
+  <div class="section-body">
+    <blockquote><p>Generated via tac-coder v1.2 (Phase 0 intake → Phase 1 ground → this plan). Cause: 2026-05-16 Langfuse activity-breakdown showed 0/751 traces in last 24h carry token usage or cost. Companion incident report: <code>second-brain/intelligence/observability/langfuse/2026-05-16-activity-breakdown.md</code>.</p></blockquote>
+  </div>
+</details>
+<details class="section" id="context">
+  <summary>
+    <span class="section-index">02</span>
+    <span class="section-title">Context</span>
+    <span class="section-count">156 words</span>
+  </summary>
+  <div class="section-body">
+    <p><code>resources/cc-otel/bootstrap.js</code> monkey-patches <code>globalThis.fetch</code> inside every Node-based agent invocation that loads it via <code>NODE_OPTIONS=--require=…/bootstrap.js</code>. This includes interactive claude-code on Windows + Mac, the Linear cron coding agent on the mini, and any Hermes/OpenClaw call that shells out to a claude subprocess. <strong>One bootstrap, many producers.</strong></p>
+<p>The hook currently captures HTTP-level facts (<code>http.url</code>, <code>http.method</code>, <code>http.route</code>, <code>http.status_code</code>, <code>http.duration_ms</code>, <code>llm.request.model</code>, <code>llm.input.preview</code>, plus <code>cc.repo</code>, <code>cc.branch</code>, <code>cc.cwd</code>) and ends the span the instant response headers arrive. It never reads the response body. Anthropic&#x27;s <code>/v1/messages</code> response always carries a <code>usage</code> block (<code>input_tokens</code>, <code>output_tokens</code>, <code>cache_creation_input_tokens</code>, <code>cache_read_input_tokens</code>) plus a <code>stop_reason</code>. None of it lands in Langfuse.</p>
+<p>This phase teaches the hook to read the response body for non-streaming requests, extract the usage block + stop reason + response headers + first 500 chars of output text, and emit them as OTel attributes that Langfuse Cloud auto-derives cost from.</p>
+  </div>
+</details>
+<details class="section" id="scope">
+  <summary>
+    <span class="section-index">03</span>
+    <span class="section-title">Scope</span>
+    <span class="section-count">318 words</span>
+  </summary>
+  <div class="section-body">
+    <h4>In scope (one PR, one rollout cycle)</h4>
+<ol>
+<li><strong>Token usage</strong> — <code>input_tokens</code> / <code>output_tokens</code> from response body</li>
+<li><strong>Prompt-cache tokens</strong> — <code>cache_creation_input_tokens</code> / <code>cache_read_input_tokens</code> from response body</li>
+<li><strong><code>stop_reason</code></strong> — from response body</li>
+<li><strong>Output preview</strong> — first 500 chars of first text block, no redaction (per intake Q3)</li>
+<li><strong>Rate-limit headers</strong> — <code>anthropic-ratelimit-{requests,tokens}-{limit,remaining,reset}</code> from response headers</li>
+<li><strong>Trace session linking</strong> — <code>CLAUDE_SESSION_ID</code> env or process-uuid fallback → Langfuse session_id</li>
+<li><strong>Invocation source</strong> — <code>source:tty | piped | cron</code> tag derived at bootstrap start</li>
+<li><strong>Streaming fail-loud</strong> — detect SSE responses and emit <code>gen_ai.usage.captured=false reason=streaming</code> instead of silent zero</li>
+<li><strong>Smoke test</strong> — <code>resources/cc-otel/scripts/smoke-token-capture.sh</code> runs <code>claude -p</code> + waits + reads back from Langfuse via existing <code>langfuse_activity_breakdown.py</code> and asserts <code>Sum output tokens &gt; 0</code> from the last hour</li>
+<li><strong>Unit test</strong> — <code>resources/cc-otel/bootstrap.test.js</code> with stubbed fetch covering: non-streaming JSON response with usage, streaming response (fail-loud branch), non-Anthropic URL (untouched passthrough), and the source/session tag wiring</li>
+</ol>
+<h4>Out of scope (explicit non-goals)</h4>
+<ul>
+<li><strong>Streaming response body parsing</strong> — deferred. SSE wrap is its own ~40 LOC; we land the non-streaming win first, validate against Anthropic billing for a known day, then do streaming as a follow-up (see &quot;Follow-up phase&quot; below).</li>
+<li><strong>Tool-use child spans</strong> — assistant <code>tool_use</code> blocks are not parsed into separate observations in this phase.</li>
+<li><strong>LLM-as-judge <code>scores</code> push</strong> — separate cron, separate skill; tracked in <code>second-brain/tasks/feedback-loops/L18-nightly-langfuse-dream-review.md</code>.</li>
+<li><strong>File-extension / per-file token attribution</strong> — requires tool_use parsing first.</li>
+<li><strong>Tier-3-only trace-linking deeper than session_id</strong> — no parent/child span linking across separate claude-code invocations.</li>
+<li><strong>Hermes / OpenClaw direct SDK paths</strong> — covered automatically when they shell out to <code>claude</code>; not covered when they call Anthropic SDK directly. A separate Hermes-side wrapper phase handles those.</li>
+</ul>
+<h4>Boundary contract</h4>
+<p>This phase touches <strong>only</strong> <code>resources/cc-otel/</code>. No edits to Hermes, OpenClaw, Langfuse, the Linear cron, or any plist. After deploy, the existing 514 mac-mini claude-code traces and the existing 29 Hermes-via-subprocess traces start carrying usage; everything else is unchanged.</p>
+  </div>
+</details>
+<details class="section" id="assumptions-locked-during-phase-0-intake">
+  <summary>
+    <span class="section-index">04</span>
+    <span class="section-title">Assumptions (locked during Phase 0 intake)</span>
+    <span class="section-count">174 words</span>
+  </summary>
+  <div class="section-body">
+    <div class="table-wrap"><table><thead><tr><th>ID</th><th>Assumption</th><th>Source</th></tr></thead><tbody><tr><td>A1</td><td>Scope is Tiers 1–5 in one phase</td><td>Intake Q1</td></tr>
+<tr><td>A2</td><td>Streaming responses are deferred; fail-loud marker on streaming spans</td><td>Intake Q2</td></tr>
+<tr><td>A3</td><td>Output preview captured as 500-char truncation, no redaction</td><td>Intake Q3</td></tr>
+<tr><td>A4</td><td>Smoke test is live <code>claude -p</code> + <code>langfuse_activity_breakdown.py --hours 1</code> asserting <code>Sum output &gt; 0</code></td><td>Intake Q4</td></tr>
+<tr><td>A5</td><td>Anchor on OTel GenAI semantic conventions (<code>gen_ai.usage.input_tokens</code>, <code>gen_ai.usage.output_tokens</code>, <code>gen_ai.response.stop_reason</code>) plus Langfuse-specific <code>langfuse.observation.usage_details</code> JSON for auto-cost-derivation</td><td>Default — Langfuse OTel mapping is published, no other anchor proposed</td></tr>
+<tr><td>A6</td><td><code>claude -p</code> invocations are non-streaming by default (the <code>--stream</code> flag exists but is opt-in). Most existing 514 mac-mini traces will be covered by the non-streaming path</td><td>Source: <code>claude --help</code></td></tr>
+<tr><td>A7</td><td>Anthropic prompt-cache <code>cache_control</code> TTL (5m vs 1h) is on the REQUEST body, not the RESPONSE — we don&#x27;t capture this in this phase; deferred to optional follow-up</td><td>Source: Anthropic API docs</td></tr>
+<tr><td>A8</td><td><code>CLAUDE_SESSION_ID</code> env may not be set by claude-code today. Fallback: generate one UUID per bootstrap load with <code>crypto.randomUUID()</code>. Process-scoped, not per-turn</td><td>Defensive default</td></tr></tbody></table></div>
+  </div>
+</details>
+<details class="section" id="phase-1-ground-tac-scan-results">
+  <summary>
+    <span class="section-index">05</span>
+    <span class="section-title">Phase 1 — Ground (TAC scan results)</span>
+    <span class="section-count">168 words</span>
+  </summary>
+  <div class="section-body">
+    <div class="table-wrap"><table><thead><tr><th>Source</th><th>Hit</th><th>Reuse?</th></tr></thead><tbody><tr><td><code>second-brain/knowledge/tac-kb.md</code> (compiled 30-source bundle)</td><td>No prior <code>cc-otel</code>/<code>bootstrap.js</code>/<code>gen_ai.usage</code>/Anthropic-fetch-wrapper component</td><td>TAC-no-match — documented</td></tr>
+<tr><td><code>~/repos/the-library/library.yaml</code> (Mac-mini side, per tac-coder Phase 1 step 1)</td><td>_execution: skip — current cc-otel bootstrap is itself the prior art; we&#x27;re extending it, not reinventing_</td><td>Extend</td></tr>
+<tr><td><code>resources/cc-otel/bootstrap.js</code></td><td>This phase&#x27;s edit target — preserves OTel setup, exporter wiring, repo-detection, tag composition</td><td>Extend</td></tr>
+<tr><td><code>resources/lib/tracing.py</code></td><td>Python-side tracing helper; out of scope here (no Python edits)</td><td>N/A</td></tr>
+<tr><td><code>scripts/setup_codex_langfuse.py</code></td><td>Sets <code>LANGFUSE_OTEL_*</code> envs for codex; unrelated to bootstrap.js content</td><td>N/A</td></tr>
+<tr><td>Langfuse OTel docs (https://langfuse.com/docs/integrations/opentelemetry/example-otel)</td><td>Reference architecture — <code>langfuse.observation.usage_details</code> JSON attr maps directly to cost catalog</td><td>Anchor</td></tr>
+<tr><td>OpenInference GenAI semconv (https://github.com/Arize-ai/openinference/blob/main/spec/semantic_conventions.md)</td><td><code>gen_ai.usage.input_tokens</code> / <code>gen_ai.usage.output_tokens</code> / <code>gen_ai.response.stop_reason</code> — standard attribute names</td><td>Anchor</td></tr></tbody></table></div>
+<p>TAC reuse policy (feedback_tac_first_reuse_policy) satisfied: extending an existing component, no new agent / skill / hook / command / ADW. KB-no-match on the specific patch documented.</p>
+  </div>
+</details>
+<details class="section" id="phase-2-plan-file-by-file">
+  <summary>
+    <span class="section-index">06</span>
+    <span class="section-title">Phase 2 — Plan (file-by-file)</span>
+    <span class="section-count">425 words</span>
+  </summary>
+  <div class="section-body">
+    <div class="table-wrap"><table><thead><tr><th>File</th><th>Action</th><th>Net LOC</th></tr></thead><tbody><tr><td><code>resources/cc-otel/bootstrap.js</code></td><td>Extend the <code>patchedFetch</code> wrapper inside the <code>globalThis.fetch</code> monkey-patch to: (i) detect streaming vs non-streaming via response <code>content-type</code>, (ii) for non-streaming, clone the response, parse JSON body, extract usage/stop_reason/first-text-block, (iii) for streaming, set fail-loud attrs, (iv) capture rate-limit headers from response headers, (v) add <code>source:</code> tag derived at module load, (vi) add session_id resolved from <code>CLAUDE_SESSION_ID</code> or generated UUID.</td><td>+~80</td></tr>
+<tr><td><code>resources/cc-otel/bootstrap.test.js</code></td><td>New file. Node native test runner (<code>node --test</code>). Four test cases per the In-Scope #10 enumeration. No network — fetch is stubbed.</td><td>+~120</td></tr>
+<tr><td><code>resources/cc-otel/scripts/smoke-token-capture.sh</code></td><td>New file. Runs <code>claude -p &quot;say hi&quot;</code> on host with cc-otel loaded, sleeps 60s for OTel batch flush, then invokes <code>python resources/skills/check-langfuse-logs/scripts/langfuse_activity_breakdown.py --hours 1</code> and greps the output for <code>Sum input/output/total tokens</code> — fails if all three are 0.</td><td>+~25</td></tr>
+<tr><td><code>resources/cc-otel/README.md</code></td><td>Document the new attributes table (attribute name → source → Langfuse mapping) so future maintainers know the contract.</td><td>+~40</td></tr>
+<tr><td><code>resources/cc-otel/package.json</code></td><td>No change — only stdlib modules used (<code>crypto.randomUUID</code>, existing <code>@opentelemetry/*</code> already present).</td><td>0</td></tr>
+<tr><td>Deploy targets</td><td>After merge: rsync <code>bootstrap.js</code> to <code>~/.cc-otel/bootstrap.js</code> on the Windows dev box AND on the Mac mini (per existing convention — both hosts already reference this path in their <code>NODE_OPTIONS</code>). Rsync step lives in the smoke-test runbook, not in this code.</td><td>0</td></tr></tbody></table></div>
+<h4>Attribute contract (new attrs emitted on each Anthropic <code>/v1/messages</code> span)</h4>
+<div class="table-wrap"><table><thead><tr><th>OTel attribute</th><th>Source</th><th>Notes</th></tr></thead><tbody><tr><td><code>gen_ai.usage.input_tokens</code></td><td><code>body.usage.input_tokens</code></td><td></td></tr>
+<tr><td><code>gen_ai.usage.output_tokens</code></td><td><code>body.usage.output_tokens</code></td><td></td></tr>
+<tr><td><code>gen_ai.usage.cache_creation_input_tokens</code></td><td><code>body.usage.cache_creation_input_tokens</code></td><td>Anthropic-specific extension</td></tr>
+<tr><td><code>gen_ai.usage.cache_read_input_tokens</code></td><td><code>body.usage.cache_read_input_tokens</code></td><td>Anthropic-specific extension</td></tr>
+<tr><td><code>gen_ai.response.stop_reason</code></td><td><code>body.stop_reason</code></td><td><code>end_turn</code> / <code>max_tokens</code> / <code>tool_use</code> / <code>stop_sequence</code></td></tr>
+<tr><td><code>gen_ai.usage.captured</code></td><td><code>true</code> for non-streaming, <code>false</code> for streaming</td><td>Fail-loud marker</td></tr>
+<tr><td><code>gen_ai.usage.capture_skip_reason</code></td><td><code>streaming</code> when applicable</td><td>Diagnostic</td></tr>
+<tr><td><code>llm.output.preview</code></td><td>First 500 chars of first <code>body.content[].text</code> block</td><td>Matches existing <code>llm.input.preview</code> pattern</td></tr>
+<tr><td><code>langfuse.observation.usage_details</code></td><td>JSON-stringified <code>{&quot;input&quot;:N,&quot;output&quot;:N,&quot;cache_creation&quot;:N,&quot;cache_read&quot;:N}</code></td><td>Triggers Langfuse cost auto-derivation</td></tr>
+<tr><td><code>langfuse.observation.model.name</code></td><td>Resolved model name (same as <code>llm.request.model</code>)</td><td>Required for Langfuse cost catalog lookup</td></tr>
+<tr><td><code>langfuse.trace.session_id</code></td><td><code>process.env.CLAUDE_SESSION_ID</code> or generated per-process UUID</td><td>Rolls multi-fetch turns into one Langfuse session</td></tr>
+<tr><td><code>http.response.header.anthropic_ratelimit_requests_limit</code></td><td>response header</td><td></td></tr>
+<tr><td><code>http.response.header.anthropic_ratelimit_requests_remaining</code></td><td>response header</td><td></td></tr>
+<tr><td><code>http.response.header.anthropic_ratelimit_tokens_limit</code></td><td>response header</td><td></td></tr>
+<tr><td><code>http.response.header.anthropic_ratelimit_tokens_remaining</code></td><td>response header</td><td></td></tr>
+<tr><td><code>http.response.header.anthropic_ratelimit_tokens_reset</code></td><td>response header</td><td>ISO timestamp</td></tr>
+<tr><td>(existing tag list) `source:tty\</td><td>piped\</td><td>cron`</td><td>derived at bootstrap load</td><td><code>tty</code> if <code>process.stdin.isTTY</code>, <code>cron</code> if `CRON \</td><td>\</td><td>GITHUB_ACTIONS \</td><td>\</td><td>CLAUDE_CODE_NONINTERACTIVE<code>, else </code>piped`</td></tr></tbody></table></div>
+  </div>
+</details>
+<details class="section" id="phase-3-build-implementation-notes">
+  <summary>
+    <span class="section-index">07</span>
+    <span class="section-title">Phase 3 — Build (implementation notes)</span>
+    <span class="section-count">444 words</span>
+  </summary>
+  <div class="section-body">
+    <ol>
+<li><strong>Module-load-time additions</strong> (above the existing <code>globalThis.fetch</code> patch):</li>
+</ol>
+<pre><code>   const { randomUUID } = require(&#x27;crypto&#x27;);
+   const _sessionId = process.env.CLAUDE_SESSION_ID || randomUUID();
+   const _invocationSource = (
+     process.env.CRON || process.env.GITHUB_ACTIONS || process.env.CLAUDE_CODE_NONINTERACTIVE
+       ? &#x27;cron&#x27;
+       : (process.stdin &amp;&amp; process.stdin.isTTY ? &#x27;tty&#x27; : &#x27;piped&#x27;)
+   );</code></pre>
+<ol>
+<li><strong>Inside <code>patchedFetch</code>, replace the current post-response block</strong> (currently 4 lines: status, duration, end, return) with a branched read:</li>
+</ol>
+<pre><code>   const res = await originalFetch.apply(this, arguments);
+   span.setAttribute(&#x27;http.status_code&#x27;, res.status);
+   span.setAttribute(&#x27;http.duration_ms&#x27;, Date.now() - t0);
+
+   // Rate-limit headers — always captured, no body read needed
+   for (const h of [
+     &#x27;anthropic-ratelimit-requests-limit&#x27;,
+     &#x27;anthropic-ratelimit-requests-remaining&#x27;,
+     &#x27;anthropic-ratelimit-tokens-limit&#x27;,
+     &#x27;anthropic-ratelimit-tokens-remaining&#x27;,
+     &#x27;anthropic-ratelimit-tokens-reset&#x27;,
+   ]) {
+     const v = res.headers.get(h);
+     if (v !== null) {
+       span.setAttribute(&#x27;http.response.header.&#x27; + h.replace(/-/g, &#x27;_&#x27;), v);
+     }
+   }
+
+   // Body read — non-streaming only
+   const ct = res.headers.get(&#x27;content-type&#x27;) || &#x27;&#x27;;
+   if (ct.includes(&#x27;text/event-stream&#x27;)) {
+     span.setAttribute(&#x27;gen_ai.usage.captured&#x27;, false);
+     span.setAttribute(&#x27;gen_ai.usage.capture_skip_reason&#x27;, &#x27;streaming&#x27;);
+   } else if (ct.includes(&#x27;application/json&#x27;) &amp;&amp; res.status === 200) {
+     try {
+       const body = await res.clone().json();
+       const u = body.usage || {};
+       if (typeof u.input_tokens === &#x27;number&#x27;) {
+         span.setAttribute(&#x27;gen_ai.usage.input_tokens&#x27;, u.input_tokens);
+       }
+       if (typeof u.output_tokens === &#x27;number&#x27;) {
+         span.setAttribute(&#x27;gen_ai.usage.output_tokens&#x27;, u.output_tokens);
+       }
+       if (typeof u.cache_creation_input_tokens === &#x27;number&#x27;) {
+         span.setAttribute(&#x27;gen_ai.usage.cache_creation_input_tokens&#x27;, u.cache_creation_input_tokens);
+       }
+       if (typeof u.cache_read_input_tokens === &#x27;number&#x27;) {
+         span.setAttribute(&#x27;gen_ai.usage.cache_read_input_tokens&#x27;, u.cache_read_input_tokens);
+       }
+       if (body.stop_reason) {
+         span.setAttribute(&#x27;gen_ai.response.stop_reason&#x27;, body.stop_reason);
+       }
+       // Langfuse cost-derivation pair — emitted only when we have model + tokens
+       if (model &amp;&amp; typeof u.input_tokens === &#x27;number&#x27;) {
+         span.setAttribute(&#x27;langfuse.observation.model.name&#x27;, model);
+         span.setAttribute(&#x27;langfuse.observation.usage_details&#x27;, JSON.stringify({
+           input: u.input_tokens || 0,
+           output: u.output_tokens || 0,
+           cache_creation: u.cache_creation_input_tokens || 0,
+           cache_read: u.cache_read_input_tokens || 0,
+         }));
+       }
+       // Output text preview — first text block, 500 chars
+       if (Array.isArray(body.content)) {
+         const txt = body.content.find((c) =&gt; c &amp;&amp; c.type === &#x27;text&#x27;);
+         if (txt &amp;&amp; typeof txt.text === &#x27;string&#x27;) {
+           span.setAttribute(&#x27;llm.output.preview&#x27;, txt.text.slice(0, 500));
+         }
+       }
+       span.setAttribute(&#x27;gen_ai.usage.captured&#x27;, true);
+     } catch (e) {
+       span.setAttribute(&#x27;gen_ai.usage.captured&#x27;, false);
+       span.setAttribute(&#x27;gen_ai.usage.capture_skip_reason&#x27;, &#x27;parse_error&#x27;);
+     }
+   }
+
+   span.end();
+   return res;</code></pre>
+<ol>
+<li><strong>Tag list amendments</strong> — extend the <code>tags</code> array assembly to push <code>source:${_invocationSource}</code> and set <code>span.setAttribute(&#x27;langfuse.trace.session_id&#x27;, _sessionId)</code>.</li>
+</ol>
+<ol>
+<li><strong>Implementation-time guardrails</strong>:</li>
+</ol>
+<ul>
+<li><code>res.clone()</code> is essential — calling <code>res.json()</code> on the original would consume the body and break the downstream consumer (claude-code&#x27;s cli.js bundle).</li>
+<li>JSON parse is wrapped in try/catch — any non-Anthropic-shaped body (error response, unexpected content) falls through to the fail-loud branch.</li>
+<li>Streaming detection uses <code>content-type: text/event-stream</code> from response headers (Anthropic&#x27;s confirmed SSE marker), not request body inspection (which would race with body serialization timing).</li>
+<li>The <code>gen_ai.usage.captured</code> attribute is set in <strong>both</strong> branches so a span without it indicates an unhandled code path — easier to spot regressions.</li>
+</ul>
+  </div>
+</details>
+<details class="section" id="phase-4-validate">
+  <summary>
+    <span class="section-index">08</span>
+    <span class="section-title">Phase 4 — Validate</span>
+    <span class="section-count">380 words</span>
+  </summary>
+  <div class="section-body">
+    <h4>Smoke test (per A4)</h4>
+<pre><code>bash resources/cc-otel/scripts/smoke-token-capture.sh</code></pre>
+<p>Script behavior:</p>
+<ol>
+<li>Records current UTC time as <code>T0</code>.</li>
+<li>Runs <code>NODE_OPTIONS=--require=$PWD/resources/cc-otel/bootstrap.js claude -p &quot;Say only the word OK&quot; --model claude-haiku-4-5-20251001 --no-session-persistence</code> once on whichever host is running it.</li>
+<li>Asserts exit code 0 and stdout contains <code>OK</code>.</li>
+<li>Sleeps 75s (60s OTel batch + 15s Langfuse Cloud ingest lag).</li>
+<li>Runs <code>python resources/skills/check-langfuse-logs/scripts/langfuse_activity_breakdown.py --hours 1</code> capturing stdout.</li>
+<li>Greps for <code>Sum input/output/total tokens:</code> line; asserts all three numbers &gt; 0.</li>
+<li>Greps for <code>claude-haiku-4-5-20251001</code> in the model table; asserts <code>Out tok</code> column &gt; 0 for that row.</li>
+<li>Exit 0 (PASS) or 1 (FAIL) with explicit reason on FAIL.</li>
+</ol>
+<h4>Unit test</h4>
+<pre><code>node --test resources/cc-otel/bootstrap.test.js</code></pre>
+<p>Four test cases:</p>
+<ol>
+<li><strong>Non-streaming JSON with usage</strong> — stub fetch returns <code>{status:200, headers:{content-type:&#x27;application/json&#x27;}, body:{usage:{input_tokens:123, output_tokens:45, cache_read_input_tokens:67}, stop_reason:&#x27;end_turn&#x27;, content:[{type:&#x27;text&#x27;, text:&#x27;hi&#x27;}]}}</code>. Assert span has <code>gen_ai.usage.input_tokens=123</code>, <code>gen_ai.usage.output_tokens=45</code>, <code>gen_ai.usage.cache_read_input_tokens=67</code>, <code>gen_ai.response.stop_reason=&#x27;end_turn&#x27;</code>, <code>llm.output.preview=&#x27;hi&#x27;</code>, <code>gen_ai.usage.captured=true</code>, and the Langfuse JSON-encoded usage_details parses correctly.</li>
+<li><strong>Streaming response</strong> — stub returns <code>{status:200, headers:{content-type:&#x27;text/event-stream&#x27;}}</code>. Assert span has <code>gen_ai.usage.captured=false</code> and <code>gen_ai.usage.capture_skip_reason=&#x27;streaming&#x27;</code>. Body is NOT consumed.</li>
+<li><strong>Non-Anthropic URL passthrough</strong> — stub fetch is called with <code>https://example.com</code>. Assert no spans created (passthrough untouched).</li>
+<li><strong>Source + session_id wiring</strong> — with <code>CLAUDE_SESSION_ID=test-sess-123</code> env set, assert <code>langfuse.trace.session_id=&#x27;test-sess-123&#x27;</code>. Without the env, assert a v4 UUID format on the same attr. With <code>process.stdin.isTTY=false</code> and no <code>CRON</code> env, assert <code>source:piped</code> in the JSON-encoded <code>langfuse.trace.tags</code>.</li>
+</ol>
+<h4>Success criteria</h4>
+<div class="table-wrap"><table><thead><tr><th>#</th><th>Criterion</th><th>Source</th></tr></thead><tbody><tr><td>C1</td><td><code>node --test resources/cc-otel/bootstrap.test.js</code> exits 0 (4/4 tests pass)</td><td>Unit</td></tr>
+<tr><td>C2</td><td>Smoke test exits 0 with non-zero token sums in the last-hour activity breakdown</td><td>A4</td></tr>
+<tr><td>C3</td><td>Existing claude-code traces in Langfuse Cloud, after rsync deploy, show <code>Sum totalCost &gt; 0</code> in the next 24h activity-breakdown run</td><td>Live</td></tr>
+<tr><td>C4</td><td>No regression in existing attrs (<code>cc.repo</code>, <code>cc.branch</code>, <code>llm.request.model</code>, tag list) — verified by diffing one trace&#x27;s metadata pre/post</td><td>Live</td></tr>
+<tr><td>C5</td><td>At least one Hermes-via-claude-subprocess trace also shows new token attrs (proves cross-producer coverage)</td><td>Live</td></tr></tbody></table></div>
+  </div>
+</details>
+<details class="section" id="phase-5-commit">
+  <summary>
+    <span class="section-index">09</span>
+    <span class="section-title">Phase 5 — Commit</span>
+    <span class="section-count">148 words</span>
+  </summary>
+  <div class="section-body">
+    <pre><code>feat(cc-otel): capture token usage + cache + stop_reason + rate limits + session linking
+
+Extend bootstrap.js fetch wrapper to read the Anthropic /v1/messages response
+body on non-streaming calls and emit:
+  - gen_ai.usage.{input,output,cache_creation,cache_read}_input_tokens
+  - gen_ai.response.stop_reason
+  - llm.output.preview (first 500 chars)
+  - langfuse.observation.{model.name, usage_details} for cost auto-derive
+  - http.response.header.anthropic_ratelimit_* for capacity tracking
+  - langfuse.trace.session_id from CLAUDE_SESSION_ID or generated UUID
+  - source:tty|piped|cron tag from process.stdin.isTTY + CRON env
+
+Streaming responses (text/event-stream) get gen_ai.usage.captured=false with
+capture_skip_reason=streaming as a fail-loud marker, to be addressed in a
+follow-up phase.
+
+Adds unit tests (node --test) and a live smoke script that runs claude -p
+and asserts the resulting Langfuse trace carries non-zero token sums within
+1 hour.
+
+Closes the instrumentation gap surfaced by the 2026-05-16 activity
+breakdown (0/751 traces in 24h carried any token data).</code></pre>
+  </div>
+</details>
+<details class="section" id="risk-register">
+  <summary>
+    <span class="section-index">10</span>
+    <span class="section-title">Risk register</span>
+    <span class="section-count">138 words</span>
+  </summary>
+  <div class="section-body">
+    <div class="table-wrap"><table><thead><tr><th>Risk</th><th>Likelihood</th><th>Mitigation</th></tr></thead><tbody><tr><td><code>res.clone()</code> doubles peak memory for body bytes</td><td>Low (responses are KB-MB)</td><td>Bounded by Anthropic&#x27;s max response size; falls inside Node default heap</td></tr>
+<tr><td>JSON parse fails on unexpected body shape</td><td>Medium for error responses</td><td>Try/catch → fail-loud branch; no exception escapes wrapper</td></tr>
+<tr><td>Streaming requests inadvertently include non-streaming responses</td><td>Low</td><td>Content-type check is the canonical Anthropic SSE marker</td></tr>
+<tr><td><code>CLAUDE_SESSION_ID</code> env collides with future claude-code feature</td><td>Low</td><td>Reading it is forward-compatible; if claude-code starts setting it, we adopt theirs automatically</td></tr>
+<tr><td>Rate-limit header capture missed because header name casing varies</td><td>Low</td><td><code>res.headers.get()</code> is case-insensitive per fetch spec</td></tr>
+<tr><td>Output preview leaks client conversation content</td><td><strong>Accepted</strong> per A3</td><td>Privacy decision frozen during intake — Langfuse Cloud is already trusted for the input preview</td></tr>
+<tr><td>Bootstrap.js becomes too big to read</td><td>Low</td><td>At ~240 LOC post-patch, still single-file, no extraction</td></tr></tbody></table></div>
+  </div>
+</details>
+<details class="section" id="rollback">
+  <summary>
+    <span class="section-index">11</span>
+    <span class="section-title">Rollback</span>
+    <span class="section-count">46 words</span>
+  </summary>
+  <div class="section-body">
+    <p>Single-file, single-commit change. <code>git revert &lt;sha&gt;</code> restores prior behavior. Deployed copies at <code>~/.cc-otel/bootstrap.js</code> on Windows + mini are overwritten on next rsync from the repo — manual rollback is a re-rsync of the prior commit&#x27;s file. No data migration. No config changes outside the file itself.</p>
+  </div>
+</details>
+<details class="section" id="follow-up-phase-out-of-scope-for-this-pr-separate-plan-when-ready">
+  <summary>
+    <span class="section-index">12</span>
+    <span class="section-title">Follow-up phase (out of scope for this PR — separate plan when ready)</span>
+    <span class="section-count">118 words</span>
+  </summary>
+  <div class="section-body">
+    <ol>
+<li><strong>Streaming response body parsing</strong> — wrap response body as a passthrough ReadableStream; watch for <code>message_delta</code> and <code>message_stop</code> SSE events carrying <code>usage</code>. ~40 LOC. Should land after this phase has 1 week of stable non-streaming data so the comparison surface is solid.</li>
+<li><strong>Tool-use child spans</strong> — parse assistant <code>tool_use</code> blocks from response body and emit synthetic OTel child spans per tool invocation. ~50 LOC.</li>
+<li><strong>Cache TTL detection</strong> — inspect request body for <code>cache_control.ttl</code> and tag with <code>cache_ttl:5m|1h</code>. ~10 LOC. Useful for cache-ROI math.</li>
+<li><strong>Hermes / OpenClaw direct SDK paths</strong> — for code paths that call the Anthropic SDK in-process rather than shelling out to <code>claude</code>, wrap call sites with the Langfuse Python decorator. Separate plan, separate producer.</li>
+</ol>
+  </div>
+</details>
+<details class="section" id="execution">
+  <summary>
+    <span class="section-index">13</span>
+    <span class="section-title">Execution</span>
+    <span class="section-count">43 words</span>
+  </summary>
+  <div class="section-body">
+    <p>This plan is ready to hand to a tactical-agentic-coder agent or to a Linear issue with the <code>automation/tac-build</code> label. The phases above map 1:1 onto the tac-coder v1.2 pipeline.</p>
+<p>Estimated effort: 2–3 hours including the smoke test debugging cycle.</p>
+  </div>
+</details>
+    </div>
+  </main>
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-label">Metadata</div>
+      <div class="metadata-grid">
+        <div class="meta-item"><span>Source</span><strong>C:\Users\gblac\OneDrive\Desktop\gbauto\gbautomation\second-brain\plans\2026-05-16-cc-otel-token-instrumentation.md</strong></div>
+<div class="meta-item"><span>Generated</span><strong>2026-05-19T15:31:36-07:00</strong></div>
+<div class="meta-item"><span>Source modified</span><strong>2026-05-16T15:24:36-07:00</strong></div>
+<div class="meta-item"><span>Source size</span><strong>22,286 bytes</strong></div>
+<div class="meta-item"><span>Word count</span><strong>2,652</strong></div>
+<div class="meta-item"><span>Sections</span><strong>13</strong></div>
+<div class="meta-item"><span>Renderer</span><strong>resources/skills/netlify-cli/scripts/render_plan_page.py</strong></div>
+<div class="meta-item"><span>Kind</span><strong>plan</strong></div>
+<div class="meta-item"><span>Type</span><strong>tac-build-plan</strong></div>
+<div class="meta-item"><span>Status</span><strong>ready-to-execute</strong></div>
+<div class="meta-item"><span>Date</span><strong>2026-05-16</strong></div>
+<div class="meta-item"><span>Created</span><strong>2026-05-16</strong></div>
+<div class="meta-item"><span>Description</span><strong>Teach cc-otel bootstrap.js to read Anthropic /v1/messages response bodies and emit token usage, cache-token counts, stop_reason, output preview, rate-limit headers, source tag, and Langfuse session id — closing the 0/751-traces token-data gap surfaced 2026-05-16.</strong></div>
+<div class="meta-item"><span>Priority</span><strong>high</strong></div>
+<div class="meta-item"><span>Domain</span><strong>observability</strong></div>
+<div class="meta-item"><span>Author</span><strong>greg-claude</strong></div>
+<div class="meta-item"><span>Client</span><strong>gbautomation</strong></div>
+      </div>
+    </div>
+  </footer>
+  <script>
+    const sections = Array.from(document.querySelectorAll('details.section'));
+    const menuButtons = Array.from(document.querySelectorAll('[data-target]'));
+    const setActive = (id) => {
+      menuButtons.forEach((button) => button.classList.toggle('active', button.dataset.target === id));
+    };
+    menuButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const section = document.getElementById(button.dataset.target);
+        if (!section) return;
+        section.open = true;
+        setActive(section.id);
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+    document.querySelector('[data-action="expand"]').addEventListener('click', () => sections.forEach((section) => section.open = true));
+    document.querySelector('[data-action="collapse"]').addEventListener('click', () => sections.forEach((section, index) => section.open = index === 0));
+    sections.forEach((section) => {
+      section.addEventListener('toggle', () => {
+        if (section.open) setActive(section.id);
+      });
+    });
+    if (sections[0]) setActive(sections[0].id);
+  </script>
+</body>
+</html>

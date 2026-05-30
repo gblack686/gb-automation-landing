@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Hermes Teams as Code — GBAutomation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:         #F3F1E7;
+    --panel:      #E6E4D9;
+    --ink:        #191919;
+    --ink-2:      #5C5C5C;
+    --ink-mute:   #8C8A84;
+    --border:     #D6D4C8;
+    --accent:     #D97757;
+    --accent-deep:#C26D52;
+    --white:      #FFFFFF;
+
+    --clients:   #D97757;
+    --blocker:   #B5413A;
+    --ops:       #B17016;
+    --build:     #C28A2D;
+    --ok:        #6E8E5A;
+    --intel:     #5A7D8C;
+    --knowledge: #7A6A8E;
+
+    --wash-clients:   rgba(217,119,87,.08);
+    --wash-blocker:   rgba(181,65,58,.08);
+    --wash-ops:       rgba(177,112,22,.08);
+    --wash-build:     rgba(194,138,45,.08);
+    --wash-ok:        rgba(110,142,90,.08);
+    --wash-intel:     rgba(90,125,140,.08);
+    --wash-knowledge: rgba(122,106,142,.08);
+
+    --shadow: 0 12px 40px -12px rgba(217,119,87,.25);
+    --radius: 14px;
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);}
+  body{
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    font-size:16px; line-height:1.65;
+    -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  }
+
+  ::selection{background:var(--accent); color:#fff;}
+
+  /* layout */
+  .wrap{max-width:1080px; margin:0 auto; padding:48px 32px 96px;}
+  @media (max-width:720px){ .wrap{padding:28px 18px 64px;} }
+
+  /* masthead */
+  .masthead{
+    border-bottom:1px solid var(--border);
+    padding-bottom:32px; margin-bottom:48px;
+    display:flex; flex-direction:column; gap:14px;
+  }
+  .eyebrow{
+    font-family:'Inter',sans-serif;
+    text-transform:uppercase; letter-spacing:.18em; font-size:.72rem; font-weight:600;
+    color:var(--accent); display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{content:""; width:24px; height:1px; background:var(--accent);}
+  h1{
+    font-family:'Newsreader',Georgia,serif;
+    font-weight:500; font-size:clamp(2.2rem,5vw,3.4rem);
+    line-height:1.1; letter-spacing:-.01em; margin:0;
+  }
+  h1 em{color:var(--accent); font-style:italic;}
+  .lede{
+    max-width:760px; color:var(--ink-2);
+    font-size:1.08rem; line-height:1.6; margin:0;
+  }
+  .meta{
+    display:flex; flex-wrap:wrap; gap:10px; margin-top:8px;
+    color:var(--ink-mute); font-size:.78rem; letter-spacing:.05em;
+    text-transform:uppercase;
+  }
+  .meta span + span{padding-left:10px; border-left:1px solid var(--border);}
+
+  /* section */
+  h2{
+    font-family:'Newsreader',Georgia,serif; font-weight:500;
+    font-size:1.9rem; line-height:1.2; margin:64px 0 8px;
+    letter-spacing:-.005em;
+  }
+  h2 em{color:var(--accent); font-style:italic;}
+  h2 .num{
+    display:inline-block; min-width:2ch; color:var(--accent);
+    font-family:'Inter',sans-serif; font-size:.95rem; font-weight:600;
+    letter-spacing:.05em; margin-right:14px; vertical-align:6px;
+  }
+  h3{
+    font-family:'Inter',sans-serif; font-weight:600;
+    font-size:1.05rem; margin:32px 0 6px; letter-spacing:.005em;
+  }
+  h3 .tick{color:var(--accent); margin-right:8px;}
+  p{margin:.6em 0;}
+  p.kicker{color:var(--ink-2); margin-top:0;}
+
+  /* links */
+  a{color:var(--accent); text-decoration:none; border-bottom:1px solid transparent; transition:all .15s ease-out;}
+  a:hover{color:var(--accent-deep); border-bottom-color:var(--accent-deep);}
+
+  /* pills (mirror the Obsidian tag style) */
+  .pill{
+    display:inline-block; font-size:.62rem; font-weight:600;
+    text-transform:uppercase; letter-spacing:.12em;
+    padding:3px 9px; border-radius:9999px;
+    font-family:'Inter',sans-serif; vertical-align:2px;
+  }
+  .pill.adw      {background:var(--accent);    color:#fff;}
+  .pill.agent    {background:var(--accent-deep); color:#fff;}
+  .pill.skill    {background:var(--ink);       color:var(--bg);}
+  .pill.mcp      {background:var(--ink-2);     color:#fff;}
+  .pill.prompt   {background:rgba(230,228,217,.6); color:var(--ink); border:1px solid var(--border);}
+  .pill.script   {background:var(--panel);     color:var(--ink); border:1px solid var(--border);}
+  .pill.expert   {background:transparent;      color:var(--accent); border:1px solid var(--accent);}
+  .pill.active   {background:var(--accent);    color:#fff;}
+  .pill.dev      {background:var(--panel);     color:var(--ink); border:1px solid var(--border);}
+  .pill.dep      {background:var(--ink-mute);  color:#fff;}
+  .pill.ok       {background:var(--ok);        color:#fff;}
+  .pill.blocker  {background:var(--blocker);   color:#fff;}
+  .pill.intel    {background:var(--intel);     color:#fff;}
+
+  /* glass panel */
+  .panel{
+    background:rgba(230,228,217,.4);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+    border:1px solid rgba(214,212,200,.6);
+    border-radius:16px;
+    padding:22px 24px;
+    margin:18px 0;
+  }
+  .panel.tinted-intel{background:var(--wash-intel); border-color:rgba(90,125,140,.25);}
+  .panel.tinted-ok{background:var(--wash-ok); border-color:rgba(110,142,90,.25);}
+  .panel.tinted-block{background:var(--wash-blocker); border-color:rgba(181,65,58,.25);}
+  .panel.tinted-ops{background:var(--wash-ops); border-color:rgba(177,112,22,.25);}
+
+  /* blockquote / callout */
+  blockquote{
+    margin:18px 0; padding:.85rem 1.1rem;
+    border-left:3px solid var(--accent);
+    background:var(--wash-clients);
+    border-radius:0 10px 10px 0;
+    color:var(--ink);
+  }
+  blockquote em{color:var(--accent-deep);}
+
+  /* tables */
+  .table-wrap{overflow-x:auto; margin:14px 0 24px;}
+  table{
+    width:100%; border-collapse:separate; border-spacing:0;
+    border:1px solid var(--border); border-radius:10px; overflow:hidden;
+    background:var(--white);
+    font-size:.94rem;
+  }
+  th,td{padding:11px 14px; text-align:left; border-bottom:1px solid var(--border); vertical-align:top;}
+  thead th{
+    background:rgba(230,228,217,.7);
+    font-weight:600; font-size:.72rem;
+    text-transform:uppercase; letter-spacing:.08em;
+    color:var(--ink-2);
+  }
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr{transition:background .2s ease;}
+  tbody tr:hover{background:var(--wash-clients);}
+  td code, th code{font-size:.86em;}
+
+  /* code */
+  code{
+    font-family:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    background:rgba(230,228,217,.6);
+    border:1px solid var(--border);
+    padding:1px 6px; border-radius:5px;
+    font-size:.88em;
+  }
+  pre{
+    background:#1d1d1d;
+    color:#f3f1e7;
+    border-radius:12px;
+    padding:18px 20px;
+    overflow-x:auto;
+    font-family:'JetBrains Mono',ui-monospace,monospace;
+    font-size:.86rem;
+    line-height:1.55;
+    margin:14px 0;
+    border:1px solid #2a2a2a;
+  }
+  pre code{background:transparent; border:none; padding:0; color:inherit;}
+  pre .c{color:#8C8A84;}                  /* comment */
+  pre .k{color:#D97757;}                  /* keyword / cmd */
+  pre .s{color:#C28A2D;}                  /* string */
+  pre .v{color:#6E8E5A;}                  /* variable */
+  pre .arrow{color:#5A7D8C;}              /* arrow */
+
+  /* stat cards */
+  .stats{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+    gap:14px; margin:18px 0 22px;
+  }
+  .stat{
+    background:var(--white);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:16px 18px;
+    transition:transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s, border-color .35s;
+  }
+  .stat:hover{
+    transform:translateY(-3px);
+    box-shadow:var(--shadow);
+    border-color:var(--accent);
+  }
+  .stat .label{
+    font-size:.65rem; text-transform:uppercase; letter-spacing:.12em;
+    color:var(--ink-mute); font-weight:600; margin-bottom:6px;
+  }
+  .stat .num{
+    font-family:'Newsreader',Georgia,serif;
+    font-size:2rem; line-height:1; color:var(--accent);
+    font-weight:500;
+  }
+  .stat .sub{font-size:.78rem; color:var(--ink-2); margin-top:6px;}
+
+  /* dag / chain viz */
+  .chain{
+    display:flex; flex-wrap:wrap; align-items:stretch; gap:10px;
+    background:var(--white);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:18px;
+    margin:14px 0 22px;
+  }
+  .node{
+    flex:1 1 130px;
+    min-width:130px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:10px 12px;
+    background:var(--bg);
+    font-size:.82rem;
+    position:relative;
+    transition:transform .25s ease, border-color .25s;
+  }
+  .node:hover{transform:translateY(-2px); border-color:var(--accent);}
+  .node .id{font-family:'JetBrains Mono',monospace; font-size:.7rem; color:var(--ink-mute);}
+  .node .lbl{margin-top:3px; line-height:1.3;}
+  .node.done   { background:var(--wash-ok);   border-color:rgba(110,142,90,.4); }
+  .node.block  { background:var(--wash-blocker); border-color:rgba(181,65,58,.4); }
+  .node.todo   { background:var(--wash-ops);  border-color:rgba(177,112,22,.4); }
+  .node .status{
+    display:inline-block; font-size:.6rem; font-weight:700;
+    text-transform:uppercase; letter-spacing:.12em;
+    margin-top:6px; padding:1px 7px; border-radius:9999px;
+  }
+  .node.done .status { background:var(--ok); color:#fff;}
+  .node.block .status{ background:var(--blocker); color:#fff;}
+  .node.todo .status { background:var(--ops); color:#fff;}
+
+  /* nav */
+  .toc{
+    background:rgba(230,228,217,.4);
+    border:1px solid rgba(214,212,200,.6);
+    border-radius:14px;
+    padding:18px 22px;
+    margin:24px 0 8px;
+    backdrop-filter:blur(12px);
+  }
+  .toc-label{
+    font-size:.65rem; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--accent); font-weight:600; margin-bottom:8px;
+  }
+  .toc ol{margin:0; padding:0 0 0 1.2em; color:var(--ink-2);}
+  .toc ol li{margin:4px 0;}
+  .toc ol li a{color:var(--ink); border-bottom:none;}
+  .toc ol li a:hover{color:var(--accent);}
+
+  /* hr — terracotta hairline */
+  hr.rule{
+    border:none; height:1px;
+    background:linear-gradient(90deg, transparent, var(--accent), transparent);
+    margin:48px 0;
+    opacity:.55;
+  }
+
+  /* footer */
+  footer{
+    margin-top:64px; padding-top:24px;
+    border-top:1px solid var(--border);
+    color:var(--ink-mute); font-size:.82rem;
+    display:flex; flex-wrap:wrap; justify-content:space-between; gap:12px;
+  }
+
+  /* utilities */
+  .row{display:flex; flex-wrap:wrap; gap:8px; align-items:center;}
+  .muted{color:var(--ink-mute);}
+  .small{font-size:.86rem;}
+  .nowrap{white-space:nowrap;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ============ Masthead ============ -->
+<header class="masthead">
+  <div class="eyebrow">GBAutomation · Intelligence · Observability</div>
+  <h1>Hermes <em>Teams as Code</em></h1>
+  <p class="lede">
+    The Nous-upstream profile model gives you sealed Hermes runtimes you can clone, distribute, and gateway-isolate.
+    What it doesn't give you is a team contract. This walkthrough separates the two layers,
+    points at the swarms that have actually fired locally, and inventories where their reports land.
+  </p>
+  <div class="meta">
+    <span>2026-05-14</span>
+    <span>Owner: Greg Black</span>
+    <span>Status: <span class="pill active">active</span></span>
+  </div>
+
+  <nav class="toc">
+    <div class="toc-label">On this page</div>
+    <ol>
+      <li><a href="#layers">Two layers of "teams as code"</a></li>
+      <li><a href="#profiles">Layer 1 — Hermes profiles (upstream)</a></li>
+      <li><a href="#claude-teams">Layer 2 — Claude-Code agent teams</a></li>
+      <li><a href="#swarms">Running swarms (concrete examples)</a></li>
+      <li><a href="#artifacts">Report artifacts</a></li>
+      <li><a href="#runtimes">Runtime environments</a></li>
+      <li><a href="#bottomline">Bottom-line mental model</a></li>
+      <li><a href="#sources">Sources</a></li>
+    </ol>
+  </nav>
+</header>
+
+<!-- ============ 1. Layers ============ -->
+<section id="layers">
+  <h2><span class="num">01</span>Two layers of <em>teams as code</em></h2>
+  <p class="kicker">
+    The Hermes docs cover one layer. The other one is sitting in your <code>.claude/</code> tree.
+  </p>
+
+  <p>
+    A "team" in this stack means two different things, sitting at different runtimes, with
+    different contracts. They compose — but mixing them up is the fastest way to design something
+    that won't run.
+  </p>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="label">Layer 1</div>
+      <div class="num">Hermes</div>
+      <div class="sub">Per-profile sealed runtimes. Gateway-per-process. Distributable via git.</div>
+    </div>
+    <div class="stat">
+      <div class="label">Layer 2</div>
+      <div class="num">Claude Code</div>
+      <div class="sub">Declarative <code>teams.yaml</code> + agents + Stop-hook validators.</div>
+    </div>
+    <div class="stat">
+      <div class="label">Glue</div>
+      <div class="num">MCP</div>
+      <div class="sub">Read-only Hermes bridge surfaces conversations + memory to Claude/Codex.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule" />
+
+<!-- ============ 2. Hermes profiles ============ -->
+<section id="profiles">
+  <h2><span class="num">02</span>Layer 1 — Hermes <em>profiles</em></h2>
+  <p class="kicker">Sealed runtimes. <span class="pill skill">upstream</span> <span class="pill mcp">Nous</span></p>
+
+  <p>
+    A profile is a complete <code>HERMES_HOME=~/.hermes/profiles/&lt;name&gt;</code> tree containing
+    <code>config.yaml</code>, <code>.env</code>, <code>SOUL.md</code>, sessions, memory, skills, cron,
+    <code>state.db</code>, <strong>gateway PID + logs</strong>, plus an auto-installed
+    <code>~/.local/bin/&lt;name&gt;</code> alias. The whole thing is portable
+    (<code>hermes profile export coder</code> → <code>.tar.gz</code>) and distributable as a git repo.
+  </p>
+
+  <h3><span class="tick">→</span>The swarm-enabling primitives</h3>
+
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th style="width:30%">Primitive</th><th>What it actually does</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>Per-profile gateway</strong></td>
+        <td>One OS process per profile. <code>coder gateway start</code>, <code>assistant gateway start</code>. Concurrent only because they're separate processes. <span class="muted">No documented swarm/scheduler primitive.</span></td>
+      </tr>
+      <tr>
+        <td><strong>Token lock</strong></td>
+        <td>Refuses to start a second gateway with a duplicate Telegram/Discord/Slack/WhatsApp/Signal token. Prevents silent-double-poller bugs.</td>
+      </tr>
+      <tr>
+        <td><strong><code>gateway install</code></strong></td>
+        <td>Generates a <code>hermes-gateway-&lt;profile&gt;</code> systemd unit / launchd plist. The team persists as N OS services, not a parent supervisor.</td>
+      </tr>
+      <tr>
+        <td><strong><code>--clone</code> / <code>--clone-all</code> / <code>--clone-from</code></strong></td>
+        <td>The only "team templating" story upstream. Config-only or full state, from any base.</td>
+      </tr>
+      <tr>
+        <td><strong>Profile distributions</strong></td>
+        <td>Closest thing to a teams manifest. <code>hermes profile install github.com/you/research-bot</code>. Ships SOUL + config + skills + cron + MCP. <em>Excludes</em> credentials, memory, sessions.</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3><span class="tick">→</span>The cheat-sheet</h3>
+<pre><code><span class="c"># clone-create the canonical Kanban workers</span>
+<span class="k">hermes profile create</span> researcher <span class="s">--clone --no-alias</span>
+<span class="k">hermes profile create</span> coder      <span class="s">--clone --no-alias</span>
+<span class="k">hermes profile create</span> reviewer   <span class="s">--clone --no-alias</span>
+<span class="k">hermes profile create</span> ops        <span class="s">--clone --no-alias</span>
+
+<span class="c"># run, switch, install as a service</span>
+<span class="k">coder chat</span>
+<span class="k">hermes -p</span> coder doctor
+<span class="k">hermes profile use</span> coder
+<span class="k">coder gateway install</span>           <span class="c"># → hermes-gateway-coder launchd plist</span>
+
+<span class="c"># export / share as a distribution</span>
+<span class="k">hermes profile export</span> coder     <span class="arrow">→</span> coder.tar.gz
+<span class="k">hermes profile install</span> github.com/you/research-bot <span class="s">--alias</span></code></pre>
+
+  <div class="panel tinted-block">
+    <strong>What's <em>missing</em> upstream — and you've had to invent locally:</strong>
+    <ul>
+      <li>No team-wide orchestrator. Profiles don't talk to each other except through Kanban (Level 5) or external surfaces.</li>
+      <li>No declarative <code>teams.yaml</code>. The closest is your <code>specs/2026-05-04-hermes-operations-subsystem.md</code> § 14.1.</li>
+      <li>No swarm-level observability. Langfuse is bolted on via <code>resources/lib/tracing.py</code>, not Hermes-native.</li>
+    </ul>
+  </div>
+</section>
+
+<hr class="rule" />
+
+<!-- ============ 3. Claude Code teams ============ -->
+<section id="claude-teams">
+  <h2><span class="num">03</span>Layer 2 — Claude-Code <em>agent teams</em></h2>
+  <p class="kicker">The build-time contract. <span class="pill agent">agent</span> <span class="pill expert">expert</span> <span class="pill adw">workflow</span></p>
+
+  <p>
+    <code>specs/2026-05-04-hermes-operations-subsystem.md</code> is your fully-worked example of
+    teams-as-code at the Claude Code layer. It doesn't run a single Hermes process — it
+    <em>builds the subsystem that operates on Hermes</em>.
+  </p>
+
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Component</th><th>Where</th><th>Count</th></tr></thead>
+    <tbody>
+      <tr><td><code>teams.yaml</code> rosters</td><td>spec § 14.1</td><td>10 named rosters (<code>scaffold-only</code>, <code>setup</code>, <code>full</code>, <code>plan-build</code>, <code>adr-only</code>, …)</td></tr>
+      <tr><td>Agent definitions</td><td><code>.claude/agents/*.md</code></td><td>8 — orchestrator + 4 parallel specialists + scaffold + research + Linear-author</td></tr>
+      <tr><td>Stop-hook validators</td><td><code>.claude/hooks/validators/</code></td><td>8 — one per deliverable, all blocking on failure</td></tr>
+      <tr><td>PreToolUse guard</td><td><code>.claude/hooks/protected-files-guard.py</code></td><td>1 — static path-protection policy with <code>HERMES_PROTECTED_OVERRIDE</code> escape valve</td></tr>
+      <tr><td>Orchestrator command</td><td><code>/hermes-ops</code> (Opus)</td><td>1 — fans out 4 specialists in parallel via Task, runs final sweep</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <blockquote>
+    <em>Hermes profiles are the runtime.</em> The Claude-Code <code>.claude/agents/</code> +
+    <code>teams.yaml</code> is the <em>build-time team contract</em>. The validators turn
+    "teams as code" into "teams that pass CI."
+  </blockquote>
+</section>
+
+<hr class="rule" />
+
+<!-- ============ 4. Running swarms ============ -->
+<section id="swarms">
+  <h2><span class="num">04</span>Running <em>swarms</em></h2>
+  <p class="kicker">Three swarm shapes have actually fired in production. Here's what they did.</p>
+
+  <h3><span class="tick">→</span>Swarm A: Kanban workers on the YouTube-Intel DAG</h3>
+  <p>
+    Four cloned profiles (<span class="pill skill">researcher</span> <span class="pill skill">coder</span> <span class="pill skill">reviewer</span> <span class="pill skill">ops</span>) seeded against a real 6-task chain on the <code>default</code> board.
+    Workers wrote durable scripts into <code>~/.hermes/kanban/workspaces/&lt;task-id&gt;/</code>, then a promotion task moved them into <code>scripts/youtube-intel/</code>.
+    Three commits pushed: <code>b1bd0fb</code>, <code>487994f</code>, <code>b5edd88</code>.
+  </p>
+
+  <div class="chain">
+    <div class="node done"><div class="id">t_2d7db5ce</div><div class="lbl">Parent — automate liked-video transcripts</div><div class="status">done</div></div>
+    <div class="node done"><div class="id">t_6944580a</div><div class="lbl">Promote pipeline from scratch workspace</div><div class="status">done</div></div>
+    <div class="node done"><div class="id">t_cfec36a2</div><div class="lbl">Detect newly liked videos</div><div class="status">done</div></div>
+    <div class="node block"><div class="id">t_19ac7aca</div><div class="lbl">Fetch transcript + normalize</div><div class="status">blocked</div></div>
+    <div class="node todo"><div class="id">t_9072df5e</div><div class="lbl">Summarize + index</div><div class="status">todo</div></div>
+    <div class="node block"><div class="id">t_8b5fa2d3</div><div class="lbl">Report completion / blocked</div><div class="status">blocked</div></div>
+  </div>
+  <p class="small muted">
+    Three finished. Two blocked on YouTube IP-blocking — the swarm correctly diagnosed and
+    externalized the blocker, which is the better tell than naive "all green."
+  </p>
+
+  <h3><span class="tick">→</span>Swarm B: Per-client tenancy via separate Unix users</h3>
+  <p>
+    A second pattern is running concurrently on the same Mac Mini, but instead of
+    profiles-under-one-user, you use <strong>one Unix user per Hermes</strong>. Token isolation
+    is at the OS layer rather than <code>~/.hermes/profiles/</code>. Pre-dates profiles in your
+    stack — <code>systems/harnesses/hermes.md</code> calls it the reference deployment.
+  </p>
+
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Tenant</th><th>Unix user</th><th>Plist label</th><th>Bot secret (AWS SM)</th></tr></thead>
+    <tbody>
+      <tr><td><span class="pill agent">Gelby</span> (Greg)</td><td><code>greg</code></td><td><code>ai.hermes.gateway</code></td><td><code>gbautomation/telegram/bot</code></td></tr>
+      <tr><td><span class="pill agent">Carlos</span> (Jason Diaz)</td><td><code>jason-agent</code></td><td><code>ai.carlos.gateway</code></td><td><code>gbautomation/telegram/bot-jid5274</code></td></tr>
+      <tr><td><span class="pill dev">jason-va</span> profile (legacy)</td><td><code>greg</code></td><td><code>ai.hermes.gateway-jason-va</code></td><td>—</td></tr>
+      <tr><td><span class="pill prompt">Finn</span> (Fish Group, planned)</td><td><code>fisch-agent</code></td><td>tbd</td><td>tbd</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3><span class="tick">→</span>Swarm C: TAC build cron → Linear coding agents</h3>
+  <p>
+    Runs every 15 min via <code>com.gbautomation.linear-cron</code>. Each Linear issue triggers
+    an isolated multi-agent build chain. Tagged in Langfuse via
+    <code>OTEL_RESOURCE_ATTRIBUTES</code>, queryable by <code>branch:</code>, <code>repo:</code>,
+    <code>model:</code>. Reference: the 5/12 trace-validation finding.
+  </p>
+
+  <div class="stats">
+    <div class="stat"><div class="label">7-day local</div><div class="num">23</div><div class="sub"><code>tac-build-report:local</code></div></div>
+    <div class="stat"><div class="label">7-day local</div><div class="num">20</div><div class="sub"><code>tac-team-runner-verifier:local</code></div></div>
+    <div class="stat"><div class="label">7-day local</div><div class="num">24</div><div class="sub"><code>linear-cron:local</code></div></div>
+    <div class="stat"><div class="label">subagent traces</div><div class="num">81+</div><div class="sub"><code>claude-code · auto_gba-*</code></div></div>
+    <div class="stat"><div class="label">30-day GHA</div><div class="num" style="color:var(--blocker);">0</div><div class="sub"><code>runtime:github-actions</code> — secrets unset</div></div>
+  </div>
+</section>
+
+<hr class="rule" />
+
+<!-- ============ 5. Artifacts ============ -->
+<section id="artifacts">
+  <h2><span class="num">05</span>Report <em>artifacts</em></h2>
+  <p class="kicker">Where the runs land. <span class="pill intel">paths</span></p>
+
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Artifact class</th><th>Path</th><th>Producer</th></tr></thead>
+    <tbody>
+      <tr><td>Phase audits</td><td><code>second-brain/intelligence/agent-runs/hermes-phase0/*.txt</code></td><td>manual audit via <code>mm.sh</code></td></tr>
+      <tr><td>Memory curation runs</td><td><code>second-brain/intelligence/agent-runs/hermes-memory-curation/&lt;date&gt;.json</code></td><td><code>scripts/hermes_memory_curator.py</code></td></tr>
+      <tr><td>Full Hermes state backups</td><td><code>second-brain/intelligence/backups/hermes/&lt;YYYYMMDD-HHMMSS&gt;/{files,status}/</code></td><td><code>scripts/hermes_backup.py</code> — daily 06:35 PT plist</td></tr>
+      <tr><td>Kanban scratch workspaces</td><td><code>~/.hermes/kanban/workspaces/&lt;task-id&gt;/</code></td><td>Kanban workers</td></tr>
+      <tr><td>Durable swarm output</td><td><code>second-brain/intelligence/transcripts/youtube/youtube_intel.db</code> + <code>DASHBOARD.md</code></td><td>YouTube-Intel DAG</td></tr>
+      <tr><td>Drift / health / backup logs</td><td><code>~/.hermes/logs/{drift,health,backup}.{out,err}.log</code></td><td><code>com.gbautomation.hermes-{drift,health,backup}</code> plists</td></tr>
+      <tr><td>Langfuse traces</td><td><span class="muted">Langfuse UI — filter by</span> <code>tac-build</code> / <code>team-runner</code> / <code>codex-verifier</code></td><td><code>resources/lib/tracing.py</code></td></tr>
+      <tr><td>Trace audits</td><td><code>second-brain/intelligence/observability/langfuse/&lt;date&gt;-*.md</code></td><td><code>check-langfuse-logs</code> skill</td></tr>
+      <tr><td>MCP introspection</td><td><code>scripts/hermes_readonly_mcp.py</code> registry output</td><td>read-only bridge — 8 read tools, blocks <code>messages_send</code> / <code>permissions_respond</code></td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<hr class="rule" />
+
+<!-- ============ 6. Runtimes ============ -->
+<section id="runtimes">
+  <h2><span class="num">06</span>Runtime <em>environments</em></h2>
+  <p class="kicker">Where teams execute, and how observable they are.</p>
+
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Environment</th><th>Where it lives</th><th>Trace coverage</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>Mac Mini macOS launchd</strong></td>
+        <td><code>ai.hermes.gateway</code>, <code>ai.&lt;agent&gt;.gateway</code>, per-Unix-user <code>~/Library/LaunchAgents/</code></td>
+        <td><span class="pill ok">runtime:local ✓</span></td>
+      </tr>
+      <tr>
+        <td><strong>Per-client Unix trees</strong></td>
+        <td><code>/Users/&lt;user&gt;/.hermes/</code> + <code>/Users/&lt;user&gt;/.openclaw/workspace/hermes-agent/venv/</code></td>
+        <td><span class="pill ok">runtime:local ✓</span></td>
+      </tr>
+      <tr>
+        <td><strong>Local dev (Windows)</strong></td>
+        <td>Greg's vault dev machine. Claude Code CLI fan-out via Task.</td>
+        <td><span class="pill ok">runtime:local ✓</span></td>
+      </tr>
+      <tr>
+        <td><strong>GitHub Actions</strong></td>
+        <td><code>.github/workflows/linear-15min.yml</code> and friends. 28 <code>linear-cron</code> invocations in 30 days.</td>
+        <td><span class="pill blocker">runtime:github-actions ✗</span></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="panel tinted-block">
+    <strong>The GHA gap is the biggest "swarm without observability" hole right now.</strong>
+    Per the 5/12 finding, fix order is:
+    <ol>
+      <li>Set <code>LANGFUSE_PUBLIC_KEY</code> / <code>LANGFUSE_SECRET_KEY</code> / <code>LANGFUSE_HOST</code> as repo secrets on <code>gbauto/gbautomation</code>. Cheapest, biggest unlock.</li>
+      <li>Patch <code>check_langfuse_logs.py:query_traces</code> page-1-only bug at <code>L120-126</code>.</li>
+      <li>Trigger one <code>linear-15min</code> dry-run; confirm <code>linear-cron:github-actions</code> appears in Langfuse.</li>
+    </ol>
+  </div>
+</section>
+
+<hr class="rule" />
+
+<!-- ============ 7. Bottom line ============ -->
+<section id="bottomline">
+  <h2><span class="num">07</span>Bottom-line <em>mental model</em></h2>
+
+  <div class="panel tinted-ok">
+    <p style="margin-top:0">
+      <strong>Hermes profiles</strong> = isolated runtimes, gateway-per-process, token-locked across 5 chat surfaces, distributable via <code>hermes profile install github.com/...</code>. No native orchestrator. Kanban (Level 5) is the upstream's only multi-agent coordination primitive.
+    </p>
+    <p>
+      <strong>Your TAC team contracts</strong> in <code>.claude/agents/</code> + <code>teams.yaml</code> + Stop-validator hooks = the actual "teams as code" artifact. Declarative, validated, reusable. The PRD at <code>specs/2026-05-04-hermes-operations-subsystem.md</code> is the reference shape.
+    </p>
+    <p style="margin-bottom:0">
+      <strong>Observability</strong> is bolt-on via Langfuse tags. The local swarm is well-instrumented. The GHA swarm is dark — fix the three repo secrets first.
+    </p>
+  </div>
+</section>
+
+<hr class="rule" />
+
+<!-- ============ 8. Sources ============ -->
+<section id="sources">
+  <h2><span class="num">08</span>Sources</h2>
+  <ul>
+    <li><a href="https://hermes-agent.nousresearch.com/docs/user-guide/profiles">Hermes Profiles — Nous user guide</a></li>
+    <li><a href="https://hermes-agent.nousresearch.com/docs/user-guide/profile-distributions">Hermes Profile Distributions</a></li>
+    <li><a href="https://hermes-agent.nousresearch.com/docs/reference/profile-commands">Hermes profile commands reference</a></li>
+    <li><a href="https://github.com/NousResearch/hermes-agent">NousResearch/hermes-agent</a> — upstream repo</li>
+    <li><a href="https://github.com/NousResearch/hermes-agent/blob/main/website/docs/user-guide/profiles.md">Profiles doc in repo</a></li>
+    <li><a href="https://github.com/kristianvast/hermes-claude-auth">kristianvast/hermes-claude-auth</a> — the bypass patch</li>
+    <li><code>second-brain/systems/harnesses/hermes.md</code> — local harness profile</li>
+    <li><code>second-brain/plans/2026-05-10-hermes-seven-level-enable-plan.md</code> — 7-level audit + Kanban swarm evidence</li>
+    <li><code>second-brain/intelligence/observability/langfuse/2026-05-12-agent-team-validation-findings.md</code> — trace audit</li>
+    <li><code>specs/2026-05-04-hermes-operations-subsystem.md</code> — Claude-Code agent team PRD</li>
+  </ul>
+</section>
+
+<footer>
+  <span>GBAutomation · second-brain · intelligence/observability/hermes-teams-as-code.html</span>
+  <span>Generated 2026-05-14</span>
+</footer>
+
+</div>
+</body>
+</html>

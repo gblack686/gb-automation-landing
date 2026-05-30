@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TAC PRD: The Mall App Scanner v2 + Site Mini-App | GBAutomation</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&display=swap');
+    :root {
+      --cream-bg: #F3F1E7;
+      --cream-panel: #E6E4D9;
+      --text-main: #191919;
+      --text-muted: #5C5C5C;
+      --text-light: #8C8A84;
+      --border: #D6D4C8;
+      --terracotta: #D97757;
+      --paper: #FFFFFF;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text-main);
+      background: var(--cream-bg);
+      font-size: 14px;
+      line-height: 1.58;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+    a { color: var(--text-main); text-decoration-color: var(--terracotta); text-underline-offset: 3px; }
+    button { font: inherit; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(214, 212, 200, .7);
+      background: rgba(243, 241, 231, .93);
+      backdrop-filter: blur(12px);
+    }
+    .topbar-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 13px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .brand-lockup { display: inline-flex; align-items: center; gap: 9px; min-height: 28px; }
+    .brand-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(217, 119, 87, .18);
+    }
+    .brand-dot::after { content: ""; width: 8px; height: 8px; border-radius: 999px; background: var(--terracotta); }
+    .brand-text {
+      font-family: Newsreader, serif;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-size: 12px;
+    }
+    .source-name { color: var(--text-muted); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    header {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 34px 24px 26px;
+    }
+    .eyebrow {
+      color: var(--terracotta);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    h1 {
+      max-width: 920px;
+      margin: 10px 0 18px;
+      font-family: Newsreader, serif;
+      font-size: clamp(30px, 4vw, 48px);
+      font-weight: 500;
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+    .summary-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+    .summary-meta li {
+      min-height: 30px;
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, .45);
+      padding: 5px 9px;
+      border-radius: 6px;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .taxonomy-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0 0 14px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      min-height: 23px;
+      padding: 2px 8px;
+      border: 1px solid;
+      border-radius: 999px;
+      line-height: 1;
+    }
+    .pill-facet {
+      font-size: 8.5px;
+      font-weight: 700;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+    .pill-value {
+      color: var(--text-main);
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .layout {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 22px 24px 56px;
+      display: grid;
+      grid-template-columns: 252px minmax(0, 1fr);
+      gap: 22px;
+      align-items: start;
+    }
+    .section-menu {
+      position: sticky;
+      top: 64px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(230, 228, 217, .62);
+      backdrop-filter: blur(12px);
+      padding: 12px;
+    }
+    .menu-title {
+      margin: 0 0 10px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .menu-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+    .menu-actions button,
+    .section-menu nav button {
+      min-height: 34px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .46);
+      color: rgba(25, 25, 25, .72);
+      cursor: pointer;
+      transition: border-color .18s ease, color .18s ease, background .18s ease;
+    }
+    .menu-actions button { padding: 0 8px; font-size: 11px; font-weight: 700; }
+    .section-menu nav { display: grid; gap: 5px; }
+    .section-menu nav button {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 30px 1fr;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      text-align: left;
+      font-size: 12px;
+      line-height: 1.25;
+    }
+    .section-menu nav button span { color: var(--terracotta); font-size: 10px; font-weight: 700; letter-spacing: .08em; }
+    .menu-actions button:hover,
+    .section-menu nav button:hover,
+    .section-menu nav button.active {
+      border-color: var(--terracotta);
+      background: rgba(255, 255, 255, .72);
+      color: var(--text-main);
+    }
+    .sections { display: grid; gap: 10px; }
+    details.section {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .5);
+      overflow: hidden;
+    }
+    details.section[open] { background: rgba(255, 255, 255, .68); }
+    details.section summary {
+      min-height: 52px;
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 12px 14px;
+      cursor: pointer;
+      list-style: none;
+    }
+    details.section summary::-webkit-details-marker { display: none; }
+    .section-index {
+      color: var(--terracotta);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+    }
+    .section-title {
+      font-family: Newsreader, serif;
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.18;
+    }
+    .section-count {
+      color: var(--text-light);
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .section-body {
+      border-top: 1px solid rgba(214, 212, 200, .75);
+      padding: 4px 18px 18px 68px;
+    }
+    .section-body h2,
+    .section-body h3,
+    .section-body h4,
+    .section-body h5 {
+      margin: 18px 0 8px;
+      color: var(--text-main);
+      font-family: Newsreader, serif;
+      font-weight: 500;
+      line-height: 1.2;
+    }
+    .section-body h2 { font-size: 19px; }
+    .section-body h3 { font-size: 17px; }
+    .section-body h4,
+    .section-body h5 {
+      font-family: Inter, sans-serif;
+      color: var(--text-light);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+    .section-body p,
+    .section-body li { color: var(--text-muted); font-size: 14px; line-height: 1.66; }
+    .section-body p { margin: 10px 0; }
+    .section-body ul,
+    .section-body ol { margin: 10px 0 10px 18px; padding: 0; }
+    .section-body li { margin: 5px 0; padding-left: 2px; }
+    .section-body .task { list-style: none; margin-left: -18px; display: flex; gap: 8px; align-items: flex-start; }
+    .section-body input[type="checkbox"] { margin-top: 4px; accent-color: var(--terracotta); }
+    code {
+      border: 1px solid rgba(217, 119, 87, .22);
+      border-radius: 4px;
+      background: rgba(217, 119, 87, .10);
+      padding: 1px 4px;
+      color: var(--text-main);
+      font-size: .92em;
+    }
+    pre {
+      overflow: auto;
+      margin: 12px 0;
+      border-radius: 8px;
+      background: #191919;
+      color: #F3F1E7;
+      padding: 14px;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+    pre code { border: 0; background: transparent; color: inherit; padding: 0; }
+    blockquote {
+      margin: 12px 0;
+      padding: 10px 12px;
+      border-left: 3px solid var(--terracotta);
+      background: rgba(230, 228, 217, .5);
+    }
+    hr { border: 0; border-top: 1px solid var(--border); margin: 18px 0; }
+    .table-wrap { overflow-x: auto; margin: 12px 0; border: 1px solid var(--border); border-radius: 8px; }
+    table { width: 100%; border-collapse: collapse; min-width: 560px; background: rgba(255, 255, 255, .5); }
+    th,
+    td { border-bottom: 1px solid rgba(214, 212, 200, .75); padding: 8px 10px; text-align: left; font-size: 12px; vertical-align: top; }
+    th { color: var(--text-main); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; }
+    tr:last-child td { border-bottom: 0; }
+    .empty { color: var(--text-light); font-style: italic; }
+    footer {
+      border-top: 1px solid rgba(214, 212, 200, .78);
+      background: rgba(230, 228, 217, .45);
+    }
+    .footer-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    .footer-label {
+      margin-bottom: 12px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .metadata-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .meta-item {
+      min-width: 0;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .42);
+      padding: 9px 10px;
+    }
+    .meta-item span {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .meta-item strong {
+      display: block;
+      overflow-wrap: anywhere;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.35;
+    }
+    @media (max-width: 860px) {
+      .topbar-inner,
+      header,
+      .layout,
+      .footer-inner { padding-left: 16px; padding-right: 16px; }
+      .layout { display: block; }
+      .section-menu { position: static; margin-bottom: 14px; }
+      .section-body { padding-left: 18px; }
+      .metadata-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 540px) {
+      .topbar-inner { align-items: flex-start; flex-direction: column; gap: 6px; }
+      details.section summary { grid-template-columns: 34px 1fr; }
+      .section-count { grid-column: 2; }
+      h1 { font-size: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand-lockup"><span class="brand-dot"></span><span class="brand-text">GBAutomation</span></div>
+      <div class="source-name">2026-05-27-the-mall-scanner-tac-build-prd.md</div>
+    </div>
+  </div>
+  <header>
+    <div class="eyebrow">Plan Brief</div>
+    <h1>TAC PRD: The Mall App Scanner v2 + Site Mini-App</h1>
+    <div class="taxonomy-pills"><span class="pill" style="background:rgba(194, 138, 45, 0.12);border-color:rgba(194, 138, 45, 0.42);"><span class="pill-facet" style="color:#C28A2D;">domain</span><span class="pill-value">build</span></span><span class="pill" style="background:rgba(79, 157, 105, 0.12);border-color:rgba(79, 157, 105, 0.42);"><span class="pill-facet" style="color:#4F9D69;">service</span><span class="pill-value">supabase</span></span></div>
+    <ul class="summary-meta">
+      <li>Client: the-mall</li><li>Priority: high</li><li>Status: draft</li><li>domain/tac</li><li>tac-prd</li><li>client/the-mall</li><li>service/instagram</li>
+      <li>Owner: Greg Black</li>
+      <li>Created: 2026-05-27</li>
+      <li>8 sections</li>
+      <li>1,008 words</li>
+    </ul>
+  </header>
+  <main class="layout">
+    <aside class="section-menu" aria-label="Plan sections">
+  <div class="menu-title">Sections</div>
+  <div class="menu-actions">
+    <button type="button" data-action="expand">Expand all</button>
+    <button type="button" data-action="collapse">Collapse all</button>
+  </div>
+  <nav><button type="button" data-target="overview"><span>01</span>Overview</button>
+<button type="button" data-target="1-summary"><span>02</span>1. Summary</button>
+<button type="button" data-target="2-surfaces"><span>03</span>2. Surfaces</button>
+<button type="button" data-target="3-agent-team"><span>04</span>3. Agent Team</button>
+<button type="button" data-target="4-acceptance-criteria"><span>05</span>4. Acceptance criteria</button>
+<button type="button" data-target="5-reuse-citations-tac-first-policy"><span>06</span>5. Reuse citations (TAC-first policy)</button>
+<button type="button" data-target="6-out-of-scope-explicit"><span>07</span>6. Out of scope (explicit)</button>
+<button type="button" data-target="7-constraints"><span>08</span>7. Constraints</button></nav>
+</aside>
+    <div class="sections">
+      <details class="section" id="overview" open>
+  <summary>
+    <span class="section-index">01</span>
+    <span class="section-title">Overview</span>
+    <span class="section-count">49 words</span>
+  </summary>
+  <div class="section-body">
+    <p>Dispatchable TAC build derived from the client-facing Sprint 1 PRD (2026-05-26-the-mall-sprint-1-prd). The client PRD is the scope-of-record for Sreya; this PRD is the agent-team build contract that routes through the TAC pipeline. Where they differ, the client PRD wins on product scope and this PRD wins on build mechanics.</p>
+  </div>
+</details>
+<details class="section" id="1-summary">
+  <summary>
+    <span class="section-index">02</span>
+    <span class="section-title">1. Summary</span>
+    <span class="section-count">141 words</span>
+  </summary>
+  <div class="section-body">
+    <p>Ship the &quot;agent + watch loop&quot; half of The Mall App backend <strong>and</strong> surface it on the GBAutomation site. Three deliverable surfaces:</p>
+<ul>
+<li><strong>Surface A — Scanner v2 (backend):</strong> upgrade the running <code>mall-scraper</code> Hermes profile + <code>social-catalog-scraper</code> skill to write rows per scrape, walk IG past the 12-post cap, download images, run on a schedule, diff against the previous run, and alert on sale / net-price change.</li>
+<li><strong>Surface B — Supabase data layer:</strong> four canonical tables (<code>mall_brands</code>, <code>mall_items</code>, <code>mall_price_history</code>, <code>scrape_runs</code>) so brand catalogs, price history, and per-run telemetry are queryable.</li>
+<li><strong>Surface C — Site mini-app:</strong> a read view at <code>/apps/mall-scanner</code> in <code>gb-automation-landing</code>, registered in the apps gallery so the build appears next to Logo Motion, YouTube Intel, and the other mini apps.</li>
+</ul>
+<p>&quot;Done&quot; is not just the scraper running — it is the mini-app card live in the gallery with a working launch into a live read view.</p>
+  </div>
+</details>
+<details class="section" id="2-surfaces">
+  <summary>
+    <span class="section-index">03</span>
+    <span class="section-title">2. Surfaces</span>
+    <span class="section-count">286 words</span>
+  </summary>
+  <div class="section-body">
+    <h4>Surface A — Scanner v2 (backend)</h4>
+<p>Upgrades on the v1 already running (see Sprint 1 PRD § 4 for the full v1-vs-v2 table):</p>
+<ul>
+<li>WooCommerce adapter (IG + Shopify already implemented).</li>
+<li>IG pagination past the 12-post cap via the <code>timeline_media</code> cursor pattern.</li>
+<li>Per-scrape writes to Supabase (Surface B tables).</li>
+<li>Image handling (Supabase Storage bucket or link-only — pending Sreya, default link-only).</li>
+<li>Scheduled run via launchd, wrapped in the canonical <code>Invoke-WithReceipt</code> equivalent (env materialization via <code>scripts/launchd_secrets_wrapper.sh</code> — no inline credentials in the plist).</li>
+<li>Diff logic against <code>mall_price_history</code>; alert on <code>item.on_sale</code> / <code>item.price_drop</code> through the <code>@gbauto_hermes_bot</code> Telegram path.</li>
+</ul>
+<h4>Surface B — Supabase data layer</h4>
+<p>Four tables, DDL in Sprint 1 PRD § 5 (<code>001_mall_brands.sql</code> → <code>004_scrape_runs.sql</code>). All migrations and inserts route through the <code>gbauto-supabase</code> CLI. <code>raw_json</code> retained on every row so columns can be re-derived after Sreya&#x27;s § 7 schema answers.</p>
+<h4>Surface C — Site mini-app (the gallery requirement)</h4>
+<p>Lands the build in <code>gb-automation-landing</code> mirroring the YouTube Intel pattern:</p>
+<ol>
+<li><strong>Registry entry</strong> in <code>public/portfolio/apps-registry.json</code>:</li>
+</ol>
+<pre><code>   {
+     &quot;slug&quot;: &quot;mall-scanner&quot;,
+     &quot;name&quot;: &quot;The Mall Scanner&quot;,
+     &quot;tagline&quot;: &quot;Tracks indie brand catalogs across Instagram + Shopify, alerts on sales and price drops&quot;,
+     &quot;repo&quot;: &quot;https://github.com/gbauto/the-mall&quot;,
+     &quot;app_path&quot;: &quot;/apps/mall-scanner&quot;,
+     &quot;tech_stack&quot;: [&quot;react&quot;, &quot;supabase&quot;, &quot;instagram&quot;, &quot;shopify&quot;, &quot;hermes&quot;],
+     &quot;thumbnail&quot;: &quot;/portfolio/samples/mall-scanner/poster.png&quot;,
+     &quot;status&quot;: &quot;experimental&quot;,
+     &quot;tags&quot;: [&quot;ecom&quot;, &quot;scraper&quot;, &quot;supabase&quot;, &quot;alerts&quot;, &quot;the-mall&quot;]
+   }</code></pre>
+<ol>
+<li><strong>Route</strong> in <code>src/App.jsx</code>: <code>&lt;Route path=&quot;/apps/mall-scanner&quot; element={&lt;RequireAuth&gt;&lt;MallScanner /&gt;&lt;/RequireAuth&gt;} /&gt;</code> (mirrors the <code>/apps/youtube-intel</code> route).</li>
+<li><strong>Page</strong> <code>MallScanner.jsx</code> + client lib (<code>src/lib/mallScannerClient.js</code>) reading the live <code>mall_<em></code> tables through an <code>/api/mall-scanner/</em></code> endpoint (same shape as <code>youtubeIntelClient.js</code> → <code>/api/youtube-intel/dashboard</code>): brands tracked, current catalog per brand, recent <code>item.on_sale</code> / <code>item.price_drop</code> events.</li>
+<li><strong><code>latest_run</code></strong> card field wired from the newest <code>scrape_runs</code> row.</li>
+<li><strong>Thumbnail</strong> poster under <code>public/portfolio/samples/mall-scanner/</code>.</li>
+</ol>
+  </div>
+</details>
+<details class="section" id="3-agent-team">
+  <summary>
+    <span class="section-index">04</span>
+    <span class="section-title">3. Agent Team</span>
+    <span class="section-count">161 words</span>
+  </summary>
+  <div class="section-body">
+    <p>This build routes through team-runner (very-high complexity, multi-surface). Roster and <code>teams.yaml</code> bundle:</p>
+<pre><code>team_type: multi-team
+brief: 2026-05-27-the-mall-scanner-tac-build
+agents:
+  - name: scaffold-agent
+    role: prepare repo scaffolding, migration files, route + page stubs, dependency markers
+    parallelizable: false
+  - name: docs-research-agent
+    role: ground IG pagination + Shopify products.json + Supabase PostgREST read patterns in current docs before workers call them
+    parallelizable: true
+  - name: tac-supabase-agent
+    role: apply the four migrations + per-scrape inserts via gbauto-supabase CLI, verify readback
+    parallelizable: false
+  - name: implementation-agent
+    role: scanner v2 capabilities (WooCommerce adapter, IG pagination, image handling, diff + alert logic)
+    parallelizable: true
+  - name: frontend-agent
+    role: Surface C — apps-registry entry, /apps/mall-scanner route, MallScanner page + client lib + /api endpoint, thumbnail
+    parallelizable: true
+  - name: tac-testing-agent
+    role: tests for the writer, diff logic, and the read endpoint; TacTestRun evidence
+    parallelizable: true
+  - name: tac-verifier-agent
+    role: independent verification of migrations applied, scraper run receipt, alert fired, gallery card live
+    parallelizable: false
+  - name: tac-report-agent
+    role: render the Build Review package from the run telemetry
+    parallelizable: true
+orchestrator: tac-build-orchestrator
+validator: tac-build-run-validator</code></pre>
+  </div>
+</details>
+<details class="section" id="4-acceptance-criteria">
+  <summary>
+    <span class="section-index">05</span>
+    <span class="section-title">4. Acceptance criteria</span>
+    <span class="section-count">128 words</span>
+  </summary>
+  <div class="section-body">
+    <p>Backend + data (from Sprint 1 § 11):</p>
+<ul>
+<li class="task"><input type="checkbox" disabled> <span>Agent runs unattended ≥48 h on the Mac Mini with no crashes / manual resets.</span></li>
+<li class="task"><input type="checkbox" disabled> <span>≥3 brands tracked end-to-end — catalogs in <code>mall_items</code>, history in <code>mall_price_history</code>, queryable in Supabase.</span></li>
+<li class="task"><input type="checkbox" disabled> <span>≥1 real <code>item.on_sale</code> / <code>item.price_drop</code> event fires through the chosen alert channel.</span></li>
+</ul>
+<p>Site mini-app (the gallery requirement):</p>
+<ul>
+<li class="task"><input type="checkbox" disabled> <span><code>apps-registry.json</code> has the <code>mall-scanner</code> entry; the card renders in the apps gallery next to the other mini apps.</span></li>
+<li class="task"><input type="checkbox" disabled> <span><code>/apps/mall-scanner</code> loads behind <code>RequireAuth</code> and shows the live read view (brands, catalog, recent sale/price-drop events) from the <code>mall_*</code> tables.</span></li>
+<li class="task"><input type="checkbox" disabled> <span>The card&#x27;s <code>latest_run</code> reflects the newest <code>scrape_runs</code> row.</span></li>
+<li class="task"><input type="checkbox" disabled> <span>Thumbnail poster renders on the card.</span></li>
+</ul>
+<p>Build hygiene:</p>
+<ul>
+<li class="task"><input type="checkbox" disabled> <span>Build Review HTML rendered from the run receipt; status honest (executed vs dry-run).</span></li>
+<li class="task"><input type="checkbox" disabled> <span>Verifier report passes; Supabase rows verified by readback.</span></li>
+</ul>
+  </div>
+</details>
+<details class="section" id="5-reuse-citations-tac-first-policy">
+  <summary>
+    <span class="section-index">06</span>
+    <span class="section-title">5. Reuse citations (TAC-first policy)</span>
+    <span class="section-count">121 words</span>
+  </summary>
+  <div class="section-body">
+    <div class="table-wrap"><table><thead><tr><th>Component</th><th>Source</th><th>Why</th></tr></thead><tbody><tr><td>Scraper engine</td><td><code>~/.hermes/skills/research/social-catalog-scraper/</code></td><td>v1 engine; v2 extends adapters + pagination.</td></tr>
+<tr><td>Supabase writer pattern</td><td><code>~/.hermes/lib/outbound_supabase_writer.py</code></td><td>Rename → <code>scrape_supabase_writer.py</code>; same insert/readback shape.</td></tr>
+<tr><td>Scheduled-run wrapper</td><td><code>scripts/launchd_secrets_wrapper.sh</code></td><td>Canonical env materialization; no inline credentials in the plist.</td></tr>
+<tr><td>Run telemetry table</td><td><code>scrape_runs</code> (Sprint 1 § 5)</td><td>Mirrors the <code>outbound_runs</code> / <code>host_job_runs</code> receipt pattern.</td></tr>
+<tr><td>Site gallery</td><td><code>gb-automation-landing</code> <code>AppsGallery.jsx</code> + <code>public/portfolio/apps-registry.json</code></td><td>Registry-driven cards; mall-scanner is one more entry.</td></tr>
+<tr><td>Site app route + read page</td><td><code>/apps/youtube-intel</code> route + <code>YouTubeIntel</code> page + <code>youtubeIntelClient.js</code></td><td>Closest analog for an <code>/apps/&lt;slug&gt;</code> live read view.</td></tr>
+<tr><td>Supabase access</td><td><code>gbauto-supabase</code> CLI</td><td>All DDL / migration / query routes through the CLI per standing policy.</td></tr>
+<tr><td>Build Review report</td><td><code>scripts/render_tac_report_package.py</code></td><td>Renders the post-build readiness/Build Review package.</td></tr></tbody></table></div>
+  </div>
+</details>
+<details class="section" id="6-out-of-scope-explicit">
+  <summary>
+    <span class="section-index">07</span>
+    <span class="section-title">6. Out of scope (explicit)</span>
+    <span class="section-count">45 words</span>
+  </summary>
+  <div class="section-body">
+    <ul>
+<li>Native mobile app UI (Sprint 2+).</li>
+<li>Auth / RBAC / multi-user beyond the existing <code>RequireAuth</code> gate on <code>/apps/*</code>.</li>
+<li>WooCommerce / BigCommerce / Squarespace adapters beyond detection, unless Sreya&#x27;s brand list needs them.</li>
+<li>TikTok scraping.</li>
+<li>A public (un-gated) gallery card — the mini-app sits behind <code>RequireAuth</code> like the other <code>/apps/*</code> routes.</li>
+</ul>
+  </div>
+</details>
+<details class="section" id="7-constraints">
+  <summary>
+    <span class="section-index">08</span>
+    <span class="section-title">7. Constraints</span>
+    <span class="section-count">44 words</span>
+  </summary>
+  <div class="section-body">
+    <ul>
+<li>Team-runner dispatch runs on the Mac Mini against live Supabase — requires Greg&#x27;s explicit go before execution.</li>
+<li>Supabase migrations additive; <code>raw_json</code> retained for re-derivation after Sreya&#x27;s schema answers.</li>
+<li>Rendered HTML routes through the standard output scrubber before publish.</li>
+<li>Commit per phase, only on Greg&#x27;s request.</li>
+</ul>
+  </div>
+</details>
+    </div>
+  </main>
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-label">Metadata</div>
+      <div class="metadata-grid">
+        <div class="meta-item"><span>Source</span><strong>C:\Users\gblac\OneDrive\Desktop\gbauto\gbautomation\second-brain\inbox\plans\2026-05-27-the-mall-scanner-tac-build-prd.md</strong></div>
+<div class="meta-item"><span>Generated</span><strong>2026-05-27T22:06:00-07:00</strong></div>
+<div class="meta-item"><span>Source modified</span><strong>2026-05-27T22:05:59-07:00</strong></div>
+<div class="meta-item"><span>Source size</span><strong>9,229 bytes</strong></div>
+<div class="meta-item"><span>Word count</span><strong>1,008</strong></div>
+<div class="meta-item"><span>Sections</span><strong>8</strong></div>
+<div class="meta-item"><span>Renderer</span><strong>resources/skills/netlify-cli/scripts/render_plan_page.py</strong></div>
+<div class="meta-item"><span>Kind</span><strong>plan</strong></div>
+<div class="meta-item"><span>Description</span><strong>Dispatchable TAC build PRD derived from The Mall App Sprint 1. Ships the scanner v2 backend (Supabase writer, IG pagination, scheduled run, sale/price-drop alerts), the canonical Supabase data layer, and a site mini-app at /apps/mall-scanner that lands the build in the GBAutomation apps gallery next to the other mini apps.</strong></div>
+<div class="meta-item"><span>Date</span><strong>2026-05-27</strong></div>
+<div class="meta-item"><span>Status</span><strong>draft</strong></div>
+<div class="meta-item"><span>Client</span><strong>the-mall</strong></div>
+<div class="meta-item"><span>Priority</span><strong>high</strong></div>
+<div class="meta-item"><span>Roadmap Ref</span><strong>clients/the-mall/sprint-1</strong></div>
+<div class="meta-item"><span>Owner</span><strong>Greg Black</strong></div>
+<div class="meta-item"><span>Tac Pathway</span><strong>issue-triage-tac-prd</strong></div>
+<div class="meta-item"><span>Data Surface</span><strong>database, schema, receipt, report, dashboard</strong></div>
+<div class="meta-item"><span>Team Runner Required</span><strong>true</strong></div>
+<div class="meta-item"><span>Source Issue</span><strong>manual-2026-05-27-the-mall-scanner-v2</strong></div>
+<div class="meta-item"><span>Tags</span><strong>domain/tac, tac-prd, client/the-mall, phase/build, service/supabase, service/instagram</strong></div>
+<div class="meta-item"><span>Related</span><strong>[[2026-05-26-the-mall-sprint-1-prd]], [[clients/the-mall/profile]], [[the-mall-engagement]], [[2026-05-22-full-tac-build-pipeline-agent-team-prd]]</strong></div>
+      </div>
+    </div>
+  </footer>
+  <script>
+    const sections = Array.from(document.querySelectorAll('details.section'));
+    const menuButtons = Array.from(document.querySelectorAll('[data-target]'));
+    const setActive = (id) => {
+      menuButtons.forEach((button) => button.classList.toggle('active', button.dataset.target === id));
+    };
+    menuButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const section = document.getElementById(button.dataset.target);
+        if (!section) return;
+        section.open = true;
+        setActive(section.id);
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+    document.querySelector('[data-action="expand"]').addEventListener('click', () => sections.forEach((section) => section.open = true));
+    document.querySelector('[data-action="collapse"]').addEventListener('click', () => sections.forEach((section, index) => section.open = index === 0));
+    sections.forEach((section) => {
+      section.addEventListener('toggle', () => {
+        if (section.open) setActive(section.id);
+      });
+    });
+    if (sections[0]) setActive(sections[0].id);
+  </script>
+</body>
+</html>

@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fish Group — AI Architecture & Deployment Options</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f8f7f4;
+    color: #1a1a1a;
+    line-height: 1.6;
+    padding: 48px 24px;
+  }
+  .page { max-width: 860px; margin: 0 auto; }
+  .header {
+    background: #1a1a1a;
+    color: #fff;
+    padding: 36px 40px;
+    border-radius: 12px;
+    margin-bottom: 36px;
+  }
+  .header .logo { font-size: 13px; color: #888; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+  .header h1 { font-size: 26px; font-weight: 700; margin-bottom: 8px; }
+  .header p { color: #aaa; font-size: 14px; }
+  .header .tags { margin-top: 16px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .tag { background: #2a2a2a; border: 1px solid #444; color: #ccc; padding: 3px 10px; border-radius: 20px; font-size: 12px; }
+
+  h2 { font-size: 20px; font-weight: 700; margin: 40px 0 16px; color: #1a1a1a; border-bottom: 2px solid #e0e0e0; padding-bottom: 8px; }
+  h3 { font-size: 15px; font-weight: 700; margin: 24px 0 10px; color: #222; }
+  p { margin-bottom: 12px; font-size: 14.5px; color: #333; }
+  ul, ol { margin: 10px 0 14px 20px; }
+  li { margin-bottom: 6px; font-size: 14.5px; color: #333; }
+  strong { color: #1a1a1a; }
+  code { background: #efefef; padding: 1px 6px; border-radius: 4px; font-size: 13px; font-family: 'Courier New', monospace; color: #333; }
+
+  .option-card {
+    border-radius: 10px;
+    padding: 24px 28px;
+    margin-bottom: 24px;
+    border: 1px solid #e0e0e0;
+    background: #fff;
+    position: relative;
+  }
+  .option-card .badge {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+  }
+  .badge-rec { background: #d4f0dc; color: #1a7c3a; }
+  .badge-good { background: #dce8ff; color: #1a50a0; }
+  .badge-limited { background: #fff0d0; color: #8a5a00; }
+  .badge-phase2 { background: #ede8ff; color: #5a2d9b; }
+
+  .option-title { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+  .option-sub { font-size: 13px; color: #888; margin-bottom: 16px; }
+
+  .pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+  .pros { background: #f0faf3; border-radius: 8px; padding: 14px; }
+  .cons { background: #fff5f5; border-radius: 8px; padding: 14px; }
+  .pros h4 { color: #1a7c3a; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+  .cons h4 { color: #c0392b; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+  .pros li, .cons li { font-size: 13px; }
+
+  .cost-row { display: flex; gap: 16px; margin-top: 14px; flex-wrap: wrap; }
+  .cost-chip {
+    background: #f0f0f0;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 12px;
+    color: #444;
+  }
+  .cost-chip strong { color: #1a1a1a; }
+
+  .arch-diagram {
+    background: #1a1a1a;
+    color: #ccc;
+    border-radius: 10px;
+    padding: 24px 28px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.8;
+    margin: 16px 0 24px;
+    white-space: pre;
+    overflow-x: auto;
+  }
+
+  .recommendation {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: #fff;
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-top: 32px;
+  }
+  .recommendation h2 { color: #fff; border-color: #444; }
+  .recommendation p { color: #ccc; }
+  .recommendation li { color: #ccc; }
+  .recommendation strong { color: #fff; }
+  .recommendation .phase { margin: 16px 0; padding: 14px 18px; background: rgba(255,255,255,0.05); border-radius: 8px; border-left: 3px solid #9b59b6; }
+  .recommendation .phase h4 { color: #d4aaff; font-size: 13px; margin-bottom: 6px; }
+
+  .comparison-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13px; }
+  .comparison-table th { background: #1a1a1a; color: #fff; padding: 10px 14px; text-align: left; font-weight: 600; }
+  .comparison-table td { padding: 9px 14px; border-bottom: 1px solid #e8e8e8; vertical-align: top; }
+  .comparison-table tr:nth-child(even) td { background: #f9f9f9; }
+  .tick { color: #1a7c3a; font-weight: 700; }
+  .cross { color: #c0392b; }
+  .partial { color: #8a5a00; }
+
+  .footer { text-align: center; margin-top: 48px; color: #aaa; font-size: 12px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="logo">GBAutomation Consulting · Confidential</div>
+    <h1>Fish Group — AI Architecture &amp; Deployment Options</h1>
+    <p>A guide to the different ways Fish Group can interact with Claude and the codebase, from local development to fully autonomous cloud agents.</p>
+    <div class="tags">
+      <span class="tag">AWS EC2</span>
+      <span class="tag">Claude Code</span>
+      <span class="tag">OpenClaw</span>
+      <span class="tag">March 2026</span>
+      <span class="tag">Prepared for Michael Fisch</span>
+    </div>
+  </div>
+
+  <!-- SECTION 1: The Spectrum -->
+  <h2>The Tool Spectrum: From Workflow to Autonomous</h2>
+  <p>Before choosing a deployment model, it helps to understand where each tool sits on the agency spectrum. This chart is attached as a PNG — here's the summary:</p>
+
+  <table class="comparison-table">
+    <tr>
+      <th>Tool</th>
+      <th>Who defines the steps?</th>
+      <th>Runs 24/7?</th>
+      <th>Best for</th>
+      <th>~Monthly cost</th>
+    </tr>
+    <tr>
+      <td><strong>n8n</strong></td>
+      <td>You do — visually</td>
+      <td><span class="tick">✓</span> (on server)</td>
+      <td>Deterministic, repeatable triggers</td>
+      <td>$80-150</td>
+    </tr>
+    <tr>
+      <td><strong>Claude Code</strong></td>
+      <td>You set the goal; AI plans steps</td>
+      <td><span class="cross">✗</span> (requires human)</td>
+      <td>One-time builds, code generation, dev work</td>
+      <td>$20-200</td>
+    </tr>
+    <tr>
+      <td><strong>OpenClaw</strong></td>
+      <td>Agent decides autonomously</td>
+      <td><span class="tick">✓</span> (cloud)</td>
+      <td>Autonomous workflows, repeatable ops</td>
+      <td>$100-200</td>
+    </tr>
+  </table>
+
+  <p><strong>The winning strategy: use all three.</strong> Claude Code builds and maintains the skills. OpenClaw runs them autonomously. n8n handles webhook triggers if needed. This is exactly what we're proposing for Fish Group.</p>
+
+  <!-- SECTION 2: Options -->
+  <h2>Deployment Options</h2>
+
+  <!-- Option 1 -->
+  <div class="option-card">
+    <span class="badge badge-good">Good Start</span>
+    <div class="option-title">Option 1 — Local Dev (Claude Code on Laptop)</div>
+    <div class="option-sub">Michael or Emil runs Claude Code locally from their MacBook / PC</div>
+    <p>The simplest entry point. You install Claude Code on your machine, give it access to your APIs (Airtable, Google, etc.) and work with it like a very smart pair programmer. You describe what you want, it builds it, you review.</p>
+    <div class="pros-cons">
+      <div class="pros">
+        <h4>Pros</h4>
+        <ul>
+          <li>Zero server cost</li>
+          <li>Instant setup (you already have it)</li>
+          <li>Full control — you're in the loop on every step</li>
+          <li>Best for exploration and building</li>
+          <li>Works with any codebase locally</li>
+        </ul>
+      </div>
+      <div class="cons">
+        <h4>Cons</h4>
+        <ul>
+          <li>Not always-on — laptop must be open</li>
+          <li>No autonomous execution (you trigger everything)</li>
+          <li>API keys stored locally (security risk if laptop lost)</li>
+          <li>Doesn't scale to client-facing automation</li>
+        </ul>
+      </div>
+    </div>
+    <div class="cost-row">
+      <div class="cost-chip"><strong>$20/mo</strong> — Claude Max (personal)</div>
+      <div class="cost-chip"><strong>$0</strong> server cost</div>
+      <div class="cost-chip">Best for: building skills &amp; one-time tasks</div>
+    </div>
+  </div>
+
+  <!-- Option 2 -->
+  <div class="option-card">
+    <span class="badge badge-limited">Limited</span>
+    <div class="option-title">Option 2 — Claude Professional with Seats</div>
+    <div class="option-sub">Multiple Claude.ai Pro accounts for Michael, Emil, and team</div>
+    <p>Anthropic offers team/professional plans where everyone gets a Claude browser seat. Good for writing, summarizing, and conversational AI — but <strong>not suitable for automated workflows or agents</strong>. No API access, no MCP servers, no persistent agents.</p>
+    <div class="pros-cons">
+      <div class="pros">
+        <h4>Pros</h4>
+        <ul>
+          <li>Easy to provision seats for the whole team</li>
+          <li>No technical setup required</li>
+          <li>Good for writing, analysis, Q&amp;A</li>
+          <li>Clients can get seats too</li>
+        </ul>
+      </div>
+      <div class="cons">
+        <h4>Cons</h4>
+        <ul>
+          <li>No API access — can't connect to Airtable, Google, etc.</li>
+          <li>No persistent agents or cron jobs</li>
+          <li>Not suitable for automation</li>
+          <li>$20-25/seat/month adds up quickly</li>
+        </ul>
+      </div>
+    </div>
+    <div class="cost-row">
+      <div class="cost-chip"><strong>$20-25/seat/mo</strong></div>
+      <div class="cost-chip">Best for: team writing &amp; analysis — not automation</div>
+    </div>
+  </div>
+
+  <!-- Option 3 -->
+  <div class="option-card">
+    <span class="badge badge-rec">Recommended</span>
+    <div class="option-title">Option 3 — EC2 + OpenClaw (Always-On Autonomous Agent)</div>
+    <div class="option-sub">Fish Group internal agent running 24/7 on AWS EC2</div>
+    <p>OpenClaw is installed on an EC2 instance (t3.small or t3.medium). It runs continuously, listening for webhook triggers, executing cron jobs, and processing tasks without anyone needing to be at a laptop. This is the "Finn 🐟" agent system we scoped in the session.</p>
+
+    <div class="arch-diagram">Fish Group AWS Architecture (Option 3)
+─────────────────────────────────────────────────────
+  [ Michael / Emil ]
+       │  Claude Code CLI (local)
+       │  (builds + edits skills in ~/.openclaw/)
+       ▼
+  [ EC2 Instance — t3.small — $17/mo ]
+  ┌─────────────────────────────────────┐
+  │  OpenClaw Gateway (:18789)          │
+  │  ├── Finn 🐟 (main agent)           │
+  │  ├── Client Ops agent               │
+  │  ├── Data/Airtable agent            │
+  │  └── Permissions agent              │
+  │                                     │
+  │  Secrets Manager (AWS KMS)          │
+  │  OpenRouter → Gemini / Claude       │
+  └─────────────────────────────────────┘
+       │  API calls via secrets
+       ▼
+  [ External Tools ]
+  ┌─────────────────────────────────────┐
+  │  Google Workspace (Gmail, Drive)    │
+  │  Airtable (all client bases)        │
+  │  AWS IAM (per-client accounts)      │
+  │  QuickBooks (Piermont)              │
+  │  ShipStation (Piermont)             │
+  └─────────────────────────────────────┘
+─────────────────────────────────────────────────────</div>
+
+    <div class="pros-cons">
+      <div class="pros">
+        <h4>Pros</h4>
+        <ul>
+          <li>Always-on — runs cron jobs, listens for webhooks</li>
+          <li>Secrets stored securely in AWS KMS</li>
+          <li>Scales to multiple clients (one instance each)</li>
+          <li>Claude Code on laptop connects to EC2 for edits</li>
+          <li>OpenRouter models — cheaper than Anthropic direct</li>
+          <li>One AWS account per client = isolated billing</li>
+        </ul>
+      </div>
+      <div class="cons">
+        <h4>Cons</h4>
+        <ul>
+          <li>Requires initial server setup (~2hr)</li>
+          <li>Small ongoing cost per EC2 instance</li>
+          <li>Need SSH access to debug/update</li>
+        </ul>
+      </div>
+    </div>
+    <div class="cost-row">
+      <div class="cost-chip"><strong>$17-35/mo</strong> EC2 (t3.small)</div>
+      <div class="cost-chip"><strong>$20-50/mo</strong> OpenRouter model tokens</div>
+      <div class="cost-chip"><strong>~$5/mo</strong> AWS KMS + data transfer</div>
+      <div class="cost-chip"><strong>Total: ~$50-90/mo</strong> per agent instance</div>
+    </div>
+  </div>
+
+  <!-- Option 4 -->
+  <div class="option-card">
+    <span class="badge badge-rec">Recommended</span>
+    <div class="option-title">Option 4 — Hybrid: Local Claude Code + EC2 OpenClaw</div>
+    <div class="option-sub">The full Fish Group architecture — building locally, running autonomously in cloud</div>
+    <p>This is the model Greg uses and recommends for Fish Group. Michael and Emil use Claude Code on their laptops to <strong>build and edit skills</strong>. Those skills live in a Git repo. EC2 runs OpenClaw, which pulls the latest skills and executes them autonomously. Best of both worlds.</p>
+
+    <div class="arch-diagram">Hybrid Architecture — Full Fish Group Setup
+─────────────────────────────────────────────────────
+  [ Michael + Emil — Local Dev ]
+  ┌────────────────────────────────┐
+  │  Claude Code CLI               │
+  │  (builds skills, edits agents) │
+  │  git push → GitHub repo        │
+  └────────────────────────────────┘
+            │ git pull (auto deploy)
+            ▼
+  [ EC2 — Fish Group Internal ]           [ EC2 — Per Client ]
+  ┌───────────────────────────┐           ┌──────────────────────┐
+  │  OpenClaw + Finn 🐟       │           │  OpenClaw (client)   │
+  │  runs all Fish Group ops  │           │  Piermont / Gary's   │
+  │  client onboarding        │           │  etc.                │
+  │  permissions, briefs      │           └──────────────────────┘
+  └───────────────────────────┘
+
+  Claude Code on laptop can SSH into EC2 and make live edits,
+  or work offline and push to deploy. Both modes work.
+─────────────────────────────────────────────────────</div>
+
+    <div class="pros-cons">
+      <div class="pros">
+        <h4>Pros</h4>
+        <ul>
+          <li>Local dev = fast iteration, no server round trips</li>
+          <li>EC2 = always-on execution, no laptop dependency</li>
+          <li>Git as source of truth for all skills</li>
+          <li>Easy rollback if something breaks</li>
+          <li>Emil can dev locally while Michael's agent runs on EC2</li>
+          <li>Client EC2 accounts are isolated — their bill, their data</li>
+        </ul>
+      </div>
+      <div class="cons">
+        <h4>Cons</h4>
+        <ul>
+          <li>Slightly more setup than a single option</li>
+          <li>Requires Git workflow discipline</li>
+        </ul>
+      </div>
+    </div>
+    <div class="cost-row">
+      <div class="cost-chip"><strong>$20/mo</strong> Claude Code (local)</div>
+      <div class="cost-chip"><strong>$50-90/mo</strong> EC2 Fish Group instance</div>
+      <div class="cost-chip"><strong>$25-50/mo</strong> per client instance</div>
+    </div>
+  </div>
+
+  <!-- Recommendation -->
+  <div class="recommendation">
+    <h2>Our Recommendation for Fish Group</h2>
+    <p>Start with Option 1 to get hands dirty. Move to Option 4 within 2-4 weeks.</p>
+
+    <div class="phase">
+      <h4>Phase 1 — Now (this week)</h4>
+      <ul>
+        <li>Michael + Emil: use Claude Code locally — build the first 2 skills (client onboarding, Airtable lookup)</li>
+        <li>Set up one AWS account for Fish Group internal with our per-client account strategy</li>
+        <li>Generate Airtable personal access token + Google Workspace OAuth</li>
+      </ul>
+    </div>
+
+    <div class="phase">
+      <h4>Phase 2 — Follow-up Session (~2 weeks out)</h4>
+      <ul>
+        <li>Deploy OpenClaw on EC2 for Fish Group internal (Finn 🐟 goes live)</li>
+        <li>Connect Google Workspace, Airtable, AWS IAM via secrets</li>
+        <li>Wire up first autonomous workflow: new client onboarding</li>
+        <li>Set up morning ops brief cron job</li>
+      </ul>
+    </div>
+
+    <div class="phase">
+      <h4>Phase 3 — Piermont + Gary's (4-8 weeks out)</h4>
+      <ul>
+        <li>Piermont gets their own EC2 instance with QuickBooks + ShipStation + Airtable agent</li>
+        <li>Build chat UI portal for Piermont (using Lovable + customer-gateway-proxy pattern)</li>
+        <li>Scope Gary's CS agent — email triage first, voice AI second</li>
+      </ul>
+    </div>
+
+    <p style="margin-top:20px; color:#aaa; font-size:13px;">Questions? Reply to this email or Slack Greg directly. Next session will go hands-on with EC2 setup + first skill deployment.</p>
+  </div>
+
+  <div class="footer">
+    Prepared by GBAutomation Consulting · March 2026 · Confidential — Fish Group only
+  </div>
+
+</div>
+</body>
+</html>

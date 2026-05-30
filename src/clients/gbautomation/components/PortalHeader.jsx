@@ -6,6 +6,7 @@ const navItems = [
   { label: 'Dashboard', to: '/clients/gbautomation' },
   { label: 'Sync', to: '/clients/gbautomation/sync' },
   { label: 'Validation', to: '/clients/gbautomation/validation' },
+  { label: 'Artifacts', to: '/clients/gbautomation/artifacts' },
 ];
 
 export default function PortalHeader() {

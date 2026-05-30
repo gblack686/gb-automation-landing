@@ -1,0 +1,1970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>GBA Agentic OS — Feedback Loops</title>
+<style>
+  :root {
+    --bg: #14110d;
+    --surface: #1f1a14;
+    --surface-2: #2a2218;
+    --border: #3a2f22;
+    --text: #ece2cf;
+    --text-dim: #9b8e78;
+    --text-faint: #5e5343;
+    --terracotta: #c8714a;
+    --terracotta-dim: #8a4f33;
+    --cream: #d4c5a9;
+    --green: #7fb069;
+    --green-dim: #4a6b3e;
+    --amber: #e6a23c;
+    --amber-dim: #87601f;
+    --slate: #6a5d4d;
+    --highlight: #f0a070;
+    --hook: #6896c8;
+    --hook-dim: #3a5a80;
+    --git: #b8985a;
+    --linear: #a487c8;
+    --brain: #5cb89a;
+    --data: #d89c5c;
+    --block: #d05050;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0; padding: 0;
+    background: var(--bg); color: var(--text);
+    font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+    font-size: 14px; line-height: 1.5;
+    min-height: 100vh; overflow-x: hidden;
+  }
+
+  .app {
+    display: grid;
+    grid-template-rows: auto auto 1fr;
+    min-height: 100vh;
+    max-width: 1900px; margin: 0 auto;
+  }
+
+  header {
+    padding: 16px 24px 0;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  h1 {
+    margin: 0 0 4px;
+    font-size: 19px; font-weight: 600;
+    color: var(--cream); letter-spacing: -0.01em;
+  }
+
+  .subtitle {
+    color: var(--text-dim); font-size: 12px;
+    margin-bottom: 12px;
+  }
+
+  /* Tabs */
+  .tabs {
+    display: flex; gap: 2px;
+    border-bottom: 1px solid var(--border);
+    margin: 0 -24px;
+    padding: 0 24px;
+  }
+
+  .tab {
+    padding: 10px 16px;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-dim);
+    font-size: 13px; font-weight: 500;
+    cursor: pointer; font-family: inherit;
+    transition: all 120ms;
+    margin-bottom: -1px;
+  }
+
+  .tab:hover { color: var(--text); }
+
+  .tab.active {
+    color: var(--cream);
+    border-bottom-color: var(--terracotta);
+  }
+
+  .tab[data-tab="sources"].active { border-bottom-color: var(--data); color: #f0b878; }
+  .tab[data-tab="git"].active { border-bottom-color: var(--git); color: #e8c878; }
+  .tab[data-tab="linear"].active { border-bottom-color: var(--linear); color: #c8b0e0; }
+  .tab[data-tab="brain"].active { border-bottom-color: var(--brain); color: #80d0b8; }
+  .tab[data-tab="lifecycle"].active { border-bottom-color: var(--hook); color: #9fc1e6; }
+  .tab[data-tab="memory"].active { border-bottom-color: var(--hook); color: #9fc1e6; }
+  .tab[data-tab="full"].active { border-bottom-color: var(--cream); color: var(--cream); }
+
+  .tab-icon {
+    display: inline-block;
+    margin-right: 6px;
+    font-size: 14px;
+  }
+
+  /* Sub-controls (per tab) */
+  .sub-controls {
+    padding: 12px 24px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .level-control { display: flex; flex-direction: column; gap: 6px; }
+
+  .level-label-row {
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: var(--text-dim);
+    letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .level-label-row strong {
+    color: var(--terracotta); font-weight: 600;
+    font-size: 12px; letter-spacing: 0.02em; text-transform: none;
+  }
+  .level-slider { position: relative; height: 24px; }
+  .level-slider input[type="range"] {
+    width: 100%; margin: 0;
+    appearance: none; -webkit-appearance: none;
+    background: transparent; height: 24px; cursor: pointer;
+  }
+  .level-slider input[type="range"]::-webkit-slider-runnable-track {
+    height: 4px; background: var(--border); border-radius: 2px;
+  }
+  .level-slider input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px; height: 16px;
+    background: var(--terracotta); border-radius: 50%;
+    border: 2px solid var(--bg); margin-top: -6px;
+    cursor: pointer;
+    box-shadow: 0 0 0 2px var(--terracotta-dim);
+  }
+  .level-slider input[type="range"]::-moz-range-track { height: 4px; background: var(--border); border-radius: 2px; }
+  .level-slider input[type="range"]::-moz-range-thumb {
+    width: 12px; height: 12px;
+    background: var(--terracotta); border-radius: 50%;
+    border: 2px solid var(--bg); cursor: pointer;
+  }
+
+  .level-ticks {
+    display: flex; justify-content: space-between;
+    font-size: 10px; color: var(--text-faint); margin-top: 1px;
+  }
+  .level-ticks span {
+    cursor: pointer; transition: color 120ms;
+    text-align: center; flex: 1;
+  }
+  .level-ticks span:first-child { text-align: left; }
+  .level-ticks span:last-child { text-align: right; }
+  .level-ticks span.active { color: var(--terracotta); font-weight: 600; }
+  .level-ticks span:hover { color: var(--cream); }
+
+  .preset-row { display: flex; gap: 6px; flex-wrap: wrap; }
+
+  .preset-btn {
+    padding: 5px 10px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 11px; border-radius: 4px;
+    cursor: pointer; font-family: inherit;
+    transition: all 120ms;
+  }
+  .preset-btn:hover { color: var(--text); border-color: var(--terracotta-dim); }
+  .preset-btn.active {
+    background: var(--terracotta-dim);
+    border-color: var(--terracotta); color: var(--cream);
+  }
+
+  .filter-row {
+    display: flex; gap: 6px; align-items: center; flex-wrap: wrap;
+  }
+  .filter-pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 8px; border-radius: 12px; font-size: 11px;
+    cursor: pointer; border: 1px solid transparent;
+    background: var(--surface-2); color: var(--text-dim);
+    user-select: none; transition: all 120ms;
+  }
+  .filter-pill:hover { color: var(--text); }
+  .filter-pill .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  .filter-pill.active { color: var(--text); background: var(--surface); border-color: var(--border); }
+  .filter-pill.dim { opacity: 0.4; }
+
+  main {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    min-height: 0;
+  }
+
+  .canvas-wrap {
+    position: relative;
+    background:
+      radial-gradient(ellipse at 30% 50%, rgba(200, 113, 74, 0.04), transparent 70%),
+      var(--bg);
+    overflow: hidden;
+  }
+
+  svg.diagram {
+    width: 100%; height: 100%;
+    min-height: 600px; display: block;
+  }
+
+  .level-badge {
+    position: absolute; top: 14px; left: 18px;
+    padding: 6px 12px;
+    background: rgba(20, 17, 13, 0.85); backdrop-filter: blur(4px);
+    border: 1px solid var(--border); border-radius: 4px;
+    font-size: 11px; color: var(--text-dim); pointer-events: none;
+    max-width: 480px;
+  }
+  .level-badge strong {
+    display: block; color: var(--terracotta); font-weight: 600;
+    font-size: 13px; letter-spacing: -0.01em; margin-bottom: 1px;
+  }
+
+  .detail-panel {
+    background: var(--surface);
+    border-left: 1px solid var(--border);
+    padding: 16px 18px; overflow-y: auto;
+    max-height: calc(100vh - 200px);
+  }
+  .detail-panel h2 {
+    font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--text-dim);
+    margin: 0 0 8px; font-weight: 600;
+  }
+  .detail-panel .empty {
+    color: var(--text-faint); font-size: 12px;
+    font-style: italic; line-height: 1.6;
+  }
+
+  .node-detail { animation: fadeIn 200ms ease-out; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .node-detail .node-title {
+    font-size: 16px; font-weight: 600;
+    color: var(--cream); margin-bottom: 4px; line-height: 1.3;
+  }
+  .node-detail .node-id {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 11px; color: var(--terracotta); margin-bottom: 10px;
+  }
+  .node-detail.hook .node-id { color: var(--hook); }
+  .node-detail.git .node-id { color: var(--git); }
+  .node-detail.linear .node-id { color: var(--linear); }
+  .node-detail.brain .node-id { color: var(--brain); }
+  .node-detail.data .node-id { color: var(--data); }
+
+  .status-badge {
+    display: inline-block; padding: 2px 8px; border-radius: 10px;
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em;
+    font-weight: 600; margin-bottom: 12px;
+  }
+  .status-active { background: var(--green-dim); color: #d2e8b8; }
+  .status-partial { background: var(--amber-dim); color: #f5d68b; }
+  .status-aspirational { background: #3a3022; color: var(--text-dim); }
+  .status-built { background: var(--terracotta-dim); color: var(--cream); }
+  .status-hook { background: var(--hook-dim); color: #cfe2f6; }
+  .status-blocking { background: #5a1f1f; color: #f5b8b8; }
+
+  .node-detail .desc {
+    font-size: 13px; color: var(--text);
+    margin-bottom: 14px; line-height: 1.55;
+  }
+  .node-detail .field { margin-bottom: 10px; }
+  .node-detail .field-label {
+    font-size: 10px; text-transform: uppercase;
+    letter-spacing: 0.06em; color: var(--text-faint);
+    margin-bottom: 3px; font-weight: 600;
+  }
+  .node-detail .field-value {
+    font-size: 12px; color: var(--text-dim); line-height: 1.5;
+  }
+  .node-detail .files {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 11px; color: var(--cream);
+    background: var(--bg); padding: 6px 8px;
+    border-radius: 3px; margin-top: 4px;
+  }
+  .node-detail .files div { margin: 2px 0; word-break: break-all; }
+
+  .svg-node {
+    cursor: pointer;
+    transition: opacity 320ms;
+  }
+  .svg-node:hover .node-bg { filter: brightness(1.18); }
+  .svg-node.selected .node-bg { filter: brightness(1.3); stroke-width: 2; }
+  .svg-node.dim { opacity: 0.18; }
+
+  .svg-edge { transition: opacity 320ms, stroke-width 200ms; }
+  .svg-edge.dim { opacity: 0.15; }
+  .svg-edge.highlight { stroke-width: 2.5; }
+
+  .tier-bg { transition: opacity 320ms; }
+
+  @media (max-width: 1400px) {
+    main { grid-template-columns: 1fr; }
+    .detail-panel { border-left: none; border-top: 1px solid var(--border); max-height: 280px; }
+    .sub-controls { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <header>
+    <h1>GBA Agentic OS — Feedback Loops</h1>
+    <div class="subtitle">Tabs scope each subsystem · slider zooms detail · click any node for files + loops · Copy hands the view back to Claude</div>
+    <div class="tabs" id="tabs">
+      <button class="tab active" data-tab="vault"><span class="tab-icon">⚡</span>Vault loops (16)</button>
+      <button class="tab" data-tab="sources"><span class="tab-icon">⇲</span>Data sources</button>
+      <button class="tab" data-tab="git"><span class="tab-icon">⎇</span>Git</button>
+      <button class="tab" data-tab="linear"><span class="tab-icon">◐</span>Linear</button>
+      <button class="tab" data-tab="brain"><span class="tab-icon">⌬</span>Second-brain</button>
+      <button class="tab" data-tab="lifecycle"><span class="tab-icon">⟳</span>Session lifecycle</button>
+      <button class="tab" data-tab="memory"><span class="tab-icon">◧</span>Memory</button>
+      <button class="tab" data-tab="full"><span class="tab-icon">✱</span>Full</button>
+    </div>
+  </header>
+
+  <div class="sub-controls">
+    <div class="level-control">
+      <div class="level-label-row">
+        <span>Detail level</span>
+        <strong id="level-title">—</strong>
+      </div>
+      <div class="level-slider">
+        <input type="range" id="level" min="0" max="3" step="1" value="1" />
+      </div>
+      <div class="level-ticks" id="ticks"></div>
+    </div>
+
+    <div class="preset-row" id="presets"></div>
+
+    <div class="filter-row" id="status-filters">
+      <span class="filter-pill active" data-status="built"><span class="dot" style="background: var(--terracotta);"></span>Just shipped</span>
+      <span class="filter-pill active" data-status="active"><span class="dot" style="background: var(--green);"></span>Active</span>
+      <span class="filter-pill active" data-status="partial"><span class="dot" style="background: var(--amber);"></span>Partial</span>
+      <span class="filter-pill active" data-status="aspirational"><span class="dot" style="background: var(--slate);"></span>Aspirational</span>
+    </div>
+  </div>
+
+  <main>
+    <div class="canvas-wrap">
+      <div class="level-badge">
+        <strong id="badge-title">—</strong>
+        <span id="badge-sub">—</span>
+      </div>
+      <svg class="diagram" id="svg" viewBox="0 0 1500 700" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#5e5343" />
+          </marker>
+          <marker id="arrow-hot" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#c8714a" />
+          </marker>
+          <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#7fb069" />
+          </marker>
+          <marker id="arrow-hook" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#6896c8" />
+          </marker>
+          <marker id="arrow-block" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#d05050" />
+          </marker>
+          <marker id="arrow-git" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#b8985a" />
+          </marker>
+          <marker id="arrow-linear" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#a487c8" />
+          </marker>
+          <marker id="arrow-brain" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#5cb89a" />
+          </marker>
+          <marker id="arrow-data" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#d89c5c" />
+          </marker>
+        </defs>
+        <g id="bg-shapes"></g>
+        <g id="edges"></g>
+        <g id="nodes"></g>
+      </svg>
+    </div>
+
+    <aside class="detail-panel" id="detail-panel">
+      <h2>Selected node</h2>
+      <div class="empty" id="detail-empty">Click any node in the diagram to see its files, status, and what it feeds into. Or pick a preset to snap to a curated view.</div>
+      <div id="detail-content"></div>
+    </aside>
+  </main>
+
+</div>
+
+<script>
+// ============================================================
+// SHARED METADATA REGISTRY
+// ============================================================
+// Node info — same node can appear in multiple tabs at different positions.
+// Detail panel reads from here regardless of current tab.
+
+const NODE_INFO = {
+  // === Vault: sources ===
+  commits:   { label:'commits',     desc:'Every commit across gbauto/* repos. The post-commit hook fires immediately and routes by file pattern.', files:['.git/hooks/post-commit'] },
+  sessions:  { label:'sessions',    desc:'Claude Code session transcripts archived by Stop hook to intelligence/claude-sessions/<repo>/.', files:['second-brain/.claude/scripts/claude-session-archive.mjs'] },
+  emails:    { label:'emails',      desc:'Gmail threads classified by email_watcher.py every 30 min, 9am–5pm PT.', files:['scripts/email_watcher.py'] },
+  calendar:  { label:'calendar',    desc:'Google Calendar events. Currently only read for daily briefs; meeting prep packets (L9) aspirational.', files:['(via Google Workspace OAuth)'] },
+  youtube:   { label:'YouTube',     desc:'YouTube transcripts via youtube-transcript-agent. One manual sample at intelligence/transcripts/youtube/.', files:['intelligence/transcripts/youtube/'] },
+  linear:    { label:'Linear evt',  desc:'Linear webhook events (status changes, comments, project moves). Currently pulled via cron, not webhook.', files:['(Linear API)'] },
+  graphify:  { label:'graphify',    desc:'Knowledge graph extraction per repo on Mac Mini. Outputs to graphify-out/.', files:['scripts/graphify_sync.py'] },
+  plans:     { label:'plan-mode',   desc:'ExitPlanMode event in Claude Code session. Captured by capture-plan.py hook → inbox/plans/.', files:['.claude/hooks/capture-plan.py'] },
+  task:      { label:'task .md',    desc:'Task file in tasks/ with linear: pending frontmatter. PostToolUse enforce-linear-frontmatter.py validates on write.', files:['tasks/*.md'] },
+  inbox:     { label:'inbox/plans/',desc:'Plan files awaiting approval. Scanner watches frontmatter for status: proposed → approved transitions.', files:['second-brain/inbox/plans/'] },
+
+  // === Vault: detectors / queues ===
+  'q-wiki':     { label:'wiki queue',     desc:'JSONL queue at scripts/hooks/wiki_enqueue.py output. Drained by update-wiki cron, runs 8 detector rules.', files:['scripts/hooks/wiki_enqueue.py'] },
+  'q-skill':    { label:'.claude/ registry', desc:'Tracks ANY change in .claude/ — skills, commands, agents, hooks, scripts, settings.json. Adds/edits/deletes should refresh capabilities/{skills,commands}-index.md and pipeline-map.md so the brain reflects current capabilities. Processor labelled R3 stub today.', files:['scripts/hooks/skill_registry_enqueue.py','.claude/{skills,commands,agents,hooks,scripts}/','.claude/settings.json','second-brain/capabilities/skills-index.md','second-brain/capabilities/commands-index.md','second-brain/capabilities/pipeline-map.md'] },
+  'q-linear':   { label:'linear-enqueue', desc:'Tasks queued for Linear sync. Drained by sync_linear.py.', files:['scripts/hooks/linear_enqueue.py'] },
+  'inbox-scan': { label:'inbox scanner',  desc:'15-min cron (launchd com.gbautomation.inbox-scanner). Detects frontmatter status flips → dispatches downstream.', files:['scripts/scan_inbox.py','scripts/launchd/com.gbautomation.inbox-scanner.plist'] },
+  'tac-gate':   { label:'TAC gate (L14)', desc:'Plans flipped to status: approved must pass /tac-validate before linear_enqueue dispatches. Sidecar receipt at intelligence/tac-validations/.', files:['scripts/tac_validate.py','.claude/hooks/enforce-linear-frontmatter.py'] },
+  capture:      { label:'capture-plan',   desc:'Hook on ExitPlanMode → writes plan to inbox/plans/<date>-<topic>.md with status: proposed.', files:['.claude/hooks/capture-plan.py'] },
+
+  // === Vault: retrievers ===
+  qmd:        { label:'QMD index',         desc:'Semantic search index. Refreshed by qmd-refresh.ts on every Write/Edit (debounced 30s).', files:['(QMD collection on disk)','second-brain/.claude/scripts/qmd-refresh.ts'] },
+  wikilinks:  { label:'wikilinks + tags',  desc:'Vault-wide [[wikilink]] graph + #hierarchical/tag taxonomy. Read by Dataview queries.', files:['(implicit in vault)'] },
+  'memory-r': { label:'os/MEMORY.md',      desc:'Operator working memory. Read by SessionStart hook, edited manually + by L6 (aspirational).', files:['second-brain/os/MEMORY.md'] },
+  dashboard:  { label:'Dashboard query',   desc:'Dataview queries on Dashboard.md showing inbox pending count, blockers, clients.', files:['second-brain/Dashboard.md'] },
+
+  // === Vault: learners (Tier 4) ===
+  'mem-cand':  { label:'memory candidates', desc:'Aspirational. Drafted by L6 aggregator when ≥3 same observation appear across runs.', files:['second-brain/os/memory-candidates/'] },
+  'tac-inv':   { label:'tac-inventory',     desc:'TAC components catalogued for reuse. tac-inventory/ at gbauto root.', files:['tac-inventory/'] },
+  'skill-h':   { label:'skill-health',      desc:'Aspirational. Per-skill red/yellow/green from telemetry roll-up.', files:['capabilities/skill-health.md'] },
+  'langfuse-dream': { label:'Langfuse dream', desc:'Planned L18. Nightly trace review groups repeated errors, drafts memory candidates, and lists artifacts that need processing.', files:['scripts/langfuse_nightly_dream.py','second-brain/intelligence/observability/langfuse-dreams/','second-brain/tasks/feedback-loops/L18-nightly-langfuse-dream-review.md'] },
+  'morning-plan': { label:'morning improvement plan', desc:'Planned L19. Converts the nightly Langfuse dream artifact into a short inbox plan Greg can approve, reject, or edit each morning.', files:['scripts/langfuse_morning_improvement_plan.py','second-brain/inbox/plans/YYYY-MM-DD-gbautomation-langfuse-improvement-plan.md','second-brain/tasks/feedback-loops/L19-morning-improvement-inbox-plan.md'] },
+  patterns:    { label:'knowledge/patterns',desc:'Aspirational. Cross-client reusable patterns extracted by L10.', files:['second-brain/knowledge/patterns/'] },
+  'tac-rec':   { label:'TAC validations',   desc:'Sidecar receipts written by tac_validate.py. Audit trail of every plan that passed L14.', files:['second-brain/intelligence/tac-validations/'] },
+  'greg-inbox':{ label:'Greg Inbox',        desc:'The keystone build (Phases 1–4). Folder structure + scanner + TAC gate + capture hook + digest.', files:['second-brain/inbox/','scripts/scan_inbox.py','scripts/inbox_digest.py'] },
+
+  // === Lifecycle: events ===
+  'session-start': { label:'SessionStart', desc:'Fires once at session boot. Reads brain/North Star.md → expands aliases to SOUL/USER/MEMORY/brain-topics → injects context. Without this, every session starts blank.', files:['second-brain/.claude/scripts/session-start.ts','brain/North Star.md'] },
+  'tool-call':     { label:'tool call',    desc:'Trigger for PreToolUse and PostToolUse hook chains. Every Write/Edit/Bash invokes the pipeline.', files:['(Claude Code runtime)'] },
+  'stop-hook':     { label:'Stop hook',    desc:'Archives session transcript to intelligence/claude-sessions/. Feeds L11 on next nightly filter pass.', files:['second-brain/.claude/scripts/claude-session-archive.mjs'] },
+
+  // === Lifecycle: PostToolUse pipeline ===
+  'enforce-fm':     { label:'enforce-linear-fm.py', desc:'Stage 1 of 3, BLOCKING. Only hook in pipeline allowed to abort writes. Gates tasks/*.md for linear:, inbox/plans/ for tac_status:. Must run first so blocked writes short-circuit before downstream wastes work.', files:['.claude/hooks/enforce-linear-frontmatter.py'] },
+  'validate-write': { label:'validate-write.ts',    desc:'Stage 2 of 3, warn-only. Vault hygiene: missing frontmatter, orphan notes, broken wikilinks. Never blocks.', files:['second-brain/.claude/scripts/validate-write.ts'] },
+  'qmd-refresh':    { label:'qmd-refresh.ts',       desc:'Stage 3 of 3, detached + debounced 30s. Reindexes QMD semantic-search collection.', files:['second-brain/.claude/scripts/qmd-refresh.ts'] },
+
+  // === Lifecycle: memory ===
+  'north-star':    { label:'North Star',         desc:'Stub at brain/North Star.md. Hook reads literally; canonical content lives in os/. Customize this to change SessionStart\'s injected text.', files:['brain/North Star.md'] },
+  'operator-mem':  { label:'os/SOUL+USER+MEMORY',desc:'Operator triplet: SOUL (Gelby personality), USER (Greg\'s profile), MEMORY (active mission, blockers). What the agent "remembers" about who it is and who it works for.', files:['second-brain/os/SOUL.md','second-brain/os/USER.md','second-brain/os/MEMORY.md'] },
+  'auto-memory':   { label:'auto-memory dir',    desc:'~/.claude/projects/<id>/memory/. 4 memory types (user/feedback/project/reference) as individual .md files. Persists across all conversations in this project.', files:['~/.claude/projects/.../memory/MEMORY.md','~/.claude/projects/.../memory/*.md'] },
+  'claude-md':     { label:'CLAUDE.md',          desc:'Hierarchy: gbautomation/CLAUDE.md → second-brain/CLAUDE.md → per-folder CLAUDE.md. Loaded as system context every conversation.', files:['gbautomation/CLAUDE.md','second-brain/CLAUDE.md'] },
+  'mem-md':        { label:'MEMORY.md (index)',  desc:'auto-memory index. ALWAYS in context. Lines after 200 truncate — keep entries one-line.', files:['~/.claude/projects/.../memory/MEMORY.md'] },
+  'brain-topics':  { label:'brain topics',       desc:'Topic files surfaced in SessionStart\'s "Brain Topics (read on demand)" section. Currently empty stub.', files:['brain/North Star.md (Brain Topics section)'] },
+
+  // === Git scripts ===
+  'post-commit':   { label:'post-commit',       desc:'.git/hooks/post-commit. Routes by file pattern → enqueues to wiki/skill/linear queues. Active across all 3 queues.', files:['.git/hooks/post-commit','scripts/hooks/wiki_enqueue.py','scripts/hooks/skill_registry_enqueue.py','scripts/hooks/linear_enqueue.py'] },
+  'commit-linter': { label:'commit-linter',     desc:'Stub commented out in post-commit (lines 106-114). Would catch non-conventional commits + decision: subjects without ADR.', files:['.git/hooks/post-commit (stubbed)'] },
+  'daily-logs':    { label:'daily-client-logs', desc:'05:50 PT launchd. Mines git diffs across gbauto/* repos → per-client daily/<client>/<date>.md notes. Active for gbautomation, fish-group, jason-diaz.', files:['scripts/daily_client_logs.py'] },
+  'morning-brief': { label:'morning_brief',     desc:'06:00 PT launchd. Rolls up commits-by-client + 4 detectors → daily/<date>-brief.md + Telegram nudge. Implements HB-04.', files:['scripts/morning_brief.py'] },
+  'graphify-sync': { label:'graphify_sync',     desc:'Daily. Re-indexes changed repos on Mac Mini → graphify-out/GRAPH_REPORT.md + graph.json + graph.html.', files:['scripts/graphify_sync.py'] },
+  'tenant-sync':   { label:'tenant-sync',       desc:'Aspirational (from Jason portal plan). repository_dispatch from gbauto/jid5274-portal → bumps submodule → Amplify rebuild → live in 2 min.', files:['(proposed) .github/workflows/tenant-sync.yml'] },
+
+  // === Linear scripts ===
+  'sync-linear':     { label:'sync-linear',       desc:'Bidirectional. Push: tasks/*.md frontmatter → Linear issue create. Pull: Linear updates → write back to task frontmatter.', files:['second-brain/os/openclaw/workspaces/main/skills/sync-linear/scripts/sync_linear.py'] },
+  'post-comment':    { label:'post-comment',     desc:'Used by inbox scanner when a question is answered. Posts answer as comment on the blocked Linear issue, unblocks agent\'s next nightly run.', files:['scripts/post_linear_comment.py'] },
+  'roadmap':         { label:'tasks/roadmap.md', desc:'Per-client TTFW progress + stalled-issue list. Currently hand-maintained; L12 aggregator would auto-update from Linear events.', files:['second-brain/tasks/roadmap.md','resources/roadmap.yaml'] },
+  'stall-detector':  { label:'stall detector',   desc:'Aspirational. Subset of L12. Flags issues stalled > 7 days in morning brief.', files:['(part of L12)'] },
+  'linear-events':   { label:'linear-events/',   desc:'Aspirational. JSONL log of Linear webhook events for the daily aggregator.', files:['intelligence/linear-events/'] },
+
+  // === Second-brain ===
+  'vault-write':   { label:'vault write',     desc:'Any Write/Edit on a .md file in second-brain/. Triggers PostToolUse pipeline.', files:['(any second-brain/*.md edit)'] },
+  'update-wiki':   { label:'update-wiki',     desc:'Drains wiki queue, runs 8 detector rules, applies safe fixes. Cron-driven.', files:['second-brain/os/openclaw/workspaces/main/skills/update-wiki/'] },
+  'rule1':         { label:'R1 orphan',       desc:'Detects notes without wikilinks. Fix: suggest 1+ link to existing notes.', files:['detectors/rule1_orphans.py'] },
+  'rule2':         { label:'R2 missing fm',   desc:'Detects missing required frontmatter (description, date). Fix: stub frontmatter.', files:['detectors/rule2_frontmatter.py'] },
+  'rule3':         { label:'R3 entity ref',   desc:'When a note references an entity (client/person), auto-add backlink to that profile.', files:['detectors/rule3_entity_backlink.py'] },
+  'rule4':         { label:'R4 missing linear',desc:'Manual flag only. Tasks without linear: frontmatter.', files:['detectors/rule4_missing_linear.py'] },
+  'rule5':         { label:'R5 broken link',  desc:'Detects broken wikilinks. Fix: nearest match suggestion.', files:['detectors/rule5_broken_links.py'] },
+  'rule6':         { label:'R6 dup tags',     desc:'Detects duplicate/conflicting tags. Fix: normalize to hierarchical form.', files:['detectors/rule6_dup_tags.py'] },
+  'rule7':         { label:'R7 mention hub',  desc:'On 3+ mentions of a concept in 7 days, auto-create concept hub at knowledge/concepts/.', files:['detectors/rule7_concept_hub.py'] },
+  'rule8':         { label:'R8 theme cluster',desc:'Detects cross-client recurring themes. Promotes to knowledge/concepts/.', files:['detectors/rule8_theme_cluster.py'] },
+  'concept-hub':   { label:'concept hub',     desc:'knowledge/concepts/<topic>.md auto-generated on R7 trigger.', files:['second-brain/knowledge/concepts/'] },
+  'align-vault':   { label:'align-vault',     desc:'Diff client vaults vs gbautomation canonical. Detects drift in conventions/structure. TAC predecessor for update-wiki.', files:['second-brain/os/openclaw/workspaces/main/skills/align-vault/'] },
+  'dataview':      { label:'Dataview',        desc:'Obsidian plugin. Powers Dashboard.md tables (clients, blockers, plans, daily notes).', files:['second-brain/Dashboard.md'] },
+  'templater':     { label:'Templater',       desc:'Obsidian plugin. All human-initiated reports (plan/client/session/proposal).', files:['second-brain/resources/templates/'] },
+  'tags':          { label:'tag taxonomy',    desc:'Hierarchical tags: #phase/<x> #client/<slug> #domain/<x>. Supplements frontmatter, doesn\'t replace it.', files:['second-brain/CLAUDE.md (Tag Taxonomy section)'] },
+  'daily-notes':   { label:'daily/<date>.md', desc:'Auto-generated by daily_client_logs.py. Per-client diff summaries.', files:['second-brain/daily/'] },
+
+  // === inbox stubs (referenced by Linear tab) ===
+  'task-frontmatter': { label:'task frontmatter', desc:'linear: pending in tasks/<file>.md. enforce-linear-frontmatter.py blocks Write if missing.', files:['tasks/*.md'] },
+  'linear-api':       { label:'Linear API',       desc:'GraphQL API. Authenticated via Linear API key in AWS Secrets Manager.', files:['(linear.app/graphql)'] },
+
+  // === Data sources tab ===
+  'cron-30min':     { label:'cron · 30 min',  desc:'launchd schedule firing every 30 min, 9am–5pm PT. Drives email_watcher.py.', files:['scripts/launchd/com.gbautomation.email-watcher.plist'] },
+  'cron-daily':     { label:'cron · daily',   desc:'Multiple daily launchd jobs: 05:50 daily-client-logs, 06:00 morning-brief, graphify-sync.', files:['scripts/launchd/com.gbautomation.daily-client-logs.plist','scripts/launchd/com.gbautomation.morning-brief.plist'] },
+  'webhook':        { label:'webhook',        desc:'Inbound HTTP. Used today: GitHub (post-receive notifications). Aspirational: Linear, Stripe, Telegram inbound.', files:['(future) scripts/webhooks/'] },
+  'session-manual': { label:'session / manual',desc:'On-demand triggers from a Claude Code session — Greg invokes recon scripts, research, transcript pulls.', files:['(any session)'] },
+
+  'email-watcher':  { label:'email_watcher',  desc:'Classifies Gmail every 30 min. Tags Clients/<slug>, fires Telegram alert, drafts reply. L8 (export to correspondence/) is the unwired piece.', files:['scripts/email_watcher.py'] },
+  'youtube-puller': { label:'youtube_intel_puller', desc:'L1 aspirational. Daily 06:30 PT after morning_brief. Pulls allowlisted channel transcripts → propose-from-transcript skill drafts plan stubs.', files:['(planned) scripts/youtube_intel_puller.py'] },
+  'calendar-pull':  { label:'calendar pull',  desc:'Pulls today\'s events for daily brief context. L9 meeting prep packets are aspirational.', files:['(via Google Workspace OAuth in morning_brief.py)'] },
+  'linear-pull':    { label:'linear pull',    desc:'Daily cron pulls Linear issue updates → writes back to task frontmatter. L12 lifecycle aggregator is partial.', files:['second-brain/os/openclaw/workspaces/main/skills/sync-linear/scripts/sync_linear.py'] },
+  'meeting-prep':   { label:'meeting prep',   desc:'L9 aspirational. Generate daily/meetings/<date>-<HHMM>-<title>.md with attendees, last 3 emails, open tasks per client.', files:['(planned) scripts/meeting_prep_packet.py'] },
+  'recon-scripts':  { label:'recon (LinkedIn/IG)', desc:'Multi-step shell scripts for prospect research. LinkedIn-thorough fallback when IG is gated. Outputs to intelligence/recon/.', files:['scripts/recon_step1_linkedin_search.sh','scripts/recon_step2_linkedin_deep.sh','scripts/recon_step5_ig_disambig.sh'] },
+  'telegram-in':    { label:'telegram inbound',desc:'Replies to bot. Currently parsed by email_watcher integration; future dedicated handler for inbox question answers.', files:['(via Telegram bot API)'] },
+
+  'youtube-tx':     { label:'youtube-transcript-agent', desc:'Browser-based transcript extractor. Used when YouTube API methods fail (bot detection, IP blocks). Cookie/Chrome required.', files:['.claude/agents/youtube-transcript-agent.md'] },
+  'firecrawl':      { label:'firecrawl (MCP)',desc:'Web scrape MCP. Used by gsd-phase-researcher, gsd-project-researcher for deep research.', files:['(MCP server: mcp__firecrawl__*)'] },
+  'exa':            { label:'exa (MCP)',      desc:'Semantic web search MCP. Same researcher agents use this alongside firecrawl.', files:['(MCP server: mcp__exa__*)'] },
+  'webfetch':       { label:'WebFetch',       desc:'Single-URL fetch tool, built into Claude Code. For one-off fetches that don\'t need scraping.', files:['(Claude Code tool)'] },
+  'websearch':      { label:'WebSearch',      desc:'General search built into Claude Code. Often the first stop before deeper firecrawl/exa queries.', files:['(Claude Code tool)'] },
+  'context7':       { label:'context7 (MCP)', desc:'Docs lookup MCP. Used during planning to pull current framework/library docs.', files:['(MCP server: mcp__context7__*)'] },
+
+  'transcripts':    { label:'intelligence/transcripts/', desc:'Where YouTube + meeting transcripts land. Triggers wiki rule 3 for entity backlinks once mentions hit threshold.', files:['second-brain/intelligence/transcripts/'] },
+  'correspondence': { label:'intelligence/correspondence/', desc:'Email thread exports. Currently manual via consulting-admin skill; L8 would automate.', files:['second-brain/intelligence/correspondence/'] },
+  'recon-out':      { label:'intelligence/recon/',     desc:'LinkedIn + IG recon output. Per-prospect dossiers used during prospect → onboard handoff.', files:['second-brain/intelligence/recon/'] },
+  'graphiti':       { label:'Graphiti graph', desc:'TAC knowledge graph. Stores entities + relationships from research/builds. Queried by /experts:tac:*.', files:['(TAC knowledge graph backend)'] },
+  'pgvector':       { label:'pgvector RAG',   desc:'TAC vector store. RAG retrieval for similar past patterns + skills.', files:['(Supabase pgvector)'] },
+
+  // === Memory tab ===
+  'session-boot':       { label:'session boot', desc:'The moment a Claude Code conversation starts. Triggers Claude\'s system-level loader + SessionStart hook in parallel — both fire before the first user message.', files:['(Claude Code runtime)'] },
+  'live-session':       { label:'live session', desc:'The active conversation. Agent reads from QMD/files on demand and writes to memory when "remember this" or feedback signals fire mid-flow.', files:['(during conversation)'] },
+  'session-end-event':  { label:'session end',  desc:'Conversation ends. Stop hook archives transcript; mentioned-3+-times concepts trigger wiki rule 7 on next cron drain.', files:['(Claude Code runtime)'] },
+  'claude-loader':      { label:'Claude loader (system)', desc:'System-level. ALWAYS loads ~/.claude/.../memory/MEMORY.md + CLAUDE.md hierarchy before any hook fires. This is what makes "remember this" persist across sessions without explicit configuration — not the SessionStart hook.', files:['(Claude Code runtime)'] },
+  'qmd-query':          { label:'QMD query',    desc:'On-demand semantic search during conversation. Agent calls when looking for past context. The QMD index (separate node) is the store; this is the read action.', files:['(QMD CLI: qmd query "<phrase>")'] },
+  'tool-read':          { label:'Read/Grep/Glob',desc:'Direct file reads via Claude Code\'s built-in tools. Used when agent knows the path or pattern.', files:['(Claude Code tools)'] },
+  'tac-improve':        { label:'TAC self-improve', desc:'After /experts:tac:plan_build_improve completes, writes lessons to local expertise.md + nominates novel tags. L3 promote_tags.py would entrench novel tags to Graphiti.', files:['second-brain/agents/tactical-agentic-coder.md','tac-inventory/'] },
+  'greg-edit':          { label:'manual edit (Greg)', desc:'You editing os/MEMORY.md, os/USER.md, etc. directly. Always wins over agent edits. The "ground truth" path.', files:['second-brain/os/MEMORY.md','second-brain/os/USER.md','second-brain/os/SOUL.md'] },
+  'l11-filter':         { label:'L11 promote', desc:'Nightly filter pass on intelligence/claude-sessions/. Tags meaningful sessions with qmd-include: true → next QMD refresh ingests them. Currently partial — filter heuristic missing.', files:['(planned) scripts/promote_sessions_to_qmd.py'] },
+};
+
+// Loop info — both vault loops (L1-L14) and lifecycle (LH-A..D) and per-tab loops (LG, LL, LW)
+const LOOP_INFO = {
+  L1:  { name:'YouTube intel → plans',  status:'aspirational', brief:'Daily YouTube transcripts → LLM summary → plan stub.', gap:'No scheduled puller.' },
+  L2:  { name:'Commits → 3 queues',     status:'partial',      brief:'Post-commit hook → file-pattern detection → enqueue.', gap:'Commit-linter stubbed; skill-registry partial.' },
+  L3:  { name:'TAC plan/build/improve', status:'partial',      brief:'Manual TAC trigger → KB query → validate → self-improve.', gap:'No promote_tags.py.' },
+  L4:  { name:'Plan capture → inbox → Linear', status:'built', brief:'ExitPlanMode → inbox/plans/ → approve → TAC → Linear.', gap:'Just shipped (Phase 4).' },
+  L5:  { name:'Wiki rules + memory',    status:'partial',      brief:'Rules 1–8 auto-create hubs/backlinks/normalizations.', gap:'No stale-concept rule, no MEMORY auto-promote.' },
+  L6:  { name:'Outcomes → MEMORY',       status:'aspirational', brief:'≥3 same observation → memory candidate.', gap:'Schema undefined, aggregator missing.' },
+  L7:  { name:'Skill telemetry',         status:'aspirational', brief:'Per-skill log → red/yellow/green health roll-up.', gap:'Telemetry not emitted.' },
+  L8:  { name:'Email export',            status:'partial',      brief:'Email → correspondence/ + auto-backlinks.', gap:'Export step never wired.' },
+  L9:  { name:'Calendar prep packets',   status:'aspirational', brief:'Daily 07:00 PT meeting prep generation.', gap:'Nothing exists today.' },
+  L10: { name:'Workflow → patterns',     status:'aspirational', brief:'TTFW-5 → mine logs → tac-inventory.', gap:'Depends on L3.' },
+  L11: { name:'Sessions → QMD',          status:'partial',      brief:'Filter session archives by signal → QMD-include.', gap:'Filter pass missing.' },
+  L12: { name:'Linear events → roadmap', status:'partial',      brief:'Issue events → aggregator → roadmap.md.', gap:'Events not pulled today.' },
+  L13: { name:'Graphify → cross-client', status:'partial',      brief:'Top-N nodes → knowledge/clients/.', gap:'Extract step missing.' },
+  L14: { name:'TAC validation gate',     status:'built',        brief:'/tac-validate gates Linear dispatch.', gap:'Just shipped (Phase 3).' },
+  L18: { name:'Nightly Langfuse dream',  status:'aspirational', brief:'11pm PT trace review → repeated-error clusters + memory candidates + artifact todos.', gap:'Task spec added; script and launchd job not built yet.' },
+  L19: { name:'Morning improvement plan',status:'aspirational', brief:'7am PT dream digest → inbox plan with today’s top fixes and memory/artifact links.', gap:'Depends on L18 dream artifact.' },
+
+  'LH-A': { name:'SessionStart context inject', status:'active', brief:'On boot, read North Star + SOUL+USER+MEMORY + brain-topics + auto-memory → inject.' },
+  'LH-B': { name:'PostToolUse Write/Edit pipeline', status:'active', brief:'enforce-fm BLOCKS → validate-write WARNS → qmd-refresh DEBOUNCED.' },
+  'LH-C': { name:'Stop hook archive', status:'active', brief:'Archive transcript → intelligence/claude-sessions/ → feeds L11.' },
+  'LH-D': { name:'Auto-memory writes', status:'active', brief:'During conversation, write to ~/.claude/.../memory/ + index in MEMORY.md.' },
+
+  'LG1': { name:'Post-commit fan-out', status:'active', brief:'Every commit → file-pattern routing → wiki/skill/linear queues.' },
+  'LG2': { name:'Daily client logs', status:'active', brief:'daily_client_logs.py mines repo diffs at 05:50 PT.' },
+  'LG3': { name:'Morning brief', status:'active', brief:'morning_brief.py rolls up commits-by-client at 06:00 PT + Telegram.' },
+  'LG4': { name:'Graphify sync', status:'partial', brief:'graphify_sync.py re-indexes changed repos on Mac Mini.' },
+  'LG5': { name:'Tenant submodule auto-bump', status:'aspirational', brief:'(Jason portal) repository_dispatch → submodule SHA bump → Amplify deploy.' },
+
+  'LL1': { name:'Task ↔ Linear sync', status:'active', brief:'sync_linear.py both directions.' },
+  'LL2': { name:'Inbox approve → Linear issue', status:'built', brief:'Phase 3+4. status: approved + tac_status: validated → linear_enqueue dispatches.' },
+  'LL3': { name:'Question answered → comment', status:'built', brief:'Phase 4. answered: true → post_linear_comment.py posts answer.' },
+  'LL4': { name:'Linear lifecycle → roadmap', status:'partial', brief:'L12 reframed. Issue events → daily aggregator → roadmap.md.' },
+  'LL5': { name:'Stalled issue detector', status:'aspirational', brief:'Subset of L12. >7d stalled → morning brief flag.' },
+
+  'LW1': { name:'Orphan note detection', status:'active', brief:'Rule 1. Notes without wikilinks → warn at write time.' },
+  'LW2': { name:'Concept hub auto-create', status:'active', brief:'Rule 7. 3+ mentions of concept in 7d → create concept hub.' },
+  'LW3': { name:'Theme cluster (cross-client)', status:'active', brief:'Rule 8. Cross-client recurring themes → promote to knowledge/concepts/.' },
+  'LW4': { name:'Entity backlink injection', status:'active', brief:'Rule 3. Reference an entity → auto-add backlink to its profile.' },
+  'LW5': { name:'align-vault drift detection', status:'active', brief:'Diff client vaults vs canonical → flag drift in conventions.' },
+  'LW6': { name:'Daily notes auto-gen', status:'active', brief:'daily_client_logs.py owns daily/<date>.md generation.' },
+
+  'LD1': { name:'Email watcher · classify + draft',  status:'active',       brief:'email_watcher.py every 30 min: classify by domain → label in Gmail → Telegram alert → draft reply if client.' },
+  'LD2': { name:'YouTube intel puller',              status:'aspirational', brief:'L1. Daily 06:30 PT pull from allowlisted channels → transcripts/ → propose-from-transcript drafts plan stub.' },
+  'LD3': { name:'Calendar → meeting prep',           status:'aspirational', brief:'L9. Daily 07:00 PT generate prep packet per meeting with attendee profiles + last 3 emails + open tasks.' },
+  'LD4': { name:'Recon (LinkedIn → IG)',             status:'active',       brief:'Manual. Multi-step shell pipeline for prospect research. Outputs intelligence/recon/<prospect>/.' },
+  'LD5': { name:'On-demand web research',            status:'active',       brief:'Session-driven. firecrawl + exa + WebFetch + WebSearch + Context7 used by researcher agents during planning.' },
+  'LD6': { name:'Linear pull (daily)',               status:'partial',      brief:'sync_linear.py daily cron pulls issue updates → writes back to task frontmatter. Webhook would replace this.' },
+  'LD7': { name:'Graphify sync',                     status:'partial',      brief:'graphify_sync.py daily re-indexes changed repos on Mac Mini → graphify-out/.' },
+
+  'LM1': { name:'System-level auto-memory load', status:'active', brief:'Claude\'s runtime loads ~/.claude/.../memory/MEMORY.md + CLAUDE.md hierarchy on every conversation. Pre-hook, always-on.' },
+  'LM2': { name:'SessionStart vault context inject', status:'active', brief:'Hook reads brain/North Star.md → expands to SOUL+USER+MEMORY+brain-topics+recent-commits → injects into agent context.' },
+  'LM3': { name:'On-demand session reads', status:'active', brief:'Live-session reads from QMD (semantic), Read/Grep (direct), Graphiti (TAC graph) as needed.' },
+  'LM4': { name:'Mid-conversation auto-memory write', status:'active', brief:'When "remember this" fires, agent writes a typed memory file (user/feedback/project/reference) + adds line to MEMORY.md index.' },
+  'LM5': { name:'Stop-hook session archive', status:'active', brief:'Stop fires → archive transcript to intelligence/claude-sessions/<repo>/.' },
+  'LM6': { name:'Wiki rule 7 → concept hub', status:'active', brief:'3+ mentions of a concept in 7 days → auto-create knowledge/concepts/<topic>.md. Readable next session via wikilinks + QMD.' },
+  'LM7': { name:'TAC pattern entrenchment', status:'partial', brief:'TAC self-improve writes to expertise.md; L3 promote_tags.py would push novel tags into Graphiti for cross-session reuse.' },
+  'LM8': { name:'L11 archive → QMD retrievable', status:'partial', brief:'Closes the long-term loop: this session\'s archive becomes next session\'s QMD-searchable context. Filter heuristic still missing.' },
+};
+
+// ============================================================
+// PER-TAB DATA
+// ============================================================
+
+const TABS = {
+  vault: {
+    label: 'Vault loops (16)',
+    levels: 4,
+    levelLabels: ['0 · Birds-eye','1 · 4 phases','2 · 5 user loops','3 · All 16 loops'],
+    levelTitles: [
+      { title:'Birds-eye · 4 tiers', sub:'INGEST → DETECT → RETRIEVE → LEARN. Learn tier is the gap.' },
+      { title:'Greg Inbox · 4 phases', sub:'What we just built — keystone for session-driven autonomy.' },
+      { title:'5 user loops + governance', sub:'YouTube · commits · TAC · plan-capture · wiki+memory + L14 gate.' },
+      { title:'All 16 vault loops', sub:'Existing 14 plus L18/L19 Langfuse dream → morning improvement inbox loop. Color = status.' },
+    ],
+    presets: [
+      { id:'just-shipped', label:'Just shipped', level:1, filters:{built:true,active:false,partial:false,aspirational:false} },
+      { id:'whats-live',   label:"What's live",  level:3, filters:{built:true,active:true,partial:true,aspirational:false} },
+      { id:'learn-gap',    label:'Learn tier gap', level:3, filters:{built:true,active:true,partial:true,aspirational:true}, focus:'mem-cand' },
+      { id:'full',         label:'All',          level:3, filters:{built:true,active:true,partial:true,aspirational:true} },
+    ],
+    tiers: [
+      { y:40, h:125, label:'TIER 1 · INGEST',  sub:'17 sources flow into the vault', dashed:false },
+      { y:180,h:125, label:'TIER 2 · DETECT',  sub:'Queues, hooks, frontmatter validators', dashed:false },
+      { y:320,h:125, label:'TIER 3 · RETRIEVE',sub:'QMD semantic index + wikilinks', dashed:false },
+      { y:460,h:200, label:'TIER 4 · LEARN  ·  NEW', sub:'Outcomes → MEMORY + TAC patterns. The gap.', dashed:true, accent:true },
+    ],
+    nodes: [
+      // sources
+      { id:'commits',  x:100, y:110, level:0 },
+      { id:'sessions', x:220, y:110, level:0 },
+      { id:'emails',   x:340, y:110, level:1 },
+      { id:'calendar', x:460, y:110, level:2 },
+      { id:'youtube',  x:580, y:110, level:2 },
+      { id:'linear',   x:700, y:110, level:2 },
+      { id:'graphify', x:820, y:110, level:2 },
+      { id:'plans',    x:970, y:110, level:1, accent:'inbox' },
+      // detectors
+      { id:'q-wiki',     x:200, y:250, level:1, status:'active' },
+      { id:'q-skill',    x:360, y:250, level:1, status:'partial' },
+      { id:'q-linear',   x:520, y:250, level:1, status:'active' },
+      { id:'inbox-scan', x:680, y:250, level:1, status:'built', accent:'inbox' },
+      { id:'tac-gate',   x:840, y:250, level:1, status:'built', accent:'inbox' },
+      { id:'capture',    x:990, y:250, level:1, status:'built', accent:'inbox' },
+      // retrievers
+      { id:'qmd',       x:240, y:390, level:0, status:'active' },
+      { id:'wikilinks', x:480, y:390, level:1, status:'active' },
+      { id:'memory-r',  x:720, y:390, level:1, status:'active' },
+      { id:'dashboard', x:940, y:390, level:1, status:'built', accent:'inbox' },
+      // learners
+      { id:'mem-cand', x:200, y:540, level:2, status:'aspirational' },
+      { id:'tac-inv',  x:380, y:540, level:2, status:'partial' },
+      { id:'skill-h',  x:540, y:540, level:2, status:'aspirational' },
+      { id:'langfuse-dream', x:700, y:540, level:2, status:'aspirational' },
+      { id:'morning-plan', x:860, y:540, level:2, status:'aspirational', accent:'inbox' },
+      { id:'patterns', x:1020, y:540, level:2, status:'aspirational' },
+      { id:'tac-rec',  x:1040, y:390, level:1, status:'built', accent:'inbox' },
+      // big inbox
+      { id:'greg-inbox', x:550, y:625, w:200, h:46, level:1, status:'built', accent:'inbox', big:true, sub:'inbox · scanner · TAC gate · digest' },
+    ],
+    edgesByLevel: {
+      0: [
+        { from:'commits',  to:'q-wiki' },
+        { from:'q-wiki',   to:'qmd' },
+        { from:'qmd',      to:'tac-inv', dasharray:'4 3' },
+        { from:'sessions', to:'q-skill' },
+      ],
+      1: [
+        { from:'plans',     to:'capture',     hot:true, w:2 },
+        { from:'capture',   to:'inbox-scan',  hot:true, w:2 },
+        { from:'inbox-scan',to:'tac-gate',    hot:true, w:2 },
+        { from:'tac-gate',  to:'tac-rec',     hot:true, w:2 },
+        { from:'inbox-scan',to:'greg-inbox',  hot:true },
+        { from:'inbox-scan',to:'dashboard',   color:'#7fb069', marker:'url(#arrow-green)' },
+        { from:'greg-inbox',to:'q-linear',    color:'#7fb069', marker:'url(#arrow-green)' },
+      ],
+      2: 'user-loops',
+      3: 'all-loops',
+    },
+    viewBox: '0 0 1180 700',
+  },
+
+  sources: {
+    label: 'Data sources',
+    levels: 3,
+    levelLabels: ['0 · Live pullers','1 · All ingestion','2 · Research + scraping'],
+    levelTitles: [
+      { title:'Sources · live pullers', sub:'Cron-driven ingestion that runs unattended: email watcher · graphify · daily-logs · calendar pull.' },
+      { title:'Sources · all ingestion', sub:'Plus aspirational: YouTube puller (L1) · meeting prep (L9) · webhooks · Telegram inbound.' },
+      { title:'Sources · research + scraping', sub:'On-demand: youtube-transcript-agent · firecrawl · exa · WebFetch · WebSearch · LinkedIn/IG recon · Context7 docs.' },
+    ],
+    presets: [
+      { id:'live',     label:'Live today', level:0, filters:{built:true,active:true,partial:true,aspirational:false} },
+      { id:'gaps',     label:'Gaps',       level:1, filters:{built:false,active:false,partial:true,aspirational:true} },
+      { id:'research', label:'Research stack', level:2, filters:{built:true,active:true,partial:true,aspirational:true}, focus:'firecrawl' },
+      { id:'full',     label:'All',        level:2, filters:{built:true,active:true,partial:true,aspirational:true} },
+    ],
+    tiers: [
+      { y:40, h:90,  label:'TRIGGERS',  sub:'Cron · webhook · session · manual', dashed:false },
+      { y:140,h:170, label:'PULLERS',   sub:'Scheduled + event-driven', dashed:false },
+      { y:320,h:120, label:'RESEARCH STACK', sub:'On-demand scrapers + search + docs MCPs', dashed:false, accent:true },
+      { y:450,h:100, label:'OUTPUT SINKS',  sub:'Where data lands in the vault', dashed:false },
+      { y:560,h:100, label:'TAC STORES', sub:'Knowledge graph + RAG vector store', dashed:true },
+    ],
+    nodes: [
+      // triggers
+      { id:'cron-30min',     x:200, y:80,  level:0, status:'active', kind:'data' },
+      { id:'cron-daily',     x:440, y:80,  level:0, status:'active', kind:'data' },
+      { id:'webhook',        x:680, y:80,  level:1, status:'aspirational', kind:'data' },
+      { id:'session-manual', x:920, y:80,  level:0, status:'active', kind:'data' },
+      // pullers (top sub-row, scheduled)
+      { id:'email-watcher', x:140, y:185, level:0, status:'active', kind:'data' },
+      { id:'daily-logs',    x:280, y:185, level:0, status:'active', kind:'git' },
+      { id:'morning-brief', x:420, y:185, level:0, status:'active', kind:'git' },
+      { id:'graphify-sync', x:560, y:185, level:0, status:'partial', kind:'git' },
+      { id:'calendar-pull', x:700, y:185, level:0, status:'partial', kind:'data' },
+      { id:'linear-pull',   x:840, y:185, level:1, status:'partial', kind:'linear' },
+      { id:'telegram-in',   x:980, y:185, level:1, status:'active', kind:'data' },
+      // pullers (bottom sub-row, aspirational)
+      { id:'youtube-puller',x:140, y:265, level:1, status:'aspirational', kind:'data' },
+      { id:'meeting-prep',  x:280, y:265, level:1, status:'aspirational', kind:'data' },
+      { id:'recon-scripts', x:420, y:265, level:0, status:'active', kind:'data' },
+      // research stack
+      { id:'youtube-tx',  x:140, y:380, level:2, status:'active', kind:'data' },
+      { id:'firecrawl',   x:280, y:380, level:2, status:'active', kind:'data' },
+      { id:'exa',         x:420, y:380, level:2, status:'active', kind:'data' },
+      { id:'webfetch',    x:560, y:380, level:2, status:'active', kind:'data' },
+      { id:'websearch',   x:700, y:380, level:2, status:'active', kind:'data' },
+      { id:'context7',    x:840, y:380, level:2, status:'active', kind:'data' },
+      // outputs
+      { id:'transcripts',     x:160, y:500, level:0, status:'active', kind:'data' },
+      { id:'correspondence',  x:340, y:500, level:0, status:'partial', kind:'data' },
+      { id:'recon-out',       x:520, y:500, level:0, status:'active', kind:'data' },
+      { id:'concept-hub',     x:700, y:500, level:1, status:'active', kind:'brain' },
+      { id:'graphify-out',    x:880, y:500, level:1, status:'partial', kind:'git' },
+      // TAC stores
+      { id:'graphiti',  x:340, y:610, level:1, status:'active', kind:'brain' },
+      { id:'pgvector',  x:560, y:610, level:1, status:'active', kind:'brain' },
+      { id:'qmd',       x:780, y:610, level:0, status:'active' },
+    ],
+    edgesByLevel: {
+      0: 'sources-live',
+      1: 'sources-all',
+      2: 'sources-research',
+    },
+    viewBox: '0 0 1180 700',
+  },
+
+  git: {
+    label: 'Git pipeline',
+    levels: 3,
+    levelLabels: ['0 · Birds-eye','1 · Core pipeline','2 · All git automation'],
+    levelTitles: [
+      { title:'Git · birds-eye', sub:'Every commit fans out to wiki/skill/linear queues.' },
+      { title:'Git · core pipeline', sub:'post-commit + 3 queues + daily-logs + morning-brief.' },
+      { title:'Git · all automation', sub:'Includes graphify-sync, commit-linter (stubbed), tenant-sync (proposed).' },
+    ],
+    presets: [
+      { id:'core',   label:'Core',    level:1, filters:{built:true,active:true,partial:true,aspirational:false} },
+      { id:'active', label:'Live',    level:2, filters:{built:true,active:true,partial:false,aspirational:false} },
+      { id:'gaps',   label:'Gaps',    level:2, filters:{built:false,active:false,partial:true,aspirational:true} },
+      { id:'full',   label:'All',     level:2, filters:{built:true,active:true,partial:true,aspirational:true} },
+    ],
+    tiers: [
+      { y:40, h:90,  label:'EVENT',     sub:'Commits across gbauto/* repos', dashed:false },
+      { y:140,h:120, label:'ROUTERS',   sub:'.git/hooks/post-commit + cron-driven scripts', dashed:false },
+      { y:280,h:120, label:'QUEUES',    sub:'JSONL queues drained by cron', dashed:false },
+      { y:420,h:130, label:'OUTPUTS',   sub:'Vault writes + daily/brief + Linear', dashed:false },
+      { y:570,h:90,  label:'DOWNSTREAM',sub:'Indices, dashboards, agent context', dashed:true },
+    ],
+    nodes: [
+      // event
+      { id:'commits', x:600, y:80, level:0, kind:'git' },
+      // routers
+      { id:'post-commit',   x:240, y:200, level:0, status:'active', kind:'git' },
+      { id:'commit-linter', x:420, y:200, level:2, status:'partial', kind:'git' },
+      { id:'daily-logs',    x:620, y:200, level:1, status:'active', kind:'git' },
+      { id:'morning-brief', x:800, y:200, level:1, status:'active', kind:'git' },
+      { id:'graphify-sync', x:980, y:200, level:2, status:'partial', kind:'git' },
+      // queues
+      { id:'q-wiki',   x:130, y:340, level:1, status:'active' },
+      { id:'q-skill',  x:280, y:340, level:1, status:'partial' },
+      { id:'q-linear', x:430, y:340, level:1, status:'active' },
+      // outputs
+      { id:'wikilinks', x:130, y:480, level:1, status:'active' },
+      { id:'concept-hub', x:280, y:480, level:2, status:'active', kind:'brain' },
+      { id:'sync-linear', x:430, y:480, level:1, status:'active', kind:'linear' },
+      { id:'daily-notes', x:620, y:480, level:1, status:'active', kind:'git' },
+      { id:'morning-brief-out', x:800, y:480, level:1, status:'active', kind:'git', altLabel:'brief.md + Telegram' },
+      { id:'graphify-out', x:980, y:480, level:2, status:'partial', kind:'git', altLabel:'graphify-out/' },
+      // tenant sync (right side, aspirational)
+      { id:'tenant-sync', x:1170, y:200, level:2, status:'aspirational', kind:'git' },
+      { id:'amplify-deploy', x:1170, y:480, level:2, status:'aspirational', kind:'git', altLabel:'Amplify deploy' },
+      // downstream
+      { id:'qmd',       x:200, y:610, level:1, status:'active' },
+      { id:'dashboard', x:500, y:610, level:1, status:'built', accent:'inbox' },
+      { id:'patterns',  x:980, y:610, level:2, status:'aspirational' },
+    ],
+    edgesByLevel: {
+      0: [
+        { from:'commits',     to:'post-commit', kind:'git', w:2, label:'fires' },
+        { from:'post-commit', to:'q-wiki',      kind:'git' },
+        { from:'post-commit', to:'q-skill',     kind:'git' },
+        { from:'post-commit', to:'q-linear',    kind:'git' },
+      ],
+      1: 'git-loops-core',
+      2: 'git-loops-all',
+    },
+    viewBox: '0 0 1300 700',
+  },
+
+  linear: {
+    label: 'Linear sync',
+    levels: 3,
+    levelLabels: ['0 · Sync direction','1 · 4 entry points','2 · All loops'],
+    levelTitles: [
+      { title:'Linear · sync direction', sub:'tasks/*.md ↔ Linear issues. Bidirectional via sync_linear.py.' },
+      { title:'Linear · 4 entry points', sub:'Task push, issue pull, inbox dispatch, question→comment.' },
+      { title:'Linear · all loops', sub:'Includes lifecycle aggregator (L12) and stalled detector.' },
+    ],
+    presets: [
+      { id:'live',   label:'Live',    level:2, filters:{built:true,active:true,partial:false,aspirational:false} },
+      { id:'inbox',  label:'Inbox flow',level:2, filters:{built:true,active:true,partial:true,aspirational:false}, focus:'sync-linear' },
+      { id:'gaps',   label:'Gaps',    level:2, filters:{built:false,active:false,partial:true,aspirational:true} },
+      { id:'full',   label:'All',     level:2, filters:{built:true,active:true,partial:true,aspirational:true} },
+    ],
+    tiers: [
+      { y:40, h:140, label:'WRITE INTENT', sub:'tasks/ frontmatter · inbox approve · agent question', dashed:false },
+      { y:200,h:140, label:'SYNC ENGINE',  sub:'sync_linear.py · linear_enqueue · post_linear_comment', dashed:false },
+      { y:360,h:140, label:'LINEAR API',   sub:'GraphQL — issues, comments, lifecycle events', dashed:false },
+      { y:520,h:140, label:'READ-BACK',    sub:'Roadmap, stall detection, morning brief flags', dashed:true },
+    ],
+    nodes: [
+      // write intent
+      { id:'task-frontmatter', x:200, y:110, level:0, status:'active', kind:'linear', altLabel:'task linear: pending' },
+      { id:'inbox',            x:500, y:110, level:0, status:'built', accent:'inbox', altLabel:'inbox status: approved' },
+      { id:'tac-gate',         x:780, y:110, level:1, status:'built', accent:'inbox' },
+      { id:'agent-q',          x:1080, y:110, level:1, status:'built', accent:'inbox', altLabel:'agent_question' },
+      // sync engine
+      { id:'q-linear',     x:200, y:270, level:0, status:'active' },
+      { id:'sync-linear',  x:500, y:270, level:0, status:'active', kind:'linear' },
+      { id:'post-comment', x:1080, y:270, level:1, status:'built', accent:'inbox', kind:'linear' },
+      // Linear API (single big node)
+      { id:'linear-api',  x:640, y:430, level:0, status:'active', kind:'linear', big:true, w:240, h:46, altLabel:'Linear API · GraphQL' },
+      // read-back
+      { id:'linear', x:200, y:590, level:1, status:'partial', kind:'linear', altLabel:'Linear events' },
+      { id:'roadmap',  x:500, y:590, level:1, status:'partial', kind:'linear' },
+      { id:'stall-detector', x:780, y:590, level:2, status:'aspirational', kind:'linear' },
+      { id:'morning-brief', x:1080, y:590, level:2, status:'active', kind:'git' },
+    ],
+    edgesByLevel: {
+      0: [
+        { from:'task-frontmatter', to:'q-linear',    kind:'linear' },
+        { from:'q-linear',         to:'sync-linear', kind:'linear' },
+        { from:'sync-linear',      to:'linear-api',  kind:'linear', w:2, label:'push' },
+        { from:'linear-api',       to:'sync-linear', kind:'linear', w:2, label:'pull' },
+      ],
+      1: 'linear-loops-core',
+      2: 'linear-loops-all',
+    },
+    viewBox: '0 0 1300 700',
+  },
+
+  brain: {
+    label: 'Second-brain ops',
+    levels: 3,
+    levelLabels: ['0 · Wiki rules','1 · Core hygiene','2 · Full graph'],
+    levelTitles: [
+      { title:'Second-brain · 8 wiki rules', sub:'Rules 1–8 fire on commit-driven wiki queue drain.' },
+      { title:'Second-brain · core hygiene', sub:'Wiki rules + QMD index + Dashboard + daily notes.' },
+      { title:'Second-brain · full graph', sub:'Includes align-vault, Templater, tag taxonomy, knowledge graph nodes.' },
+    ],
+    presets: [
+      { id:'rules',     label:'8 wiki rules', level:0, filters:{built:true,active:true,partial:true,aspirational:false}, focus:'update-wiki' },
+      { id:'live',      label:'Live',          level:1, filters:{built:true,active:true,partial:true,aspirational:false} },
+      { id:'full',      label:'All',           level:2, filters:{built:true,active:true,partial:true,aspirational:true} },
+    ],
+    tiers: [
+      { y:40, h:100, label:'INPUT',     sub:'Vault writes + queued events', dashed:false },
+      { y:150,h:120, label:'DRAIN',     sub:'update-wiki + align-vault', dashed:false },
+      { y:280,h:140, label:'8 DETECTOR RULES', sub:'Hygiene + entity + concept + cluster', dashed:false, accent:true },
+      { y:430,h:120, label:'OUTPUTS',   sub:'Concept hubs · backlinks · normalized tags', dashed:false },
+      { y:560,h:100, label:'SURFACES',  sub:'Dashboard · daily notes · QMD · Templater', dashed:true },
+    ],
+    nodes: [
+      // input
+      { id:'vault-write', x:280, y:80, level:0, status:'active', kind:'brain' },
+      { id:'q-wiki',      x:520, y:80, level:0, status:'active' },
+      { id:'commits',     x:760, y:80, level:1, kind:'git' },
+      // drain
+      { id:'update-wiki', x:400, y:200, level:0, status:'active', kind:'brain' },
+      { id:'align-vault', x:760, y:200, level:1, status:'active', kind:'brain' },
+      // 8 rules
+      { id:'rule1', x:120, y:340, level:0, status:'active', kind:'brain' },
+      { id:'rule2', x:260, y:340, level:0, status:'active', kind:'brain' },
+      { id:'rule3', x:400, y:340, level:0, status:'active', kind:'brain' },
+      { id:'rule4', x:540, y:340, level:0, status:'partial', kind:'brain' },
+      { id:'rule5', x:680, y:340, level:0, status:'active', kind:'brain' },
+      { id:'rule6', x:820, y:340, level:0, status:'active', kind:'brain' },
+      { id:'rule7', x:960, y:340, level:0, status:'active', kind:'brain' },
+      { id:'rule8', x:1100, y:340, level:0, status:'active', kind:'brain' },
+      // outputs
+      { id:'wikilinks',   x:240, y:470, level:0, status:'active' },
+      { id:'concept-hub', x:480, y:470, level:0, status:'active', kind:'brain' },
+      { id:'tags',        x:720, y:470, level:1, status:'active', kind:'brain' },
+      { id:'patterns',    x:960, y:470, level:1, status:'aspirational' },
+      // surfaces
+      { id:'qmd',        x:160, y:600, level:0, status:'active' },
+      { id:'dashboard',  x:380, y:600, level:0, status:'built', accent:'inbox' },
+      { id:'daily-notes',x:600, y:600, level:1, status:'active', kind:'git' },
+      { id:'templater',  x:820, y:600, level:2, status:'active', kind:'brain' },
+      { id:'memory-r',   x:1040, y:600, level:1, status:'active' },
+    ],
+    edgesByLevel: {
+      0: 'wiki-rules',
+      1: 'brain-core',
+      2: 'brain-all',
+    },
+    viewBox: '0 0 1240 700',
+  },
+
+  lifecycle: {
+    label: 'Session lifecycle',
+    levels: 3,
+    levelLabels: ['0 · Events','1 · Hook chain','2 · Memory + context'],
+    levelTitles: [
+      { title:'Lifecycle · the 3 events', sub:'SessionStart fires once, tool-call N times, Stop once.' },
+      { title:'Lifecycle · PostToolUse chain', sub:'Load-bearing 3-stage: enforce BLOCKS → validate WARNS → qmd-refresh DEBOUNCED.' },
+      { title:'Lifecycle · with memory + context', sub:'What SessionStart reads on boot + what auto-memory persists across sessions.' },
+    ],
+    presets: [
+      { id:'chain', label:'PostToolUse chain', level:1, filters:{built:true,active:true,partial:true,aspirational:false}, focus:'enforce-fm' },
+      { id:'memory',label:'Memory stack',      level:2, filters:{built:true,active:true,partial:true,aspirational:false}, focus:'auto-memory' },
+      { id:'full',  label:'All',                level:2, filters:{built:true,active:true,partial:true,aspirational:true} },
+    ],
+    tiers: [
+      { y:40, h:130, label:'SESSION EVENTS', sub:'SessionStart · tool-call · Stop', dashed:false },
+      { y:190,h:130, label:'PostToolUse PIPELINE', sub:'3-stage chain · order is load-bearing', dashed:false, accent:true },
+      { y:340,h:130, label:'MEMORY LAYER', sub:'What SessionStart reads · what auto-memory persists', dashed:false },
+      { y:490,h:170, label:'CONTEXT INJECT', sub:'CLAUDE.md hierarchy · brain topics · index', dashed:true },
+    ],
+    nodes: [
+      // events
+      { id:'session-start', x:200, y:110, level:0, status:'active', kind:'hook' },
+      { id:'tool-call',     x:600, y:110, level:0, status:'active', kind:'hook' },
+      { id:'stop-hook',     x:1000, y:110, level:0, status:'active', kind:'hook' },
+      // pipeline
+      { id:'enforce-fm',    x:340, y:260, level:1, status:'active', kind:'blocking' },
+      { id:'validate-write',x:600, y:260, level:1, status:'active', kind:'hook' },
+      { id:'qmd-refresh',   x:860, y:260, level:1, status:'active', kind:'hook' },
+      // memory
+      { id:'north-star',    x:160, y:410, level:0, status:'active', kind:'hook' },
+      { id:'operator-mem',  x:380, y:410, level:0, status:'active', kind:'hook' },
+      { id:'auto-memory',   x:620, y:410, level:0, status:'active', kind:'hook' },
+      { id:'mem-md',        x:840, y:410, level:1, status:'active', kind:'hook' },
+      // context inject
+      { id:'claude-md',     x:200, y:580, level:1, status:'active', kind:'hook' },
+      { id:'brain-topics',  x:440, y:580, level:2, status:'active', kind:'hook' },
+      { id:'memory-r',      x:680, y:580, level:1, status:'active' },
+      { id:'sessions',      x:1000, y:580, level:1, kind:'hook', altLabel:'session archives' },
+      // qmd
+      { id:'qmd',           x:1120, y:260, level:1, status:'active' },
+      // q-linear (target of enforce-fm dispatch)
+      { id:'q-linear',      x:340, y:580, level:2, status:'active' },
+    ],
+    edgesByLevel: {
+      0: [
+        { from:'session-start', to:'tool-call', kind:'hook', label:'context' },
+        { from:'tool-call', to:'stop-hook', kind:'hook' },
+      ],
+      1: 'lifecycle-chain',
+      2: 'lifecycle-all',
+    },
+    viewBox: '0 0 1280 700',
+  },
+
+  memory: {
+    label: 'Memory',
+    levels: 3,
+    levelLabels: ['0 · Read paths','1 · Read + write','2 · Long-term feedback loop'],
+    levelTitles: [
+      { title:'Memory · how it feeds the session', sub:'3 read paths: Claude system loader (always-on) · SessionStart hook (vault) · on-demand (QMD/Read/Grep).' },
+      { title:'Memory · read + write', sub:'Plus what writes back during the session: tool-call writes auto-memory, Stop hook archives, wiki rules promote concepts.' },
+      { title:'Memory · long-term feedback loop', sub:'How writes from THIS session become next session\'s read paths. The closed feedback loop.' },
+    ],
+    presets: [
+      { id:'how-loaded',  label:'How loaded',   level:0, filters:{built:true,active:true,partial:true,aspirational:true}, focus:'session-start' },
+      { id:'where-saved', label:'Where saved',  level:1, filters:{built:true,active:true,partial:true,aspirational:true}, focus:'auto-memory' },
+      { id:'next-session',label:'Next-session feedback', level:2, filters:{built:true,active:true,partial:true,aspirational:true}, focus:'l11-filter' },
+      { id:'full',        label:'All',          level:2, filters:{built:true,active:true,partial:true,aspirational:true} },
+    ],
+    tiers: [
+      { y:40, h:90,  label:'SESSION EVENTS', sub:'Boot · live · end', dashed:false },
+      { y:140,h:90,  label:'READ PATHS',     sub:'Claude loader · SessionStart · on-demand', dashed:false, hook:true },
+      { y:240,h:200, label:'MEMORY STORES',  sub:'Always-loaded · SessionStart-loaded · long-term retrievable', dashed:false, accent:true },
+      { y:450,h:90,  label:'WRITE PATHS',    sub:'tool-call · Stop · update-wiki · TAC self-improve · manual', dashed:false },
+      { y:550,h:120, label:'PERSISTENCE BRIDGE', sub:'How this session\'s writes become next session\'s reads', dashed:true },
+    ],
+    nodes: [
+      // events
+      { id:'session-boot',      x:200, y:80, level:0, status:'active', kind:'hook' },
+      { id:'live-session',      x:640, y:80, level:0, status:'active', kind:'hook', big:true, w:200, h:46, sub:'agent reads + writes' },
+      { id:'session-end-event', x:1080,y:80, level:0, status:'active', kind:'hook' },
+      // readers
+      { id:'claude-loader',     x:200, y:185, level:0, status:'active', kind:'hook' },
+      { id:'session-start',     x:400, y:185, level:0, status:'active', kind:'hook' },
+      { id:'qmd-query',         x:680, y:185, level:0, status:'active', kind:'hook' },
+      { id:'tool-read',         x:880, y:185, level:0, status:'active', kind:'hook' },
+      // stores · sub-row 1 (always-loaded)
+      { id:'auto-memory',       x:140, y:300, level:0, status:'active', kind:'hook' },
+      { id:'mem-md',            x:280, y:300, level:0, status:'active', kind:'hook' },
+      { id:'claude-md',         x:440, y:300, level:0, status:'active', kind:'hook' },
+      // stores · sub-row 2 (SessionStart-loaded vault)
+      { id:'north-star',        x:140, y:380, level:0, status:'active', kind:'hook' },
+      { id:'operator-mem',      x:300, y:380, level:0, status:'active', kind:'hook' },
+      { id:'brain-topics',      x:460, y:380, level:1, status:'active', kind:'hook' },
+      // stores · long-term cluster
+      { id:'qmd',               x:680, y:340, level:0, status:'active' },
+      { id:'concept-hub',       x:820, y:340, level:0, status:'active', kind:'brain' },
+      { id:'graphiti',          x:960, y:340, level:1, status:'active', kind:'brain' },
+      { id:'sessions',          x:1100,y:340, level:0, kind:'hook', altLabel:'session archives' },
+      // writers
+      { id:'tool-call',         x:200, y:495, level:1, status:'active', kind:'hook' },
+      { id:'stop-hook',         x:400, y:495, level:1, status:'active', kind:'hook' },
+      { id:'update-wiki',       x:600, y:495, level:1, status:'active', kind:'brain' },
+      { id:'tac-improve',       x:800, y:495, level:1, status:'partial', kind:'brain' },
+      { id:'greg-edit',         x:1000,y:495, level:1, status:'active', kind:'hook' },
+      // persistence bridge
+      { id:'l11-filter',        x:400, y:610, level:2, status:'partial', kind:'hook' },
+      { id:'patterns',          x:800, y:610, level:2, status:'aspirational' },
+    ],
+    edgesByLevel: {
+      0: 'memory-read',
+      1: 'memory-rw',
+      2: 'memory-feedback',
+    },
+    viewBox: '0 0 1240 700',
+  },
+
+  full: {
+    label: 'Full architecture',
+    levels: 4,
+    levelLabels: ['0 · Birds-eye','1 · 4 phases','2 · 5 user loops','3 · Everything'],
+    levelTitles: [
+      { title:'Full · birds-eye', sub:'Both vault flow and session lifecycle.' },
+      { title:'Full · 4 phases + lifecycle', sub:'Greg Inbox phases with context.' },
+      { title:'Full · 5 user loops + 4 lifecycle loops', sub:'User-named + governance + Claude Code lifecycle.' },
+      { title:'Full · everything', sub:'16 vault + 4 lifecycle + 5 git + 5 linear + 6 wiki = 36 loops.' },
+    ],
+    presets: [
+      { id:'just-shipped', label:'Just shipped', level:1, filters:{built:true,active:false,partial:false,aspirational:false} },
+      { id:'live',         label:'Live',         level:3, filters:{built:true,active:true,partial:true,aspirational:false} },
+      { id:'gaps',         label:'Gaps',         level:3, filters:{built:false,active:false,partial:true,aspirational:true} },
+      { id:'full',         label:'All',          level:3, filters:{built:true,active:true,partial:true,aspirational:true} },
+    ],
+    tiers: [
+      // left zone (vault)
+      { x:40, w:1060, y:40, h:125, label:'TIER 1 · INGEST', sub:'17 sources flow into the vault', dashed:false },
+      { x:40, w:1060, y:180,h:125, label:'TIER 2 · DETECT', sub:'Queues, hooks, frontmatter validators', dashed:false },
+      { x:40, w:1060, y:320,h:125, label:'TIER 3 · RETRIEVE',sub:'QMD + wikilinks + memory', dashed:false },
+      { x:40, w:1060, y:460,h:200, label:'TIER 4 · LEARN  ·  NEW', sub:'Outcomes → MEMORY + TAC patterns. The gap.', dashed:true, accent:true },
+      // right zone (lifecycle)
+      { x:1120, w:360, y:40, h:125, label:'SESSION EVENTS', sub:'SessionStart · tool · Stop', dashed:false, hook:true },
+      { x:1120, w:360, y:180,h:125, label:'PostToolUse', sub:'enforce → validate → qmd-refresh', dashed:false, hook:true },
+      { x:1120, w:360, y:320,h:125, label:'MEMORY', sub:'North Star · SOUL+USER · auto-memory', dashed:false, hook:true },
+      { x:1120, w:360, y:460,h:200, label:'CONTEXT', sub:'CLAUDE.md · brain topics · index', dashed:true, hook:true },
+    ],
+    nodes: [
+      // === Left zone — vault ===
+      { id:'commits',  x:100, y:110, level:0 },
+      { id:'sessions', x:220, y:110, level:0 },
+      { id:'emails',   x:340, y:110, level:1 },
+      { id:'calendar', x:460, y:110, level:2 },
+      { id:'youtube',  x:580, y:110, level:2 },
+      { id:'linear',   x:700, y:110, level:2 },
+      { id:'graphify', x:820, y:110, level:2 },
+      { id:'plans',    x:970, y:110, level:1, accent:'inbox' },
+      { id:'q-wiki',     x:200, y:250, level:1, status:'active' },
+      { id:'q-skill',    x:360, y:250, level:1, status:'partial' },
+      { id:'q-linear',   x:520, y:250, level:1, status:'active' },
+      { id:'inbox-scan', x:680, y:250, level:1, status:'built', accent:'inbox' },
+      { id:'tac-gate',   x:840, y:250, level:1, status:'built', accent:'inbox' },
+      { id:'capture',    x:990, y:250, level:1, status:'built', accent:'inbox' },
+      { id:'qmd',       x:240, y:390, level:0, status:'active' },
+      { id:'wikilinks', x:480, y:390, level:1, status:'active' },
+      { id:'memory-r',  x:720, y:390, level:1, status:'active' },
+      { id:'dashboard', x:940, y:390, level:1, status:'built', accent:'inbox' },
+      { id:'mem-cand', x:200, y:540, level:2, status:'aspirational' },
+      { id:'tac-inv',  x:380, y:540, level:2, status:'partial' },
+      { id:'skill-h',  x:540, y:540, level:2, status:'aspirational' },
+      { id:'langfuse-dream', x:700, y:540, level:2, status:'aspirational' },
+      { id:'morning-plan', x:860, y:540, level:2, status:'aspirational', accent:'inbox' },
+      { id:'patterns', x:1020, y:540, level:2, status:'aspirational' },
+      { id:'tac-rec',  x:940, y:390, level:1, status:'built', accent:'inbox' },
+      { id:'greg-inbox', x:550, y:625, w:200, h:46, level:1, status:'built', accent:'inbox', big:true, sub:'inbox · scanner · TAC gate · digest' },
+      // === Right zone — lifecycle ===
+      { id:'session-start', x:1180, y:110, level:0, kind:'hook' },
+      { id:'tool-call',     x:1300, y:110, level:0, kind:'hook' },
+      { id:'stop-hook',     x:1420, y:110, level:0, kind:'hook' },
+      { id:'enforce-fm',    x:1180, y:250, level:0, kind:'blocking' },
+      { id:'validate-write',x:1300, y:250, level:1, kind:'hook' },
+      { id:'qmd-refresh',   x:1420, y:250, level:1, kind:'hook' },
+      { id:'north-star',    x:1180, y:390, level:1, kind:'hook' },
+      { id:'operator-mem',  x:1300, y:390, level:1, kind:'hook' },
+      { id:'auto-memory',   x:1420, y:390, level:1, kind:'hook' },
+      { id:'claude-md',     x:1200, y:540, level:2, kind:'hook' },
+      { id:'brain-topics',  x:1340, y:540, level:2, kind:'hook' },
+      { id:'mem-md',        x:1460, y:540, level:2, kind:'hook' },
+    ],
+    edgesByLevel: {
+      0: 'full-birds-eye',
+      1: 'full-phases',
+      2: 'full-user-loops',
+      3: 'full-everything',
+    },
+    viewBox: '0 0 1500 700',
+  },
+};
+
+// ============================================================
+// EDGE GENERATORS
+// ============================================================
+
+function genEdges(tab, key) {
+  if (Array.isArray(key)) return key;
+
+  switch (key) {
+    case 'user-loops':
+      return [
+        { from:'youtube', to:'plans', loopId:'L1', status:'aspirational' },
+        { from:'commits', to:'q-wiki', loopId:'L2', status:'partial' },
+        { from:'tac-rec', to:'tac-inv', loopId:'L3', status:'partial' },
+        { from:'plans',   to:'inbox-scan', loopId:'L4', status:'built' },
+        { from:'q-wiki',  to:'wikilinks', loopId:'L5', status:'partial' },
+        { from:'inbox-scan', to:'tac-rec', loopId:'L14', status:'built' },
+      ].map(e => loopEdge(e));
+
+    case 'all-loops':
+      return [
+        { from:'youtube', to:'plans', loopId:'L1', status:'aspirational' },
+        { from:'commits', to:'q-wiki', loopId:'L2', status:'partial' },
+        { from:'tac-rec', to:'tac-inv', loopId:'L3', status:'partial' },
+        { from:'plans', to:'inbox-scan', loopId:'L4', status:'built' },
+        { from:'q-wiki', to:'wikilinks', loopId:'L5', status:'partial' },
+        { from:'sessions', to:'mem-cand', loopId:'L6', status:'aspirational' },
+        { from:'q-skill', to:'skill-h', loopId:'L7', status:'aspirational' },
+        { from:'emails', to:'wikilinks', loopId:'L8', status:'partial' },
+        { from:'calendar', to:'wikilinks', loopId:'L9', status:'aspirational' },
+        { from:'tac-inv', to:'patterns', loopId:'L10', status:'aspirational' },
+        { from:'sessions', to:'qmd', loopId:'L11', status:'partial' },
+        { from:'linear', to:'q-linear', loopId:'L12', status:'partial' },
+        { from:'graphify', to:'patterns', loopId:'L13', status:'partial' },
+        { from:'inbox-scan', to:'tac-rec', loopId:'L14', status:'built' },
+        { from:'sessions', to:'langfuse-dream', loopId:'L18', status:'aspirational' },
+        { from:'langfuse-dream', to:'morning-plan', loopId:'L19', status:'aspirational' },
+        { from:'morning-plan', to:'greg-inbox', loopId:'L19', status:'aspirational' },
+      ].map(e => loopEdge(e));
+
+    case 'git-loops-core':
+      return [
+        { from:'commits', to:'post-commit', loopId:'LG1', status:'active', kind:'git', label:'fires' },
+        { from:'post-commit', to:'q-wiki', kind:'git' },
+        { from:'post-commit', to:'q-skill', kind:'git' },
+        { from:'post-commit', to:'q-linear', kind:'git' },
+        { from:'q-wiki', to:'wikilinks', loopId:'L5', status:'partial', kind:'brain' },
+        { from:'q-linear', to:'sync-linear', loopId:'LL1', status:'active', kind:'linear' },
+        { from:'commits', to:'daily-logs', loopId:'LG2', status:'active', kind:'git' },
+        { from:'daily-logs', to:'daily-notes', kind:'git' },
+        { from:'commits', to:'morning-brief', loopId:'LG3', status:'active', kind:'git' },
+        { from:'morning-brief', to:'morning-brief-out', kind:'git' },
+      ];
+
+    case 'git-loops-all':
+      return [
+        { from:'commits', to:'post-commit', loopId:'LG1', status:'active', kind:'git', w:2, label:'fires' },
+        { from:'commits', to:'commit-linter', loopId:'L2', status:'partial', kind:'git', dasharray:'4 3' },
+        { from:'post-commit', to:'q-wiki', kind:'git' },
+        { from:'post-commit', to:'q-skill', kind:'git' },
+        { from:'post-commit', to:'q-linear', kind:'git' },
+        { from:'q-wiki', to:'wikilinks', loopId:'L5', status:'partial', kind:'brain' },
+        { from:'q-wiki', to:'concept-hub', loopId:'LW2', status:'active', kind:'brain' },
+        { from:'q-linear', to:'sync-linear', loopId:'LL1', status:'active', kind:'linear' },
+        { from:'commits', to:'daily-logs', loopId:'LG2', status:'active', kind:'git' },
+        { from:'daily-logs', to:'daily-notes', kind:'git' },
+        { from:'commits', to:'morning-brief', loopId:'LG3', status:'active', kind:'git' },
+        { from:'morning-brief', to:'morning-brief-out', kind:'git' },
+        { from:'commits', to:'graphify-sync', loopId:'LG4', status:'partial', kind:'git' },
+        { from:'graphify-sync', to:'graphify-out', kind:'git' },
+        { from:'graphify-out', to:'patterns', loopId:'L13', status:'partial', kind:'git', dasharray:'4 3' },
+        { from:'commits', to:'tenant-sync', loopId:'LG5', status:'aspirational', kind:'git', dasharray:'4 3' },
+        { from:'tenant-sync', to:'amplify-deploy', kind:'git', dasharray:'4 3' },
+        { from:'wikilinks', to:'qmd', kind:'brain' },
+        { from:'concept-hub', to:'dashboard', kind:'brain' },
+      ];
+
+    case 'linear-loops-core':
+      return [
+        { from:'task-frontmatter', to:'q-linear', kind:'linear' },
+        { from:'inbox', to:'tac-gate', kind:'linear', status:'built' },
+        { from:'tac-gate', to:'q-linear', kind:'linear', status:'built', loopId:'LL2' },
+        { from:'q-linear', to:'sync-linear', kind:'linear', loopId:'LL1', status:'active' },
+        { from:'sync-linear', to:'linear-api', kind:'linear', w:2, label:'push' },
+        { from:'linear-api', to:'sync-linear', kind:'linear', w:2, label:'pull' },
+        { from:'agent-q', to:'post-comment', kind:'linear', status:'built', loopId:'LL3' },
+        { from:'post-comment', to:'linear-api', kind:'linear' },
+      ];
+
+    case 'linear-loops-all':
+      return [
+        { from:'task-frontmatter', to:'q-linear', kind:'linear' },
+        { from:'inbox', to:'tac-gate', kind:'linear', status:'built' },
+        { from:'tac-gate', to:'q-linear', kind:'linear', status:'built', loopId:'LL2', label:'L14' },
+        { from:'q-linear', to:'sync-linear', kind:'linear', loopId:'LL1', status:'active' },
+        { from:'sync-linear', to:'linear-api', kind:'linear', w:2, label:'push' },
+        { from:'linear-api', to:'sync-linear', kind:'linear', w:2, label:'pull' },
+        { from:'agent-q', to:'post-comment', kind:'linear', status:'built', loopId:'LL3' },
+        { from:'post-comment', to:'linear-api', kind:'linear' },
+        { from:'linear-api', to:'linear', kind:'linear', loopId:'LL4', status:'partial', label:'events' },
+        { from:'linear', to:'roadmap', kind:'linear', status:'partial' },
+        { from:'roadmap', to:'stall-detector', kind:'linear', status:'aspirational', dasharray:'4 3', loopId:'LL5' },
+        { from:'stall-detector', to:'morning-brief', kind:'linear', status:'aspirational', dasharray:'4 3' },
+      ];
+
+    case 'wiki-rules':
+      return [
+        { from:'vault-write', to:'q-wiki', kind:'brain' },
+        { from:'q-wiki', to:'update-wiki', kind:'brain', w:2 },
+        { from:'update-wiki', to:'rule1', kind:'brain' },
+        { from:'update-wiki', to:'rule2', kind:'brain' },
+        { from:'update-wiki', to:'rule3', kind:'brain' },
+        { from:'update-wiki', to:'rule4', kind:'brain' },
+        { from:'update-wiki', to:'rule5', kind:'brain' },
+        { from:'update-wiki', to:'rule6', kind:'brain' },
+        { from:'update-wiki', to:'rule7', kind:'brain' },
+        { from:'update-wiki', to:'rule8', kind:'brain' },
+        { from:'rule1', to:'wikilinks', kind:'brain', label:'LW1' },
+        { from:'rule3', to:'wikilinks', kind:'brain', label:'LW4' },
+        { from:'rule6', to:'tags', kind:'brain' },
+        { from:'rule7', to:'concept-hub', kind:'brain', label:'LW2' },
+      ];
+
+    case 'brain-core':
+      return [
+        { from:'vault-write', to:'q-wiki', kind:'brain' },
+        { from:'commits', to:'q-wiki', kind:'git' },
+        { from:'q-wiki', to:'update-wiki', kind:'brain', w:2 },
+        { from:'update-wiki', to:'rule1', kind:'brain' },
+        { from:'update-wiki', to:'rule3', kind:'brain' },
+        { from:'update-wiki', to:'rule5', kind:'brain' },
+        { from:'update-wiki', to:'rule7', kind:'brain' },
+        { from:'update-wiki', to:'rule8', kind:'brain' },
+        { from:'rule1', to:'wikilinks', kind:'brain', label:'LW1' },
+        { from:'rule3', to:'wikilinks', kind:'brain', label:'LW4' },
+        { from:'rule7', to:'concept-hub', kind:'brain', label:'LW2' },
+        { from:'rule8', to:'patterns', kind:'brain', label:'LW3', dasharray:'4 3' },
+        { from:'wikilinks', to:'qmd', kind:'brain' },
+        { from:'wikilinks', to:'dashboard', kind:'brain' },
+        { from:'concept-hub', to:'dashboard', kind:'brain' },
+        { from:'commits', to:'daily-notes', kind:'git', label:'LW6' },
+      ];
+
+    case 'brain-all':
+      return [
+        { from:'vault-write', to:'q-wiki', kind:'brain' },
+        { from:'commits', to:'q-wiki', kind:'git' },
+        { from:'q-wiki', to:'update-wiki', kind:'brain', w:2 },
+        { from:'q-wiki', to:'align-vault', kind:'brain', label:'LW5' },
+        { from:'update-wiki', to:'rule1', kind:'brain' },
+        { from:'update-wiki', to:'rule2', kind:'brain' },
+        { from:'update-wiki', to:'rule3', kind:'brain' },
+        { from:'update-wiki', to:'rule4', kind:'brain' },
+        { from:'update-wiki', to:'rule5', kind:'brain' },
+        { from:'update-wiki', to:'rule6', kind:'brain' },
+        { from:'update-wiki', to:'rule7', kind:'brain' },
+        { from:'update-wiki', to:'rule8', kind:'brain' },
+        { from:'rule1', to:'wikilinks', kind:'brain' },
+        { from:'rule3', to:'wikilinks', kind:'brain' },
+        { from:'rule5', to:'wikilinks', kind:'brain' },
+        { from:'rule6', to:'tags', kind:'brain' },
+        { from:'rule7', to:'concept-hub', kind:'brain' },
+        { from:'rule8', to:'patterns', kind:'brain', dasharray:'4 3' },
+        { from:'align-vault', to:'wikilinks', kind:'brain' },
+        { from:'wikilinks', to:'qmd', kind:'brain' },
+        { from:'wikilinks', to:'dashboard', kind:'brain' },
+        { from:'concept-hub', to:'dashboard', kind:'brain' },
+        { from:'commits', to:'daily-notes', kind:'git' },
+        { from:'wikilinks', to:'memory-r', kind:'brain' },
+      ];
+
+    case 'lifecycle-chain':
+      return [
+        { from:'session-start', to:'tool-call', kind:'hook', label:'context' },
+        { from:'tool-call', to:'enforce-fm', kind:'block', w:2, label:'1·block' },
+        { from:'enforce-fm', to:'validate-write', kind:'hook', label:'2·warn' },
+        { from:'validate-write', to:'qmd-refresh', kind:'hook', label:'3·reindex' },
+        { from:'qmd-refresh', to:'qmd', kind:'hook' },
+        { from:'enforce-fm', to:'q-linear', kind:'hook', label:'dispatch' },
+        { from:'tool-call', to:'stop-hook', kind:'hook' },
+        { from:'stop-hook', to:'sessions', kind:'hook', label:'archive' },
+      ];
+
+    case 'lifecycle-all':
+      return [
+        { from:'north-star', to:'session-start', kind:'hook', label:'read' },
+        { from:'operator-mem', to:'session-start', kind:'hook', label:'read' },
+        { from:'auto-memory', to:'session-start', kind:'hook', label:'read' },
+        { from:'claude-md', to:'session-start', kind:'hook', label:'read' },
+        { from:'brain-topics', to:'session-start', kind:'hook', label:'read' },
+        { from:'mem-md', to:'auto-memory', kind:'hook', label:'index' },
+        { from:'session-start', to:'tool-call', kind:'hook' },
+        { from:'tool-call', to:'enforce-fm', kind:'block', w:2, label:'1·block' },
+        { from:'enforce-fm', to:'validate-write', kind:'hook', label:'2·warn' },
+        { from:'validate-write', to:'qmd-refresh', kind:'hook', label:'3·reindex' },
+        { from:'qmd-refresh', to:'qmd', kind:'hook' },
+        { from:'enforce-fm', to:'q-linear', kind:'hook', label:'dispatch' },
+        { from:'tool-call', to:'auto-memory', kind:'hook', label:'write' },
+        { from:'tool-call', to:'stop-hook', kind:'hook' },
+        { from:'stop-hook', to:'sessions', kind:'hook', label:'archive' },
+        { from:'sessions', to:'memory-r', kind:'hook', dasharray:'4 3' },
+      ];
+
+    case 'full-birds-eye':
+      return [
+        { from:'commits', to:'q-wiki' },
+        { from:'q-wiki', to:'qmd' },
+        { from:'qmd', to:'tac-inv', dasharray:'4 3' },
+        { from:'sessions', to:'q-skill' },
+        { from:'session-start', to:'tool-call', kind:'hook' },
+        { from:'tool-call', to:'enforce-fm', kind:'block' },
+      ];
+
+    case 'full-phases':
+      return [
+        { from:'plans', to:'capture', hot:true, w:2 },
+        { from:'capture', to:'inbox-scan', hot:true, w:2 },
+        { from:'inbox-scan', to:'tac-gate', hot:true, w:2 },
+        { from:'tac-gate', to:'tac-rec', hot:true, w:2 },
+        { from:'inbox-scan', to:'greg-inbox', hot:true },
+        { from:'inbox-scan', to:'dashboard', color:'#7fb069', marker:'url(#arrow-green)' },
+        { from:'greg-inbox', to:'q-linear', color:'#7fb069', marker:'url(#arrow-green)' },
+        { from:'north-star', to:'session-start', kind:'hook' },
+        { from:'operator-mem', to:'session-start', kind:'hook' },
+        { from:'tool-call', to:'enforce-fm', kind:'block' },
+        { from:'enforce-fm', to:'validate-write', kind:'hook' },
+        { from:'validate-write', to:'qmd-refresh', kind:'hook' },
+      ];
+
+    case 'full-user-loops':
+      return genEdges(tab, 'user-loops').concat(genEdges(tab, 'lifecycle-chain'));
+
+    case 'full-everything':
+      return genEdges(tab, 'all-loops').concat(genEdges(tab, 'lifecycle-all'));
+
+    case 'sources-live':
+      return [
+        // triggers → pullers
+        { from:'cron-30min',    to:'email-watcher', kind:'data', label:'30 min' },
+        { from:'cron-daily',    to:'daily-logs',    kind:'data', label:'05:50' },
+        { from:'cron-daily',    to:'morning-brief', kind:'data', label:'06:00' },
+        { from:'cron-daily',    to:'graphify-sync', kind:'data' },
+        { from:'cron-daily',    to:'calendar-pull', kind:'data' },
+        { from:'session-manual',to:'recon-scripts', kind:'data' },
+        // pullers → outputs
+        { from:'email-watcher', to:'correspondence', kind:'data', dasharray:'4 3', label:'L8 gap' },
+        { from:'recon-scripts', to:'recon-out',      kind:'data', loopId:'LD4' },
+        // outputs → TAC
+        { from:'correspondence',to:'qmd', kind:'brain' },
+        { from:'recon-out',     to:'qmd', kind:'brain' },
+      ];
+
+    case 'sources-all':
+      return [
+        { from:'cron-30min',    to:'email-watcher', kind:'data', label:'30 min' },
+        { from:'cron-daily',    to:'daily-logs',    kind:'data' },
+        { from:'cron-daily',    to:'morning-brief', kind:'data' },
+        { from:'cron-daily',    to:'graphify-sync', kind:'data' },
+        { from:'cron-daily',    to:'calendar-pull', kind:'data' },
+        { from:'cron-daily',    to:'linear-pull',   kind:'linear', loopId:'LD6' },
+        { from:'cron-daily',    to:'youtube-puller',kind:'data', dasharray:'4 3', loopId:'LD2' },
+        { from:'cron-daily',    to:'meeting-prep',  kind:'data', dasharray:'4 3', loopId:'LD3' },
+        { from:'webhook',       to:'telegram-in',   kind:'data' },
+        { from:'session-manual',to:'recon-scripts', kind:'data', loopId:'LD4' },
+        { from:'email-watcher', to:'correspondence',kind:'data', dasharray:'4 3' },
+        { from:'youtube-puller',to:'transcripts',   kind:'data', dasharray:'4 3' },
+        { from:'recon-scripts', to:'recon-out',     kind:'data' },
+        { from:'graphify-sync', to:'graphify-out',  kind:'git' },
+        { from:'meeting-prep',  to:'transcripts',   kind:'data', dasharray:'4 3' },
+        { from:'transcripts',   to:'qmd',           kind:'brain' },
+        { from:'correspondence',to:'qmd',           kind:'brain' },
+        { from:'recon-out',     to:'qmd',           kind:'brain' },
+        { from:'graphify-out',  to:'concept-hub',   kind:'brain' },
+      ];
+
+    case 'memory-read':
+      return [
+        // boot fires both readers
+        { from:'session-boot', to:'claude-loader', kind:'hook', label:'always', loopId:'LM1' },
+        { from:'session-boot', to:'session-start', kind:'hook', label:'hook',   loopId:'LM2' },
+        // claude-loader (system, pre-hook) reads always-loaded stores
+        { from:'auto-memory', to:'claude-loader', kind:'hook', label:'load' },
+        { from:'mem-md',      to:'claude-loader', kind:'hook', label:'index' },
+        { from:'claude-md',   to:'claude-loader', kind:'hook', label:'load' },
+        // session-start reads vault
+        { from:'north-star',   to:'session-start', kind:'hook', label:'alias' },
+        { from:'operator-mem', to:'session-start', kind:'hook', label:'expand' },
+        { from:'brain-topics', to:'session-start', kind:'hook', dasharray:'4 3' },
+        // both readers feed live-session
+        { from:'claude-loader', to:'live-session', kind:'hook', w:2, label:'context' },
+        { from:'session-start', to:'live-session', kind:'hook', w:2, label:'context' },
+        // on-demand reads during session
+        { from:'live-session', to:'qmd-query', kind:'hook', label:'LM3' },
+        { from:'qmd-query',    to:'qmd',       kind:'hook' },
+        { from:'live-session', to:'tool-read', kind:'hook' },
+        { from:'tool-read',    to:'graphiti',  kind:'brain', dasharray:'4 3' },
+        // session end
+        { from:'live-session', to:'session-end-event', kind:'hook' },
+      ];
+
+    case 'memory-rw':
+      return [
+        // reads (compressed)
+        { from:'session-boot',  to:'claude-loader', kind:'hook', loopId:'LM1' },
+        { from:'session-boot',  to:'session-start', kind:'hook', loopId:'LM2' },
+        { from:'auto-memory',   to:'claude-loader', kind:'hook', label:'load' },
+        { from:'mem-md',        to:'claude-loader', kind:'hook' },
+        { from:'claude-md',     to:'claude-loader', kind:'hook' },
+        { from:'north-star',    to:'session-start', kind:'hook' },
+        { from:'operator-mem',  to:'session-start', kind:'hook' },
+        { from:'claude-loader', to:'live-session',  kind:'hook', w:2 },
+        { from:'session-start', to:'live-session',  kind:'hook', w:2 },
+        { from:'live-session',  to:'qmd-query',     kind:'hook' },
+        { from:'qmd-query',     to:'qmd',           kind:'hook' },
+        { from:'live-session',  to:'tool-read',     kind:'hook' },
+        { from:'live-session',  to:'session-end-event', kind:'hook' },
+        // writes (the new part at this level)
+        { from:'live-session',  to:'tool-call',     kind:'hook' },
+        { from:'tool-call',     to:'auto-memory',   kind:'hook', label:'LM4', w:2 },
+        { from:'tool-call',     to:'mem-md',        kind:'hook', label:'index' },
+        { from:'session-end-event', to:'stop-hook', kind:'hook' },
+        { from:'stop-hook',     to:'sessions',      kind:'hook', label:'LM5', w:2 },
+        { from:'live-session',  to:'update-wiki',   kind:'brain' },
+        { from:'update-wiki',   to:'concept-hub',   kind:'brain', label:'LM6' },
+        { from:'live-session',  to:'tac-improve',   kind:'brain', dasharray:'4 3' },
+        { from:'tac-improve',   to:'graphiti',      kind:'brain', label:'LM7', dasharray:'4 3' },
+        { from:'greg-edit',     to:'operator-mem',  kind:'hook', label:'manual' },
+      ];
+
+    case 'memory-feedback':
+      return [
+        // boot reads
+        { from:'session-boot',  to:'claude-loader', kind:'hook' },
+        { from:'session-boot',  to:'session-start', kind:'hook' },
+        { from:'auto-memory',   to:'claude-loader', kind:'hook' },
+        { from:'mem-md',        to:'claude-loader', kind:'hook' },
+        { from:'claude-md',     to:'claude-loader', kind:'hook' },
+        { from:'north-star',    to:'session-start', kind:'hook' },
+        { from:'operator-mem',  to:'session-start', kind:'hook' },
+        { from:'claude-loader', to:'live-session',  kind:'hook', w:2 },
+        { from:'session-start', to:'live-session',  kind:'hook', w:2 },
+        // on-demand
+        { from:'live-session',  to:'qmd-query',     kind:'hook' },
+        { from:'qmd-query',     to:'qmd',           kind:'hook' },
+        { from:'live-session',  to:'tool-read',     kind:'hook' },
+        // session end + writes
+        { from:'live-session',  to:'session-end-event', kind:'hook' },
+        { from:'live-session',  to:'tool-call',     kind:'hook' },
+        { from:'tool-call',     to:'auto-memory',   kind:'hook', label:'LM4' },
+        { from:'session-end-event', to:'stop-hook', kind:'hook' },
+        { from:'stop-hook',     to:'sessions',      kind:'hook', label:'LM5' },
+        { from:'update-wiki',   to:'concept-hub',   kind:'brain', label:'LM6' },
+        { from:'tac-improve',   to:'graphiti',      kind:'brain', label:'LM7', dasharray:'4 3' },
+        { from:'greg-edit',     to:'operator-mem',  kind:'hook' },
+        // === THE FEEDBACK LOOP — this session's writes feed next session's reads ===
+        { from:'sessions',      to:'l11-filter',    kind:'hook', label:'filter' },
+        { from:'l11-filter',    to:'qmd',           kind:'hook', label:'LM8 · qmd-include', w:2, dasharray:'4 3' },
+        { from:'concept-hub',   to:'operator-mem',  kind:'brain', label:'promote', dasharray:'4 3' },
+        { from:'graphiti',      to:'patterns',      kind:'brain', dasharray:'4 3' },
+        { from:'patterns',      to:'session-start', kind:'brain', label:'next session', dasharray:'4 3', w:2 },
+        { from:'qmd',           to:'qmd-query',     kind:'hook', label:'next session', dasharray:'4 3' },
+      ];
+
+    case 'sources-research':
+      return [
+        { from:'cron-30min',    to:'email-watcher', kind:'data' },
+        { from:'cron-daily',    to:'daily-logs',    kind:'data' },
+        { from:'cron-daily',    to:'morning-brief', kind:'data' },
+        { from:'cron-daily',    to:'graphify-sync', kind:'data' },
+        { from:'cron-daily',    to:'calendar-pull', kind:'data' },
+        { from:'cron-daily',    to:'linear-pull',   kind:'linear' },
+        { from:'webhook',       to:'telegram-in',   kind:'data' },
+        { from:'session-manual',to:'recon-scripts', kind:'data' },
+        { from:'session-manual',to:'youtube-tx',    kind:'data', label:'manual' },
+        { from:'session-manual',to:'firecrawl',     kind:'data', label:'research' },
+        { from:'session-manual',to:'exa',           kind:'data' },
+        { from:'session-manual',to:'webfetch',      kind:'data' },
+        { from:'session-manual',to:'websearch',     kind:'data' },
+        { from:'session-manual',to:'context7',      kind:'data' },
+        { from:'youtube-tx',    to:'transcripts',   kind:'data' },
+        { from:'firecrawl',     to:'pgvector',      kind:'brain', loopId:'LD5' },
+        { from:'exa',           to:'pgvector',      kind:'brain' },
+        { from:'context7',      to:'graphiti',      kind:'brain' },
+        { from:'recon-scripts', to:'recon-out',     kind:'data' },
+        { from:'transcripts',   to:'qmd',           kind:'brain' },
+        { from:'correspondence',to:'qmd',           kind:'brain' },
+        { from:'graphiti',      to:'qmd',           kind:'brain', dasharray:'4 3' },
+        { from:'pgvector',      to:'qmd',           kind:'brain', dasharray:'4 3' },
+      ];
+  }
+
+  return [];
+}
+
+function loopEdge(e) {
+  const status = e.status || 'active';
+  let color, marker, w;
+  if (status === 'built') { color = '#c8714a'; marker = 'url(#arrow-hot)'; w = 2; }
+  else if (status === 'active') { color = '#7fb069'; marker = 'url(#arrow-green)'; w = 1.4; }
+  else if (status === 'partial') { color = '#e6a23c'; marker = 'url(#arrow)'; w = 1.4; }
+  else { color = '#5e5343'; marker = 'url(#arrow)'; w = 1.4; }
+  return { ...e, color, marker, w, label: e.loopId, dasharray: status === 'aspirational' ? '4 3' : null };
+}
+
+// ============================================================
+// RENDERING
+// ============================================================
+
+const $ = id => document.getElementById(id);
+const svg = $('svg');
+const nodesGroup = $('nodes');
+const edgesGroup = $('edges');
+const bgGroup = $('bg-shapes');
+
+const state = {
+  tab: 'vault',
+  level: 1,
+  selected: null,
+  filters: { built:true, active:true, partial:true, aspirational:true },
+};
+
+const STATUS_COLORS = {
+  built:        { fill:'#3a2418', stroke:'#c8714a', accent:'#f0a070' },
+  active:       { fill:'#1f2a18', stroke:'#7fb069', accent:'#a8d088' },
+  partial:      { fill:'#2a2318', stroke:'#e6a23c', accent:'#f5d68b' },
+  aspirational: { fill:'#1f1d18', stroke:'#5e5343', accent:'#9b8e78' },
+  hook:         { fill:'#1a2230', stroke:'#5b7ba0', accent:'#9fc1e6' },
+  blocking:     { fill:'#2a1a1a', stroke:'#d05050', accent:'#f5b8b8' },
+  git:          { fill:'#2a2418', stroke:'#b8985a', accent:'#dcc488' },
+  linear:       { fill:'#251c30', stroke:'#a487c8', accent:'#c8b0e0' },
+  brain:        { fill:'#1a2820', stroke:'#5cb89a', accent:'#80d0b8' },
+  data:         { fill:'#2a2218', stroke:'#d89c5c', accent:'#f0b878' },
+};
+
+const KIND_COLORS = {
+  hook:   '#6896c8',
+  block:  '#d05050',
+  git:    '#b8985a',
+  linear: '#a487c8',
+  brain:  '#5cb89a',
+  data:   '#d89c5c',
+};
+
+const KIND_MARKERS = {
+  hook:   'url(#arrow-hook)',
+  block:  'url(#arrow-block)',
+  git:    'url(#arrow-git)',
+  linear: 'url(#arrow-linear)',
+  brain:  'url(#arrow-brain)',
+  data:   'url(#arrow-data)',
+};
+
+function statusColor(node) {
+  if (node.accent === 'inbox') return STATUS_COLORS.built;
+  if (node.kind === 'blocking') return STATUS_COLORS.blocking;
+  if (node.kind === 'hook') return STATUS_COLORS.hook;
+  if (node.kind === 'git' && node.status === 'active') return STATUS_COLORS.git;
+  if (node.kind === 'git' && node.status === 'partial') return { ...STATUS_COLORS.partial, stroke:'#b8985a' };
+  if (node.kind === 'linear' && node.status === 'active') return STATUS_COLORS.linear;
+  if (node.kind === 'brain' && (node.status === 'active' || !node.status)) return STATUS_COLORS.brain;
+  if (node.kind === 'data' && (node.status === 'active' || !node.status)) return STATUS_COLORS.data;
+  if (node.kind === 'data' && node.status === 'partial') return { ...STATUS_COLORS.partial, stroke:'#d89c5c' };
+  return STATUS_COLORS[node.status] || STATUS_COLORS.aspirational;
+}
+
+function makeRect(x, y, w, h, fill, stroke, rx=6) {
+  const r = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+  r.setAttribute('x', x); r.setAttribute('y', y);
+  r.setAttribute('width', w); r.setAttribute('height', h);
+  r.setAttribute('rx', rx); r.setAttribute('fill', fill);
+  r.setAttribute('stroke', stroke); r.setAttribute('class', 'node-bg');
+  return r;
+}
+
+function makeText(x, y, txt, opts = {}) {
+  const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  t.setAttribute('x', x); t.setAttribute('y', y);
+  t.setAttribute('font-size', opts.size || 12);
+  t.setAttribute('fill', opts.fill || '#ece2cf');
+  t.setAttribute('font-weight', opts.weight || 400);
+  t.setAttribute('text-anchor', opts.anchor || 'middle');
+  if (opts.family) t.setAttribute('font-family', opts.family);
+  t.textContent = txt;
+  return t;
+}
+
+function getNodeLabel(nodeData) {
+  if (nodeData.altLabel) return nodeData.altLabel;
+  return NODE_INFO[nodeData.id]?.label || nodeData.id;
+}
+
+function makeNode(nodeData) {
+  const w = nodeData.big ? (nodeData.w || 200) : 110;
+  const h = nodeData.big ? (nodeData.h || 50) : 36;
+  const x = nodeData.x - w/2;
+  const y = nodeData.y - h/2;
+  const c = statusColor(nodeData);
+
+  const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  g.setAttribute('class', 'svg-node');
+  g.setAttribute('data-id', nodeData.id);
+
+  const r = makeRect(x, y, w, h, c.fill, c.stroke);
+  if (nodeData.kind === 'blocking') r.setAttribute('stroke-width', 1.8);
+  g.appendChild(r);
+
+  const label = getNodeLabel(nodeData);
+
+  if (nodeData.big) {
+    g.appendChild(makeText(nodeData.x, nodeData.y - 2, label, { size: 14, weight: 600, fill: c.accent }));
+    if (nodeData.sub) g.appendChild(makeText(nodeData.x, nodeData.y + 14, nodeData.sub, { size: 9, fill: '#9b8e78' }));
+  } else {
+    g.appendChild(makeText(nodeData.x, nodeData.y + 4, label, { size: 11, fill: c.accent, weight: 500 }));
+  }
+
+  if (nodeData.kind === 'blocking') {
+    g.appendChild(makeText(x + w - 8, y + 10, '⛔', { size: 9, fill: '#d05050', anchor: 'end' }));
+  }
+
+  g.addEventListener('click', () => selectNode(nodeData.id));
+  return g;
+}
+
+function findNodeInTab(tab, id) {
+  return tab.nodes.find(n => n.id === id);
+}
+
+function makeEdge(tab, edge) {
+  const from = findNodeInTab(tab, edge.from);
+  const to   = findNodeInTab(tab, edge.to);
+  if (!from || !to) return null;
+
+  const fromW = from.big ? (from.w || 200) : 110;
+  const fromH = from.big ? (from.h || 50) : 36;
+  const toW = to.big ? (to.w || 200) : 110;
+  const toH = to.big ? (to.h || 50) : 36;
+
+  const dx = to.x - from.x;
+  const dy = to.y - from.y;
+  const isLateral = Math.abs(dy) < 30;
+
+  let fx, fy, tx, ty;
+  if (isLateral) {
+    fx = from.x + (dx > 0 ? fromW/2 : -fromW/2);
+    tx = to.x + (dx > 0 ? -toW/2 : toW/2);
+    fy = from.y; ty = to.y;
+  } else {
+    fy = from.y + (dy > 0 ? fromH/2 : -fromH/2);
+    ty = to.y + (dy > 0 ? -toH/2 : toH/2);
+    fx = from.x; tx = to.x;
+  }
+
+  let color = edge.color;
+  let marker = edge.marker;
+  if (!color && edge.kind) {
+    color = KIND_COLORS[edge.kind];
+    marker = KIND_MARKERS[edge.kind];
+  }
+  if (edge.hot) { color = '#c8714a'; marker = 'url(#arrow-hot)'; }
+  color = color || '#3a2f22';
+  marker = marker || 'url(#arrow)';
+
+  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  let d;
+  if (isLateral) {
+    d = `M ${fx} ${fy} L ${tx} ${ty}`;
+  } else {
+    const midY = (fy + ty) / 2;
+    d = `M ${fx} ${fy} C ${fx} ${midY}, ${tx} ${midY}, ${tx} ${ty}`;
+  }
+  path.setAttribute('d', d);
+  path.setAttribute('fill', 'none');
+  path.setAttribute('stroke', color);
+  path.setAttribute('stroke-width', edge.w || 1.4);
+  path.setAttribute('class', 'svg-edge');
+  path.setAttribute('marker-end', marker);
+  if (edge.dasharray) path.setAttribute('stroke-dasharray', edge.dasharray);
+
+  if (edge.label) {
+    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    g.setAttribute('class', 'svg-edge');
+    g.appendChild(path);
+
+    const labelX = (fx + tx) / 2;
+    const labelY = (fy + ty) / 2;
+    const labelW = Math.max(36, edge.label.length * 6 + 8);
+    const labelBg = makeRect(labelX - labelW/2, labelY - 8, labelW, 16, '#14110d', color, 8);
+    labelBg.setAttribute('class', '');
+    g.appendChild(labelBg);
+    g.appendChild(makeText(labelX, labelY + 4, edge.label, { size: 10, fill: color, weight: 600 }));
+    return g;
+  }
+
+  return path;
+}
+
+function clearSvg() {
+  nodesGroup.innerHTML = '';
+  edgesGroup.innerHTML = '';
+  bgGroup.innerHTML = '';
+}
+
+function renderTiers(tab) {
+  bgGroup.innerHTML = '';
+  if (!tab.tiers) return;
+  const vbWidth = parseInt(tab.viewBox.split(' ')[2], 10);
+  tab.tiers.forEach(t => {
+    const x = t.x ?? 40;
+    const w = t.w ?? (vbWidth - 80);
+    const r = makeRect(x, t.y, w, t.h, '#1a1612', t.dashed ? '#3a2f22' : '#2a2218');
+    if (t.dashed) r.setAttribute('stroke-dasharray', '4 3');
+    if (t.hook) { r.setAttribute('fill', '#171c25'); r.setAttribute('stroke', '#2a3548'); }
+    bgGroup.appendChild(r);
+
+    const labelColor = t.accent ? '#c8714a' : (t.hook ? '#5b7ba0' : '#5e5343');
+    bgGroup.appendChild(makeText(x + 20, t.y + 22, t.label, { size: 10, fill: labelColor, weight: 600, anchor: 'start' }));
+    if (t.sub) bgGroup.appendChild(makeText(x + 20, t.y + 42, t.sub, { size: 12, fill: t.accent ? '#d4c5a9' : (t.hook ? '#7898b8' : '#9b8e78'), anchor: 'start' }));
+  });
+}
+
+function render() {
+  clearSvg();
+
+  const tab = TABS[state.tab];
+  if (!tab) return;
+
+  svg.setAttribute('viewBox', tab.viewBox);
+
+  renderTiers(tab);
+
+  // Resolve edges for current level
+  const level = Math.min(state.level, tab.levels - 1);
+  let edgeKey = tab.edgesByLevel[level];
+  let edges = genEdges(tab, edgeKey);
+
+  edges.forEach(e => {
+    const node = makeEdge(tab, e);
+    if (node) edgesGroup.appendChild(node);
+  });
+
+  // Render nodes
+  tab.nodes.forEach(n => {
+    const visible = (n.level == null) || (n.level <= level);
+    if (!visible) return;
+    const nodeEl = makeNode(n);
+    if (state.selected === n.id) nodeEl.classList.add('selected');
+
+    let filterStatus;
+    if (n.accent === 'inbox') filterStatus = 'built';
+    else filterStatus = n.status || 'active';
+
+    if (!state.filters[filterStatus]) nodeEl.classList.add('dim');
+    nodesGroup.appendChild(nodeEl);
+  });
+
+  // Update controls
+  const lt = tab.levelTitles[level];
+  $('level-title').textContent = lt.title;
+  $('badge-title').textContent = lt.title;
+  $('badge-sub').textContent = lt.sub;
+
+  // Ticks
+  const ticks = $('ticks');
+  ticks.innerHTML = tab.levelLabels.map((lbl, i) =>
+    `<span data-level="${i}" class="${i === level ? 'active' : ''}">${lbl}</span>`
+  ).join('');
+  ticks.querySelectorAll('span').forEach(s => {
+    s.addEventListener('click', () => {
+      state.level = parseInt(s.dataset.level, 10);
+      state.selected = null;
+      $('detail-empty').style.display = 'block';
+      $('detail-content').innerHTML = '';
+      render();
+      updateActivePresetButton();
+    });
+  });
+
+  // Slider config
+  $('level').max = tab.levels - 1;
+  $('level').value = level;
+
+  // Presets
+  const presets = $('presets');
+  presets.innerHTML = tab.presets.map(p =>
+    `<button class="preset-btn" data-preset="${p.id}">${p.label}</button>`
+  ).join('');
+  presets.querySelectorAll('.preset-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const preset = tab.presets.find(p => p.id === btn.dataset.preset);
+      if (!preset) return;
+      state.level = preset.level;
+      state.filters = { ...preset.filters };
+      state.selected = preset.focus || null;
+      $('level').value = state.level;
+      document.querySelectorAll('.filter-pill').forEach(pill => {
+        const on = state.filters[pill.dataset.status];
+        pill.classList.toggle('active', on);
+        pill.classList.toggle('dim', !on);
+      });
+      presets.querySelectorAll('.preset-btn').forEach(b => b.classList.toggle('active', b === btn));
+      render();
+      showDetail(state.selected);
+    });
+  });
+
+}
+
+// ============================================================
+// SELECTION + DETAIL PANEL
+// ============================================================
+
+function selectNode(id) {
+  state.selected = state.selected === id ? null : id;
+  render();
+  showDetail(state.selected);
+}
+
+function findRelatedLoops(id) {
+  // Look across all tabs' edge generators to find loops
+  const tab = TABS[state.tab];
+  const allLevelKeys = Object.values(tab.edgesByLevel).filter(v => typeof v === 'string');
+  const loopIds = new Set();
+  allLevelKeys.forEach(key => {
+    const edges = genEdges(tab, key);
+    edges.forEach(e => {
+      if (e.loopId && (e.from === id || e.to === id)) loopIds.add(e.loopId);
+    });
+  });
+  return [...loopIds].map(lid => ({ id: lid, ...LOOP_INFO[lid] })).filter(l => l.name);
+}
+
+function showDetail(id) {
+  const empty = $('detail-empty');
+  const content = $('detail-content');
+  if (!id) {
+    empty.style.display = 'block';
+    content.innerHTML = '';
+    return;
+  }
+  empty.style.display = 'none';
+
+  const info = NODE_INFO[id];
+  if (!info) { content.innerHTML = `<div class="node-detail"><div class="node-id">${id}</div><div class="empty">No metadata for this node.</div></div>`; return; }
+
+  const tab = TABS[state.tab];
+  const nodeData = findNodeInTab(tab, id) || {};
+  const isHook = nodeData.kind === 'hook' || nodeData.kind === 'blocking';
+  const isBlocking = nodeData.kind === 'blocking';
+  const kindClass = nodeData.kind === 'git' ? 'git' :
+                    nodeData.kind === 'linear' ? 'linear' :
+                    nodeData.kind === 'brain' ? 'brain' :
+                    isHook ? 'hook' : '';
+
+  let status;
+  if (isBlocking) status = 'blocking';
+  else if (nodeData.accent === 'inbox') status = 'built';
+  else if (isHook) status = 'hook';
+  else status = nodeData.status || 'active';
+
+  const STATUS_LABELS = {
+    built: '✦ Just shipped', active: 'Active', partial: 'Partial',
+    aspirational: 'Aspirational', hook: '⚡ Lifecycle hook', blocking: '⛔ Blocking',
+  };
+
+  const relatedLoops = findRelatedLoops(id);
+
+  let html = `
+    <div class="node-detail ${kindClass}">
+      <div class="node-id">${id}</div>
+      <div class="node-title">${info.label}</div>
+      <span class="status-badge status-${status}">${STATUS_LABELS[status] || status}</span>
+      <div class="desc">${info.desc}</div>
+      <div class="field">
+        <div class="field-label">Files</div>
+        <div class="files">${info.files.map(f => `<div>${f}</div>`).join('')}</div>
+      </div>
+  `;
+
+  if (relatedLoops.length) {
+    html += `<div class="field"><div class="field-label">Loops anchored here</div>`;
+    relatedLoops.forEach(l => {
+      const c = l.status === 'built' ? '#c8714a' :
+                l.status === 'active' ? '#7fb069' :
+                l.status === 'partial' ? '#e6a23c' : '#9b8e78';
+      html += `
+        <div style="border-left: 2px solid ${c}; padding: 4px 0 4px 8px; margin: 6px 0;">
+          <div style="font-size:11px; color:${c}; font-weight:600; font-family: ui-monospace, monospace;">${l.id} · ${l.name}</div>
+          <div style="font-size:12px; color: var(--text-dim); margin-top:2px;">${l.brief}</div>
+          ${l.gap ? `<div style="font-size:11px; color: var(--text-faint); margin-top:4px; font-style:italic;">${l.gap}</div>` : ''}
+        </div>
+      `;
+    });
+    html += `</div>`;
+  }
+
+  html += `</div>`;
+  content.innerHTML = html;
+}
+
+// ============================================================
+// EVENT WIRING
+// ============================================================
+
+document.querySelectorAll('.tab').forEach(tabBtn => {
+  tabBtn.addEventListener('click', () => {
+    state.tab = tabBtn.dataset.tab;
+    state.level = TABS[state.tab].levels >= 2 ? 1 : 0;
+    state.selected = null;
+    $('detail-empty').style.display = 'block';
+    $('detail-content').innerHTML = '';
+    document.querySelectorAll('.tab').forEach(b => b.classList.toggle('active', b === tabBtn));
+    render();
+  });
+});
+
+$('level').addEventListener('input', e => {
+  state.level = parseInt(e.target.value, 10);
+  state.selected = null;
+  $('detail-empty').style.display = 'block';
+  $('detail-content').innerHTML = '';
+  render();
+  updateActivePresetButton();
+});
+
+document.querySelectorAll('.filter-pill').forEach(pill => {
+  pill.addEventListener('click', () => {
+    const status = pill.dataset.status;
+    state.filters[status] = !state.filters[status];
+    pill.classList.toggle('active', state.filters[status]);
+    pill.classList.toggle('dim', !state.filters[status]);
+    render();
+    });
+});
+
+function updateActivePresetButton() {
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+}
+
+render();
+</script>
+</body>
+</html>
