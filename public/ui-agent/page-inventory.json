@@ -1,6 +1,439 @@
 {
-  "$schema": "page-inventory@1",
-  "generatedFrom": "src/App.jsx + src/ops/routes.jsx + src/clients/gbautomation/routes.jsx + src/clients/jid5274/routes.jsx",
+  "$schema": "page-inventory@2",
+  "generatedFrom": "src/App.jsx + src/ops/routes.jsx + src/clients/gbautomation/routes.jsx + src/clients/jid5274/routes.jsx + public/prds/* + public/previews/** + public/portfolio/*.json + public/artifacts/manifest.json",
+  "surfaceGroups": [
+    {
+      "id": "public-marketing",
+      "label": "Public marketing & docs",
+      "summary": "First-touch surfaces: brand homepage, sign-in entry, and the public-facing PRD reading room. All anonymous; SEO-relevant.",
+      "authClass": "public",
+      "routes": [
+        {
+          "path": "/",
+          "title": "Home",
+          "source": "src/pages/Home.jsx",
+          "header": "none",
+          "footer": true,
+          "recommendedAction": "keep",
+          "notes": "Canonical brand surface — VideoHero + Portfolio + TechMarquee + Features + Process + Pricing + ContactForm + Footer."
+        },
+        {
+          "path": "/login",
+          "title": "Login",
+          "source": "src/pages/Login.jsx",
+          "header": "boxed-icon",
+          "footer": false,
+          "recommendedAction": "unify",
+          "notes": "Hosts Amplify Authenticator. Header is a stripped boxed-icon variant — align with shared PageHeader."
+        },
+        {
+          "path": "/prds",
+          "title": "PRD Index",
+          "source": "src/pages/PRDIndex.jsx",
+          "header": "gradient-gb-circle",
+          "footer": false,
+          "recommendedAction": "unify",
+          "dataSources": ["/prds/prds-manifest.json"],
+          "notes": "Inline-styled pillStyle() heavy. Container is max-w-5xl vs site default max-w-7xl. Candidate for <Pill /> + Layout primitive."
+        },
+        {
+          "path": "/prds/:slug",
+          "title": "PRD View (dynamic)",
+          "source": "src/pages/PRDView.jsx",
+          "header": "gradient-gb-circle",
+          "footer": false,
+          "recommendedAction": "unify",
+          "dataSources": ["/prds/<slug>.html", "/prds/prds-manifest.json"],
+          "notes": "Embeds public/prds/<slug>.html inside glass-panel. Slug list driven by prds-manifest.json."
+        }
+      ],
+      "staticPages": [],
+      "recommendedAction": "unify",
+      "groupNotes": "PRD subgroup drifts from the rest of the public surface — italic Newsreader, inline styles, narrower container. Highest-leverage uniformity win."
+    },
+    {
+      "id": "public-static-artifacts",
+      "label": "Public static artifacts",
+      "summary": "Plain HTML files served from /public with no React shell. Reached directly via URL or linked from registries. Anonymous.",
+      "authClass": "public",
+      "routes": [],
+      "staticPages": [
+        {
+          "path": "/portfolio.html",
+          "source": "public/portfolio.html",
+          "header": "inline (Tailwind CDN)",
+          "recommendedAction": "investigate",
+          "notes": "Legacy standalone marketing variant — uses Tailwind via CDN and inline brand tokens. Check whether anything still links here before deciding to archive."
+        },
+        {
+          "path": "/test.html",
+          "source": "public/test.html",
+          "header": "none",
+          "recommendedAction": "archive",
+          "notes": "Site diagnostics page from early build. Hard-coded blue palette, off-brand. Move behind /ops or delete."
+        },
+        {
+          "path": "/previews/report-artifacts/prd-email-artifact.html",
+          "source": "public/previews/report-artifacts/prd-email-artifact.html",
+          "header": "preview-shell",
+          "recommendedAction": "generate-sample",
+          "notes": "Branded email artifact preview. Pinned in _redirects with 200! Good candidate for UI Agent token sweep."
+        },
+        {
+          "path": "/previews/report-artifacts/build-report-artifact.html",
+          "source": "public/previews/report-artifacts/build-report-artifact.html",
+          "header": "preview-shell",
+          "recommendedAction": "generate-sample",
+          "notes": "Branded TAC build report preview. Pair with prd-email-artifact for a /previews/* template family."
+        }
+      ],
+      "recommendedAction": "investigate",
+      "groupNotes": "Mixed bag — keep the /previews/* family as the canonical artifact template surface, archive or relocate everything else."
+    },
+    {
+      "id": "gated-internal-apps",
+      "label": "Gated internal apps",
+      "summary": "Signed-in surfaces for any authenticated user — operator-facing tools, registries, and the UI Agent itself.",
+      "authClass": "gated",
+      "routes": [
+        {
+          "path": "/plan",
+          "title": "Plan",
+          "source": "src/pages/Plan.jsx",
+          "header": "none",
+          "footer": false,
+          "recommendedAction": "unify",
+          "notes": "Just wraps PRDGenerator — no site chrome. Add shared PageHeader once it exists."
+        },
+        {
+          "path": "/apps",
+          "title": "Apps",
+          "source": "src/pages/Apps.jsx",
+          "header": "minimalist-dot",
+          "footer": true,
+          "recommendedAction": "keep",
+          "dataSources": ["/portfolio/apps-registry.json"],
+          "notes": "Hosts AppsGallery driven by apps-registry.json."
+        },
+        {
+          "path": "/apps/youtube-intel",
+          "title": "YouTube Intel",
+          "source": "src/pages/YouTubeIntel.jsx",
+          "header": "minimalist-dot",
+          "footer": true,
+          "recommendedAction": "keep",
+          "notes": "Metric card layout — pattern to share with Mall Scanner."
+        },
+        {
+          "path": "/apps/mall-scanner",
+          "title": "Mall Scanner",
+          "source": "src/pages/MallScanner.jsx",
+          "header": "minimalist-dot",
+          "footer": true,
+          "recommendedAction": "keep",
+          "notes": "Mirrors YouTubeIntel layout. Backed by src/lib/mallScannerClient.js."
+        },
+        {
+          "path": "/artifacts",
+          "title": "Artifacts",
+          "source": "src/pages/Artifacts.jsx",
+          "header": "minimalist-dot",
+          "footer": true,
+          "recommendedAction": "keep",
+          "dataSources": ["/artifacts/manifest.json", "/portfolio/artifacts-feed.json"],
+          "notes": "Adds Archive sub-link to header. Hosts RegistryArtifacts + ArtifactsGallery."
+        },
+        {
+          "path": "/artifacts/archive",
+          "title": "Artifact Archive",
+          "source": "src/pages/Artifacts.jsx",
+          "header": "minimalist-dot",
+          "footer": true,
+          "recommendedAction": "keep",
+          "notes": "Same component as /artifacts, archivedOnly mode."
+        },
+        {
+          "path": "/blockers",
+          "title": "Blockers",
+          "source": "src/pages/Blockers.jsx",
+          "header": "minimalist-dot",
+          "footer": true,
+          "recommendedAction": "unify",
+          "notes": "max-w-4xl long-form. Live mirror of blockers.md via AppSync."
+        },
+        {
+          "path": "/ui-agent",
+          "title": "UI Agent",
+          "source": "src/pages/UiAgent.jsx",
+          "header": "minimalist-dot",
+          "footer": true,
+          "recommendedAction": "keep",
+          "dataSources": ["/ui-agent/gbautomation-brand.json", "/ui-agent/page-inventory.json"],
+          "notes": "This auditor."
+        }
+      ],
+      "recommendedAction": "unify",
+      "groupNotes": "All currently share minimalist-dot except /plan (none) and /login (boxed-icon). Collapse onto a single PageHeader so nav stops being undiscoverable (F5)."
+    },
+    {
+      "id": "ops-dashboard",
+      "label": "Ops dashboard",
+      "summary": "Tenant-restricted operations console (tenant-gbautomation + Greg's allowlist). Lives under /ops/*.",
+      "authClass": "tenant:gbautomation",
+      "routes": [
+        {
+          "path": "/ops",
+          "title": "Ops Overview",
+          "source": "src/ops/pages/OpsOverview.jsx",
+          "header": "boxed-icon",
+          "footer": false,
+          "recommendedAction": "keep"
+        },
+        {
+          "path": "/ops/systems",
+          "title": "Ops Systems",
+          "source": "src/ops/pages/OpsSystems.jsx",
+          "header": "boxed-icon",
+          "footer": false,
+          "recommendedAction": "keep"
+        },
+        {
+          "path": "/ops/runs",
+          "title": "Ops Runs",
+          "source": "src/ops/pages/OpsRuns.jsx",
+          "header": "boxed-icon",
+          "footer": false,
+          "recommendedAction": "keep"
+        },
+        {
+          "path": "/ops/kanban",
+          "title": "Hermes Kanban",
+          "source": "src/ops/pages/HermesKanban.jsx",
+          "header": "boxed-icon",
+          "footer": false,
+          "recommendedAction": "keep",
+          "dataSources": ["/ops/hermes-kanban.json"]
+        },
+        {
+          "path": "/ops/data",
+          "title": "Ops Data",
+          "source": "src/ops/pages/OpsData.jsx",
+          "header": "boxed-icon",
+          "footer": false,
+          "recommendedAction": "keep"
+        }
+      ],
+      "recommendedAction": "keep",
+      "groupNotes": "Header lives in src/ops/components/OpsHeader.jsx. boxed-icon is already consistent within the group — promote it as the canonical 'tool surface' header."
+    },
+    {
+      "id": "client-portals",
+      "label": "Client portals",
+      "summary": "Per-tenant portals nested under /clients/<slug>/*. Each tenant has its own allowlist (group + email) and its own visual shell.",
+      "authClass": "tenant:per-portal",
+      "routes": [
+        {
+          "path": "/clients/gbautomation",
+          "title": "GBAutomation Portal — Dashboard",
+          "source": "src/clients/gbautomation/pages/DashboardPage.jsx",
+          "header": "boxed-icon",
+          "footer": false,
+          "auth": "tenant:gbautomation",
+          "recommendedAction": "keep"
+        },
+        {
+          "path": "/clients/gbautomation/sync",
+          "title": "GBAutomation Portal — Sync",
+          "source": "src/clients/gbautomation/pages/SyncPage.jsx",
+          "header": "boxed-icon",
+          "footer": false,
+          "auth": "tenant:gbautomation",
+          "recommendedAction": "keep"
+        },
+        {
+          "path": "/clients/gbautomation/validation",
+          "title": "GBAutomation Portal — Validation",
+          "source": "src/clients/gbautomation/pages/ValidationPage.jsx",
+          "header": "boxed-icon",
+          "footer": false,
+          "auth": "tenant:gbautomation",
+          "recommendedAction": "keep"
+        },
+        {
+          "path": "/clients/jid5274/*",
+          "title": "JID5274 Portal (iframe shell)",
+          "source": "src/clients/jid5274/routes.jsx",
+          "header": "custom (PMC strip)",
+          "footer": false,
+          "auth": "tenant:jid5274",
+          "recommendedAction": "unify",
+          "notes": "Iframes the synced Archon SPA at /clients/jid5274/archon/. Header is a one-off PMC strip — port to a tenant-themed PageHeader variant."
+        }
+      ],
+      "staticPages": [
+        {
+          "path": "/clients/jid5274/archon/index.html",
+          "source": "public/clients/jid5274/archon/index.html",
+          "header": "external SPA",
+          "recommendedAction": "keep",
+          "notes": "Synced Vite build of the Archon SPA. Owned upstream — do not edit in this repo."
+        },
+        {
+          "path": "/clients/jid5274/archon/artifacts/apollo-sequence-medspa-chiro-2026-04.html",
+          "source": "public/clients/jid5274/archon/artifacts/apollo-sequence-medspa-chiro-2026-04.html",
+          "header": "artifact-html",
+          "recommendedAction": "generate-sample",
+          "notes": "Long-lived HTML artifact bundled with the portal."
+        },
+        {
+          "path": "/clients/jid5274/archon/artifacts/heyreach-campaign-plan-pmc-v1.html",
+          "source": "public/clients/jid5274/archon/artifacts/heyreach-campaign-plan-pmc-v1.html",
+          "header": "artifact-html",
+          "recommendedAction": "generate-sample",
+          "notes": "Same family as apollo-sequence — a candidate for the shared artifact template."
+        }
+      ],
+      "recommendedAction": "unify",
+      "groupNotes": "gbautomation portal already uses boxed-icon; jid5274 ships an iframe with a one-off PMC strip. Unify the React shell, leave the iframe contents alone (upstream-owned)."
+    },
+    {
+      "id": "dynamic-generated",
+      "label": "Dynamic & generated content",
+      "summary": "Route patterns whose contents come from manifests, generated files, or external sync. The route is stable; the body is generated.",
+      "authClass": "mixed",
+      "routes": [
+        {
+          "pattern": "/prds/:slug",
+          "title": "PRD detail",
+          "source": "src/pages/PRDView.jsx",
+          "fedBy": ["public/prds/prds-manifest.json", "public/prds/<slug>.html"],
+          "authClass": "public",
+          "recommendedAction": "unify",
+          "notes": "Manifest enumerates 9 published PRDs. Each slug resolves to a generated HTML body embedded in the React shell."
+        },
+        {
+          "pattern": "/artifacts/:client/:artifactId",
+          "title": "Artifact detail",
+          "source": "src/pages/ArtifactView.jsx",
+          "fedBy": ["public/artifacts/manifest.json", "public/artifacts/<client>/<artifactId>/<filename>"],
+          "authClass": "gated",
+          "recommendedAction": "generate-sample",
+          "notes": "Manifest currently lists 1 acme-co brief. Disk has additional artifacts under gbautomation/, fisch-group/, sylvan-hills/ — manifest is out of sync."
+        },
+        {
+          "pattern": "/ops/*",
+          "title": "Ops nested routes",
+          "source": "src/ops/routes.jsx",
+          "fedBy": ["see ops-dashboard surface"],
+          "authClass": "tenant:gbautomation",
+          "recommendedAction": "keep"
+        },
+        {
+          "pattern": "/clients/:tenant/*",
+          "title": "Per-tenant nested routes",
+          "source": "src/App.jsx",
+          "fedBy": ["src/clients/<tenant>/routes.jsx"],
+          "authClass": "tenant:per-portal",
+          "recommendedAction": "keep",
+          "notes": "Currently registered: gbautomation, jid5274. New tenants are added by creating src/clients/<slug>/routes.jsx and registering a Route in App.jsx."
+        },
+        {
+          "pattern": "/clients/jid5274/archon/*",
+          "title": "Synced Archon SPA assets",
+          "source": "external repo sync",
+          "fedBy": ["public/clients/jid5274/archon/**"],
+          "authClass": "tenant:jid5274",
+          "recommendedAction": "keep",
+          "notes": "Treated as opaque static assets; do not modify in this repo."
+        }
+      ],
+      "recommendedAction": "investigate",
+      "groupNotes": "Artifact manifest drift is the most actionable item — files exist on disk for clients not represented in manifest.json."
+    },
+    {
+      "id": "data-json-surfaces",
+      "label": "Data JSON surfaces",
+      "summary": "JSON endpoints served as static assets. They drive the visual surfaces above; no UI of their own. Listed so the UI Agent can audit data contracts alongside pages.",
+      "authClass": "public",
+      "routes": [],
+      "dataSources": [
+        {
+          "path": "/portfolio/apps-registry.json",
+          "source": "public/portfolio/apps-registry.json",
+          "feeds": ["/apps", "Portfolio component on /"],
+          "recommendedAction": "keep",
+          "notes": "Canonical apps catalog (6 apps as of 2026-05-28)."
+        },
+        {
+          "path": "/portfolio/portfolio.json",
+          "source": "public/portfolio/portfolio.json",
+          "feeds": ["Portfolio component on /"],
+          "recommendedAction": "keep"
+        },
+        {
+          "path": "/portfolio/artifacts-feed.json",
+          "source": "public/portfolio/artifacts-feed.json",
+          "feeds": ["/artifacts"],
+          "recommendedAction": "keep"
+        },
+        {
+          "path": "/portfolio/claude-code-projects.json",
+          "source": "public/portfolio/claude-code-projects.json",
+          "feeds": ["Portfolio drill-down"],
+          "recommendedAction": "investigate",
+          "notes": "Verify a UI surface still consumes this."
+        },
+        {
+          "path": "/portfolio/gbautomation-projects.json",
+          "source": "public/portfolio/gbautomation-projects.json",
+          "feeds": ["Portfolio drill-down"],
+          "recommendedAction": "investigate"
+        },
+        {
+          "path": "/portfolio/revstar-projects.json",
+          "source": "public/portfolio/revstar-projects.json",
+          "feeds": ["Portfolio drill-down"],
+          "recommendedAction": "investigate"
+        },
+        {
+          "path": "/prds/prds-manifest.json",
+          "source": "public/prds/prds-manifest.json",
+          "feeds": ["/prds", "/prds/:slug"],
+          "recommendedAction": "keep",
+          "notes": "9 PRDs. Two of them point at the netlify preview domain rather than gbautomation.xyz — normalize."
+        },
+        {
+          "path": "/artifacts/manifest.json",
+          "source": "public/artifacts/manifest.json",
+          "feeds": ["/artifacts", "/artifacts/:client/:artifactId"],
+          "recommendedAction": "investigate",
+          "notes": "Lists 1 artifact (acme-co brief). Disk has more — manifest is out of sync with the public/artifacts/ tree."
+        },
+        {
+          "path": "/ops/hermes-kanban.json",
+          "source": "public/ops/hermes-kanban.json",
+          "feeds": ["/ops/kanban"],
+          "recommendedAction": "keep"
+        },
+        {
+          "path": "/ui-agent/gbautomation-brand.json",
+          "source": "public/ui-agent/gbautomation-brand.json",
+          "feeds": ["/ui-agent"],
+          "recommendedAction": "keep",
+          "notes": "Mirrors ui-agents/apps/infinite-ui/src/brands/gbautomation/brand.yaml."
+        },
+        {
+          "path": "/ui-agent/page-inventory.json",
+          "source": "public/ui-agent/page-inventory.json",
+          "feeds": ["/ui-agent"],
+          "recommendedAction": "keep",
+          "notes": "This file."
+        }
+      ],
+      "recommendedAction": "investigate",
+      "groupNotes": "Three actions: (1) reconcile artifacts/manifest.json with the actual disk tree, (2) confirm the three legacy *-projects.json files still have consumers, (3) normalize PRD public_url hosts in prds-manifest.json."
+    }
+  ],
   "headerPatterns": {
     "minimalist-dot": {
       "id": "minimalist-dot",
@@ -295,6 +728,20 @@
       "title": "Tree/branch coverage vs. ui-agents trees.yaml",
       "detail": "ui-agents/apps/infinite-ui/src/brands/gbautomation/products/site/trees.yaml declares trees: hero, portfolio, features, process, pricing, testimonials, contact, about, blog, calculator. The live site has hero, portfolio, features, process, pricing, contact. Missing: testimonials, about, blog, calculator.",
       "recommendation": "Either drop the empty branches from trees.yaml or schedule generation runs to fill in testimonials/about/blog/calculator using the UI Generation Team."
+    },
+    {
+      "id": "F8-manifest-drift",
+      "severity": "medium",
+      "title": "public/artifacts/manifest.json is out of sync with the disk tree",
+      "detail": "manifest.json lists only acme-co/brief-bdfbfda44fbb. public/artifacts/ on disk also contains gbautomation/, fisch-group/, sylvan-hills/ trees. /artifacts and /artifacts/:client/:artifactId may show stale or partial data.",
+      "recommendation": "Re-run the artifact registry build so manifest.json enumerates every tenant subdirectory, or document that those trees are intentionally manifest-excluded."
+    },
+    {
+      "id": "F9-stale-public-html",
+      "severity": "low",
+      "title": "Legacy standalone HTML in /public has unclear ownership",
+      "detail": "public/portfolio.html (Tailwind-CDN marketing variant) and public/test.html (early diagnostics page, off-brand blue palette) coexist with the React routes that supersede them.",
+      "recommendation": "Confirm nothing links to either, then archive or move under /previews/. test.html in particular leaks an alternate visual identity."
     }
   ]
 }

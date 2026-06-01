@@ -44,3 +44,40 @@ export function summarizeInventory(pages) {
   }, {});
   return { total, byAuth, withFooter, headerCounts };
 }
+
+export function countSurfaceEntries(group) {
+  if (!group) return 0;
+  return (
+    (group.routes?.length || 0) +
+    (group.staticPages?.length || 0) +
+    (group.dataSources?.length || 0)
+  );
+}
+
+export function summarizeSurfaceGroups(groups) {
+  if (!Array.isArray(groups)) return { total: 0, byAction: {}, totalEntries: 0 };
+  const totalEntries = groups.reduce((acc, g) => acc + countSurfaceEntries(g), 0);
+  const byAction = groups.reduce((acc, g) => {
+    const k = g.recommendedAction || 'unspecified';
+    acc[k] = (acc[k] || 0) + 1;
+    return acc;
+  }, {});
+  return { total: groups.length, byAction, totalEntries };
+}
+
+export function actionColor(action) {
+  switch (action) {
+    case 'keep':
+      return { bg: 'bg-emerald-50', text: 'text-emerald-700', border: 'border-emerald-200' };
+    case 'unify':
+      return { bg: 'bg-amber-50', text: 'text-amber-800', border: 'border-amber-200' };
+    case 'generate-sample':
+      return { bg: 'bg-violet-50', text: 'text-violet-700', border: 'border-violet-200' };
+    case 'archive':
+      return { bg: 'bg-stone-100', text: 'text-stone-700', border: 'border-stone-300' };
+    case 'investigate':
+      return { bg: 'bg-sky-50', text: 'text-sky-700', border: 'border-sky-200' };
+    default:
+      return { bg: 'bg-[#E6E4D9]', text: 'text-[#191919]/70', border: 'border-[#D6D4C8]' };
+  }
+}

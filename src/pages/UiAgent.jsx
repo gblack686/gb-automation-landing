@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Sparkles, FileText, Palette, ListTree, AlertCircle, Download, ExternalLink } from 'lucide-react';
+import { Sparkles, FileText, Palette, ListTree, AlertCircle, Download, ExternalLink, Layers } from 'lucide-react';
 import Footer from '../components/Footer';
 import SignOutButton from '../components/SignOutButton';
 import {
+  actionColor,
   groupPagesByHeader,
   severityColor,
   sortBySeverity,
   summarizeInventory,
+  summarizeSurfaceGroups,
 } from '../lib/uiAgent/audit';
 
 const BRAND_URL = '/ui-agent/gbautomation-brand.json';
@@ -94,6 +96,8 @@ export default function UiAgent() {
   const findings = sortBySeverity(inventory.uniformityFindings || []);
   const summary = summarizeInventory(inventory.pages || []);
   const headerGroups = groupPagesByHeader(inventory.pages || []);
+  const surfaceGroups = inventory.surfaceGroups || [];
+  const surfaceSummary = summarizeSurfaceGroups(surfaceGroups);
 
   return (
     <div className="min-h-screen bg-[#F3F1E7] selection:bg-[#D97757] selection:text-white">
@@ -180,15 +184,20 @@ export default function UiAgent() {
         </section>
 
         <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <StatCard label="Pages catalogued" value={summary.total} />
+          <StatCard
+            label="Surface groups"
+            value={surfaceSummary.total || '—'}
+            hint={
+              surfaceSummary.totalEntries
+                ? `${surfaceSummary.totalEntries} routes + static + data entries`
+                : undefined
+            }
+          />
+          <StatCard label="React routes catalogued" value={summary.total} />
           <StatCard
             label="Header families"
             value={Object.keys(summary.headerCounts).length}
             hint="Lower is more uniform"
-          />
-          <StatCard
-            label="Pages with footer"
-            value={`${summary.withFooter} / ${summary.total}`}
           />
           <StatCard
             label="Open findings"
@@ -250,6 +259,186 @@ export default function UiAgent() {
           </div>
         </section>
 
+        {surfaceGroups.length > 0 && (
+          <section className="space-y-4">
+            <div className="flex items-center gap-2">
+              <Layers className="h-4 w-4 text-[#D97757]" />
+              <span className="text-[#D97757] text-xs font-bold tracking-widest uppercase">
+                Surface taxonomy
+              </span>
+            </div>
+            <h2 className="font-serif text-2xl text-[#191919]">
+              Site organized by surface group
+            </h2>
+            <p className="text-sm text-[#191919]/70 max-w-3xl">
+              Seven distinct surface families. Each carries its own auth class, source data, and
+              recommended UI-agent action. Use this as the unit of work for design uniformity runs
+              rather than individual routes.
+            </p>
+            <div className="space-y-4">
+              {surfaceGroups.map((group) => {
+                const ac = actionColor(group.recommendedAction);
+                const routes = group.routes || [];
+                const statics = group.staticPages || [];
+                const data = group.dataSources || [];
+                return (
+                  <div
+                    key={group.id}
+                    className="rounded-xl border border-[#D6D4C8] bg-white/70 p-5"
+                  >
+                    <div className="flex flex-wrap items-baseline justify-between gap-3">
+                      <div>
+                        <p className="text-[10px] font-bold uppercase tracking-widest text-[#D97757]">
+                          {group.id}
+                        </p>
+                        <h3 className="font-serif text-xl text-[#191919]">
+                          {group.label}{' '}
+                          <span className="text-sm text-[#191919]/55">
+                            ({routes.length + statics.length + data.length} entries)
+                          </span>
+                        </h3>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="rounded-full bg-[#E6E4D9] px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-[#191919]/65">
+                          {group.authClass}
+                        </span>
+                        <span
+                          className={`rounded-full ${ac.bg} ${ac.text} ${ac.border} border px-3 py-1 text-[10px] font-bold uppercase tracking-widest`}
+                        >
+                          {group.recommendedAction}
+                        </span>
+                      </div>
+                    </div>
+                    {group.summary && (
+                      <p className="mt-3 text-sm text-[#191919]/70">{group.summary}</p>
+                    )}
+                    {group.groupNotes && (
+                      <p className="mt-2 text-xs italic text-[#191919]/55">{group.groupNotes}</p>
+                    )}
+
+                    {routes.length > 0 && (
+                      <div className="mt-4">
+                        <p className="text-[10px] font-bold uppercase tracking-widest text-[#191919]/45 mb-2">
+                          React routes ({routes.length})
+                        </p>
+                        <div className="overflow-x-auto">
+                          <table className="min-w-full text-sm">
+                            <thead>
+                              <tr className="text-[10px] uppercase tracking-widest text-[#191919]/45">
+                                <th className="text-left font-semibold py-1 pr-4">Path</th>
+                                <th className="text-left font-semibold py-1 pr-4">Source</th>
+                                <th className="text-left font-semibold py-1 pr-4">Action</th>
+                                <th className="text-left font-semibold py-1 pr-4">Notes</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {routes.map((r) => {
+                                const rac = actionColor(r.recommendedAction);
+                                return (
+                                  <tr
+                                    key={r.path || r.pattern}
+                                    className="border-t border-[#D6D4C8]/60 align-top"
+                                  >
+                                    <td className="py-1.5 pr-4 font-mono text-[12px] text-[#191919]">
+                                      {r.path || r.pattern}
+                                    </td>
+                                    <td className="py-1.5 pr-4 font-mono text-[11px] text-[#191919]/65">
+                                      {r.source}
+                                    </td>
+                                    <td className="py-1.5 pr-4">
+                                      <span
+                                        className={`rounded-full ${rac.bg} ${rac.text} px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest`}
+                                      >
+                                        {r.recommendedAction || '—'}
+                                      </span>
+                                    </td>
+                                    <td className="py-1.5 pr-4 text-[#191919]/65 max-w-md">
+                                      {r.notes || ''}
+                                    </td>
+                                  </tr>
+                                );
+                              })}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    )}
+
+                    {statics.length > 0 && (
+                      <div className="mt-4">
+                        <p className="text-[10px] font-bold uppercase tracking-widest text-[#191919]/45 mb-2">
+                          Static HTML ({statics.length})
+                        </p>
+                        <ul className="space-y-1.5">
+                          {statics.map((s) => {
+                            const sac = actionColor(s.recommendedAction);
+                            return (
+                              <li
+                                key={s.path}
+                                className="flex flex-wrap items-baseline gap-2 text-sm"
+                              >
+                                <code className="font-mono text-[12px] text-[#191919]">
+                                  {s.path}
+                                </code>
+                                <span
+                                  className={`rounded-full ${sac.bg} ${sac.text} px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest`}
+                                >
+                                  {s.recommendedAction || '—'}
+                                </span>
+                                {s.notes && (
+                                  <span className="text-xs text-[#191919]/60">{s.notes}</span>
+                                )}
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </div>
+                    )}
+
+                    {data.length > 0 && (
+                      <div className="mt-4">
+                        <p className="text-[10px] font-bold uppercase tracking-widest text-[#191919]/45 mb-2">
+                          Data sources ({data.length})
+                        </p>
+                        <ul className="space-y-1.5">
+                          {data.map((d) => {
+                            const dac = actionColor(d.recommendedAction);
+                            return (
+                              <li
+                                key={d.path}
+                                className="flex flex-wrap items-baseline gap-2 text-sm"
+                              >
+                                <code className="font-mono text-[12px] text-[#191919]">
+                                  {d.path}
+                                </code>
+                                <span
+                                  className={`rounded-full ${dac.bg} ${dac.text} px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest`}
+                                >
+                                  {d.recommendedAction || '—'}
+                                </span>
+                                {d.feeds && (
+                                  <span className="text-xs text-[#191919]/60">
+                                    → {Array.isArray(d.feeds) ? d.feeds.join(', ') : d.feeds}
+                                  </span>
+                                )}
+                                {d.notes && (
+                                  <span className="text-xs text-[#191919]/55 italic">
+                                    {d.notes}
+                                  </span>
+                                )}
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+        )}
+
         <section className="space-y-4">
           <div className="flex items-center gap-2">
             <ListTree className="h-4 w-4 text-[#D97757]" />
@@ -257,7 +446,7 @@ export default function UiAgent() {
               Page inventory
             </span>
           </div>
-          <h2 className="font-serif text-2xl text-[#191919]">All website routes</h2>
+          <h2 className="font-serif text-2xl text-[#191919]">All React routes by header family</h2>
           {[...headerGroups.entries()].map(([headerId, pages]) => {
             const pattern = inventory.headerPatterns?.[headerId];
             return (
