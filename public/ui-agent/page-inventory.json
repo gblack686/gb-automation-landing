@@ -1,0 +1,300 @@
+{
+  "$schema": "page-inventory@1",
+  "generatedFrom": "src/App.jsx + src/ops/routes.jsx + src/clients/gbautomation/routes.jsx + src/clients/jid5274/routes.jsx",
+  "headerPatterns": {
+    "minimalist-dot": {
+      "id": "minimalist-dot",
+      "label": "Minimalist dot",
+      "summary": "py-10 header with terracotta dot-in-circle logo, inline nav links, active link uses font-bold border-b border-[#D97757]",
+      "usedBy": ["/apps", "/artifacts", "/artifacts/archive", "/blockers"],
+      "example": "Apps.jsx, Artifacts.jsx, Blockers.jsx"
+    },
+    "boxed-icon": {
+      "id": "boxed-icon",
+      "label": "Boxed icon header",
+      "summary": "py-5 header with rounded-square icon tile, label + serif brand, nav rendered as pill (bg-[#E6E4D9]/70)",
+      "usedBy": ["/ops", "/ops/*", "/clients/gbautomation/*", "/login"],
+      "example": "OpsHeader.jsx, PortalHeader.jsx, Login.jsx"
+    },
+    "gradient-gb-circle": {
+      "id": "gradient-gb-circle",
+      "label": "Gradient \"gb\" circle (PRD style)",
+      "summary": "Inline-style header with gradient circle showing italic 'gb' text — no nav, max-w-5xl container",
+      "usedBy": ["/prds", "/prds/:slug"],
+      "example": "PRDIndex.jsx, PRDView.jsx"
+    },
+    "none": {
+      "id": "none",
+      "label": "No site header",
+      "summary": "Page provides its own hero (VideoHero) or has no chrome",
+      "usedBy": ["/", "/plan"],
+      "example": "Home.jsx (VideoHero), Plan.jsx (raw PRDGenerator)"
+    }
+  },
+  "pages": [
+    {
+      "path": "/",
+      "title": "Home",
+      "file": "src/pages/Home.jsx",
+      "auth": "public",
+      "header": "none",
+      "footer": true,
+      "tokenCompliance": "high",
+      "notes": "Composes VideoHero + Portfolio + TechMarquee + Features + Process + Pricing + ContactForm + Footer. Canonical brand surface."
+    },
+    {
+      "path": "/login",
+      "title": "Login",
+      "file": "src/pages/Login.jsx",
+      "auth": "public",
+      "header": "boxed-icon",
+      "footer": false,
+      "tokenCompliance": "high",
+      "notes": "Hosts AWS Amplify Authenticator. Header uses ArrowLeft+text, simpler than Ops/Portal but matches the py-5 boxed-icon family."
+    },
+    {
+      "path": "/prds",
+      "title": "PRD Index",
+      "file": "src/pages/PRDIndex.jsx",
+      "auth": "public",
+      "header": "gradient-gb-circle",
+      "footer": false,
+      "tokenCompliance": "medium",
+      "notes": "Heavy inline-style usage rather than Tailwind utilities. Container is max-w-5xl (smaller than the rest of the site which uses max-w-7xl)."
+    },
+    {
+      "path": "/prds/:slug",
+      "title": "PRD View",
+      "file": "src/pages/PRDView.jsx",
+      "auth": "public",
+      "header": "gradient-gb-circle",
+      "footer": false,
+      "tokenCompliance": "medium",
+      "notes": "Renders embedded PRD HTML inside glass-panel. Back-link only, no shared chrome."
+    },
+    {
+      "path": "/plan",
+      "title": "Plan",
+      "file": "src/pages/Plan.jsx",
+      "auth": "gated",
+      "header": "none",
+      "footer": false,
+      "tokenCompliance": "unknown",
+      "notes": "Just wraps PRDGenerator — no site header or footer. Often linked from minimalist-dot nav as 'Plan', but the page itself has no nav."
+    },
+    {
+      "path": "/apps",
+      "title": "Apps",
+      "file": "src/pages/Apps.jsx",
+      "auth": "gated",
+      "header": "minimalist-dot",
+      "footer": true,
+      "tokenCompliance": "high",
+      "notes": "Active link styled with bottom border. Hosts AppsGallery."
+    },
+    {
+      "path": "/artifacts",
+      "title": "Artifacts",
+      "file": "src/pages/Artifacts.jsx",
+      "auth": "gated",
+      "header": "minimalist-dot",
+      "footer": true,
+      "tokenCompliance": "high",
+      "notes": "Adds Archive sub-link to the nav. Hosts RegistryArtifacts + ArtifactsGallery."
+    },
+    {
+      "path": "/artifacts/archive",
+      "title": "Artifact Archive",
+      "file": "src/pages/Artifacts.jsx",
+      "auth": "gated",
+      "header": "minimalist-dot",
+      "footer": true,
+      "tokenCompliance": "high",
+      "notes": "Same component as /artifacts, archivedOnly mode."
+    },
+    {
+      "path": "/artifacts/:client/:artifactId",
+      "title": "Artifact View",
+      "file": "src/pages/ArtifactView.jsx",
+      "auth": "gated",
+      "header": "minimalist-dot",
+      "footer": true,
+      "tokenCompliance": "high",
+      "notes": "Single artifact detail."
+    },
+    {
+      "path": "/blockers",
+      "title": "Blockers",
+      "file": "src/pages/Blockers.jsx",
+      "auth": "gated",
+      "header": "minimalist-dot",
+      "footer": true,
+      "tokenCompliance": "high",
+      "notes": "Live mirror of blockers.md via AppSync."
+    },
+    {
+      "path": "/apps/youtube-intel",
+      "title": "YouTube Intel",
+      "file": "src/pages/YouTubeIntel.jsx",
+      "auth": "gated",
+      "header": "minimalist-dot",
+      "footer": true,
+      "tokenCompliance": "high",
+      "notes": "App tool. Uses Metric cards with brand tokens."
+    },
+    {
+      "path": "/apps/mall-scanner",
+      "title": "Mall Scanner",
+      "file": "src/pages/MallScanner.jsx",
+      "auth": "gated",
+      "header": "minimalist-dot",
+      "footer": true,
+      "tokenCompliance": "high",
+      "notes": "App tool. Mirrors YouTubeIntel layout/metric pattern."
+    },
+    {
+      "path": "/ui-agent",
+      "title": "UI Agent",
+      "file": "src/pages/UiAgent.jsx",
+      "auth": "gated",
+      "header": "minimalist-dot",
+      "footer": true,
+      "tokenCompliance": "high",
+      "notes": "This auditor. Loads the gbautomation brand spec and renders this inventory + audit findings."
+    },
+    {
+      "path": "/ops",
+      "title": "Ops Overview",
+      "file": "src/ops/pages/OpsOverview.jsx",
+      "auth": "tenant:gbautomation",
+      "header": "boxed-icon",
+      "footer": false,
+      "tokenCompliance": "high",
+      "notes": "Operations dashboard. Header lives in OpsHeader.jsx, no footer."
+    },
+    {
+      "path": "/ops/systems",
+      "title": "Ops Systems",
+      "file": "src/ops/pages/OpsSystems.jsx",
+      "auth": "tenant:gbautomation",
+      "header": "boxed-icon",
+      "footer": false,
+      "tokenCompliance": "high"
+    },
+    {
+      "path": "/ops/runs",
+      "title": "Ops Runs",
+      "file": "src/ops/pages/OpsRuns.jsx",
+      "auth": "tenant:gbautomation",
+      "header": "boxed-icon",
+      "footer": false,
+      "tokenCompliance": "high"
+    },
+    {
+      "path": "/ops/kanban",
+      "title": "Hermes Kanban",
+      "file": "src/ops/pages/HermesKanban.jsx",
+      "auth": "tenant:gbautomation",
+      "header": "boxed-icon",
+      "footer": false,
+      "tokenCompliance": "high"
+    },
+    {
+      "path": "/ops/data",
+      "title": "Ops Data",
+      "file": "src/ops/pages/OpsData.jsx",
+      "auth": "tenant:gbautomation",
+      "header": "boxed-icon",
+      "footer": false,
+      "tokenCompliance": "high"
+    },
+    {
+      "path": "/clients/gbautomation",
+      "title": "GBAutomation Portal — Dashboard",
+      "file": "src/clients/gbautomation/pages/DashboardPage.jsx",
+      "auth": "tenant:gbautomation",
+      "header": "boxed-icon",
+      "footer": false,
+      "tokenCompliance": "high"
+    },
+    {
+      "path": "/clients/gbautomation/sync",
+      "title": "GBAutomation Portal — Sync",
+      "file": "src/clients/gbautomation/pages/SyncPage.jsx",
+      "auth": "tenant:gbautomation",
+      "header": "boxed-icon",
+      "footer": false,
+      "tokenCompliance": "high"
+    },
+    {
+      "path": "/clients/gbautomation/validation",
+      "title": "GBAutomation Portal — Validation",
+      "file": "src/clients/gbautomation/pages/ValidationPage.jsx",
+      "auth": "tenant:gbautomation",
+      "header": "boxed-icon",
+      "footer": false,
+      "tokenCompliance": "high"
+    },
+    {
+      "path": "/clients/jid5274/*",
+      "title": "JID5274 Portal",
+      "file": "src/clients/jid5274/routes.jsx",
+      "auth": "tenant:jid5274",
+      "header": "boxed-icon",
+      "footer": false,
+      "tokenCompliance": "medium",
+      "notes": "Per-tenant portal; uses the boxed-icon family. Verify visual parity with PortalHeader."
+    }
+  ],
+  "uniformityFindings": [
+    {
+      "id": "F1-headers",
+      "severity": "high",
+      "title": "Three distinct header families compete for the same brand voice",
+      "detail": "minimalist-dot (Apps/Artifacts/Blockers/Plan-nav), boxed-icon (Ops/Portal/Login), gradient-gb-circle (PRDs). Each implies a different identity. A first-time visitor crossing from /apps to /ops to /prds sees three brand presentations.",
+      "recommendation": "Consolidate to a single shared header component (e.g. src/components/PageHeader.jsx). Promote the boxed-icon variant as the surface for tools (Ops, Portal, Apps, Artifacts, Blockers, UI Agent) and reserve the gradient-gb-circle for marketing/PRD reading surfaces only — and even there, align typography and container width with the rest of the site."
+    },
+    {
+      "id": "F2-container-widths",
+      "severity": "medium",
+      "title": "Inconsistent main container widths",
+      "detail": "Most pages use max-w-7xl px-6 py-16. PRD pages use max-w-5xl px-4 py-12. Blockers uses max-w-4xl px-6 py-16.",
+      "recommendation": "Standardize on max-w-7xl for dashboard/tool routes; reserve narrower max-w-3xl for long-form text (Blockers markdown). Codify in a Layout primitive."
+    },
+    {
+      "id": "F3-footer",
+      "severity": "medium",
+      "title": "Footer presence is inconsistent across gated routes",
+      "detail": "Home/Apps/Artifacts/Blockers/YouTubeIntel/MallScanner render <Footer />; Ops and client portals do not. Plan/Login/PRD routes omit it intentionally.",
+      "recommendation": "Decide per surface family. For tool surfaces (Ops, Portal), keep no footer but add a slim status strip (build sha, env). For consumer surfaces, keep the full Footer."
+    },
+    {
+      "id": "F4-inline-styles",
+      "severity": "medium",
+      "title": "PRDIndex/PRDView use heavy inline styles in lieu of Tailwind tokens",
+      "detail": "Buttons and badges in PRDIndex.jsx are constructed via pillStyle(color) inline. Hard to keep in sync with palette changes.",
+      "recommendation": "Extract status/wave/priority pills into a <Pill kind=\"status|wave|priority\" value={...} /> component that reads from the brand JSON published at /ui-agent/gbautomation-brand.json."
+    },
+    {
+      "id": "F5-nav-link-rot",
+      "severity": "low",
+      "title": "Cross-surface navigation is uneven",
+      "detail": "Apps header offers Apps/Artifacts/Plan; Artifacts adds Archive; Blockers adds Blockers. None of the minimalist-dot headers expose YouTubeIntel, MallScanner, UI Agent, Ops, or Portal — making them effectively undiscoverable.",
+      "recommendation": "Move the nav into a single source of truth (e.g. an array exported from src/lib/navigation.js) consumed by every header. Group by surface family with visual separators."
+    },
+    {
+      "id": "F6-typography",
+      "severity": "low",
+      "title": "Heading styles vary between font-serif font-medium and inline italic Newsreader",
+      "detail": "Most pages use Tailwind's font-serif font-medium. PRD pages override with inline-style italic Newsreader.",
+      "recommendation": "If italic is intentional for PRDs, add a `.font-serif-display-italic` utility in index.css and use it. Otherwise normalize to font-serif font-medium tracking-tight."
+    },
+    {
+      "id": "F7-page-coverage",
+      "severity": "info",
+      "title": "Tree/branch coverage vs. ui-agents trees.yaml",
+      "detail": "ui-agents/apps/infinite-ui/src/brands/gbautomation/products/site/trees.yaml declares trees: hero, portfolio, features, process, pricing, testimonials, contact, about, blog, calculator. The live site has hero, portfolio, features, process, pricing, contact. Missing: testimonials, about, blog, calculator.",
+      "recommendation": "Either drop the empty branches from trees.yaml or schedule generation runs to fill in testimonials/about/blog/calculator using the UI Generation Team."
+    }
+  ]
+}

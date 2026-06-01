@@ -1,0 +1,51 @@
+{
+  "name": "GBAutomation",
+  "tagline": "90-Day Agentic Systems Program",
+  "tone": "sophisticated, approachable, vibe-driven",
+  "audience": "businesses seeking AI automation with personality",
+  "source": "ui-agents/apps/infinite-ui/src/brands/gbautomation/brand.yaml",
+  "identity": {
+    "mission": "Build smarter and faster with AI developers that code in your vibe",
+    "description": "GB Automation specializes in 90-day agentic systems programs that transform how businesses operate. We don't just build AI - we build AI that codes in your vibe, creating systems that feel authentically yours while delivering enterprise-grade results.",
+    "keywords": ["vibe coding", "agentic systems", "90-day program", "AI automation", "AI developers"],
+    "voice": "Sophisticated yet playful, technically precise yet human, confident but never condescending",
+    "avoid": ["generic tech speak", "corporate jargon", "fear-based messaging", "em dashes"]
+  },
+  "palette": {
+    "primary": "#D97757",
+    "secondary": "#C26D52",
+    "accent": "#191919",
+    "background": "#F3F1E7",
+    "bg-secondary": "#E6E4D9",
+    "surface": "#FFFFFF",
+    "text": "#191919",
+    "muted": "#5C5C5C",
+    "muted-light": "#8C8A84",
+    "border": "#D6D4C8",
+    "overlay": "rgba(243, 241, 231, 0.7)"
+  },
+  "typography": {
+    "heading": "'Newsreader', Georgia, serif",
+    "body": "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+    "mono": "ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', monospace"
+  },
+  "motion": {
+    "duration-fast": "150ms",
+    "duration-normal": "300ms",
+    "duration-slow": "700ms",
+    "easing": "ease-in-out",
+    "easing-smooth": "cubic-bezier(0.4, 0, 0.2, 1)",
+    "hover-mini": "scale(1.02)"
+  },
+  "patterns": {
+    "uppercase-label": "text-[10px] uppercase font-bold tracking-wider",
+    "serif-display": "font-serif font-medium tracking-tight",
+    "button-pill": "px-4 py-1.5 rounded-full transition-all",
+    "hover-invert": "hover:bg-[#191919] hover:text-[#F3F1E7]",
+    "text-gradient": "bg-gradient-to-r from-[#D97757] to-[#C26D52] bg-clip-text text-transparent"
+  },
+  "assets": {
+    "logo": "/gb-signature.png",
+    "favicon": "/gb-logo.png"
+  }
+}

@@ -7,6 +7,7 @@ import Artifacts from './pages/Artifacts';
 import ArtifactView from './pages/ArtifactView';
 import Blockers from './pages/Blockers';
 import YouTubeIntel from './pages/YouTubeIntel';
+import UiAgent from './pages/UiAgent';
 import Login from './pages/Login';
 import PRDIndex from './pages/PRDIndex';
 import PRDView from './pages/PRDView';
@@ -54,6 +55,10 @@ function App() {
           <Route
             path="/apps/youtube-intel"
             element={<RequireAuth><YouTubeIntel /></RequireAuth>}
+          />
+          <Route
+            path="/ui-agent"
+            element={<RequireAuth><UiAgent /></RequireAuth>}
           />
           <Route
             path="/ops/*"
