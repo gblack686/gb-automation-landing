@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-06-01T23:01:58.055Z",
+  "count": 2,
+  "channels": [
+    {
+      "slug": "indydevdan",
+      "name": "IndyDevDan",
+      "handle": "@indydevdan",
+      "channel_id": "UC_x36zCEGilGpB1m-V4gmjg",
+      "priority": "high",
+      "enabled": true,
+      "tags": [
+        "tac",
+        "agents",
+        "claude-code"
+      ],
+      "last_status": "ok",
+      "last_error": null,
+      "last_scraped_at": "2026-06-01T23:01:57.958Z",
+      "video_count": 10
+    },
+    {
+      "slug": "anthropic",
+      "name": "Anthropic",
+      "handle": "@anthropic-ai",
+      "channel_id": "UCrDwWp7EBBv4NwvScIpBDOA",
+      "priority": "high",
+      "enabled": true,
+      "tags": [
+        "anthropic",
+        "claude"
+      ],
+      "last_status": "ok",
+      "last_error": null,
+      "last_scraped_at": "2026-06-01T23:01:58.040Z",
+      "video_count": 10
+    }
+  ]
+}

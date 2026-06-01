@@ -1,0 +1,13 @@
+{
+  "started_at": "2026-06-01T23:01:57.957Z",
+  "finished_at": "2026-06-01T23:01:58.055Z",
+  "mode": "live",
+  "max_videos_per_channel": 10,
+  "channels_scanned": 2,
+  "channels_enabled": 2,
+  "channels_ok": 2,
+  "channels_error": 0,
+  "videos_indexed": 20,
+  "errors": [],
+  "next_steps": "Schedule daily via OpenClaw cron (see docs/youtube-intel.md)."
+}

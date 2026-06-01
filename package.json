@@ -11,6 +11,9 @@
     "test": "node test-site.js",
     "test:tenant": "node scripts/validate-tenant-portal.mjs",
     "ops:kanban:export": "node scripts/export-hermes-kanban.mjs",
+    "youtube-intel:scrape": "node scripts/youtube-intel/scrape.mjs",
+    "youtube-intel:scrape:sample": "node scripts/youtube-intel/scrape.mjs --sample",
+    "youtube-intel:scrape:dry": "node scripts/youtube-intel/scrape.mjs --dry-run",
     "amplify:sandbox": "ampx sandbox",
     "amplify:deploy": "ampx sandbox --once"
   },

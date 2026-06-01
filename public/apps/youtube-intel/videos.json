@@ -1,0 +1,207 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-06-01T23:01:58.055Z",
+  "count": 20,
+  "videos": [
+    {
+      "video_id": "o4KZH_KSqYQ",
+      "title": "Pi Coding Agent Observability: HTML Specs with Gemini 3.5 Flash and GPT Image 2",
+      "url": "https://www.youtube.com/watch?v=o4KZH_KSqYQ",
+      "published_at": "2026-06-01T13:00:30+00:00",
+      "updated_at": "2026-06-01T13:08:01+00:00",
+      "channel_name": "IndyDevDan",
+      "channel_slug": "indydevdan",
+      "status": "indexed"
+    },
+    {
+      "video_id": "2KcITKKJikA",
+      "title": "Top #1 Opportunity for Senior Engineers: Agentic Engineering",
+      "url": "https://www.youtube.com/watch?v=2KcITKKJikA",
+      "published_at": "2026-05-25T13:00:27+00:00",
+      "updated_at": "2026-05-25T14:07:23+00:00",
+      "channel_name": "IndyDevDan",
+      "channel_slug": "indydevdan",
+      "status": "indexed"
+    },
+    {
+      "video_id": "PIdETjcXNIk",
+      "title": "Pi to Pi: Two-Way Agent Orchestration with the Pi Coding Agent",
+      "url": "https://www.youtube.com/watch?v=PIdETjcXNIk",
+      "published_at": "2026-05-18T13:00:15+00:00",
+      "updated_at": "2026-05-23T00:34:34+00:00",
+      "channel_name": "IndyDevDan",
+      "channel_slug": "indydevdan",
+      "status": "indexed"
+    },
+    {
+      "video_id": "yBcmIoA-vGs",
+      "title": "Engineers, DELETE the BASH Tool: Agentic Security For Pi Agent and Claude Code",
+      "url": "https://www.youtube.com/watch?v=yBcmIoA-vGs",
+      "published_at": "2026-05-11T13:00:34+00:00",
+      "updated_at": "2026-05-17T01:52:21+00:00",
+      "channel_name": "IndyDevDan",
+      "channel_slug": "indydevdan",
+      "status": "indexed"
+    },
+    {
+      "video_id": "j2knrqAzYVY",
+      "title": "Translating Claude’s thoughts into language",
+      "url": "https://www.youtube.com/watch?v=j2knrqAzYVY",
+      "published_at": "2026-05-07T17:01:21+00:00",
+      "updated_at": "2026-05-17T00:20:47+00:00",
+      "channel_name": "Anthropic",
+      "channel_slug": "anthropic",
+      "status": "indexed"
+    },
+    {
+      "video_id": "EnXKysJNz_8",
+      "title": "GPT-5.5 VERIFIED Opus 4.7: A Pi Coding Agent That REVIEWS Like YOU",
+      "url": "https://www.youtube.com/watch?v=EnXKysJNz_8",
+      "published_at": "2026-05-04T13:00:00+00:00",
+      "updated_at": "2026-05-08T07:05:49+00:00",
+      "channel_name": "IndyDevDan",
+      "channel_slug": "indydevdan",
+      "status": "indexed"
+    },
+    {
+      "video_id": "8IDzBRRFnQU",
+      "title": "MAXIMIZE Your Claude Code Subscription (Without Getting BANNED)",
+      "url": "https://www.youtube.com/watch?v=8IDzBRRFnQU",
+      "published_at": "2026-04-27T13:00:00+00:00",
+      "updated_at": "2026-05-20T20:35:13+00:00",
+      "channel_name": "IndyDevDan",
+      "channel_slug": "indydevdan",
+      "status": "indexed"
+    },
+    {
+      "video_id": "00Y-p62sk0s",
+      "title": "My M5 Max, Gemma 4, MLX LOCAL Stack. (This KILLS MODEL PROVIDERS)",
+      "url": "https://www.youtube.com/watch?v=00Y-p62sk0s",
+      "published_at": "2026-04-20T13:00:00+00:00",
+      "updated_at": "2026-05-05T04:40:50+00:00",
+      "channel_name": "IndyDevDan",
+      "channel_slug": "indydevdan",
+      "status": "indexed"
+    },
+    {
+      "video_id": "RvowJ_hmLps",
+      "title": "The First UNSHIPPED Model: Claude MYTHOS (Senior Engineer Breakdown)",
+      "url": "https://www.youtube.com/watch?v=RvowJ_hmLps",
+      "published_at": "2026-04-13T13:00:00+00:00",
+      "updated_at": "2026-05-05T07:53:55+00:00",
+      "channel_name": "IndyDevDan",
+      "channel_slug": "indydevdan",
+      "status": "indexed"
+    },
+    {
+      "video_id": "INGOC6-LLv0",
+      "title": "An initiative to secure the world's software | Project Glasswing",
+      "url": "https://www.youtube.com/watch?v=INGOC6-LLv0",
+      "published_at": "2026-04-07T18:03:51+00:00",
+      "updated_at": "2026-04-28T17:59:58+00:00",
+      "channel_name": "Anthropic",
+      "channel_slug": "anthropic",
+      "status": "indexed"
+    },
+    {
+      "video_id": "RairMJflUSA",
+      "title": "My Pi Agent Teams. Claude Code Leak SIGNAL. Harness Engineering",
+      "url": "https://www.youtube.com/watch?v=RairMJflUSA",
+      "published_at": "2026-04-06T13:00:00+00:00",
+      "updated_at": "2026-04-21T20:21:13+00:00",
+      "channel_name": "IndyDevDan",
+      "channel_slug": "indydevdan",
+      "status": "indexed"
+    },
+    {
+      "video_id": "D4XTefP3Lsc",
+      "title": "When AIs act emotional",
+      "url": "https://www.youtube.com/watch?v=D4XTefP3Lsc",
+      "published_at": "2026-04-02T16:06:59+00:00",
+      "updated_at": "2026-05-04T21:19:08+00:00",
+      "channel_name": "Anthropic",
+      "channel_slug": "anthropic",
+      "status": "indexed"
+    },
+    {
+      "video_id": "M30gp1315Y4",
+      "title": "One Agent Is NOT ENOUGH: Agentic Coding BEYOND Claude Code",
+      "url": "https://www.youtube.com/watch?v=M30gp1315Y4",
+      "published_at": "2026-03-30T13:00:00+00:00",
+      "updated_at": "2026-05-05T07:58:34+00:00",
+      "channel_name": "IndyDevDan",
+      "channel_slug": "indydevdan",
+      "status": "indexed"
+    },
+    {
+      "video_id": "dPn3GBI8lII",
+      "title": "Introducing Claude Opus 4.6",
+      "url": "https://www.youtube.com/watch?v=dPn3GBI8lII",
+      "published_at": "2026-02-05T17:45:22+00:00",
+      "updated_at": "2026-04-22T16:13:28+00:00",
+      "channel_name": "Anthropic",
+      "channel_slug": "anthropic",
+      "status": "indexed"
+    },
+    {
+      "video_id": "kYJO0y8fVTA",
+      "title": "Claude on Mars",
+      "url": "https://www.youtube.com/shorts/kYJO0y8fVTA",
+      "published_at": "2026-01-30T19:09:11+00:00",
+      "updated_at": "2026-05-21T01:48:54+00:00",
+      "channel_name": "Anthropic",
+      "channel_slug": "anthropic",
+      "status": "indexed"
+    },
+    {
+      "video_id": "bluAmTHoEow",
+      "title": "Your tools are now interactive in Claude",
+      "url": "https://www.youtube.com/watch?v=bluAmTHoEow",
+      "published_at": "2026-01-26T19:06:25+00:00",
+      "updated_at": "2026-04-30T03:34:08+00:00",
+      "channel_name": "Anthropic",
+      "channel_slug": "anthropic",
+      "status": "indexed"
+    },
+    {
+      "video_id": "N5yJJA0NCU0",
+      "title": "AI on campus",
+      "url": "https://www.youtube.com/watch?v=N5yJJA0NCU0",
+      "published_at": "2026-01-12T22:41:27+00:00",
+      "updated_at": "2026-04-22T00:48:06+00:00",
+      "channel_name": "Anthropic",
+      "channel_slug": "anthropic",
+      "status": "indexed"
+    },
+    {
+      "video_id": "UAmKyyZ-b9E",
+      "title": "Introducing Cowork: Claude Code for the rest of your work",
+      "url": "https://www.youtube.com/watch?v=UAmKyyZ-b9E",
+      "published_at": "2026-01-12T20:02:22+00:00",
+      "updated_at": "2026-05-05T01:41:47+00:00",
+      "channel_name": "Anthropic",
+      "channel_slug": "anthropic",
+      "status": "indexed"
+    },
+    {
+      "video_id": "mM9TY91FECI",
+      "title": "AI's limited self-knowledge",
+      "url": "https://www.youtube.com/shorts/mM9TY91FECI",
+      "published_at": "2026-01-08T16:07:44+00:00",
+      "updated_at": "2026-04-22T20:58:59+00:00",
+      "channel_name": "Anthropic",
+      "channel_slug": "anthropic",
+      "status": "indexed"
+    },
+    {
+      "video_id": "nvbq39yVYRk",
+      "title": "What is sycophancy in AI models?",
+      "url": "https://www.youtube.com/watch?v=nvbq39yVYRk",
+      "published_at": "2025-12-18T20:30:14+00:00",
+      "updated_at": "2026-04-23T00:48:17+00:00",
+      "channel_name": "Anthropic",
+      "channel_slug": "anthropic",
+      "status": "indexed"
+    }
+  ]
+}

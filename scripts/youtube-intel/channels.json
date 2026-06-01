@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "description": "YouTube Intel channel allowlist. channel_id is required (RSS feed needs the UC... id). handle is cosmetic.",
+  "channels": [
+    {
+      "slug": "indydevdan",
+      "name": "IndyDevDan",
+      "handle": "@indydevdan",
+      "channel_id": "UC_x36zCEGilGpB1m-V4gmjg",
+      "priority": "high",
+      "enabled": true,
+      "tags": ["tac", "agents", "claude-code"]
+    },
+    {
+      "slug": "anthropic",
+      "name": "Anthropic",
+      "handle": "@anthropic-ai",
+      "channel_id": "UCrDwWp7EBBv4NwvScIpBDOA",
+      "priority": "high",
+      "enabled": true,
+      "tags": ["anthropic", "claude"]
+    }
+  ]
+}

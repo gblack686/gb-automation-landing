@@ -1,56 +1,34 @@
-﻿import { fetchAuthSession } from 'aws-amplify/auth';
+/**
+ * YouTube Intel client.
+ *
+ * Source of truth is the static JSON written by scripts/youtube-intel/scrape.mjs
+ * (see docs/youtube-intel.md). Fetched from the deployed site under
+ * /apps/youtube-intel/ so no backend is required to render the app.
+ */
 
-const DEFAULT_BASE_URL = 'http://127.0.0.1:8787';
+const DATA_BASE_PATH = '/apps/youtube-intel';
 
-function apiBaseUrl() {
-  return (import.meta.env.VITE_YOUTUBE_INTEL_API_URL || DEFAULT_BASE_URL).replace(/\/$/, '');
-}
-
-async function authHeaders() {
-  try {
-    const session = await fetchAuthSession();
-    const token = session?.tokens?.idToken?.toString();
-    return token ? { Authorization: `Bearer ${token}` } : {};
-  } catch {
-    return {};
-  }
-}
-
-async function request(path, options = {}) {
-  const headers = {
-    'Content-Type': 'application/json',
-    ...(await authHeaders()),
-    ...(options.headers || {}),
-  };
-  const response = await fetch(`${apiBaseUrl()}${path}`, {
-    ...options,
-    headers,
-  });
-  const data = await response.json().catch(() => ({}));
+async function fetchJson(path) {
+  const url = `${DATA_BASE_PATH}${path}`;
+  const response = await fetch(url, { headers: { Accept: 'application/json' } });
   if (!response.ok) {
-    throw new Error(data.error || `YouTube Intel API ${response.status}`);
+    throw new Error(`YouTube Intel data ${response.status} at ${url}`);
   }
-  return data;
+  return response.json();
 }
 
 export function getDashboard() {
-  return request('/api/youtube-intel/dashboard');
+  return fetchJson('/dashboard.json');
 }
 
 export function getChannels() {
-  return request('/api/youtube-intel/channels');
+  return fetchJson('/channels.json');
 }
 
-export function addChannel(channel) {
-  return request('/api/youtube-intel/channels', {
-    method: 'POST',
-    body: JSON.stringify(channel),
-  });
+export function getVideos() {
+  return fetchJson('/videos.json');
 }
 
-export function backfillArtifacts() {
-  return request('/api/youtube-intel/backfill', {
-    method: 'POST',
-    body: JSON.stringify({}),
-  });
+export function getLatestRun() {
+  return fetchJson('/latest-run.json');
 }
