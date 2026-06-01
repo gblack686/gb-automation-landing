@@ -237,7 +237,7 @@ function inferTarget(sourceUrl) {
 }
 
 async function liveBrands() {
-  return supabase('mall_brands?select=brand_id,handle,display_name,platform,status,last_scraped_at&order=handle.asc');
+  return supabase('mall_brands?select=brand_id,handle,display_name,platform,status,item_count,last_scraped_at&order=handle.asc');
 }
 
 async function liveEvents() {
@@ -245,7 +245,11 @@ async function liveEvents() {
 }
 
 async function liveLatestRun() {
-  const rows = await supabase('scrape_runs?select=*&order=scraped_at.desc&limit=1');
+  // The live scrape_runs table keys on created_at (not scraped_at); alias it so the API
+  // contract — and the UI's latest_run.scraped_at — stays stable.
+  const rows = await supabase(
+    'scrape_runs?select=run_id,brand_id,source_handle,source_platform,status,item_count,output_dir,scraped_at:created_at&order=created_at.desc&limit=1',
+  );
   return Array.isArray(rows) && rows.length ? rows[0] : null;
 }
 
@@ -309,20 +313,53 @@ export async function handler(event) {
         requested_at: requestedAt,
         source: 'mall-scanner-ui',
       };
+      const command = `hermes -p mall-scraper exec "scrape ${payload.brand.source_url || handle}"`;
+
+      // Preferred path: a legacy webhook runner is configured.
       const webhookResult = await postRunWebhook(payload);
-      const receipt = webhookResult?.receipt || {
-        run_id: `manual-${handle}-${Date.now()}`,
-        source_handle: handle,
-        source_platform: payload.brand.platform,
-        source_url: payload.brand.source_url,
-        status: webhookResult ? 'queued' : 'dry_run',
-        requested_at: requestedAt,
-        command: `hermes -p mall-scraper exec "scrape ${payload.brand.source_url || handle}"`,
-        item_count: 0,
-      };
+      if (webhookResult?.receipt) {
+        return json(202, { receipt: webhookResult.receipt, source: 'webhook' });
+      }
+
+      // Canonical path: enqueue a 'queued' scrape_runs row. The Mac Mini poller drains it,
+      // runs the scraper, and flips the row to running -> ok/failed. No inbound port needed.
+      if (SUPABASE_URL && SUPABASE_SERVICE_KEY) {
+        const rows = await supabaseInsert('scrape_runs', {
+          source_url: payload.brand.source_url || handle,
+          source_platform: payload.brand.platform,
+          source_handle: handle,
+          status: 'queued',
+          payload: { brand: payload.brand, requested_by: 'mall-scanner-ui', requested_at: requestedAt },
+        });
+        const row = Array.isArray(rows) ? rows[0] : rows;
+        return json(202, {
+          receipt: {
+            run_id: row?.run_id,
+            source_handle: handle,
+            source_platform: payload.brand.platform,
+            source_url: payload.brand.source_url,
+            status: 'queued',
+            requested_at: requestedAt,
+            command,
+            item_count: 0,
+          },
+          source: 'queue',
+        });
+      }
+
+      // No backend wired: dry-run receipt so the UI stays testable.
       return json(202, {
-        receipt,
-        source: webhookResult ? 'webhook' : 'fixture',
+        receipt: {
+          run_id: `manual-${handle}-${Date.now()}`,
+          source_handle: handle,
+          source_platform: payload.brand.platform,
+          source_url: payload.brand.source_url,
+          status: 'dry_run',
+          requested_at: requestedAt,
+          command,
+          item_count: 0,
+        },
+        source: 'fixture',
       });
     }
 
