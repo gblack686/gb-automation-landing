@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "source": "Tenant-scoped slice of public/artifacts/manifest.json. Mirrors the on-disk tree under public/artifacts/gbautomation/.",
+  "artifacts": [
+    {
+      "id": "wk-2026-22-tac-report",
+      "title": "TAC Weekly Report, Week 22",
+      "summary": "5 wins, 1 blocker rolled. Includes Mall Scanner sale-alert delta and YouTube Intel coverage.",
+      "kind": "report",
+      "status": "shipped",
+      "owner": "Greg",
+      "updated_at": "2026-05-30T09:42:00Z",
+      "asset_url": "/clients/gbautomation/reports/wk-2026-22-tac-report"
+    },
+    {
+      "id": "prd-client-portal-shell-v2",
+      "title": "PRD: Client Portal Shell v2",
+      "summary": "Promote boxed-icon header to shared PageHeader. Adopt :clientSlug route pattern with tenant config registry.",
+      "kind": "prd",
+      "status": "review",
+      "owner": "Greg",
+      "updated_at": "2026-05-28T16:11:00Z",
+      "asset_url": "/prds/the-mall-app-sprint-1-crawl-map-watch"
+    },
+    {
+      "id": "brief-mall-app-sprint-2",
+      "title": "Brief: Mall App Sprint 2 — Catalog Diff",
+      "summary": "Scope for surfacing daily diffs, alert grouping, and cost guards on the price-drop watcher.",
+      "kind": "brief",
+      "status": "draft",
+      "owner": "Greg",
+      "updated_at": "2026-05-25T20:30:00Z",
+      "asset_url": "/artifacts/gbautomation/brief-mall-app-sprint-2"
+    },
+    {
+      "id": "adjust-ai-7-day-developer-observability",
+      "title": "PRD: Adjust AI 7-Day Developer Observability Build",
+      "summary": "Adjust AI prospect PRD. Pinpoints the 7-day proof gate before any code is shipped.",
+      "kind": "prd",
+      "status": "shipped",
+      "owner": "Greg",
+      "updated_at": "2026-05-26T13:00:00Z",
+      "asset_url": "/prds/adjust-ai-7-day-developer-observability-build"
+    },
+    {
+      "id": "build-report-2026-05-30",
+      "title": "TAC Build Report, 2026-05-30",
+      "summary": "Static preview of the canonical build report artifact. Pinned in _redirects under /previews/.",
+      "kind": "html",
+      "status": "shipped",
+      "owner": "Pipeline",
+      "updated_at": "2026-05-30T18:14:00Z",
+      "asset_url": "/previews/report-artifacts/build-report-artifact.html"
+    },
+    {
+      "id": "prd-email-artifact-template",
+      "title": "PRD Email Artifact Template",
+      "summary": "Reference email artifact used by every TAC-driven prospect outreach.",
+      "kind": "html",
+      "status": "archived",
+      "owner": "Pipeline",
+      "updated_at": "2026-05-18T08:00:00Z",
+      "asset_url": "/previews/report-artifacts/prd-email-artifact.html"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Sparkles, FileText, Palette, ListTree, AlertCircle, Download, ExternalLink, Layers } from 'lucide-react';
+import { Sparkles, FileText, Palette, ListTree, AlertCircle, Download, ExternalLink, Layers, Users, Camera } from 'lucide-react';
 import Footer from '../components/Footer';
 import SignOutButton from '../components/SignOutButton';
 import {
@@ -98,6 +98,15 @@ export default function UiAgent() {
   const headerGroups = groupPagesByHeader(inventory.pages || []);
   const surfaceGroups = inventory.surfaceGroups || [];
   const surfaceSummary = summarizeSurfaceGroups(surfaceGroups);
+
+  const pages = inventory.pages || [];
+  const templatePages = pages.filter(
+    (p) => p.tenantScope && p.tenantScope !== 'global',
+  );
+  const shouldBeScoped = pages.filter((p) => p.shouldBeClientScoped);
+  const screenshotTargets = pages
+    .filter((p) => p.screenshot)
+    .map((p) => ({ path: p.path, ...p.screenshot }));
 
   return (
     <div className="min-h-screen bg-[#F3F1E7] selection:bg-[#D97757] selection:text-white">
@@ -257,6 +266,132 @@ export default function UiAgent() {
               </p>
             </div>
           </div>
+        </section>
+
+        <section className="space-y-4">
+          <div className="flex items-center gap-2">
+            <Users className="h-4 w-4 text-[#D97757]" />
+            <span className="text-[#D97757] text-xs font-bold tracking-widest uppercase">
+              Tenant template
+            </span>
+          </div>
+          <h2 className="font-serif text-2xl text-[#191919]">
+            GBAutomation is the template tenant
+          </h2>
+          <p className="text-sm text-[#191919]/70 max-w-3xl">
+            Most website surfaces are scoped per client. The{' '}
+            <code className="bg-[#E6E4D9] px-1.5 py-0.5 rounded">/clients/gbautomation/*</code>{' '}
+            family is the reference configuration every new client portal forks from. Shared
+            primitives live under{' '}
+            <code className="bg-[#E6E4D9] px-1.5 py-0.5 rounded">src/clients/shared/</code>;
+            tenant data lives under{' '}
+            <code className="bg-[#E6E4D9] px-1.5 py-0.5 rounded">public/clients/&lt;slug&gt;/</code>.
+          </p>
+
+          <div className="grid gap-4 lg:grid-cols-2">
+            <div className="rounded-xl border border-[#D6D4C8] bg-white/70 p-5">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-[#D97757]">
+                Tenant-template routes ({templatePages.length})
+              </p>
+              <p className="mt-1 text-xs text-[#191919]/55">
+                Live samples. Read-only copies of these power every new client portal.
+              </p>
+              <ul className="mt-3 space-y-1.5">
+                {templatePages.map((p) => (
+                  <li
+                    key={p.path}
+                    className="flex flex-wrap items-baseline gap-2 text-sm"
+                  >
+                    <code className="font-mono text-[12px] text-[#191919]">
+                      {p.path}
+                    </code>
+                    {p.templateRole && (
+                      <span className="text-xs text-[#191919]/60">
+                        {p.templateRole}
+                      </span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="rounded-xl border border-[#D6D4C8] bg-white/70 p-5">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-[#D97757]">
+                Global routes that should be tenant-scoped ({shouldBeScoped.length})
+              </p>
+              <p className="mt-1 text-xs text-[#191919]/55">
+                Move under{' '}
+                <code className="bg-[#E6E4D9] px-1.5 py-0.5 rounded text-[11px]">
+                  /clients/:clientSlug/&lt;surface&gt;
+                </code>{' '}
+                next pass.
+              </p>
+              <ul className="mt-3 space-y-1.5">
+                {shouldBeScoped.map((p) => (
+                  <li
+                    key={p.path}
+                    className="flex flex-wrap items-baseline gap-2 text-sm"
+                  >
+                    <code className="font-mono text-[12px] text-[#191919]">
+                      {p.path}
+                    </code>
+                    {p.templateSource && (
+                      <span className="text-xs text-[#191919]/60">
+                        template:{' '}
+                        <code className="font-mono">{p.templateSource}</code>
+                      </span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {screenshotTargets.length > 0 && (
+            <div className="rounded-xl border border-[#D6D4C8] bg-white/70 p-5">
+              <div className="flex items-center gap-2">
+                <Camera className="h-4 w-4 text-[#D97757]" />
+                <p className="text-[10px] font-bold uppercase tracking-widest text-[#D97757]">
+                  Screenshot capture queue ({screenshotTargets.length})
+                </p>
+              </div>
+              <p className="mt-1 text-xs text-[#191919]/55">
+                Suggested URLs for Sebastian to capture. Save under{' '}
+                <code className="font-mono">public/ui-agent/screenshots/</code>.
+              </p>
+              <div className="mt-3 overflow-x-auto">
+                <table className="min-w-full text-sm">
+                  <thead>
+                    <tr className="text-[10px] uppercase tracking-widest text-[#191919]/45">
+                      <th className="text-left font-semibold py-1 pr-4">Route</th>
+                      <th className="text-left font-semibold py-1 pr-4">Status</th>
+                      <th className="text-left font-semibold py-1 pr-4">Target file</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {screenshotTargets.map((s) => (
+                      <tr
+                        key={s.path}
+                        className="border-t border-[#D6D4C8]/60"
+                      >
+                        <td className="py-1.5 pr-4 font-mono text-[12px] text-[#191919]">
+                          {s.path}
+                        </td>
+                        <td className="py-1.5 pr-4">
+                          <span className="rounded-full bg-[#E6E4D9] px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-[#191919]/70">
+                            {s.status || 'todo'}
+                          </span>
+                        </td>
+                        <td className="py-1.5 pr-4 font-mono text-[11px] text-[#191919]/60">
+                          {s.target || '—'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
         </section>
 
         {surfaceGroups.length > 0 && (

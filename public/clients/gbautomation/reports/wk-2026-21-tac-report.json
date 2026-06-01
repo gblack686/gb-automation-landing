@@ -1,0 +1,40 @@
+{
+  "id": "wk-2026-21-tac-report",
+  "period": "weekly",
+  "title": "TAC Weekly Report, Week 21",
+  "window": "2026-05-17 to 2026-05-23",
+  "published_at": "2026-05-23T10:18:00Z",
+  "author": "Greg",
+  "summary": "Apps registry refresh. UI Agent surface taxonomy mapped. Tenant submodule pattern documented.",
+  "sections": [
+    {
+      "heading": "Wins",
+      "bullets": [
+        "Apps registry rewritten as the single source of truth for /apps.",
+        "UI Agent now reads the page-inventory file and renders the surface taxonomy.",
+        "Tenant sync runbook moved into docs/tenant-portals.md."
+      ]
+    },
+    {
+      "heading": "Blockers",
+      "bullets": [
+        "Three legacy *-projects.json files still ship. Confirm consumers or delete."
+      ]
+    },
+    {
+      "heading": "Numbers",
+      "rows": [
+        { "metric": "Apps shipped", "value": "6" },
+        { "metric": "PRDs published", "value": "8" },
+        { "metric": "Amplify deploys", "value": "9 green / 1 incident" }
+      ]
+    },
+    {
+      "heading": "Next week",
+      "bullets": [
+        "Ship Mall Scanner sale alerts.",
+        "Validate the client portal route shell."
+      ]
+    }
+  ]
+}

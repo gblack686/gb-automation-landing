@@ -1,0 +1,39 @@
+{
+  "id": "inc-2026-05-15-amplify-rebuild",
+  "period": "incident",
+  "title": "Incident: Amplify rebuild stuck on submodule fetch",
+  "window": "2026-05-15 21:11 to 22:30 UTC",
+  "published_at": "2026-05-15T22:40:00Z",
+  "author": "Greg",
+  "summary": "Amplify build held 18 minutes waiting on a stale submodule pointer. Resolved by manual PAT rotation. Postmortem inside.",
+  "sections": [
+    {
+      "heading": "Impact",
+      "bullets": [
+        "One Amplify rebuild for the parent site blocked for 18 minutes.",
+        "No client surfaces were degraded. The previous deploy continued to serve."
+      ]
+    },
+    {
+      "heading": "Root cause",
+      "bullets": [
+        "Fine-grained parent PAT expired two days earlier than calendar tracked.",
+        "Submodule fetch fell back to HTTPS and stalled on auth prompt."
+      ]
+    },
+    {
+      "heading": "Fix",
+      "bullets": [
+        "Rotated the parent PAT. Restarted the Amplify build.",
+        "Added a calendar reminder 7 days ahead of the next PAT expiry."
+      ]
+    },
+    {
+      "heading": "Follow-ups",
+      "bullets": [
+        "Add an actions-level smoke event that exercises dispatch weekly.",
+        "Move PAT expiry tracking from calendar to the ops dashboard."
+      ]
+    }
+  ]
+}

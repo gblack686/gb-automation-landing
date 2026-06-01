@@ -1,6 +1,9 @@
 {
-  "$schema": "page-inventory@2",
-  "generatedFrom": "src/App.jsx + src/ops/routes.jsx + src/clients/gbautomation/routes.jsx + src/clients/jid5274/routes.jsx + public/prds/* + public/previews/** + public/portfolio/*.json + public/artifacts/manifest.json",
+  "$schema": "page-inventory@3",
+  "generatedFrom": "src/App.jsx + src/ops/routes.jsx + src/clients/gbautomation/routes.jsx + src/clients/jid5274/routes.jsx + src/clients/shared/* + public/prds/* + public/previews/** + public/portfolio/*.json + public/artifacts/manifest.json + public/clients/gbautomation/*.json",
+  "schemaNotes": {
+    "v3": "Adds tenantScope, shouldBeClientScoped, templateSource, recommendedRoutePattern, and screenshot tracking on routes. Used by /ui-agent to surface which global routes need per-client variants and which surfaces are template/sample pages."
+  },
   "surfaceGroups": [
     {
       "id": "public-marketing",
@@ -102,8 +105,11 @@
           "source": "src/pages/Plan.jsx",
           "header": "none",
           "footer": false,
+          "shouldBeClientScoped": true,
+          "recommendedRoutePattern": "/clients/:clientSlug/plan",
+          "templateSource": "src/clients/gbautomation/* (sync/validation/plan family)",
           "recommendedAction": "unify",
-          "notes": "Just wraps PRDGenerator — no site chrome. Add shared PageHeader once it exists."
+          "notes": "Just wraps PRDGenerator. Planning is inherently per-client; move under the client portal once the shared PageHeader lands."
         },
         {
           "path": "/apps",
@@ -111,9 +117,12 @@
           "source": "src/pages/Apps.jsx",
           "header": "minimalist-dot",
           "footer": true,
+          "shouldBeClientScoped": true,
+          "recommendedRoutePattern": "/clients/:clientSlug/apps",
+          "templateSource": "/clients/gbautomation/apps + public/clients/gbautomation/apps.json",
           "recommendedAction": "keep",
           "dataSources": ["/portfolio/apps-registry.json"],
-          "notes": "Hosts AppsGallery driven by apps-registry.json."
+          "notes": "Hosts AppsGallery driven by apps-registry.json. Per-tenant subset already lives at /clients/gbautomation/apps."
         },
         {
           "path": "/apps/youtube-intel",
@@ -139,9 +148,12 @@
           "source": "src/pages/Artifacts.jsx",
           "header": "minimalist-dot",
           "footer": true,
+          "shouldBeClientScoped": true,
+          "recommendedRoutePattern": "/clients/:clientSlug/artifacts",
+          "templateSource": "/clients/gbautomation/artifacts + public/clients/gbautomation/artifacts.json",
           "recommendedAction": "keep",
           "dataSources": ["/artifacts/manifest.json", "/portfolio/artifacts-feed.json"],
-          "notes": "Adds Archive sub-link to header. Hosts RegistryArtifacts + ArtifactsGallery."
+          "notes": "Hosts RegistryArtifacts + ArtifactsGallery. Per-tenant variant lives at /clients/gbautomation/artifacts."
         },
         {
           "path": "/artifacts/archive",
@@ -149,8 +161,10 @@
           "source": "src/pages/Artifacts.jsx",
           "header": "minimalist-dot",
           "footer": true,
+          "shouldBeClientScoped": true,
+          "recommendedRoutePattern": "/clients/:clientSlug/artifacts (archived section)",
           "recommendedAction": "keep",
-          "notes": "Same component as /artifacts, archivedOnly mode."
+          "notes": "Same component as /artifacts, archivedOnly mode. Tenant variant exposes archive inline."
         },
         {
           "path": "/blockers",
@@ -158,8 +172,11 @@
           "source": "src/pages/Blockers.jsx",
           "header": "minimalist-dot",
           "footer": true,
+          "shouldBeClientScoped": true,
+          "recommendedRoutePattern": "/clients/:clientSlug/blockers",
+          "templateSource": "src/clients/gbautomation/* — promote next pass",
           "recommendedAction": "unify",
-          "notes": "max-w-4xl long-form. Live mirror of blockers.md via AppSync."
+          "notes": "max-w-4xl long-form. Live mirror of blockers.md via AppSync. Blockers are inherently per-client."
         },
         {
           "path": "/ui-agent",
@@ -229,34 +246,119 @@
     {
       "id": "client-portals",
       "label": "Client portals",
-      "summary": "Per-tenant portals nested under /clients/<slug>/*. Each tenant has its own allowlist (group + email) and its own visual shell.",
+      "summary": "Per-tenant portals nested under /clients/<slug>/*. Each tenant has its own allowlist (group + email) and shares the ClientPortalLayout shell. GBAutomation is the template tenant.",
       "authClass": "tenant:per-portal",
+      "templateSource": "src/clients/gbautomation/* + public/clients/gbautomation/*.json",
+      "recommendedRoutePattern": "/clients/:clientSlug/* with auth resolved from src/clients/shared/tenantConfig.js",
       "routes": [
         {
           "path": "/clients/gbautomation",
-          "title": "GBAutomation Portal — Dashboard",
+          "title": "GBAutomation Portal — Overview",
           "source": "src/clients/gbautomation/pages/DashboardPage.jsx",
-          "header": "boxed-icon",
+          "header": "client-portal (shared)",
           "footer": false,
           "auth": "tenant:gbautomation",
+          "tenantScope": "gbautomation",
+          "templateRole": "Template overview. Validates the tenant route shell and auth wrapper.",
+          "screenshot": { "status": "todo", "target": "ui-agent/screenshots/clients-gbautomation-overview.png" },
+          "recommendedAction": "keep"
+        },
+        {
+          "path": "/clients/gbautomation/dashboard",
+          "title": "GBAutomation Portal — Dashboard (template)",
+          "source": "src/clients/gbautomation/pages/TenantDashboardPage.jsx",
+          "header": "client-portal (shared)",
+          "footer": false,
+          "auth": "tenant:gbautomation",
+          "tenantScope": "gbautomation",
+          "templateRole": "Reference dashboard. Reads public/clients/gbautomation/dashboard.json via useTenantData.",
+          "dataSources": ["/clients/gbautomation/dashboard.json"],
+          "screenshot": { "status": "todo", "target": "ui-agent/screenshots/clients-gbautomation-dashboard.png" },
+          "recommendedAction": "keep"
+        },
+        {
+          "path": "/clients/gbautomation/apps",
+          "title": "GBAutomation Portal — Apps (template)",
+          "source": "src/clients/gbautomation/pages/AppsPage.jsx",
+          "header": "client-portal (shared)",
+          "footer": false,
+          "auth": "tenant:gbautomation",
+          "tenantScope": "gbautomation",
+          "templateRole": "Tenant-scoped slice of /portfolio/apps-registry.json.",
+          "dataSources": ["/clients/gbautomation/apps.json"],
+          "screenshot": { "status": "todo", "target": "ui-agent/screenshots/clients-gbautomation-apps.png" },
+          "recommendedAction": "keep"
+        },
+        {
+          "path": "/clients/gbautomation/artifacts",
+          "title": "GBAutomation Portal — Artifacts (template)",
+          "source": "src/clients/gbautomation/pages/ArtifactsPage.jsx",
+          "header": "client-portal (shared)",
+          "footer": false,
+          "auth": "tenant:gbautomation",
+          "tenantScope": "gbautomation",
+          "templateRole": "Tenant artifact registry. Mirrors the global /artifacts surface scoped to one tenant.",
+          "dataSources": ["/clients/gbautomation/artifacts.json"],
+          "screenshot": { "status": "todo", "target": "ui-agent/screenshots/clients-gbautomation-artifacts.png" },
+          "recommendedAction": "keep"
+        },
+        {
+          "path": "/clients/gbautomation/artifacts/:artifactId",
+          "title": "GBAutomation Portal — Artifact detail (template)",
+          "source": "src/clients/gbautomation/pages/ArtifactDetailPage.jsx",
+          "header": "client-portal (shared)",
+          "footer": false,
+          "auth": "tenant:gbautomation",
+          "tenantScope": "gbautomation",
+          "templateRole": "Detail view for one tenant artifact.",
+          "dataSources": ["/clients/gbautomation/artifacts.json"],
+          "screenshot": { "status": "todo", "target": "ui-agent/screenshots/clients-gbautomation-artifact-detail.png" },
+          "recommendedAction": "keep"
+        },
+        {
+          "path": "/clients/gbautomation/reports",
+          "title": "GBAutomation Portal — Reports (template)",
+          "source": "src/clients/gbautomation/pages/ReportsPage.jsx",
+          "header": "client-portal (shared)",
+          "footer": false,
+          "auth": "tenant:gbautomation",
+          "tenantScope": "gbautomation",
+          "templateRole": "TAC weekly + monthly roll-ups + incident postmortems.",
+          "dataSources": ["/clients/gbautomation/reports.json"],
+          "screenshot": { "status": "todo", "target": "ui-agent/screenshots/clients-gbautomation-reports.png" },
+          "recommendedAction": "keep"
+        },
+        {
+          "path": "/clients/gbautomation/reports/:reportId",
+          "title": "GBAutomation Portal — Report detail (template)",
+          "source": "src/clients/gbautomation/pages/ReportDetailPage.jsx",
+          "header": "client-portal (shared)",
+          "footer": false,
+          "auth": "tenant:gbautomation",
+          "tenantScope": "gbautomation",
+          "templateRole": "Report body. Reads /clients/gbautomation/reports/<id>.json.",
+          "dataSources": ["/clients/gbautomation/reports/<reportId>.json"],
+          "screenshot": { "status": "todo", "target": "ui-agent/screenshots/clients-gbautomation-report-detail.png" },
           "recommendedAction": "keep"
         },
         {
           "path": "/clients/gbautomation/sync",
           "title": "GBAutomation Portal — Sync",
           "source": "src/clients/gbautomation/pages/SyncPage.jsx",
-          "header": "boxed-icon",
+          "header": "client-portal (shared)",
           "footer": false,
           "auth": "tenant:gbautomation",
+          "tenantScope": "gbautomation",
           "recommendedAction": "keep"
         },
         {
           "path": "/clients/gbautomation/validation",
           "title": "GBAutomation Portal — Validation",
           "source": "src/clients/gbautomation/pages/ValidationPage.jsx",
-          "header": "boxed-icon",
+          "header": "client-portal (shared)",
           "footer": false,
           "auth": "tenant:gbautomation",
+          "tenantScope": "gbautomation",
           "recommendedAction": "keep"
         },
         {
@@ -266,8 +368,9 @@
           "header": "custom (PMC strip)",
           "footer": false,
           "auth": "tenant:jid5274",
+          "tenantScope": "jid5274",
           "recommendedAction": "unify",
-          "notes": "Iframes the synced Archon SPA at /clients/jid5274/archon/. Header is a one-off PMC strip — port to a tenant-themed PageHeader variant."
+          "notes": "Iframes the synced Archon SPA at /clients/jid5274/archon/. Port the one-off PMC strip to the shared ClientPortalHeader using tenantConfig.jid5274."
         }
       ],
       "staticPages": [
@@ -428,6 +531,44 @@
           "feeds": ["/ui-agent"],
           "recommendedAction": "keep",
           "notes": "This file."
+        },
+        {
+          "path": "/clients/gbautomation/profile.json",
+          "source": "public/clients/gbautomation/profile.json",
+          "feeds": ["/clients/gbautomation/*"],
+          "recommendedAction": "keep",
+          "notes": "Tenant identity. Recommended fork target: public/clients/<slug>/profile.json."
+        },
+        {
+          "path": "/clients/gbautomation/dashboard.json",
+          "source": "public/clients/gbautomation/dashboard.json",
+          "feeds": ["/clients/gbautomation/dashboard"],
+          "recommendedAction": "keep"
+        },
+        {
+          "path": "/clients/gbautomation/apps.json",
+          "source": "public/clients/gbautomation/apps.json",
+          "feeds": ["/clients/gbautomation/apps"],
+          "recommendedAction": "keep"
+        },
+        {
+          "path": "/clients/gbautomation/artifacts.json",
+          "source": "public/clients/gbautomation/artifacts.json",
+          "feeds": ["/clients/gbautomation/artifacts", "/clients/gbautomation/artifacts/:artifactId"],
+          "recommendedAction": "keep"
+        },
+        {
+          "path": "/clients/gbautomation/reports.json",
+          "source": "public/clients/gbautomation/reports.json",
+          "feeds": ["/clients/gbautomation/reports"],
+          "recommendedAction": "keep"
+        },
+        {
+          "path": "/clients/gbautomation/reports/<reportId>.json",
+          "source": "public/clients/gbautomation/reports/<reportId>.json",
+          "feeds": ["/clients/gbautomation/reports/:reportId"],
+          "recommendedAction": "keep",
+          "notes": "One file per report body."
         }
       ],
       "recommendedAction": "investigate",
@@ -446,8 +587,15 @@
       "id": "boxed-icon",
       "label": "Boxed icon header",
       "summary": "py-5 header with rounded-square icon tile, label + serif brand, nav rendered as pill (bg-[#E6E4D9]/70)",
-      "usedBy": ["/ops", "/ops/*", "/clients/gbautomation/*", "/login"],
-      "example": "OpsHeader.jsx, PortalHeader.jsx, Login.jsx"
+      "usedBy": ["/ops", "/ops/*", "/login"],
+      "example": "OpsHeader.jsx, Login.jsx"
+    },
+    "client-portal": {
+      "id": "client-portal",
+      "label": "Client portal header (tenant-themed)",
+      "summary": "Boxed-icon family wrapped in ClientPortalHeader. Renders nav + quick links from src/clients/shared/tenantConfig.js. Same chrome for every tenant; copy and accents come from the tenant config.",
+      "usedBy": ["/clients/gbautomation/*"],
+      "example": "src/clients/shared/ClientPortalHeader.jsx"
     },
     "gradient-gb-circle": {
       "id": "gradient-gb-circle",
@@ -513,7 +661,9 @@
       "header": "none",
       "footer": false,
       "tokenCompliance": "unknown",
-      "notes": "Just wraps PRDGenerator — no site header or footer. Often linked from minimalist-dot nav as 'Plan', but the page itself has no nav."
+      "tenantScope": "global",
+      "shouldBeClientScoped": true,
+      "notes": "Just wraps PRDGenerator — no site header or footer. Planning should move under /clients/:clientSlug/plan."
     },
     {
       "path": "/apps",
@@ -523,7 +673,10 @@
       "header": "minimalist-dot",
       "footer": true,
       "tokenCompliance": "high",
-      "notes": "Active link styled with bottom border. Hosts AppsGallery."
+      "tenantScope": "global",
+      "shouldBeClientScoped": true,
+      "templateSource": "/clients/gbautomation/apps",
+      "notes": "Active link styled with bottom border. Hosts AppsGallery. Tenant template at /clients/gbautomation/apps."
     },
     {
       "path": "/artifacts",
@@ -533,7 +686,10 @@
       "header": "minimalist-dot",
       "footer": true,
       "tokenCompliance": "high",
-      "notes": "Adds Archive sub-link to the nav. Hosts RegistryArtifacts + ArtifactsGallery."
+      "tenantScope": "global",
+      "shouldBeClientScoped": true,
+      "templateSource": "/clients/gbautomation/artifacts",
+      "notes": "Adds Archive sub-link to the nav. Hosts RegistryArtifacts + ArtifactsGallery. Tenant template at /clients/gbautomation/artifacts."
     },
     {
       "path": "/artifacts/archive",
@@ -543,6 +699,8 @@
       "header": "minimalist-dot",
       "footer": true,
       "tokenCompliance": "high",
+      "tenantScope": "global",
+      "shouldBeClientScoped": true,
       "notes": "Same component as /artifacts, archivedOnly mode."
     },
     {
@@ -553,7 +711,10 @@
       "header": "minimalist-dot",
       "footer": true,
       "tokenCompliance": "high",
-      "notes": "Single artifact detail."
+      "tenantScope": "global (client in path, no per-tenant auth)",
+      "shouldBeClientScoped": true,
+      "recommendedRoutePattern": "/clients/:clientSlug/artifacts/:artifactId",
+      "notes": "Single artifact detail. Already path-scoped by client but not auth-scoped. Move under client portal."
     },
     {
       "path": "/blockers",
@@ -563,6 +724,8 @@
       "header": "minimalist-dot",
       "footer": true,
       "tokenCompliance": "high",
+      "tenantScope": "global",
+      "shouldBeClientScoped": true,
       "notes": "Live mirror of blockers.md via AppSync."
     },
     {
@@ -643,40 +806,118 @@
     },
     {
       "path": "/clients/gbautomation",
-      "title": "GBAutomation Portal — Dashboard",
+      "title": "GBAutomation Portal — Overview",
       "file": "src/clients/gbautomation/pages/DashboardPage.jsx",
       "auth": "tenant:gbautomation",
-      "header": "boxed-icon",
+      "header": "client-portal (shared)",
       "footer": false,
-      "tokenCompliance": "high"
+      "tokenCompliance": "high",
+      "tenantScope": "gbautomation",
+      "templateRole": "Template overview. Reference for every external tenant.",
+      "screenshot": { "status": "todo", "target": "ui-agent/screenshots/clients-gbautomation-overview.png" }
+    },
+    {
+      "path": "/clients/gbautomation/dashboard",
+      "title": "GBAutomation Portal — Dashboard",
+      "file": "src/clients/gbautomation/pages/TenantDashboardPage.jsx",
+      "auth": "tenant:gbautomation",
+      "header": "client-portal (shared)",
+      "footer": false,
+      "tokenCompliance": "high",
+      "tenantScope": "gbautomation",
+      "templateRole": "Reference dashboard. Tenant data lives at /clients/gbautomation/dashboard.json.",
+      "screenshot": { "status": "todo", "target": "ui-agent/screenshots/clients-gbautomation-dashboard.png" }
+    },
+    {
+      "path": "/clients/gbautomation/apps",
+      "title": "GBAutomation Portal — Apps",
+      "file": "src/clients/gbautomation/pages/AppsPage.jsx",
+      "auth": "tenant:gbautomation",
+      "header": "client-portal (shared)",
+      "footer": false,
+      "tokenCompliance": "high",
+      "tenantScope": "gbautomation",
+      "templateRole": "Tenant-scoped slice of the apps registry.",
+      "screenshot": { "status": "todo", "target": "ui-agent/screenshots/clients-gbautomation-apps.png" }
+    },
+    {
+      "path": "/clients/gbautomation/artifacts",
+      "title": "GBAutomation Portal — Artifacts",
+      "file": "src/clients/gbautomation/pages/ArtifactsPage.jsx",
+      "auth": "tenant:gbautomation",
+      "header": "client-portal (shared)",
+      "footer": false,
+      "tokenCompliance": "high",
+      "tenantScope": "gbautomation",
+      "templateRole": "Tenant artifact registry. Mirrors the global /artifacts surface.",
+      "screenshot": { "status": "todo", "target": "ui-agent/screenshots/clients-gbautomation-artifacts.png" }
+    },
+    {
+      "path": "/clients/gbautomation/artifacts/:artifactId",
+      "title": "GBAutomation Portal — Artifact detail",
+      "file": "src/clients/gbautomation/pages/ArtifactDetailPage.jsx",
+      "auth": "tenant:gbautomation",
+      "header": "client-portal (shared)",
+      "footer": false,
+      "tokenCompliance": "high",
+      "tenantScope": "gbautomation",
+      "templateRole": "Detail view for one tenant artifact.",
+      "screenshot": { "status": "todo", "target": "ui-agent/screenshots/clients-gbautomation-artifact-detail.png" }
+    },
+    {
+      "path": "/clients/gbautomation/reports",
+      "title": "GBAutomation Portal — Reports",
+      "file": "src/clients/gbautomation/pages/ReportsPage.jsx",
+      "auth": "tenant:gbautomation",
+      "header": "client-portal (shared)",
+      "footer": false,
+      "tokenCompliance": "high",
+      "tenantScope": "gbautomation",
+      "templateRole": "TAC weekly + monthly + incident roll-ups for the tenant.",
+      "screenshot": { "status": "todo", "target": "ui-agent/screenshots/clients-gbautomation-reports.png" }
+    },
+    {
+      "path": "/clients/gbautomation/reports/:reportId",
+      "title": "GBAutomation Portal — Report detail",
+      "file": "src/clients/gbautomation/pages/ReportDetailPage.jsx",
+      "auth": "tenant:gbautomation",
+      "header": "client-portal (shared)",
+      "footer": false,
+      "tokenCompliance": "high",
+      "tenantScope": "gbautomation",
+      "templateRole": "Single report body.",
+      "screenshot": { "status": "todo", "target": "ui-agent/screenshots/clients-gbautomation-report-detail.png" }
     },
     {
       "path": "/clients/gbautomation/sync",
       "title": "GBAutomation Portal — Sync",
       "file": "src/clients/gbautomation/pages/SyncPage.jsx",
       "auth": "tenant:gbautomation",
-      "header": "boxed-icon",
+      "header": "client-portal (shared)",
       "footer": false,
-      "tokenCompliance": "high"
+      "tokenCompliance": "high",
+      "tenantScope": "gbautomation"
     },
     {
       "path": "/clients/gbautomation/validation",
       "title": "GBAutomation Portal — Validation",
       "file": "src/clients/gbautomation/pages/ValidationPage.jsx",
       "auth": "tenant:gbautomation",
-      "header": "boxed-icon",
+      "header": "client-portal (shared)",
       "footer": false,
-      "tokenCompliance": "high"
+      "tokenCompliance": "high",
+      "tenantScope": "gbautomation"
     },
     {
       "path": "/clients/jid5274/*",
       "title": "JID5274 Portal",
       "file": "src/clients/jid5274/routes.jsx",
       "auth": "tenant:jid5274",
-      "header": "boxed-icon",
+      "header": "custom (PMC strip)",
       "footer": false,
       "tokenCompliance": "medium",
-      "notes": "Per-tenant portal; uses the boxed-icon family. Verify visual parity with PortalHeader."
+      "tenantScope": "jid5274",
+      "notes": "Per-tenant portal. Port to ClientPortalHeader using tenantConfig.jid5274."
     }
   ],
   "uniformityFindings": [
@@ -735,6 +976,13 @@
       "title": "public/artifacts/manifest.json is out of sync with the disk tree",
       "detail": "manifest.json lists only acme-co/brief-bdfbfda44fbb. public/artifacts/ on disk also contains gbautomation/, fisch-group/, sylvan-hills/ trees. /artifacts and /artifacts/:client/:artifactId may show stale or partial data.",
       "recommendation": "Re-run the artifact registry build so manifest.json enumerates every tenant subdirectory, or document that those trees are intentionally manifest-excluded."
+    },
+    {
+      "id": "F10-tenant-scoping",
+      "severity": "high",
+      "title": "Most gated surfaces are global but conceptually per-client",
+      "detail": "/apps, /artifacts, /artifacts/archive, /artifacts/:client/:artifactId, /blockers, and /plan are gated globally but their content is inherently per-client. Today a signed-in user sees one pooled view. GBAutomation now has tenant-scoped mirrors at /clients/gbautomation/{apps, artifacts, reports} as the template.",
+      "recommendation": "Promote the global routes to /clients/:clientSlug/{apps, artifacts, blockers, plan} backed by the tenant config registry (src/clients/shared/tenantConfig.js) and per-tenant JSON under public/clients/<slug>/. Keep the global routes as redirects for now."
     },
     {
       "id": "F9-stale-public-html",

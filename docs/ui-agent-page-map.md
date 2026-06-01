@@ -21,7 +21,7 @@ The site has seven distinct surface groups. The first column matches the
 | `public-static-artifacts` | public | `/portfolio.html`, `/test.html`, `/previews/report-artifacts/*` | investigate |
 | `gated-internal-apps` | gated | `/plan`, `/apps`, `/apps/youtube-intel`, `/apps/mall-scanner`, `/artifacts`, `/artifacts/archive`, `/blockers`, `/ui-agent` | unify |
 | `ops-dashboard` | tenant:gbautomation | `/ops`, `/ops/systems`, `/ops/runs`, `/ops/kanban`, `/ops/data` | keep |
-| `client-portals` | tenant:per-portal | `/clients/gbautomation/*`, `/clients/jid5274/*` | unify |
+| `client-portals` | tenant:per-portal | `/clients/gbautomation/*` (template), `/clients/jid5274/*` | unify |
 | `dynamic-generated` | mixed | `/prds/:slug`, `/artifacts/:client/:artifactId`, `/ops/*`, `/clients/:tenant/*`, `/clients/jid5274/archon/*` | investigate |
 | `data-json-surfaces` | public | `/portfolio/*.json`, `/prds/prds-manifest.json`, `/artifacts/manifest.json`, `/ops/hermes-kanban.json`, `/ui-agent/*.json` | investigate |
 
@@ -86,16 +86,50 @@ allowlist `gblack686@gmail.com` / `greg@gbautomation.xyz`.
 ### 5. Client portals
 
 Per-tenant portals nested under `/clients/<slug>/*`. Each tenant has its own
-group + email allowlist.
+group + email allowlist. **GBAutomation is the template tenant** — its routes,
+JSON data, and shared primitives are the reference every new client portal forks
+from.
 
-| Path | Source | Auth | Action |
+**Template source.** `src/clients/gbautomation/*` plus
+`public/clients/gbautomation/*.json`. The shared shell lives in
+`src/clients/shared/` (`ClientPortalLayout`, `ClientPortalHeader`,
+`ClientMetric` + `ClientStatusRail`, `ClientAppsList`, `ClientArtifactList`,
+`ClientReportList`, `ClientSection`, `useTenantData`, `tenantConfig`).
+
+**Recommended generic route pattern.** `/clients/:clientSlug/*` with auth
+resolved from `src/clients/shared/tenantConfig.js`. The current router still
+mounts each tenant explicitly in `src/App.jsx` because every tenant carries its
+own Cognito group plus email allowlist; promoting to a single `:clientSlug`
+route is the next pass.
+
+| Path | Source | Auth | Tenant scope | Template role |
+| --- | --- | --- | --- | --- |
+| `/clients/gbautomation` | `src/clients/gbautomation/pages/DashboardPage.jsx` | tenant:gbautomation | gbautomation | Overview |
+| `/clients/gbautomation/dashboard` | `src/clients/gbautomation/pages/TenantDashboardPage.jsx` | tenant:gbautomation | gbautomation | Template dashboard, reads `dashboard.json` |
+| `/clients/gbautomation/apps` | `src/clients/gbautomation/pages/AppsPage.jsx` | tenant:gbautomation | gbautomation | Tenant-scoped apps registry |
+| `/clients/gbautomation/artifacts` | `src/clients/gbautomation/pages/ArtifactsPage.jsx` | tenant:gbautomation | gbautomation | Tenant artifact registry + archive |
+| `/clients/gbautomation/artifacts/:artifactId` | `src/clients/gbautomation/pages/ArtifactDetailPage.jsx` | tenant:gbautomation | gbautomation | Artifact detail |
+| `/clients/gbautomation/reports` | `src/clients/gbautomation/pages/ReportsPage.jsx` | tenant:gbautomation | gbautomation | Weekly + monthly + incident reports |
+| `/clients/gbautomation/reports/:reportId` | `src/clients/gbautomation/pages/ReportDetailPage.jsx` | tenant:gbautomation | gbautomation | Report body |
+| `/clients/gbautomation/sync` | `src/clients/gbautomation/pages/SyncPage.jsx` | tenant:gbautomation | gbautomation | keep |
+| `/clients/gbautomation/validation` | `src/clients/gbautomation/pages/ValidationPage.jsx` | tenant:gbautomation | gbautomation | keep |
+| `/clients/jid5274/*` | `src/clients/jid5274/routes.jsx` (iframe shell) | tenant:jid5274 | jid5274 | port header to `ClientPortalHeader` using `tenantConfig.jid5274` |
+| `/clients/jid5274/archon/index.html` | `public/clients/jid5274/archon/` (synced SPA) | tenant:jid5274 | jid5274 | keep (upstream-owned) |
+| `/clients/jid5274/archon/artifacts/*.html` | bundled artifact HTML | tenant:jid5274 | jid5274 | generate-sample |
+
+### 5a. Global routes that should be tenant-scoped
+
+These gated routes are pooled today but the content is conceptually per-client.
+GBAutomation now ships tenant-scoped mirrors as the template.
+
+| Global route | Should become | Template lives at | Status |
 | --- | --- | --- | --- |
-| `/clients/gbautomation` | `src/clients/gbautomation/pages/DashboardPage.jsx` | tenant:gbautomation | keep |
-| `/clients/gbautomation/sync` | `src/clients/gbautomation/pages/SyncPage.jsx` | tenant:gbautomation | keep |
-| `/clients/gbautomation/validation` | `src/clients/gbautomation/pages/ValidationPage.jsx` | tenant:gbautomation | keep |
-| `/clients/jid5274/*` | `src/clients/jid5274/routes.jsx` (iframe shell) | tenant:jid5274 | unify |
-| `/clients/jid5274/archon/index.html` | `public/clients/jid5274/archon/` (synced SPA) | tenant:jid5274 | keep (upstream-owned) |
-| `/clients/jid5274/archon/artifacts/*.html` | bundled artifact HTML | tenant:jid5274 | generate-sample |
+| `/plan` | `/clients/:clientSlug/plan` | (forthcoming) | pending |
+| `/apps` | `/clients/:clientSlug/apps` | `/clients/gbautomation/apps` | template ready |
+| `/artifacts` | `/clients/:clientSlug/artifacts` | `/clients/gbautomation/artifacts` | template ready |
+| `/artifacts/archive` | `/clients/:clientSlug/artifacts` (archived section) | `/clients/gbautomation/artifacts` | template ready |
+| `/artifacts/:client/:artifactId` | `/clients/:clientSlug/artifacts/:artifactId` | `/clients/gbautomation/artifacts/:artifactId` | template ready |
+| `/blockers` | `/clients/:clientSlug/blockers` | (forthcoming) | pending |
 
 ### 6. Dynamic & generated content
 
@@ -176,6 +210,15 @@ manifest.json lists only `acme-co/brief-bdfbfda44fbb`. The disk tree also
 contains `gbautomation/`, `fisch-group/`, `sylvan-hills/`. `/artifacts` may show
 stale or partial data. **Recommendation:** re-run the artifact registry build
 so the manifest enumerates every tenant tree, or document the exclusion.
+
+### F10 — Most gated surfaces are global but conceptually per-client (high)
+`/apps`, `/artifacts`, `/artifacts/archive`, `/artifacts/:client/:artifactId`,
+`/blockers`, and `/plan` are gated globally but the content is per-client.
+GBAutomation now ships tenant-scoped mirrors at `/clients/gbautomation/{apps, artifacts, reports}`
+as the template. **Recommendation:** promote each global route to
+`/clients/:clientSlug/<surface>` backed by `src/clients/shared/tenantConfig.js`
+and per-tenant JSON under `public/clients/<slug>/`. Keep the global routes as
+redirects during the migration.
 
 ### F9 — Legacy standalone HTML in `/public` has unclear ownership (low)
 `public/portfolio.html` (Tailwind CDN marketing variant) and `public/test.html`

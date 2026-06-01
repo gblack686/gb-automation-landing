@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "tenant": {
+    "slug": "gbautomation",
+    "name": "GBAutomation",
+    "eyebrow": "Internal Client Portal",
+    "productLabel": "Template Tenant",
+    "tagline": "The reference configuration every new client portal forks from.",
+    "repository": "gbauto/gbautomation",
+    "primary_contact": {
+      "name": "Greg Black",
+      "role": "Owner",
+      "handle": "@greg"
+    },
+    "sla": {
+      "sync_target_minutes": 5,
+      "uptime_target": "99.9%",
+      "review_cadence": "weekly"
+    },
+    "registered_at": "2026-04-12",
+    "validated_at": "2026-05-10"
+  }
+}

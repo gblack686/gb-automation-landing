@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "source": "Subset of /portfolio/apps-registry.json scoped to tenant gbautomation.",
+  "apps": [
+    {
+      "slug": "client-portal-gbautomation",
+      "name": "Client Portal",
+      "tagline": "Reusable tenant shell. Validated against this tenant before any external client is connected.",
+      "surface": "Portal",
+      "app_path": "/clients/gbautomation",
+      "status": "validated",
+      "tech_stack": ["react", "react-router", "github-actions", "aws-amplify"]
+    },
+    {
+      "slug": "mall-scanner",
+      "name": "The Mall Scanner",
+      "tagline": "Tracks indie brand catalogs across Instagram and Shopify. Alerts on sales and price drops.",
+      "surface": "Operations app",
+      "app_path": "/apps/mall-scanner",
+      "status": "experimental",
+      "tech_stack": ["react", "supabase", "instagram", "shopify", "hermes"]
+    },
+    {
+      "slug": "youtube-intel",
+      "name": "YouTube Intel",
+      "tagline": "Channel allowlist, transcript coverage, and artifact reporting for the TAC-backed YouTube pipeline.",
+      "surface": "Operations app",
+      "app_path": "/apps/youtube-intel",
+      "status": "experimental",
+      "tech_stack": ["react", "sqlite", "python", "tac-dev-pipeline"]
+    },
+    {
+      "slug": "logo-motion",
+      "name": "Logo Motion",
+      "tagline": "Brand-aware logo animation via gpt-image-2 keyframes interpolated through FFmpeg minterpolate.",
+      "surface": "Generative tool",
+      "app_path": null,
+      "status": "experimental",
+      "tech_stack": ["python", "openai gpt-image-2", "ffmpeg", "claude-code-team"]
+    },
+    {
+      "slug": "claude-html-artifacts",
+      "name": "Claude HTML Artifacts",
+      "tagline": "Curated catalog of standalone HTML artifacts produced inside Claude playground sessions.",
+      "surface": "Artifact catalog",
+      "app_path": null,
+      "status": "placeholder",
+      "tech_stack": ["claude-code", "html", "static-cdn"]
+    }
+  ]
+}

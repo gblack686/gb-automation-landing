@@ -1,0 +1,44 @@
+{
+  "id": "may-2026-monthly",
+  "period": "monthly",
+  "title": "GBAutomation Monthly, May 2026",
+  "window": "2026-05",
+  "published_at": "2026-06-01T08:00:00Z",
+  "author": "Greg",
+  "summary": "Roll-up of four weekly TAC reports. Client portal validation closed out the month. Mall Scanner went live.",
+  "sections": [
+    {
+      "heading": "Headline",
+      "bullets": [
+        "Validated the reusable tenant portal end to end on the GBAutomation template.",
+        "Mall Scanner moved from prototype to scheduled cycle. Hermes alerts wired.",
+        "UI Agent now bridges the ui-agents repo into this site."
+      ]
+    },
+    {
+      "heading": "What shipped",
+      "bullets": [
+        "Tenant portal scaffold under /clients/gbautomation with apps, artifacts, reports.",
+        "Apps registry consolidated. Six apps live, two private.",
+        "Surface taxonomy for the website published at /ui-agent."
+      ]
+    },
+    {
+      "heading": "Numbers",
+      "rows": [
+        { "metric": "Apps shipped", "value": "6" },
+        { "metric": "PRDs published", "value": "9" },
+        { "metric": "Weekly reports", "value": "4" },
+        { "metric": "Incidents", "value": "1 (resolved same day)" }
+      ]
+    },
+    {
+      "heading": "Looking ahead",
+      "bullets": [
+        "Promote the boxed-icon header to the shared PageHeader primitive.",
+        "Onboard the first external tenant. Use this portal as the template.",
+        "Backfill testimonials, about, blog, and calculator surfaces from trees.yaml."
+      ]
+    }
+  ]
+}
