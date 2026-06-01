@@ -53,8 +53,32 @@ jobs:
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: d0f641dd-0228-4dff-b0bb-d5f7f47382cc
+          NETLIFY_CLI_VERSION: 26.0.2
         run: |
-          npx --yes netlify-cli@latest deploy \
+          python - <<'PY'
+          import json
+          import os
+          import sys
+          import urllib.request
+
+          site_id = os.environ["NETLIFY_SITE_ID"]
+          token = os.environ["NETLIFY_AUTH_TOKEN"]
+          request = urllib.request.Request(
+              f"https://api.netlify.com/api/v1/sites/{site_id}",
+              headers={"Authorization": f"Bearer {token}"},
+          )
+          with urllib.request.urlopen(request, timeout=30) as response:
+              site = json.load(response)
+
+          print(f"Netlify site: {site.get('name')} ({site.get('id')})")
+          if site.get("disabled"):
+              reason = site.get("disabled_reason") or "no reason returned"
+              print(f"Netlify site is disabled: {reason}", file=sys.stderr)
+              sys.exit(2)
+          PY
+
+          npx --yes "netlify-cli@${NETLIFY_CLI_VERSION}" deploy \
+            --auth "$NETLIFY_AUTH_TOKEN" \
             --prod \
             --site "$NETLIFY_SITE_ID" \
             --dir dist \
