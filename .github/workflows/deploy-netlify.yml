@@ -62,7 +62,7 @@ jobs:
           import urllib.request
 
           site_id = os.environ["NETLIFY_SITE_ID"]
-          token = os.environ["NETLIFY_AUTH_TOKEN"]
+          token = os.environ["NETLIFY_AUTH_TOKEN"].strip().lstrip("\ufeff")
           request = urllib.request.Request(
               f"https://api.netlify.com/api/v1/sites/{site_id}",
               headers={"Authorization": f"Bearer {token}"},
