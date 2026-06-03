@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { observabilityData, formatNumber, formatPercent } from '../data/observabilityData';
 import { StatusBadge } from '../components/OpsCards';
+import { getLangfuseTraces } from '../lib/langfuseClient';
 
 const navItems = [
   { label: 'Overview', to: '/ops/observability', end: true },
@@ -215,11 +216,7 @@ function useLangfuseTraces() {
 
   useEffect(() => {
     let active = true;
-    fetch('/.netlify/functions/langfuse-traces?hours=168&observationPages=5')
-      .then((response) => {
-        if (!response.ok) throw new Error(`Langfuse function ${response.status}`);
-        return response.json();
-      })
+    getLangfuseTraces({ hours: 168, observationPages: 5, limit: 50 })
       .then((payload) => {
         if (!active) return;
         const rows = Array.isArray(payload.traces) && payload.traces.length ? payload.traces : observabilityData.traceFixtures;
@@ -231,7 +228,7 @@ function useLangfuseTraces() {
           observations,
           treeStats: payload.treeStats || {},
           events,
-          source: payload.source || 'function',
+          source: payload.source || 'amplify',
           error: payload.error || '',
         });
       })
@@ -278,7 +275,7 @@ function Traces() {
   return (
     <div className="space-y-8">
       <PageHead eyebrow="Langfuse Logs" title="Trace Browser">
-        Server-side Langfuse reads use the Netlify function when credentials are configured; otherwise the page stays usable with the latest archived report data.
+        Server-side Langfuse reads use an authenticated Amplify query backed by a Lambda that reads AWS Secrets Manager; otherwise the page stays usable with the latest archived report data.
       </PageHead>
       <ObservabilityNav />
 

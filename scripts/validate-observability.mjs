@@ -4,8 +4,10 @@ import { resolve } from 'node:path';
 const root = process.cwd();
 const requiredPaths = [
   'src/ops/pages/OpsObservability.jsx',
+  'src/ops/lib/langfuseClient.js',
   'src/ops/data/observabilityData.js',
-  'netlify/functions/langfuse-traces.js',
+  'amplify/functions/langfuse-traces/resource.ts',
+  'amplify/functions/langfuse-traces/handler.ts',
   'public/observability/reports/ecom-telemetry-report-2026-06-02.html',
   'public/observability/reports/trace-attribution-standard-plan.html',
   'public/observability/reports/2026-06-01-activity-breakdown.md',
@@ -47,10 +49,10 @@ for (const token of ['LiveSingle', 'LiveSwimlane', 'LiveRace', 'useLangfuseTrace
   if (!page.includes(token)) failures.push(`observability page missing ${token}`);
 }
 
-const fn = readFileSync(resolve(root, 'netlify/functions/langfuse-traces.js'), 'utf8');
+const fn = readFileSync(resolve(root, 'amplify/functions/langfuse-traces/handler.ts'), 'utf8');
 for (const token of [
-  'LANGFUSE_PUBLIC_KEY',
-  'LANGFUSE_SECRET_KEY',
+  'GetSecretValueCommand',
+  'gbautomation/infrastructure/langfuse',
   'static-fallback',
   '/api/public/traces',
   '/api/public/observations',
@@ -58,6 +60,20 @@ for (const token of [
   'observationsToEvents',
 ]) {
   if (!fn.includes(token)) failures.push(`Langfuse function missing ${token}`);
+}
+
+const amplifyData = readFileSync(resolve(root, 'amplify/data/resource.ts'), 'utf8');
+for (const token of ['langfuseTraces', 'a.handler.function', 'allow.authenticated', 'LangfuseTracePayload']) {
+  if (!amplifyData.includes(token)) failures.push(`Amplify data missing ${token}`);
+}
+
+const amplifyBackend = readFileSync(resolve(root, 'amplify/backend.ts'), 'utf8');
+for (const token of ['langfuseTraces', 'secretsmanager:GetSecretValue']) {
+  if (!amplifyBackend.includes(token)) failures.push(`Amplify backend missing ${token}`);
+}
+
+if (page.includes('/.netlify/functions/langfuse-traces')) {
+  failures.push('observability page still calls Netlify Langfuse function');
 }
 
 if (failures.length) {

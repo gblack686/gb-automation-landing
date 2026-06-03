@@ -1,6 +1,22 @@
 import { type ClientSchema, a, defineData } from '@aws-amplify/backend';
+import { langfuseTraces } from '../functions/langfuse-traces/resource';
 
 const schema = a.schema({
+  LangfuseTracePayload: a.customType({
+    payload: a.json(),
+  }),
+
+  langfuseTraces: a
+    .query()
+    .arguments({
+      hours: a.integer(),
+      observationPages: a.integer(),
+      limit: a.integer(),
+    })
+    .returns(a.ref('LangfuseTracePayload'))
+    .authorization((allow) => [allow.authenticated()])
+    .handler(a.handler.function(langfuseTraces)),
+
   ContactSubmission: a
     .model({
       name: a.string().required(),
