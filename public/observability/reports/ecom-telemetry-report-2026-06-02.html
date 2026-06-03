@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ecom + The Mall Telemetry Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --terracotta:       #D97757;
+  --terracotta-hover: #B75F43;
+  --ink:              #191919;
+  --cream-bg:         #F3F1E7;
+  --cream-2:          #E6E4D9;
+  --stone:            #D6D4C8;
+  --text-mute:        #8C8A84;
+  --text-muted-2:     #5C5C5C;
+  --font-sans:        'Inter', sans-serif;
+  --font-serif:       'Newsreader', serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--cream-bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  font-weight: 400;
+  line-height: 1.55;
+}
+h1, h2, h3, h4 { font-family: var(--font-serif); font-weight: 500; letter-spacing: -0.01em; }
+a { color: var(--terracotta); text-decoration: none; }
+a:hover { color: var(--terracotta-hover); text-decoration: underline; }
+
+.container { max-width: 980px; margin: 0 auto; padding: 64px 32px 96px; }
+
+.eyebrow {
+  font-size: 11px;
+  color: var(--text-mute);
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+h1.headline {
+  font-size: clamp(36px, 5vw, 56px);
+  line-height: 1.05;
+  margin: 0 0 14px;
+  letter-spacing: -0.02em;
+}
+h1.headline em { font-style: italic; color: var(--terracotta); font-weight: 400; }
+.subhead {
+  font-size: 16px;
+  color: var(--text-muted-2);
+  max-width: 720px;
+  margin: 0 0 24px;
+  font-weight: 400;
+}
+.pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 24px;
+}
+.pill {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  background: var(--cream-2);
+  border: 1px solid var(--stone);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 12px;
+  color: var(--ink);
+  line-height: 1.4;
+}
+.pill .pill-label {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-mute);
+  font-weight: 600;
+  font-size: 10px;
+}
+.pill .pill-value {
+  font-weight: 500;
+  color: var(--ink);
+}
+.pill.accent {
+  background: rgba(217,119,87,0.10);
+  border-color: rgba(217,119,87,0.45);
+}
+.pill.accent .pill-value {
+  color: var(--terracotta);
+}
+.pill.muted {
+  background: transparent;
+  border-style: dashed;
+}
+.window {
+  display: inline-block;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: var(--cream-2);
+  border: 1px solid var(--stone);
+  border-radius: 999px;
+  padding: 6px 14px;
+  color: var(--ink);
+  margin-bottom: 56px;
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 48px;
+}
+.kpi-card {
+  background: var(--cream-2);
+  border: 1px solid var(--stone);
+  border-radius: 14px;
+  padding: 20px 22px;
+  position: relative;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+.kpi-card:hover { transform: translateY(-2px); border-color: var(--terracotta); }
+.kpi-card .label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--text-mute);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+.kpi-card .value {
+  font-family: var(--font-serif);
+  font-size: 34px;
+  line-height: 1.05;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+.kpi-card .sub {
+  font-size: 12px;
+  color: var(--text-muted-2);
+  margin-top: 6px;
+}
+.kpi-card.accent { border-color: var(--terracotta); background: linear-gradient(180deg, var(--cream-2) 0%, #efece0 100%); }
+.kpi-card.accent .value { color: var(--terracotta); }
+
+section.block { margin-bottom: 56px; }
+section.block > h2 {
+  font-size: 28px;
+  margin: 0 0 8px;
+  letter-spacing: -0.01em;
+}
+section.block > .lede {
+  font-size: 14px;
+  color: var(--text-muted-2);
+  margin-bottom: 24px;
+  max-width: 760px;
+}
+
+table.report {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--cream-2);
+  border: 1px solid var(--stone);
+  border-radius: 12px;
+  overflow: hidden;
+  font-size: 13px;
+}
+table.report th, table.report td {
+  padding: 10px 14px;
+  text-align: right;
+  border-bottom: 1px solid var(--stone);
+}
+table.report th {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  background: #efece0;
+  color: var(--text-muted-2);
+  font-weight: 600;
+}
+table.report th:first-child, table.report td:first-child { text-align: left; }
+table.report tr:last-child td { border-bottom: none; }
+table.report tr.totals td {
+  background: #eeeadd;
+  font-weight: 600;
+  border-top: 2px solid var(--terracotta);
+}
+
+.chart-card {
+  background: var(--cream-2);
+  border: 1px solid var(--stone);
+  border-radius: 14px;
+  padding: 28px;
+  margin-bottom: 18px;
+}
+.chart-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+@media (max-width: 760px) { .chart-grid { grid-template-columns: 1fr; } }
+
+.commit-list { list-style: none; padding: 0; margin: 0; }
+.commit-list li {
+  font-size: 13px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--stone);
+  font-family: var(--font-sans);
+  color: var(--text-muted-2);
+}
+.commit-list li:last-child { border-bottom: none; }
+.commit-list code {
+  background: #efece0;
+  color: var(--ink);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.repo-block {
+  background: var(--cream-2);
+  border: 1px solid var(--stone);
+  border-radius: 14px;
+  margin-bottom: 18px;
+  overflow: hidden;
+}
+.repo-block > h3 {
+  margin: 0;
+  padding: 16px 20px;
+  font-size: 17px;
+  background: #efece0;
+  border-bottom: 1px solid var(--stone);
+}
+
+.pitfall-list, .method-list { padding-left: 22px; color: var(--text-muted-2); font-size: 13px; }
+.pitfall-list li, .method-list li { margin-bottom: 8px; }
+.pitfall-list li::marker { color: var(--terracotta); }
+
+.footer {
+  margin-top: 80px;
+  padding-top: 24px;
+  border-top: 1px solid var(--stone);
+  font-size: 11px;
+  color: var(--text-mute);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.footer .brand { color: var(--ink); font-weight: 600; }
+
+.callout {
+  background: linear-gradient(135deg, rgba(217,119,87,0.10) 0%, rgba(217,119,87,0.02) 100%);
+  border: 1px solid rgba(217,119,87,0.35);
+  border-radius: 14px;
+  padding: 20px 24px;
+  margin-bottom: 32px;
+  font-size: 14px;
+  color: var(--ink);
+}
+.callout strong { color: var(--terracotta); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="eyebrow">GBAutomation Observability</div>
+  <h1 class="headline">Ecom + The Mall Telemetry <em>Report</em></h1>
+  <div class="pill-row"><span class="pill"><span class="pill-label">Window</span><span class="pill-value">8 day(s)</span></span><span class="pill"><span class="pill-label">Filter</span><span class="pill-value">ecom, vans, fabletics, madewell, plp, pdp, shop-intelligence, sales-alert, price-observation, scrape_vans, scrape_fabletics, mall, the-mall, themall, mall-scraper, mall-scanner, sreya, scanner, sprint, scrape_runs</span></span><span class="pill accent"><span class="pill-label">Commits</span><span class="pill-value">26 across 3 repo(s)</span></span><span class="pill accent"><span class="pill-label">Net LOC</span><span class="pill-value">+10,805 (10,958 added / 153 deleted)</span></span><span class="pill"><span class="pill-label">Traces</span><span class="pill-value">722</span></span><span class="pill"><span class="pill-label">Generations</span><span class="pill-value">498</span></span><span class="pill accent"><span class="pill-label">Input tokens</span><span class="pill-value">936,309</span></span><span class="pill accent"><span class="pill-label">Output tokens</span><span class="pill-value">77,076</span></span><span class="pill"><span class="pill-label">Attributed gens</span><span class="pill-value">247</span></span><span class="pill"><span class="pill-label">Unknown-model gens</span><span class="pill-value">251 (telemetry gap)</span></span></div>
+  <div class="window">2026-05-26 07:55 UTC -&gt; 2026-06-02 07:55 UTC</div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card"><div class="label">Commits</div><div class="value">26</div><div class="sub">git activity</div></div><div class="kpi-card"><div class="label">Net LOC</div><div class="value">+10,805</div><div class="sub">10,958 added / 153 deleted</div></div><div class="kpi-card accent"><div class="label">Tokens</div><div class="value">1,013,385</div><div class="sub">936,309 in / 77,076 out</div></div><div class="kpi-card"><div class="label">Generations</div><div class="value">498</div><div class="sub">LLM calls (Langfuse)</div></div>
+  </div>
+
+  <div class="callout"><strong>Telemetry gap.</strong> <span class="pill accent" style="margin:0 4px;"><span class="pill-label">Unknown</span><span class="pill-value">251 / 498 (50%)</span></span> agent-team subagent spans returned without a model attribution. Fix: ship <code>telemetry-fix-agent</code> (Skill-Run-Registry PRD).</div>
+
+  <section class="block">
+    <h2>Day-by-day</h2>
+    <p class="lede">Commits + LOC from the repo. Generations + tokens from Langfuse.</p>
+    <table class="report"><thead><tr><th>Day</th><th>Commits</th><th>LOC +</th><th>LOC -</th><th>Gens</th><th>Input</th><th>Output</th></tr></thead><tbody><tr><td>2026-05-26</td><td>5</td><td>2,340</td><td>49</td><td>0</td><td>0</td><td>0</td></tr><tr><td>2026-05-27</td><td>1</td><td>357</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>2026-05-28</td><td>6</td><td>4,538</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>2026-05-29</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>2026-05-30</td><td>6</td><td>1,633</td><td>35</td><td>0</td><td>0</td><td>0</td></tr><tr><td>2026-05-31</td><td>5</td><td>582</td><td>69</td><td>308</td><td>879,624</td><td>70,863</td></tr><tr><td>2026-06-01</td><td>3</td><td>1,508</td><td>0</td><td>154</td><td>56,685</td><td>6,213</td></tr><tr><td>2026-06-02</td><td>0</td><td>0</td><td>0</td><td>36</td><td>0</td><td>0</td></tr><tr class='totals'><td>TOTAL</td><td>26</td><td>10,958</td><td>153</td><td>498</td><td>936,309</td><td>77,076</td></tr></tbody></table>
+  </section>
+
+  <section class="block"><h2>Visualizations</h2><p class="lede">Daily token spend and generation volume.</p><div class="chart-grid"><div class="chart-card"><svg width="460" height="240" viewBox="0 0 460 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Total tokens per day"><text x="230.0" y="30" font-size="11" font-weight="600" fill="#191919" font-family="Inter, sans-serif" letter-spacing="0.12em" text-anchor="middle">TOTAL TOKENS PER DAY</text><line x1="44" y1="196.0" x2="416" y2="196.0" stroke="#D6D4C8" stroke-width="1" stroke-dasharray="2 4" opacity="0.6"/><text x="38" y="200.0" text-anchor="end" font-size="10" fill="#8C8A84">0</text><line x1="44" y1="158.0" x2="416" y2="158.0" stroke="#D6D4C8" stroke-width="1" stroke-dasharray="2 4" opacity="0.6"/><text x="38" y="162.0" text-anchor="end" font-size="10" fill="#8C8A84">237,621</text><line x1="44" y1="120.0" x2="416" y2="120.0" stroke="#D6D4C8" stroke-width="1" stroke-dasharray="2 4" opacity="0.6"/><text x="38" y="124.0" text-anchor="end" font-size="10" fill="#8C8A84">475,243</text><line x1="44" y1="82.0" x2="416" y2="82.0" stroke="#D6D4C8" stroke-width="1" stroke-dasharray="2 4" opacity="0.6"/><text x="38" y="86.0" text-anchor="end" font-size="10" fill="#8C8A84">712,865</text><line x1="44" y1="44.0" x2="416" y2="44.0" stroke="#D6D4C8" stroke-width="1" stroke-dasharray="2 4" opacity="0.6"/><text x="38" y="48.0" text-anchor="end" font-size="10" fill="#8C8A84">950,487</text><rect x="44.0" y="196.0" width="54" height="0.0" rx="3" fill="#D97757" opacity="0.92"/><text x="71.0" y="190.0" text-anchor="middle" font-size="10" font-weight="600" fill="#191919">0</text><rect x="106.0" y="196.0" width="54" height="0.0" rx="3" fill="#D97757" opacity="0.92"/><text x="133.0" y="190.0" text-anchor="middle" font-size="10" font-weight="600" fill="#191919">0</text><rect x="168.0" y="196.0" width="54" height="0.0" rx="3" fill="#D97757" opacity="0.92"/><text x="195.0" y="190.0" text-anchor="middle" font-size="10" font-weight="600" fill="#191919">0</text><rect x="230.0" y="44.0" width="54" height="152.0" rx="3" fill="#D97757" opacity="0.92"/><text x="257.0" y="38.0" text-anchor="middle" font-size="10" font-weight="600" fill="#191919">950,487</text><rect x="292.0" y="185.9" width="54" height="10.1" rx="3" fill="#D97757" opacity="0.92"/><text x="319.0" y="179.9" text-anchor="middle" font-size="10" font-weight="600" fill="#191919">62,898</text><rect x="354.0" y="196.0" width="54" height="0.0" rx="3" fill="#D97757" opacity="0.92"/><text x="381.0" y="190.0" text-anchor="middle" font-size="10" font-weight="600" fill="#191919">0</text><text x="71.0" y="212.0" text-anchor="middle" font-size="10" fill="#5C5C5C">05-28</text><text x="133.0" y="212.0" text-anchor="middle" font-size="10" fill="#5C5C5C">05-29</text><text x="195.0" y="212.0" text-anchor="middle" font-size="10" fill="#5C5C5C">05-30</text><text x="257.0" y="212.0" text-anchor="middle" font-size="10" fill="#5C5C5C">05-31</text><text x="319.0" y="212.0" text-anchor="middle" font-size="10" fill="#5C5C5C">06-01</text><text x="381.0" y="212.0" text-anchor="middle" font-size="10" fill="#5C5C5C">06-02</text></svg></div><div class="chart-card"><svg width="460" height="240" viewBox="0 0 460 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Generations per day"><text x="230.0" y="30" font-size="11" font-weight="600" fill="#191919" font-family="Inter, sans-serif" letter-spacing="0.12em" text-anchor="middle">GENERATIONS PER DAY</text><line x1="44" y1="196.0" x2="416" y2="196.0" stroke="#D6D4C8" stroke-width="1" stroke-dasharray="2 4" opacity="0.6"/><text x="38" y="200.0" text-anchor="end" font-size="10" fill="#8C8A84">0</text><line x1="44" y1="158.0" x2="416" y2="158.0" stroke="#D6D4C8" stroke-width="1" stroke-dasharray="2 4" opacity="0.6"/><text x="38" y="162.0" text-anchor="end" font-size="10" fill="#8C8A84">77</text><line x1="44" y1="120.0" x2="416" y2="120.0" stroke="#D6D4C8" stroke-width="1" stroke-dasharray="2 4" opacity="0.6"/><text x="38" y="124.0" text-anchor="end" font-size="10" fill="#8C8A84">154</text><line x1="44" y1="82.0" x2="416" y2="82.0" stroke="#D6D4C8" stroke-width="1" stroke-dasharray="2 4" opacity="0.6"/><text x="38" y="86.0" text-anchor="end" font-size="10" fill="#8C8A84">231</text><line x1="44" y1="44.0" x2="416" y2="44.0" stroke="#D6D4C8" stroke-width="1" stroke-dasharray="2 4" opacity="0.6"/><text x="38" y="48.0" text-anchor="end" font-size="10" fill="#8C8A84">309</text><rect x="44.0" y="196.0" width="54" height="0.0" rx="3" fill="#191919" opacity="0.92"/><text x="71.0" y="190.0" text-anchor="middle" font-size="10" font-weight="600" fill="#191919">0</text><rect x="106.0" y="196.0" width="54" height="0.0" rx="3" fill="#191919" opacity="0.92"/><text x="133.0" y="190.0" text-anchor="middle" font-size="10" font-weight="600" fill="#191919">0</text><rect x="168.0" y="196.0" width="54" height="0.0" rx="3" fill="#191919" opacity="0.92"/><text x="195.0" y="190.0" text-anchor="middle" font-size="10" font-weight="600" fill="#191919">0</text><rect x="230.0" y="44.0" width="54" height="152.0" rx="3" fill="#191919" opacity="0.92"/><text x="257.0" y="38.0" text-anchor="middle" font-size="10" font-weight="600" fill="#191919">309</text><rect x="292.0" y="119.8" width="54" height="76.2" rx="3" fill="#191919" opacity="0.92"/><text x="319.0" y="113.8" text-anchor="middle" font-size="10" font-weight="600" fill="#191919">155</text><rect x="354.0" y="178.3" width="54" height="17.7" rx="3" fill="#191919" opacity="0.92"/><text x="381.0" y="172.3" text-anchor="middle" font-size="10" font-weight="600" fill="#191919">36</text><text x="71.0" y="212.0" text-anchor="middle" font-size="10" fill="#5C5C5C">05-28</text><text x="133.0" y="212.0" text-anchor="middle" font-size="10" fill="#5C5C5C">05-29</text><text x="195.0" y="212.0" text-anchor="middle" font-size="10" fill="#5C5C5C">05-30</text><text x="257.0" y="212.0" text-anchor="middle" font-size="10" fill="#5C5C5C">05-31</text><text x="319.0" y="212.0" text-anchor="middle" font-size="10" fill="#5C5C5C">06-01</text><text x="381.0" y="212.0" text-anchor="middle" font-size="10" fill="#5C5C5C">06-02</text></svg></div><div class="chart-card"><svg width="460" height="240" viewBox="0 0 460 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Input tokens per day"><text x="230.0" y="30" font-size="11" font-weight="600" fill="#191919" font-family="Inter, sans-serif" letter-spacing="0.12em" text-anchor="middle">INPUT TOKENS PER DAY</text><line x1="44" y1="196.0" x2="416" y2="196.0" stroke="#D6D4C8" stroke-width="1" stroke-dasharray="2 4" opacity="0.6"/><text x="38" y="200.0" text-anchor="end" font-size="10" fill="#8C8A84">0</text><line x1="44" y1="158.0" x2="416" y2="158.0" stroke="#D6D4C8" stroke-width="1" stroke-dasharray="2 4" opacity="0.6"/><text x="38" y="162.0" text-anchor="end" font-size="10" fill="#8C8A84">219,906</text><line x1="44" y1="120.0" x2="416" y2="120.0" stroke="#D6D4C8" stroke-width="1" stroke-dasharray="2 4" opacity="0.6"/><text x="38" y="124.0" text-anchor="end" font-size="10" fill="#8C8A84">439,812</text><line x1="44" y1="82.0" x2="416" y2="82.0" stroke="#D6D4C8" stroke-width="1" stroke-dasharray="2 4" opacity="0.6"/><text x="38" y="86.0" text-anchor="end" font-size="10" fill="#8C8A84">659,718</text><line x1="44" y1="44.0" x2="416" y2="44.0" stroke="#D6D4C8" stroke-width="1" stroke-dasharray="2 4" opacity="0.6"/><text x="38" y="48.0" text-anchor="end" font-size="10" fill="#8C8A84">879,624</text><rect x="44.0" y="196.0" width="54" height="0.0" rx="3" fill="#5C5C5C" opacity="0.92"/><text x="71.0" y="190.0" text-anchor="middle" font-size="10" font-weight="600" fill="#191919">0</text><rect x="106.0" y="196.0" width="54" height="0.0" rx="3" fill="#5C5C5C" opacity="0.92"/><text x="133.0" y="190.0" text-anchor="middle" font-size="10" font-weight="600" fill="#191919">0</text><rect x="168.0" y="196.0" width="54" height="0.0" rx="3" fill="#5C5C5C" opacity="0.92"/><text x="195.0" y="190.0" text-anchor="middle" font-size="10" font-weight="600" fill="#191919">0</text><rect x="230.0" y="44.0" width="54" height="152.0" rx="3" fill="#5C5C5C" opacity="0.92"/><text x="257.0" y="38.0" text-anchor="middle" font-size="10" font-weight="600" fill="#191919">879,624</text><rect x="292.0" y="186.2" width="54" height="9.8" rx="3" fill="#5C5C5C" opacity="0.92"/><text x="319.0" y="180.2" text-anchor="middle" font-size="10" font-weight="600" fill="#191919">56,685</text><rect x="354.0" y="196.0" width="54" height="0.0" rx="3" fill="#5C5C5C" opacity="0.92"/><text x="381.0" y="190.0" text-anchor="middle" font-size="10" font-weight="600" fill="#191919">0</text><text x="71.0" y="212.0" text-anchor="middle" font-size="10" fill="#5C5C5C">05-28</text><text x="133.0" y="212.0" text-anchor="middle" font-size="10" fill="#5C5C5C">05-29</text><text x="195.0" y="212.0" text-anchor="middle" font-size="10" fill="#5C5C5C">05-30</text><text x="257.0" y="212.0" text-anchor="middle" font-size="10" fill="#5C5C5C">05-31</text><text x="319.0" y="212.0" text-anchor="middle" font-size="10" fill="#5C5C5C">06-01</text><text x="381.0" y="212.0" text-anchor="middle" font-size="10" fill="#5C5C5C">06-02</text></svg></div><div class="chart-card"><svg width="460" height="240" viewBox="0 0 460 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Output tokens per day"><text x="230.0" y="30" font-size="11" font-weight="600" fill="#191919" font-family="Inter, sans-serif" letter-spacing="0.12em" text-anchor="middle">OUTPUT TOKENS PER DAY</text><line x1="44" y1="196.0" x2="416" y2="196.0" stroke="#D6D4C8" stroke-width="1" stroke-dasharray="2 4" opacity="0.6"/><text x="38" y="200.0" text-anchor="end" font-size="10" fill="#8C8A84">0</text><line x1="44" y1="158.0" x2="416" y2="158.0" stroke="#D6D4C8" stroke-width="1" stroke-dasharray="2 4" opacity="0.6"/><text x="38" y="162.0" text-anchor="end" font-size="10" fill="#8C8A84">17,715</text><line x1="44" y1="120.0" x2="416" y2="120.0" stroke="#D6D4C8" stroke-width="1" stroke-dasharray="2 4" opacity="0.6"/><text x="38" y="124.0" text-anchor="end" font-size="10" fill="#8C8A84">35,431</text><line x1="44" y1="82.0" x2="416" y2="82.0" stroke="#D6D4C8" stroke-width="1" stroke-dasharray="2 4" opacity="0.6"/><text x="38" y="86.0" text-anchor="end" font-size="10" fill="#8C8A84">53,147</text><line x1="44" y1="44.0" x2="416" y2="44.0" stroke="#D6D4C8" stroke-width="1" stroke-dasharray="2 4" opacity="0.6"/><text x="38" y="48.0" text-anchor="end" font-size="10" fill="#8C8A84">70,863</text><rect x="44.0" y="196.0" width="54" height="0.0" rx="3" fill="#B75F43" opacity="0.92"/><text x="71.0" y="190.0" text-anchor="middle" font-size="10" font-weight="600" fill="#191919">0</text><rect x="106.0" y="196.0" width="54" height="0.0" rx="3" fill="#B75F43" opacity="0.92"/><text x="133.0" y="190.0" text-anchor="middle" font-size="10" font-weight="600" fill="#191919">0</text><rect x="168.0" y="196.0" width="54" height="0.0" rx="3" fill="#B75F43" opacity="0.92"/><text x="195.0" y="190.0" text-anchor="middle" font-size="10" font-weight="600" fill="#191919">0</text><rect x="230.0" y="44.0" width="54" height="152.0" rx="3" fill="#B75F43" opacity="0.92"/><text x="257.0" y="38.0" text-anchor="middle" font-size="10" font-weight="600" fill="#191919">70,863</text><rect x="292.0" y="182.7" width="54" height="13.3" rx="3" fill="#B75F43" opacity="0.92"/><text x="319.0" y="176.7" text-anchor="middle" font-size="10" font-weight="600" fill="#191919">6,213</text><rect x="354.0" y="196.0" width="54" height="0.0" rx="3" fill="#B75F43" opacity="0.92"/><text x="381.0" y="190.0" text-anchor="middle" font-size="10" font-weight="600" fill="#191919">0</text><text x="71.0" y="212.0" text-anchor="middle" font-size="10" fill="#5C5C5C">05-28</text><text x="133.0" y="212.0" text-anchor="middle" font-size="10" fill="#5C5C5C">05-29</text><text x="195.0" y="212.0" text-anchor="middle" font-size="10" fill="#5C5C5C">05-30</text><text x="257.0" y="212.0" text-anchor="middle" font-size="10" fill="#5C5C5C">05-31</text><text x="319.0" y="212.0" text-anchor="middle" font-size="10" fill="#5C5C5C">06-01</text><text x="381.0" y="212.0" text-anchor="middle" font-size="10" fill="#5C5C5C">06-02</text></svg></div></div></section>
+
+  <section class="block">
+    <h2>What was built</h2>
+    <p class="lede">Commit log grouped by repo, newest first.</p>
+    <div class="repo-block"><h3>Ecom (price scraper) (/Users/ecom/repos/ecom)</h3><ul class="commit-list"><li>2026-05-31 <code>0b9b317</code> feat: add Vans production readiness smoke (+383/-0, 3 files)</li><li>2026-05-31 <code>f8cfca2</code> fix: enforce hard PLP deadlines (+58/-39, 1 files)</li><li>2026-05-31 <code>0139e9d</code> fix: prefer fresh PDP browsers for seeded Fabletics products (+7/-0, 1 files)</li><li>2026-05-31 <code>1be5a8e</code> fix: recover Fabletics prices via seeded PDP refresh (+98/-12, 1 files)</li><li>2026-05-31 <code>d769ea8</code> fix: gate Fabletics runs on priced product coverage (+36/-18, 1 files)</li><li>2026-05-30 <code>c2b1372</code> fix: isolate Fabletics listing pages in fresh CDP targets (+30/-9, 1 files)</li><li>2026-05-30 <code>58776c5</code> fix: continue Fabletics broad runs after page timeouts (+77/-19, 1 files)</li><li>2026-05-30 <code>3eb1678</code> chore: ignore browser runtime profiles (+1/-0, 1 files)</li><li>2026-05-30 <code>6220395</code> fix: bound Fabletics CDP websocket open (+7/-1, 1 files)</li><li>2026-05-30 <code>d23d2bf</code> feat: improve Fabletics browser mapping coverage (+69/-5, 1 files)</li><li>2026-05-30 <code>94b86d9</code> feat: add ecom telemetry and Fabletics browser scraper (+1449/-1, 11 files)</li></ul></div><div class="repo-block"><h3>Ecom (browser harness) (/Users/ecom/Developer/browser-harness)</h3><ul class="commit-list"><li>no commits in window</li></ul></div><div class="repo-block"><h3>GBAutomation (ecom+mall) (/Users/greg/repos/gbautomation)</h3><ul class="commit-list"><li>2026-06-01 <code>21eeece7</code> docs(the-mall): cross-machine code inventory for engagement + ecom scanner (+94/-0, 1 files)</li><li>2026-06-01 <code>860205f5</code> chore(telemetry): weekly ecom report 2026-06-02 (v3.1, first archived) (+643/-0, 4 files)</li><li>2026-06-01 <code>3fdd1d9d</code> feat(mall-scanner): Supabase schema, queue poller, and launchd jobs (+771/-0, 12 files)</li><li>2026-05-28 <code>29bd5903</code> feat(ecom): ECOM-6 Telegram sales alert agent dry-run (GBA-495) (#137) (+800/-0, 4 files)</li><li>2026-05-28 <code>7fb51a7a</code> feat(ecom): ECOM-5 price observation normalization and change classifier (GBA-494) (#132) (+386/-0, 2 files)</li><li>2026-05-28 <code>8414bf99</code> feat(ecom): ECOM-3 scraper profile builder from shop map (GBA-492) (#135) (+1119/-0, 2 files)</li><li>2026-05-28 <code>b7f61208</code> feat(ecom): ECOM-2 browser-harness shop mapper dry-run (GBA-491) (#136)</li><li>2026-05-28 <code>0b72492f</code> feat(ecom): ECOM-1 shop-intelligence orchestrator PRD and dry-run contract (GBA-490) (#138) (+2193/-0, 12 files)</li><li>2026-05-28 <code>7237430f</code> fix(ecom): add sudo-n escalation to codex auth mirror script (GBA-700) (#142) (+40/-0, 1 files)</li><li>2026-05-27 <code>97b88c00</code> feat(ecom): expose ecom scanner OpenClaw gateway via Tailscale Funnel :8443 (+357/-0, 3 files)</li><li>2026-05-26 <code>c76e8bfa</code> feat(the-mall): send Sprint 1 PRD email to Sreya + record send receipt (+31/-12, 6 files)</li><li>2026-05-26 <code>198ec99b</code> docs(the-mall): rewrite Sreya email in Greg&#x27;s voice + switch to HTML attachment (+17/-26, 1 files)</li><li>2026-05-26 <code>bee2c576</code> feat(the-mall): Sprint 1 PRD + client-facing email draft (+1510/-1, 10 files)</li><li>2026-05-26 <code>ce4bb717</code> chore(client): wire The Mall App profile to gbauto/the-mall repo (+99/-6, 5 files)</li><li>2026-05-26 <code>017f67b9</code> feat(client): onboard The Mall App (Sreya Halder + Ellie, ECOM team) (+683/-4, 18 files)</li></ul></div>
+  </section>
+
+  <section class="block">
+    <h2>LLM telemetry breakdown</h2>
+    <p class="lede">Generations bucketed by model. The unknown bucket is the agent-team subagent gap.</p>
+    <table class="report"><thead><tr><th>Model</th><th>Generations</th></tr></thead><tbody><tr><td><code style='background:#efece0;padding:2px 8px;border-radius:4px;font-family:ui-monospace,Menlo,monospace;font-size:12px;'>unknown</code></td><td>251</td></tr><tr><td><code style='background:#efece0;padding:2px 8px;border-radius:4px;font-family:ui-monospace,Menlo,monospace;font-size:12px;'>gpt-5.5</code></td><td>247</td></tr></tbody></table>
+    <p style="font-size:12px;color:var(--text-muted-2);margin-top:14px;">Langfuse-calculated cost: **$0.0000** (gpt-5.5 is not in Langfuse pricing table; Codex Max billing is the real source)</p>
+  </section>
+
+  <section class="block"><h2>Plans</h2><p class="lede">Plan docs touched this week.</p><p style="font-size:14px;color:var(--text-muted-2);margin:0 0 14px;">8 plan document(s) created or updated.</p><ul style="margin:0 0 8px 0;padding-left:22px;color:var(--text-muted-2);font-size:13px;line-height:1.6;"><li style='margin-bottom:6px;'><strong>Ecom Telemetry Report</strong> <code style='background:#efece0;padding:1px 6px;border-radius:4px;font-size:12px;font-family:ui-monospace,Menlo,monospace;'>2026-06-02</code> <code style='background:#efece0;padding:1px 6px;border-radius:4px;font-size:12px;font-family:ui-monospace,Menlo,monospace;'>~/.hermes/plans/ecom-telemetry-report-2026-06-02.md</code></li></ul><p style="font-size:14px;color:var(--text-muted-2);margin:0 0 14px;">2026-05-26 03:04 UTC -&gt; 2026-06-02 03:04 UTC</p><ul style="margin:0 0 8px 0;padding-left:22px;color:var(--text-muted-2);font-size:13px;line-height:1.6;"><li style='margin-bottom:6px;'><strong>Ecom Telemetry Report</strong> <code style='background:#efece0;padding:1px 6px;border-radius:4px;font-size:12px;font-family:ui-monospace,Menlo,monospace;'>2026-06-01</code> <code style='background:#efece0;padding:1px 6px;border-radius:4px;font-size:12px;font-family:ui-monospace,Menlo,monospace;'>~/repos/gbautomation/second-brain/inbox/plans/ecom-telemetry-report-2026-06-02.md</code></li></ul><p style="font-size:14px;color:var(--text-muted-2);margin:0 0 14px;">2026-05-26 02:59 UTC -&gt; 2026-06-02 02:59 UTC</p><ul style="margin:0 0 8px 0;padding-left:22px;color:var(--text-muted-2);font-size:13px;line-height:1.6;"><li style='margin-bottom:6px;'><strong>Ecom Telemetry Report</strong> <code style='background:#efece0;padding:1px 6px;border-radius:4px;font-size:12px;font-family:ui-monospace,Menlo,monospace;'>2026-06-01</code> <code style='background:#efece0;padding:1px 6px;border-radius:4px;font-size:12px;font-family:ui-monospace,Menlo,monospace;'>~/repos/gbautomation/second-brain/inbox/plans/ecom-telemetry-report-2026-06-01.md</code></li></ul><p style="font-size:14px;color:var(--text-muted-2);margin:0 0 14px;">2026-05-25 21:47 UTC -&gt; 2026-06-01 21:47 UTC</p><ul style="margin:0 0 8px 0;padding-left:22px;color:var(--text-muted-2);font-size:13px;line-height:1.6;"><li style='margin-bottom:6px;'><strong>Ecom Telemetry Report</strong> <code style='background:#efece0;padding:1px 6px;border-radius:4px;font-size:12px;font-family:ui-monospace,Menlo,monospace;'>2026-06-01</code> <code style='background:#efece0;padding:1px 6px;border-radius:4px;font-size:12px;font-family:ui-monospace,Menlo,monospace;'>~/.hermes/plans/ecom-telemetry-report-2026-06-01.md</code></li></ul><p style="font-size:14px;color:var(--text-muted-2);margin:0 0 14px;">2026-05-25 21:47 UTC -&gt; 2026-06-01 21:47 UTC</p><ul style="margin:0 0 8px 0;padding-left:22px;color:var(--text-muted-2);font-size:13px;line-height:1.6;"><li style='margin-bottom:6px;'><strong>Ecom-Smoketest Telemetry Report</strong> <code style='background:#efece0;padding:1px 6px;border-radius:4px;font-size:12px;font-family:ui-monospace,Menlo,monospace;'>2026-06-01</code> <code style='background:#efece0;padding:1px 6px;border-radius:4px;font-size:12px;font-family:ui-monospace,Menlo,monospace;'>~/repos/gbautomation/second-brain/inbox/plans/ecom-smoketest-telemetry-report-2026-06-01.md</code></li></ul><p style="font-size:14px;color:var(--text-muted-2);margin:0 0 14px;">2026-05-30 21:40 UTC -&gt; 2026-06-01 21:40 UTC</p><ul style="margin:0 0 8px 0;padding-left:22px;color:var(--text-muted-2);font-size:13px;line-height:1.6;"><li style='margin-bottom:6px;'><strong>ECOM-VANS Build Analytics — May 28 - June 1, 2026 (CORRECTED)</strong> <code style='background:#efece0;padding:1px 6px;border-radius:4px;font-size:12px;font-family:ui-monospace,Menlo,monospace;'>2026-06-01</code> <code style='background:#efece0;padding:1px 6px;border-radius:4px;font-size:12px;font-family:ui-monospace,Menlo,monospace;'>~/.hermes/plans/ecom-vans-build-analytics-2026-06-01.md</code></li></ul><p style="font-size:14px;color:var(--text-muted-2);margin:0 0 14px;">Hermes / GBAutomation Observability greg@gbautomation.xyz ECOM-VANS build report — day-by-day, ~2.87M tokens through Codex on ecom user</p><ul style="margin:0 0 8px 0;padding-left:22px;color:var(--text-muted-2);font-size:13px;line-height:1.6;"><li style='margin-bottom:6px;'><strong>ECOM-VANS Build Analytics — May 20-23, 2026</strong> <code style='background:#efece0;padding:1px 6px;border-radius:4px;font-size:12px;font-family:ui-monospace,Menlo,monospace;'>2026-06-01</code> <code style='background:#efece0;padding:1px 6px;border-radius:4px;font-size:12px;font-family:ui-monospace,Menlo,monospace;'>~/repos/gbautomation/second-brain/inbox/plans/ecom-vans-build-analytics-2026-06-01.md</code></li></ul><p style="font-size:14px;color:var(--text-muted-2);margin:0 0 14px;">Hermes / GBAutomation Observability greg@gbautomation.xyz ECOM-VANS build report — 6,941 net LOC across 8 PRs, ~293k LLM tokens</p><ul style="margin:0 0 8px 0;padding-left:22px;color:var(--text-muted-2);font-size:13px;line-height:1.6;"><li style='margin-bottom:6px;'><strong>TAC PRD: The Mall App Scanner v2 + Site Mini-App</strong> <code style='background:#efece0;padding:1px 6px;border-radius:4px;font-size:12px;font-family:ui-monospace,Menlo,monospace;'>2026-05-28</code> <code style='background:#efece0;padding:1px 6px;border-radius:4px;font-size:12px;font-family:ui-monospace,Menlo,monospace;'>~/repos/gbautomation/second-brain/inbox/plans/2026-05-27-the-mall-scanner-tac-build-prd.md</code></li></ul><p style="font-size:14px;color:var(--text-muted-2);margin:0 0 14px;">Dispatchable TAC build derived from the client-facing Sprint 1 PRD ([[2026-05-26-the-mall-sprint-1-prd]]). The client PRD is the scope-of-record for Sreya; this PRD is the agent-team build contract...</p></section><section class="block"><h2>Insights from user signals</h2><p class="lede">Goals, preferences, and pain points from user messages.</p><ul style="margin:0 0 8px 0;padding-left:22px;color:var(--text-muted-2);font-size:13px;line-height:1.6;"><li style='margin-bottom:6px;'>Source: 3 non-skill, non-cron user messages in <code style='background:#efece0;padding:1px 6px;border-radius:4px;font-size:12px;font-family:ui-monospace,Menlo,monospace;'>~/.hermes/state.db</code></li></ul><div style="background:var(--cream-2);border:1px solid var(--stone);border-radius:12px;padding:18px 22px;margin-bottom:14px;"><h3 style="margin:0 0 10px;font-size:17px;font-family:var(--font-serif);font-weight:500;letter-spacing:-0.01em;">Goals and asks</h3><ul style="margin:0 0 8px 0;padding-left:22px;color:var(--text-muted-2);font-size:13px;line-height:1.6;"><li style='margin-bottom:6px;'><code style='background:#efece0;padding:1px 6px;border-radius:4px;font-size:12px;font-family:ui-monospace,Menlo,monospace;'>2026-05-31T18:45</code> Make sure you can ask the Ecom agent these questions! This is imperative bake it into your prompts</li><li style='margin-bottom:6px;'><code style='background:#efece0;padding:1px 6px;border-radius:4px;font-size:12px;font-family:ui-monospace,Menlo,monospace;'>2026-05-31T18:39</code> Set up a cron to check on Ecom scanner every hour and make sure we finish this goal by tomorrows meeting with sreya</li></ul></div><div style="background:var(--cream-2);border:1px solid var(--stone);border-radius:12px;padding:18px 22px;margin-bottom:14px;"><h3 style="margin:0 0 10px;font-size:17px;font-family:var(--font-serif);font-weight:500;letter-spacing:-0.01em;">Other intent signals</h3><ul style="margin:0 0 8px 0;padding-left:22px;color:var(--text-muted-2);font-size:13px;line-height:1.6;"><li style='margin-bottom:6px;'><code style='background:#efece0;padding:1px 6px;border-radius:4px;font-size:12px;font-family:ui-monospace,Menlo,monospace;'>2026-05-30T13:04</code> I notice that we keep getting approval gates for the e-commerce scanner. What it makes sense to set approval to full access? I&#x27;m leaning towards doing that, so we don&#x27;t get caught up. The agent can just run and end....</li></ul><ul style="margin:0 0 8px 0;padding-left:22px;color:var(--text-muted-2);font-size:13px;line-height:1.6;"><li style='margin-bottom:6px;'><strong>Recurring themes:</strong> agent, scanner, approval, questions, imperative, prompts, check, every, finish, tomorrows</li></ul></div></section><section class="block"><h2>Architectural decisions</h2><p class="lede">ADRs and decision-tagged commits this week.</p><ul style="margin:0 0 8px 0;padding-left:22px;color:var(--text-muted-2);font-size:13px;line-height:1.6;"><li style='margin-bottom:6px;'>No ADRs or decision-tagged commits this week.</li></ul><p style="font-size:14px;color:var(--text-muted-2);margin:0 0 14px;">(Sources scanned: <code style='background:#efece0;padding:1px 6px;border-radius:4px;font-size:12px;font-family:ui-monospace,Menlo,monospace;'>second-brain/intelligence/decisions/</code>, commits matching <code style='background:#efece0;padding:1px 6px;border-radius:4px;font-size:12px;font-family:ui-monospace,Menlo,monospace;'>adr|decision|architecture|design</code>.)</p></section><section class="block" style="background:rgba(217,119,87,0.04);border-radius:14px;padding:24px 28px;border:1px solid var(--stone);"><h2>Weekly wins</h2><p class="lede">Shipped features and completed goals.</p><ul style="margin:0 0 8px 0;padding-left:22px;color:var(--text-muted-2);font-size:13px;line-height:1.6;"><li style='margin-bottom:6px;'><span style="display:inline-block;background:rgba(31,122,58,0.10);border:1px solid rgba(31,122,58,0.45);color:#1f7a3a;border-radius:999px;padding:2px 9px;font-size:10px;font-weight:600;letter-spacing:0.10em;text-transform:uppercase;margin-right:6px;">Shipped</span> feat: add Vans production readiness smoke <code style='background:#efece0;padding:1px 6px;border-radius:4px;font-size:12px;font-family:ui-monospace,Menlo,monospace;'>0b9b317 on 2026-05-31 (+383 LOC, 3 files)</code></li><li style='margin-bottom:6px;'><span style="display:inline-block;background:rgba(31,122,58,0.10);border:1px solid rgba(31,122,58,0.45);color:#1f7a3a;border-radius:999px;padding:2px 9px;font-size:10px;font-weight:600;letter-spacing:0.10em;text-transform:uppercase;margin-right:6px;">Shipped</span> feat: improve Fabletics browser mapping coverage <code style='background:#efece0;padding:1px 6px;border-radius:4px;font-size:12px;font-family:ui-monospace,Menlo,monospace;'>d23d2bf on 2026-05-30 (+69 LOC, 1 files)</code></li><li style='margin-bottom:6px;'><span style="display:inline-block;background:rgba(31,122,58,0.10);border:1px solid rgba(31,122,58,0.45);color:#1f7a3a;border-radius:999px;padding:2px 9px;font-size:10px;font-weight:600;letter-spacing:0.10em;text-transform:uppercase;margin-right:6px;">Shipped</span> feat: add ecom telemetry and Fabletics browser scraper <code style='background:#efece0;padding:1px 6px;border-radius:4px;font-size:12px;font-family:ui-monospace,Menlo,monospace;'>94b86d9 on 2026-05-30 (+1449 LOC, 11 files)</code></li><li style='margin-bottom:6px;'><span style="display:inline-block;background:rgba(31,122,58,0.10);border:1px solid rgba(31,122,58,0.45);color:#1f7a3a;border-radius:999px;padding:2px 9px;font-size:10px;font-weight:600;letter-spacing:0.10em;text-transform:uppercase;margin-right:6px;">Shipped</span> feat(mall-scanner): Supabase schema, queue poller, and launchd jobs <code style='background:#efece0;padding:1px 6px;border-radius:4px;font-size:12px;font-family:ui-monospace,Menlo,monospace;'>3fdd1d9 on 2026-06-01 (+771 LOC, 12 files)</code></li><li style='margin-bottom:6px;'><span style="display:inline-block;background:rgba(31,122,58,0.10);border:1px solid rgba(31,122,58,0.45);color:#1f7a3a;border-radius:999px;padding:2px 9px;font-size:10px;font-weight:600;letter-spacing:0.10em;text-transform:uppercase;margin-right:6px;">Shipped</span> feat(ecom): ECOM-6 Telegram sales alert agent dry-run (GBA-495) (#137) <code style='background:#efece0;padding:1px 6px;border-radius:4px;font-size:12px;font-family:ui-monospace,Menlo,monospace;'>29bd590 on 2026-05-28 (+800 LOC, 4 files)</code></li><li style='margin-bottom:6px;'><span style="display:inline-block;background:rgba(31,122,58,0.10);border:1px solid rgba(31,122,58,0.45);color:#1f7a3a;border-radius:999px;padding:2px 9px;font-size:10px;font-weight:600;letter-spacing:0.10em;text-transform:uppercase;margin-right:6px;">Shipped</span> feat(ecom): ECOM-5 price observation normalization and change classifier (GBA-494) (#132) <code style='background:#efece0;padding:1px 6px;border-radius:4px;font-size:12px;font-family:ui-monospace,Menlo,monospace;'>7fb51a7 on 2026-05-28 (+386 LOC, 2 files)</code></li><li style='margin-bottom:6px;'><span style="display:inline-block;background:rgba(31,122,58,0.10);border:1px solid rgba(31,122,58,0.45);color:#1f7a3a;border-radius:999px;padding:2px 9px;font-size:10px;font-weight:600;letter-spacing:0.10em;text-transform:uppercase;margin-right:6px;">Shipped</span> feat(ecom): ECOM-3 scraper profile builder from shop map (GBA-492) (#135) <code style='background:#efece0;padding:1px 6px;border-radius:4px;font-size:12px;font-family:ui-monospace,Menlo,monospace;'>8414bf9 on 2026-05-28 (+1119 LOC, 2 files)</code></li><li style='margin-bottom:6px;'><span style="display:inline-block;background:rgba(31,122,58,0.10);border:1px solid rgba(31,122,58,0.45);color:#1f7a3a;border-radius:999px;padding:2px 9px;font-size:10px;font-weight:600;letter-spacing:0.10em;text-transform:uppercase;margin-right:6px;">Shipped</span> feat(ecom): ECOM-2 browser-harness shop mapper dry-run (GBA-491) (#136) <code style='background:#efece0;padding:1px 6px;border-radius:4px;font-size:12px;font-family:ui-monospace,Menlo,monospace;'>b7f6120 on 2026-05-28 (+0 LOC, 0 files)</code></li><li style='margin-bottom:6px;'><span style="display:inline-block;background:rgba(31,122,58,0.10);border:1px solid rgba(31,122,58,0.45);color:#1f7a3a;border-radius:999px;padding:2px 9px;font-size:10px;font-weight:600;letter-spacing:0.10em;text-transform:uppercase;margin-right:6px;">Goal acknowledged</span> Set up a cron to check on Ecom scanner every hour and make sure we finish this goal by tomorrows meeting with sreya <code style='background:#efece0;padding:1px 6px;border-radius:4px;font-size:12px;font-family:ui-monospace,Menlo,monospace;'>User goal on 2026-05-31T18:39</code></li></ul></section><section class="block" style="background:rgba(217,119,87,0.08);border-radius:14px;padding:24px 28px;border:1px solid var(--stone);"><h2>Weekly challenges</h2><ul style="margin:0 0 8px 0;padding-left:22px;color:var(--text-muted-2);font-size:13px;line-height:1.6;"><li style='margin-bottom:6px;'>None flagged this week.</li></ul></section><section class="block" style="background:rgba(47,108,166,0.07);border-radius:14px;padding:24px 28px;border:1px solid rgba(47,108,166,0.45);"><h2>Up Next</h2><p class="lede">Queued work and follow-ups for next cycle.</p><ul style="margin:0 0 8px 0;padding-left:22px;color:var(--text-muted-2);font-size:13px;line-height:1.6;"><li style='margin-bottom:6px;'><span style="display:inline-block;background:rgba(47,108,166,0.12);border:1px solid rgba(47,108,166,0.45);color:#2F6CA6;border-radius:999px;padding:2px 9px;font-size:10px;font-weight:600;letter-spacing:0.10em;text-transform:uppercase;margin-right:6px;">To Do</span> Make sure you can ask the Ecom agent these questions! This is imperative bake it into your prompts</li><li style='margin-bottom:6px;'><span style="display:inline-block;background:rgba(47,108,166,0.12);border:1px solid rgba(47,108,166,0.45);color:#2F6CA6;border-radius:999px;padding:2px 9px;font-size:10px;font-weight:600;letter-spacing:0.10em;text-transform:uppercase;margin-right:6px;">To Do</span> Wire the Sunday weekly cron to run run_ecom_report.sh (not yet scheduled).</li><li style='margin-bottom:6px;'><span style="display:inline-block;background:rgba(47,108,166,0.12);border:1px solid rgba(47,108,166,0.45);color:#2F6CA6;border-radius:999px;padding:2px 9px;font-size:10px;font-weight:600;letter-spacing:0.10em;text-transform:uppercase;margin-right:6px;">To Do</span> Ship telemetry-fix-agent so agent-team subagent traces carry model + token attribution.</li></ul></section>
+
+  <section class="block"><h2>Known gaps</h2><ul class="pitfall-list"><li>`gpt-5.5` cost not in Langfuse pricing table -- raw tokens only, no dollar figure.</li><li>Unknown-model generations are almost entirely agent-team subagent spans without token attribution. Closing fix: ship `telemetry-fix-agent` from Skill-Run-Registry PRD.</li><li>Filter is keyword-based on trace name/input/output/metadata, not on a structured `slug` tag. Add `branch:` / `repo:` / `slug:` tags upstream to tighten.</li></ul></section>
+
+  <section class="block"><h2>Methodology</h2><ul class="method-list"><li>Langfuse Cloud REST: `/api/public/traces` and `/api/public/observations?type=GENERATION`, paginated. fromTimestamp `2026-05-26T07:55:14Z`, toTimestamp `2026-06-02T07:55:14Z`.</li><li>Keywords: `[&#x27;ecom&#x27;, &#x27;vans&#x27;, &#x27;fabletics&#x27;, &#x27;madewell&#x27;, &#x27;plp&#x27;, &#x27;pdp&#x27;, &#x27;shop-intelligence&#x27;, &#x27;sales-alert&#x27;, &#x27;price-observation&#x27;, &#x27;scrape_vans&#x27;, &#x27;scrape_fabletics&#x27;, &#x27;mall&#x27;, &#x27;the-mall&#x27;, &#x27;themall&#x27;, &#x27;mall-scraper&#x27;, &#x27;mall-scanner&#x27;, &#x27;sreya&#x27;, &#x27;scanner&#x27;, &#x27;sprint&#x27;, &#x27;scrape_runs&#x27;]`</li><li>Repos: `ecom:/Users/ecom/repos/ecom:Ecom (price scraper);ecom:/Users/ecom/Developer/browser-harness:Ecom (browser harness);greg:/Users/greg/repos/gbautomation:GBAutomation (ecom+mall)`</li><li>Auth: `~/.langfuse/.env` (live source of truth).</li><li>Generated by `~/.hermes/skills/devops/telemetry-report/scripts/weekly_telemetry.py` on 2026-06-02T07:55:14.660278+00:00.</li></ul></section>
+
+  <div class="footer">
+    <div class="brand">GBAutomation</div>
+    <div>Generated 2026-06-02 00:58</div>
+  </div>
+
+</div>
+</body>
+</html>

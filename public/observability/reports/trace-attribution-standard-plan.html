@@ -1,0 +1,611 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Plan: Full-Tree Trace Attribution Standard | GBAutomation</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&display=swap');
+    :root {
+      --cream-bg: #F3F1E7;
+      --cream-panel: #E6E4D9;
+      --text-main: #191919;
+      --text-muted: #5C5C5C;
+      --text-light: #8C8A84;
+      --border: #D6D4C8;
+      --terracotta: #D97757;
+      --paper: #FFFFFF;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text-main);
+      background: var(--cream-bg);
+      font-size: 14px;
+      line-height: 1.58;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+    a { color: var(--text-main); text-decoration-color: var(--terracotta); text-underline-offset: 3px; }
+    button { font: inherit; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(214, 212, 200, .7);
+      background: rgba(243, 241, 231, .93);
+      backdrop-filter: blur(12px);
+    }
+    .topbar-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 13px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .brand-lockup { display: inline-flex; align-items: center; gap: 9px; min-height: 28px; }
+    .brand-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(217, 119, 87, .18);
+    }
+    .brand-dot::after { content: ""; width: 8px; height: 8px; border-radius: 999px; background: var(--terracotta); }
+    .brand-text {
+      font-family: Newsreader, serif;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-size: 12px;
+    }
+    .source-name { color: var(--text-muted); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    header {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 34px 24px 26px;
+    }
+    .eyebrow {
+      color: var(--terracotta);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    h1 {
+      max-width: 920px;
+      margin: 10px 0 18px;
+      font-family: Newsreader, serif;
+      font-size: clamp(30px, 4vw, 48px);
+      font-weight: 500;
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+    .summary-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+    .summary-meta li {
+      min-height: 30px;
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, .45);
+      padding: 5px 9px;
+      border-radius: 6px;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .taxonomy-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0 0 14px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      min-height: 23px;
+      padding: 2px 8px;
+      border: 1px solid;
+      border-radius: 999px;
+      line-height: 1;
+    }
+    .pill-facet {
+      font-size: 8.5px;
+      font-weight: 700;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+    .pill-value {
+      color: var(--text-main);
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .layout {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 22px 24px 56px;
+      display: grid;
+      grid-template-columns: 252px minmax(0, 1fr);
+      gap: 22px;
+      align-items: start;
+    }
+    .section-menu {
+      position: sticky;
+      top: 64px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(230, 228, 217, .62);
+      backdrop-filter: blur(12px);
+      padding: 12px;
+    }
+    .menu-title {
+      margin: 0 0 10px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .menu-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+    .menu-actions button,
+    .section-menu nav button {
+      min-height: 34px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .46);
+      color: rgba(25, 25, 25, .72);
+      cursor: pointer;
+      transition: border-color .18s ease, color .18s ease, background .18s ease;
+    }
+    .menu-actions button { padding: 0 8px; font-size: 11px; font-weight: 700; }
+    .section-menu nav { display: grid; gap: 5px; }
+    .section-menu nav button {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 30px 1fr;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      text-align: left;
+      font-size: 12px;
+      line-height: 1.25;
+    }
+    .section-menu nav button span { color: var(--terracotta); font-size: 10px; font-weight: 700; letter-spacing: .08em; }
+    .menu-actions button:hover,
+    .section-menu nav button:hover,
+    .section-menu nav button.active {
+      border-color: var(--terracotta);
+      background: rgba(255, 255, 255, .72);
+      color: var(--text-main);
+    }
+    .sections { display: grid; gap: 10px; }
+    details.section {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .5);
+      overflow: hidden;
+    }
+    details.section[open] { background: rgba(255, 255, 255, .68); }
+    details.section summary {
+      min-height: 52px;
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 12px 14px;
+      cursor: pointer;
+      list-style: none;
+    }
+    details.section summary::-webkit-details-marker { display: none; }
+    .section-index {
+      color: var(--terracotta);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+    }
+    .section-title {
+      font-family: Newsreader, serif;
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.18;
+    }
+    .section-count {
+      color: var(--text-light);
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .section-body {
+      border-top: 1px solid rgba(214, 212, 200, .75);
+      padding: 4px 18px 18px 68px;
+    }
+    .section-body h2,
+    .section-body h3,
+    .section-body h4,
+    .section-body h5 {
+      margin: 18px 0 8px;
+      color: var(--text-main);
+      font-family: Newsreader, serif;
+      font-weight: 500;
+      line-height: 1.2;
+    }
+    .section-body h2 { font-size: 19px; }
+    .section-body h3 { font-size: 17px; }
+    .section-body h4,
+    .section-body h5 {
+      font-family: Inter, sans-serif;
+      color: var(--text-light);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+    .section-body p,
+    .section-body li { color: var(--text-muted); font-size: 14px; line-height: 1.66; }
+    .section-body p { margin: 10px 0; }
+    .section-body ul,
+    .section-body ol { margin: 10px 0 10px 18px; padding: 0; }
+    .section-body li { margin: 5px 0; padding-left: 2px; }
+    .section-body .task { list-style: none; margin-left: -18px; display: flex; gap: 8px; align-items: flex-start; }
+    .section-body input[type="checkbox"] { margin-top: 4px; accent-color: var(--terracotta); }
+    code {
+      border: 1px solid rgba(217, 119, 87, .22);
+      border-radius: 4px;
+      background: rgba(217, 119, 87, .10);
+      padding: 1px 4px;
+      color: var(--text-main);
+      font-size: .92em;
+    }
+    pre {
+      overflow: auto;
+      margin: 12px 0;
+      border-radius: 8px;
+      background: #191919;
+      color: #F3F1E7;
+      padding: 14px;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+    pre code { border: 0; background: transparent; color: inherit; padding: 0; }
+    blockquote {
+      margin: 12px 0;
+      padding: 10px 12px;
+      border-left: 3px solid var(--terracotta);
+      background: rgba(230, 228, 217, .5);
+    }
+    hr { border: 0; border-top: 1px solid var(--border); margin: 18px 0; }
+    .table-wrap { overflow-x: auto; margin: 12px 0; border: 1px solid var(--border); border-radius: 8px; }
+    table { width: 100%; border-collapse: collapse; min-width: 560px; background: rgba(255, 255, 255, .5); }
+    th,
+    td { border-bottom: 1px solid rgba(214, 212, 200, .75); padding: 8px 10px; text-align: left; font-size: 12px; vertical-align: top; }
+    th { color: var(--text-main); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; }
+    tr:last-child td { border-bottom: 0; }
+    .empty { color: var(--text-light); font-style: italic; }
+    footer {
+      border-top: 1px solid rgba(214, 212, 200, .78);
+      background: rgba(230, 228, 217, .45);
+    }
+    .footer-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    .footer-label {
+      margin-bottom: 12px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .metadata-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .meta-item {
+      min-width: 0;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .42);
+      padding: 9px 10px;
+    }
+    .meta-item span {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .meta-item strong {
+      display: block;
+      overflow-wrap: anywhere;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.35;
+    }
+    @media (max-width: 860px) {
+      .topbar-inner,
+      header,
+      .layout,
+      .footer-inner { padding-left: 16px; padding-right: 16px; }
+      .layout { display: block; }
+      .section-menu { position: static; margin-bottom: 14px; }
+      .section-body { padding-left: 18px; }
+      .metadata-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 540px) {
+      .topbar-inner { align-items: flex-start; flex-direction: column; gap: 6px; }
+      details.section summary { grid-template-columns: 34px 1fr; }
+      .section-count { grid-column: 2; }
+      h1 { font-size: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand-lockup"><span class="brand-dot"></span><span class="brand-text">GBAutomation</span></div>
+      <div class="source-name">2026-06-02-trace-attribution-standard-plan.md</div>
+    </div>
+  </div>
+  <header>
+    <div class="eyebrow">Plan Brief</div>
+    <h1>Plan: Full-Tree Trace Attribution Standard</h1>
+    <div class="taxonomy-pills"><span class="pill" style="background:rgba(90, 125, 140, 0.12);border-color:rgba(90, 125, 140, 0.42);"><span class="pill-facet" style="color:#5A7D8C;">domain</span><span class="pill-value">observability</span></span><span class="pill" style="background:rgba(124, 108, 203, 0.12);border-color:rgba(124, 108, 203, 0.42);"><span class="pill-facet" style="color:#7C6CCB;">service</span><span class="pill-value">langfuse</span></span></div>
+    <ul class="summary-meta">
+      <li>Priority: high</li><li>Status: draft</li><li>telemetry</li><li>tokens</li><li>cost</li><li>standard</li>
+      <li>Owner: Greg Black</li>
+      <li>Created: 2026-06-02</li>
+      <li>8 sections</li>
+      <li>890 words</li>
+    </ul>
+  </header>
+  <main class="layout">
+    <aside class="section-menu" aria-label="Plan sections">
+  <div class="menu-title">Sections</div>
+  <div class="menu-actions">
+    <button type="button" data-action="expand">Expand all</button>
+    <button type="button" data-action="collapse">Collapse all</button>
+  </div>
+  <nav><button type="button" data-target="overview"><span>01</span>Overview</button>
+<button type="button" data-target="goal"><span>02</span>Goal</button>
+<button type="button" data-target="why-evidence-2026-06-02"><span>03</span>Why (evidence, 2026-06-02)</button>
+<button type="button" data-target="the-standard-what-this-level-of-detail-means"><span>04</span>The standard (what &quot;this level of detail&quot; means)</button>
+<button type="button" data-target="phases"><span>05</span>Phases</button>
+<button type="button" data-target="acceptance-criteria"><span>06</span>Acceptance criteria</button>
+<button type="button" data-target="reuse-non-goals"><span>07</span>Reuse / non-goals</button>
+<button type="button" data-target="risk-notes"><span>08</span>Risk notes</button></nav>
+</aside>
+    <div class="sections">
+      <details class="section" id="overview" open>
+  <summary>
+    <span class="section-index">01</span>
+    <span class="section-title">Overview</span>
+    <span class="section-count">0 words</span>
+  </summary>
+  <div class="section-body">
+    <p class="empty">No section notes yet.</p>
+  </div>
+</details>
+<details class="section" id="goal">
+  <summary>
+    <span class="section-index">02</span>
+    <span class="section-title">Goal</span>
+    <span class="section-count">56 words</span>
+  </summary>
+  <div class="section-body">
+    <p>Make <strong>per-tool and per-output-type token attribution</strong> the standard level of detail for every GBAutomation agent runtime, and wire the telemetry-report skill to consume it. Today the data exists in Langfuse but is thrown away: reports pull only <code>type=GENERATION</code> and discard the <code>SPAN</code>/<code>TOOL</code>/<code>CHAIN</code> tree that links token spend to the tool that caused it.</p>
+  </div>
+</details>
+<details class="section" id="why-evidence-2026-06-02">
+  <summary>
+    <span class="section-index">03</span>
+    <span class="section-title">Why (evidence, 2026-06-02)</span>
+    <span class="section-count">202 words</span>
+  </summary>
+  <div class="section-body">
+    <p>Probing the live <code>ecom</code> traces during the telemetry-report work surfaced four facts:</p>
+<ol>
+<li><strong>The tree already exists.</strong> Observations come in four types: <code>GENERATION</code>,</li>
+<p><code>SPAN</code> (<code>tool_call:main</code>), <code>TOOL</code> (<code>Tool: read_file</code>, <code>Tool: write_file</code>, <code>Tool: terminal</code>, <code>Tool: skill_view</code>, ...), and <code>CHAIN</code> (<code>Hermes turn end</code>). Every observation carries <code>parentObservationId</code>, so the turn tree is fully reconstructable.</p>
+<li><strong>Tools carry no tokens; generations do.</strong> Every <code>TOOL</code> observation shows</li>
+<p><code>tok(in=0 out=0)</code>. Tokens live only on <code>GENERATION</code> observations (<code>promptTokens</code> / <code>completionTokens</code> + <code>usageDetails</code>). Attribution therefore means joining generations to their tool context via the tree.</p>
+<li><strong>Tool args are captured.</strong> <code>write_file</code> TOOL input includes the full path</li>
+<p>(e.g. <code>/Users/ecom/repos/ecom/docs/PRD-...md</code>), so output <strong>by file type</strong> is derivable from the extension.</p>
+<li><strong>Caching is already excellent but invisible in the report.</strong> <code>usageDetails</code></li>
+<p>carries <code>cache_read_input_tokens</code>; the Codex agent runs at a <strong>94.7% cache hit rate</strong> (16.6M cached vs 936K full-price input, 12:1 input:output). The report counts only <code>promptTokens</code>/<code>completionTokens</code>, so it under-reports throughput and hides cache efficiency.</p>
+</ol>
+<p>The current report also has a standing <strong>54% unknown-model</strong> gap: agent-team subagent generations arrive without a resolved <code>model</code>, so they cannot be attributed at all. See plans/2026-05-11-github-canonical-tac-self-improve-team-runner-prd (the telemetry-fix-agent / Skill-Run-Registry line of work).</p>
+  </div>
+</details>
+<details class="section" id="the-standard-what-this-level-of-detail-means">
+  <summary>
+    <span class="section-index">04</span>
+    <span class="section-title">The standard (what &quot;this level of detail&quot; means)</span>
+    <span class="section-count">247 words</span>
+  </summary>
+  <div class="section-body">
+    <h4>A. Emission contract (every agent runtime MUST emit)</h4>
+<div class="table-wrap"><table><thead><tr><th>Field / structure</th><th>Requirement</th></tr></thead><tbody><tr><td>Observation tree</td><td><code>CHAIN</code> (turn) -&gt; <code>SPAN</code> (tool_call) -&gt; <code>TOOL</code> (named) -&gt; <code>GENERATION</code>, linked by <code>parentObservationId</code>.</td></tr>
+<tr><td><code>TOOL.name</code></td><td><code>Tool: &lt;tool_name&gt;</code> (read_file, write_file, terminal, skill_view, ...).</td></tr>
+<tr><td><code>TOOL.input</code></td><td>Full args, including <code>path</code> for file tools (so output-type + context-bloat attribution works).</td></tr>
+<tr><td><code>GENERATION.model</code></td><td>Resolved model id (NOT null/unknown). Closes the 54% gap.</td></tr>
+<tr><td><code>GENERATION.usageDetails</code></td><td><code>input</code>, <code>output</code>, <code>cache_read_input_tokens</code>, <code>reasoning_tokens</code>, <code>total</code>.</td></tr>
+<tr><td>Structured trace tags</td><td><code>repo:</code>, <code>branch:</code>, <code>slug:</code>, <code>client:</code>, <code>workflow:</code>, <code>feature:</code> so reports group without keyword guessing.</td></tr></tbody></table></div>
+<h4>B. Consumption contract (the telemetry-report skill MUST do)</h4>
+<ol>
+<li>Pull <strong>all</strong> observation types for the window (drop the <code>type=GENERATION</code> filter).</li>
+<li>Reconstruct each turn tree via <code>parentObservationId</code>.</li>
+<li>Attribute generation tokens to tool context:</li>
+</ol>
+<ul>
+<li><strong>Input-cost of a tool result</strong> = tokens the tool&#x27;s output adds to the next</li>
+<p>generation&#x27;s prompt (diff successive generation inputs in the same turn).</p>
+<li><strong>Output-cost of a tool call</strong> = output tokens of the generation that emits</li>
+<p>the tool_use (e.g. a large <code>write_file</code> body).</p>
+</ul>
+<ol>
+<li>Bucket <code>write_file</code> calls by file extension -&gt; tokens <strong>by output type</strong>.</li>
+<li>Surface <strong>cache efficiency</strong> (hit rate, cached vs full-price input) and</li>
+<p><strong>unknown-model %</strong> as first-class numbers.</p>
+</ol>
+<h4>C. Known attribution caveat (canonized, not hidden)</h4>
+<p>A single generation can fire up to ~10 tool calls in one turn (<code>tool_call_count</code>). Within such a turn, that generation&#x27;s tokens cannot be split perfectly per tool. <strong>Rule:</strong> attribute input-cost to the specific tool whose result was ingested; attribute everything else at <strong>turn level</strong>. Report multi-tool turns as such. This is &quot;directionally correct, not penny-precise&quot; by design.</p>
+  </div>
+</details>
+<details class="section" id="phases">
+  <summary>
+    <span class="section-index">05</span>
+    <span class="section-title">Phases</span>
+    <span class="section-count">223 words</span>
+  </summary>
+  <div class="section-body">
+    <h4>Phase 0 — Reuse check (TAC-first, non-negotiable)</h4>
+<ul>
+<li>Extend the existing <code>resources/skills/telemetry-report/</code> skill; do NOT create a</li>
+<p>new skill. Reuse score is high (same data source, same renderer). Record as a TAC reuse, not a new-skill build.</p>
+</ul>
+<h4>Phase 1 — Consumption side (low risk, immediate value)</h4>
+<ul>
+<li>Add a tree-walking extractor (<code>extractors.py</code>: <code>collect_tool_attribution</code>).</li>
+<li>Extend <code>weekly_telemetry.py</code> to pull all observation types and emit two new</li>
+<p>sections: <strong>Tokens by tool</strong> and <strong>Output by file type</strong>, plus a <strong>Cost &amp; Cache Efficiency</strong> block (hit rate, cached vs uncached, reasoning tokens).</p>
+<li><code>render_html.py</code>: render the new sections as branded cards.</li>
+<li>Works immediately for runtimes that already emit tool spans (Codex/<code>ecom</code>).</li>
+</ul>
+<h4>Phase 2 — Emission side (close the gaps)</h4>
+<ul>
+<li>Ensure all three runtimes emit a resolved <code>model</code> + structured tags + tool spans:</li>
+<li><strong>Codex (<code>ecom</code>)</strong> — already emits the full tree; add <code>repo:</code>/<code>slug:</code> tags.</li>
+<li><strong>Hermes</strong> — verify <code>CHAIN</code>/<code>SPAN</code>/<code>TOOL</code> emission across profiles.</li>
+<li><strong>Claude Code subagents</strong> — the 54% unknown-model source; resolve model on</li>
+<p>subagent spans (the telemetry-fix-agent).</p>
+</ul>
+<h4>Phase 3 — Enforcement</h4>
+<ul>
+<li>Acceptance criteria below become a gate for any new agent runtime.</li>
+<li>Add a check to the telemetry skill that flags traces missing <code>model</code> or</li>
+<p>structured tags (so regressions are visible in the weekly report itself).</p>
+</ul>
+<h4>Phase 4 — Canonize + backfill</h4>
+<ul>
+<li>This plan + the ADR (2026-06-02-trace-attribution-standard) are the</li>
+<p>standard of record.</p>
+<li>Regenerate the ecom + mall report with the new sections as the reference output.</li>
+</ul>
+  </div>
+</details>
+<details class="section" id="acceptance-criteria">
+  <summary>
+    <span class="section-index">06</span>
+    <span class="section-title">Acceptance criteria</span>
+    <span class="section-count">49 words</span>
+  </summary>
+  <div class="section-body">
+    <ul>
+<li class="task"><input type="checkbox" disabled> <span>Weekly report shows <strong>Tokens by tool</strong> and <strong>Output by file type</strong>.</span></li>
+<li class="task"><input type="checkbox" disabled> <span>Report shows <strong>cache hit rate</strong> + cached-vs-full-price input.</span></li>
+<li class="task"><input type="checkbox" disabled> <span><strong>Unknown-model generations &lt; 5%</strong> of the window (down from ~54%).</span></li>
+<li class="task"><input type="checkbox" disabled> <span>Structured <code>repo:</code>/<code>slug:</code> tags present on &gt;= 95% of agent traces.</span></li>
+<li class="task"><input type="checkbox" disabled> <span>Standard documented in the ADR and linked from the telemetry-report SKILL.md.</span></li>
+</ul>
+  </div>
+</details>
+<details class="section" id="reuse-non-goals">
+  <summary>
+    <span class="section-index">07</span>
+    <span class="section-title">Reuse / non-goals</span>
+    <span class="section-count">46 words</span>
+  </summary>
+  <div class="section-body">
+    <ul>
+<li><strong>Reuse:</strong> <code>resources/skills/telemetry-report/</code> (consumer), the Langfuse REST</li>
+<p>pattern in <code>llm-observability</code>, and <code>parentObservationId</code> already in the data.</p>
+<li><strong>Non-goals:</strong> penny-precise per-tool token splitting inside multi-tool turns;</li>
+<p>per-tool <em>latency</em> (a separate, easy add if wanted); changing the deterministic HTML/PDF renderers (they cost zero tokens and stay as-is).</p>
+</ul>
+  </div>
+</details>
+<details class="section" id="risk-notes">
+  <summary>
+    <span class="section-index">08</span>
+    <span class="section-title">Risk notes</span>
+    <span class="section-count">43 words</span>
+  </summary>
+  <div class="section-body">
+    <ul>
+<li>Pulling all observation types increases Langfuse API volume ~5-10x per run;</li>
+<p>keep the page cap and persist raw JSON to <code>/tmp</code> as today.</p>
+<li>Tree-walk attribution depends on consistent <code>parentObservationId</code> emission; if a</li>
+<p>runtime flattens its tree, that runtime falls back to turn-level only.</p>
+</ul>
+  </div>
+</details>
+    </div>
+  </main>
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-label">Metadata</div>
+      <div class="metadata-grid">
+        <div class="meta-item"><span>Source</span><strong>C:\Users\gblac\OneDrive\Desktop\gbauto\gbautomation\second-brain\plans\2026-06-02-trace-attribution-standard-plan.md</strong></div>
+<div class="meta-item"><span>Generated</span><strong>2026-06-02T13:11:33-07:00</strong></div>
+<div class="meta-item"><span>Source modified</span><strong>2026-06-02T13:11:32-07:00</strong></div>
+<div class="meta-item"><span>Source size</span><strong>7,186 bytes</strong></div>
+<div class="meta-item"><span>Word count</span><strong>890</strong></div>
+<div class="meta-item"><span>Sections</span><strong>8</strong></div>
+<div class="meta-item"><span>Renderer</span><strong>resources/skills/netlify-cli/scripts/render_plan_page.py</strong></div>
+<div class="meta-item"><span>Date</span><strong>2026-06-02</strong></div>
+<div class="meta-item"><span>Status</span><strong>draft</strong></div>
+<div class="meta-item"><span>Owner</span><strong>Greg Black</strong></div>
+<div class="meta-item"><span>Priority</span><strong>high</strong></div>
+<div class="meta-item"><span>Type</span><strong>plan</strong></div>
+<div class="meta-item"><span>Tags</span><strong>plan, observability, langfuse, telemetry, tokens, cost, standard</strong></div>
+<div class="meta-item"><span>Related</span><strong>[[2026-06-02-trace-attribution-standard]], [[systems/harnesses/codex]], [[systems/harnesses/hermes]], [[projects/ecom-scanner-work-board]]</strong></div>
+      </div>
+    </div>
+  </footer>
+  <script>
+    const sections = Array.from(document.querySelectorAll('details.section'));
+    const menuButtons = Array.from(document.querySelectorAll('[data-target]'));
+    const setActive = (id) => {
+      menuButtons.forEach((button) => button.classList.toggle('active', button.dataset.target === id));
+    };
+    menuButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const section = document.getElementById(button.dataset.target);
+        if (!section) return;
+        section.open = true;
+        setActive(section.id);
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+    document.querySelector('[data-action="expand"]').addEventListener('click', () => sections.forEach((section) => section.open = true));
+    document.querySelector('[data-action="collapse"]').addEventListener('click', () => sections.forEach((section, index) => section.open = index === 0));
+    sections.forEach((section) => {
+      section.addEventListener('toggle', () => {
+        if (section.open) setActive(section.id);
+      });
+    });
+    if (sections[0]) setActive(sections[0].id);
+  </script>
+</body>
+</html>
