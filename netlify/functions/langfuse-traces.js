@@ -59,6 +59,83 @@ const fallbackTraces = [
   },
 ];
 
+const fallbackObservations = [
+  {
+    id: 'obs-codex-chain',
+    traceId: 'ecom-report-window',
+    parentObservationId: null,
+    type: 'CHAIN',
+    name: 'codex:ecom:weekly-report',
+    startTime: '2026-06-02T21:06:14Z',
+    model: 'gpt-5.5',
+    inputUsage: 0,
+    outputUsage: 0,
+    metadata: { harness: 'codex', repo: 'ecom', slug: 'ecom', branch: 'smoke/agent-team-config' },
+  },
+  {
+    id: 'obs-codex-tool',
+    traceId: 'ecom-report-window',
+    parentObservationId: 'obs-codex-chain',
+    type: 'TOOL',
+    name: 'Tool: terminal',
+    startTime: '2026-06-02T21:06:18Z',
+    model: 'gpt-5.5',
+    inputUsage: 0,
+    outputUsage: 0,
+    input: { command: 'run_ecom_report.sh' },
+    metadata: { harness: 'codex', tool: 'terminal' },
+  },
+  {
+    id: 'obs-codex-generation',
+    traceId: 'ecom-report-window',
+    parentObservationId: 'obs-codex-tool',
+    type: 'GENERATION',
+    name: 'gpt-5.5 generation',
+    startTime: '2026-06-02T21:06:22Z',
+    model: 'gpt-5.5',
+    inputUsage: 5439578,
+    outputUsage: 385121,
+    usageDetails: { cache_read_input_tokens: 100388864 },
+    metadata: { harness: 'codex' },
+  },
+  {
+    id: 'obs-hermes-chain',
+    traceId: 'hermes-profile-gap',
+    parentObservationId: null,
+    type: 'CHAIN',
+    name: 'Hermes turn end',
+    startTime: '2026-06-01T00:00:00Z',
+    model: null,
+    inputUsage: 0,
+    outputUsage: 0,
+    metadata: { harness: 'hermes', profile: 'main' },
+  },
+  {
+    id: 'obs-hermes-tool',
+    traceId: 'hermes-profile-gap',
+    parentObservationId: 'obs-hermes-chain',
+    type: 'SPAN',
+    name: 'tool_call:cron',
+    startTime: '2026-06-01T00:00:06Z',
+    model: null,
+    inputUsage: 0,
+    outputUsage: 0,
+    metadata: { harness: 'hermes', tool: 'cron' },
+  },
+  {
+    id: 'obs-claude-generation',
+    traceId: 'claude-subagent-gap',
+    parentObservationId: null,
+    type: 'GENERATION',
+    name: 'claude-code subagent generation',
+    startTime: '2026-06-02T00:00:00Z',
+    model: null,
+    inputUsage: 0,
+    outputUsage: 0,
+    metadata: { harness: 'claude-code', profile: 'subagent' },
+  },
+];
+
 function json(statusCode, body) {
   return {
     statusCode,
@@ -188,6 +265,179 @@ function normalizeTrace(trace, host) {
   };
 }
 
+function observationUsage(observation) {
+  const metadata = parseJsonMaybe(observation.metadata);
+  const usage = parseJsonMaybe(observation.usageDetails || observation.usage_details || metadata.usageDetails);
+  return {
+    input_tokens: usageNumber(
+      observation.inputUsage,
+      observation.input_usage,
+      observation.promptTokens,
+      usage.input,
+      usage.input_tokens,
+      usage.prompt_tokens,
+      metadata.input_tokens,
+    ),
+    output_tokens: usageNumber(
+      observation.outputUsage,
+      observation.output_usage,
+      observation.completionTokens,
+      usage.output,
+      usage.output_tokens,
+      usage.completion_tokens,
+      metadata.output_tokens,
+    ),
+    cache_read_input_tokens: usageNumber(
+      usage.cache_read_input_tokens,
+      usage.cache_read,
+      metadata.cache_read_input_tokens,
+    ),
+  };
+}
+
+function normalizeObservation(observation, traceLookup) {
+  const metadata = parseJsonMaybe(observation.metadata);
+  const attrs = metadata.attributes || {};
+  const traceId = observation.traceId || observation.trace_id || observation.trace?.id || 'unknown-trace';
+  const trace = traceLookup.get(traceId) || {};
+  const inferred = normalizeTags({
+    name: observation.name || trace.name,
+    tags: trace.tags || [],
+    metadata: {
+      ...trace.metadata,
+      ...metadata,
+      harness: metadata.harness || attrs.harness || trace.harness,
+      repo: metadata.repo || attrs.repo || trace.repo,
+      slug: metadata.slug || attrs.slug || trace.slug,
+      branch: metadata.branch || attrs.branch || trace.branch,
+    },
+    input: observation.input,
+    output: observation.output,
+  });
+  const usage = observationUsage(observation);
+  return {
+    observation_id: observation.id || observation.observationId || crypto.randomUUID(),
+    trace_id: traceId,
+    parent_observation_id: observation.parentObservationId || observation.parent_observation_id || null,
+    type: String(observation.type || 'UNKNOWN').toUpperCase(),
+    name: observation.name || 'unnamed observation',
+    harness: inferred.harness || trace.harness || 'other',
+    agent_profile: inferred.agentProfile || trace.agent_profile || 'unknown',
+    repo: inferred.repo || trace.repo || 'unknown',
+    slug: inferred.slug || trace.slug || 'unknown',
+    branch: inferred.branch || trace.branch || 'unknown',
+    model: observation.model
+      || metadata.model
+      || attrs['llm.request.model']
+      || trace.model
+      || 'unknown',
+    started_at: observation.startTime || observation.start_time || observation.createdAt || null,
+    latency_ms: observation.latency || observation.latencyMs || null,
+    input_tokens: usage.input_tokens,
+    output_tokens: usage.output_tokens,
+    cache_read_input_tokens: usage.cache_read_input_tokens,
+    input_preview: collectText(observation.input).slice(0, 240),
+    output_preview: collectText(observation.output).slice(0, 240),
+  };
+}
+
+function summarizeTraceTrees(traces, observations) {
+  const byTrace = new Map();
+  for (const trace of traces) {
+    byTrace.set(trace.trace_id, {
+      trace_id: trace.trace_id,
+      observation_count: 0,
+      chain_count: 0,
+      span_count: 0,
+      tool_count: 0,
+      generation_count: 0,
+      input_tokens: 0,
+      output_tokens: 0,
+      cache_read_input_tokens: 0,
+      missing_model_count: 0,
+      has_tool_tree: false,
+    });
+  }
+
+  for (const observation of observations) {
+    const stats = byTrace.get(observation.trace_id);
+    if (!stats) continue;
+    stats.observation_count += 1;
+    stats.input_tokens += observation.input_tokens || 0;
+    stats.output_tokens += observation.output_tokens || 0;
+    stats.cache_read_input_tokens += observation.cache_read_input_tokens || 0;
+    if (!observation.model || observation.model === 'unknown') stats.missing_model_count += 1;
+    if (observation.type === 'CHAIN') stats.chain_count += 1;
+    if (observation.type === 'SPAN') stats.span_count += 1;
+    if (observation.type === 'TOOL' || observation.name.toLowerCase().startsWith('tool:')) stats.tool_count += 1;
+    if (observation.type === 'GENERATION') stats.generation_count += 1;
+  }
+
+  for (const stats of byTrace.values()) {
+    stats.has_tool_tree = stats.tool_count > 0 || stats.span_count > 0;
+  }
+  return Object.fromEntries(byTrace);
+}
+
+function observationsToEvents(observations) {
+  const seqBySession = new Map();
+  return observations
+    .slice()
+    .sort((a, b) => String(a.started_at || '').localeCompare(String(b.started_at || '')))
+    .map((observation) => {
+      const session = `${observation.harness}-${observation.trace_id}`;
+      const seq = (seqBySession.get(session) || 0) + 1;
+      seqBySession.set(session, seq);
+      const type = observation.type === 'GENERATION'
+        ? 'assistant_message'
+        : observation.type === 'TOOL' || observation.name.toLowerCase().startsWith('tool:')
+          ? 'tool_call'
+          : observation.type === 'SPAN'
+            ? 'custom'
+            : 'turn_start';
+      return {
+        event_id: observation.observation_id,
+        session_id: session,
+        seq,
+        type,
+        ts: observation.started_at || new Date(0).toISOString(),
+        cwd: observation.repo,
+        pool: observation.slug,
+        tags: [
+          `harness:${observation.harness}`,
+          `repo:${observation.repo}`,
+          `slug:${observation.slug}`,
+          `branch:${observation.branch}`,
+        ],
+        agent_name: observation.harness,
+        provider: observation.harness === 'codex' ? 'openai' : 'anthropic',
+        model: observation.model,
+        payload: {
+          observation_type: observation.type,
+          observation_name: observation.name,
+          trace_id: observation.trace_id,
+          parent_observation_id: observation.parent_observation_id,
+          input_tokens: observation.input_tokens,
+          output_tokens: observation.output_tokens,
+          summary: observation.output_preview || observation.input_preview || observation.name,
+        },
+      };
+    });
+}
+
+function attachTreeStats(traces, treeStats) {
+  return traces.map((trace) => {
+    const stats = treeStats[trace.trace_id] || {};
+    return {
+      ...trace,
+      tree: stats,
+      input_tokens: trace.input_tokens || stats.input_tokens || 0,
+      output_tokens: trace.output_tokens || stats.output_tokens || 0,
+      cache_read_input_tokens: trace.cache_read_input_tokens || stats.cache_read_input_tokens || 0,
+    };
+  });
+}
+
 async function langfuseGet(host, publicKey, secretKey, path, params) {
   const url = new URL(`${host.replace(/\/$/, '')}${path}`);
   for (const [key, value] of Object.entries(params)) {
@@ -206,29 +456,75 @@ async function langfuseGet(host, publicKey, secretKey, path, params) {
   return response.json();
 }
 
+async function langfusePageAll(host, publicKey, secretKey, path, baseParams, maxPages) {
+  const rows = [];
+  for (let page = 1; page <= maxPages; page += 1) {
+    const payload = await langfuseGet(host, publicKey, secretKey, path, {
+      ...baseParams,
+      page,
+      limit: baseParams.limit || 100,
+    });
+    const data = Array.isArray(payload.data) ? payload.data : [];
+    rows.push(...data);
+    const totalPages = Number(payload.meta?.totalPages || 1);
+    if (!data.length || page >= totalPages) break;
+  }
+  return rows;
+}
+
+function fallbackPayload(reason) {
+  const traceLookup = new Map(fallbackTraces.map((trace) => [trace.trace_id, trace]));
+  const observations = fallbackObservations.map((observation) => normalizeObservation(observation, traceLookup));
+  const treeStats = summarizeTraceTrees(fallbackTraces, observations);
+  return {
+    traces: attachTreeStats(fallbackTraces, treeStats),
+    observations,
+    treeStats,
+    events: observationsToEvents(observations),
+    source: 'static-fallback',
+    error: reason,
+  };
+}
+
 async function fetchTraces(event) {
   const host = env('LANGFUSE_HOST') || env('LANGFUSE_BASE_URL') || DEFAULT_HOST;
   const publicKey = env('LANGFUSE_PUBLIC_KEY');
   const secretKey = env('LANGFUSE_SECRET_KEY');
   if (!publicKey || !secretKey) {
-    return { traces: fallbackTraces, source: 'static-fallback', error: 'LANGFUSE_PUBLIC_KEY/LANGFUSE_SECRET_KEY not configured' };
+    return fallbackPayload('LANGFUSE_PUBLIC_KEY/LANGFUSE_SECRET_KEY not configured');
   }
 
   const hours = Math.max(1, Math.min(24 * 30, Number(event.queryStringParameters?.hours || 168)));
   const limit = Math.max(1, Math.min(100, Number(event.queryStringParameters?.limit || 50)));
+  const observationPages = Math.max(1, Math.min(20, Number(event.queryStringParameters?.observationPages || 5)));
   const to = new Date();
   const from = new Date(to.getTime() - hours * 60 * 60 * 1000);
-  const payload = await langfuseGet(host, publicKey, secretKey, '/api/public/traces', {
+  const tracePayload = await langfuseGet(host, publicKey, secretKey, '/api/public/traces', {
     fromTimestamp: from.toISOString(),
     toTimestamp: to.toISOString(),
     page: 1,
     limit,
   });
-  const rawRows = Array.isArray(payload.data) ? payload.data : Array.isArray(payload.traces) ? payload.traces : [];
+  const rawRows = Array.isArray(tracePayload.data) ? tracePayload.data : Array.isArray(tracePayload.traces) ? tracePayload.traces : [];
+  const traces = rawRows.map((trace) => normalizeTrace(trace, host));
+  const traceLookup = new Map(traces.map((trace) => [trace.trace_id, trace]));
+  const traceIds = new Set(traceLookup.keys());
+  const rawObservations = await langfusePageAll(host, publicKey, secretKey, '/api/public/observations', {
+    fromStartTime: from.toISOString(),
+    toStartTime: to.toISOString(),
+    limit: 100,
+  }, observationPages);
+  const observations = rawObservations
+    .map((observation) => normalizeObservation(observation, traceLookup))
+    .filter((observation) => traceIds.has(observation.trace_id));
+  const treeStats = summarizeTraceTrees(traces, observations);
   return {
-    traces: rawRows.map((trace) => normalizeTrace(trace, host)),
+    traces: attachTreeStats(traces, treeStats),
+    observations,
+    treeStats,
+    events: observationsToEvents(observations),
     source: 'langfuse',
-    window: { from: from.toISOString(), to: to.toISOString(), hours },
+    window: { from: from.toISOString(), to: to.toISOString(), hours, observationPages },
   };
 }
 
@@ -239,10 +535,6 @@ export async function handler(event) {
   try {
     return json(200, await fetchTraces(event));
   } catch (error) {
-    return json(200, {
-      traces: fallbackTraces,
-      source: 'static-fallback',
-      error: error.message || 'Langfuse proxy failed',
-    });
+    return json(200, fallbackPayload(error.message || 'Langfuse proxy failed'));
   }
 }

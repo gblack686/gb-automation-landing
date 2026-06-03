@@ -43,12 +43,20 @@ for (const token of ['traceFixtures', 'liveEvents', 'committers', 'worktrees', '
 }
 
 const page = readFileSync(resolve(root, 'src/ops/pages/OpsObservability.jsx'), 'utf8');
-for (const token of ['LiveSingle', 'LiveSwimlane', 'LiveRace', 'useLangfuseTraces']) {
+for (const token of ['LiveSingle', 'LiveSwimlane', 'LiveRace', 'useLangfuseTraces', 'Observation Tree', 'observation_count']) {
   if (!page.includes(token)) failures.push(`observability page missing ${token}`);
 }
 
 const fn = readFileSync(resolve(root, 'netlify/functions/langfuse-traces.js'), 'utf8');
-for (const token of ['LANGFUSE_PUBLIC_KEY', 'LANGFUSE_SECRET_KEY', 'static-fallback', '/api/public/traces']) {
+for (const token of [
+  'LANGFUSE_PUBLIC_KEY',
+  'LANGFUSE_SECRET_KEY',
+  'static-fallback',
+  '/api/public/traces',
+  '/api/public/observations',
+  'summarizeTraceTrees',
+  'observationsToEvents',
+]) {
   if (!fn.includes(token)) failures.push(`Langfuse function missing ${token}`);
 }
 
@@ -59,4 +67,3 @@ if (failures.length) {
 }
 
 console.log('Observability validation passed.');
-

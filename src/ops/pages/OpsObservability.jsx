@@ -203,11 +203,19 @@ function Overview() {
 }
 
 function useLangfuseTraces() {
-  const [state, setState] = useState({ loading: true, rows: observabilityData.traceFixtures, source: 'static', error: '' });
+  const [state, setState] = useState({
+    loading: true,
+    rows: observabilityData.traceFixtures,
+    observations: [],
+    treeStats: {},
+    events: observabilityData.liveEvents,
+    source: 'static',
+    error: '',
+  });
 
   useEffect(() => {
     let active = true;
-    fetch('/.netlify/functions/langfuse-traces?hours=168')
+    fetch('/.netlify/functions/langfuse-traces?hours=168&observationPages=5')
       .then((response) => {
         if (!response.ok) throw new Error(`Langfuse function ${response.status}`);
         return response.json();
@@ -215,11 +223,29 @@ function useLangfuseTraces() {
       .then((payload) => {
         if (!active) return;
         const rows = Array.isArray(payload.traces) && payload.traces.length ? payload.traces : observabilityData.traceFixtures;
-        setState({ loading: false, rows, source: payload.source || 'function', error: payload.error || '' });
+        const observations = Array.isArray(payload.observations) ? payload.observations : [];
+        const events = Array.isArray(payload.events) && payload.events.length ? payload.events : observabilityData.liveEvents;
+        setState({
+          loading: false,
+          rows,
+          observations,
+          treeStats: payload.treeStats || {},
+          events,
+          source: payload.source || 'function',
+          error: payload.error || '',
+        });
       })
       .catch((error) => {
         if (!active) return;
-        setState({ loading: false, rows: observabilityData.traceFixtures, source: 'static-fallback', error: error.message });
+        setState({
+          loading: false,
+          rows: observabilityData.traceFixtures,
+          observations: [],
+          treeStats: {},
+          events: observabilityData.liveEvents,
+          source: 'static-fallback',
+          error: error.message,
+        });
       });
     return () => {
       active = false;
@@ -232,7 +258,8 @@ function useLangfuseTraces() {
 function Traces() {
   const [harness, setHarness] = useState('all');
   const [query, setQuery] = useState('');
-  const { loading, rows, source, error } = useLangfuseTraces();
+  const [selectedTraceId, setSelectedTraceId] = useState('');
+  const { loading, rows, observations, source, error } = useLangfuseTraces();
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return rows.filter((row) => {
@@ -243,6 +270,10 @@ function Traces() {
       return harnessOk && queryOk;
     });
   }, [harness, query, rows]);
+  const selectedTrace = filtered.find((trace) => trace.trace_id === selectedTraceId) || filtered[0];
+  const selectedObservations = selectedTrace
+    ? observations.filter((observation) => observation.trace_id === selectedTrace.trace_id)
+    : [];
 
   return (
     <div className="space-y-8">
@@ -284,7 +315,7 @@ function Traces() {
 
       <section className="overflow-hidden rounded-md border border-[#D6D4C8] bg-white/50">
         {filtered.map((trace) => (
-          <article key={trace.trace_id} className="grid gap-4 border-b border-[#D6D4C8] p-5 last:border-b-0 xl:grid-cols-[1.1fr_0.7fr_0.9fr_0.8fr_auto] xl:items-center">
+          <article key={trace.trace_id} className="grid gap-4 border-b border-[#D6D4C8] p-5 last:border-b-0 xl:grid-cols-[1.1fr_0.7fr_0.9fr_0.8fr_0.7fr_auto] xl:items-center">
             <div>
               <div className="flex flex-wrap items-center gap-2">
                 <SmallPill tone={trace.harness}>{trace.harness}</SmallPill>
@@ -305,6 +336,21 @@ function Traces() {
               <p>{formatNumber(trace.input_tokens)} in</p>
               <p>{formatNumber(trace.output_tokens)} out</p>
             </div>
+            <div className="text-sm text-[#191919]/65">
+              <p>{formatNumber(trace.tree?.observation_count || 0)} obs</p>
+              <p>{trace.tree?.has_tool_tree ? 'tree present' : 'tree missing'}</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setSelectedTraceId(trace.trace_id)}
+              className={`inline-flex min-h-0 items-center justify-center rounded-md border px-3 py-2 text-xs font-semibold uppercase ${
+                selectedTrace?.trace_id === trace.trace_id
+                  ? 'border-[#191919] bg-[#191919] text-[#F3F1E7]'
+                  : 'border-[#D6D4C8] text-[#191919]/60 hover:border-[#D97757] hover:text-[#D97757]'
+              }`}
+            >
+              Tree
+            </button>
             <a
               href={trace.langfuse_url || 'https://us.cloud.langfuse.com'}
               target="_blank"
@@ -317,6 +363,44 @@ function Traces() {
           </article>
         ))}
       </section>
+
+      {selectedTrace ? (
+        <section className="rounded-md border border-[#D6D4C8] bg-white/50 p-5">
+          <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+            <div>
+              <span className="text-xs font-bold uppercase text-[#D97757]">Observation Tree</span>
+              <h2 className="mt-2 font-serif text-3xl text-[#191919]">{selectedTrace.name}</h2>
+              <p className="mt-2 font-mono text-xs text-[#191919]/45">{selectedTrace.trace_id}</p>
+            </div>
+            <div className="grid grid-cols-2 gap-2 text-sm sm:grid-cols-4">
+              <p className="rounded-md border border-[#D6D4C8] bg-[#F3F1E7] p-3 text-[#191919]/65">CHAIN<br /><strong className="text-[#191919]">{selectedTrace.tree?.chain_count || 0}</strong></p>
+              <p className="rounded-md border border-[#D6D4C8] bg-[#F3F1E7] p-3 text-[#191919]/65">SPAN<br /><strong className="text-[#191919]">{selectedTrace.tree?.span_count || 0}</strong></p>
+              <p className="rounded-md border border-[#D6D4C8] bg-[#F3F1E7] p-3 text-[#191919]/65">TOOL<br /><strong className="text-[#191919]">{selectedTrace.tree?.tool_count || 0}</strong></p>
+              <p className="rounded-md border border-[#D6D4C8] bg-[#F3F1E7] p-3 text-[#191919]/65">GEN<br /><strong className="text-[#191919]">{selectedTrace.tree?.generation_count || 0}</strong></p>
+            </div>
+          </div>
+          <div className="mt-5 overflow-hidden rounded-md border border-[#D6D4C8]">
+            {selectedObservations.length ? selectedObservations.map((observation) => (
+              <article key={observation.observation_id} className="grid gap-3 border-b border-[#D6D4C8] bg-[#F3F1E7]/70 p-4 last:border-b-0 md:grid-cols-[120px_1fr_140px_160px] md:items-center">
+                <SmallPill>{observation.type}</SmallPill>
+                <div>
+                  <h3 className="font-medium text-[#191919]">{observation.name}</h3>
+                  <p className="mt-1 font-mono text-xs text-[#191919]/45">
+                    {observation.observation_id}
+                    {observation.parent_observation_id ? ` <- ${observation.parent_observation_id}` : ''}
+                  </p>
+                </div>
+                <p className="font-mono text-xs text-[#191919]/55">{observation.model || 'unknown model'}</p>
+                <p className="text-sm text-[#191919]/65">
+                  {formatNumber(observation.input_tokens)} in / {formatNumber(observation.output_tokens)} out
+                </p>
+              </article>
+            )) : (
+              <p className="p-5 text-sm text-[#191919]/60">No observation rows returned for this trace yet. Configure Langfuse credentials and increase observation pagination if needed.</p>
+            )}
+          </div>
+        </section>
+      ) : null}
     </div>
   );
 }
@@ -504,7 +588,7 @@ function LiveRace({ events }) {
 function Live() {
   const [view, setView] = useState('single');
   const [selectedSession, setSelectedSession] = useState('all');
-  const events = observabilityData.liveEvents;
+  const { events, source, error, loading } = useLangfuseTraces();
   const sessions = ['all', ...new Set(events.map((event) => event.session_id))];
 
   return (
@@ -550,6 +634,9 @@ function Live() {
             ))}
           </select>
         </div>
+        <p className="mt-3 text-xs text-[#191919]/50">
+          Source: {source}{loading ? ' (loading)' : ''}{error ? ` - ${error}` : ''}. Events are normalized from Langfuse observations into the template ObsEvent shape.
+        </p>
       </section>
       {view === 'single' ? <LiveSingle events={events} selectedSession={selectedSession} /> : null}
       {view === 'swimlane' ? <LiveSwimlane events={events} /> : null}
