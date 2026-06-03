@@ -6,6 +6,7 @@ import OpsRuns from './pages/OpsRuns';
 import HermesKanban from './pages/HermesKanban';
 import OpsData from './pages/OpsData';
 import OpsSupabase from './pages/OpsSupabase';
+import OpsObservability from './pages/OpsObservability';
 
 export default function OpsRoutes() {
   return (
@@ -19,6 +20,12 @@ export default function OpsRoutes() {
           <Route path="kanban" element={<HermesKanban />} />
           <Route path="data" element={<OpsData />} />
           <Route path="supabase" element={<OpsSupabase />} />
+          <Route path="observability" element={<OpsObservability />} />
+          <Route path="observability/traces" element={<OpsObservability />} />
+          <Route path="observability/sessions" element={<OpsObservability />} />
+          <Route path="observability/agents" element={<OpsObservability />} />
+          <Route path="observability/reports" element={<OpsObservability />} />
+          <Route path="observability/live" element={<OpsObservability />} />
           <Route path="*" element={<Navigate to="/ops" replace />} />
         </Routes>
       </main>

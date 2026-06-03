@@ -6,6 +6,7 @@ const navItems = [
   { label: 'Overview', to: '/ops' },
   { label: 'Systems', to: '/ops/systems' },
   { label: 'Runs', to: '/ops/runs' },
+  { label: 'Observability', to: '/ops/observability' },
   { label: 'Kanban', to: '/ops/kanban' },
   { label: 'Data', to: '/ops/data' },
   { label: 'Supabase', to: '/ops/supabase' },
