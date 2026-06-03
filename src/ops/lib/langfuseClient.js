@@ -11,5 +11,9 @@ export async function getLangfuseTraces({ hours = 168, observationPages = 5, lim
     throw new Error(errors.map((error) => error.message).join('; '));
   }
 
-  return data?.payload || data || {};
+  const payload = data?.payload || data || {};
+  if (typeof payload === 'string') {
+    return JSON.parse(payload);
+  }
+  return payload;
 }
