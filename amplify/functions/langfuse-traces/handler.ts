@@ -431,8 +431,8 @@ async function fetchTraces(args: JsonRecord) {
     limit,
   });
   const rawRows = Array.isArray(tracePayload.data) ? tracePayload.data : Array.isArray(tracePayload.traces) ? tracePayload.traces : [];
-  const traces = rawRows.map((trace: JsonRecord) => normalizeTrace(trace, host));
-  const traceLookup = new Map(traces.map((trace) => [trace.trace_id, trace]));
+  const traces: JsonRecord[] = rawRows.map((trace: JsonRecord) => normalizeTrace(trace, host));
+  const traceLookup = new Map<string, JsonRecord>(traces.map((trace) => [trace.trace_id, trace]));
   const traceIds = new Set(traceLookup.keys());
   const rawObservations = await langfusePageAll(host, publicKey, secretKey, '/api/public/observations', {
     fromStartTime: from.toISOString(),
