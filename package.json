@@ -10,6 +10,7 @@
     "preview": "vite preview",
     "test": "node test-site.js",
     "test:tenant": "node scripts/validate-tenant-portal.mjs",
+    "test:observability": "node scripts/validate-observability.mjs",
     "ops:kanban:export": "node scripts/export-hermes-kanban.mjs",
     "amplify:sandbox": "ampx sandbox",
     "amplify:deploy": "ampx sandbox --once"
