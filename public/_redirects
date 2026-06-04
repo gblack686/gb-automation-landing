@@ -27,6 +27,9 @@
 # Mall Scanner API - Netlify function backed by Supabase when env is present.
 /api/mall-scanner/*       /.netlify/functions/mall-scanner/:splat       200!
 
+# Mac Mini ops API - telemetry + allowlisted action intent queue (Cognito-verified).
+/api/mac-mini/*           /.netlify/functions/mac-mini/:splat           200!
+
 # SPA fallback for React Router deep links (no extension).
 # Order matters: this rule only applies after the asset rules above miss.
 /*                         /index.html                    200

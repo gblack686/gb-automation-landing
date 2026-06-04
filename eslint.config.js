@@ -26,4 +26,11 @@ export default defineConfig([
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
     },
   },
+  {
+    // Server-side functions (Netlify functions, Lambda) run on Node, not the browser.
+    files: ['netlify/functions/**/*.{js,mjs}', 'lambda/**/*.{js,mjs}'],
+    languageOptions: {
+      globals: globals.node,
+    },
+  },
 ])

@@ -7,6 +7,7 @@ import HermesKanban from './pages/HermesKanban';
 import OpsData from './pages/OpsData';
 import OpsSupabase from './pages/OpsSupabase';
 import OpsObservability from './pages/OpsObservability';
+import OpsMacMini from './pages/OpsMacMini';
 
 export default function OpsRoutes() {
   return (
@@ -15,6 +16,7 @@ export default function OpsRoutes() {
       <main className="mx-auto max-w-7xl px-6 py-10 md:py-14">
         <Routes>
           <Route index element={<OpsOverview />} />
+          <Route path="mac-mini" element={<OpsMacMini />} />
           <Route path="systems" element={<OpsSystems />} />
           <Route path="runs" element={<OpsRuns />} />
           <Route path="kanban" element={<HermesKanban />} />

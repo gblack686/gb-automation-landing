@@ -4,6 +4,7 @@ import SignOutButton from '../../components/SignOutButton';
 
 const navItems = [
   { label: 'Overview', to: '/ops' },
+  { label: 'Mac Mini', to: '/ops/mac-mini' },
   { label: 'Systems', to: '/ops/systems' },
   { label: 'Runs', to: '/ops/runs' },
   { label: 'Observability', to: '/ops/observability' },
