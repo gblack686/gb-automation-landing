@@ -1,52 +1,39 @@
-// Client for the Mac Mini ops API (Netlify function /api/mac-mini/*). Mirrors
-// src/lib/mallScannerClient.js: attaches the Cognito ID token as a Bearer header.
-import { fetchAuthSession } from 'aws-amplify/auth';
+// Client for the Mac Mini ops dashboard. Talks to the Amplify Data (AppSync) custom
+// query/mutation backed by the macMiniOps Lambda — Cognito auth is handled by Amplify
+// (authMode userPool), so the browser never holds a Supabase/DB credential. Mirrors
+// src/ops/lib/langfuseClient.js.
+import { generateClient } from 'aws-amplify/data';
 
-const DEFAULT_BASE_URL = 'https://gbautoxyz.netlify.app';
-
-function apiBaseUrl() {
-  return (import.meta.env.VITE_OPS_API_URL || DEFAULT_BASE_URL).replace(/\/$/, '');
+let _client;
+function client() {
+  if (!_client) _client = generateClient();
+  return _client;
 }
 
-async function authHeaders() {
-  try {
-    const session = await fetchAuthSession();
-    const token = session?.tokens?.idToken?.toString();
-    return token ? { Authorization: `Bearer ${token}` } : {};
-  } catch {
-    return {};
+function unwrap({ data, errors }) {
+  if (errors?.length) throw new Error(errors.map((e) => e.message).join('; '));
+  let payload = data?.payload ?? data ?? {};
+  if (typeof payload === 'string') {
+    try { payload = JSON.parse(payload); } catch { /* leave as-is */ }
   }
+  if (payload?.error) throw new Error(payload.error);
+  return payload;
 }
 
-async function request(path, options = {}) {
-  const headers = {
-    'Content-Type': 'application/json',
-    ...(await authHeaders()),
-    ...(options.headers || {}),
-  };
-  const response = await fetch(`${apiBaseUrl()}${path}`, { ...options, headers });
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    throw new Error(data.error || `Mac Mini API ${response.status}`);
-  }
-  return data;
+// -> { snapshot, generated_at }
+export async function getTelemetry() {
+  return unwrap(await client().queries.macMiniTelemetry({}, { authMode: 'userPool' }));
 }
 
-export function getTelemetry() {
-  return request('/api/mac-mini/telemetry');
+// -> { id, action, status }
+export async function createActionRequest(action, params = {}) {
+  return unwrap(await client().mutations.createMacMiniRequest(
+    { action, params: JSON.stringify(params) },
+    { authMode: 'userPool' },
+  ));
 }
 
-export function createActionRequest(action, params = {}) {
-  return request('/api/mac-mini/requests', {
-    method: 'POST',
-    body: JSON.stringify({ action, params }),
-  });
-}
-
-export function getRequest(id) {
-  return request(`/api/mac-mini/requests?id=${encodeURIComponent(id)}`);
-}
-
-export function listRequests() {
-  return request('/api/mac-mini/requests');
+// -> { request }
+export async function getRequest(id) {
+  return unwrap(await client().queries.macMiniRequest({ id }, { authMode: 'userPool' }));
 }

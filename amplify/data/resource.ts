@@ -1,5 +1,6 @@
 import { type ClientSchema, a, defineData } from '@aws-amplify/backend';
 import { langfuseTraces } from '../functions/langfuse-traces/resource';
+import { macMiniOps } from '../functions/mac-mini-ops/resource';
 
 const schema = a.schema({
   LangfuseTracePayload: a.customType({
@@ -16,6 +17,32 @@ const schema = a.schema({
     .returns(a.ref('LangfuseTracePayload'))
     .authorization((allow) => [allow.authenticated()])
     .handler(a.handler.function(langfuseTraces)),
+
+  // /ops/mac-mini dashboard. All three route to the single macMiniOps Lambda, which
+  // reads telemetry from / writes intent rows to Supabase (service key from SM).
+  MacMiniResult: a.customType({
+    payload: a.json(),
+  }),
+
+  macMiniTelemetry: a
+    .query()
+    .returns(a.ref('MacMiniResult'))
+    .authorization((allow) => [allow.authenticated()])
+    .handler(a.handler.function(macMiniOps)),
+
+  macMiniRequest: a
+    .query()
+    .arguments({ id: a.string().required() })
+    .returns(a.ref('MacMiniResult'))
+    .authorization((allow) => [allow.authenticated()])
+    .handler(a.handler.function(macMiniOps)),
+
+  createMacMiniRequest: a
+    .mutation()
+    .arguments({ action: a.string().required(), params: a.json() })
+    .returns(a.ref('MacMiniResult'))
+    .authorization((allow) => [allow.authenticated()])
+    .handler(a.handler.function(macMiniOps)),
 
   ContactSubmission: a
     .model({
