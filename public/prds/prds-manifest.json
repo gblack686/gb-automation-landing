@@ -1,5 +1,16 @@
 [
   {
+    "slug": "2026-06-04-harness-per-session-git-worktree-plan",
+    "title": "Plan: Per-session git worktrees across harnesses",
+    "date": "2026-06-04",
+    "status": "planned",
+    "client": "",
+    "priority": "high",
+    "description": "Unify git worktree isolation for interactive Claude Code, Codex, Cursor, and Hermes-delegated coding. Reuse cron_worktree.py; optional per-task trees; registry maps sessions to cwd. Cron lane already isolated \u2014 this plan covers human and orchestrator surfaces.",
+    "category": "plan",
+    "public_url": "https://gbautomation.xyz/prds/2026-06-04-harness-per-session-git-worktree-plan"
+  },
+  {
     "slug": "graphify-sync-local-execution-lakehouse-countable-taxonomies",
     "title": "Graphify-Sync: Local Execution + Lakehouse + Countable Taxonomies",
     "url": "/prds/graphify-sync-local-execution-lakehouse-countable-taxonomies",

@@ -1,0 +1,669 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Plan: Per-session git worktrees across harnesses | GBAutomation</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&display=swap');
+    :root {
+      --cream-bg: #F3F1E7;
+      --cream-panel: #E6E4D9;
+      --text-main: #191919;
+      --text-muted: #5C5C5C;
+      --text-light: #8C8A84;
+      --border: #D6D4C8;
+      --terracotta: #D97757;
+      --paper: #FFFFFF;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text-main);
+      background: var(--cream-bg);
+      font-size: 14px;
+      line-height: 1.58;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+    a { color: var(--text-main); text-decoration-color: var(--terracotta); text-underline-offset: 3px; }
+    button { font: inherit; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(214, 212, 200, .7);
+      background: rgba(243, 241, 231, .93);
+      backdrop-filter: blur(12px);
+    }
+    .topbar-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 13px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .brand-lockup { display: inline-flex; align-items: center; gap: 9px; min-height: 28px; }
+    .brand-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(217, 119, 87, .18);
+    }
+    .brand-dot::after { content: ""; width: 8px; height: 8px; border-radius: 999px; background: var(--terracotta); }
+    .brand-text {
+      font-family: Newsreader, serif;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-size: 12px;
+    }
+    .source-name { color: var(--text-muted); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    header {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 34px 24px 26px;
+    }
+    .eyebrow {
+      color: var(--terracotta);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    h1 {
+      max-width: 920px;
+      margin: 10px 0 18px;
+      font-family: Newsreader, serif;
+      font-size: clamp(30px, 4vw, 48px);
+      font-weight: 500;
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+    .summary-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+    .summary-meta li {
+      min-height: 30px;
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, .45);
+      padding: 5px 9px;
+      border-radius: 6px;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .taxonomy-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0 0 14px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      min-height: 23px;
+      padding: 2px 8px;
+      border: 1px solid;
+      border-radius: 999px;
+      line-height: 1;
+    }
+    .pill-facet {
+      font-size: 8.5px;
+      font-weight: 700;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+    .pill-value {
+      color: var(--text-main);
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .layout {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 22px 24px 56px;
+      display: grid;
+      grid-template-columns: 252px minmax(0, 1fr);
+      gap: 22px;
+      align-items: start;
+    }
+    .section-menu {
+      position: sticky;
+      top: 64px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(230, 228, 217, .62);
+      backdrop-filter: blur(12px);
+      padding: 12px;
+    }
+    .menu-title {
+      margin: 0 0 10px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .menu-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+    .menu-actions button,
+    .section-menu nav button {
+      min-height: 34px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .46);
+      color: rgba(25, 25, 25, .72);
+      cursor: pointer;
+      transition: border-color .18s ease, color .18s ease, background .18s ease;
+    }
+    .menu-actions button { padding: 0 8px; font-size: 11px; font-weight: 700; }
+    .section-menu nav { display: grid; gap: 5px; }
+    .section-menu nav button {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 30px 1fr;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      text-align: left;
+      font-size: 12px;
+      line-height: 1.25;
+    }
+    .section-menu nav button span { color: var(--terracotta); font-size: 10px; font-weight: 700; letter-spacing: .08em; }
+    .menu-actions button:hover,
+    .section-menu nav button:hover,
+    .section-menu nav button.active {
+      border-color: var(--terracotta);
+      background: rgba(255, 255, 255, .72);
+      color: var(--text-main);
+    }
+    .sections { display: grid; gap: 10px; }
+    details.section {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .5);
+      overflow: hidden;
+    }
+    details.section[open] { background: rgba(255, 255, 255, .68); }
+    details.section summary {
+      min-height: 52px;
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 12px 14px;
+      cursor: pointer;
+      list-style: none;
+    }
+    details.section summary::-webkit-details-marker { display: none; }
+    .section-index {
+      color: var(--terracotta);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+    }
+    .section-title {
+      font-family: Newsreader, serif;
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.18;
+    }
+    .section-count {
+      color: var(--text-light);
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .section-body {
+      border-top: 1px solid rgba(214, 212, 200, .75);
+      padding: 4px 18px 18px 68px;
+    }
+    .section-body h2,
+    .section-body h3,
+    .section-body h4,
+    .section-body h5 {
+      margin: 18px 0 8px;
+      color: var(--text-main);
+      font-family: Newsreader, serif;
+      font-weight: 500;
+      line-height: 1.2;
+    }
+    .section-body h2 { font-size: 19px; }
+    .section-body h3 { font-size: 17px; }
+    .section-body h4,
+    .section-body h5 {
+      font-family: Inter, sans-serif;
+      color: var(--text-light);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+    .section-body p,
+    .section-body li { color: var(--text-muted); font-size: 14px; line-height: 1.66; }
+    .section-body p { margin: 10px 0; }
+    .section-body ul,
+    .section-body ol { margin: 10px 0 10px 18px; padding: 0; }
+    .section-body li { margin: 5px 0; padding-left: 2px; }
+    .section-body .task { list-style: none; margin-left: -18px; display: flex; gap: 8px; align-items: flex-start; }
+    .section-body input[type="checkbox"] { margin-top: 4px; accent-color: var(--terracotta); }
+    code {
+      border: 1px solid rgba(217, 119, 87, .22);
+      border-radius: 4px;
+      background: rgba(217, 119, 87, .10);
+      padding: 1px 4px;
+      color: var(--text-main);
+      font-size: .92em;
+    }
+    pre {
+      overflow: auto;
+      margin: 12px 0;
+      border-radius: 8px;
+      background: #191919;
+      color: #F3F1E7;
+      padding: 14px;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+    pre code { border: 0; background: transparent; color: inherit; padding: 0; }
+    blockquote {
+      margin: 12px 0;
+      padding: 10px 12px;
+      border-left: 3px solid var(--terracotta);
+      background: rgba(230, 228, 217, .5);
+    }
+    hr { border: 0; border-top: 1px solid var(--border); margin: 18px 0; }
+    .table-wrap { overflow-x: auto; margin: 12px 0; border: 1px solid var(--border); border-radius: 8px; }
+    table { width: 100%; border-collapse: collapse; min-width: 560px; background: rgba(255, 255, 255, .5); }
+    th,
+    td { border-bottom: 1px solid rgba(214, 212, 200, .75); padding: 8px 10px; text-align: left; font-size: 12px; vertical-align: top; }
+    th { color: var(--text-main); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; }
+    tr:last-child td { border-bottom: 0; }
+    .empty { color: var(--text-light); font-style: italic; }
+    footer {
+      border-top: 1px solid rgba(214, 212, 200, .78);
+      background: rgba(230, 228, 217, .45);
+    }
+    .footer-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    .footer-label {
+      margin-bottom: 12px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .metadata-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .meta-item {
+      min-width: 0;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .42);
+      padding: 9px 10px;
+    }
+    .meta-item span {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .meta-item strong {
+      display: block;
+      overflow-wrap: anywhere;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.35;
+    }
+    @media (max-width: 860px) {
+      .topbar-inner,
+      header,
+      .layout,
+      .footer-inner { padding-left: 16px; padding-right: 16px; }
+      .layout { display: block; }
+      .section-menu { position: static; margin-bottom: 14px; }
+      .section-body { padding-left: 18px; }
+      .metadata-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 540px) {
+      .topbar-inner { align-items: flex-start; flex-direction: column; gap: 6px; }
+      details.section summary { grid-template-columns: 34px 1fr; }
+      .section-count { grid-column: 2; }
+      h1 { font-size: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand-lockup"><span class="brand-dot"></span><span class="brand-text">GBAutomation</span></div>
+      <div class="source-name">2026-06-04-harness-per-session-git-worktree-plan.md</div>
+    </div>
+  </div>
+  <header>
+    <div class="eyebrow">Plan Brief</div>
+    <h1>Plan: Per-session git worktrees across harnesses</h1>
+    <div class="taxonomy-pills"><span class="pill" style="background:rgba(63, 158, 140, 0.12);border-color:rgba(63, 158, 140, 0.42);"><span class="pill-facet" style="color:#3F9E8C;">service</span><span class="pill-value">codex</span></span><span class="pill" style="background:rgba(177, 124, 62, 0.12);border-color:rgba(177, 124, 62, 0.42);"><span class="pill-facet" style="color:#B17C3E;">service</span><span class="pill-value">hermes</span></span></div>
+    <ul class="summary-meta">
+      <li>Priority: high</li><li>Status: planned</li><li>git</li><li>worktree</li><li>harness</li><li>claude-code</li><li>cursor</li><li>isolation</li>
+      <li>Owner: Greg Black</li>
+      <li>Created: 2026-06-04</li>
+      <li>11 sections</li>
+      <li>942 words</li>
+    </ul>
+  </header>
+  <main class="layout">
+    <aside class="section-menu" aria-label="Plan sections">
+  <div class="menu-title">Sections</div>
+  <div class="menu-actions">
+    <button type="button" data-action="expand">Expand all</button>
+    <button type="button" data-action="collapse">Collapse all</button>
+  </div>
+  <nav><button type="button" data-target="overview"><span>01</span>Overview</button>
+<button type="button" data-target="goal"><span>02</span>Goal</button>
+<button type="button" data-target="mental-model"><span>03</span>Mental model</button>
+<button type="button" data-target="design-decisions"><span>04</span>Design decisions</button>
+<button type="button" data-target="session-registry-runtime-not-in-git"><span>05</span>Session registry (runtime, not in git)</button>
+<button type="button" data-target="artifacts-to-build"><span>06</span>Artifacts to build</button>
+<button type="button" data-target="phases"><span>07</span>Phases</button>
+<button type="button" data-target="harness-matrix-target-state"><span>08</span>Harness matrix (target state)</button>
+<button type="button" data-target="out-of-scope-v1"><span>09</span>Out of scope (v1)</button>
+<button type="button" data-target="acceptance-criteria"><span>10</span>Acceptance criteria</button>
+<button type="button" data-target="references"><span>11</span>References</button></nav>
+</aside>
+    <div class="sections">
+      <details class="section" id="overview" open>
+  <summary>
+    <span class="section-index">01</span>
+    <span class="section-title">Overview</span>
+    <span class="section-count">0 words</span>
+  </summary>
+  <div class="section-body">
+    <p class="empty">No section notes yet.</p>
+  </div>
+</details>
+<details class="section" id="goal">
+  <summary>
+    <span class="section-index">02</span>
+    <span class="section-title">Goal</span>
+    <span class="section-count">77 words</span>
+  </summary>
+  <div class="section-body">
+    <p>Give each <strong>meaningful coding session</strong> (or task) its own git worktree so parallel harnesses do not stomp the same working tree. Reuse the proven <strong><code>resources/lib/cron_worktree.py</code></strong> path (<code>/tmp/gbauto-worktrees/</code> on Mac Mini; Windows sibling outside OneDrive when possible).</p>
+<p><strong>In scope:</strong> interactive Claude Code, Codex/Cursor, Hermes → Claude TUI delegate, and documentation for operator ergonomics.</p>
+<p><strong>Already done:</strong> Linear cron (<code>scripts/cron_linear_agent.py</code>) — one worktree per <code>auto/gba-<em></code> build; Claude Code subagent trees under <code>.claude/worktrees/agent-</em></code>.</p>
+  </div>
+</details>
+<details class="section" id="mental-model">
+  <summary>
+    <span class="section-index">03</span>
+    <span class="section-title">Mental model</span>
+    <span class="section-count">147 words</span>
+  </summary>
+  <div class="section-body">
+    <div class="table-wrap"><table><thead><tr><th>Layer</th><th>Isolation unit</th><th>Default cwd</th><th>Worktree owner</th></tr></thead><tbody><tr><td><strong>Linear cron</strong></td><td>Linear issue / branch</td><td><code>/tmp/gbauto-worktrees/auto_gba-*</code></td><td><code>cron_worktree.make_worktree</code> (existing)</td></tr>
+<tr><td><strong>Claude Code TUI (local)</strong></td><td>Feature / task slug</td><td>Main clone OR <code>../gbautomation-&lt;slug&gt;</code></td><td>Operator or SessionStart hook</td></tr>
+<tr><td><strong>Claude Code TUI (Hermes delegate)</strong></td><td>Task (optional) or pool</td><td><code>cc-pool-&lt;workspace&gt;</code></td><td><code>claude_tmux_delegate.sh</code></td></tr>
+<tr><td><strong>Codex / Cursor</strong></td><td>Cursor window / Codex session</td><td>User-opened folder</td><td>SessionStart or manual <code>git worktree add</code></td></tr>
+<tr><td><strong>Hermes chat</strong></td><td>N/A (orchestrator)</td><td><code>TERMINAL_CWD</code> main clone</td><td>Delegate only when coding</td></tr></tbody></table></div>
+<p><strong>Not 1:1 with every chat message.</strong> Prefer <strong>per-task</strong> worktrees (<code>cc-task-gba-123</code>, <code>greg/logo-animation</code>) over per Telegram turn.</p>
+<pre><code>flowchart TB
+  subgraph existing[&quot;Already isolated&quot;]
+    Cron[cron_linear_agent.py]
+    Agent[.claude/worktrees/agent-*]
+  end
+
+  subgraph new[&quot;This plan&quot;]
+    SS[SessionStart worktree resolver]
+    Del[claude_tmux_delegate.sh --worktree]
+    Reg[session-worktrees.json registry]
+    Cursor[Cursor opens worktree path]
+  end
+
+  Lib[cron_worktree.py]
+  Cron --&gt; Lib
+  Del --&gt; Lib
+  SS --&gt; Lib
+  Lib --&gt; WT[&quot;/tmp/gbauto-worktrees or ../gbautomation-&lt;slug&gt;&quot;]
+  Del --&gt; Reg
+  SS --&gt; Reg</code></pre>
+  </div>
+</details>
+<details class="section" id="design-decisions">
+  <summary>
+    <span class="section-index">04</span>
+    <span class="section-title">Design decisions</span>
+    <span class="section-count">103 words</span>
+  </summary>
+  <div class="section-body">
+    <div class="table-wrap"><table><thead><tr><th>Decision</th><th>Choice</th><th>Rationale</th></tr></thead><tbody><tr><td>Worktree library</td><td>Extend <code>cron_worktree.py</code></td><td>Collision purge, per-repo lock, default-branch detect already battle-tested</td></tr>
+<tr><td>Windows paths</td><td>Prefer <strong>outside OneDrive</strong></td><td><code>C:\tmp\gbauto-worktrees\</code> or repo sibling <code>../gbautomation-&lt;slug&gt;</code> — avoids sync latency</td></tr>
+<tr><td>Hermes default</td><td><strong>Pool reuse</strong> on main clone</td><td>plans/2026-06-04-hermes-claude-code-tui-delegate-plan — fast follow-ups</td></tr>
+<tr><td>Hermes opt-in</td><td><code>--worktree &lt;branch&gt;</code> on delegate</td><td>Dirty-tree / multi-task isolation without 1:1 Hermes↔Claude sessions</td></tr>
+<tr><td>Codex SessionStart</td><td><strong>Resolve only</strong> (no auto-create by default)</td><td>Keep startup fast/offline per plans/2026-05-10-session-start-library-portability-plan</td></tr>
+<tr><td>Registry</td><td><code>~/.gbauto/var/session-worktrees.json</code> (local) + delegate JSON on Mini</td><td>Tie <code>session_id</code> / <code>transcript_path</code> / Hermes <code>last_hermes_session</code> → <code>cwd</code>, <code>branch</code>, <code>created_at</code></td></tr>
+<tr><td>Cleanup</td><td>TTL + explicit <code>worktree cleanup</code> skill</td><td>Prevent <code>.claude/worktrees/</code> and <code>/tmp</code> sprawl</td></tr></tbody></table></div>
+  </div>
+</details>
+<details class="section" id="session-registry-runtime-not-in-git">
+  <summary>
+    <span class="section-index">05</span>
+    <span class="section-title">Session registry (runtime, not in git)</span>
+    <span class="section-count">50 words</span>
+  </summary>
+  <div class="section-body">
+    <pre><code>{
+  &quot;cc-task-gba-501&quot;: {
+    &quot;branch&quot;: &quot;cc-task-gba-501&quot;,
+    &quot;cwd&quot;: &quot;/tmp/gbauto-worktrees/cc-task-gba-501&quot;,
+    &quot;repo&quot;: &quot;/Users/greg/.openclaw/workspace/gbauto/gbautomation&quot;,
+    &quot;harness&quot;: &quot;claude-code-remote&quot;,
+    &quot;hermes_session&quot;: &quot;telegram:6777263736&quot;,
+    &quot;status&quot;: &quot;active&quot;,
+    &quot;updated_at&quot;: &quot;2026-06-04T12:00:00Z&quot;
+  }
+}</code></pre>
+<p>Langfuse / tracing: tag spans with <code>worktree.cwd</code> and <code>worktree.branch</code> when registry entry exists (closes Hermes cwd gap noted in intelligence/observability/langfuse/2026-06-01-ecom-scanner-work-report).</p>
+  </div>
+</details>
+<details class="section" id="artifacts-to-build">
+  <summary>
+    <span class="section-index">06</span>
+    <span class="section-title">Artifacts to build</span>
+    <span class="section-count">82 words</span>
+  </summary>
+  <div class="section-body">
+    <div class="table-wrap"><table><thead><tr><th>Artifact</th><th>Path</th><th>Role</th></tr></thead><tbody><tr><td>Plan (this file)</td><td><code>second-brain/plans/2026-06-04-harness-per-session-git-worktree-plan.md</code></td><td>Standard of record</td></tr>
+<tr><td>Worktree resolver CLI</td><td><code>scripts/session_worktree.py</code></td><td><code>ensure</code>, <code>status</code>, <code>cleanup</code>, <code>list</code> — thin wrapper over <code>cron_worktree</code></td></tr>
+<tr><td>SessionStart hook (optional)</td><td><code>.codex/hooks/session-worktree.sh</code> + Claude mirror</td><td>Read <code>GBAUTO_WORKTREE_BRANCH</code> env; print cwd hint, do not block</td></tr>
+<tr><td>Delegate extension</td><td><code>scripts/claude_tmux_delegate.sh</code></td><td><code>ensure --worktree &lt;branch&gt;</code> sets tmux <code>cwd</code></td></tr>
+<tr><td>Harness doc patch</td><td><code>second-brain/systems/harnesses/claude-code-remote.md</code></td><td>Worktree section + operator commands</td></tr>
+<tr><td>Skill pointer</td><td><code>resources/skills/session-worktree/SKILL.md</code></td><td>When to use pool vs task worktree</td></tr></tbody></table></div>
+  </div>
+</details>
+<details class="section" id="phases">
+  <summary>
+    <span class="section-index">07</span>
+    <span class="section-title">Phases</span>
+    <span class="section-count">264 words</span>
+  </summary>
+  <div class="section-body">
+    <h4>Phase 0 — Inventory and path policy (one-time)</h4>
+<ul>
+<li class="task"><input type="checkbox" disabled> <span>Document current worktrees: <code>git worktree list</code> on Windows + Mac Mini</span></li>
+<li class="task"><input type="checkbox" disabled> <span>Prune stale <code>.claude/worktrees/agent-*</code> locked trees (operator approval)</span></li>
+<li class="task"><input type="checkbox" disabled> <span>Set <code>WORKTREE_ROOT</code> env convention: Mac <code>/tmp/gbauto-worktrees</code>, Win <code>C:/tmp/gbauto-worktrees</code></span></li>
+<li class="task"><input type="checkbox" disabled> <span>Add <code>WORKTREE_ROOT</code> override to <code>cron_worktree.py</code> (env var, default <code>/tmp/gbauto-worktrees</code>)</span></li>
+</ul>
+<h4>Phase 1 — <code>session_worktree.py</code> + registry</h4>
+<ul>
+<li class="task"><input type="checkbox" disabled> <span>Add <code>scripts/session_worktree.py</code> wrapping <code>make_worktree</code> / <code>cleanup_worktree</code></span></li>
+<li class="task"><input type="checkbox" disabled> <span>Branch naming: <code>cc-task-&lt;slug&gt;</code>, <code>codex-session-&lt;short-id&gt;</code>, <code>cursor-&lt;slug&gt;</code></span></li>
+<li class="task"><input type="checkbox" disabled> <span>Write/read <code>~/.gbauto/var/session-worktrees.json</code> (or repo-local <code>.gbauto/session-worktrees.json</code> for dev)</span></li>
+<li class="task"><input type="checkbox" disabled> <span><code>list</code> shows active trees + age; <code>cleanup --older-than 7d</code> best-effort</span></li>
+</ul>
+<h4>Phase 2 — Hermes delegate integration</h4>
+<ul>
+<li class="task"><input type="checkbox" disabled> <span>Extend plans/2026-06-04-hermes-claude-code-tui-delegate-plan Phase 1 script with <code>--worktree &lt;branch&gt;</code></span></li>
+<li class="task"><input type="checkbox" disabled> <span>On <code>ensure --worktree</code>, call <code>session_worktree.py ensure</code>, set pool <code>cwd</code> to worktree path</span></li>
+<li class="task"><input type="checkbox" disabled> <span>Merge fields into <code>~/.hermes/var/claude-delegates.json</code> (<code>cwd</code>, <code>branch</code>, <code>worktree_id</code>)</span></li>
+<li class="task"><input type="checkbox" disabled> <span>Gelby skill <code>hermes-claude-code-tui</code>: use worktree when issue id or explicit <code>/code --wt</code></span></li>
+</ul>
+<h4>Phase 3 — Claude Code + Codex interactive</h4>
+<ul>
+<li class="task"><input type="checkbox" disabled> <span>Document operator flow: <code>session_worktree.py ensure my-feature &amp;&amp; cd &lt;path&gt; &amp;&amp; claude</code></span></li>
+<li class="task"><input type="checkbox" disabled> <span>Optional SessionStart: if <code>GBAUTO_WORKTREE_BRANCH</code> set, verify tree exists, inject one-line cwd into briefing</span></li>
+<li class="task"><input type="checkbox" disabled> <span>Codex: same env contract in <code>.codex/hooks/session-start.sh</code> postamble</span></li>
+<li class="task"><input type="checkbox" disabled> <span>Cursor: open folder at worktree path (no automation required in v1)</span></li>
+</ul>
+<h4>Phase 4 — Observability + cleanup automation</h4>
+<ul>
+<li class="task"><input type="checkbox" disabled> <span><code>resources/lib/tracing.py</code>: optional <code>worktree_branch</code> / <code>worktree_cwd</code> span attributes from registry lookup</span></li>
+<li class="task"><input type="checkbox" disabled> <span>Weekly cron or OpenClaw skill: prune worktrees with no commit in 14d and no active registry entry</span></li>
+<li class="task"><input type="checkbox" disabled> <span>Update <code>vault-manifest.json</code> <code>skip_paths</code> if new worktree roots generate noise in validate-write</span></li>
+</ul>
+<h4>Phase 5 — SessionStop pairing (optional)</h4>
+<ul>
+<li class="task"><input type="checkbox" disabled> <span>On Stop + significant diff, commit <strong>in worktree cwd</strong> (see plans/2026-06-04-stop-hook-significant-diff-auto-commit-plan)</span></li>
+<li class="task"><input type="checkbox" disabled> <span>Optional: <code>session_worktree.py finalize</code> — commit, push branch, open PR link in stop-checklist output</span></li>
+</ul>
+  </div>
+</details>
+<details class="section" id="harness-matrix-target-state">
+  <summary>
+    <span class="section-index">08</span>
+    <span class="section-title">Harness matrix (target state)</span>
+    <span class="section-count">58 words</span>
+  </summary>
+  <div class="section-body">
+    <div class="table-wrap"><table><thead><tr><th>Harness</th><th>Session → worktree</th><th>Mechanism</th></tr></thead><tbody><tr><td>Linear cron</td><td>Per issue</td><td>Existing <code>cron_worktree</code></td></tr>
+<tr><td>Claude Code local</td><td>Per task (opt-in)</td><td><code>session_worktree.py</code> + manual <code>cd</code></td></tr>
+<tr><td>Claude Code remote (tmux)</td><td>Per task (opt-in)</td><td><code>claude_tmux_delegate.sh --worktree</code></td></tr>
+<tr><td>Codex CLI / Cursor</td><td>Per window</td><td>Open worktree path or env <code>GBAUTO_WORKTREE_BRANCH</code></td></tr>
+<tr><td>Hermes</td><td>Main clone</td><td><code>TERMINAL_CWD</code>; delegate for isolated coding</td></tr>
+<tr><td>OpenClaw skills</td><td>Unchanged</td><td>Invoke scripts with explicit <code>cwd</code> arg</td></tr></tbody></table></div>
+  </div>
+</details>
+<details class="section" id="out-of-scope-v1">
+  <summary>
+    <span class="section-index">09</span>
+    <span class="section-title">Out of scope (v1)</span>
+    <span class="section-count">29 words</span>
+  </summary>
+  <div class="section-body">
+    <ul>
+<li>Automatic worktree on every Cursor chat open (too heavy; confuses OneDrive)</li>
+<li>Replacing Archon-style <code>/worktree create</code> in other products</li>
+<li>Cross-repo worktrees (monorepo only)</li>
+<li>Hermes 1:1 Telegram thread → permanent worktree</li>
+</ul>
+  </div>
+</details>
+<details class="section" id="acceptance-criteria">
+  <summary>
+    <span class="section-index">10</span>
+    <span class="section-title">Acceptance criteria</span>
+    <span class="section-count">70 words</span>
+  </summary>
+  <div class="section-body">
+    <ol>
+<li><code>python scripts/session_worktree.py ensure test-hello</code> creates a branch + directory; <code>git worktree list</code> shows it.</li>
+<li>Hermes delegate Hello World can run in <code>--worktree cc-task-hello</code> without touching main clone dirty state.</li>
+<li>Registry JSON records <code>cwd</code> + <code>branch</code> for that task; delegate status reflects it.</li>
+<li>Cron parallel builds still pass (no regression to <code>cron_worktree</code> lock behavior).</li>
+<li>Harness docs linked from systems/harnesses/_harnesses and tasks/internal-ops This Week.</li>
+</ol>
+  </div>
+</details>
+<details class="section" id="references">
+  <summary>
+    <span class="section-index">11</span>
+    <span class="section-title">References</span>
+    <span class="section-count">30 words</span>
+  </summary>
+  <div class="section-body">
+    <ul>
+<li><code>resources/lib/cron_worktree.py</code> — canonical implementation</li>
+<li>plans/2026-06-04-hermes-claude-code-tui-delegate-plan — tmux pool + Phase 5 worktree deferral</li>
+<li>knowledge/domains/consulting/skills/worktree-manager/SKILL — ADW naming precedent</li>
+<li>Archon <code>/worktree create</code> pattern (historical) — per-conversation pin</li>
+</ul>
+  </div>
+</details>
+    </div>
+  </main>
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-label">Metadata</div>
+      <div class="metadata-grid">
+        <div class="meta-item"><span>Source</span><strong>C:\Users\gblac\OneDrive\Desktop\gbauto\gbautomation\second-brain\plans\2026-06-04-harness-per-session-git-worktree-plan.md</strong></div>
+<div class="meta-item"><span>Generated</span><strong>2026-06-04T14:43:38-07:00</strong></div>
+<div class="meta-item"><span>Source modified</span><strong>2026-06-04T14:14:17-07:00</strong></div>
+<div class="meta-item"><span>Source size</span><strong>9,736 bytes</strong></div>
+<div class="meta-item"><span>Word count</span><strong>942</strong></div>
+<div class="meta-item"><span>Sections</span><strong>11</strong></div>
+<div class="meta-item"><span>Renderer</span><strong>resources/skills/netlify-cli/scripts/render_plan_page.py</strong></div>
+<div class="meta-item"><span>Description</span><strong>Unify git worktree isolation for interactive Claude Code, Codex, Cursor, and Hermes-delegated coding. Reuse cron_worktree.py; optional per-task trees; registry maps sessions to cwd. Cron lane already isolated — this plan covers human and orchestrator surfaces.</strong></div>
+<div class="meta-item"><span>Date</span><strong>2026-06-04</strong></div>
+<div class="meta-item"><span>Status</span><strong>planned</strong></div>
+<div class="meta-item"><span>Owner</span><strong>Greg Black</strong></div>
+<div class="meta-item"><span>Priority</span><strong>high</strong></div>
+<div class="meta-item"><span>Type</span><strong>plan</strong></div>
+<div class="meta-item"><span>Tags</span><strong>plan, git, worktree, harness, claude-code, codex, hermes, cursor, isolation</strong></div>
+<div class="meta-item"><span>Related</span><strong>[[systems/harnesses/_harnesses]], [[systems/harnesses/claude-code]], [[systems/harnesses/codex]], [[systems/harnesses/hermes]], [[systems/harnesses/claude-code-remote]], [[plans/2026-06-04-hermes-claude-code-tui-delegate-plan]], [[plans/2026-06-04-stop-hook-significant-diff-auto-commit-plan]], [[knowledge/concepts/autonomous-linear-agent]], [[knowledge/domains/consulting/skills/worktree-manager/SKILL]], [[tasks/internal-ops]]</strong></div>
+      </div>
+    </div>
+  </footer>
+  <script>
+    const sections = Array.from(document.querySelectorAll('details.section'));
+    const menuButtons = Array.from(document.querySelectorAll('[data-target]'));
+    const setActive = (id) => {
+      menuButtons.forEach((button) => button.classList.toggle('active', button.dataset.target === id));
+    };
+    menuButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const section = document.getElementById(button.dataset.target);
+        if (!section) return;
+        section.open = true;
+        setActive(section.id);
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+    document.querySelector('[data-action="expand"]').addEventListener('click', () => sections.forEach((section) => section.open = true));
+    document.querySelector('[data-action="collapse"]').addEventListener('click', () => sections.forEach((section, index) => section.open = index === 0));
+    sections.forEach((section) => {
+      section.addEventListener('toggle', () => {
+        if (section.open) setActive(section.id);
+      });
+    });
+    if (sections[0]) setActive(sections[0].id);
+  </script>
+</body>
+</html>
