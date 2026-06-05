@@ -20,7 +20,7 @@ trees:
 
   - slug: portfolio
     name: Portfolio
-    description: Client project showcases and case studies
+    description: Client project showcases and productized offers
     icon: briefcase
     branches:
       - slug: portfolio-v1
@@ -38,13 +38,61 @@ trees:
     name: Features
     description: Feature cards and benefit sections
     icon: star
-    branches: []
+    branches:
+      - slug: agentic-systems-v1
+        name: Agentic Systems Grid
+        status: validated
+        description: Compact feature grid for transcript, Linear, PR, and Hermes capabilities
+        created: "2026-06-05"
+      - slug: owned-stack-v1
+        name: Owned Infrastructure
+        status: validated
+        description: Trust-forward feature section around ownership, vaults, and dedicated infrastructure
+        created: "2026-06-05"
+
+  - slug: automation-loop
+    name: Automation Loop
+    description: How It Works section from transcript to reviewed pull request
+    icon: git-branch
+    branches:
+      - slug: transcript-to-pr-v1
+        name: Transcript to PR Flow
+        status: validated
+        description: Four-stage workflow connecting meetings, Linear, autonomous builds, and PR review
+        created: "2026-06-05"
+
+  - slug: hermes
+    name: Hermes Companion
+    description: Dedicated per-client Hermes profile model
+    icon: bot
+    branches:
+      - slug: dedicated-ai-companion-v1
+        name: Dedicated AI Companion
+        status: validated
+        description: Client-isolated Hermes agent section with Telegram and vault-aware positioning
+        created: "2026-06-05"
+
+  - slug: team-session
+    name: AI Team Session
+    description: Productized one-hour Hermes team build session
+    icon: users
+    branches:
+      - slug: ai-team-hour-v1
+        name: Your AI Team in an Hour
+        status: validated
+        description: Intake, live build, Telegram launch, deliverables, and pricing callout
+        created: "2026-06-05"
 
   - slug: process
     name: Process
     description: 90-day process timeline and methodology
     icon: chart-line
-    branches: []
+    branches:
+      - slug: ninety-day-roadmap-v1
+        name: 90-Day Roadmap
+        status: validated
+        description: Three-phase delivery model for foundation, agent buildout, and handoff
+        created: "2026-06-05"
 
   - slug: pricing
     name: Pricing
@@ -59,30 +107,55 @@ trees:
 
   - slug: testimonials
     name: Testimonials
-    description: Client testimonials and social proof
+    description: Client testimonials, logo garden, and social proof
     icon: message-circle
-    branches: []
+    branches:
+      - slug: trust-stack-v1
+        name: Trust Stack
+        status: validated
+        description: Logo garden, metric strip, and proof quotes in GB Automation styling
+        created: "2026-06-05"
 
   - slug: contact
     name: Contact
     description: Contact forms and consultation booking
     icon: mail
-    branches: []
+    branches:
+      - slug: consultation-v1
+        name: Consultation Form
+        status: validated
+        description: Focused contact page with qualification fields and warm conversion copy
+        created: "2026-06-05"
 
   - slug: about
     name: About
     description: Team, mission, and company story sections
     icon: users
-    branches: []
+    branches:
+      - slug: operator-story-v1
+        name: Operator Story
+        status: validated
+        description: Founder-led about page positioning around practical autonomous systems
+        created: "2026-06-05"
 
   - slug: blog
-    name: Blog
+    name: Insights
     description: Blog post cards and article layouts
     icon: file-text
-    branches: []
+    branches:
+      - slug: insights-index-v1
+        name: Insights Index
+        status: validated
+        description: Editorial index for agentic systems, Hermes, and automation operations writing
+        created: "2026-06-05"
 
   - slug: calculator
     name: Calculator
     description: ROI and savings calculator components
     icon: calculator
-    branches: []
+    branches:
+      - slug: roi-calculator-v1
+        name: Automation ROI Calculator
+        status: validated
+        description: Calculator concept for weekly hours saved, hourly value, and 90-day payoff
+        created: "2026-06-05"
