@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { ExternalLink, GitBranch } from 'lucide-react';
 import SignOutButton from '../components/SignOutButton';
 
-const uiAgentsPath = '/mini-apps/ui-agents/#/gbautomation/site';
+const uiAgentsPath = '/mini-apps/ui-agents/index.html#/gbautomation/site';
 
 export default function UiAgents() {
   return (

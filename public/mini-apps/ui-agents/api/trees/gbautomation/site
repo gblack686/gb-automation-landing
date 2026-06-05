@@ -1,4 +1,4 @@
-version: "1.0"
+﻿version: 1
 brand: gbautomation
 product: site
 trees:
@@ -12,11 +12,13 @@ trees:
         status: validated
         description: Video hero with stats and dual CTAs
         created: "2026-05-04"
+        screenshot: null
       - slug: hero-v2-exact
         name: Exact Site Match
         status: validated
         description: Exact replica with Tailwind classes from production
         created: "2026-05-04"
+        screenshot: null
 
   - slug: portfolio
     name: Portfolio
@@ -28,11 +30,13 @@ trees:
         status: validated
         description: Horizontal scrolling portfolio cards
         created: "2026-05-04"
+        screenshot: null
       - slug: portfolio-v2-tailwind
         name: Tailwind Portfolio
         status: validated
         description: Exact Tailwind classes from production site
         created: "2026-05-04"
+        screenshot: null
 
   - slug: features
     name: Features
@@ -44,11 +48,13 @@ trees:
         status: validated
         description: Compact feature grid for transcript, Linear, PR, and Hermes capabilities
         created: "2026-06-05"
+        screenshot: null
       - slug: owned-stack-v1
         name: Owned Infrastructure
         status: validated
         description: Trust-forward feature section around ownership, vaults, and dedicated infrastructure
         created: "2026-06-05"
+        screenshot: null
 
   - slug: automation-loop
     name: Automation Loop
@@ -60,6 +66,7 @@ trees:
         status: validated
         description: Four-stage workflow connecting meetings, Linear, autonomous builds, and PR review
         created: "2026-06-05"
+        screenshot: null
 
   - slug: hermes
     name: Hermes Companion
@@ -71,6 +78,7 @@ trees:
         status: validated
         description: Client-isolated Hermes agent section with Telegram and vault-aware positioning
         created: "2026-06-05"
+        screenshot: null
 
   - slug: team-session
     name: AI Team Session
@@ -82,6 +90,7 @@ trees:
         status: validated
         description: Intake, live build, Telegram launch, deliverables, and pricing callout
         created: "2026-06-05"
+        screenshot: null
 
   - slug: process
     name: Process
@@ -93,6 +102,7 @@ trees:
         status: validated
         description: Three-phase delivery model for foundation, agent buildout, and handoff
         created: "2026-06-05"
+        screenshot: null
 
   - slug: pricing
     name: Pricing
@@ -104,6 +114,7 @@ trees:
         status: validated
         description: Three-tier pricing with ROI calculator
         created: "2026-05-04"
+        screenshot: null
 
   - slug: testimonials
     name: Testimonials
@@ -115,6 +126,7 @@ trees:
         status: validated
         description: Logo garden, metric strip, and proof quotes in GB Automation styling
         created: "2026-06-05"
+        screenshot: null
 
   - slug: contact
     name: Contact
@@ -126,6 +138,7 @@ trees:
         status: validated
         description: Focused contact page with qualification fields and warm conversion copy
         created: "2026-06-05"
+        screenshot: null
 
   - slug: about
     name: About
@@ -137,6 +150,7 @@ trees:
         status: validated
         description: Founder-led about page positioning around practical autonomous systems
         created: "2026-06-05"
+        screenshot: null
 
   - slug: blog
     name: Insights
@@ -148,6 +162,7 @@ trees:
         status: validated
         description: Editorial index for agentic systems, Hermes, and automation operations writing
         created: "2026-06-05"
+        screenshot: null
 
   - slug: calculator
     name: Calculator
@@ -159,3 +174,4 @@ trees:
         status: validated
         description: Calculator concept for weekly hours saved, hourly value, and 90-day payoff
         created: "2026-06-05"
+        screenshot: null
