@@ -1,4 +1,4 @@
-import { Cloud, Code, Video, Workflow, Network } from 'lucide-react';
+import { Cloud, Code, Video, Workflow, Network, FileText, GitPullRequest, Users } from 'lucide-react';
 
 export const portfolioItems = [
   {
@@ -189,6 +189,114 @@ export const portfolioItems = [
         'Token usage optimization and tracking'
       ],
       deployment: 'FastAPI backend with Neo4j database and Langfuse observability platform. Redis for caching and session management.'
+    }
+  },
+  {
+    id: 'meet-transcript-processor',
+    unit: 'TRANSCRIPT-06',
+    name: 'Meet Transcript Processor',
+    Icon: FileText,
+    role: 'Post-Session Automation',
+    tagline: 'Transcript In, Linear Issues Out',
+    features: [
+      'Gmail transcript pickup',
+      'Linear issue extraction',
+      'Draft replies generated'
+    ],
+    capabilities: [
+      'Google Meet',
+      'Linear API',
+      'Agent Review'
+    ],
+    description: 'Drag-drop a Google Meet transcript, or let Gmail polling pick it up automatically, and get structured Linear issues, action items, and a draft reply without reading the transcript yourself.',
+    technologies: ['FastAPI', 'Vue 3', 'Google Meet API', 'Linear API', 'Claude Code'],
+    useCases: [
+      'Post-client-session triage',
+      'Sales call follow-up automation',
+      'Internal stand-up action tracking'
+    ],
+    image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=1000&auto=format&fit=crop',
+    detailedInfo: {
+      architecture: 'FastAPI backend + Vue 3 frontend. Claude agent team: orchestrator -> meet-fetch -> turn-extract -> dedup -> linear-draft -> validator.',
+      integrations: ['Google Workspace', 'Linear', 'Gmail', 'Claude Code'],
+      benefits: [
+        'Zero manual triage',
+        'Every action item captured',
+        'Linear issues in under 2 minutes per session'
+      ],
+      deployment: 'Hosted behind authenticated access with Gmail polling and review queues.'
+    }
+  },
+  {
+    id: 'autonomous-coding-agent',
+    unit: 'AUTO-AGENT-07',
+    name: 'Autonomous Coding Agent',
+    Icon: GitPullRequest,
+    role: 'Self-Directed Development',
+    tagline: 'Linear Issue to Merged PR, Unattended',
+    features: [
+      '15-minute coding loop',
+      'Isolated git worktrees',
+      'Automatic PR summaries'
+    ],
+    capabilities: [
+      'Linear Queue',
+      'GitHub PRs',
+      'Verifier Agent'
+    ],
+    description: 'A cron-driven agent loop that scores your Linear backlog, picks the highest-priority issues, writes the code in isolated git worktrees, and opens pull requests around the clock.',
+    technologies: ['Claude Code', 'Linear API', 'GitHub API', 'Python', 'Git worktrees'],
+    useCases: [
+      'Backlog burn-down without sprint planning',
+      'Bug fix SLAs met overnight',
+      'Continuous feature development on a fixed budget'
+    ],
+    image: 'https://images.unsplash.com/photo-1551434678-e076c223a692?q=80&w=1000&auto=format&fit=crop',
+    detailedInfo: {
+      architecture: 'Python orchestrator with scoring, parallel worktree execution, authenticated CLI lanes, and verifier reports before PR handoff.',
+      integrations: ['Linear', 'GitHub', 'AWS Secrets Manager', 'Langfuse'],
+      benefits: [
+        'Engineering output without engineering headcount',
+        'PRs open while you sleep',
+        'Full observability via Langfuse'
+      ],
+      deployment: 'Mac Mini launchd or GitHub Actions with configurable parallelism and per-issue timeouts.'
+    }
+  },
+  {
+    id: 'ai-team-build-session',
+    unit: 'HERMES-SESSION-08',
+    name: 'AI Team Build Session',
+    Icon: Users,
+    role: 'Productized Service',
+    tagline: 'Your AI Team, Wired and Live in 60 Minutes',
+    features: [
+      'Orchestrator plus departments',
+      'Telegram-first access',
+      'Portable YAML profiles'
+    ],
+    capabilities: [
+      'Hermes',
+      'Telegram',
+      'Live Build'
+    ],
+    description: 'A structured 60-minute session where we scaffold your Hermes AI agent team live, wire it to Telegram, and leave you with working agents plus portable profile files.',
+    technologies: ['Hermes', 'Claude Max', 'Telegram', 'YAML', 'Mac Mini / Linux'],
+    useCases: [
+      'Founders wanting AI ops without hiring',
+      'Consultants building client AI teams',
+      'Teams automating research, content, and sales in parallel'
+    ],
+    image: 'https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=1000&auto=format&fit=crop',
+    detailedInfo: {
+      architecture: 'Hermes gateway plus per-department profile YAMLs, Telegram bots, and delegation routing through a named orchestrator.',
+      integrations: ['Hermes', 'Telegram', 'Claude Max', 'Linux', 'Mac Mini'],
+      benefits: [
+        'Working AI team at session end',
+        'No vendor lock-in',
+        'Telegram-first access from any phone'
+      ],
+      deployment: 'Runs on client-owned or GBAutomation-hosted infrastructure with isolated profile and credential boundaries.'
     }
   }
 ];

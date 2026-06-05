@@ -157,6 +157,35 @@
                                   "alerts",
                                   "the-mall"
                               ]
+                 },
+                 {
+                     "slug":  "ui-agents",
+                     "name":  "UI Agents",
+                     "tagline":  "Brand-aware interface generation workspace for GB Automation website variants",
+                     "description":  "A private mini-app built from the gbauto-tac/ui-agents Infinite UI workspace. It loads the GB Automation brand and site tree definitions as a static read-only bundle for reviewing generated page/component variants.",
+                     "repo":  "https://github.com/gbauto-tac/ui-agents",
+                     "app_path":  "/apps/ui-agents",
+                     "tech_stack":  [
+                                        "vue",
+                                        "vite",
+                                        "pinia",
+                                        "brand-yaml",
+                                        "tac"
+                                    ],
+                     "thumbnail":  null,
+                     "latest_run":  {
+                                        "job_id":  "ui-agents-static-gbautomation-site",
+                                        "passed":  true,
+                                        "created_at":  "2026-06-05T20:58:00Z"
+                                    },
+                     "status":  "experimental",
+                     "tags":  [
+                                  "ui-agents",
+                                  "infinite-ui",
+                                  "website-redesign",
+                                  "gbautomation",
+                                  "tac"
+                              ]
                  }
              ]
 }

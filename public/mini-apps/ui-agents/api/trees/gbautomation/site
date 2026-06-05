@@ -1,0 +1,88 @@
+version: "1.0"
+brand: gbautomation
+product: site
+trees:
+  - slug: hero
+    name: Hero
+    description: Hero sections with video backgrounds and CTAs
+    icon: home
+    branches:
+      - slug: hero-v1
+        name: Video Hero
+        status: validated
+        description: Video hero with stats and dual CTAs
+        created: "2026-05-04"
+      - slug: hero-v2-exact
+        name: Exact Site Match
+        status: validated
+        description: Exact replica with Tailwind classes from production
+        created: "2026-05-04"
+
+  - slug: portfolio
+    name: Portfolio
+    description: Client project showcases and case studies
+    icon: briefcase
+    branches:
+      - slug: portfolio-v1
+        name: Sliding Portfolio
+        status: validated
+        description: Horizontal scrolling portfolio cards
+        created: "2026-05-04"
+      - slug: portfolio-v2-tailwind
+        name: Tailwind Portfolio
+        status: validated
+        description: Exact Tailwind classes from production site
+        created: "2026-05-04"
+
+  - slug: features
+    name: Features
+    description: Feature cards and benefit sections
+    icon: star
+    branches: []
+
+  - slug: process
+    name: Process
+    description: 90-day process timeline and methodology
+    icon: chart-line
+    branches: []
+
+  - slug: pricing
+    name: Pricing
+    description: Investment tiers and package comparisons
+    icon: credit-card
+    branches:
+      - slug: pricing-v1
+        name: Three Tier
+        status: validated
+        description: Three-tier pricing with ROI calculator
+        created: "2026-05-04"
+
+  - slug: testimonials
+    name: Testimonials
+    description: Client testimonials and social proof
+    icon: message-circle
+    branches: []
+
+  - slug: contact
+    name: Contact
+    description: Contact forms and consultation booking
+    icon: mail
+    branches: []
+
+  - slug: about
+    name: About
+    description: Team, mission, and company story sections
+    icon: users
+    branches: []
+
+  - slug: blog
+    name: Blog
+    description: Blog post cards and article layouts
+    icon: file-text
+    branches: []
+
+  - slug: calculator
+    name: Calculator
+    description: ROI and savings calculator components
+    icon: calculator
+    branches: []

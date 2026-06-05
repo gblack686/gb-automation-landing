@@ -1,0 +1,15 @@
+name: Main Website
+description: Primary GBAutomation marketing and conversion site
+type: marketing
+
+# Product-specific overrides (inherits from parent brand.yaml)
+palette:
+  # Keep the sophisticated cream/terracotta but add some depth
+  gradient-primary: "linear-gradient(135deg, #D97757 0%, #C26D52 100%)"
+  gradient-accent: "linear-gradient(135deg, #F3F1E7 0%, #EBE8DC 100%)"
+  
+# Additional product-specific tokens
+tokens:
+  hero-overlay: "rgba(243, 241, 231, 0.7)"  # Cream overlay for video
+  card-hover: "#FDFCF8"                      # Subtle hover state
+  cta-gradient: "linear-gradient(135deg, #D97757 0%, #E8A599 100%)"

@@ -8,6 +8,7 @@ import ArtifactView from './pages/ArtifactView';
 import Blockers from './pages/Blockers';
 import YouTubeIntel from './pages/YouTubeIntel';
 import MallScanner from './pages/MallScanner';
+import UiAgents from './pages/UiAgents';
 import Login from './pages/Login';
 import PRDIndex from './pages/PRDIndex';
 import PRDView from './pages/PRDView';
@@ -59,6 +60,10 @@ function App() {
           <Route
             path="/apps/mall-scanner"
             element={<RequireAuth><MallScanner /></RequireAuth>}
+          />
+          <Route
+            path="/apps/ui-agents"
+            element={<RequireAuth><UiAgents /></RequireAuth>}
           />
           <Route
             path="/ops/*"
