@@ -7,7 +7,6 @@ import {
   Database,
   Filter,
   GitBranch,
-  Layers,
   RefreshCw,
   Search,
   Tags,
@@ -63,6 +62,18 @@ function TagPill({ children }) {
   );
 }
 
+function SourceBadge({ kind, label }) {
+  const isLocal = kind === 'gbautomation_local';
+  return (
+    <span className={cx(
+      'inline-flex items-center rounded-full px-2 py-1 text-[11px] font-semibold',
+      isLocal ? 'bg-[#D97757]/10 text-[#B75F43]' : 'bg-[#191919]/10 text-[#191919]/65'
+    )}>
+      {label || (isLocal ? 'GB Automation' : 'Original TAC')}
+    </span>
+  );
+}
+
 function sourceHref(component) {
   const raw = component.raw_source;
   if (!raw) return '';
@@ -76,6 +87,7 @@ export default function TacCatalog() {
   const [error, setError] = useState('');
   const [query, setQuery] = useState('');
   const [repoFilter, setRepoFilter] = useState('');
+  const [sourceFilter, setSourceFilter] = useState('');
   const [primitiveFilter, setPrimitiveFilter] = useState('');
   const [tagFilter, setTagFilter] = useState('');
   const [selectedRepo, setSelectedRepo] = useState('');
@@ -103,6 +115,10 @@ export default function TacCatalog() {
   }, []);
 
   const repoOptions = useMemo(() => (catalog?.repos || []).map((repo) => repo.name), [catalog]);
+  const sourceOptions = useMemo(
+    () => Array.from(new Set((catalog?.repos || []).map((repo) => repo.source_label).filter(Boolean))),
+    [catalog]
+  );
   const primitiveOptions = useMemo(() => (catalog?.primitive_counts || []).map((item) => item.name), [catalog]);
   const tagOptions = useMemo(() => (catalog?.tag_counts || []).slice(0, 80).map((item) => item.name), [catalog]);
 
@@ -111,6 +127,7 @@ export default function TacCatalog() {
     const q = query.trim().toLowerCase();
     return components.filter((component) => {
       if (repoFilter && component.repo !== repoFilter) return false;
+      if (sourceFilter && component.repo_source_label !== sourceFilter) return false;
       if (primitiveFilter && component.primitive !== primitiveFilter) return false;
       if (tagFilter && !component.tags.includes(tagFilter)) return false;
       if (!q) return true;
@@ -123,7 +140,7 @@ export default function TacCatalog() {
         ...(component.tags || []),
       ].filter(Boolean).some((value) => String(value).toLowerCase().includes(q));
     });
-  }, [catalog, primitiveFilter, query, repoFilter, tagFilter]);
+  }, [catalog, primitiveFilter, query, repoFilter, sourceFilter, tagFilter]);
 
   const selectedRepoData = useMemo(() => {
     if (!catalog?.repos?.length) return null;
@@ -192,9 +209,9 @@ export default function TacCatalog() {
 
         <section className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <Metric icon={GitBranch} label="Repos" value={catalog?.summary?.repositories} />
+          <Metric icon={Database} label="GB Repos" value={catalog?.summary?.gbautomation_repositories} sub={`${fmt(catalog?.summary?.original_tac_repositories)} original TAC`} />
           <Metric icon={Boxes} label="Components" value={catalog?.summary?.components} />
           <Metric icon={Tags} label="Tags" value={catalog?.summary?.tags} />
-          <Metric icon={Layers} label="Used Components" value={catalog?.summary?.unique_components_used} sub={`${fmt(catalog?.summary?.total_component_usage_refs)} usage refs`} />
         </section>
 
         <section className="mb-6 grid gap-4 lg:grid-cols-[minmax(0,1.2fr),minmax(360px,0.8fr)]">
@@ -203,7 +220,7 @@ export default function TacCatalog() {
               <Filter className="h-4 w-4 text-[#D97757]" />
               <h2 className="font-serif text-2xl">Catalog Controls</h2>
             </div>
-            <div className="grid gap-3 md:grid-cols-[1.4fr,1fr,1fr,1fr]">
+            <div className="grid gap-3 md:grid-cols-[1.4fr,1fr,1fr,1fr,1fr]">
               <label className="min-w-0 text-[11px] font-bold uppercase tracking-widest text-[#191919]/50">
                 Search
                 <span className="relative mt-1 block">
@@ -217,6 +234,7 @@ export default function TacCatalog() {
                 </span>
               </label>
               <SelectFilter label="Repo" value={repoFilter} options={repoOptions} onChange={setRepoFilter} />
+              <SelectFilter label="Source" value={sourceFilter} options={sourceOptions} onChange={setSourceFilter} />
               <SelectFilter label="Primitive" value={primitiveFilter} options={primitiveOptions} onChange={setPrimitiveFilter} />
               <SelectFilter label="Tag" value={tagFilter} options={tagOptions} onChange={setTagFilter} />
             </div>
@@ -263,6 +281,7 @@ export default function TacCatalog() {
                   <span className="min-w-0">
                     <span className="block truncate text-sm font-semibold">{repo.name}</span>
                     <span className="mt-1 flex flex-wrap gap-1">
+                      <SourceBadge kind={repo.source_kind} label={repo.source_label} />
                       {repo.primitive_counts.slice(0, 3).map((item) => <TagPill key={item.name}>{item.name}</TagPill>)}
                     </span>
                   </span>
@@ -279,6 +298,9 @@ export default function TacCatalog() {
                   <div>
                     <div className="text-[11px] font-bold uppercase tracking-widest text-[#D97757]">Selected Repo</div>
                     <h2 className="mt-1 font-serif text-3xl">{selectedRepoData.name}</h2>
+                    <div className="mt-2">
+                      <SourceBadge kind={selectedRepoData.source_kind} label={selectedRepoData.source_label} />
+                    </div>
                   </div>
                   <div className="rounded-md border border-[#D6D4C8] bg-[#F8F7F0] px-3 py-2 text-sm">
                     <strong>{fmt(selectedRepoData.component_count)}</strong> components
@@ -391,7 +413,12 @@ export default function TacCatalog() {
                           )}
                         </div>
                       </td>
-                      <td className="min-w-[180px] px-4 py-3">{component.repo}</td>
+                      <td className="min-w-[180px] px-4 py-3">
+                        <div className="font-semibold">{component.repo}</div>
+                        <div className="mt-1">
+                          <SourceBadge kind={component.repo_source_kind} label={component.repo_source_label} />
+                        </div>
+                      </td>
                       <td className="px-4 py-3">
                         <div className="flex flex-wrap gap-1">
                           <TagPill>{component.primitive}</TagPill>

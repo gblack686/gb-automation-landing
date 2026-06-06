@@ -7,6 +7,7 @@ const repoRoot = path.resolve(__dirname, '..');
 const gbautomationRoot = process.env.GBAUTOMATION_REPO || path.resolve(repoRoot, '..', 'gbautomation');
 const inventoryDir = path.join(gbautomationRoot, 'tac-inventory');
 const scalePath = path.join(gbautomationRoot, 'outputs', 'tac_inventory_scale.json');
+const weeklyScanDir = path.join(gbautomationRoot, 'second-brain', 'intelligence', 'tac-cli', 'weekly-scan');
 const outputPath = path.join(repoRoot, 'public', 'tac', 'catalog.json');
 
 function countBy(values) {
@@ -19,11 +20,26 @@ function countBy(values) {
     .map(([name, count]) => ({ name, count }));
 }
 
-function safeComponent(repoName, component) {
+function repoSource(repoName, originalTacRepos) {
+  if (originalTacRepos.has(repoName)) {
+    return {
+      source_kind: 'original_tac',
+      source_label: 'Original TAC',
+    };
+  }
+  return {
+    source_kind: 'gbautomation_local',
+    source_label: 'GB Automation',
+  };
+}
+
+function safeComponent(repoName, component, source) {
   const tags = Array.isArray(component.tags) ? component.tags : [];
   return {
     id: `${repoName}:${component.path || component.name || 'component'}`,
     repo: repoName,
+    repo_source_kind: source.source_kind,
+    repo_source_label: source.source_label,
     path: component.path || '',
     name: component.name || path.basename(component.path || 'component'),
     primitive: component.primitive || 'unknown',
@@ -42,20 +58,40 @@ async function readJson(filePath, fallback = null) {
   }
 }
 
+async function latestWeeklyScan() {
+  try {
+    const files = (await readdir(weeklyScanDir))
+      .filter((file) => file.endsWith('.json'))
+      .sort();
+    if (!files.length) return null;
+    return readJson(path.join(weeklyScanDir, files.at(-1)), null);
+  } catch {
+    return null;
+  }
+}
+
 async function main() {
   const files = (await readdir(inventoryDir)).filter((file) => file.endsWith('.json')).sort();
+  const weeklyScan = await latestWeeklyScan();
+  const originalTacRepos = new Set(
+    (weeklyScan?.github_repos || [])
+      .filter((repo) => repo?.status === 'listed' && repo?.org === 'gbauto-tac' && repo?.name)
+      .map((repo) => repo.name)
+  );
   const repos = [];
   const components = [];
 
   for (const file of files) {
     const doc = await readJson(path.join(inventoryDir, file), {});
     const repoName = doc.repo_name || path.basename(file, '.json');
-    const repoComponents = Array.isArray(doc.components) ? doc.components.map((component) => safeComponent(repoName, component)) : [];
+    const source = repoSource(repoName, originalTacRepos);
+    const repoComponents = Array.isArray(doc.components) ? doc.components.map((component) => safeComponent(repoName, component, source)) : [];
     components.push(...repoComponents);
 
     const tags = repoComponents.flatMap((component) => component.tags);
     repos.push({
       name: repoName,
+      ...source,
       stack: Array.isArray(doc.stack) ? doc.stack : [],
       component_count: repoComponents.length,
       primitive_counts: countBy(repoComponents.map((component) => component.primitive)).slice(0, 12),
@@ -71,9 +107,12 @@ async function main() {
     source: {
       inventory_dir: 'gbautomation/tac-inventory',
       scale_report: 'gbautomation/outputs/tac_inventory_scale.json',
+      weekly_scan_report: weeklyScan ? 'gbautomation/second-brain/intelligence/tac-cli/weekly-scan' : null,
     },
     summary: {
       repositories: repos.length,
+      original_tac_repositories: repos.filter((repo) => repo.source_kind === 'original_tac').length,
+      gbautomation_repositories: repos.filter((repo) => repo.source_kind === 'gbautomation_local').length,
       components: components.length,
       primitives: countBy(components.map((component) => component.primitive)).length,
       tags: countBy(allTags).length,
