@@ -12,6 +12,7 @@
     "test:tenant": "node scripts/validate-tenant-portal.mjs",
     "test:observability": "node scripts/validate-observability.mjs",
     "ops:kanban:export": "node scripts/export-hermes-kanban.mjs",
+    "tac:catalog": "node scripts/build-tac-catalog.mjs",
     "amplify:sandbox": "ampx sandbox",
     "amplify:deploy": "ampx sandbox --once"
   },

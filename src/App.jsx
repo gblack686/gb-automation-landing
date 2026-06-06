@@ -9,6 +9,7 @@ import Blockers from './pages/Blockers';
 import YouTubeIntel from './pages/YouTubeIntel';
 import MallScanner from './pages/MallScanner';
 import UiAgents from './pages/UiAgents';
+import TacCatalog from './pages/TacCatalog';
 import Login from './pages/Login';
 import PRDIndex from './pages/PRDIndex';
 import PRDView from './pages/PRDView';
@@ -27,6 +28,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/prds" element={<PRDIndex />} />
           <Route path="/prds/:slug" element={<PRDView />} />
+          <Route path="/tac" element={<TacCatalog />} />
 
           {/* Gated — everything behind sign-in */}
           <Route
