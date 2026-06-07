@@ -23,6 +23,15 @@
 /previews/*.html                                            /previews/:splat.html                                      200!
 /previews/*                                                 /previews/:splat                                           200!
 
+# UI Agents mini-app is a standalone Vue static build under public/.
+# These rules must stay above the main-site SPA fallback so Netlify serves the
+# mini-app shell, assets, and static API snapshot instead of /index.html.
+/mini-apps/ui-agents/assets/*                               /mini-apps/ui-agents/assets/:splat                        200!
+/mini-apps/ui-agents/api/*                                  /mini-apps/ui-agents/api/:splat                           200!
+/mini-apps/ui-agents/favicon.svg                            /mini-apps/ui-agents/favicon.svg                          200!
+/mini-apps/ui-agents/icons.svg                              /mini-apps/ui-agents/icons.svg                            200!
+/mini-apps/ui-agents/gb-signature.png                       /mini-apps/ui-agents/gb-signature.png                     200!
+/mini-apps/ui-agents/*                                      /mini-apps/ui-agents/index.html                           200!
 
 # Mall Scanner API - Netlify function backed by Supabase when env is present.
 /api/mall-scanner/*       /.netlify/functions/mall-scanner/:splat       200!
