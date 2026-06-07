@@ -1,0 +1,32 @@
+[
+  {
+    "source": "/prds/prds-manifest.json",
+    "status": "200",
+    "target": "/prds/prds-manifest.json",
+    "condition": null
+  },
+  {
+    "source": "/prds/<*>.html",
+    "status": "200",
+    "target": "/prds/<*>.html",
+    "condition": null
+  },
+  {
+    "source": "/prds/<*>.json",
+    "status": "200",
+    "target": "/prds/<*>.json",
+    "condition": null
+  },
+  {
+    "source": "/previews/<*>",
+    "status": "200",
+    "target": "/previews/<*>",
+    "condition": null
+  },
+  {
+    "source": "</^[^.]+$|\\.(?!(css|gif|ico|jpg|js|png|txt|svg|woff|woff2|ttf|map|json|webp|html)$)([^.]+$)/>",
+    "status": "200",
+    "target": "/index.html",
+    "condition": null
+  }
+]
