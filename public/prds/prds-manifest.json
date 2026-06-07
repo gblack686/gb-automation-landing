@@ -107,5 +107,16 @@
     "category": "devops",
     "description": "",
     "public_url": "https://gbautoxyz.netlify.app/prds/the-mall-app-sprint-1-crawl-map-watch"
+  },
+  {
+    "slug": "2026-06-07-crawl-resilience-anti-bot-intelligence-prd",
+    "title": "Crawl Resilience & Anti-Bot Intelligence Layer",
+    "date": "",
+    "status": "draft_for_review",
+    "client": "the-mall",
+    "priority": "",
+    "description": "",
+    "category": "plan",
+    "public_url": "https://gbautomation.xyz/prds/2026-06-07-crawl-resilience-anti-bot-intelligence-prd"
   }
 ]

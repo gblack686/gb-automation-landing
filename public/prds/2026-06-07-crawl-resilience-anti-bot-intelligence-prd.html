@@ -1,0 +1,724 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Crawl Resilience &amp; Anti-Bot Intelligence Layer | GBAutomation</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&display=swap');
+    :root {
+      --cream-bg: #F3F1E7;
+      --cream-panel: #E6E4D9;
+      --text-main: #191919;
+      --text-muted: #5C5C5C;
+      --text-light: #8C8A84;
+      --border: #D6D4C8;
+      --terracotta: #D97757;
+      --paper: #FFFFFF;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text-main);
+      background: var(--cream-bg);
+      font-size: 14px;
+      line-height: 1.58;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+    a { color: var(--text-main); text-decoration-color: var(--terracotta); text-underline-offset: 3px; }
+    button { font: inherit; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(214, 212, 200, .7);
+      background: rgba(243, 241, 231, .93);
+      backdrop-filter: blur(12px);
+    }
+    .topbar-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 13px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .brand-lockup { display: inline-flex; align-items: center; gap: 9px; min-height: 28px; }
+    .brand-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(217, 119, 87, .18);
+    }
+    .brand-dot::after { content: ""; width: 8px; height: 8px; border-radius: 999px; background: var(--terracotta); }
+    .brand-text {
+      font-family: Newsreader, serif;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-size: 12px;
+    }
+    .source-name { color: var(--text-muted); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    header {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 34px 24px 26px;
+    }
+    .eyebrow {
+      color: var(--terracotta);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    h1 {
+      max-width: 920px;
+      margin: 10px 0 18px;
+      font-family: Newsreader, serif;
+      font-size: clamp(30px, 4vw, 48px);
+      font-weight: 500;
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+    .summary-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+    .summary-meta li {
+      min-height: 30px;
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, .45);
+      padding: 5px 9px;
+      border-radius: 6px;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .taxonomy-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0 0 14px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      min-height: 23px;
+      padding: 2px 8px;
+      border: 1px solid;
+      border-radius: 999px;
+      line-height: 1;
+    }
+    .pill-facet {
+      font-size: 8.5px;
+      font-weight: 700;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+    .pill-value {
+      color: var(--text-main);
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .layout {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 22px 24px 56px;
+      display: grid;
+      grid-template-columns: 252px minmax(0, 1fr);
+      gap: 22px;
+      align-items: start;
+    }
+    .section-menu {
+      position: sticky;
+      top: 64px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(230, 228, 217, .62);
+      backdrop-filter: blur(12px);
+      padding: 12px;
+    }
+    .menu-title {
+      margin: 0 0 10px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .menu-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+    .menu-actions button,
+    .section-menu nav button {
+      min-height: 34px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .46);
+      color: rgba(25, 25, 25, .72);
+      cursor: pointer;
+      transition: border-color .18s ease, color .18s ease, background .18s ease;
+    }
+    .menu-actions button { padding: 0 8px; font-size: 11px; font-weight: 700; }
+    .section-menu nav { display: grid; gap: 5px; }
+    .section-menu nav button {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 30px 1fr;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      text-align: left;
+      font-size: 12px;
+      line-height: 1.25;
+    }
+    .section-menu nav button span { color: var(--terracotta); font-size: 10px; font-weight: 700; letter-spacing: .08em; }
+    .menu-actions button:hover,
+    .section-menu nav button:hover,
+    .section-menu nav button.active {
+      border-color: var(--terracotta);
+      background: rgba(255, 255, 255, .72);
+      color: var(--text-main);
+    }
+    .sections { display: grid; gap: 10px; }
+    details.section {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .5);
+      overflow: hidden;
+    }
+    details.section[open] { background: rgba(255, 255, 255, .68); }
+    details.section summary {
+      min-height: 52px;
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 12px 14px;
+      cursor: pointer;
+      list-style: none;
+    }
+    details.section summary::-webkit-details-marker { display: none; }
+    .section-index {
+      color: var(--terracotta);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+    }
+    .section-title {
+      font-family: Newsreader, serif;
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.18;
+    }
+    .section-count {
+      color: var(--text-light);
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .section-body {
+      border-top: 1px solid rgba(214, 212, 200, .75);
+      padding: 4px 18px 18px 68px;
+    }
+    .section-body h2,
+    .section-body h3,
+    .section-body h4,
+    .section-body h5 {
+      margin: 18px 0 8px;
+      color: var(--text-main);
+      font-family: Newsreader, serif;
+      font-weight: 500;
+      line-height: 1.2;
+    }
+    .section-body h2 { font-size: 19px; }
+    .section-body h3 { font-size: 17px; }
+    .section-body h4,
+    .section-body h5 {
+      font-family: Inter, sans-serif;
+      color: var(--text-light);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+    .section-body p,
+    .section-body li { color: var(--text-muted); font-size: 14px; line-height: 1.66; }
+    .section-body p { margin: 10px 0; }
+    .section-body ul,
+    .section-body ol { margin: 10px 0 10px 18px; padding: 0; }
+    .section-body li { margin: 5px 0; padding-left: 2px; }
+    .section-body .task { list-style: none; margin-left: -18px; display: flex; gap: 8px; align-items: flex-start; }
+    .section-body input[type="checkbox"] { margin-top: 4px; accent-color: var(--terracotta); }
+    code {
+      border: 1px solid rgba(217, 119, 87, .22);
+      border-radius: 4px;
+      background: rgba(217, 119, 87, .10);
+      padding: 1px 4px;
+      color: var(--text-main);
+      font-size: .92em;
+    }
+    pre {
+      overflow: auto;
+      margin: 12px 0;
+      border-radius: 8px;
+      background: #191919;
+      color: #F3F1E7;
+      padding: 14px;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+    pre code { border: 0; background: transparent; color: inherit; padding: 0; }
+    blockquote {
+      margin: 12px 0;
+      padding: 10px 12px;
+      border-left: 3px solid var(--terracotta);
+      background: rgba(230, 228, 217, .5);
+    }
+    hr { border: 0; border-top: 1px solid var(--border); margin: 18px 0; }
+    .table-wrap { overflow-x: auto; margin: 12px 0; border: 1px solid var(--border); border-radius: 8px; }
+    table { width: 100%; border-collapse: collapse; min-width: 560px; background: rgba(255, 255, 255, .5); }
+    th,
+    td { border-bottom: 1px solid rgba(214, 212, 200, .75); padding: 8px 10px; text-align: left; font-size: 12px; vertical-align: top; }
+    th { color: var(--text-main); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; }
+    tr:last-child td { border-bottom: 0; }
+    .empty { color: var(--text-light); font-style: italic; }
+    footer {
+      border-top: 1px solid rgba(214, 212, 200, .78);
+      background: rgba(230, 228, 217, .45);
+    }
+    .footer-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    .footer-label {
+      margin-bottom: 12px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .metadata-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .meta-item {
+      min-width: 0;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .42);
+      padding: 9px 10px;
+    }
+    .meta-item span {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .meta-item strong {
+      display: block;
+      overflow-wrap: anywhere;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.35;
+    }
+    @media (max-width: 860px) {
+      .topbar-inner,
+      header,
+      .layout,
+      .footer-inner { padding-left: 16px; padding-right: 16px; }
+      .layout { display: block; }
+      .section-menu { position: static; margin-bottom: 14px; }
+      .section-body { padding-left: 18px; }
+      .metadata-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 540px) {
+      .topbar-inner { align-items: flex-start; flex-direction: column; gap: 6px; }
+      details.section summary { grid-template-columns: 34px 1fr; }
+      .section-count { grid-column: 2; }
+      h1 { font-size: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand-lockup"><span class="brand-dot"></span><span class="brand-text">GBAutomation</span></div>
+      <div class="source-name">2026-06-07-crawl-resilience-anti-bot-intelligence-prd.md</div>
+    </div>
+  </div>
+  <header>
+    <div class="eyebrow">Plan Brief</div>
+    <h1>Crawl Resilience &amp; Anti-Bot Intelligence Layer</h1>
+    
+    <ul class="summary-meta">
+      <li>Client: the-mall</li><li>Status: draft_for_review</li><li>prd</li><li>the-mall</li><li>ecom</li><li>mall-scanner</li><li>anti-bot</li><li>crawl4ai</li><li>browser-harness</li>
+      <li>Owner: tac</li>
+      
+      <li>13 sections</li>
+      <li>1,469 words</li>
+    </ul>
+  </header>
+  <main class="layout">
+    <aside class="section-menu" aria-label="Plan sections">
+  <div class="menu-title">Sections</div>
+  <div class="menu-actions">
+    <button type="button" data-action="expand">Expand all</button>
+    <button type="button" data-action="collapse">Collapse all</button>
+  </div>
+  <nav><button type="button" data-target="overview"><span>01</span>Overview</button>
+<button type="button" data-target="overview-2"><span>02</span>Overview</button>
+<button type="button" data-target="problem"><span>03</span>Problem</button>
+<button type="button" data-target="goals"><span>04</span>Goals</button>
+<button type="button" data-target="non-goals"><span>05</span>Non-goals</button>
+<button type="button" data-target="users"><span>06</span>Users</button>
+<button type="button" data-target="requirements"><span>07</span>Requirements</button>
+<button type="button" data-target="architecture"><span>08</span>Architecture</button>
+<button type="button" data-target="key-data-contract"><span>09</span>Key Data Contract</button>
+<button type="button" data-target="acceptance-criteria"><span>10</span>Acceptance Criteria</button>
+<button type="button" data-target="risks"><span>11</span>Risks</button>
+<button type="button" data-target="delivery-plan"><span>12</span>Delivery Plan</button>
+<button type="button" data-target="approval-state"><span>13</span>Approval State</button></nav>
+</aside>
+    <div class="sections">
+      <details class="section" id="overview" open>
+  <summary>
+    <span class="section-index">01</span>
+    <span class="section-title">Overview</span>
+    <span class="section-count">7 words</span>
+  </summary>
+  <div class="section-body">
+    <p>Related: 2026-05-27-the-mall-scanner-tac-build-prd · 2026-05-26-the-mall-sprint-1-prd · the-mall mall-scanner data plane.</p>
+  </div>
+</details>
+<details class="section" id="overview-2">
+  <summary>
+    <span class="section-index">02</span>
+    <span class="section-title">Overview</span>
+    <span class="section-count">133 words</span>
+  </summary>
+  <div class="section-body">
+    <p>The mall-scanner pipeline goes silent or fails when a target site (Instagram first, protected apparel sites next) returns a bot wall, a rate-limit, or an empty JSON payload — and today it has no way to tell those apart, no way to escalate past them, and no way to retry intelligently. This PRD specifies a shared <strong>crawl-resilience layer</strong>: a block classifier, a tiered escalation ladder, type-aware retry handlers, and a fixture test harness — usable by both the mall-scanner (<code>mall_<em></code>) and shop-intelligence (<code>ecom_</em></code>) runtimes.</p>
+<p>The goal is not a magic &quot;bypass everything&quot; engine. It is to make the scraper <em>honest about why it failed</em> and <em>correct about what to try next</em>, so a run ends in a true <code>ok | empty | blocked_bot_wall | rate_limited | login_required</code> verdict with evidence — and reaches the data when a legitimate path exists.</p>
+  </div>
+</details>
+<details class="section" id="problem">
+  <summary>
+    <span class="section-index">03</span>
+    <span class="section-title">Problem</span>
+    <span class="section-count">212 words</span>
+  </summary>
+  <div class="section-body">
+    <p>Three concrete failures, observed and root-caused 2026-06-07:</p>
+<ol>
+<li><strong>Instagram path is brittle and terminal.</strong> The scraper hits IG&#x27;s</li>
+<p><code>web_profile_info</code> JSON endpoint first (this is what produced the 2026-05-18 baseline of 12 posts). IG has since clamped that endpoint for unauthenticated / datacenter callers (401/429). Because IG is classified as &quot;has a JSON path,&quot; the router treats the failure as terminal and <strong>never escalates to the browser harness fallback.</strong> Result: empty or failed, no retry, no signal.</p>
+</ol>
+<ol>
+<li><strong>No block intelligence.</strong> Failures surface as a bare <code>stderr</code> tail written</li>
+<p>to <code>scrape_runs.failure_reason</code> (<code>scripts/mall_scanner_poller.py:157-170</code>). There is no taxonomy distinguishing &quot;rate-limited, back off and retry&quot; from &quot;login required, stop&quot; from &quot;real bot wall.&quot; The poller does <strong>zero retries</strong> and re-queueing is manual.</p>
+</ol>
+<ol>
+<li><strong>The &quot;it just works&quot; expectation is mis-set.</strong> <code>browser-use/browser-harness</code></li>
+<p>has <strong>no local stealth engine</strong> — the word &quot;stealth&quot; appears once in the repo (<code>README.md:43</code>) describing a <em>Browser Use Cloud</em> tier, not a local flag. The harness gets through DataDome/Cloudflare/PerimeterX <strong>only</strong> by presenting a real Chrome&#x27;s genuine TLS/JA3 fingerprint via CDP (documented per-site in <code>agent-workspace/domain-skills/*/scraping.md</code>, gated behind <code>BH_DOMAIN_SKILLS=1</code>). Run headless on the Mini with no logged-in session and no residential egress, that thesis breaks — which is the configuration we are (probably) in.</p>
+</ol>
+  </div>
+</details>
+<details class="section" id="goals">
+  <summary>
+    <span class="section-index">04</span>
+    <span class="section-title">Goals</span>
+    <span class="section-count">115 words</span>
+  </summary>
+  <div class="section-body">
+    <ul>
+<li>Classify every scrape outcome into a structured verdict with evidence, not a</li>
+<p>raw stderr tail.</p>
+<li>Replace terminal single-attempt behavior with a **type-aware escalation</li>
+<p>ladder** (cheap → expensive) that stops on verdicts that retry can&#x27;t fix.</p>
+<li>Make Instagram escalate to a real authenticated browser session when the JSON</li>
+<p>endpoint is blocked, instead of dead-ending.</p>
+<li>Stand up a <strong>Crawl4AI probe path</strong> (stealth mode → undetected adapter →</li>
+<p>proxy/fallback) as the programmatic tier alongside browser-harness&#x27;s real-Chrome tier.</p>
+<li>Turn on and extend <code>browser-harness</code> domain-skill intelligence</li>
+<p>(<code>BH_DOMAIN_SKILLS=1</code>; add an <code>instagram/</code> skill).</p>
+<li>Ship a <strong>fixture-based test harness</strong> so block detection is validated against</li>
+<p>saved challenge pages, not debugged live against a moving target.</p>
+<li>Emit the verdict + tier-resolved-by into existing telemetry</li>
+<p>(<code>scrape_runs</code> / <code>ecom_runs</code>).</p>
+</ul>
+  </div>
+</details>
+<details class="section" id="non-goals">
+  <summary>
+    <span class="section-index">05</span>
+    <span class="section-title">Non-goals</span>
+    <span class="section-count">132 words</span>
+  </summary>
+  <div class="section-body">
+    <ul>
+<li><strong>Not</strong> solving CAPTCHA-farm-grade or behavioral-biometric walls. Where a</li>
+<p>legitimate authenticated/residential path doesn&#x27;t exist, the correct output is still <code>blocked_bot_wall</code> with evidence — we stop, we don&#x27;t brute-force.</p>
+<li>Not scraping anything outside the client&#x27;s legitimate interest (The Mall App&#x27;s</li>
+<p>own IG, its featured/partner brands, public apparel catalogs). No credential stuffing, no auth bypass, no ToS-violating volume.</p>
+<li>No secrets in reports, fixtures, or frontend code.</li>
+<li>Not rewriting the mall-scanner data plane — this layer plugs into it.</li>
+</ul>
+<blockquote><p><strong>Stance change (explicit):</strong> the 2026-06-07 mall-scanner PRD listed &quot;No anti-bot bypass&quot; as a non-goal and said to &quot;stop cleanly on anti-bot walls.&quot; This PRD narrows that: we now <em>do</em> build resilience and legitimate escalation (authenticated sessions, residential egress, real-browser fingerprint, stealth-mode crawling), while keeping the hard line at CAPTCHA-farming and ToS-violating bypass. Approve this reversal before build.</p></blockquote>
+  </div>
+</details>
+<details class="section" id="users">
+  <summary>
+    <span class="section-index">06</span>
+    <span class="section-title">Users</span>
+    <span class="section-count">58 words</span>
+  </summary>
+  <div class="section-body">
+    <ul>
+<li><strong>Sreya Halder / The Mall App team</strong> — need reliable brand + product + IG</li>
+<p>intelligence, and a trustworthy &quot;blocked&quot; signal when a site genuinely can&#x27;t be reached.</p>
+<li><strong>Greg / operator</strong> — approves the stance change, residential-proxy spend, any</li>
+<p>Browser Use Cloud key, and live writes/cron installs.</p>
+<li><strong>Ecom + mall runtime agents</strong> — get a single <code>classify_block()</code> +</li>
+<p><code>escalate()</code> contract instead of bespoke per-site error handling.</p>
+</ul>
+  </div>
+</details>
+<details class="section" id="requirements">
+  <summary>
+    <span class="section-index">07</span>
+    <span class="section-title">Requirements</span>
+    <span class="section-count">227 words</span>
+  </summary>
+  <div class="section-body">
+    <div class="table-wrap"><table><thead><tr><th>ID</th><th>Requirement</th><th>Evidence / Anchor</th></tr></thead><tbody><tr><td>R1</td><td><code>classify_block(response, html, headers)</code> returns <code>{verdict, vendor, signal, retryable}</code> from <strong>structural markers</strong> (element IDs, script srcs, headers), not keyword guessing</td><td>Crawl4AI anti-bot detector; browser-harness <code>g2/scraping.md:558</code>, <code>wellfound/scraping.md:23</code></td></tr>
+<tr><td>R2</td><td>Verdict enum: `ok</td><td>empty</td><td>rate_limited</td><td>login_required</td><td>captcha</td><td>blocked_bot_wall</td><td>transient_error`</td><td>extends <code>scrape_runs.status</code></td></tr>
+<tr><td>R3</td><td>Vendor fingerprint detection: Cloudflare, DataDome, PerimeterX, Akamai, Imperva — by header + body signature</td><td>browser-harness domain-skills corpus</td></tr>
+<tr><td>R4</td><td>Escalation ladder: <code>http_json → stealth_crawl → real_browser(authed/residential) → fallback_fetch</code>, gated by verdict (no retry on <code>login_required</code>/<code>captcha</code>)</td><td>Crawl4AI <code>max_retries</code>+<code>proxy_config</code>+<code>fallback_fetch_function</code></td></tr>
+<tr><td>R5</td><td>Crawl4AI tier: <code>enable_stealth=True</code> then <code>UndetectedAdapter</code>, <code>headless=False</code>, <code>wait_until=&quot;load&quot;</code> + post-load wait for JS challenges</td><td>docs.crawl4ai.com/advanced/anti-bot-and-fallback</td></tr>
+<tr><td>R6</td><td>IG router fix: on IG <code>web_profile_info</code> 401/429 → escalate to authed browser session, not terminal <code>empty</code></td><td><code>SOUL.md:97-135</code> routing rules</td></tr>
+<tr><td>R7</td><td>Browser-harness used the way its thesis requires: <code>BH_DOMAIN_SKILLS=1</code>, real Chrome, logged-in profile, residential egress; add <code>domain-skills/instagram/</code></td><td><code>browser-harness/README.md:41-47</code>, <code>install.md</code> Way 1/2</td></tr>
+<tr><td>R8</td><td>Type-aware retry/backoff in the poller (currently zero) — exponential backoff for <code>rate_limited</code>/<code>transient_error</code>, immediate stop otherwise</td><td><code>mall_scanner_poller.py:250-265</code></td></tr>
+<tr><td>R9</td><td>Fixture test harness: saved CF/DataDome/PX/hCaptcha/IG-429 pages → assert classifier verdict + vendor</td><td>new <code>tests/fixtures/blocks/</code></td></tr>
+<tr><td>R10</td><td>Telemetry: every run records <code>verdict</code>, <code>vendor</code>, <code>tier_resolved_by</code>, <code>attempts</code> into <code>scrape_runs</code>/<code>ecom_runs</code></td><td>Crawl4AI <code>crawl_stats.resolved_by</code> pattern</td></tr>
+<tr><td>R11</td><td>All Supabase writes via <code>gbauto-supabase</code> CLI; no PostgREST/psycopg2 bypass</td><td>CLAUDE.md §9</td></tr></tbody></table></div>
+  </div>
+</details>
+<details class="section" id="architecture">
+  <summary>
+    <span class="section-index">08</span>
+    <span class="section-title">Architecture</span>
+    <span class="section-count">124 words</span>
+  </summary>
+  <div class="section-body">
+    <pre><code>                          ┌─────────────────────────────┐
+  scrape_runs (queued) ──▶│   mall_scanner_poller (loop) │
+                          └──────────────┬──────────────┘
+                                         ▼
+                          ┌─────────────────────────────┐
+                          │   escalate(target, verdict)  │  ← core contract
+                          └──────────────┬──────────────┘
+              ┌──────────────┬───────────┼────────────────┬───────────────┐
+              ▼              ▼           ▼                 ▼               ▼
+        Tier 0          Tier 1       Tier 2            Tier 3         (stop)
+       http_json      stealth_crawl  real_browser      fallback_fetch  blocked_
+       (urllib/       (Crawl4AI      (browser-harness  (external        bot_wall /
+        fetch-use)    enable_stealth) real Chrome,     scraping API)    login_
+                      → Undetected    authed +                          required
+                        Adapter)      residential)
+              │              │           │                 │
+              └──────────────┴─────┬─────┴─────────────────┘
+                                   ▼
+                         ┌───────────────────┐
+                         │ classify_block()  │  verdict + vendor + signal
+                         └─────────┬─────────┘
+                                   ▼
+                    scrape_runs / ecom_runs  (verdict, vendor, tier_resolved_by, attempts)</code></pre>
+<p>Codebase shape (new + touched):</p>
+<pre><code>crawl_resilience/
+├── classify.py          # classify_block(): vendor + verdict from markers
+├── escalate.py          # the ladder; verdict-gated tier selection
+├── tiers/
+│   ├── http_json.py     # Tier 0 (existing fetch-use / urllib)
+│   ├── stealth_crawl.py # Tier 1 (Crawl4AI)
+│   ├── real_browser.py  # Tier 2 (browser-harness bridge)
+│   └── fallback.py      # Tier 3 (external API, optional)
+├── signatures.py        # vendor header/body fingerprints
+└── tests/
+    └── fixtures/blocks/ # saved CF/DataDome/PX/IG-429 pages
+scripts/mall_scanner_poller.py   # + type-aware retry/backoff (R8)
+browser-harness/agent-workspace/domain-skills/instagram/  # new skill (R7)</code></pre>
+  </div>
+</details>
+<details class="section" id="key-data-contract">
+  <summary>
+    <span class="section-index">09</span>
+    <span class="section-title">Key Data Contract</span>
+    <span class="section-count">49 words</span>
+  </summary>
+  <div class="section-body">
+    <p><code>classify_block()</code> output — the single handoff shape every tier and the poller share:</p>
+<pre><code>{
+  &quot;verdict&quot;: &quot;rate_limited&quot;,
+  &quot;vendor&quot;: &quot;instagram_graphql&quot;,
+  &quot;signal&quot;: &quot;HTTP 429; body {\&quot;message\&quot;:\&quot;Please wait a few minutes\&quot;}&quot;,
+  &quot;retryable&quot;: true,
+  &quot;suggested_tier&quot;: &quot;real_browser&quot;,
+  &quot;backoff_seconds&quot;: 900
+}</code></pre>
+<p>Run telemetry appended to <code>scrape_runs</code>:</p>
+<pre><code>{ &quot;verdict&quot;: &quot;ok&quot;, &quot;vendor&quot;: null, &quot;tier_resolved_by&quot;: &quot;real_browser&quot;,
+  &quot;attempts&quot;: 3, &quot;duration_ms&quot;: 18400 }</code></pre>
+  </div>
+</details>
+<details class="section" id="acceptance-criteria">
+  <summary>
+    <span class="section-index">10</span>
+    <span class="section-title">Acceptance Criteria</span>
+    <span class="section-count">97 words</span>
+  </summary>
+  <div class="section-body">
+    <ul>
+<li>Given the saved fixture set, <code>classify_block()</code> tags vendor + verdict</li>
+<p>correctly for ≥1 each of Cloudflare, DataDome, PerimeterX, and IG-429.</p>
+<li>A blocked IG <code>web_profile_info</code> run <strong>escalates</strong> to the real-browser tier</li>
+<p>instead of returning terminal <code>empty</code>.</p>
+<li>One previously-failing target either (a) resolves via a higher tier and</li>
+<p>records <code>tier_resolved_by</code>, or (b) returns <code>blocked_bot_wall</code>/<code>login_required</code> with a captured <code>signal</code> — never a bare stderr tail.</p>
+<li><code>rate_limited</code>/<code>transient_error</code> get exponential-backoff retries; <code>captcha</code>/</li>
+<p><code>login_required</code> stop immediately (verified in a retry-policy unit test).</p>
+<li>Telemetry rows carry <code>verdict</code>, <code>vendor</code>, <code>tier_resolved_by</code>, <code>attempts</code>.</li>
+<li><code>BH_DOMAIN_SKILLS=1</code> is set in the mall-scraper invocation and an</li>
+<p><code>instagram/</code> domain skill exists.</p>
+</ul>
+  </div>
+</details>
+<details class="section" id="risks">
+  <summary>
+    <span class="section-index">11</span>
+    <span class="section-title">Risks</span>
+    <span class="section-count">148 words</span>
+  </summary>
+  <div class="section-body">
+    <ul>
+<li>RISK: anti-bot is probabilistic and adaptive — a tier that works today may</li>
+<p>fail tomorrow. Mitigation: classifier + telemetry make regressions <em>visible</em>; we don&#x27;t promise 100%.</p>
+<li>RISK: residential proxy / Browser Use Cloud spend. Mitigation: order tiers</li>
+<p>cheap→expensive; gate Tier 2/3 behind operator-approved budget.</p>
+<li>RISK: Instagram authed-session scraping carries account/ToS exposure.</li>
+<p>Mitigation: use a dedicated non-primary IG session, conservative volume, client-relevant handles only; stop at <code>login_required</code>.</p>
+<li>RISK: stance reversal needs operator sign-off before any bypass code lands.</li>
+<p>Mitigation: this PRD blocks on the explicit approval above.</p>
+<li>OPEN: confirm the live failure mode — pull the last N <code>scrape_runs.failure_reason</code></li>
+<p>rows via <code>gbauto-supabase</code> before building, so the classifier is seeded from real signals, not inferred ones.</p>
+<li>OPEN: adopt Crawl4AI as a vendored dependency vs. copy only its classifier</li>
+<p>taxonomy? (Recommend: start with the taxonomy + a thin Crawl4AI probe script, vendor fully only if Tier 1 proves it earns its place.)</p>
+</ul>
+  </div>
+</details>
+<details class="section" id="delivery-plan">
+  <summary>
+    <span class="section-index">12</span>
+    <span class="section-title">Delivery Plan</span>
+    <span class="section-count">110 words</span>
+  </summary>
+  <div class="section-body">
+    <ol>
+<li><strong>Confirm reality (pre-build).</strong> Pull recent <code>scrape_runs</code> failures; capture</li>
+<p>real block pages into <code>tests/fixtures/blocks/</code>. Decide IG session strategy.</p>
+<li><strong>Classifier first.</strong> <code>classify.py</code> + <code>signatures.py</code> + fixture tests (R1–R3,</li>
+<p>R9). Pure functions, no network — fully testable.</p>
+<li><strong>Escalation skeleton.</strong> <code>escalate.py</code> with Tier 0 + verdict gating (R4),</li>
+<p>wired into the poller with type-aware retry (R8).</p>
+<li><strong>Crawl4AI probe.</strong> Standalone <code>stealth_crawl.py</code> script against a handful of</li>
+<p>apparel targets; record which tier each site needs (R5).</p>
+<li><strong>Browser-harness tier + IG fix.</strong> <code>BH_DOMAIN_SKILLS=1</code>, <code>instagram/</code> skill,</li>
+<p>real-browser bridge, IG escalation (R6, R7).</p>
+<li><strong>Telemetry + 24h proof.</strong> Emit verdict fields; run one approved target on</li>
+<p>the Mini schedule; collect receipts (R10).</p>
+</ol>
+  </div>
+</details>
+<details class="section" id="approval-state">
+  <summary>
+    <span class="section-index">13</span>
+    <span class="section-title">Approval State</span>
+    <span class="section-count">34 words</span>
+  </summary>
+  <div class="section-body">
+    <p>Draft for operator review. <strong>Blocks on:</strong> (a) explicit approval of the anti-bot stance reversal, (b) residential-proxy / Cloud-key budget, (c) IG session strategy. Not approved for live writes or bypass code by this document alone.</p>
+  </div>
+</details>
+    </div>
+  </main>
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-label">Metadata</div>
+      <div class="metadata-grid">
+        <div class="meta-item"><span>Source</span><strong>C:\Users\gblac\OneDrive\Desktop\gbauto\gbautomation\second-brain\plans\2026-06-07-crawl-resilience-anti-bot-intelligence-prd.md</strong></div>
+<div class="meta-item"><span>Generated</span><strong>2026-06-07T13:11:21-07:00</strong></div>
+<div class="meta-item"><span>Source modified</span><strong>2026-06-07T13:11:20-07:00</strong></div>
+<div class="meta-item"><span>Source size</span><strong>14,395 bytes</strong></div>
+<div class="meta-item"><span>Word count</span><strong>1,469</strong></div>
+<div class="meta-item"><span>Sections</span><strong>13</strong></div>
+<div class="meta-item"><span>Renderer</span><strong>resources/skills/netlify-cli/scripts/render_plan_page.py</strong></div>
+<div class="meta-item"><span>Schema Version</span><strong>gbauto-report.v1</strong></div>
+<div class="meta-item"><span>Report Type</span><strong>prd</strong></div>
+<div class="meta-item"><span>Slug</span><strong>crawl-resilience-anti-bot-intelligence-prd-2026-06-07</strong></div>
+<div class="meta-item"><span>Client</span><strong>the-mall</strong></div>
+<div class="meta-item"><span>Created At</span><strong>2026-06-07T00:00:00-07:00</strong></div>
+<div class="meta-item"><span>Owner</span><strong>tac</strong></div>
+<div class="meta-item"><span>Status</span><strong>draft_for_review</strong></div>
+<div class="meta-item"><span>Audience</span><strong>operator</strong></div>
+<div class="meta-item"><span>External Facing</span><strong>false</strong></div>
+<div class="meta-item"><span>Supersedes Stance</span><strong>second-brain/intelligence/reports/projects/the-mall-app-sreya-ecom/2026-06-07/prd.md: Non-goals -&gt; &#x27;No anti-bot bypass&#x27;</strong></div>
+<div class="meta-item"><span>Tags</span><strong>prd, the-mall, ecom, mall-scanner, anti-bot, crawl4ai, browser-harness</strong></div>
+      </div>
+    </div>
+  </footer>
+  <script>
+    const sections = Array.from(document.querySelectorAll('details.section'));
+    const menuButtons = Array.from(document.querySelectorAll('[data-target]'));
+    const setActive = (id) => {
+      menuButtons.forEach((button) => button.classList.toggle('active', button.dataset.target === id));
+    };
+    menuButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const section = document.getElementById(button.dataset.target);
+        if (!section) return;
+        section.open = true;
+        setActive(section.id);
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+    document.querySelector('[data-action="expand"]').addEventListener('click', () => sections.forEach((section) => section.open = true));
+    document.querySelector('[data-action="collapse"]').addEventListener('click', () => sections.forEach((section, index) => section.open = index === 0));
+    sections.forEach((section) => {
+      section.addEventListener('toggle', () => {
+        if (section.open) setActive(section.id);
+      });
+    });
+    if (sections[0]) setActive(sections[0].id);
+  </script>
+</body>
+</html>
