@@ -1,9 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
-
-// Supabase configuration
-const SUPABASE_URL = 'https://aejkzyjrlsfryfidwedm.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFlamt6eWpybHNmcnlmaWR3ZWRtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1Mzc5MTUsImV4cCI6MjA5NDExMzkxNX0.UFowowM9b9fkIhrUdQ4B8uGJwbEqGPBr-bPSQe8CKA0';
+import { insertContactSubmission } from '../lib/supabaseOps';
 
 export default function ContactForm() {
   const [submitStatus, setSubmitStatus] = useState(null);
@@ -32,27 +29,13 @@ export default function ContactForm() {
     try {
       setSubmitStatus('submitting');
 
-      // Submit to Supabase
-      const response = await fetch(`${SUPABASE_URL}/rest/v1/contact_submissions`, {
-        method: 'POST',
-        headers: {
-          'apikey': SUPABASE_ANON_KEY,
-          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-          'Content-Type': 'application/json',
-          'Prefer': 'return=minimal'
-        },
-        body: JSON.stringify({
-          name: data.name,
-          email: data.email,
-          company: data.company || null,
-          phone: data.phone || null,
-          project_description: data.projectDescription
-        })
+      await insertContactSubmission({
+        name: data.name,
+        email: data.email,
+        company: data.company || null,
+        phone: data.phone || null,
+        project_description: data.projectDescription
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to submit form');
-      }
 
       setSubmitStatus('success');
       reset();

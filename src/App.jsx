@@ -13,6 +13,7 @@ import TacCatalog from './pages/TacCatalog';
 import Login from './pages/Login';
 import PRDIndex from './pages/PRDIndex';
 import PRDView from './pages/PRDView';
+import HermesCommandLayer from './components/HermesCommandLayer';
 import RequireAuth from './components/RequireAuth';
 import GbautomationPortal from './clients/gbautomation/routes';
 import Jid5274Portal from './clients/jid5274/routes';
@@ -22,6 +23,7 @@ function App() {
   return (
     <Authenticator.Provider>
       <Router>
+        <HermesCommandLayer />
         <Routes>
           {/* Public — homepage + PRDs */}
           <Route path="/" element={<Home />} />
