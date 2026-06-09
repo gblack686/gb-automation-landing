@@ -56,6 +56,66 @@ trees:
         created: "2026-06-05"
         screenshot: null
 
+  - slug: enterprise-onboarding
+    name: Enterprise Onboarding
+    description: Eagle-inspired client onboarding surfaces in GB Automation styling
+    icon: messages-square
+    branches:
+      - slug: eagle-onboarding-chat-gbauto
+        name: Onboarding Chat Shell
+        status: validated
+        description: Enterprise chat onboarding shell with Hermes intake, package status, and client workspace threads
+        created: "2026-06-06"
+        screenshot: null
+      - slug: eagle-work-package-board-gbauto
+        name: Work Package Board
+        status: validated
+        description: Delivery board for client packages, artifacts, approvals, and build readiness
+        created: "2026-06-06"
+        screenshot: null
+      - slug: eagle-client-knowledge-base-gbauto
+        name: Client Knowledge Base
+        status: validated
+        description: Searchable client brain for transcripts, PRDs, source systems, and decision records
+        created: "2026-06-06"
+        screenshot: null
+      - slug: eagle-trace-console-gbauto
+        name: Agent Trace Console
+        status: validated
+        description: Operator console for Hermes traces, latency, observations, and delivery confidence
+        created: "2026-06-06"
+        screenshot: null
+      - slug: eagle-scaffold-command-center-gbauto
+        name: Scaffold Command Center
+        status: validated
+        description: Eagle simple chat patterns adapted into a GB Automation command center with quick actions and activity rail
+        created: "2026-06-07"
+        screenshot: null
+      - slug: eagle-scaffold-intake-workflow-gbauto
+        name: Scaffold Intake Workflow
+        status: validated
+        description: Intake workflow panel translated into client onboarding stages and state changes
+        created: "2026-06-07"
+        screenshot: null
+      - slug: eagle-scaffold-document-factory-gbauto
+        name: Scaffold Document Factory
+        status: validated
+        description: Package checklist and generated document patterns adapted for client artifact handoff
+        created: "2026-06-07"
+        screenshot: null
+      - slug: eagle-scaffold-package-review-gbauto
+        name: Scaffold Package Review
+        status: validated
+        description: Workflow package index converted into a client package review board
+        created: "2026-06-07"
+        screenshot: null
+      - slug: eagle-scaffold-admin-telemetry-gbauto
+        name: Scaffold Admin Telemetry
+        status: validated
+        description: Admin traces, costs, and agent logs condensed into an operator telemetry view
+        created: "2026-06-07"
+        screenshot: null
+
   - slug: automation-loop
     name: Automation Loop
     description: How It Works section from transcript to reviewed pull request
@@ -78,6 +138,54 @@ trees:
         status: validated
         description: Client-isolated Hermes agent section with Telegram and vault-aware positioning
         created: "2026-06-05"
+        screenshot: null
+      - slug: hermes-kanban-board-gbauto
+        name: Hermes Kanban Board
+        status: validated
+        description: Website-native version of the Hermes Kanban board, steward loop, human gates, and card bus
+        created: "2026-06-08"
+        screenshot: null
+      - slug: hermes-site-chat-hotkeys-gbauto
+        name: Always-On Site Chat
+        status: validated
+        description: Persistent website chat layer with Ctrl-K and Ctrl-O entry points
+        created: "2026-06-08"
+        screenshot: null
+      - slug: hermes-command-palette-gbauto
+        name: Hermes Command Palette
+        status: validated
+        description: Keyboard-driven command surface for chat, sessions, directory search, and feedback
+        created: "2026-06-08"
+        screenshot: null
+      - slug: hermes-second-brain-directory-gbauto
+        name: Second-Brain Directory
+        status: validated
+        description: Read-only repository and second-brain context browser with scoped write-request affordances
+        created: "2026-06-08"
+        screenshot: null
+      - slug: hermes-user-profile-session-gbauto
+        name: User Profile Session
+        status: validated
+        description: Website visitor profile, session memory, repository scope, and permission model
+        created: "2026-06-08"
+        screenshot: null
+      - slug: hermes-feedback-pipeline-gbauto
+        name: Feedback Pipeline
+        status: validated
+        description: Feedback button concept that turns page-aware chat context into consulting pipeline events
+        created: "2026-06-08"
+        screenshot: null
+      - slug: hermes-shortcuts-reference-gbauto
+        name: Keyboard Shortcuts
+        status: validated
+        description: Complete website-wide Hermes shortcut reference including chat, session, feedback, library, board, intake, sharing, uploads, and send
+        created: "2026-06-08"
+        screenshot: null
+      - slug: hermes-ai-library-browser-gbauto
+        name: AI Library Browser
+        status: validated
+        description: Shortcut-accessible library for skills, agent.md files, prompts, profiles, templates, and reusable operating patterns
+        created: "2026-06-08"
         screenshot: null
 
   - slug: team-session
