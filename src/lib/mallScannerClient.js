@@ -162,6 +162,42 @@ export function getBrandItems(brandSlug) {
   }));
 }
 
+export function getBrandAnalytics(brandSlug) {
+  const items = FALLBACK_ITEMS[brandSlug] || [];
+  const pricedValues = items
+    .map((item) => Number(item.sale_price ?? item.price))
+    .filter((value) => Number.isFinite(value) && value > 0);
+  return request(`/api/mall-scanner/brands/${brandSlug}/analytics`).catch(() => ({
+    brand: brandSlug,
+    analytics: {
+      brand: FALLBACK_BRANDS.find((brand) => brand.slug === brandSlug || brand.handle === brandSlug) || { handle: brandSlug },
+      catalog: {
+        total_items: items.length,
+        live_items: items.filter((item) => !item.removed_at).length,
+        available_items: items.filter((item) => item.available !== false).length,
+        on_sale_items: items.filter((item) => item.sale_price != null || item.compare_at_price != null).length,
+        removed_items: items.filter((item) => item.removed_at).length,
+        missing_images: items.filter((item) => !Array.isArray(item.image_urls) || item.image_urls.length === 0).length,
+      },
+      pricing: {
+        priced_items: pricedValues.length,
+        min_price: pricedValues.length ? Math.min(...pricedValues) : null,
+        max_price: pricedValues.length ? Math.max(...pricedValues) : null,
+        average_price: pricedValues.length ? pricedValues.reduce((sum, value) => sum + value, 0) / pricedValues.length : null,
+      },
+      freshness: {
+        first_seen_at: items[0]?.first_seen_at || null,
+        last_seen_at: items[0]?.last_seen_at || null,
+        last_scraped_at: FALLBACK_LATEST_RUN.scraped_at,
+        latest_observation_at: FALLBACK_LATEST_RUN.scraped_at,
+      },
+      observations: { total_observations_sampled: items.length, available_observations: items.length, latest_observation_at: FALLBACK_LATEST_RUN.scraped_at },
+      runs: { recent_runs: [FALLBACK_LATEST_RUN], status_counts: { dry_run: 1 }, latest_run: FALLBACK_LATEST_RUN, latest_failure: null },
+    },
+    source: 'client-fallback',
+  }));
+}
+
 export function addCrawlTarget(sourceUrl) {
   const target = inferTarget(sourceUrl);
   const client = getAmplifyClient();

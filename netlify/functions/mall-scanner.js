@@ -147,6 +147,17 @@ const fixture = {
   latest_run: { run_id: 'dryrun-2026-05-28', source_handle: 'fixture', source_platform: 'fixture', status: 'dry_run', item_count: 90, scraped_at: '2026-05-28T19:45:05Z' },
 };
 
+const fixtureAnalytics = {
+  vaincourt_paris: {
+    brand: fixture.brands[0],
+    catalog: { total_items: 42, live_items: 42, available_items: 40, on_sale_items: 8, removed_items: 0, missing_images: 42 },
+    pricing: { priced_items: 18, min_price: 120, max_price: 620, average_price: 310 },
+    freshness: { first_seen_at: '2026-05-28T19:45:05Z', last_seen_at: '2026-05-28T19:45:05Z', last_scraped_at: '2026-05-28T19:45:05Z', latest_observation_at: '2026-05-28T19:45:05Z' },
+    observations: { total_observations_sampled: 2, available_observations: 2, latest_observation_at: '2026-05-28T19:45:05Z' },
+    runs: { recent_runs: [fixture.latest_run], status_counts: { dry_run: 1 }, latest_run: fixture.latest_run, latest_failure: null },
+  },
+};
+
 function json(statusCode, body) {
   return {
     statusCode,
@@ -237,7 +248,7 @@ function inferTarget(sourceUrl) {
 }
 
 async function liveBrands() {
-  return supabase('mall_brands?select=brand_id,handle,display_name,platform,status,item_count,last_scraped_at&order=handle.asc');
+  return supabase('mall_brands?select=brand_id,handle,display_name,platform,status,source_url,scrape_cadence,item_count,last_scraped_at,created_at&order=handle.asc');
 }
 
 async function liveEvents() {
@@ -254,7 +265,7 @@ async function liveLatestRun() {
 }
 
 async function liveBrandBySlug(slug) {
-  const rows = await supabase(`mall_brands?select=brand_id,handle,display_name,platform,status,last_scraped_at&handle=eq.${encodeURIComponent(slug)}&limit=1`);
+  const rows = await supabase(`mall_brands?select=brand_id,handle,display_name,platform,status,source_url,scrape_cadence,item_count,last_scraped_at,created_at&handle=eq.${encodeURIComponent(slug)}&limit=1`);
   return Array.isArray(rows) && rows.length ? rows[0] : null;
 }
 
@@ -262,6 +273,65 @@ async function liveBrandItems(slug) {
   const brand = await liveBrandBySlug(slug);
   if (!brand?.brand_id) return [];
   return supabase(`mall_items?select=item_id,source_item_id,item_type,title,description,url,image_urls,price,currency,sale_price,compare_at_price,available,raw_json,first_seen_at,last_seen_at,removed_at&brand_id=eq.${encodeURIComponent(brand.brand_id)}&order=last_seen_at.desc`);
+}
+
+async function liveBrandAnalytics(slug) {
+  const brand = await liveBrandBySlug(slug);
+  if (!brand?.brand_id) return null;
+
+  const items = await liveBrandItems(slug);
+  const itemIds = items.map((item) => item.item_id).filter(Boolean).slice(0, 120);
+  const histories = itemIds.length
+    ? await supabase(`mall_price_history?select=history_id,item_id,price,sale_price,available,scraped_at&item_id=in.(${itemIds.join(',')})&order=scraped_at.desc&limit=300`)
+    : [];
+  const runs = await supabase(`scrape_runs?select=run_id,source_handle,source_platform,status,item_count,created_at,failure_reason,output_dir&source_handle=eq.${encodeURIComponent(slug)}&order=created_at.desc&limit=10`);
+
+  const liveItems = items.filter((item) => !item.removed_at);
+  const availableItems = liveItems.filter((item) => item.available !== false);
+  const onSaleItems = liveItems.filter((item) => item.sale_price != null || item.compare_at_price != null);
+  const pricedValues = liveItems
+    .map((item) => Number(item.sale_price ?? item.price))
+    .filter((value) => Number.isFinite(value) && value > 0);
+  const statusCounts = runs.reduce((acc, run) => {
+    const status = run.status || 'unknown';
+    acc[status] = (acc[status] || 0) + 1;
+    return acc;
+  }, {});
+
+  return {
+    brand,
+    catalog: {
+      total_items: items.length,
+      live_items: liveItems.length,
+      available_items: availableItems.length,
+      on_sale_items: onSaleItems.length,
+      removed_items: items.length - liveItems.length,
+      missing_images: liveItems.filter((item) => !Array.isArray(item.image_urls) || item.image_urls.length === 0).length,
+    },
+    pricing: {
+      priced_items: pricedValues.length,
+      min_price: pricedValues.length ? Math.min(...pricedValues) : null,
+      max_price: pricedValues.length ? Math.max(...pricedValues) : null,
+      average_price: pricedValues.length ? pricedValues.reduce((sum, value) => sum + value, 0) / pricedValues.length : null,
+    },
+    freshness: {
+      first_seen_at: items.reduce((oldest, item) => !oldest || (item.first_seen_at && item.first_seen_at < oldest) ? item.first_seen_at : oldest, null),
+      last_seen_at: items.reduce((latest, item) => !latest || (item.last_seen_at && item.last_seen_at > latest) ? item.last_seen_at : latest, null),
+      last_scraped_at: brand.last_scraped_at,
+      latest_observation_at: histories.reduce((latest, row) => !latest || (row.scraped_at && row.scraped_at > latest) ? row.scraped_at : latest, null),
+    },
+    observations: {
+      total_observations_sampled: histories.length,
+      available_observations: histories.filter((row) => row.available !== false).length,
+      latest_observation_at: histories[0]?.scraped_at || null,
+    },
+    runs: {
+      recent_runs: runs,
+      status_counts: statusCounts,
+      latest_run: runs[0] || null,
+      latest_failure: runs.find((run) => run.status === 'failed' || run.failure_reason) || null,
+    },
+  };
 }
 
 export async function handler(event) {
@@ -384,6 +454,8 @@ export async function handler(event) {
         name: brand.display_name || brand.name || brand.handle,
         platform: brand.platform,
         status: brand.status,
+        source_url: brand.source_url,
+        scrape_cadence: brand.scrape_cadence,
         active: brand.active ?? brand.status !== 'paused',
         last_scraped_at: brand.last_scraped_at,
         item_count: brand.item_count || 0,
@@ -417,6 +489,18 @@ export async function handler(event) {
       const brandSlug = decodeURIComponent(brandItemsMatch[1]);
       const rows = SUPABASE_URL && SUPABASE_SERVICE_KEY ? await liveBrandItems(brandSlug) : (fixture.items[brandSlug] || []);
       return json(200, { brand: brandSlug, items: rows });
+    }
+
+    const brandAnalyticsMatch = route.match(/^brands\/([^/]+)\/analytics$/);
+    if (brandAnalyticsMatch) {
+      const brandSlug = decodeURIComponent(brandAnalyticsMatch[1]);
+      const analytics = SUPABASE_URL && SUPABASE_SERVICE_KEY
+        ? await liveBrandAnalytics(brandSlug)
+        : fixtureAnalytics[brandSlug];
+      if (!analytics) {
+        return json(404, { error: `Unknown brand: ${brandSlug}` });
+      }
+      return json(200, { brand: brandSlug, analytics });
     }
 
     return json(404, { error: `Unknown Mall Scanner route: ${route}` });

@@ -1,11 +1,12 @@
-import { useEffect, useMemo, useState } from 'react';
+import { createElement, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Clock, Code2, ExternalLink, Package, Play, Plus, RefreshCw, Search, ShoppingBag, Store, Tag } from 'lucide-react';
+import { AlertTriangle, BarChart3, Clock, Code2, ExternalLink, Package, Play, Plus, RefreshCw, Search, ShoppingBag, Store, Tag, X } from 'lucide-react';
 import Footer from '../components/Footer';
 import SignOutButton from '../components/SignOutButton';
 import {
   addCrawlTarget,
   getCrawlerCode,
+  getBrandAnalytics,
   getBrandItems,
   getBrands,
   getDashboard,
@@ -20,7 +21,7 @@ function Metric({ icon: Icon, label, value }) {
     <div className="bg-white border border-[#D6D4C8] rounded-lg p-5">
       <div className="flex items-center justify-between gap-3 mb-4">
         <span className="text-xs uppercase tracking-widest text-[#191919]/50">{label}</span>
-        <Icon className="w-4 h-4 text-[#D97757]" />
+        {createElement(Icon, { className: 'w-4 h-4 text-[#D97757]' })}
       </div>
       <div className="text-3xl font-serif text-[#191919]">{value ?? 0}</div>
     </div>
@@ -45,6 +46,15 @@ function formatDate(iso) {
   if (!iso) return '-';
   try {
     return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  } catch {
+    return iso;
+  }
+}
+
+function formatDateTime(iso) {
+  if (!iso) return '-';
+  try {
+    return new Date(iso).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
   } catch {
     return iso;
   }
@@ -144,6 +154,105 @@ function ItemCard({ item }) {
   );
 }
 
+function AnalyticsStat({ label, value, detail }) {
+  return (
+    <div className="rounded-lg border border-[#D6D4C8] bg-[#F3F1E7] p-3">
+      <p className="text-[11px] font-bold uppercase tracking-widest text-[#191919]/45">{label}</p>
+      <p className="mt-1 font-serif text-2xl text-[#191919]">{value ?? '-'}</p>
+      {detail && <p className="mt-1 text-xs text-[#191919]/55">{detail}</p>}
+    </div>
+  );
+}
+
+function BrandAnalyticsModal({ analytics, loading, error, onClose }) {
+  const data = analytics?.analytics || analytics;
+  const brand = data?.brand || {};
+  const catalog = data?.catalog || {};
+  const pricing = data?.pricing || {};
+  const freshness = data?.freshness || {};
+  const observations = data?.observations || {};
+  const runs = data?.runs || {};
+  const recentRuns = runs.recent_runs || [];
+  const title = brand.display_name || brand.name || brand.handle || analytics?.brand || 'Shop analytics';
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#191919]/55 px-4 py-6" role="dialog" aria-modal="true" aria-label={`${title} analytics`}>
+      <div className="max-h-[92vh] w-full max-w-5xl overflow-hidden rounded-lg border border-[#D6D4C8] bg-white shadow-2xl">
+        <div className="flex items-start justify-between gap-4 border-b border-[#D6D4C8] p-5">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-widest text-[#D97757]">Site Analytics</p>
+            <h2 className="mt-1 font-serif text-3xl text-[#191919]">{title}</h2>
+            <p className="mt-1 text-sm text-[#191919]/55">{brand.source_url || brand.handle || '-'}</p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-md border border-[#D6D4C8] p-2 text-[#191919]/55 hover:border-[#D97757] hover:text-[#D97757]"
+            aria-label="Close analytics"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+
+        <div className="max-h-[calc(92vh-96px)] overflow-auto p-5">
+          {loading ? (
+            <p className="rounded-lg border border-[#D6D4C8] bg-[#F3F1E7] p-6 text-sm text-[#191919]/60">Loading analytics...</p>
+          ) : error ? (
+            <div className="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+              <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+              <span>{error}</span>
+            </div>
+          ) : (
+            <>
+              <div className="grid gap-3 md:grid-cols-4">
+                <AnalyticsStat label="Live Items" value={catalog.live_items ?? catalog.total_items ?? 0} detail={`${catalog.total_items ?? 0} total indexed`} />
+                <AnalyticsStat label="Available" value={catalog.available_items ?? 0} detail={`${catalog.on_sale_items ?? 0} on sale`} />
+                <AnalyticsStat label="Price Range" value={pricing.priced_items ? `${formatPrice(pricing.min_price)} - ${formatPrice(pricing.max_price)}` : '-'} detail={pricing.priced_items ? `${pricing.priced_items} priced items` : 'No prices captured'} />
+                <AnalyticsStat label="Avg Price" value={pricing.average_price ? formatPrice(pricing.average_price) : '-'} detail={`${catalog.missing_images ?? 0} missing images`} />
+              </div>
+
+              <div className="mt-5 grid gap-4 lg:grid-cols-[1fr_1fr]">
+                <section className="rounded-lg border border-[#D6D4C8] p-4">
+                  <h3 className="font-serif text-xl text-[#191919]">Freshness</h3>
+                  <dl className="mt-3 grid gap-2 text-sm">
+                    <div className="flex justify-between gap-4"><dt className="text-[#191919]/50">Cadence</dt><dd className="font-medium">{brand.scrape_cadence || '-'}</dd></div>
+                    <div className="flex justify-between gap-4"><dt className="text-[#191919]/50">Status</dt><dd className="font-medium">{brand.status || '-'}</dd></div>
+                    <div className="flex justify-between gap-4"><dt className="text-[#191919]/50">Last scraped</dt><dd className="font-medium">{formatDateTime(freshness.last_scraped_at)}</dd></div>
+                    <div className="flex justify-between gap-4"><dt className="text-[#191919]/50">Last item seen</dt><dd className="font-medium">{formatDateTime(freshness.last_seen_at)}</dd></div>
+                    <div className="flex justify-between gap-4"><dt className="text-[#191919]/50">Latest observation</dt><dd className="font-medium">{formatDateTime(observations.latest_observation_at || freshness.latest_observation_at)}</dd></div>
+                  </dl>
+                </section>
+
+                <section className="rounded-lg border border-[#D6D4C8] p-4">
+                  <h3 className="font-serif text-xl text-[#191919]">Run Receipts</h3>
+                  {runs.latest_failure && (
+                    <div className="mt-3 rounded-md border border-red-200 bg-red-50 p-3 text-xs text-red-800">
+                      {runs.latest_failure.failure_reason || `Latest failure: ${runs.latest_failure.status}`}
+                    </div>
+                  )}
+                  {recentRuns.length === 0 ? (
+                    <p className="mt-3 text-sm text-[#191919]/55">No `scrape_runs` receipts are linked to this site yet.</p>
+                  ) : (
+                    <div className="mt-3 overflow-hidden rounded-md border border-[#D6D4C8]">
+                      {recentRuns.slice(0, 5).map((run) => (
+                        <div key={run.run_id} className="grid grid-cols-[1fr_auto_auto] gap-3 border-b border-[#D6D4C8]/70 px-3 py-2 text-xs last:border-0">
+                          <span className="truncate font-mono text-[#191919]/60">{run.run_id}</span>
+                          <span className="font-medium">{run.status || '-'}</span>
+                          <span className="text-[#191919]/50">{formatDateTime(run.created_at || run.scraped_at)}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </section>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function MallScanner() {
   const [dashboard, setDashboard] = useState(null);
   const [brands, setBrands] = useState([]);
@@ -162,6 +271,10 @@ export default function MallScanner() {
   const [search, setSearch] = useState('');
   const [crawlerCode, setCrawlerCode] = useState(null);
   const [showCrawlerCode, setShowCrawlerCode] = useState(false);
+  const [analyticsOpen, setAnalyticsOpen] = useState(false);
+  const [analyticsLoading, setAnalyticsLoading] = useState(false);
+  const [analyticsError, setAnalyticsError] = useState('');
+  const [brandAnalytics, setBrandAnalytics] = useState(null);
 
   async function load() {
     setLoading(true);
@@ -262,6 +375,23 @@ export default function MallScanner() {
       setError(err.message || 'Could not start crawler run');
     } finally {
       setRunLoading(false);
+    }
+  }
+
+  async function openBrandAnalytics(brand) {
+    const slug = brandSlug(brand);
+    if (!slug) return;
+    setAnalyticsOpen(true);
+    setAnalyticsLoading(true);
+    setAnalyticsError('');
+    setBrandAnalytics({ brand: slug, analytics: { brand } });
+    try {
+      const data = await getBrandAnalytics(slug);
+      setBrandAnalytics(data);
+    } catch (err) {
+      setAnalyticsError(err.message || 'Could not load site analytics');
+    } finally {
+      setAnalyticsLoading(false);
     }
   }
 
@@ -466,26 +596,37 @@ export default function MallScanner() {
                 const platformClass = PLATFORM_COLORS[brand.platform?.toLowerCase()] || 'bg-gray-100 text-gray-600';
                 const active = slug === selectedBrand;
                 return (
-                  <button
+                  <div
                     key={slug}
-                    type="button"
-                    onClick={() => setSelectedBrand(slug)}
-                    className={`block w-full border-b border-[#D6D4C8]/70 p-4 text-left hover:bg-[#F3F1E7] ${active ? 'bg-[#F3F1E7]' : ''}`}
+                    className={`border-b border-[#D6D4C8]/70 p-4 hover:bg-[#F3F1E7] ${active ? 'bg-[#F3F1E7]' : ''}`}
                   >
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <p className="font-semibold text-[#191919]">{brand.name || brand.display_name || brand.handle || slug}</p>
-                        <p className="mt-1 text-xs text-[#191919]/50">{brand.source_url || brand.handle || slug}</p>
+                    <button type="button" onClick={() => setSelectedBrand(slug)} className="block w-full text-left">
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <p className="font-semibold text-[#191919]">{brand.name || brand.display_name || brand.handle || slug}</p>
+                          <p className="mt-1 text-xs text-[#191919]/50">{brand.source_url || brand.handle || slug}</p>
+                        </div>
+                        <span className={`rounded-full px-2 py-1 text-xs font-medium ${platformClass}`}>
+                          {brand.platform || '-'}
+                        </span>
                       </div>
-                      <span className={`rounded-full px-2 py-1 text-xs font-medium ${platformClass}`}>
-                        {brand.platform || '-'}
-                      </span>
+                      <div className="mt-3 flex items-center justify-between text-xs text-[#191919]/55">
+                        <span>{brand.item_count ?? 0} items</span>
+                        <span>{formatDate(brand.last_scraped_at)}</span>
+                      </div>
+                    </button>
+                    <div className="mt-3 flex items-center justify-between gap-3">
+                      <span className="text-xs uppercase tracking-widest text-[#191919]/35">{brand.scrape_cadence || 'cadence n/a'}</span>
+                      <button
+                        type="button"
+                        onClick={() => openBrandAnalytics(brand)}
+                        className="inline-flex items-center gap-1 rounded-md border border-[#D6D4C8] px-2 py-1 text-xs font-semibold text-[#191919]/65 hover:border-[#D97757] hover:text-[#D97757]"
+                      >
+                        <BarChart3 className="h-3.5 w-3.5" />
+                        Analytics
+                      </button>
                     </div>
-                    <div className="mt-3 flex items-center justify-between text-xs text-[#191919]/55">
-                      <span>{brand.item_count ?? 0} items</span>
-                      <span>{formatDate(brand.last_scraped_at)}</span>
-                    </div>
-                  </button>
+                  </div>
                 );
               })}
             </div>
@@ -500,15 +641,26 @@ export default function MallScanner() {
                 </h2>
               </div>
               <div className="flex flex-col items-start gap-2 sm:items-end">
-                <button
-                  type="button"
-                  onClick={runSelectedShop}
-                  disabled={!selectedBrandRecord || runLoading}
-                  className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md bg-[#191919] px-4 text-sm font-semibold text-white hover:bg-[#D97757] disabled:opacity-50"
-                >
-                  <Play className="h-4 w-4" />
-                  {runLoading ? 'Running...' : 'Run now'}
-                </button>
+                <div className="flex flex-wrap justify-start gap-2 sm:justify-end">
+                  <button
+                    type="button"
+                    onClick={() => selectedBrandRecord && openBrandAnalytics(selectedBrandRecord)}
+                    disabled={!selectedBrandRecord}
+                    className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md border border-[#D6D4C8] px-4 text-sm font-semibold text-[#191919] hover:border-[#D97757] hover:text-[#D97757] disabled:opacity-50"
+                  >
+                    <BarChart3 className="h-4 w-4" />
+                    Analytics
+                  </button>
+                  <button
+                    type="button"
+                    onClick={runSelectedShop}
+                    disabled={!selectedBrandRecord || runLoading}
+                    className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md bg-[#191919] px-4 text-sm font-semibold text-white hover:bg-[#D97757] disabled:opacity-50"
+                  >
+                    <Play className="h-4 w-4" />
+                    {runLoading ? 'Running...' : 'Run now'}
+                  </button>
+                </div>
                 <p className="text-sm text-[#191919]/55">
                   {itemsLoading ? 'Loading items...' : `${visibleItems.length} of ${items.length} items`}
                 </p>
@@ -581,6 +733,15 @@ export default function MallScanner() {
           </div>
         </section>
       </main>
+
+      {analyticsOpen && (
+        <BrandAnalyticsModal
+          analytics={brandAnalytics}
+          loading={analyticsLoading}
+          error={analyticsError}
+          onClose={() => setAnalyticsOpen(false)}
+        />
+      )}
 
       <Footer />
     </div>
