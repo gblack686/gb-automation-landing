@@ -1,0 +1,55 @@
+portal-scaffold-complete.v1
+
+task: t_0d10ec0e
+generated_at_utc: 2026-06-11T19:23:58Z
+repo: /Users/greg/repos/gb-automation-landing
+safe_worktree: /Users/greg/repos/gb-automation-landing-worktrees/t_0d10ec0e
+branch: kanban/gbautomation/portal-sprint-scaffold
+base_head: 6b18d5c
+
+canonical_prd_loaded: /Users/greg/repos/gbautomation/second-brain/inbox/plans/2026-06-11-five-day-website-client-portal-sprint.md
+canonical_brand_tokens_loaded: /Users/greg/repos/gbautomation/second-brain/systems/brand/gbauto-brand-tokens.md
+brand_token_policy: linked-only; do not duplicate tokens into scaffold artifacts
+
+worktree_safety:
+  dispatcher_workspace_path: /Users/greg/repos/gb-automation-landing
+  dispatcher_workspace_observation: occupied by branch kanban/t_abf65b2b-amplify-prds-rewrites with uncommitted work
+  action_taken: created isolated sibling git worktree for this task; no clean/reset/switch performed on occupied repo
+
+package_scripts_verified:
+  dev: vite
+  build: vite build
+  lint: eslint .
+  preview: vite preview
+  test: node test-site.js
+  test_tenant: node scripts/validate-tenant-portal.mjs
+  ops_kanban_export: node scripts/export-hermes-kanban.mjs
+  amplify_sandbox: ampx sandbox
+  amplify_deploy: ampx sandbox --once
+
+dependency_proof:
+  node_modules_before: missing
+  install_command: npm install
+  install_result: exit 0; 2810 packages added; 3672 packages audited
+  audit_summary: 102 vulnerabilities reported by npm audit summary; no audit fix run in scaffold lane
+
+route_inventory: docs/portal-route-inventory.md
+build_scaffold_fix:
+  files:
+    - src/main.jsx
+    - src/pages/MallScanner.jsx
+  reasons:
+    - src/main.jsx imported ignored ../amplify_outputs.json; switched to tracked non-secret src/amplifyconfiguration.json for scaffold builds
+    - src/App.jsx imports ./pages/MallScanner but the file was absent from the base worktree
+  secret_policy: no real Cognito values added
+client_portal_shell_verified:
+  - src/clients/shared/ClientPortalLayout.jsx
+  - src/clients/shared/ClientPortalHeader.jsx
+  - src/clients/shared/tenantConfig.js
+  - src/clients/gbautomation/routes.jsx
+  - src/clients/jid5274/routes.jsx
+  - src/components/RequireAuth.jsx
+
+known_route_gaps:
+  - /team/builds not present yet
+  - generic /clients/:clientSlug route not present yet; explicit /clients/gbautomation and /clients/jid5274 routes exist

@@ -35,6 +35,12 @@ async function testEndpoint(url, testName) {
 }
 
 async function findVitePort() {
+  if (process.env.TEST_BASE_URL) {
+    const parsed = new URL(process.env.TEST_BASE_URL);
+    log(`\n🔍 Using TEST_BASE_URL=${process.env.TEST_BASE_URL}`, 'blue');
+    return parsed.port || (parsed.protocol === 'https:' ? 443 : 80);
+  }
+
   log('\n🔍 Finding active Vite dev server...', 'blue');
 
   const commonPorts = [5173, 5174, 5175, 5176, 5177, 5178, 5179];
