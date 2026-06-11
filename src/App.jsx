@@ -13,22 +13,22 @@ import Login from './pages/Login';
 import PRDIndex from './pages/PRDIndex';
 import PRDView from './pages/PRDView';
 import RequireAuth from './components/RequireAuth';
-import GbautomationPortal from './clients/gbautomation/routes';
-import Jid5274Portal from './clients/jid5274/routes';
+import ClientPortalBoundary from './clients/ClientPortalBoundary';
 import OpsRoutes from './ops/routes';
+import TeamRoutes from './team/routes';
 
 function App() {
   return (
     <Authenticator.Provider>
       <Router>
         <Routes>
-          {/* Public — homepage + PRDs */}
+          {/* Public: homepage plus PRDs */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/prds" element={<PRDIndex />} />
           <Route path="/prds/:slug" element={<PRDView />} />
 
-          {/* Gated — everything behind sign-in */}
+          {/* Gated: everything behind sign-in */}
           <Route
             path="/plan"
             element={<RequireAuth><Plan /></RequireAuth>}
@@ -66,6 +66,17 @@ function App() {
             element={<RequireAuth><UiAgent /></RequireAuth>}
           />
           <Route
+            path="/team/*"
+            element={
+              <RequireAuth
+                allowedGroups={['tenant-gbautomation', 'teammate', 'admin']}
+                allowedEmails={['gblack686@gmail.com', 'greg@gbautomation.xyz']}
+              >
+                <TeamRoutes />
+              </RequireAuth>
+            }
+          />
+          <Route
             path="/ops/*"
             element={
               <RequireAuth
@@ -78,25 +89,15 @@ function App() {
           />
           <Route
             path="/clients/gbautomation/*"
-            element={
-              <RequireAuth
-                allowedGroups={['tenant-gbautomation']}
-                allowedEmails={['gblack686@gmail.com']}
-              >
-                <GbautomationPortal />
-              </RequireAuth>
-            }
+            element={<ClientPortalBoundary tenantSlug="gbautomation" />}
           />
           <Route
             path="/clients/jid5274/*"
-            element={
-              <RequireAuth
-                allowedGroups={['tenant-jid5274']}
-                allowedEmails={['jid5274@gmail.com']}
-              >
-                <Jid5274Portal />
-              </RequireAuth>
-            }
+            element={<ClientPortalBoundary tenantSlug="jid5274" />}
+          />
+          <Route
+            path="/clients/:clientSlug/*"
+            element={<ClientPortalBoundary />}
           />
         </Routes>
       </Router>

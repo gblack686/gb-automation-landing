@@ -22,6 +22,9 @@ const requiredPaths = [
   'public/clients/gbautomation/artifacts.json',
   'public/clients/gbautomation/reports.json',
   'src/clients/jid5274/routes.jsx',
+  'src/clients/ClientTenantRoutes.jsx',
+  'src/routes/routeRegistry.js',
+  'src/team/routes.jsx',
   '.github/workflows/tenant-sync.yml',
   '.github/workflows/jid5274-archon-sync.yml',
   'docs/tenant-source-notify-parent.yml',
@@ -43,6 +46,31 @@ if (!app.includes('/clients/gbautomation/*')) {
 
 if (!app.includes('/clients/jid5274/*')) {
   failures.push('src/App.jsx does not mount /clients/jid5274/*');
+}
+
+if (!app.includes('/clients/:clientSlug/*')) {
+  failures.push('src/App.jsx does not mount /clients/:clientSlug/*');
+}
+
+if (!app.includes('/team/*')) {
+  failures.push('src/App.jsx does not mount /team/*');
+}
+
+const routeRegistrySource = existsSync(resolve(root, 'src/routes/routeRegistry.js'))
+  ? readFileSync(resolve(root, 'src/routes/routeRegistry.js'), 'utf8')
+  : '';
+for (const routeClass of ['public', 'client', 'team', 'ops']) {
+  if (!routeRegistrySource.includes(`routeClass: '${routeClass}'`)) {
+    failures.push(`route registry does not represent ${routeClass} routes`);
+  }
+}
+for (const tenant of ['gbautomation', 'jid5274']) {
+  if (!routeRegistrySource.includes(`tenantSlug: '${tenant}'`)) {
+    failures.push(`route registry does not retain ${tenant} tenant alias`);
+  }
+}
+if (/kanban|hermes-kanban/i.test(routeRegistrySource) && /method:\s*['"](POST|PUT|PATCH|DELETE)['"]/i.test(routeRegistrySource)) {
+  failures.push('route registry contains a live Kanban mutation method');
 }
 
 const requireAuth = readFileSync(resolve(root, 'src/components/RequireAuth.jsx'), 'utf8');

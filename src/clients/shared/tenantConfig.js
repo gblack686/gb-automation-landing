@@ -5,7 +5,7 @@
 // generic route pattern is /clients/:clientSlug/* with auth resolved from
 // this registry (see docs/ui-agent-page-map.md for the migration plan).
 //
-// GBAutomation is the template tenant — its config and sample data under
+// GBAutomation is the template tenant. Its config and sample data under
 // public/clients/gbautomation/ are the reference for every new client.
 
 export const tenantConfigs = {
@@ -21,6 +21,11 @@ export const tenantConfigs = {
     border: '#D6D4C8',
     panel: '#E6E4D9',
     dataPath: '/clients/gbautomation',
+    adapter: 'react-pages',
+    auth: {
+      allowedGroups: ['tenant-gbautomation'],
+      allowedEmails: ['gblack686@gmail.com'],
+    },
     navItems: [
       { label: 'Overview', to: '/clients/gbautomation' },
       { label: 'Dashboard', to: '/clients/gbautomation/dashboard' },
@@ -47,6 +52,11 @@ export const tenantConfigs = {
     border: '#D6D4C8',
     panel: '#E6E4D9',
     dataPath: '/clients/jid5274',
+    adapter: 'static-bundle',
+    auth: {
+      allowedGroups: ['tenant-jid5274'],
+      allowedEmails: ['jid5274@gmail.com'],
+    },
     navItems: [
       { label: 'Archon', to: '/clients/jid5274' },
     ],

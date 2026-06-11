@@ -1,0 +1,120 @@
+export const routeClasses = ['public', 'client', 'team', 'ops'];
+
+export const routeRegistry = [
+  {
+    id: 'public-home',
+    routeClass: 'public',
+    path: '/',
+    label: 'Home',
+    authPolicy: 'public',
+    dataContract: 'marketing-pages',
+    owner: 'gb-automation-landing',
+  },
+  {
+    id: 'public-login',
+    routeClass: 'public',
+    path: '/login',
+    label: 'Login',
+    authPolicy: 'public',
+    dataContract: 'amplify-auth',
+    owner: 'gb-automation-landing',
+  },
+  {
+    id: 'public-prds',
+    routeClass: 'public',
+    path: '/prds',
+    label: 'PRDs',
+    authPolicy: 'public',
+    dataContract: 'public-prd-manifest',
+    owner: 'gb-automation-landing',
+  },
+  {
+    id: 'client-generic-shell',
+    routeClass: 'client',
+    path: '/clients/:clientSlug/*',
+    label: 'Client portal',
+    authPolicy: 'tenant-group',
+    dataContract: 'portal-tenant.v1',
+    owner: 'gb-automation-landing',
+  },
+  {
+    id: 'client-gbautomation-alias',
+    routeClass: 'client',
+    path: '/clients/gbautomation/*',
+    label: 'GBAutomation alias',
+    authPolicy: 'tenant-group',
+    dataContract: 'portal-tenant.v1',
+    owner: 'gb-automation-landing',
+    tenantSlug: 'gbautomation',
+    aliasFor: '/clients/:clientSlug/*',
+  },
+  {
+    id: 'client-jid5274-alias',
+    routeClass: 'client',
+    path: '/clients/jid5274/*',
+    label: 'Jason Diaz alias',
+    authPolicy: 'tenant-group',
+    dataContract: 'portal-tenant.v1',
+    owner: 'gb-automation-landing',
+    tenantSlug: 'jid5274',
+    aliasFor: '/clients/:clientSlug/*',
+  },
+  {
+    id: 'team-workspace',
+    routeClass: 'team',
+    path: '/team/*',
+    label: 'Team workspace',
+    authPolicy: 'teammate-or-admin',
+    dataContract: 'team-readonly-mirrors.v1',
+    owner: 'gb-automation-landing',
+    mutations: 'none',
+  },
+  {
+    id: 'team-builds',
+    routeClass: 'team',
+    path: '/team/builds',
+    label: 'Builds',
+    authPolicy: 'teammate-or-admin',
+    dataContract: 'build-receipts-readonly.v1',
+    owner: 'gb-automation-landing',
+    mutations: 'none',
+  },
+  {
+    id: 'team-dispatch',
+    routeClass: 'team',
+    path: '/team/dispatch',
+    label: 'Dispatch specs',
+    authPolicy: 'admin-readonly-v1',
+    dataContract: 'copyable-dispatch-specs.v1',
+    owner: 'gb-automation-landing',
+    mutations: 'none',
+  },
+  {
+    id: 'ops-shell',
+    routeClass: 'ops',
+    path: '/ops/*',
+    label: 'Ops',
+    authPolicy: 'gbautomation-admin',
+    dataContract: 'ops-mirrors-readonly.v1',
+    owner: 'gb-automation-landing',
+    mutations: 'none',
+  },
+  {
+    id: 'ops-kanban-mirror',
+    routeClass: 'ops',
+    path: '/ops/kanban',
+    label: 'Kanban mirror',
+    authPolicy: 'gbautomation-admin',
+    dataContract: 'kanban-static-mirror.v1',
+    owner: 'gb-automation-landing',
+    mutations: 'none',
+  },
+];
+
+export function getRoutesByClass(routeClass) {
+  return routeRegistry.filter((route) => route.routeClass === routeClass);
+}
+
+export function getTenantAliasRoutes() {
+  return routeRegistry.filter((route) => route.routeClass === 'client' && route.tenantSlug);
+}
