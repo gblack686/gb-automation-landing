@@ -1,5 +1,16 @@
 [
   {
+    "slug": "2026-06-12-prd-supabase-spine-and-enforcement-prd",
+    "title": "PRD Supabase Spine and Schema Enforcement",
+    "date": "2026-06-12",
+    "status": "ready_for_dispatch",
+    "client": "gbautomation",
+    "priority": "high",
+    "description": "Stand up the canonical PRD object in Supabase (prd_artifacts + sprint_rock_prd_links), run the index_prds sync, add a blocking write-hook that enforces gbauto-prd.v1 conformance, and join PRDs to commits and PRs so the sprint report can prove plan-to-PR traceability.",
+    "category": "plan",
+    "public_url": "https://gbautomation.xyz/prds/2026-06-12-prd-supabase-spine-and-enforcement-prd"
+  },
+  {
     "slug": "2026-06-04-harness-per-session-git-worktree-plan",
     "title": "Plan: Per-session git worktrees across harnesses",
     "date": "2026-06-04",

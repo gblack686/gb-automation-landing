@@ -1,0 +1,617 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PRD Supabase Spine and Schema Enforcement | GBAutomation</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&display=swap');
+    :root {
+      --cream-bg: #F3F1E7;
+      --cream-panel: #E6E4D9;
+      --text-main: #191919;
+      --text-muted: #5C5C5C;
+      --text-light: #8C8A84;
+      --border: #D6D4C8;
+      --terracotta: #D97757;
+      --paper: #FFFFFF;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text-main);
+      background: var(--cream-bg);
+      font-size: 14px;
+      line-height: 1.58;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+    a { color: var(--text-main); text-decoration-color: var(--terracotta); text-underline-offset: 3px; }
+    button { font: inherit; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(214, 212, 200, .7);
+      background: rgba(243, 241, 231, .93);
+      backdrop-filter: blur(12px);
+    }
+    .topbar-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 13px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .brand-lockup { display: inline-flex; align-items: center; gap: 9px; min-height: 28px; }
+    .brand-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(217, 119, 87, .18);
+    }
+    .brand-dot::after { content: ""; width: 8px; height: 8px; border-radius: 999px; background: var(--terracotta); }
+    .brand-text {
+      font-family: Newsreader, serif;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-size: 12px;
+    }
+    .source-name { color: var(--text-muted); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    header {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 34px 24px 26px;
+    }
+    .eyebrow {
+      color: var(--terracotta);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    h1 {
+      max-width: 920px;
+      margin: 10px 0 18px;
+      font-family: Newsreader, serif;
+      font-size: clamp(30px, 4vw, 48px);
+      font-weight: 500;
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+    .summary-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+    .summary-meta li {
+      min-height: 30px;
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, .45);
+      padding: 5px 9px;
+      border-radius: 6px;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .taxonomy-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0 0 14px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      min-height: 23px;
+      padding: 2px 8px;
+      border: 1px solid;
+      border-radius: 999px;
+      line-height: 1;
+    }
+    .pill-facet {
+      font-size: 8.5px;
+      font-weight: 700;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+    .pill-value {
+      color: var(--text-main);
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .layout {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 22px 24px 56px;
+      display: grid;
+      grid-template-columns: 252px minmax(0, 1fr);
+      gap: 22px;
+      align-items: start;
+    }
+    .section-menu {
+      position: sticky;
+      top: 64px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(230, 228, 217, .62);
+      backdrop-filter: blur(12px);
+      padding: 12px;
+    }
+    .menu-title {
+      margin: 0 0 10px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .menu-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+    .menu-actions button,
+    .section-menu nav button {
+      min-height: 34px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .46);
+      color: rgba(25, 25, 25, .72);
+      cursor: pointer;
+      transition: border-color .18s ease, color .18s ease, background .18s ease;
+    }
+    .menu-actions button { padding: 0 8px; font-size: 11px; font-weight: 700; }
+    .section-menu nav { display: grid; gap: 5px; }
+    .section-menu nav button {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 30px 1fr;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      text-align: left;
+      font-size: 12px;
+      line-height: 1.25;
+    }
+    .section-menu nav button span { color: var(--terracotta); font-size: 10px; font-weight: 700; letter-spacing: .08em; }
+    .menu-actions button:hover,
+    .section-menu nav button:hover,
+    .section-menu nav button.active {
+      border-color: var(--terracotta);
+      background: rgba(255, 255, 255, .72);
+      color: var(--text-main);
+    }
+    .sections { display: grid; gap: 10px; }
+    details.section {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .5);
+      overflow: hidden;
+    }
+    details.section[open] { background: rgba(255, 255, 255, .68); }
+    details.section summary {
+      min-height: 52px;
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 12px 14px;
+      cursor: pointer;
+      list-style: none;
+    }
+    details.section summary::-webkit-details-marker { display: none; }
+    .section-index {
+      color: var(--terracotta);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+    }
+    .section-title {
+      font-family: Newsreader, serif;
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.18;
+    }
+    .section-count {
+      color: var(--text-light);
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .section-body {
+      border-top: 1px solid rgba(214, 212, 200, .75);
+      padding: 4px 18px 18px 68px;
+    }
+    .section-body h2,
+    .section-body h3,
+    .section-body h4,
+    .section-body h5 {
+      margin: 18px 0 8px;
+      color: var(--text-main);
+      font-family: Newsreader, serif;
+      font-weight: 500;
+      line-height: 1.2;
+    }
+    .section-body h2 { font-size: 19px; }
+    .section-body h3 { font-size: 17px; }
+    .section-body h4,
+    .section-body h5 {
+      font-family: Inter, sans-serif;
+      color: var(--text-light);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+    .section-body p,
+    .section-body li { color: var(--text-muted); font-size: 14px; line-height: 1.66; }
+    .section-body p { margin: 10px 0; }
+    .section-body ul,
+    .section-body ol { margin: 10px 0 10px 18px; padding: 0; }
+    .section-body li { margin: 5px 0; padding-left: 2px; }
+    .section-body .task { list-style: none; margin-left: -18px; display: flex; gap: 8px; align-items: flex-start; }
+    .section-body input[type="checkbox"] { margin-top: 4px; accent-color: var(--terracotta); }
+    code {
+      border: 1px solid rgba(217, 119, 87, .22);
+      border-radius: 4px;
+      background: rgba(217, 119, 87, .10);
+      padding: 1px 4px;
+      color: var(--text-main);
+      font-size: .92em;
+    }
+    pre {
+      overflow: auto;
+      margin: 12px 0;
+      border-radius: 8px;
+      background: #191919;
+      color: #F3F1E7;
+      padding: 14px;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+    pre code { border: 0; background: transparent; color: inherit; padding: 0; }
+    blockquote {
+      margin: 12px 0;
+      padding: 10px 12px;
+      border-left: 3px solid var(--terracotta);
+      background: rgba(230, 228, 217, .5);
+    }
+    hr { border: 0; border-top: 1px solid var(--border); margin: 18px 0; }
+    .table-wrap { overflow-x: auto; margin: 12px 0; border: 1px solid var(--border); border-radius: 8px; }
+    table { width: 100%; border-collapse: collapse; min-width: 560px; background: rgba(255, 255, 255, .5); }
+    th,
+    td { border-bottom: 1px solid rgba(214, 212, 200, .75); padding: 8px 10px; text-align: left; font-size: 12px; vertical-align: top; }
+    th { color: var(--text-main); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; }
+    tr:last-child td { border-bottom: 0; }
+    .empty { color: var(--text-light); font-style: italic; }
+    footer {
+      border-top: 1px solid rgba(214, 212, 200, .78);
+      background: rgba(230, 228, 217, .45);
+    }
+    .footer-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    .footer-label {
+      margin-bottom: 12px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .metadata-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .meta-item {
+      min-width: 0;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .42);
+      padding: 9px 10px;
+    }
+    .meta-item span {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .meta-item strong {
+      display: block;
+      overflow-wrap: anywhere;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.35;
+    }
+    @media (max-width: 860px) {
+      .topbar-inner,
+      header,
+      .layout,
+      .footer-inner { padding-left: 16px; padding-right: 16px; }
+      .layout { display: block; }
+      .section-menu { position: static; margin-bottom: 14px; }
+      .section-body { padding-left: 18px; }
+      .metadata-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 540px) {
+      .topbar-inner { align-items: flex-start; flex-direction: column; gap: 6px; }
+      details.section summary { grid-template-columns: 34px 1fr; }
+      .section-count { grid-column: 2; }
+      h1 { font-size: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand-lockup"><span class="brand-dot"></span><span class="brand-text">GBAutomation</span></div>
+      <div class="source-name">2026-06-12-prd-supabase-spine-and-enforcement-prd.md</div>
+    </div>
+  </div>
+  <header>
+    <div class="eyebrow">Plan Brief</div>
+    <h1>PRD Supabase Spine and Schema Enforcement</h1>
+    <div class="taxonomy-pills"><span class="pill" style="background:rgba(79, 157, 105, 0.12);border-color:rgba(79, 157, 105, 0.42);"><span class="pill-facet" style="color:#4F9D69;">service</span><span class="pill-value">supabase</span></span></div>
+    <ul class="summary-meta">
+      <li>Client: gbautomation</li><li>Priority: high</li><li>Status: ready_for_dispatch</li><li>prd</li><li>tac-build</li><li>prd-index</li><li>enforcement</li><li>traceability</li><li>domain/gbautomation</li><li>client/gbautomation</li>
+      <li>Owner: Greg Black</li>
+      <li>Created: 2026-06-12</li>
+      <li>8 sections</li>
+      <li>932 words</li>
+    </ul>
+  </header>
+  <main class="layout">
+    <aside class="section-menu" aria-label="Plan sections">
+  <div class="menu-title">Sections</div>
+  <div class="menu-actions">
+    <button type="button" data-action="expand">Expand all</button>
+    <button type="button" data-action="collapse">Collapse all</button>
+  </div>
+  <nav><button type="button" data-target="overview"><span>01</span>Overview</button>
+<button type="button" data-target="purpose"><span>02</span>Purpose</button>
+<button type="button" data-target="goals"><span>03</span>Goals</button>
+<button type="button" data-target="non-goals"><span>04</span>Non-Goals</button>
+<button type="button" data-target="requirements"><span>05</span>Requirements</button>
+<button type="button" data-target="acceptance-criteria"><span>06</span>Acceptance Criteria</button>
+<button type="button" data-target="risks"><span>07</span>Risks</button>
+<button type="button" data-target="delivery-plan"><span>08</span>Delivery Plan</button></nav>
+</aside>
+    <div class="sections">
+      <details class="section" id="overview" open>
+  <summary>
+    <span class="section-index">01</span>
+    <span class="section-title">Overview</span>
+    <span class="section-count">23 words</span>
+  </summary>
+  <div class="section-body">
+    <blockquote><p><strong>TAC Lead — <code>tac_prd_spec</code> mode.</strong> Grounded by component retrieval (<code>2026-06-12-prd-spine-components.json</code>, 1518 scanned / 675 matched) and knowledge retrieval (<code>2026-06-12-prd-spine-knowledge.json</code>). Execution route: <code>tac_team_dispatch</code> → tac-hermes.</p></blockquote>
+  </div>
+</details>
+<details class="section" id="purpose">
+  <summary>
+    <span class="section-index">02</span>
+    <span class="section-title">Purpose</span>
+    <span class="section-count">117 words</span>
+  </summary>
+  <div class="section-body">
+    <p>PRDs are the practice&#x27;s unit of intent, but they live only as markdown. There is <strong>no PRD object in Supabase</strong> — <code>prd_artifacts</code> and <code>sprint_rock_prd_links</code> both return <code>UndefinedTable</code> (the 2026-06-11 migration was written but never applied), the <code>index_prds.py --sync-supabase</code> path has never run, and conformance to <code>gbauto-prd.v1</code> is enforced by nothing (advisory skill text only, versus <code>enforce-linear-frontmatter.py</code> which actually blocks task writes).</p>
+<p>The consequence shows up directly in this sprint&#x27;s report: every shipped plan is graded &quot;partial&quot; because there is no closed loop from <strong>PRD → rock → card → commit → PR → validation</strong>. This PRD builds that spine: a live, populated PRD table; a blocking conformance gate; and a join that lets reports prove what a plan actually shipped.</p>
+  </div>
+</details>
+<details class="section" id="goals">
+  <summary>
+    <span class="section-index">03</span>
+    <span class="section-title">Goals</span>
+    <span class="section-count">108 words</span>
+  </summary>
+  <div class="section-body">
+    <ul>
+<li>Apply the <code>prd_artifacts</code> + <code>sprint_rock_prd_links</code> migration to Supabase</li>
+<p><code>gbauto</code> and populate it by running <code>index_prds.py --sync-supabase</code>.</p>
+<li>Add a <strong>blocking PostToolUse write-hook</strong> that rejects PRD writes which violate</li>
+<p><code>gbauto-prd.v1</code> (required frontmatter <code>title/client/status/priority</code> + the seven required sections), mirroring <code>enforce-linear-frontmatter.py</code>.</p>
+<li>Phase enforcement so legacy PRDs are <strong>warn-only</strong> and only PRDs declaring</li>
+<p><code>schema_version: gbauto-prd.v1</code> (or newly created PRDs) are hard-blocked — honoring the standing &quot;do not churn all 150 historical PRDs&quot; decision.</p>
+<li>Join each PRD to its <strong>commits and PRs</strong> (via branch / <code>source_refs</code> + the</li>
+<p><code>gh</code> CLI) and surface that join in the sprint report and plans index.</p>
+<li>Backfill <code>gbauto-prd.v1</code> frontmatter for the <strong>active sprint PRDs only</strong>.</li>
+</ul>
+  </div>
+</details>
+<details class="section" id="non-goals">
+  <summary>
+    <span class="section-index">04</span>
+    <span class="section-title">Non-Goals</span>
+    <span class="section-count">55 words</span>
+  </summary>
+  <div class="section-body">
+    <ul>
+<li>Backfilling or rewriting all 150 historical PRDs to conformance.</li>
+<li>Changing the <code>gbauto-prd.v1</code> schema itself or the <code>index_prds.py</code> computation</li>
+<p>logic (it is correct; it has just never been wired to Supabase).</p>
+<li>Applying the broader DBForge schema-unification governance objects</li>
+<p>(<code>ops_schema_catalog</code>, etc.) — that is a separate plan.</p>
+<li>Auto-mutating the live Hermes Kanban board without operator approval.</li>
+</ul>
+  </div>
+</details>
+<details class="section" id="requirements">
+  <summary>
+    <span class="section-index">05</span>
+    <span class="section-title">Requirements</span>
+    <span class="section-count">200 words</span>
+  </summary>
+  <div class="section-body">
+    <ol>
+<li><strong>Migration applied:</strong> <code>supabase/migrations/20260611000000_create_prd_artifacts_index.sql</code></li>
+<p>runs cleanly via <code>gbauto-supabase migrate</code>; <code>prd_artifacts</code> and <code>sprint_rock_prd_links</code> exist with the documented columns and indices.</p>
+<li><strong>Sync run:</strong> <code>python resources/skills/prd-index/scripts/index_prds.py --sync-supabase</code></li>
+<p>upserts every indexed PRD on <code>prd_id</code> with zero CLI errors; row count &gt; 0.</p>
+<li><strong>Blocking hook:</strong> a new <code>enforce-prd-frontmatter.py</code> PostToolUse hook</li>
+<p>(stdlib only, &lt;200ms, no network) that:</p>
+</ol>
+<ul>
+<li>matches PRD paths (<code>second-brain/plans/<em>.md</code>, <code>second-brain/inbox/plans/</em>.md</code>,</li>
+<p><code>second-brain/operations/sprints/*.md</code>) carrying a PRD marker;</p>
+<li><strong>blocks</strong> (exit 1 + actionable stderr) when a PRD declares</li>
+<p><code>schema_version: gbauto-prd.v1</code> but is missing required frontmatter or any of the seven required sections;</p>
+<li><strong>warns only</strong> (exit 0 + stderr note) for legacy PRDs without the</li>
+<p><code>schema_version</code> declaration.</p>
+</ul>
+<ol>
+<li><strong>Hook registered</strong> in <code>.claude/settings.json</code> PostToolUse Write|Edit, ordered</li>
+<p>after <code>enforce-linear-frontmatter.py</code>, with a <code>node --test</code> / unit test.</p>
+<li><strong>PR + commit join:</strong> a report-side step resolves each PRD to its branch,</li>
+<p>merged PRs (<code>gh pr list --search</code>), and in-window commits, written into the sprint report and plans index.</p>
+<li><strong>Active-PRD backfill:</strong> the current sprint&#x27;s PRDs carry conformant</li>
+<p><code>gbauto-prd.v1</code> frontmatter and pass the hook.</p>
+<li><strong>Receipts:</strong> the build emits a <code>host-job-run.v1</code> receipt and Langfuse trace</li>
+<p>with <code>team:tac-hermes</code>, <code>profile:tac-*</code> tags.</p>
+</ol>
+  </div>
+</details>
+<details class="section" id="acceptance-criteria">
+  <summary>
+    <span class="section-index">06</span>
+    <span class="section-title">Acceptance Criteria</span>
+    <span class="section-count">98 words</span>
+  </summary>
+  <div class="section-body">
+    <ul>
+<li class="task"><input type="checkbox" disabled> <span><code>gbauto-supabase --project gbauto query &quot;SELECT count(*) FROM prd_artifacts&quot;</code></span></li>
+<p>returns &gt; 0.</p>
+<li class="task"><input type="checkbox" disabled> <span><code>sprint_rock_prd_links</code> resolves the current sprint&#x27;s rocks to <code>prd_id</code>s.</span></li>
+<li class="task"><input type="checkbox" disabled> <span>Writing a PRD with <code>schema_version: gbauto-prd.v1</code> but a missing</span></li>
+<p><code>acceptance criteria</code> section is <strong>blocked</strong> with a clear message; the same write without the <code>schema_version</code> line is <strong>warned, not blocked</strong>.</p>
+<li class="task"><input type="checkbox" disabled> <span>The hook adds &lt; 200ms and has a passing unit test (good + bad fixtures).</span></li>
+<li class="task"><input type="checkbox" disabled> <span>The sprint report&#x27;s &quot;Plans Executed&quot; rows show merged PRs per plan</span></li>
+<p>(e.g. PR #174 → crawl-resilience plan).</p>
+<li class="task"><input type="checkbox" disabled> <span>This PRD itself indexes with <code>schema_contract_ok: true</code> (dogfood gate).</span></li>
+<li class="task"><input type="checkbox" disabled> <span>A <code>host-job-run.v1</code> receipt for the build exists in <code>host_job_runs</code>.</span></li>
+</ul>
+  </div>
+</details>
+<details class="section" id="risks">
+  <summary>
+    <span class="section-index">07</span>
+    <span class="section-title">Risks</span>
+    <span class="section-count">116 words</span>
+  </summary>
+  <div class="section-body">
+    <ul>
+<li><strong>150-file breakage:</strong> a naive blocking hook would reject every legacy PRD on</li>
+<p>next edit. <em>Mitigation:</em> phased enforcement keyed on the <code>schema_version</code> declaration (warn legacy, block declared/new).</p>
+<li><strong>Supabase connectivity:</strong> prior sync attempts were blocked on DB connectivity;</li>
+<p>the sprint plan logged this. <em>Mitigation:</em> use <code>gbauto-supabase</code> pooler-session mode (the documented PC path); confirm <code>whoami</code> before migrate.</p>
+<li><strong>PR-join accuracy:</strong> branch→PRD mapping is heuristic. <em>Mitigation:</em> prefer</li>
+<p>explicit <code>source_refs.branch</code> / <code>source_refs.pr</code> in frontmatter; fall back to slug match and mark low-confidence joins.</p>
+<li><strong>Hook false-positives</strong> on non-PRD plans in the same dirs. <em>Mitigation:</em></li>
+<p>require a PRD marker (<code>prd_type</code>/markers) before enforcing.</p>
+<li><strong>Secret exposure:</strong> none introduced; all DB access via <code>gbauto-supabase</code> CLI</li>
+<p>(AWS-SM credentials), no keys in argv or git.</p>
+</ul>
+  </div>
+</details>
+<details class="section" id="delivery-plan">
+  <summary>
+    <span class="section-index">08</span>
+    <span class="section-title">Delivery Plan</span>
+    <span class="section-count">200 words</span>
+  </summary>
+  <div class="section-body">
+    <p>Execution route: <strong>tac_team_dispatch</strong> to tac-hermes (board <code>gbautomation</code>, worktree <code>kanban-board-gbautomation</code>). Phased so each card is independently validatable.</p>
+<ol>
+<li><strong>Apply + sync (tac-ops + dbforge):</strong> <code>gbauto-supabase whoami</code> → <code>migrate</code> the</li>
+<p>prd_artifacts migration → <code>index_prds.py --sync-supabase</code> → verify row count. <em>Gate:</em> <code>SELECT count(*) &gt; 0</code>.</p>
+<li><strong>Blocking hook (tac-builder):</strong> write <code>enforce-prd-frontmatter.py</code> mirroring</li>
+<p><code>enforce-linear-frontmatter.py</code>; phased warn/block; register in settings.json; unit test with good/bad fixtures. <em>Gate:</em> test passes, bad PRD blocked, legacy warned.</p>
+<li><strong>Active backfill (tac-architect):</strong> bring current-sprint PRDs to</li>
+<p><code>gbauto-prd.v1</code>; re-run sync. <em>Gate:</em> active rocks resolve to <code>prd_id</code>s.</p>
+<li><strong>PR/commit join (tac-builder):</strong> add a report-side resolver</li>
+<p>(<code>gh pr list --search</code> + git branch/commit match) feeding the sprint report and plans index. <em>Gate:</em> merged PRs appear per plan.</p>
+<li><strong>Validate + receipt (tac-validator):</strong> smoke all gates, emit <code>host-job-run.v1</code></li>
+<p>receipt + Langfuse trace; write a build report. <em>Gate:</em> all acceptance boxes checked.</p>
+</ol>
+<p><strong>Agent team roles:</strong> tac-director (sequences + handoffs) · tac-researcher (confirm migration columns + gh/branch conventions) · tac-architect (backfill + join design) · tac-builder (hook + resolver) · tac-validator (smoke + receipts) · tac-ops (migrate + sync). <strong>Observability:</strong> tags <code>runtime:hermes</code>, <code>team:tac-hermes</code>, <code>profile:tac-*</code>; receipts to <code>host_job_runs</code>; <code>sprint_rock_prd_links</code> is the traceability surface. <strong>Secrets/safety:</strong> all Supabase via <code>gbauto-supabase</code> CLI; no live Kanban mutation without approval; no secrets in argv/git/Telegram.</p>
+  </div>
+</details>
+    </div>
+  </main>
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-label">Metadata</div>
+      <div class="metadata-grid">
+        <div class="meta-item"><span>Source</span><strong>C:\Users\gblac\OneDrive\Desktop\gbauto\gbautomation\second-brain\plans\2026-06-12-prd-supabase-spine-and-enforcement-prd.md</strong></div>
+<div class="meta-item"><span>Generated</span><strong>2026-06-12T12:10:02-07:00</strong></div>
+<div class="meta-item"><span>Source modified</span><strong>2026-06-12T12:09:58-07:00</strong></div>
+<div class="meta-item"><span>Source size</span><strong>9,092 bytes</strong></div>
+<div class="meta-item"><span>Word count</span><strong>932</strong></div>
+<div class="meta-item"><span>Sections</span><strong>8</strong></div>
+<div class="meta-item"><span>Renderer</span><strong>resources/skills/netlify-cli/scripts/render_plan_page.py</strong></div>
+<div class="meta-item"><span>Schema Version</span><strong>gbauto-prd.v1</strong></div>
+<div class="meta-item"><span>Description</span><strong>Stand up the canonical PRD object in Supabase (prd_artifacts + sprint_rock_prd_links), run the index_prds sync, add a blocking write-hook that enforces gbauto-prd.v1 conformance, and join PRDs to commits and PRs so the sprint report can prove plan-to-PR traceability.</strong></div>
+<div class="meta-item"><span>Date</span><strong>2026-06-12</strong></div>
+<div class="meta-item"><span>Created</span><strong>2026-06-12</strong></div>
+<div class="meta-item"><span>Status</span><strong>ready_for_dispatch</strong></div>
+<div class="meta-item"><span>Priority</span><strong>high</strong></div>
+<div class="meta-item"><span>Client</span><strong>gbautomation</strong></div>
+<div class="meta-item"><span>Prd Type</span><strong>tac_build</strong></div>
+<div class="meta-item"><span>Artifact Kind</span><strong>prd</strong></div>
+<div class="meta-item"><span>Owner</span><strong>Greg Black</strong></div>
+<div class="meta-item"><span>Author Harness</span><strong>claude-code</strong></div>
+<div class="meta-item"><span>Agent Team</span><strong>tac-hermes</strong></div>
+<div class="meta-item"><span>Execution Route</span><strong>tac_team_dispatch</strong></div>
+<div class="meta-item"><span>Hermes Profiles</span><strong>tac-director, tac-researcher, tac-architect, tac-builder, tac-validator, tac-ops</strong></div>
+<div class="meta-item"><span>Components</span><strong>resources/skills/prd-index/scripts/index_prds.py, supabase/migrations/20260611000000_create_prd_artifacts_index.sql, .claude/hooks/enforce-linear-frontmatter.py, services/gbauto_supabase</strong></div>
+<div class="meta-item"><span>Tac Status</span><strong>ready</strong></div>
+<div class="meta-item"><span>Tac Level</span><strong>L5</strong></div>
+<div class="meta-item"><span>Tags</span><strong>prd, tac-build, prd-index, supabase, enforcement, traceability, domain/gbautomation, client/gbautomation</strong></div>
+<div class="meta-item"><span>Related</span><strong>[[2026-06-11-gbautomation-sprint-plan]], [[2026-06-08-dbforge-supabase-schema-unification-plan]], [[prd-index]]</strong></div>
+      </div>
+    </div>
+  </footer>
+  <script>
+    const sections = Array.from(document.querySelectorAll('details.section'));
+    const menuButtons = Array.from(document.querySelectorAll('[data-target]'));
+    const setActive = (id) => {
+      menuButtons.forEach((button) => button.classList.toggle('active', button.dataset.target === id));
+    };
+    menuButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const section = document.getElementById(button.dataset.target);
+        if (!section) return;
+        section.open = true;
+        setActive(section.id);
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+    document.querySelector('[data-action="expand"]').addEventListener('click', () => sections.forEach((section) => section.open = true));
+    document.querySelector('[data-action="collapse"]').addEventListener('click', () => sections.forEach((section, index) => section.open = index === 0));
+    sections.forEach((section) => {
+      section.addEventListener('toggle', () => {
+        if (section.open) setActive(section.id);
+      });
+    });
+    if (sections[0]) setActive(sections[0].id);
+  </script>
+</body>
+</html>
