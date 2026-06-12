@@ -1,0 +1,546 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TAC Kanban Team Resilience Hardening — crash loops, silent deaths, empty blocks | GBAutomation</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&display=swap');
+    :root {
+      --cream-bg: #F3F1E7;
+      --cream-panel: #E6E4D9;
+      --text-main: #191919;
+      --text-muted: #5C5C5C;
+      --text-light: #8C8A84;
+      --border: #D6D4C8;
+      --terracotta: #D97757;
+      --paper: #FFFFFF;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text-main);
+      background: var(--cream-bg);
+      font-size: 14px;
+      line-height: 1.58;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+    a { color: var(--text-main); text-decoration-color: var(--terracotta); text-underline-offset: 3px; }
+    button { font: inherit; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(214, 212, 200, .7);
+      background: rgba(243, 241, 231, .93);
+      backdrop-filter: blur(12px);
+    }
+    .topbar-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 13px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .brand-lockup { display: inline-flex; align-items: center; gap: 9px; min-height: 28px; }
+    .brand-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(217, 119, 87, .18);
+    }
+    .brand-dot::after { content: ""; width: 8px; height: 8px; border-radius: 999px; background: var(--terracotta); }
+    .brand-text {
+      font-family: Newsreader, serif;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-size: 12px;
+    }
+    .source-name { color: var(--text-muted); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    header {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 34px 24px 26px;
+    }
+    .eyebrow {
+      color: var(--terracotta);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    h1 {
+      max-width: 920px;
+      margin: 10px 0 18px;
+      font-family: Newsreader, serif;
+      font-size: clamp(30px, 4vw, 48px);
+      font-weight: 500;
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+    .summary-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+    .summary-meta li {
+      min-height: 30px;
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, .45);
+      padding: 5px 9px;
+      border-radius: 6px;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .taxonomy-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0 0 14px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      min-height: 23px;
+      padding: 2px 8px;
+      border: 1px solid;
+      border-radius: 999px;
+      line-height: 1;
+    }
+    .pill-facet {
+      font-size: 8.5px;
+      font-weight: 700;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+    .pill-value {
+      color: var(--text-main);
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .layout {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 22px 24px 56px;
+      display: grid;
+      grid-template-columns: 252px minmax(0, 1fr);
+      gap: 22px;
+      align-items: start;
+    }
+    .section-menu {
+      position: sticky;
+      top: 64px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(230, 228, 217, .62);
+      backdrop-filter: blur(12px);
+      padding: 12px;
+    }
+    .menu-title {
+      margin: 0 0 10px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .menu-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+    .menu-actions button,
+    .section-menu nav button {
+      min-height: 34px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .46);
+      color: rgba(25, 25, 25, .72);
+      cursor: pointer;
+      transition: border-color .18s ease, color .18s ease, background .18s ease;
+    }
+    .menu-actions button { padding: 0 8px; font-size: 11px; font-weight: 700; }
+    .section-menu nav { display: grid; gap: 5px; }
+    .section-menu nav button {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 30px 1fr;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      text-align: left;
+      font-size: 12px;
+      line-height: 1.25;
+    }
+    .section-menu nav button span { color: var(--terracotta); font-size: 10px; font-weight: 700; letter-spacing: .08em; }
+    .menu-actions button:hover,
+    .section-menu nav button:hover,
+    .section-menu nav button.active {
+      border-color: var(--terracotta);
+      background: rgba(255, 255, 255, .72);
+      color: var(--text-main);
+    }
+    .sections { display: grid; gap: 10px; }
+    details.section {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .5);
+      overflow: hidden;
+    }
+    details.section[open] { background: rgba(255, 255, 255, .68); }
+    details.section summary {
+      min-height: 52px;
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 12px 14px;
+      cursor: pointer;
+      list-style: none;
+    }
+    details.section summary::-webkit-details-marker { display: none; }
+    .section-index {
+      color: var(--terracotta);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+    }
+    .section-title {
+      font-family: Newsreader, serif;
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.18;
+    }
+    .section-count {
+      color: var(--text-light);
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .section-body {
+      border-top: 1px solid rgba(214, 212, 200, .75);
+      padding: 4px 18px 18px 68px;
+    }
+    .section-body h2,
+    .section-body h3,
+    .section-body h4,
+    .section-body h5 {
+      margin: 18px 0 8px;
+      color: var(--text-main);
+      font-family: Newsreader, serif;
+      font-weight: 500;
+      line-height: 1.2;
+    }
+    .section-body h2 { font-size: 19px; }
+    .section-body h3 { font-size: 17px; }
+    .section-body h4,
+    .section-body h5 {
+      font-family: Inter, sans-serif;
+      color: var(--text-light);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+    .section-body p,
+    .section-body li { color: var(--text-muted); font-size: 14px; line-height: 1.66; }
+    .section-body p { margin: 10px 0; }
+    .section-body ul,
+    .section-body ol { margin: 10px 0 10px 18px; padding: 0; }
+    .section-body li { margin: 5px 0; padding-left: 2px; }
+    .section-body .task { list-style: none; margin-left: -18px; display: flex; gap: 8px; align-items: flex-start; }
+    .section-body input[type="checkbox"] { margin-top: 4px; accent-color: var(--terracotta); }
+    code {
+      border: 1px solid rgba(217, 119, 87, .22);
+      border-radius: 4px;
+      background: rgba(217, 119, 87, .10);
+      padding: 1px 4px;
+      color: var(--text-main);
+      font-size: .92em;
+    }
+    pre {
+      overflow: auto;
+      margin: 12px 0;
+      border-radius: 8px;
+      background: #191919;
+      color: #F3F1E7;
+      padding: 14px;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+    pre code { border: 0; background: transparent; color: inherit; padding: 0; }
+    blockquote {
+      margin: 12px 0;
+      padding: 10px 12px;
+      border-left: 3px solid var(--terracotta);
+      background: rgba(230, 228, 217, .5);
+    }
+    hr { border: 0; border-top: 1px solid var(--border); margin: 18px 0; }
+    .table-wrap { overflow-x: auto; margin: 12px 0; border: 1px solid var(--border); border-radius: 8px; }
+    table { width: 100%; border-collapse: collapse; min-width: 560px; background: rgba(255, 255, 255, .5); }
+    th,
+    td { border-bottom: 1px solid rgba(214, 212, 200, .75); padding: 8px 10px; text-align: left; font-size: 12px; vertical-align: top; }
+    th { color: var(--text-main); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; }
+    tr:last-child td { border-bottom: 0; }
+    .empty { color: var(--text-light); font-style: italic; }
+    footer {
+      border-top: 1px solid rgba(214, 212, 200, .78);
+      background: rgba(230, 228, 217, .45);
+    }
+    .footer-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    .footer-label {
+      margin-bottom: 12px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .metadata-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .meta-item {
+      min-width: 0;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .42);
+      padding: 9px 10px;
+    }
+    .meta-item span {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .meta-item strong {
+      display: block;
+      overflow-wrap: anywhere;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.35;
+    }
+    @media (max-width: 860px) {
+      .topbar-inner,
+      header,
+      .layout,
+      .footer-inner { padding-left: 16px; padding-right: 16px; }
+      .layout { display: block; }
+      .section-menu { position: static; margin-bottom: 14px; }
+      .section-body { padding-left: 18px; }
+      .metadata-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 540px) {
+      .topbar-inner { align-items: flex-start; flex-direction: column; gap: 6px; }
+      details.section summary { grid-template-columns: 34px 1fr; }
+      .section-count { grid-column: 2; }
+      h1 { font-size: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand-lockup"><span class="brand-dot"></span><span class="brand-text">GBAutomation</span></div>
+      <div class="source-name">2026-06-12-tac-kanban-resilience-hardening-plan.md</div>
+    </div>
+  </div>
+  <header>
+    <div class="eyebrow">Plan Brief</div>
+    <h1>TAC Kanban Team Resilience Hardening — crash loops, silent deaths, empty blocks</h1>
+    <div class="taxonomy-pills"><span class="pill" style="background:rgba(177, 124, 62, 0.12);border-color:rgba(177, 124, 62, 0.42);"><span class="pill-facet" style="color:#B17C3E;">service</span><span class="pill-value">hermes</span></span></div>
+    <ul class="summary-meta">
+      <li>Client: gbautomation</li><li>Priority: high</li><li>Status: draft</li><li>tac</li><li>kanban</li><li>resilience</li><li>hooks</li><li>domain/tac</li><li>domain/gbautomation</li>
+      <li>Owner: GBAutomation</li>
+      <li>Created: 2026-06-12</li>
+      <li>6 sections</li>
+      <li>852 words</li>
+    </ul>
+  </header>
+  <main class="layout">
+    <aside class="section-menu" aria-label="Plan sections">
+  <div class="menu-title">Sections</div>
+  <div class="menu-actions">
+    <button type="button" data-action="expand">Expand all</button>
+    <button type="button" data-action="collapse">Collapse all</button>
+  </div>
+  <nav><button type="button" data-target="overview"><span>01</span>Overview</button>
+<button type="button" data-target="why-the-sprint-plans-graded-shipped-partial"><span>02</span>Why the sprint plans graded SHIPPED·PARTIAL</button>
+<button type="button" data-target="failure-taxonomy-supabase-agent-runs-2026-06-05-12-deduped-run-ids"><span>03</span>Failure taxonomy (Supabase <code>agent_runs</code>, 2026-06-05..12, deduped run ids)</button>
+<button type="button" data-target="hardening-proposals-mapped-to-tac-creed-retrieved-components"><span>04</span>Hardening proposals (mapped to TAC creed + retrieved components)</button>
+<button type="button" data-target="validation"><span>05</span>Validation</button>
+<button type="button" data-target="success-criteria"><span>06</span>Success criteria</button></nav>
+</aside>
+    <div class="sections">
+      <details class="section" id="overview" open>
+  <summary>
+    <span class="section-index">01</span>
+    <span class="section-title">Overview</span>
+    <span class="section-count">193 words</span>
+  </summary>
+  <div class="section-body">
+    <p><strong>Why the sprint plans graded SHIPPED·PARTIAL:</strong> The 2026-06-05..12 plans index grades every executed plan <em>partial</em>. The execution dossiers (<code>execution-dossiers.json</code> in the sprint report package) show the mechanism: <strong>the unattended Hermes Kanban lane starves at the head of the pipeline, so net-new plan scope falls back to operator-attended codex sessions</strong> — which ship the baseline but not the plan&#x27;s full spec.</p>
+<p><strong>Failure taxonomy (Supabase <code>agent_runs</code>, 2026-06-05..12, deduped run ids):</strong> dies at ~+39s; dispatcher immediately re-claims; repeat all night. The big loops all run <strong>23:00 → 06:56 PT</strong> unattended. <code>max_retries</code>, <code>max_runtime_seconds</code>, and <code>claim_expires</code> are <strong>null</strong> on every card — no failure cap, no backoff, no circuit breaker. The ~39s lifespan and the <code>rate_limited_reclaim</code> notes point at provider 429/auth errors crashing the worker process instead of soft-failing (the open card &quot;cron driver should soft-fail (not raise RuntimeError) on account-wide HTTP 429&quot; is the same bug class).</p>
+<p><strong>Hardening proposals (mapped to TAC creed + retrieved components):</strong> TAC component retrieval artifact: <code>second-brain/intelligence/tac-retrievals/20260612-kanban-resilience-components.json</code> (1,518 components scanned). Reuse sources named per item; creed mapping per tac-creed (Tactic 4 <em>Stay Out The Loop</em> requires Tactic 5 <em>Always Add Feedback Loops</em> to be safe).</p>
+  </div>
+</details>
+<details class="section" id="why-the-sprint-plans-graded-shipped-partial">
+  <summary>
+    <span class="section-index">02</span>
+    <span class="section-title">Why the sprint plans graded SHIPPED·PARTIAL</span>
+    <span class="section-count">118 words</span>
+  </summary>
+  <div class="section-body">
+    <p>The 2026-06-05..12 plans index grades every executed plan <em>partial</em>. The execution dossiers (<code>execution-dossiers.json</code> in the sprint report package) show the mechanism: <strong>the unattended Hermes Kanban lane starves at the head of the pipeline, so net-new plan scope falls back to operator-attended codex sessions</strong> — which ship the baseline but not the plan&#x27;s full spec.</p>
+<p>Observed on the tac-hermes waves: <code>intake, route, and frame</code> (17 runs, 6 crashed, latest <strong>blocked</strong>) and <code>retrieve TAC sources</code> (15 runs, 10 crashed, <strong>blocked</strong>) die first, so <code>implement scoped worktree changes</code> (<strong>blocked</strong>, 5 runs), <code>validate</code>, <code>publish receipts</code>, and <code>post-run learning</code> (4 cards, <strong>0 runs</strong>) never execute. The TAC dispatch receipts the plans expected were never produced because the team never got past research.</p>
+  </div>
+</details>
+<details class="section" id="failure-taxonomy-supabase-agent-runs-2026-06-05-12-deduped-run-ids">
+  <summary>
+    <span class="section-index">03</span>
+    <span class="section-title">Failure taxonomy (Supabase <code>agent_runs</code>, 2026-06-05..12, deduped run ids)</span>
+    <span class="section-count">238 words</span>
+  </summary>
+  <div class="section-body">
+    <div class="table-wrap"><table><thead><tr><th>#</th><th>Class</th><th>Count</th><th>Evidence</th></tr></thead><tbody><tr><td>1</td><td><code>pid N not alive</code> — silent worker death</td><td><strong>8,827 runs / 72 tasks</strong> (~123 respawns/task)</td><td>worst: 1,472 respawns on one <code>logs</code> card; 678/479/395 on <code>sysadmin</code> cards; 382/379 on <code>tac-researcher</code> cards</td></tr>
+<tr><td>2</td><td>Protocol violation — worker exited rc=0 without calling <code>kanban_complete</code>/<code>kanban_block</code></td><td>79</td><td>dispatcher marks crashed; no cause captured</td></tr>
+<tr><td>3</td><td>Iteration budget exhausted</td><td>7</td><td><code>goal_max_turns</code> hit</td></tr>
+<tr><td>4</td><td>Manual reclaims (operator parking crash loops)</td><td>15</td><td>e.g. &quot;Codex parking after repeated Hermes worker crashes&quot;, &quot;rate_limited_reclaim&quot;, mis-targeted dispatch (rock filename inferred as <code>target_url</code>)</td></tr>
+<tr><td>5</td><td>Blocked cards carry <strong>no reason</strong></td><td>all sampled</td><td><code>last_failure_error</code> and <code>result</code> empty on every blocked tac-hermes/ecom card</td></tr></tbody></table></div>
+<p><strong>Crash-loop anatomy</strong> (sampled <code>task_run</code>): worker spawns, heartbeats at +3s, dies at ~+39s; dispatcher immediately re-claims; repeat all night. The big loops all run <strong>23:00 → 06:56 PT</strong> unattended. <code>max_retries</code>, <code>max_runtime_seconds</code>, and <code>claim_expires</code> are <strong>null</strong> on every card — no failure cap, no backoff, no circuit breaker. The ~39s lifespan and the <code>rate_limited_reclaim</code> notes point at provider 429/auth errors crashing the worker process instead of soft-failing (the open card &quot;cron driver should soft-fail (not raise RuntimeError) on account-wide HTTP 429&quot; is the same bug class).</p>
+<p><strong>Observability gap:</strong> of 2,753 in-window Langfuse traces only 88 carry token usage — all from the Telegram operator lane (&quot;Hermes turn&quot;: 83.8M in / 0.97M out). Kanban worker runs emit zero generation usage, so cost/turn budgets cannot be enforced from traces. Same finding as 2026-06-02-trace-attribution-standard-plan.</p>
+  </div>
+</details>
+<details class="section" id="hardening-proposals-mapped-to-tac-creed-retrieved-components">
+  <summary>
+    <span class="section-index">04</span>
+    <span class="section-title">Hardening proposals (mapped to TAC creed + retrieved components)</span>
+    <span class="section-count">357 words</span>
+  </summary>
+  <div class="section-body">
+    <p>TAC component retrieval artifact: <code>second-brain/intelligence/tac-retrievals/20260612-kanban-resilience-components.json</code> (1,518 components scanned). Reuse sources named per item; creed mapping per tac-creed (Tactic 4 <em>Stay Out The Loop</em> requires Tactic 5 <em>Always Add Feedback Loops</em> to be safe).</p>
+<ol>
+<li><strong>Crash circuit breaker + backoff (dispatcher)</strong> — enforce default</li>
+<p><code>max_retries=3</code> and exponential backoff between respawns; on cap, auto-<code>kanban_block</code> with reason <code>crash_loop</code> + last stderr tail. Reuse: the ecom retry-context ledger shipped this sprint (<code>scripts/ecom_retry_context.py</code>, commit <code>b0938e9d</code>) — port the pattern into the Kanban dispatcher. KPI: Attempts ↓. <em>This single change removes ~8.8k junk runs/week.</em></p>
+<li><strong>Death-note capture (spawn wrapper)</strong> — wrap worker spawn so exit code,</li>
+<p>signal, and stderr tail land in <code>task_run.error</code> instead of <code>pid N not alive</code>; soft-fail provider 429s (park with <code>rate_limited</code> reason + retry-after) rather than crashing. Pairs with the open Hermes-core 429 card.</p>
+<li><strong>Completion-protocol Stop hook (worker)</strong> — Stop/SessionEnd hook checks a</li>
+<p><code>kanban_complete</code>/<code>kanban_block</code> call occurred this session; if not, block exit once with a reminder, then auto-<code>kanban_block</code> with <code>protocol_violation</code> + transcript tail. Reuse: <code>claude-code-hooks-mastery</code> <code>stop.py</code> / <code>subagent_stop.py</code>; <code>agent-experts</code> <code>stop.py</code> (TAC inventory, 276 hook components catalogued).</p>
+<li><strong>Block-reason contract (PreToolUse validator)</strong> — reject <code>kanban_block</code></li>
+<p>calls with empty reason/evidence; mirror reason into the board payload so blocked cards are triageable. Fixes failure class 5. Reuse: <code>agentic-finance-review</code> validator-hook family.</p>
+<li><strong>Respawn continuity via context bundles</strong> — each attempt appends a compact</li>
+<p>bundle (what was tried, what failed, remaining steps); respawned workers resume instead of starting blank (Tactic 2: the agent is brilliant but blind). Reuse: <code>context_bundle_builder.py</code> (<code>agentic-prompt-engineering</code> / <code>building-domain-specific-agents</code>).</p>
+<li><strong>Dispatch preflight (PreToolUse on <code>kanban_create_task</code>)</strong> — validate</li>
+<p><code>target_url</code>/repo/workspace exists and <code>assignee</code> profile is installed before card creation. Evidence: mis-targeted dispatch inferred a rock markdown filename as <code>target_url</code>; profile-missing dispatches dead-end.</p>
+<li><strong>Crash-storm alerting + scorecard KPIs</strong> — Telegram alert when a task</li>
+<p>exceeds N respawns/hour (the 1,472-respawn card should have paged at ~23:30, not been found in the morning); wire the execution-dossier stoppage metrics into <code>sprint_scorecard_metrics</code> weekly (Agentic KPIs: Attempts ↓, Streak ↑, Presence ↓).</p>
+<li><strong>Worker generation-usage emission</strong> — emit token usage on worker traces so</li>
+<p>iteration budgets and cost caps become enforceable; this is the trace-attribution plan&#x27;s emission phase, re-prioritized by this data.</p>
+</ol>
+  </div>
+</details>
+<details class="section" id="validation">
+  <summary>
+    <span class="section-index">05</span>
+    <span class="section-title">Validation</span>
+    <span class="section-count">70 words</span>
+  </summary>
+  <div class="section-body">
+    <ul>
+<li>Replay a synthetic always-crashing card on a throwaway Kanban DB: expect 3</li>
+<p>attempts, backoff, auto-block with <code>crash_loop</code> reason, one Telegram alert.</p>
+<li>Kill a worker mid-task: expect death-note in <code>task_run.error</code> (no</li>
+<p><code>pid N not alive</code>).</p>
+<li>Worker that &quot;finishes&quot; without completion call: expect Stop-hook reminder,</li>
+<p>then <code>protocol_violation</code> block.</p>
+<li>Re-run <code>build_plan_execution_dossiers.py</code> after one week: stoppage count on</li>
+<p>the TAC plane should drop an order of magnitude; blocked cards all carry reasons.</p>
+</ul>
+  </div>
+</details>
+<details class="section" id="success-criteria">
+  <summary>
+    <span class="section-index">06</span>
+    <span class="section-title">Success criteria</span>
+    <span class="section-count">37 words</span>
+  </summary>
+  <div class="section-body">
+    <ul>
+<li>Zero unbounded respawn loops (no task &gt;10 runs without a block).</li>
+<li>100% of blocked cards have machine-readable reason + evidence path.</li>
+<li>A full tac-hermes wave (intake → self-improve) completes unattended with</li>
+<p>receipts, proving the lane the sprint plans assumed.</p>
+</ul>
+  </div>
+</details>
+    </div>
+  </main>
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-label">Metadata</div>
+      <div class="metadata-grid">
+        <div class="meta-item"><span>Source</span><strong>C:\Users\gblac\OneDrive\Desktop\gbauto\gbautomation\second-brain\plans\2026-06-12-tac-kanban-resilience-hardening-plan.md</strong></div>
+<div class="meta-item"><span>Generated</span><strong>2026-06-12T15:42:03-07:00</strong></div>
+<div class="meta-item"><span>Source modified</span><strong>2026-06-12T15:42:01-07:00</strong></div>
+<div class="meta-item"><span>Source size</span><strong>7,035 bytes</strong></div>
+<div class="meta-item"><span>Word count</span><strong>852</strong></div>
+<div class="meta-item"><span>Sections</span><strong>6</strong></div>
+<div class="meta-item"><span>Renderer</span><strong>resources/skills/netlify-cli/scripts/render_plan_page.py</strong></div>
+<div class="meta-item"><span>Date</span><strong>2026-06-12</strong></div>
+<div class="meta-item"><span>Type</span><strong>plan</strong></div>
+<div class="meta-item"><span>Status</span><strong>draft</strong></div>
+<div class="meta-item"><span>Client</span><strong>gbautomation</strong></div>
+<div class="meta-item"><span>Priority</span><strong>high</strong></div>
+<div class="meta-item"><span>Tags</span><strong>plan, tac, hermes, kanban, resilience, hooks, domain/tac, domain/gbautomation</strong></div>
+<div class="meta-item"><span>Related</span><strong>[[tac-creed]], [[2026-06-02-trace-attribution-standard-plan]], [[2026-06-07-crawl-resilience-anti-bot-intelligence-prd]], [[2026-06-11-gbautomation-sprint-plan]]</strong></div>
+      </div>
+    </div>
+  </footer>
+  <script>
+    const sections = Array.from(document.querySelectorAll('details.section'));
+    const menuButtons = Array.from(document.querySelectorAll('[data-target]'));
+    const setActive = (id) => {
+      menuButtons.forEach((button) => button.classList.toggle('active', button.dataset.target === id));
+    };
+    menuButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const section = document.getElementById(button.dataset.target);
+        if (!section) return;
+        section.open = true;
+        setActive(section.id);
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+    document.querySelector('[data-action="expand"]').addEventListener('click', () => sections.forEach((section) => section.open = true));
+    document.querySelector('[data-action="collapse"]').addEventListener('click', () => sections.forEach((section, index) => section.open = index === 0));
+    sections.forEach((section) => {
+      section.addEventListener('toggle', () => {
+        if (section.open) setActive(section.id);
+      });
+    });
+    if (sections[0]) setActive(sections[0].id);
+  </script>
+</body>
+</html>
