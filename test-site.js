@@ -1,9 +1,13 @@
+/* global process */
 /**
- * Comprehensive Site Testing Script
- * Tests all critical functionality of the GB Automation landing page
+ * Comprehensive site testing script for the GB Automation landing page.
+ * Starts an isolated Vite dev server so tests do not attach to another repo.
  */
 
-import { createServer } from 'http';
+import { spawn } from 'node:child_process';
+import { existsSync } from 'node:fs';
+import { createServer } from 'node:net';
+import { resolve } from 'node:path';
 
 const COLORS = {
   reset: '\x1b[0m',
@@ -11,11 +15,90 @@ const COLORS = {
   red: '\x1b[31m',
   yellow: '\x1b[33m',
   blue: '\x1b[34m',
-  bold: '\x1b[1m'
+  bold: '\x1b[1m',
 };
 
 function log(message, color = 'reset') {
   console.log(`${COLORS[color]}${message}${COLORS.reset}`);
+}
+
+async function getFreePort() {
+  return new Promise((resolvePort, reject) => {
+    const server = createServer();
+    server.once('error', reject);
+    server.listen(0, '127.0.0.1', () => {
+      const { port } = server.address();
+      server.close(() => resolvePort(port));
+    });
+  });
+}
+
+async function waitForServer(baseUrl, timeoutMs = 15000) {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    try {
+      const response = await fetch(baseUrl, { signal: AbortSignal.timeout(1000) });
+      if (response.ok) return;
+    } catch {
+      // Server is still starting.
+    }
+    await new Promise((resolveDelay) => setTimeout(resolveDelay, 250));
+  }
+  throw new Error(`Timed out waiting for Vite at ${baseUrl}`);
+}
+
+async function startViteServer() {
+  const viteBin = resolve(process.cwd(), 'node_modules/vite/bin/vite.js');
+  if (!existsSync(viteBin)) {
+    throw new Error('Vite binary missing. Run npm install before npm test.');
+  }
+
+  const port = await getFreePort();
+  const baseUrl = `http://127.0.0.1:${port}`;
+  log(`\n🔍 Starting isolated Vite dev server on port ${port}...`, 'blue');
+
+  const child = spawn(process.execPath, [viteBin, '--host', '127.0.0.1', '--port', String(port)], {
+    cwd: process.cwd(),
+    stdio: ['ignore', 'pipe', 'pipe'],
+    env: { ...process.env, BROWSER: 'none' },
+  });
+
+  let output = '';
+  child.stdout.on('data', (chunk) => {
+    output += chunk.toString();
+  });
+  child.stderr.on('data', (chunk) => {
+    output += chunk.toString();
+  });
+
+  let stopping = false;
+  child.once('exit', (code) => {
+    if (!stopping && code !== 0 && code !== null) {
+      log(`Vite exited early with code ${code}`, 'red');
+      if (output.trim()) log(output.trim(), 'yellow');
+    }
+  });
+
+  await waitForServer(baseUrl);
+  log(`✓ Vite server ready at ${baseUrl}`, 'green');
+  return { baseUrl, child, stop: () => { stopping = true; } };
+}
+
+async function stopViteServer(server) {
+  const child = server?.child;
+  if (!child || child.killed) return;
+  server.stop?.();
+  child.kill('SIGTERM');
+  await new Promise((resolveStop) => {
+    const timer = setTimeout(() => {
+      if (!child.killed) child.kill('SIGKILL');
+      resolveStop();
+    }, 2000);
+    child.once('exit', () => {
+      clearTimeout(timer);
+      resolveStop();
+    });
+  });
 }
 
 async function testEndpoint(url, testName) {
@@ -24,40 +107,57 @@ async function testEndpoint(url, testName) {
     if (response.ok) {
       log(`✓ ${testName}: PASSED`, 'green');
       return { passed: true, status: response.status };
-    } else {
-      log(`✗ ${testName}: FAILED (Status ${response.status})`, 'red');
-      return { passed: false, status: response.status };
     }
+    log(`✗ ${testName}: FAILED (Status ${response.status})`, 'red');
+    return { passed: false, status: response.status };
   } catch (error) {
     log(`✗ ${testName}: ERROR - ${error.message}`, 'red');
     return { passed: false, error: error.message };
   }
 }
 
-async function findVitePort() {
-  log('\n🔍 Finding active Vite dev server...', 'blue');
-
-  const commonPorts = [5173, 5174, 5175, 5176, 5177, 5178, 5179];
-
-  for (const port of commonPorts) {
-    try {
-      const response = await fetch(`http://localhost:${port}`, {
-        signal: AbortSignal.timeout(1000)
-      });
-      if (response.ok) {
-        const html = await response.text();
-        if (html.includes('vite') || html.includes('root')) {
-          log(`✓ Found Vite server on port ${port}`, 'green');
-          return port;
-        }
-      }
-    } catch (error) {
-      // Port not available, continue
+async function testHtmlContains(baseUrl, pattern, testName) {
+  try {
+    const response = await fetch(baseUrl);
+    const html = await response.text();
+    if (pattern.test(html)) {
+      log(`✓ ${testName}`, 'green');
+      return { passed: true };
     }
+    log(`✗ ${testName}`, 'red');
+    return { passed: false };
+  } catch (error) {
+    log(`✗ ${testName}: ${error.message}`, 'red');
+    return { passed: false, error: error.message };
   }
+}
 
-  log('✗ No Vite server found on common ports', 'red');
-  return null;
+async function testSourceContains(baseUrl, path, checks) {
+  const results = [];
+  try {
+    const response = await fetch(`${baseUrl}${path}`);
+    const code = await response.text();
+    if (!response.ok) {
+      log(`✗ ${path} loads: FAILED (Status ${response.status})`, 'red');
+      return checks.map(() => ({ passed: false, status: response.status }));
+    }
+    log(`✓ ${path} loads`, 'green');
+    results.push({ passed: true });
+
+    for (const check of checks) {
+      if (check.pattern.test(code)) {
+        log(`✓ ${check.name} found in ${path}`, 'green');
+        results.push({ passed: true });
+      } else {
+        log(`✗ ${check.name} missing in ${path}`, 'red');
+        results.push({ passed: false });
+      }
+    }
+  } catch (error) {
+    log(`✗ Failed to analyze ${path}: ${error.message}`, 'red');
+    return checks.map(() => ({ passed: false, error: error.message }));
+  }
+  return results;
 }
 
 async function runTests() {
@@ -65,85 +165,46 @@ async function runTests() {
   log('GB AUTOMATION - SITE TEST SUITE', 'bold');
   log('=================================\n', 'bold');
 
-  const port = await findVitePort();
-
-  if (!port) {
-    log('\n❌ TEST SUITE FAILED: Dev server not running', 'red');
-    log('\nTo start the dev server, run:', 'yellow');
-    log('  npm run dev\n', 'yellow');
-    process.exit(1);
-  }
-
-  const baseUrl = `http://localhost:${port}`;
+  let server;
   const results = [];
 
-  log('\n📋 Running tests...\n', 'blue');
-
-  // Test 1: Main page loads
-  results.push(await testEndpoint(baseUrl, 'Main page loads'));
-
-  // Test 2: Check for React app initialization
   try {
-    const response = await fetch(baseUrl);
-    const html = await response.text();
+    server = await startViteServer();
+    const { baseUrl } = server;
 
-    if (html.includes('id="root"')) {
-      log('✓ React root element found', 'green');
-      results.push({ passed: true });
-    } else {
-      log('✗ React root element missing', 'red');
-      results.push({ passed: false });
+    log('\n📋 Running tests...\n', 'blue');
+
+    results.push(await testEndpoint(baseUrl, 'Main page loads'));
+    results.push(await testHtmlContains(baseUrl, /id="root"/, 'React root element found'));
+    results.push(await testEndpoint(`${baseUrl}/src/main.jsx`, 'Main.jsx loads'));
+    results.push(await testEndpoint(`${baseUrl}/src/index.css`, 'CSS loads'));
+
+    const components = ['Hero', 'Features', 'Process', 'Pricing', 'ContactForm', 'Footer'];
+    for (const component of components) {
+      results.push(await testEndpoint(
+        `${baseUrl}/src/components/${component}.jsx`,
+        `${component} component loads`,
+      ));
     }
-  } catch (error) {
-    log(`✗ Failed to check React root: ${error.message}`, 'red');
-    results.push({ passed: false });
+
+    results.push(...await testSourceContains(baseUrl, '/src/App.jsx', [
+      { pattern: /react-router-dom/, name: 'React Router import' },
+      { pattern: /ClientPortalBoundary/, name: 'Generic client portal boundary' },
+      { pattern: /\/clients\/:clientSlug\/\*/, name: 'Generic client route path' },
+      { pattern: /export default App/, name: 'Default export' },
+    ]));
+
+    results.push(...await testSourceContains(baseUrl, '/src/clients/registry/tenantRegistry.js', [
+      { pattern: /gbautomation/, name: 'gbautomation tenant policy' },
+      { pattern: /jid5274/, name: 'jid5274 tenant policy' },
+      { pattern: /tenant-gbautomation/, name: 'gbautomation auth group' },
+      { pattern: /tenant-jid5274/, name: 'jid5274 auth group' },
+    ]));
+  } finally {
+    await stopViteServer(server);
   }
 
-  // Test 3: Main JavaScript entry point
-  results.push(await testEndpoint(`${baseUrl}/src/main.jsx`, 'Main.jsx loads'));
-
-  // Test 4: App component
-  results.push(await testEndpoint(`${baseUrl}/src/App.jsx`, 'App.jsx loads'));
-
-  // Test 5: CSS loads
-  results.push(await testEndpoint(`${baseUrl}/src/index.css`, 'CSS loads'));
-
-  // Test 6: Check all components exist
-  const components = ['Hero', 'Features', 'Process', 'Pricing', 'ContactForm', 'Footer'];
-
-  for (const component of components) {
-    results.push(await testEndpoint(
-      `${baseUrl}/src/components/${component}.jsx`,
-      `${component} component loads`
-    ));
-  }
-
-  // Test 7: Check for common JavaScript errors
-  try {
-    const response = await fetch(`${baseUrl}/src/App.jsx`);
-    const code = await response.text();
-
-    const commonIssues = [
-      { pattern: /react_jsx-dev-runtime|react-router-dom/, name: 'React runtime import' },
-      { pattern: /export default/, name: 'Default export' },
-    ];
-
-    for (const issue of commonIssues) {
-      if (issue.pattern.test(code)) {
-        log(`✓ ${issue.name} found in App.jsx`, 'green');
-        results.push({ passed: true });
-      } else {
-        log(`✗ ${issue.name} missing in App.jsx`, 'red');
-        results.push({ passed: false });
-      }
-    }
-  } catch (error) {
-    log(`✗ Failed to analyze App.jsx: ${error.message}`, 'red');
-    results.push({ passed: false });
-  }
-
-  // Summary
-  const passed = results.filter(r => r.passed).length;
+  const passed = results.filter((result) => result.passed).length;
   const total = results.length;
   const percentage = ((passed / total) * 100).toFixed(1);
 
@@ -154,18 +215,13 @@ async function runTests() {
 
   if (passed === total) {
     log('\n✅ ALL TESTS PASSED!', 'green');
-    log(`\n🌐 Your site is running at: ${baseUrl}`, 'blue');
-    log('\nOpen this URL in your browser to view the site.\n', 'blue');
   } else {
     log('\n❌ SOME TESTS FAILED', 'red');
-    log('\nPlease check the errors above and fix them.\n', 'yellow');
+    process.exitCode = 1;
   }
-
-  process.exitCode = passed === total ? 0 : 1;
 }
 
-// Run tests
-runTests().catch(error => {
+runTests().catch((error) => {
   log(`\n❌ Fatal error: ${error.message}`, 'red');
   console.error(error);
   process.exitCode = 1;

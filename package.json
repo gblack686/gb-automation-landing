@@ -15,7 +15,8 @@
     "youtube-intel:scrape:sample": "node scripts/youtube-intel/scrape.mjs --sample",
     "youtube-intel:scrape:dry": "node scripts/youtube-intel/scrape.mjs --dry-run",
     "amplify:sandbox": "ampx sandbox",
-    "amplify:deploy": "ampx sandbox --once"
+    "amplify:deploy": "ampx sandbox --once",
+    "test:tenant-registry": "node scripts/validate-tenant-registry-policy.mjs"
   },
   "dependencies": {
     "@aws-amplify/backend": "^1.17.0",
