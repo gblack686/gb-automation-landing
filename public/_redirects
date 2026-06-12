@@ -36,6 +36,11 @@
 # Mall Scanner API - Netlify function backed by Supabase when env is present.
 /api/mall-scanner/*       /.netlify/functions/mall-scanner/:splat       200!
 
+# Standalone branded static pages (resume + zero-touch philosophy).
+# Real files in public/; .html requests serve directly, extensionless via forced rewrite.
+/zero-touch-engineering    /zero-touch-engineering.html   200!
+/ai-resume                 /ai-resume.html                200!
+
 # SPA fallback for React Router deep links (no extension).
 # Order matters: this rule only applies after the asset rules above miss.
 /*                         /index.html                    200
