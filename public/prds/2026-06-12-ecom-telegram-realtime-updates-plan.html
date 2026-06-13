@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ecom Telegram realtime updates — single edited message per run | GBAutomation</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&display=swap');
+    :root {
+      --cream-bg: #F3F1E7;
+      --cream-panel: #E6E4D9;
+      --text-main: #191919;
+      --text-muted: #5C5C5C;
+      --text-light: #8C8A84;
+      --border: #D6D4C8;
+      --terracotta: #D97757;
+      --paper: #FFFFFF;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text-main);
+      background: var(--cream-bg);
+      font-size: 14px;
+      line-height: 1.58;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+    a { color: var(--text-main); text-decoration-color: var(--terracotta); text-underline-offset: 3px; }
+    button { font: inherit; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(214, 212, 200, .7);
+      background: rgba(243, 241, 231, .93);
+      backdrop-filter: blur(12px);
+    }
+    .topbar-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 13px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .brand-lockup { display: inline-flex; align-items: center; gap: 9px; min-height: 28px; }
+    .brand-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(217, 119, 87, .18);
+    }
+    .brand-dot::after { content: ""; width: 8px; height: 8px; border-radius: 999px; background: var(--terracotta); }
+    .brand-text {
+      font-family: Newsreader, serif;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-size: 12px;
+    }
+    .source-name { color: var(--text-muted); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    header {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 34px 24px 26px;
+    }
+    .eyebrow {
+      color: var(--terracotta);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    h1 {
+      max-width: 920px;
+      margin: 10px 0 18px;
+      font-family: Newsreader, serif;
+      font-size: clamp(30px, 4vw, 48px);
+      font-weight: 500;
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+    .summary-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+    .summary-meta li {
+      min-height: 30px;
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, .45);
+      padding: 5px 9px;
+      border-radius: 6px;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .taxonomy-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0 0 14px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      min-height: 23px;
+      padding: 2px 8px;
+      border: 1px solid;
+      border-radius: 999px;
+      line-height: 1;
+    }
+    .pill-facet {
+      font-size: 8.5px;
+      font-weight: 700;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+    .pill-value {
+      color: var(--text-main);
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .layout {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 22px 24px 56px;
+      display: grid;
+      grid-template-columns: 252px minmax(0, 1fr);
+      gap: 22px;
+      align-items: start;
+    }
+    .section-menu {
+      position: sticky;
+      top: 64px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(230, 228, 217, .62);
+      backdrop-filter: blur(12px);
+      padding: 12px;
+    }
+    .menu-title {
+      margin: 0 0 10px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .menu-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+    .menu-actions button,
+    .section-menu nav button {
+      min-height: 34px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .46);
+      color: rgba(25, 25, 25, .72);
+      cursor: pointer;
+      transition: border-color .18s ease, color .18s ease, background .18s ease;
+    }
+    .menu-actions button { padding: 0 8px; font-size: 11px; font-weight: 700; }
+    .section-menu nav { display: grid; gap: 5px; }
+    .section-menu nav button {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 30px 1fr;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      text-align: left;
+      font-size: 12px;
+      line-height: 1.25;
+    }
+    .section-menu nav button span { color: var(--terracotta); font-size: 10px; font-weight: 700; letter-spacing: .08em; }
+    .menu-actions button:hover,
+    .section-menu nav button:hover,
+    .section-menu nav button.active {
+      border-color: var(--terracotta);
+      background: rgba(255, 255, 255, .72);
+      color: var(--text-main);
+    }
+    .sections { display: grid; gap: 10px; }
+    details.section {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .5);
+      overflow: hidden;
+    }
+    details.section[open] { background: rgba(255, 255, 255, .68); }
+    details.section summary {
+      min-height: 52px;
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 12px 14px;
+      cursor: pointer;
+      list-style: none;
+    }
+    details.section summary::-webkit-details-marker { display: none; }
+    .section-index {
+      color: var(--terracotta);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+    }
+    .section-title {
+      font-family: Newsreader, serif;
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.18;
+    }
+    .section-count {
+      color: var(--text-light);
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .section-body {
+      border-top: 1px solid rgba(214, 212, 200, .75);
+      padding: 4px 18px 18px 68px;
+    }
+    .section-body h2,
+    .section-body h3,
+    .section-body h4,
+    .section-body h5 {
+      margin: 18px 0 8px;
+      color: var(--text-main);
+      font-family: Newsreader, serif;
+      font-weight: 500;
+      line-height: 1.2;
+    }
+    .section-body h2 { font-size: 19px; }
+    .section-body h3 { font-size: 17px; }
+    .section-body h4,
+    .section-body h5 {
+      font-family: Inter, sans-serif;
+      color: var(--text-light);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+    .section-body p,
+    .section-body li { color: var(--text-muted); font-size: 14px; line-height: 1.66; }
+    .section-body p { margin: 10px 0; }
+    .section-body ul,
+    .section-body ol { margin: 10px 0 10px 18px; padding: 0; }
+    .section-body li { margin: 5px 0; padding-left: 2px; }
+    .section-body .task { list-style: none; margin-left: -18px; display: flex; gap: 8px; align-items: flex-start; }
+    .section-body input[type="checkbox"] { margin-top: 4px; accent-color: var(--terracotta); }
+    code {
+      border: 1px solid rgba(217, 119, 87, .22);
+      border-radius: 4px;
+      background: rgba(217, 119, 87, .10);
+      padding: 1px 4px;
+      color: var(--text-main);
+      font-size: .92em;
+    }
+    pre {
+      overflow: auto;
+      margin: 12px 0;
+      border-radius: 8px;
+      background: #191919;
+      color: #F3F1E7;
+      padding: 14px;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+    pre code { border: 0; background: transparent; color: inherit; padding: 0; }
+    blockquote {
+      margin: 12px 0;
+      padding: 10px 12px;
+      border-left: 3px solid var(--terracotta);
+      background: rgba(230, 228, 217, .5);
+    }
+    hr { border: 0; border-top: 1px solid var(--border); margin: 18px 0; }
+    .table-wrap { overflow-x: auto; margin: 12px 0; border: 1px solid var(--border); border-radius: 8px; }
+    table { width: 100%; border-collapse: collapse; min-width: 560px; background: rgba(255, 255, 255, .5); }
+    th,
+    td { border-bottom: 1px solid rgba(214, 212, 200, .75); padding: 8px 10px; text-align: left; font-size: 12px; vertical-align: top; }
+    th { color: var(--text-main); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; }
+    tr:last-child td { border-bottom: 0; }
+    .empty { color: var(--text-light); font-style: italic; }
+    footer {
+      border-top: 1px solid rgba(214, 212, 200, .78);
+      background: rgba(230, 228, 217, .45);
+    }
+    .footer-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    .footer-label {
+      margin-bottom: 12px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .metadata-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .meta-item {
+      min-width: 0;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .42);
+      padding: 9px 10px;
+    }
+    .meta-item span {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .meta-item strong {
+      display: block;
+      overflow-wrap: anywhere;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.35;
+    }
+    @media (max-width: 860px) {
+      .topbar-inner,
+      header,
+      .layout,
+      .footer-inner { padding-left: 16px; padding-right: 16px; }
+      .layout { display: block; }
+      .section-menu { position: static; margin-bottom: 14px; }
+      .section-body { padding-left: 18px; }
+      .metadata-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 540px) {
+      .topbar-inner { align-items: flex-start; flex-direction: column; gap: 6px; }
+      details.section summary { grid-template-columns: 34px 1fr; }
+      .section-count { grid-column: 2; }
+      h1 { font-size: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand-lockup"><span class="brand-dot"></span><span class="brand-text">GBAutomation</span></div>
+      <div class="source-name">2026-06-12-ecom-telegram-realtime-updates-plan.md</div>
+    </div>
+  </div>
+  <header>
+    <div class="eyebrow">Plan Brief</div>
+    <h1>Ecom Telegram realtime updates — single edited message per run</h1>
+    <div class="taxonomy-pills"><span class="pill" style="background:rgba(75, 141, 196, 0.12);border-color:rgba(75, 141, 196, 0.42);"><span class="pill-facet" style="color:#4B8DC4;">service</span><span class="pill-value">telegram</span></span><span class="pill" style="background:rgba(90, 125, 140, 0.12);border-color:rgba(90, 125, 140, 0.42);"><span class="pill-facet" style="color:#5A7D8C;">domain</span><span class="pill-value">observability</span></span></div>
+    <ul class="summary-meta">
+      <li>Client: gbautomation</li><li>Priority: medium</li><li>Status: draft</li><li>ecom</li><li>domain/gbautomation</li>
+      <li>Owner: GBAutomation</li>
+      <li>Created: 2026-06-12</li>
+      <li>6 sections</li>
+      <li>448 words</li>
+    </ul>
+  </header>
+  <main class="layout">
+    <aside class="section-menu" aria-label="Plan sections">
+  <div class="menu-title">Sections</div>
+  <div class="menu-actions">
+    <button type="button" data-action="expand">Expand all</button>
+    <button type="button" data-action="collapse">Collapse all</button>
+  </div>
+  <nav><button type="button" data-target="overview"><span>01</span>Overview</button>
+<button type="button" data-target="design-principle"><span>02</span>Design principle</button>
+<button type="button" data-target="message-contract-3-lines-max-dense"><span>03</span>Message contract (3 lines max, dense)</button>
+<button type="button" data-target="implementation-3-small-pieces"><span>04</span>Implementation (3 small pieces)</button>
+<button type="button" data-target="rate-noise-budget"><span>05</span>Rate/noise budget</button>
+<button type="button" data-target="validation"><span>06</span>Validation</button></nav>
+</aside>
+    <div class="sections">
+      <details class="section" id="overview" open>
+  <summary>
+    <span class="section-index">01</span>
+    <span class="section-title">Overview</span>
+    <span class="section-count">212 words</span>
+  </summary>
+  <div class="section-body">
+    <p><strong>Design principle:</strong> start (members get exactly one notification); every ~75s a sidecar reads <code>progress_heartbeat.json</code> and calls <code>editMessageText</code> on the same <code>message_id</code>; the final edit carries the verdict. No scroll spam, fully realtime, and Telegram doesn&#x27;t re-notify on edits. Separate one-shot lines only for block escalations and production-gate transitions.</p>
+<p><strong>Message contract (3 lines max, dense):</strong> 🕷 vans-com #0035 ⏳14m 🔁1/2 🛍 312/2000 · 💰 287 · 📄 3/42 · 🧭 scrolling ⏰ cap 45m · hb 01:52:14</p>
+<p><strong>Implementation (3 small pieces):</strong> 1. <strong><code>ecom_runtime/notify.py</code></strong>: add <code>edit_message(token, chat_id, message_id, html)</code> (editMessageText, swallow &quot;message is not modified&quot; errors) + <code>build_live_status_html(heartbeat, checkpoint, target)</code> for the 3-line format. 2. <strong><code>ecom_runtime/cli.py live-status</code> subcommand</strong>: loop — read <code>progress_heartbeat.json</code> + <code>scrape_checkpoint.json</code> every <code>--interval 75</code>; first tick <code>sendMessage</code> (store <code>{message_id, chat_id}</code> in <code>&lt;run-dir&gt;/telegram_live_message.json</code> — survives runner attempts since the run dir is shared); subsequent ticks edit; exit + final edit when the runner pid dies and <code>summary.json</code>/<code>runs.jsonl</code> verdict lands. <code>--dry-run</code> prints instead of sending. 3. <strong><code>vans.sh</code></strong>: launch the sidecar alongside the runner (<code>python3 -m ecom_runtime.cli live-status --run-dir outputs/crawl/vans-com --interval 75 &amp;</code>), reusing the existing lock lifecycle. Gate transitions: a tiny <code>gate_notify</code> step appended to the runner epilogue compares <code>ecom_website_production_status</code> against a state file (same edge-trigger pattern as <code>scripts/kanban_crash_storm_alert.py</code>) and posts 🏁 lines on change.</p>
+  </div>
+</details>
+<details class="section" id="design-principle">
+  <summary>
+    <span class="section-index">02</span>
+    <span class="section-title">Design principle</span>
+    <span class="section-count">92 words</span>
+  </summary>
+  <div class="section-body">
+    <p><strong>One message per run, edited in place.</strong> <code>sendMessage</code> fires once at run start (members get exactly one notification); every ~75s a sidecar reads <code>progress_heartbeat.json</code> and calls <code>editMessageText</code> on the same <code>message_id</code>; the final edit carries the verdict. No scroll spam, fully realtime, and Telegram doesn&#x27;t re-notify on edits. Separate one-shot lines only for block escalations and production-gate transitions.</p>
+<p>Channel: the existing <strong>ecom log channel</strong> — <code>ecom_runtime/notify.py:resolve_telegram_config(channel=&quot;log&quot;)</code> (<code>ECOM_TELEGRAM_LOG_CHAT_ID</code> / AWS <code>log_chat_id</code>) already resolves it, and <code>_post_telegram</code> already returns <code>message_id</code> (notify.py:229). The missing primitive is one function: <code>edit_message()</code>.</p>
+  </div>
+</details>
+<details class="section" id="message-contract-3-lines-max-dense">
+  <summary>
+    <span class="section-index">03</span>
+    <span class="section-title">Message contract (3 lines max, dense)</span>
+    <span class="section-count">106 words</span>
+  </summary>
+  <div class="section-body">
+    <p><strong>Live run (edited in place):</strong></p>
+<pre><code>🕷 vans-com #0035 ⏳14m 🔁1/2
+🛍 312/2000 · 💰 287 · 📄 3/42 · 🧭 scrolling
+⏰ cap 45m · hb 01:52:14</code></pre>
+<p><strong>Final — green:</strong></p>
+<pre><code>🕷 vans-com #0035 ✅ 21m 🔁2/2
+🛍 2021 · 💰 2021 · 📸 1998 · Δ37
+💾 mall_items ✓ · 🧾 receipt ✓</code></pre>
+<p><strong>Final — blocked:</strong></p>
+<pre><code>🕷 vans-com #0035 🧱 PX 45m⏰ 🔁2/2
+🛍 0 · 🧭 warmup_retry_2 · ↪️ redirect_trap×1
+→ 🔬 anti-bot research queued</code></pre>
+<p><strong>Gate transition (one-shot, edge-triggered):</strong></p>
+<pre><code>🏁 vans-com 🟡 5/8 OK(8h) → watch_green
+🏁 vans-com 🟢 production_green_24h 24/24 ✅</code></pre>
+<p><strong>Crash storm (reuses kanban_crash_storm_alert format):</strong></p>
+<pre><code>🌀 vans-com 23× crashes/60m — parked, see runbook</code></pre>
+<p>Vocabulary: 🕷 run · ⏳ elapsed · 🔁 attempt x/x · 🛍 products x/target · 💰 priced · 📸 photos · 📄 pages x/x · Δ changes · 🧭 phase · ⏰ wallclock cap · 🧱 bot wall · ↪️ redirect trap · 💾 persistence · 🧾 receipt · 🏁 gate · 🟢🟡🔴 status · 🌀 crash storm · 🔬 escalation.</p>
+  </div>
+</details>
+<details class="section" id="implementation-3-small-pieces">
+  <summary>
+    <span class="section-index">04</span>
+    <span class="section-title">Implementation (3 small pieces)</span>
+    <span class="section-count">136 words</span>
+  </summary>
+  <div class="section-body">
+    <ol>
+<li><strong><code>ecom_runtime/notify.py</code></strong>: add `edit_message(token, chat_id,</li>
+<p>message_id, html)<code> (editMessageText, swallow &quot;message is not modified&quot; errors) + </code>build_live_status_html(heartbeat, checkpoint, target)` for the 3-line format.</p>
+<li><strong><code>ecom_runtime/cli.py live-status</code> subcommand</strong>: loop — read</li>
+<p><code>progress_heartbeat.json</code> + <code>scrape_checkpoint.json</code> every <code>--interval 75</code>; first tick <code>sendMessage</code> (store <code>{message_id, chat_id}</code> in <code>&lt;run-dir&gt;/telegram_live_message.json</code> — survives runner attempts since the run dir is shared); subsequent ticks edit; exit + final edit when the runner pid dies and <code>summary.json</code>/<code>runs.jsonl</code> verdict lands. <code>--dry-run</code> prints instead of sending.</p>
+<li><strong><code>vans.sh</code></strong>: launch the sidecar alongside the runner</li>
+<p>(<code>python3 -m ecom_runtime.cli live-status --run-dir outputs/crawl/vans-com --interval 75 &amp;</code>), reusing the existing lock lifecycle. Gate transitions: a tiny <code>gate_notify</code> step appended to the runner epilogue compares <code>ecom_website_production_status</code> against a state file (same edge-trigger pattern as <code>scripts/kanban_crash_storm_alert.py</code>) and posts 🏁 lines on change.</p>
+</ol>
+  </div>
+</details>
+<details class="section" id="rate-noise-budget">
+  <summary>
+    <span class="section-index">05</span>
+    <span class="section-title">Rate/noise budget</span>
+    <span class="section-count">41 words</span>
+  </summary>
+  <div class="section-body">
+    <ul>
+<li>1 notification per run (the start message); edits are silent.</li>
+<li>≤1 edit/75s per run, well under Telegram edit limits.</li>
+<li>One-shot lines only on: block escalation, gate transition, crash storm.</li>
+<li>Worst case per hour: 1 message + ~36 silent edits + ≤2 one-shots.</li>
+</ul>
+  </div>
+</details>
+<details class="section" id="validation">
+  <summary>
+    <span class="section-index">06</span>
+    <span class="section-title">Validation</span>
+    <span class="section-count">53 words</span>
+  </summary>
+  <div class="section-body">
+    <ol>
+<li><code>live-status --dry-run</code> against a finished run dir → 3-line renders.</li>
+<li>One live vans run → confirm a single message evolves start→final in</li>
+<p>the log channel (no notification spam on edits).</p>
+<li>Kill the runner mid-run → sidecar&#x27;s final edit shows ⏰/🧱 verdict.</li>
+<li>Gate state file flip → exactly one 🏁 line, no repeats next tick.</li>
+</ol>
+  </div>
+</details>
+    </div>
+  </main>
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-label">Metadata</div>
+      <div class="metadata-grid">
+        <div class="meta-item"><span>Source</span><strong>C:\Users\gblac\OneDrive\Desktop\gbauto\gbautomation\second-brain\plans\2026-06-12-ecom-telegram-realtime-updates-plan.md</strong></div>
+<div class="meta-item"><span>Generated</span><strong>2026-06-12T18:45:48-07:00</strong></div>
+<div class="meta-item"><span>Source modified</span><strong>2026-06-12T18:45:47-07:00</strong></div>
+<div class="meta-item"><span>Source size</span><strong>4,482 bytes</strong></div>
+<div class="meta-item"><span>Word count</span><strong>448</strong></div>
+<div class="meta-item"><span>Sections</span><strong>6</strong></div>
+<div class="meta-item"><span>Renderer</span><strong>resources/skills/netlify-cli/scripts/render_plan_page.py</strong></div>
+<div class="meta-item"><span>Description</span><strong>Plan for dense realtime run updates to the existing ecom Telegram log channel: one sendMessage per run edited in place every ~75s from progress_heartbeat.json, 3-line emoji/x-of-x format, edge-triggered production-gate transitions. Builds on ecom_runtime/notify.py which already resolves the log channel and returns message_id.</strong></div>
+<div class="meta-item"><span>Date</span><strong>2026-06-12</strong></div>
+<div class="meta-item"><span>Type</span><strong>plan</strong></div>
+<div class="meta-item"><span>Status</span><strong>draft</strong></div>
+<div class="meta-item"><span>Client</span><strong>gbautomation</strong></div>
+<div class="meta-item"><span>Priority</span><strong>medium</strong></div>
+<div class="meta-item"><span>Tags</span><strong>plan, ecom, telegram, observability, domain/gbautomation</strong></div>
+<div class="meta-item"><span>Related</span><strong>[[2026-06-12-vans-lane-production-cutover-fire-drill]], [[2026-06-12-crawl4ai-browser-harness-crawl-hardening-research]]</strong></div>
+      </div>
+    </div>
+  </footer>
+  <script>
+    const sections = Array.from(document.querySelectorAll('details.section'));
+    const menuButtons = Array.from(document.querySelectorAll('[data-target]'));
+    const setActive = (id) => {
+      menuButtons.forEach((button) => button.classList.toggle('active', button.dataset.target === id));
+    };
+    menuButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const section = document.getElementById(button.dataset.target);
+        if (!section) return;
+        section.open = true;
+        setActive(section.id);
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+    document.querySelector('[data-action="expand"]').addEventListener('click', () => sections.forEach((section) => section.open = true));
+    document.querySelector('[data-action="collapse"]').addEventListener('click', () => sections.forEach((section, index) => section.open = index === 0));
+    sections.forEach((section) => {
+      section.addEventListener('toggle', () => {
+        if (section.open) setActive(section.id);
+      });
+    });
+    if (sections[0]) setActive(sections[0].id);
+  </script>
+</body>
+</html>

@@ -22,6 +22,17 @@
     "public_url": "https://gbautomation.xyz/prds/2026-06-12-tac-kanban-resilience-hardening-plan"
   },
   {
+    "slug": "2026-06-12-ecom-telegram-realtime-updates-plan",
+    "title": "Ecom Telegram realtime updates \u2014 single edited message per run",
+    "date": "2026-06-12",
+    "status": "draft",
+    "client": "gbautomation",
+    "priority": "medium",
+    "description": "Plan for dense realtime run updates to the existing ecom Telegram log channel: one sendMessage per run edited in place every ~75s from progress_heartbeat.json, 3-line emoji/x-of-x format, edge-triggered production-gate transitions. Builds on ecom_runtime/notify.py which already resolves the log channel and returns message_id.",
+    "category": "plan",
+    "public_url": "https://gbautomation.xyz/prds/2026-06-12-ecom-telegram-realtime-updates-plan"
+  },
+  {
     "slug": "2026-06-04-harness-per-session-git-worktree-plan",
     "title": "Plan: Per-session git worktrees across harnesses",
     "date": "2026-06-04",
