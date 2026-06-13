@@ -1,0 +1,143 @@
+{
+  "schema_version": "gbauto-archon-dag.v1",
+  "standard": "archon-inspired-static-report",
+  "source": "report-package multi-agent DAG report",
+  "nodes": [
+    {
+      "id": "operator.goal",
+      "label": "Operator Goal",
+      "nodeType": "approval",
+      "status": "completed",
+      "summary": "Approve the Mall Scanner proof target and report package direction.",
+      "owner": "operator",
+      "evidence": "multi-agent-dag-report.html"
+    },
+    {
+      "id": "agent.tac_supervisor",
+      "label": "TAC Supervisor",
+      "nodeType": "agent",
+      "status": "running",
+      "summary": "Routes agents, keeps gates visible, and ties proof to reports.",
+      "depends_on": [
+        "operator.goal"
+      ],
+      "owner": "tac",
+      "evidence": "multi-agent-dag-report.html"
+    },
+    {
+      "id": "agent.prd",
+      "label": "PRD Agent",
+      "nodeType": "agent",
+      "status": "completed",
+      "summary": "Defines product scope, requirements, and acceptance criteria.",
+      "depends_on": [
+        "agent.tac_supervisor"
+      ],
+      "owner": "agent-team",
+      "evidence": "prd.html"
+    },
+    {
+      "id": "agent.architecture",
+      "label": "Architecture Agent",
+      "nodeType": "agent",
+      "status": "completed",
+      "summary": "Explains app, ecom runtime, Supabase, and report package ownership.",
+      "depends_on": [
+        "agent.tac_supervisor"
+      ],
+      "owner": "agent-team",
+      "evidence": "architecture-report.html"
+    },
+    {
+      "id": "agent.build",
+      "label": "Build Agent",
+      "nodeType": "agent",
+      "status": "completed",
+      "summary": "Records code state, generated files, tests, and next build proof.",
+      "depends_on": [
+        "agent.tac_supervisor"
+      ],
+      "owner": "agent-team",
+      "evidence": "build-report.html"
+    },
+    {
+      "id": "tool.pytest",
+      "label": "Focused Tests",
+      "nodeType": "tool",
+      "status": "completed",
+      "summary": "35 focused ecom tests passed.",
+      "depends_on": [
+        "agent.build"
+      ],
+      "owner": "codex",
+      "duration": "1.63s",
+      "evidence": "build-report.html"
+    },
+    {
+      "id": "agent.telemetry",
+      "label": "Telemetry Agent",
+      "nodeType": "agent",
+      "status": "ready_for_review",
+      "summary": "Carries prior Langfuse signal until the next live trace pull.",
+      "depends_on": [
+        "agent.tac_supervisor"
+      ],
+      "owner": "agent-team",
+      "evidence": "telemetry-report.html"
+    },
+    {
+      "id": "artifact.report_package",
+      "label": "HTML Report Package",
+      "nodeType": "artifact",
+      "status": "completed",
+      "summary": "PRD, architecture, build, telemetry, sprint, and DAG reports.",
+      "depends_on": [
+        "agent.prd",
+        "agent.architecture",
+        "agent.build",
+        "agent.telemetry"
+      ],
+      "owner": "report-package",
+      "evidence": "index.html"
+    },
+    {
+      "id": "gate.live_writes",
+      "label": "Live Writes Gate",
+      "nodeType": "approval",
+      "status": "pending",
+      "summary": "Operator decides when dry-run rows can become live Supabase rows.",
+      "depends_on": [
+        "artifact.report_package"
+      ],
+      "owner": "operator",
+      "when": "approved live target exists",
+      "evidence": "multi-agent-dag-report.html#gates-and-decisions"
+    },
+    {
+      "id": "gate.cron_install",
+      "label": "Cron Install Gate",
+      "nodeType": "approval",
+      "status": "pending",
+      "summary": "Mac Mini recurring runner waits for target and live-send approval.",
+      "depends_on": [
+        "artifact.report_package"
+      ],
+      "owner": "operator/runtime-agent",
+      "when": "proof target selected",
+      "evidence": "multi-agent-dag-report.html#gates-and-decisions"
+    },
+    {
+      "id": "artifact.next_proof_run",
+      "label": "24-Hour Proof Run",
+      "nodeType": "artifact",
+      "status": "pending",
+      "summary": "Capture hourly receipts and live trace spans for one approved target.",
+      "depends_on": [
+        "gate.live_writes",
+        "gate.cron_install"
+      ],
+      "owner": "ecom-runtime",
+      "evidence": "multi-agent-dag-report.html#next-proof-run"
+    }
+  ]
+}

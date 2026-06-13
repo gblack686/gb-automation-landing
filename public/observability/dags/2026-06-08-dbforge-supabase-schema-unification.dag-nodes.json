@@ -1,0 +1,108 @@
+{
+  "schema_version": "gbauto-archon-dag.v1",
+  "standard": "archon-inspired-static-report",
+  "source": "DBForge Supabase schema unification TAC route",
+  "nodes": [
+    {
+      "id": "operator.goal",
+      "label": "Operator Goal",
+      "nodeType": "approval",
+      "status": "completed",
+      "summary": "Turn the schema cleanup plan into a TAC-governed PRD and report package.",
+      "owner": "operator",
+      "evidence": "prd.html"
+    },
+    {
+      "id": "agent.tac_supervisor",
+      "label": "TAC Supervisor",
+      "nodeType": "agent",
+      "status": "running",
+      "summary": "Routes PRD, repair, validation, and apply gates.",
+      "depends_on": ["operator.goal"],
+      "owner": "tac",
+      "evidence": "multi-agent-dag-report.html"
+    },
+    {
+      "id": "agent.prd",
+      "label": "PRD Agent",
+      "nodeType": "agent",
+      "status": "completed",
+      "summary": "Converts the schema plan into approved PRD sections.",
+      "depends_on": ["agent.tac_supervisor"],
+      "owner": "agent-team",
+      "evidence": "prd.html"
+    },
+    {
+      "id": "agent.dbforge_scan",
+      "label": "DBForge Scan Agent",
+      "nodeType": "agent",
+      "status": "completed",
+      "summary": "Scanned live schema, RLS, migration ledger, status vocabulary, and storage metadata.",
+      "depends_on": ["agent.tac_supervisor"],
+      "owner": "dbforge",
+      "evidence": "C:/Users/gblac/OneDrive/Desktop/gbauto/gbautomation/second-brain/plans/2026-06-08-dbforge-supabase-schema-unification-plan.md"
+    },
+    {
+      "id": "agent.report",
+      "label": "Report Agent",
+      "nodeType": "agent",
+      "status": "completed",
+      "summary": "Produces PRD, build readiness report, DAG report, SVG hyperframes, and email body.",
+      "depends_on": ["agent.prd", "agent.dbforge_scan"],
+      "owner": "report-package",
+      "evidence": "index.html"
+    },
+    {
+      "id": "agent.migration_repair",
+      "label": "Migration Repair Agent",
+      "nodeType": "agent",
+      "status": "pending",
+      "summary": "Repairs the pending migration and adds status-map/view-security gates.",
+      "depends_on": ["agent.report"],
+      "owner": "dbforge/tac",
+      "evidence": "build-report.html"
+    },
+    {
+      "id": "tool.sql_static_check",
+      "label": "SQL Static Check",
+      "nodeType": "tool",
+      "status": "pending",
+      "summary": "Confirms no missing table references and checks idempotent SQL shape.",
+      "depends_on": ["agent.migration_repair"],
+      "owner": "tac-validator",
+      "evidence": "build-report.html"
+    },
+    {
+      "id": "tool.branch_validation",
+      "label": "Branch/Local Validation",
+      "nodeType": "tool",
+      "status": "pending",
+      "summary": "Runs migration against local or branch database where available.",
+      "depends_on": ["tool.sql_static_check"],
+      "owner": "dbforge",
+      "evidence": "build-report.html"
+    },
+    {
+      "id": "gate.production_apply",
+      "label": "Production DDL Gate",
+      "nodeType": "approval",
+      "status": "blocked",
+      "summary": "Production apply waits for explicit operator approval after validation.",
+      "depends_on": ["tool.branch_validation"],
+      "owner": "operator",
+      "when": "operator approves additive migration apply",
+      "evidence": "build-report.html"
+    },
+    {
+      "id": "artifact.readback_receipt",
+      "label": "Readback Receipt",
+      "nodeType": "artifact",
+      "status": "pending",
+      "summary": "Records object existence, RLS/policies, view counts, and status-map coverage.",
+      "depends_on": ["gate.production_apply"],
+      "owner": "dbforge",
+      "evidence": "build-report.html"
+    }
+  ]
+}
+

@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>DBForge Supabase Schema Unification TAC DAG</title><style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap');
+:root{--sans:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--serif:Newsreader,Georgia,serif;--mono:"JetBrains Mono",Consolas,monospace;--ink:#191919;--muted:#5C5C5C;--line:#D6D4C8;--line-soft:rgba(214,212,200,.75);--cream:#F3F1E7;--panel:#E6E4D9;--panel-soft:rgba(230,228,217,.55);--accent:#8A5FBF}
+*{box-sizing:border-box}body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--cream);font-size:14px;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}html{scroll-behavior:smooth}.topbar{border-bottom:1px solid var(--line);background:rgba(243,241,231,.88)}.topbar-inner,header,main{max-width:1180px;margin:0 auto}.topbar-inner{padding:10px 24px;display:flex;justify-content:space-between;gap:16px;align-items:center}.brand-lockup{display:flex;gap:8px;align-items:center;font-weight:700;font-size:12px}.brand-dot{width:9px;height:9px;border-radius:999px;background:var(--accent)}.source-name{font-size:12px;color:var(--muted)}header{padding:34px 24px 8px}main{padding:18px 24px 72px}.eyebrow{color:var(--accent);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}h1{font-family:var(--serif);font-weight:500;margin:10px 0 16px;font-size:42px;line-height:1.04;letter-spacing:-.01em}h2,h3,h4{font-family:var(--serif);font-weight:500;color:var(--ink)}h3{font-size:17px;margin:18px 0 8px}h4{font-size:14px;margin:18px 0 8px;color:var(--ink)}p{line-height:1.62;color:rgba(25,25,25,.74);margin:8px 0}a{color:var(--accent);text-underline-offset:2px}.sub{max-width:760px;color:rgba(25,25,25,.68)}.nav{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0;padding:0;list-style:none}.nav a{border:1px solid var(--line);background:rgba(255,255,255,.46);border-radius:999px;padding:5px 10px;font-size:11px;color:rgba(25,25,25,.68);text-decoration:none}.brief-layout{display:grid;grid-template-columns:248px minmax(0,1fr);gap:24px;align-items:start}.toc{position:sticky;top:18px;background:rgba(255,255,255,.48);border:1px solid var(--line);border-radius:8px;padding:14px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}.toc h2{font-family:var(--sans);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:rgba(25,25,25,.45);margin:0 0 8px}.toc-actions{display:flex;gap:6px;margin-bottom:8px}.toc-actions button{flex:1;border:1px solid var(--line);background:#fff;border-radius:6px;padding:6px;font:inherit;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);cursor:pointer}.toc-actions button:hover{border-color:var(--accent);color:var(--accent)}.toc a{display:grid;grid-template-columns:24px 1fr;gap:6px;padding:7px 0;color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line-soft)}.toc a:last-child{border-bottom:0}.toc a:hover,.toc a.active{color:var(--accent)}.toc a span{color:var(--accent);font-weight:700;font-size:11px}.toc a strong{font-size:12.5px;font-weight:500}.toc a em{grid-column:2;color:rgba(25,25,25,.4);font-size:10.5px;font-style:normal}.sections{display:grid;gap:10px}.section{background:rgba(255,255,255,.48);border:1px solid var(--line);border-radius:8px;overflow:hidden}.section[open]{background:rgba(255,255,255,.58)}.section summary{display:grid;grid-template-columns:38px 1fr auto;gap:10px;align-items:center;padding:14px 18px;cursor:pointer;list-style:none}.section summary::-webkit-details-marker{display:none}.section-index{color:var(--accent);font-size:11px;font-weight:700;letter-spacing:.08em;font-family:var(--mono)}.section-title{font-family:var(--serif);font-size:18px;font-weight:500}.section-meta{color:var(--muted);font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}.section-body{border-top:1px solid var(--line-soft);padding:6px 20px 20px}table{width:100%;border-collapse:collapse;font-size:12.5px;margin:8px 0}th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line-soft);vertical-align:top}th{background:var(--panel-soft);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(25,25,25,.55)}tbody th{background:transparent;width:172px;color:rgba(25,25,25,.55);font-weight:600}ul,ol{margin:8px 0 8px 20px;padding:0}li{margin:5px 0;line-height:1.58;color:rgba(25,25,25,.74)}code{font-family:var(--mono);font-size:12px;background:rgba(230,228,217,.55);border:1px solid rgba(214,212,200,.8);border-radius:4px;padding:1px 5px}pre{background:#191919;color:#F3F1E7;border-radius:8px;padding:14px;overflow:auto}pre code{background:transparent;border:0;color:inherit;padding:0}blockquote{border-left:3px solid var(--accent);margin:14px 0;padding:2px 0 2px 14px;color:rgba(25,25,25,.68)}@media(max-width:900px){.brief-layout{grid-template-columns:1fr}.toc{position:static}}@media(max-width:720px){h1{font-size:32px}.section summary{grid-template-columns:32px 1fr}.section-meta{grid-column:2}.topbar-inner{display:block}header,main{padding-left:18px;padding-right:18px}}
+
+.visual-package{position:relative;z-index:1;margin:0 0 14px}.visual-package-title{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:0 0 8px}.visual-package-title h2{font-family:var(--sans,Inter,sans-serif);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:rgba(25,25,25,.45);margin:0}.visual-package-title span{font-size:10.5px;color:rgba(25,25,25,.45);font-weight:600}.hypeframes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;overflow:visible}.hypeframe{position:relative;background:rgba(255,255,255,.58);border:1px solid var(--line,#D6D4C8);border-radius:8px;overflow:hidden;transition:box-shadow .18s ease,border-color .18s ease,opacity .18s ease,background .18s ease}.hypeframe:hover,.hypeframe:focus-within{border-color:var(--accent,var(--terracotta,#3D6EA8));box-shadow:0 12px 28px rgba(25,25,25,.16);outline:0}.hypeframe[data-feedback-state="approved"]{border-color:rgba(79,157,105,.58);background:rgba(79,157,105,.08)}.hypeframe[data-feedback-state="revise"]{border-color:rgba(192,138,62,.58);background:rgba(192,138,62,.08)}.hypeframe[data-feedback-state="rejected"]{border-color:rgba(185,74,72,.55);background:rgba(185,74,72,.07)}.hypeframe-open{display:block;width:100%;padding:0;border:0;background:transparent;cursor:zoom-in;text-align:inherit}.hypeframe-open:focus-visible{outline:2px solid var(--accent,var(--terracotta,#3D6EA8));outline-offset:-3px}.hypeframe svg{display:block;width:100%;height:auto}.hypeframe-feedback{display:none}.hypeframe-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.hypeframe-tools{display:flex;gap:6px;justify-content:space-between;align-items:center}.feedback-btn,.feedback-export{min-height:29px;border:1px solid var(--line,#D6D4C8);border-radius:6px;background:rgba(255,255,255,.72);color:rgba(25,25,25,.66);font:inherit;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;cursor:pointer}.feedback-btn:hover,.feedback-export:hover{border-color:var(--accent,var(--terracotta,#3D6EA8));color:var(--accent,var(--terracotta,#3D6EA8))}.feedback-btn.active[data-feedback="approved"]{background:#4F9D69;border-color:#4F9D69;color:#fff}.feedback-btn.active[data-feedback="revise"]{background:#C08A3E;border-color:#C08A3E;color:#fff}.feedback-btn.active[data-feedback="rejected"]{background:#B94A48;border-color:#B94A48;color:#fff}.feedback-comment{width:100%;min-height:120px;resize:vertical;border:1px solid var(--line,#D6D4C8);border-radius:6px;background:rgba(255,255,255,.72);padding:8px 9px;color:rgba(25,25,25,.72);font:inherit;font-size:12px;line-height:1.4}.feedback-status{font-size:10.5px;color:rgba(25,25,25,.48);font-weight:650}.modal{position:fixed;inset:0;background:rgba(25,25,25,.28);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);display:grid;place-items:center;padding:24px;z-index:1000}.modal-inner{width:min(90vw,90vh);height:min(90vw,90vh);background:#F3F1E7;border:1px solid var(--accent,var(--terracotta,#3D6EA8));border-radius:12px;overflow:hidden;box-shadow:0 32px 90px rgba(25,25,25,.34)}.modal-inner svg{display:block;width:100%;height:100%}@media(max-width:900px){.hypeframes{grid-template-columns:1fr}.modal-inner{width:min(92vw,86vh);height:min(92vw,86vh)}}
+
+.taxonomy-pills{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 0}.taxonomy-pill{border:1px solid rgba(25,25,25,.14);background:rgba(255,255,255,.46);border-radius:999px;padding:5px 10px;font-size:11px;color:rgba(25,25,25,.72);display:inline-flex;align-items:center;min-height:25px;font-weight:650}.taxonomy-pill:nth-child(1){background:rgba(217,119,87,.13);border-color:rgba(217,119,87,.32);color:#9A5139}.taxonomy-pill:nth-child(2){background:rgba(79,157,105,.13);border-color:rgba(79,157,105,.32);color:#346C48}.taxonomy-pill:nth-child(3){background:rgba(61,110,168,.13);border-color:rgba(61,110,168,.30);color:#2B5686}.taxonomy-pill:nth-child(4){background:rgba(138,95,191,.13);border-color:rgba(138,95,191,.30);color:#5F3E90}.taxonomy-pill:nth-child(5){background:rgba(192,138,62,.13);border-color:rgba(192,138,62,.30);color:#815918}.taxonomy-pill:nth-child(6){background:rgba(185,74,72,.10);border-color:rgba(185,74,72,.24);color:#8A302E}
+
+.report-metadata{margin:22px auto 0;max-width:1180px;border-top:1px solid var(--line,#D6D4C8);padding:22px 24px 36px}.report-metadata h2{margin:0 0 12px;font-family:var(--sans,Inter,sans-serif);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(25,25,25,.45)}.metadata-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.meta-item{border:1px solid var(--line,#D6D4C8);border-radius:8px;background:rgba(255,255,255,.42);padding:10px 12px;min-width:0}.meta-item span{display:block;margin-bottom:4px;font-size:9.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:rgba(25,25,25,.43)}.meta-item strong{display:block;font-size:12px;font-weight:600;color:rgba(25,25,25,.70);overflow-wrap:anywhere}.meta-item code{font-size:11.5px}@media(min-width:901px){body{zoom:1.25}.topbar-inner,header,main,.report-metadata{max-width:944px}}@media(max-width:900px){.metadata-grid{grid-template-columns:1fr 1fr}}@media(max-width:540px){.metadata-grid{grid-template-columns:1fr}}
+
+.toc,.section-menu,.section,details.section,.report-metadata,.hypeframe,.section-body img,.taxonomy-pill,.nav a{transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease,background .18s ease,color .18s ease}
+.toc:hover,.section-menu:hover,.report-metadata:hover{border-color:var(--accent,var(--terracotta,#D97757));background:rgba(255,255,255,.58);box-shadow:0 10px 24px rgba(25,25,25,.08)}
+.section:hover,details.section:hover{border-color:var(--accent,var(--terracotta,#D97757));background:rgba(255,255,255,.62);box-shadow:0 12px 28px rgba(25,25,25,.10);transform:translateY(-2px)}
+.section summary:focus-visible,details.section summary:focus-visible,.toc-actions button:focus-visible,.menu-actions button:focus-visible,.section-menu nav button:focus-visible,.toc a:focus-visible,.nav a:focus-visible{outline:2px solid var(--accent,var(--terracotta,#D97757));outline-offset:2px}
+.toc-actions button:hover,.menu-actions button:hover,.section-menu nav button:hover,.toc a:hover,.toc a.active,.nav a:hover{border-color:var(--accent,var(--terracotta,#D97757));background:rgba(255,255,255,.72);color:var(--accent,var(--terracotta,#D97757))}
+.taxonomy-pill:hover,.nav a:hover{border-color:var(--accent,var(--terracotta,#D97757));box-shadow:0 8px 18px rgba(25,25,25,.08);transform:translateY(-1px)}
+.hypeframe{background:rgba(255,255,255,.58)}
+.hypeframe:hover,.hypeframe:focus-visible{transform:translateY(-2px);border-color:var(--accent,var(--terracotta,#D97757));box-shadow:0 12px 28px rgba(25,25,25,.16);outline:0}
+.hypeframe>svg{width:100%;height:auto;aspect-ratio:1/1;object-fit:contain}
+.section-body img{display:block;width:100%;max-width:760px;height:auto;aspect-ratio:760/260;object-fit:contain;margin:14px 0;border:1px solid var(--line,#D6D4C8);border-radius:8px;background:#F3F1E7}
+.section-body img:hover{border-color:var(--accent,var(--terracotta,#D97757));box-shadow:0 12px 28px rgba(25,25,25,.12);transform:translateY(-2px)}
+@media(prefers-reduced-motion:reduce){.toc,.section-menu,.section,details.section,.report-metadata,.hypeframe,.section-body img,.taxonomy-pill,.nav a{transition:none}.section:hover,details.section:hover,.hypeframe:hover,.hypeframe:focus-visible,.section-body img:hover:hover,.taxonomy-pill:hover,.nav a:hover{transform:none}}
+</style></head>
+<body><div class="topbar"><div class="topbar-inner"><div class="brand-lockup"><span class="brand-dot"></span><span class="brand-text">GBAutomation</span></div><div class="source-name">multi-agent-dag-report.html</div></div></div>
+<header><div class="eyebrow">Multi-Agent DAG Report - GBAutomation Report Package</div><h1>DBForge Supabase Schema Unification TAC DAG</h1><p class="sub">Agent handoffs, trace spans, gates, and TAC build proof</p><div class="taxonomy-pills" aria-label="Report category pills"><span class="taxonomy-pill">multi-agent-dag-report</span><span class="taxonomy-pill">tac</span><span class="taxonomy-pill">dbforge</span><span class="taxonomy-pill">supabase</span><span class="taxonomy-pill">schema</span><span class="taxonomy-pill">migration</span><span class="taxonomy-pill">approval</span><span class="taxonomy-pill">Autonomous AI Agents</span><span class="taxonomy-pill">Software Development</span></div><nav class="nav"><a href="index.html">Index</a><a href="prd.html">PRD</a><a href="build-report.html">Build Report</a><a href="multi-agent-dag-report.html">Multi-Agent DAG Report</a></nav></header>
+<main><div class="brief-layout"><aside class="toc"><h2>Sections</h2><div class="toc-actions"><button type="button" data-action="expand">Expand all</button><button type="button" data-action="collapse">Collapse all</button></div><a href="#section-01" data-target="section-01"><span>01</span><strong>Overview</strong><em>25 words</em></a>
+<a href="#section-02" data-target="section-02"><span>02</span><strong>Agent Team</strong><em>76 words</em></a>
+<a href="#section-03" data-target="section-03"><span>03</span><strong>Gates And Decisions</strong><em>55 words</em></a>
+<a href="#section-04" data-target="section-04"><span>04</span><strong>Artifacts</strong><em>19 words</em></a>
+<a href="#section-05" data-target="section-05"><span>05</span><strong>Next Proof Run</strong><em>35 words</em></a></aside><div class="sections"><section class="visual-package" aria-label="Report hyperframe pack"><div class="visual-package-title"><h2>Hyperframe Pack</h2><span>SVG proof cards</span></div><div class="hypeframes"><article class="hypeframe" data-hyperframe-id="multi-agent-dag-report:01-agent-dag" data-hyperframe-title="multi-agent-dag-report / Agent DAG"><button type="button" class="hypeframe-open" onclick="return window.openHyperframeReview && window.openHyperframeReview(this)" aria-label="Open SVG review modal for multi-agent-dag-report / Agent DAG"><svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1080" viewBox="0 0 1080 1080" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" role="img">
+<title>Multi-Agent DAG Report Archon DAG 01: Agent DAG</title>
+<desc>Archon-style top-to-bottom DAG with typed nodes, dependency edges, statuses, gates, and proof artifacts.</desc>
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#F3F1E7"/><stop offset="100%" stop-color="#E6E4D9"/></linearGradient>
+<radialGradient id="glow" cx="66%" cy="18%" r="58%"><stop offset="0%" stop-color="#8A5FBF" stop-opacity=".20"/><stop offset="100%" stop-color="#8A5FBF" stop-opacity="0"/></radialGradient>
+<pattern id="dots" width="26" height="26" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r="1.35" fill="rgba(25,25,25,.13)"/></pattern>
+<filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#191919" flood-opacity=".08"/></filter>
+<marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 z" fill="#8A5FBF"/></marker>
+</defs>
+<rect width="1080" height="1080" fill="url(#bg)"/>
+<rect width="1080" height="1080" fill="url(#glow)"/>
+<rect x="48" y="48" width="984" height="984" rx="20" fill="none" stroke="#D6D4C8" stroke-width="1.2"/>
+<rect x="72" y="226" width="936" height="660" rx="18" fill="url(#dots)" opacity=".75"/>
+<text x="82" y="120" font-size="20" font-weight="800" fill="#8A5FBF" text-anchor="start" letter-spacing="2.2">01 / ARCHON DAG STANDARD</text>
+<text x="82" y="178" font-size="48" font-weight="500" fill="#191919" text-anchor="start" letter-spacing="0">Agent DAG</text>
+<text x="82" y="216" font-size="22" font-weight="400" fill="rgba(25,25,25,.62)" text-anchor="start" letter-spacing="0">Top-to-bottom layout from depends_on. Status-colored nodes and edges. Proof stays attached.</text>
+<path d="M540 298 C540 313 540 313 540 328" fill="none" stroke="#8A5FBF" stroke-width="2.25" stroke-linecap="round" marker-end="url(#arrow)" opacity=".68"><animate attributeName="stroke-dashoffset" from="52" to="0" dur="3.5s" repeatCount="indefinite"/></path>
+<path d="M540 416 C540 431 410 431 410 446" fill="none" stroke="#4F9D69" stroke-width="2.25" stroke-linecap="round" marker-end="url(#arrow)" opacity=".68"></path>
+<path d="M540 416 C540 431 670 431 670 446" fill="none" stroke="#4F9D69" stroke-width="2.25" stroke-linecap="round" marker-end="url(#arrow)" opacity=".68"></path>
+<path d="M410 534 C410 549 540 549 540 564" fill="none" stroke="#4F9D69" stroke-width="2.25" stroke-linecap="round" marker-end="url(#arrow)" opacity=".68"></path>
+<path d="M670 534 C670 549 540 549 540 564" fill="none" stroke="#4F9D69" stroke-width="2.25" stroke-linecap="round" marker-end="url(#arrow)" opacity=".68"></path>
+<path d="M540 652 C540 667 540 667 540 682" fill="none" stroke="#9B9688" stroke-width="2.25" stroke-linecap="round" marker-end="url(#arrow)" opacity=".68"></path>
+<path d="M540 770 C540 785 540 785 540 800" fill="none" stroke="#9B9688" stroke-width="2.25" stroke-linecap="round" marker-end="url(#arrow)" opacity=".68"></path>
+<path d="M540 888 C540 903 540 903 540 918" fill="none" stroke="#9B9688" stroke-width="2.25" stroke-linecap="round" marker-end="url(#arrow)" opacity=".68"></path>
+<path d="M540 1006 C540 1021 540 1021 540 1036" fill="none" stroke="#B94A48" stroke-width="2.25" stroke-linecap="round" marker-end="url(#arrow)" opacity=".68" stroke-dasharray="14 12"><animate attributeName="stroke-dashoffset" from="52" to="0" dur="3.5s" repeatCount="indefinite"/></path>
+<path d="M540 1124 C540 1139 540 1139 540 1154" fill="none" stroke="#9B9688" stroke-width="2.25" stroke-linecap="round" marker-end="url(#arrow)" opacity=".68"></path>
+<rect x="463" y="217" width="154" height="74" rx="11" fill="rgba(255,255,255,.72)" stroke="#D6D4C8" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="463" y="217" width="6" height="74" rx="3.0" fill="#4F9D69"/>
+<circle cx="485" cy="239" r="7" fill="#4F9D69"/><path d="M482 239 l2 2 l5 -6" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="500" y="243" font-size="10" font-weight="800" fill="#8A5FBF" text-anchor="start" letter-spacing="1.0">APPROVAL</text>
+<text x="478" y="265" font-size="13" font-weight="700" fill="#191919" text-anchor="start" letter-spacing="0">Operator Goal</text>
+<text x="478" y="281" font-size="9" font-weight="400" fill="rgba(25,25,25,.58)" text-anchor="start" letter-spacing="0">Turn the schema cleanup</text>
+<rect x="463" y="335" width="154" height="74" rx="11" fill="rgba(255,255,255,.72)" stroke="#D6D4C8" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="463" y="335" width="6" height="74" rx="3.0" fill="#8A5FBF"/>
+<circle cx="485" cy="357" r="7" fill="none" stroke="#8A5FBF" stroke-width="2" stroke-dasharray="9 6"><animateTransform attributeName="transform" type="rotate" from="0 485 357" to="360 485 357" dur="1.7s" repeatCount="indefinite"/></circle>
+<text x="500" y="361" font-size="10" font-weight="800" fill="#8A5FBF" text-anchor="start" letter-spacing="1.0">AGENT</text>
+<text x="478" y="383" font-size="13" font-weight="700" fill="#191919" text-anchor="start" letter-spacing="0">TAC Supervisor</text>
+<text x="478" y="399" font-size="9" font-weight="400" fill="rgba(25,25,25,.58)" text-anchor="start" letter-spacing="0">Routes PRD, repair,</text>
+<rect x="333" y="453" width="154" height="74" rx="11" fill="rgba(255,255,255,.72)" stroke="#D6D4C8" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="333" y="453" width="6" height="74" rx="3.0" fill="#4F9D69"/>
+<circle cx="355" cy="475" r="7" fill="#4F9D69"/><path d="M352 475 l2 2 l5 -6" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="370" y="479" font-size="10" font-weight="800" fill="#8A5FBF" text-anchor="start" letter-spacing="1.0">AGENT</text>
+<text x="348" y="501" font-size="13" font-weight="700" fill="#191919" text-anchor="start" letter-spacing="0">PRD Agent</text>
+<text x="348" y="517" font-size="9" font-weight="400" fill="rgba(25,25,25,.58)" text-anchor="start" letter-spacing="0">Converts the schema plan</text>
+<rect x="593" y="453" width="154" height="74" rx="11" fill="rgba(255,255,255,.72)" stroke="#D6D4C8" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="593" y="453" width="6" height="74" rx="3.0" fill="#4F9D69"/>
+<circle cx="615" cy="475" r="7" fill="#4F9D69"/><path d="M612 475 l2 2 l5 -6" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="630" y="479" font-size="10" font-weight="800" fill="#8A5FBF" text-anchor="start" letter-spacing="1.0">AGENT</text>
+<text x="608" y="501" font-size="13" font-weight="700" fill="#191919" text-anchor="start" letter-spacing="0">DBForge Scan</text>
+<text x="608" y="516" font-size="13" font-weight="700" fill="#191919" text-anchor="start" letter-spacing="0">Agent</text>
+<rect x="463" y="571" width="154" height="74" rx="11" fill="rgba(255,255,255,.72)" stroke="#D6D4C8" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="463" y="571" width="6" height="74" rx="3.0" fill="#4F9D69"/>
+<circle cx="485" cy="593" r="7" fill="#4F9D69"/><path d="M482 593 l2 2 l5 -6" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="500" y="597" font-size="10" font-weight="800" fill="#8A5FBF" text-anchor="start" letter-spacing="1.0">AGENT</text>
+<text x="478" y="619" font-size="13" font-weight="700" fill="#191919" text-anchor="start" letter-spacing="0">Report Agent</text>
+<text x="478" y="635" font-size="9" font-weight="400" fill="rgba(25,25,25,.58)" text-anchor="start" letter-spacing="0">Produces PRD, build</text>
+<rect x="463" y="689" width="154" height="74" rx="11" fill="rgba(255,255,255,.72)" stroke="#D6D4C8" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="463" y="689" width="6" height="74" rx="3.0" fill="#9B9688"/>
+<circle cx="485" cy="711" r="7" fill="none" stroke="#9B9688" stroke-width="2"/>
+<text x="500" y="715" font-size="10" font-weight="800" fill="#8A5FBF" text-anchor="start" letter-spacing="1.0">AGENT</text>
+<text x="478" y="737" font-size="13" font-weight="700" fill="#191919" text-anchor="start" letter-spacing="0">Migration Repair</text>
+<text x="478" y="752" font-size="13" font-weight="700" fill="#191919" text-anchor="start" letter-spacing="0">Agent</text>
+<rect x="463" y="807" width="154" height="74" rx="11" fill="rgba(255,255,255,.72)" stroke="#D6D4C8" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="463" y="807" width="6" height="74" rx="3.0" fill="#9B9688"/>
+<circle cx="485" cy="829" r="7" fill="none" stroke="#9B9688" stroke-width="2"/>
+<text x="500" y="833" font-size="10" font-weight="800" fill="#8A5FBF" text-anchor="start" letter-spacing="1.0">TOOL</text>
+<text x="478" y="855" font-size="13" font-weight="700" fill="#191919" text-anchor="start" letter-spacing="0">SQL Static Check</text>
+<text x="478" y="871" font-size="9" font-weight="400" fill="rgba(25,25,25,.58)" text-anchor="start" letter-spacing="0">Confirms no missing</text>
+<rect x="463" y="925" width="154" height="74" rx="11" fill="rgba(255,255,255,.72)" stroke="#D6D4C8" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="463" y="925" width="6" height="74" rx="3.0" fill="#9B9688"/>
+<circle cx="485" cy="947" r="7" fill="none" stroke="#9B9688" stroke-width="2"/>
+<text x="500" y="951" font-size="10" font-weight="800" fill="#8A5FBF" text-anchor="start" letter-spacing="1.0">TOOL</text>
+<text x="478" y="973" font-size="13" font-weight="700" fill="#191919" text-anchor="start" letter-spacing="0">Branch/Local</text>
+<text x="478" y="988" font-size="13" font-weight="700" fill="#191919" text-anchor="start" letter-spacing="0">Validation</text>
+<rect x="463" y="1043" width="154" height="74" rx="11" fill="rgba(255,255,255,.72)" stroke="#D6D4C8" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="463" y="1043" width="6" height="74" rx="3.0" fill="#B94A48"/>
+<circle cx="485" cy="1065" r="7" fill="#B94A48"/><path d="M482 1062 l6 6 M488 1062 l-6 6" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+<text x="500" y="1069" font-size="10" font-weight="800" fill="#8A5FBF" text-anchor="start" letter-spacing="1.0">APPROVAL</text>
+<text x="478" y="1091" font-size="13" font-weight="700" fill="#191919" text-anchor="start" letter-spacing="0">Production DDL</text>
+<text x="478" y="1106" font-size="13" font-weight="700" fill="#191919" text-anchor="start" letter-spacing="0">Gate</text>
+<rect x="463" y="1161" width="154" height="74" rx="11" fill="rgba(255,255,255,.72)" stroke="#D6D4C8" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="463" y="1161" width="6" height="74" rx="3.0" fill="#9B9688"/>
+<circle cx="485" cy="1183" r="7" fill="none" stroke="#9B9688" stroke-width="2"/>
+<text x="500" y="1187" font-size="10" font-weight="800" fill="#8A5FBF" text-anchor="start" letter-spacing="1.0">ARTIFACT</text>
+<text x="478" y="1209" font-size="13" font-weight="700" fill="#191919" text-anchor="start" letter-spacing="0">Readback Receipt</text>
+<text x="478" y="1225" font-size="9" font-weight="400" fill="rgba(25,25,25,.58)" text-anchor="start" letter-spacing="0">Records object</text>
+<circle cx="112" cy="942" r="9" fill="#4F9D69"/><path d="M108 942 l3 3 l7 -8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="132" y="947" font-size="16" font-weight="700" fill="rgba(25,25,25,.66)" text-anchor="start" letter-spacing="0">done</text>
+<circle cx="254" cy="942" r="9" fill="none" stroke="#8A5FBF" stroke-width="2" stroke-dasharray="12 8"><animateTransform attributeName="transform" type="rotate" from="0 254 942" to="360 254 942" dur="1.7s" repeatCount="indefinite"/></circle>
+<text x="274" y="947" font-size="16" font-weight="700" fill="rgba(25,25,25,.66)" text-anchor="start" letter-spacing="0">active</text>
+<circle cx="396" cy="942" r="9" fill="none" stroke="#9B9688" stroke-width="2"/>
+<text x="416" y="947" font-size="16" font-weight="700" fill="rgba(25,25,25,.66)" text-anchor="start" letter-spacing="0">waiting</text>
+<circle cx="538" cy="942" r="9" fill="#B94A48"/><path d="M534 938 l8 8 M542 938 l-8 8" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+<text x="558" y="947" font-size="16" font-weight="700" fill="rgba(25,25,25,.66)" text-anchor="start" letter-spacing="0">blocked</text>
+<text x="112" y="990" font-size="22" font-weight="800" fill="#8A5FBF" text-anchor="start" letter-spacing="0">Archon rule</text>
+<text x="232" y="990" font-size="23" font-weight="500" fill="#191919" text-anchor="start" letter-spacing="0">Every TAC node needs id, depends_on, type, status, owner, and evidence.</text>
+</svg></button></article><article class="hypeframe" data-hyperframe-id="multi-agent-dag-report:02-trace-format" data-hyperframe-title="multi-agent-dag-report / Trace Format"><button type="button" class="hypeframe-open" onclick="return window.openHyperframeReview && window.openHyperframeReview(this)" aria-label="Open SVG review modal for multi-agent-dag-report / Trace Format"><svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1080" viewBox="0 0 1080 1080" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" role="img">
+<title>Multi-Agent DAG Report diagram 02: Trace Format</title>
+<desc>Multi-agent DAG diagram for Trace Format</desc>
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#F3F1E7"/><stop offset="100%" stop-color="#E6E4D9"/></linearGradient>
+<radialGradient id="glow" cx="66%" cy="18%" r="58%"><stop offset="0%" stop-color="#8A5FBF" stop-opacity=".20"/><stop offset="100%" stop-color="#8A5FBF" stop-opacity="0"/></radialGradient>
+<filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#191919" flood-opacity=".08"/></filter>
+<marker id="arrow" markerWidth="16" markerHeight="16" refX="12" refY="5" orient="auto"><path d="M0,0 L12,5 L0,10 z" fill="#8A5FBF"/></marker>
+</defs>
+<rect width="1080" height="1080" fill="url(#bg)"/>
+<rect width="1080" height="1080" fill="url(#glow)"/>
+<rect x="48" y="48" width="984" height="984" rx="20" fill="none" stroke="#D6D4C8" stroke-width="1.2"/>
+<text x="82" y="120" font-size="20" font-weight="800" fill="#8A5FBF" text-anchor="start" letter-spacing="2.2">02 / MULTI-AGENT DAG</text>
+<text x="82" y="178" font-size="48" font-weight="500" fill="#191919" text-anchor="start" letter-spacing="0">Trace Format</text>
+<rect x="96" y="286" width="888" height="78" rx="15" fill="rgba(255,255,255,.62)" stroke="#D6D4C8" stroke-width="2" filter="url(#shadow)"/>
+<circle cx="132" cy="325" r="12" fill="#8A5FBF"><animate attributeName="r" values="9;13;9" dur="4s" begin="0.0s" repeatCount="indefinite"/></circle>
+<text x="164" y="334" font-size="25" font-weight="800" fill="#191919" text-anchor="start" letter-spacing="0">Trace summary</text>
+<text x="444" y="334" font-size="22" font-weight="400" fill="rgba(25,25,25,.64)" text-anchor="start" letter-spacing="0">trace_id, session_id, user_id, duration_ms, status</text>
+<rect x="96" y="390" width="888" height="78" rx="15" fill="rgba(255,255,255,.62)" stroke="#D6D4C8" stroke-width="2" filter="url(#shadow)"/>
+<circle cx="132" cy="429" r="12" fill="#8A5FBF"><animate attributeName="r" values="9;13;9" dur="4s" begin="0.18s" repeatCount="indefinite"/></circle>
+<text x="164" y="438" font-size="25" font-weight="800" fill="#191919" text-anchor="start" letter-spacing="0">Rollup metrics</text>
+<text x="444" y="438" font-size="22" font-weight="400" fill="rgba(25,25,25,.64)" text-anchor="start" letter-spacing="0">input_tokens, output_tokens, cost, span_count</text>
+<rect x="96" y="494" width="888" height="78" rx="15" fill="rgba(255,255,255,.62)" stroke="#D6D4C8" stroke-width="2" filter="url(#shadow)"/>
+<circle cx="132" cy="533" r="12" fill="#8A5FBF"><animate attributeName="r" values="9;13;9" dur="4s" begin="0.36s" repeatCount="indefinite"/></circle>
+<text x="164" y="542" font-size="25" font-weight="800" fill="#191919" text-anchor="start" letter-spacing="0">Agent list</text>
+<text x="444" y="542" font-size="22" font-weight="400" fill="rgba(25,25,25,.64)" text-anchor="start" letter-spacing="0">agents_delegated in first-use order</text>
+<rect x="96" y="598" width="888" height="78" rx="15" fill="rgba(255,255,255,.62)" stroke="#D6D4C8" stroke-width="2" filter="url(#shadow)"/>
+<circle cx="132" cy="637" r="12" fill="#8A5FBF"><animate attributeName="r" values="9;13;9" dur="4s" begin="0.54s" repeatCount="indefinite"/></circle>
+<text x="164" y="646" font-size="25" font-weight="800" fill="#191919" text-anchor="start" letter-spacing="0">Tool list</text>
+<text x="444" y="646" font-size="22" font-weight="400" fill="rgba(25,25,25,.64)" text-anchor="start" letter-spacing="0">tools_called in first-use order</text>
+<rect x="96" y="702" width="888" height="78" rx="15" fill="rgba(255,255,255,.62)" stroke="#D6D4C8" stroke-width="2" filter="url(#shadow)"/>
+<circle cx="132" cy="741" r="12" fill="#8A5FBF"><animate attributeName="r" values="9;13;9" dur="4s" begin="0.72s" repeatCount="indefinite"/></circle>
+<text x="164" y="750" font-size="25" font-weight="800" fill="#191919" text-anchor="start" letter-spacing="0">Span rows</text>
+<text x="444" y="750" font-size="22" font-weight="400" fill="rgba(25,25,25,.64)" text-anchor="start" letter-spacing="0">name, span_type, duration_ms, parent_id, metadata</text>
+<rect x="96" y="806" width="888" height="78" rx="15" fill="rgba(255,255,255,.62)" stroke="#D6D4C8" stroke-width="2" filter="url(#shadow)"/>
+<circle cx="132" cy="845" r="12" fill="#8A5FBF"><animate attributeName="r" values="9;13;9" dur="4s" begin="0.8999999999999999s" repeatCount="indefinite"/></circle>
+<text x="164" y="854" font-size="25" font-weight="800" fill="#191919" text-anchor="start" letter-spacing="0">Observations</text>
+<text x="444" y="854" font-size="22" font-weight="400" fill="rgba(25,25,25,.64)" text-anchor="start" letter-spacing="0">GENERATION, SPAN, EVENT with model and tokens</text>
+<text x="96" y="944" font-size="24" font-weight="800" fill="#8A5FBF" text-anchor="start" letter-spacing="0">Preferred format from Eagle scaffold</text>
+<text x="96" y="982" font-size="25" font-weight="500" fill="#191919" text-anchor="start" letter-spacing="0">Compact summary first. Ordered spans second. Raw trace only when needed.</text>
+</svg></button></article><article class="hypeframe" data-hyperframe-id="multi-agent-dag-report:03-gates-proof" data-hyperframe-title="multi-agent-dag-report / Gates And Proof"><button type="button" class="hypeframe-open" onclick="return window.openHyperframeReview && window.openHyperframeReview(this)" aria-label="Open SVG review modal for multi-agent-dag-report / Gates And Proof"><svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1080" viewBox="0 0 1080 1080" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" role="img">
+<title>Multi-Agent DAG Report diagram 03: Gates And Proof</title>
+<desc>Multi-agent DAG diagram for Gates And Proof</desc>
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#F3F1E7"/><stop offset="100%" stop-color="#E6E4D9"/></linearGradient>
+<radialGradient id="glow" cx="66%" cy="18%" r="58%"><stop offset="0%" stop-color="#8A5FBF" stop-opacity=".20"/><stop offset="100%" stop-color="#8A5FBF" stop-opacity="0"/></radialGradient>
+<filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#191919" flood-opacity=".08"/></filter>
+<marker id="arrow" markerWidth="16" markerHeight="16" refX="12" refY="5" orient="auto"><path d="M0,0 L12,5 L0,10 z" fill="#8A5FBF"/></marker>
+</defs>
+<rect width="1080" height="1080" fill="url(#bg)"/>
+<rect width="1080" height="1080" fill="url(#glow)"/>
+<rect x="48" y="48" width="984" height="984" rx="20" fill="none" stroke="#D6D4C8" stroke-width="1.2"/>
+<text x="82" y="120" font-size="20" font-weight="800" fill="#8A5FBF" text-anchor="start" letter-spacing="2.2">03 / MULTI-AGENT DAG</text>
+<text x="82" y="178" font-size="48" font-weight="500" fill="#191919" text-anchor="start" letter-spacing="0">Gates And Proof</text>
+<rect x="104" y="286" width="872" height="92" rx="18" fill="rgba(255,255,255,.62)" stroke="#D6D4C8" stroke-width="2" filter="url(#shadow)"/>
+<text x="138" y="326" font-size="30" font-weight="800" fill="#191919" text-anchor="start" letter-spacing="0">Approval</text>
+<text x="338" y="326" font-size="23" font-weight="400" fill="rgba(25,25,25,.64)" text-anchor="start" letter-spacing="0">operator approves PRD / live writes</text>
+<rect x="812" y="310" width="118" height="34" rx="17" fill="#8A5FBF" opacity=".13" stroke="#8A5FBF"/>
+<text x="871" y="334" font-size="14" font-weight="800" fill="#8A5FBF" text-anchor="middle" letter-spacing="1.5">PENDING</text>
+<path d="M540 378 C540 378 540 412 540 412" fill="none" stroke="#8A5FBF" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow)" opacity=".72"><animate attributeName="stroke-dashoffset" from="64" to="0" dur="4s" repeatCount="indefinite"/></path>
+<rect x="104" y="412" width="872" height="92" rx="18" fill="rgba(255,255,255,.62)" stroke="#D6D4C8" stroke-width="2" filter="url(#shadow)"/>
+<text x="138" y="452" font-size="30" font-weight="800" fill="#191919" text-anchor="start" letter-spacing="0">Build</text>
+<text x="338" y="452" font-size="23" font-weight="400" fill="rgba(25,25,25,.64)" text-anchor="start" letter-spacing="0">code changes and generated artifacts</text>
+<rect x="812" y="436" width="118" height="34" rx="17" fill="#8A5FBF" opacity=".13" stroke="#8A5FBF"/>
+<text x="871" y="460" font-size="14" font-weight="800" fill="#8A5FBF" text-anchor="middle" letter-spacing="1.5">ACTIVE</text>
+<path d="M540 504 C540 504 540 538 540 538" fill="none" stroke="#8A5FBF" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow)" opacity=".72"><animate attributeName="stroke-dashoffset" from="64" to="0" dur="4s" repeatCount="indefinite"/></path>
+<rect x="104" y="538" width="872" height="92" rx="18" fill="rgba(255,255,255,.62)" stroke="#D6D4C8" stroke-width="2" filter="url(#shadow)"/>
+<text x="138" y="578" font-size="30" font-weight="800" fill="#191919" text-anchor="start" letter-spacing="0">Tests</text>
+<text x="338" y="578" font-size="23" font-weight="400" fill="rgba(25,25,25,.64)" text-anchor="start" letter-spacing="0">unit, integration, browser, smoke</text>
+<rect x="812" y="562" width="118" height="34" rx="17" fill="#8A5FBF" opacity=".13" stroke="#8A5FBF"/>
+<text x="871" y="586" font-size="14" font-weight="800" fill="#8A5FBF" text-anchor="middle" letter-spacing="1.5">REQUIRED</text>
+<path d="M540 630 C540 630 540 664 540 664" fill="none" stroke="#8A5FBF" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow)" opacity=".72"><animate attributeName="stroke-dashoffset" from="64" to="0" dur="4s" repeatCount="indefinite"/></path>
+<rect x="104" y="664" width="872" height="92" rx="18" fill="rgba(255,255,255,.62)" stroke="#D6D4C8" stroke-width="2" filter="url(#shadow)"/>
+<text x="138" y="704" font-size="30" font-weight="800" fill="#191919" text-anchor="start" letter-spacing="0">Data</text>
+<text x="338" y="704" font-size="23" font-weight="400" fill="rgba(25,25,25,.64)" text-anchor="start" letter-spacing="0">receipt, manifest, schema, row counts</text>
+<rect x="812" y="688" width="118" height="34" rx="17" fill="#8A5FBF" opacity=".13" stroke="#8A5FBF"/>
+<text x="871" y="712" font-size="14" font-weight="800" fill="#8A5FBF" text-anchor="middle" letter-spacing="1.5">REQUIRED</text>
+<path d="M540 756 C540 756 540 790 540 790" fill="none" stroke="#8A5FBF" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow)" opacity=".72"><animate attributeName="stroke-dashoffset" from="64" to="0" dur="4s" repeatCount="indefinite"/></path>
+<rect x="104" y="790" width="872" height="92" rx="18" fill="rgba(255,255,255,.62)" stroke="#D6D4C8" stroke-width="2" filter="url(#shadow)"/>
+<text x="138" y="830" font-size="30" font-weight="800" fill="#191919" text-anchor="start" letter-spacing="0">Publish</text>
+<text x="338" y="830" font-size="23" font-weight="400" fill="rgba(25,25,25,.64)" text-anchor="start" letter-spacing="0">HTML report, PR link, Telegram/email</text>
+<rect x="812" y="814" width="118" height="34" rx="17" fill="#8A5FBF" opacity=".13" stroke="#8A5FBF"/>
+<text x="871" y="838" font-size="14" font-weight="800" fill="#8A5FBF" text-anchor="middle" letter-spacing="1.5">READY</text>
+<text x="104" y="952" font-size="24" font-weight="800" fill="#8A5FBF" text-anchor="start" letter-spacing="0">Trust rule</text>
+<text x="104" y="988" font-size="27" font-weight="500" fill="#191919" text-anchor="start" letter-spacing="0">A TAC build is not done until gates and proof agree.</text>
+</svg></button></article></div></section><details class="section" id="section-01" open><summary><span class="section-index">01</span><span class="section-title">Overview</span><span class="section-count">25 words</span></summary><div class="section-body"><p>This DAG shows how the DBForge schema-unification plan should move through TAC: operator approval, PRD/report packaging, migration repair, validation, and explicit production apply approval.</p></div></details>
+<details class="section" id="section-02"><summary><span class="section-index">02</span><span class="section-title">Agent Team</span><span class="section-count">76 words</span></summary><div class="section-body"><table><thead><tr><th>Node</th><th>Owner</th><th>Role</th></tr></thead><tbody><tr><td>Operator Goal</td><td>Greg/operator</td><td>Approves scope and production apply gates</td></tr><tr><td>TAC Supervisor</td><td>TAC</td><td>Routes work and blocks unsafe jumps</td></tr><tr><td>PRD Agent</td><td>agent-team</td><td>Converts plan into approved PRD structure</td></tr><tr><td>DBForge Scan Agent</td><td>DBForge</td><td>Maintains live schema facts and risk findings</td></tr><tr><td>Migration Repair Agent</td><td>DBForge/TAC</td><td>Repairs additive SQL and status-map surfaces</td></tr><tr><td>Validation Agent</td><td>TAC verifier</td><td>Runs static SQL, branch/local checks, and readbacks</td></tr><tr><td>Report Agent</td><td>report-package</td><td>Produces PRD, build report, DAG, and email-ready summary</td></tr></tbody></table></div></details>
+<details class="section" id="section-03"><summary><span class="section-index">03</span><span class="section-title">Gates And Decisions</span><span class="section-count">55 words</span></summary><div class="section-body"><table><thead><tr><th>Gate</th><th>Status</th><th>Meaning</th></tr></thead><tbody><tr><td>PRD approval</td><td>ready_for_review</td><td>Operator can approve the TAC build lane</td></tr><tr><td>Migration repair</td><td>pending</td><td>Pending SQL still references missing tables</td></tr><tr><td>Branch/local validation</td><td>pending</td><td>Must run before production apply when available</td></tr><tr><td>Production DDL apply</td><td>blocked</td><td>Requires explicit approval after repair and validation</td></tr><tr><td>Build report update</td><td>pending</td><td>Must be updated after any real apply</td></tr></tbody></table></div></details>
+<details class="section" id="section-04"><summary><span class="section-index">04</span><span class="section-title">Artifacts</span><span class="section-count">19 words</span></summary><div class="section-body"><table><thead><tr><th>Artifact</th><th>Link</th></tr></thead><tbody><tr><td>Source plan</td><td><a href="C:/Users/gblac/OneDrive/Desktop/gbauto/gbautomation/second-brain/plans/2026-06-08-dbforge-supabase-schema-unification-plan.md">schema unification plan</a></td></tr><tr><td>PRD</td><td><a href="prd.html">prd.html</a></td></tr><tr><td>Build readiness report</td><td><a href="build-report.html">build-report.html</a></td></tr><tr><td>DAG source</td><td><a href="dag-nodes.json">dag-nodes.json</a></td></tr></tbody></table></div></details>
+<details class="section" id="section-05"><summary><span class="section-index">05</span><span class="section-title">Next Proof Run</span><span class="section-count">35 words</span></summary><div class="section-body"><p>The next proof run is not a production migration. It is a TAC build that repairs the migration, validates it without touching production, and returns with a build report showing exactly what would be applied.</p></div></details></div></div><footer class="report-metadata" aria-label="Report metadata"><h2>Metadata</h2><div class="metadata-grid"><div class="meta-item"><span>Report</span><strong>Multi-Agent DAG Report</strong></div><div class="meta-item"><span>Source</span><strong>multi-agent-dag-report.md</strong></div><div class="meta-item"><span>Rendered</span><strong>multi-agent-dag-report.html</strong></div><div class="meta-item"><span>Package</span><strong>C:\Users\gblac\OneDrive\Desktop\gbauto\gbautomation\second-brain\intelligence\reports\projects\dbforge-supabase-schema-unification\2026-06-08</strong></div><div class="meta-item"><span>Generated</span><strong>2026-06-10T19:04:21+00:00</strong></div><div class="meta-item"><span>Schema Version</span><strong>gbauto-report.v1</strong></div><div class="meta-item"><span>Report Type</span><strong>multi_agent_dag_report</strong></div><div class="meta-item"><span>Slug</span><strong>dbforge-supabase-schema-unification-dag-2026-06-08</strong></div><div class="meta-item"><span>Client</span><strong>gbautomation</strong></div><div class="meta-item"><span>Created At</span><strong>2026-06-08T00:00:00-07:00</strong></div><div class="meta-item"><span>Owner</span><strong>tac</strong></div><div class="meta-item"><span>Status</span><strong>ready_for_review</strong></div><div class="meta-item"><span>Audience</span><strong>operator</strong></div><div class="meta-item"><span>Tags</span><strong>[multi-agent-dag-report, tac, dbforge, supabase, schema, migration, approval]</strong></div></div></footer></main>
+<script>
+const sections=[...document.querySelectorAll('details.section')];
+const controls=[...document.querySelectorAll('[data-target]')];
+const setActive=id=>controls.forEach(control=>control.classList.toggle('active',control.dataset.target===id));
+controls.forEach(control=>control.addEventListener('click',event=>{
+  event.preventDefault();
+  const section=document.getElementById(control.dataset.target);
+  if(!section) return;
+  section.open=true;
+  setActive(section.id);
+  section.scrollIntoView({behavior:'smooth',block:'start'});
+}));
+document.querySelectorAll('[data-action="expand"]').forEach(button=>button.addEventListener('click',()=>sections.forEach(section=>section.open=true)));
+document.querySelectorAll('[data-action="collapse"]').forEach(button=>button.addEventListener('click',()=>sections.forEach((section,index)=>section.open=index===0)));
+sections.forEach(section=>section.addEventListener('toggle',()=>{if(section.open)setActive(section.id);}));
+if(sections[0])setActive(sections[0].id);
+const hideHyperframePreview=()=>{
+  document.querySelectorAll('.modal[data-svg-modal="report"]').forEach(modal=>modal.remove());
+};
+const showHyperframePreview=card=>{
+  const svg=card.querySelector('svg');
+  if(!svg)return;
+  hideHyperframePreview();
+  const modal=document.createElement('div');
+  modal.className='modal';
+  modal.dataset.svgModal='report';
+  modal.setAttribute('role','dialog');
+  modal.setAttribute('aria-modal','true');
+  modal.innerHTML='<div class="modal-inner">'+svg.outerHTML+'</div>';
+  modal.addEventListener('click',()=>modal.remove());
+  modal.querySelector('.modal-inner').addEventListener('click',event=>event.stopPropagation());
+  document.body.appendChild(modal);
+};
+window.openHyperframeReview=button=>{
+  const card=button.closest('.hypeframe');
+  if(card)showHyperframePreview(card);
+  return false;
+};
+document.querySelectorAll('.hypeframe').forEach(card=>{
+  const opener=card.querySelector('.hypeframe-open');
+  if(opener&&!opener.hasAttribute('onclick'))opener.addEventListener('click',event=>{
+    event.preventDefault();
+    showHyperframePreview(card);
+  });
+});
+document.addEventListener('keydown',event=>{if(event.key==='Escape')hideHyperframePreview();});
+</script>
+</body></html>

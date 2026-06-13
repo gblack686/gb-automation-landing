@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Multi-Agent Workflows: Fisch Hermes TAC Run</title><style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap');
+:root{--sans:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--serif:Newsreader,Georgia,serif;--mono:"JetBrains Mono",Consolas,monospace;--ink:#191919;--muted:#5C5C5C;--line:#D6D4C8;--line-soft:rgba(214,212,200,.75);--cream:#F3F1E7;--panel:#E6E4D9;--panel-soft:rgba(230,228,217,.55);--accent:#8A5FBF}
+*{box-sizing:border-box}body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--cream);font-size:14px;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}html{scroll-behavior:smooth}.topbar{border-bottom:1px solid var(--line);background:rgba(243,241,231,.88)}.topbar-inner,header,main{max-width:1180px;margin:0 auto}.topbar-inner{padding:10px 24px;display:flex;justify-content:space-between;gap:16px;align-items:center}.brand-lockup{display:flex;gap:8px;align-items:center;font-weight:700;font-size:12px}.brand-dot{width:9px;height:9px;border-radius:999px;background:var(--accent)}.source-name{font-size:12px;color:var(--muted)}header{padding:34px 24px 8px}main{padding:18px 24px 72px}.eyebrow{color:var(--accent);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}h1{font-family:var(--serif);font-weight:500;margin:10px 0 16px;font-size:42px;line-height:1.04;letter-spacing:-.01em}h2,h3,h4{font-family:var(--serif);font-weight:500;color:var(--ink)}h3{font-size:17px;margin:18px 0 8px}h4{font-size:14px;margin:18px 0 8px;color:var(--ink)}p{line-height:1.62;color:rgba(25,25,25,.74);margin:8px 0}a{color:var(--accent);text-underline-offset:2px}.sub{max-width:760px;color:rgba(25,25,25,.68)}.nav{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0;padding:0;list-style:none}.nav a{border:1px solid var(--line);background:rgba(255,255,255,.46);border-radius:999px;padding:5px 10px;font-size:11px;color:rgba(25,25,25,.68);text-decoration:none}.brief-layout{display:grid;grid-template-columns:248px minmax(0,1fr);gap:24px;align-items:start}.toc{position:sticky;top:18px;background:rgba(255,255,255,.48);border:1px solid var(--line);border-radius:8px;padding:14px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}.toc h2{font-family:var(--sans);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:rgba(25,25,25,.45);margin:0 0 8px}.toc-actions{display:flex;gap:6px;margin-bottom:8px}.toc-actions button{flex:1;border:1px solid var(--line);background:#fff;border-radius:6px;padding:6px;font:inherit;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);cursor:pointer}.toc-actions button:hover{border-color:var(--accent);color:var(--accent)}.toc a{display:grid;grid-template-columns:24px 1fr;gap:6px;padding:7px 0;color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line-soft)}.toc a:last-child{border-bottom:0}.toc a:hover,.toc a.active{color:var(--accent)}.toc a span{color:var(--accent);font-weight:700;font-size:11px}.toc a strong{font-size:12.5px;font-weight:500}.toc a em{grid-column:2;color:rgba(25,25,25,.4);font-size:10.5px;font-style:normal}.sections{display:grid;gap:10px}.section{background:rgba(255,255,255,.48);border:1px solid var(--line);border-radius:8px;overflow:hidden}.section[open]{background:rgba(255,255,255,.58)}.section summary{display:grid;grid-template-columns:38px 1fr auto;gap:10px;align-items:center;padding:14px 18px;cursor:pointer;list-style:none}.section summary::-webkit-details-marker{display:none}.section-index{color:var(--accent);font-size:11px;font-weight:700;letter-spacing:.08em;font-family:var(--mono)}.section-title{font-family:var(--serif);font-size:18px;font-weight:500}.section-meta{color:var(--muted);font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}.section-body{border-top:1px solid var(--line-soft);padding:6px 20px 20px}table{width:100%;border-collapse:collapse;font-size:12.5px;margin:8px 0}th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line-soft);vertical-align:top}th{background:var(--panel-soft);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(25,25,25,.55)}tbody th{background:transparent;width:172px;color:rgba(25,25,25,.55);font-weight:600}ul,ol{margin:8px 0 8px 20px;padding:0}li{margin:5px 0;line-height:1.58;color:rgba(25,25,25,.74)}code{font-family:var(--mono);font-size:12px;background:rgba(230,228,217,.55);border:1px solid rgba(214,212,200,.8);border-radius:4px;padding:1px 5px}pre{background:#191919;color:#F3F1E7;border-radius:8px;padding:14px;overflow:auto}pre code{background:transparent;border:0;color:inherit;padding:0}blockquote{border-left:3px solid var(--accent);margin:14px 0;padding:2px 0 2px 14px;color:rgba(25,25,25,.68)}@media(max-width:900px){.brief-layout{grid-template-columns:1fr}.toc{position:static}}@media(max-width:720px){h1{font-size:32px}.section summary{grid-template-columns:32px 1fr}.section-meta{grid-column:2}.topbar-inner{display:block}header,main{padding-left:18px;padding-right:18px}}
+
+.visual-package{position:relative;z-index:1;margin:0 0 14px}.visual-package-title{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:0 0 8px}.visual-package-title h2{font-family:var(--sans,Inter,sans-serif);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:rgba(25,25,25,.45);margin:0}.visual-package-title span{font-size:10.5px;color:rgba(25,25,25,.45);font-weight:600}.hypeframes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;overflow:visible}.hypeframe{position:relative;background:rgba(255,255,255,.58);border:1px solid var(--line,#D6D4C8);border-radius:8px;overflow:hidden;transition:box-shadow .18s ease,border-color .18s ease,opacity .18s ease,background .18s ease}.hypeframe:hover,.hypeframe:focus-within{border-color:var(--accent,var(--terracotta,#3D6EA8));box-shadow:0 12px 28px rgba(25,25,25,.16);outline:0}.hypeframe[data-feedback-state="approved"]{border-color:rgba(79,157,105,.58);background:rgba(79,157,105,.08)}.hypeframe[data-feedback-state="revise"]{border-color:rgba(192,138,62,.58);background:rgba(192,138,62,.08)}.hypeframe[data-feedback-state="rejected"]{border-color:rgba(185,74,72,.55);background:rgba(185,74,72,.07)}.hypeframe-open{display:block;width:100%;padding:0;border:0;background:transparent;cursor:zoom-in;text-align:inherit}.hypeframe-open:focus-visible{outline:2px solid var(--accent,var(--terracotta,#3D6EA8));outline-offset:-3px}.hypeframe svg{display:block;width:100%;height:auto}.hypeframe-feedback{display:none}.hypeframe-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.hypeframe-tools{display:flex;gap:6px;justify-content:space-between;align-items:center}.feedback-btn,.feedback-export{min-height:29px;border:1px solid var(--line,#D6D4C8);border-radius:6px;background:rgba(255,255,255,.72);color:rgba(25,25,25,.66);font:inherit;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;cursor:pointer}.feedback-btn:hover,.feedback-export:hover{border-color:var(--accent,var(--terracotta,#3D6EA8));color:var(--accent,var(--terracotta,#3D6EA8))}.feedback-btn.active[data-feedback="approved"]{background:#4F9D69;border-color:#4F9D69;color:#fff}.feedback-btn.active[data-feedback="revise"]{background:#C08A3E;border-color:#C08A3E;color:#fff}.feedback-btn.active[data-feedback="rejected"]{background:#B94A48;border-color:#B94A48;color:#fff}.feedback-comment{width:100%;min-height:120px;resize:vertical;border:1px solid var(--line,#D6D4C8);border-radius:6px;background:rgba(255,255,255,.72);padding:8px 9px;color:rgba(25,25,25,.72);font:inherit;font-size:12px;line-height:1.4}.feedback-status{font-size:10.5px;color:rgba(25,25,25,.48);font-weight:650}.modal{position:fixed;inset:0;background:rgba(25,25,25,.28);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);display:grid;place-items:center;padding:24px;z-index:1000}.modal-inner{width:min(90vw,90vh);height:min(90vw,90vh);background:#F3F1E7;border:1px solid var(--accent,var(--terracotta,#3D6EA8));border-radius:12px;overflow:hidden;box-shadow:0 32px 90px rgba(25,25,25,.34)}.modal-inner svg{display:block;width:100%;height:100%}@media(max-width:900px){.hypeframes{grid-template-columns:1fr}.modal-inner{width:min(92vw,86vh);height:min(92vw,86vh)}}
+
+.taxonomy-pills{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 0}.taxonomy-pill{border:1px solid rgba(25,25,25,.14);background:rgba(255,255,255,.46);border-radius:999px;padding:5px 10px;font-size:11px;color:rgba(25,25,25,.72);display:inline-flex;align-items:center;min-height:25px;font-weight:650}.taxonomy-pill:nth-child(1){background:rgba(217,119,87,.13);border-color:rgba(217,119,87,.32);color:#9A5139}.taxonomy-pill:nth-child(2){background:rgba(79,157,105,.13);border-color:rgba(79,157,105,.32);color:#346C48}.taxonomy-pill:nth-child(3){background:rgba(61,110,168,.13);border-color:rgba(61,110,168,.30);color:#2B5686}.taxonomy-pill:nth-child(4){background:rgba(138,95,191,.13);border-color:rgba(138,95,191,.30);color:#5F3E90}.taxonomy-pill:nth-child(5){background:rgba(192,138,62,.13);border-color:rgba(192,138,62,.30);color:#815918}.taxonomy-pill:nth-child(6){background:rgba(185,74,72,.10);border-color:rgba(185,74,72,.24);color:#8A302E}
+
+.report-metadata{margin:22px auto 0;max-width:1180px;border-top:1px solid var(--line,#D6D4C8);padding:22px 24px 36px}.report-metadata h2{margin:0 0 12px;font-family:var(--sans,Inter,sans-serif);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(25,25,25,.45)}.metadata-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.meta-item{border:1px solid var(--line,#D6D4C8);border-radius:8px;background:rgba(255,255,255,.42);padding:10px 12px;min-width:0}.meta-item span{display:block;margin-bottom:4px;font-size:9.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:rgba(25,25,25,.43)}.meta-item strong{display:block;font-size:12px;font-weight:600;color:rgba(25,25,25,.70);overflow-wrap:anywhere}.meta-item code{font-size:11.5px}@media(min-width:901px){body{zoom:1.25}.topbar-inner,header,main,.report-metadata{max-width:944px}}@media(max-width:900px){.metadata-grid{grid-template-columns:1fr 1fr}}@media(max-width:540px){.metadata-grid{grid-template-columns:1fr}}
+
+.toc,.section-menu,.section,details.section,.report-metadata,.hypeframe,.section-body img,.taxonomy-pill,.nav a{transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease,background .18s ease,color .18s ease}
+.toc:hover,.section-menu:hover,.report-metadata:hover{border-color:var(--accent,var(--terracotta,#D97757));background:rgba(255,255,255,.58);box-shadow:0 10px 24px rgba(25,25,25,.08)}
+.section:hover,details.section:hover{border-color:var(--accent,var(--terracotta,#D97757));background:rgba(255,255,255,.62);box-shadow:0 12px 28px rgba(25,25,25,.10);transform:translateY(-2px)}
+.section summary:focus-visible,details.section summary:focus-visible,.toc-actions button:focus-visible,.menu-actions button:focus-visible,.section-menu nav button:focus-visible,.toc a:focus-visible,.nav a:focus-visible{outline:2px solid var(--accent,var(--terracotta,#D97757));outline-offset:2px}
+.toc-actions button:hover,.menu-actions button:hover,.section-menu nav button:hover,.toc a:hover,.toc a.active,.nav a:hover{border-color:var(--accent,var(--terracotta,#D97757));background:rgba(255,255,255,.72);color:var(--accent,var(--terracotta,#D97757))}
+.taxonomy-pill:hover,.nav a:hover{border-color:var(--accent,var(--terracotta,#D97757));box-shadow:0 8px 18px rgba(25,25,25,.08);transform:translateY(-1px)}
+.hypeframe{background:rgba(255,255,255,.58)}
+.hypeframe:hover,.hypeframe:focus-visible{transform:translateY(-2px);border-color:var(--accent,var(--terracotta,#D97757));box-shadow:0 12px 28px rgba(25,25,25,.16);outline:0}
+.hypeframe>svg{width:100%;height:auto;aspect-ratio:1/1;object-fit:contain}
+.section-body img{display:block;width:100%;max-width:760px;height:auto;aspect-ratio:760/260;object-fit:contain;margin:14px 0;border:1px solid var(--line,#D6D4C8);border-radius:8px;background:#F3F1E7}
+.section-body img:hover{border-color:var(--accent,var(--terracotta,#D97757));box-shadow:0 12px 28px rgba(25,25,25,.12);transform:translateY(-2px)}
+@media(prefers-reduced-motion:reduce){.toc,.section-menu,.section,details.section,.report-metadata,.hypeframe,.section-body img,.taxonomy-pill,.nav a{transition:none}.section:hover,details.section:hover,.hypeframe:hover,.hypeframe:focus-visible,.section-body img:hover:hover,.taxonomy-pill:hover,.nav a:hover{transform:none}}
+</style></head>
+<body><div class="topbar"><div class="topbar-inner"><div class="brand-lockup"><span class="brand-dot"></span><span class="brand-text">GBAutomation</span></div><div class="source-name">multi-agent-dag-report.html</div></div></div>
+<header><div class="eyebrow">Multi-Agent DAG Report - GBAutomation Report Package</div><h1>Multi-Agent Workflows: Fisch Hermes TAC Run</h1><p class="sub">A real TAC/Hermes workflow report showing the request, retrieval receipts, agent DAG, Kanban execution cards, Langfuse telemetry, validation gates, and remaining traceability gaps.</p><div class="taxonomy-pills" aria-label="Report category pills"><span class="taxonomy-pill">multi-agent-workflows</span><span class="taxonomy-pill">tac</span><span class="taxonomy-pill">hermes</span><span class="taxonomy-pill">langfuse</span><span class="taxonomy-pill">kanban</span><span class="taxonomy-pill">telemetry</span><span class="taxonomy-pill">fisch-group</span><span class="taxonomy-pill">approved-svgs</span><span class="taxonomy-pill">Autonomous AI Agents</span></div><nav class="nav"><a href="index.html">Index</a><a href="prd.html">PRD</a><a href="multi-agent-dag-report.html">Multi-Agent DAG Report</a></nav></header>
+<main><div class="brief-layout"><aside class="toc"><h2>Sections</h2><div class="toc-actions"><button type="button" data-action="expand">Expand all</button><button type="button" data-action="collapse">Collapse all</button></div><a href="#section-01" data-target="section-01"><span>01</span><strong>Overview</strong><em>83 words</em></a>
+<a href="#section-02" data-target="section-02"><span>02</span><strong>TAC Plan And Retrieval</strong><em>97 words</em></a>
+<a href="#section-03" data-target="section-03"><span>03</span><strong>Workflow Request</strong><em>57 words</em></a>
+<a href="#section-04" data-target="section-04"><span>04</span><strong>Agent Team DAG</strong><em>102 words</em></a>
+<a href="#section-05" data-target="section-05"><span>05</span><strong>Hermes Kanban Execution</strong><em>95 words</em></a>
+<a href="#section-06" data-target="section-06"><span>06</span><strong>Langfuse Telemetry</strong><em>91 words</em></a>
+<a href="#section-07" data-target="section-07"><span>07</span><strong>Validation Gates</strong><em>91 words</em></a>
+<a href="#section-08" data-target="section-08"><span>08</span><strong>Evidence Gaps</strong><em>89 words</em></a>
+<a href="#section-09" data-target="section-09"><span>09</span><strong>Reusable Pattern</strong><em>56 words</em></a>
+<a href="#section-10" data-target="section-10"><span>10</span><strong>Artifacts</strong><em>47 words</em></a>
+<a href="#section-11" data-target="section-11"><span>11</span><strong>Next Steps</strong><em>39 words</em></a></aside><div class="sections"><section class="visual-package" aria-label="Report hyperframe pack"><div class="visual-package-title"><h2>Hyperframe Pack</h2><span>SVG proof cards</span></div><div class="hypeframes"><article class="hypeframe" data-hyperframe-id="multi-agent-dag-report:fisch-hermes-agent-dag" data-hyperframe-title="multi-agent-dag-report / Fisch Hermes Agent DAG"><button type="button" class="hypeframe-open" onclick="return window.openHyperframeReview && window.openHyperframeReview(this)" aria-label="Open SVG review modal for multi-agent-dag-report / Fisch Hermes Agent DAG"><svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1080" viewBox="0 0 1080 1080" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" role="img">
+<title>Multi-Agent DAG Report Archon DAG 01: Fisch Hermes Agent DAG</title>
+<desc>Archon-style top-to-bottom DAG with typed nodes, dependency edges, statuses, gates, and proof artifacts.</desc>
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#F3F1E7"/><stop offset="100%" stop-color="#E6E4D9"/></linearGradient>
+<radialGradient id="glow" cx="66%" cy="18%" r="58%"><stop offset="0%" stop-color="#8A5FBF" stop-opacity=".20"/><stop offset="100%" stop-color="#8A5FBF" stop-opacity="0"/></radialGradient>
+<pattern id="dots" width="26" height="26" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r="1.35" fill="rgba(25,25,25,.13)"/></pattern>
+<filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#191919" flood-opacity=".08"/></filter>
+<marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 z" fill="#8A5FBF"/></marker>
+</defs>
+<rect width="1080" height="1080" fill="url(#bg)"/>
+<rect width="1080" height="1080" fill="url(#glow)"/>
+<rect x="48" y="48" width="984" height="984" rx="20" fill="none" stroke="#D6D4C8" stroke-width="1.2"/>
+<rect x="72" y="226" width="936" height="660" rx="18" fill="url(#dots)" opacity=".75"/>
+<text x="82" y="120" font-size="20" font-weight="800" fill="#8A5FBF" text-anchor="start" letter-spacing="2.2">01 / ARCHON DAG STANDARD</text>
+<text x="82" y="178" font-size="48" font-weight="500" fill="#191919" text-anchor="start" letter-spacing="0">Fisch Hermes Agent DAG</text>
+<text x="82" y="216" font-size="22" font-weight="400" fill="rgba(25,25,25,.62)" text-anchor="start" letter-spacing="0">Top-to-bottom layout from depends_on. Status-colored nodes and edges. Proof stays attached.</text>
+<path d="M540 301 C540 313 540 313 540 325" fill="none" stroke="#8A5FBF" stroke-width="2.6" stroke-linecap="round" marker-end="url(#arrow)" opacity=".68"><animate attributeName="stroke-dashoffset" from="52" to="0" dur="3.5s" repeatCount="indefinite"/></path>
+<path d="M540 419 C540 431 410 431 410 443" fill="none" stroke="#9B9688" stroke-width="2.6" stroke-linecap="round" marker-end="url(#arrow)" opacity=".68"></path>
+<path d="M540 419 C540 431 670 431 670 443" fill="none" stroke="#9B9688" stroke-width="2.6" stroke-linecap="round" marker-end="url(#arrow)" opacity=".68"></path>
+<path d="M410 537 C410 549 540 549 540 561" fill="none" stroke="#9B9688" stroke-width="2.6" stroke-linecap="round" marker-end="url(#arrow)" opacity=".68"></path>
+<path d="M670 537 C670 549 540 549 540 561" fill="none" stroke="#9B9688" stroke-width="2.6" stroke-linecap="round" marker-end="url(#arrow)" opacity=".68"></path>
+<path d="M540 655 C540 667 540 667 540 679" fill="none" stroke="#9B9688" stroke-width="2.6" stroke-linecap="round" marker-end="url(#arrow)" opacity=".68"></path>
+<path d="M540 773 C540 785 410 785 410 797" fill="none" stroke="#9B9688" stroke-width="2.6" stroke-linecap="round" marker-end="url(#arrow)" opacity=".68"></path>
+<path d="M410 891 C410 903 540 903 540 915" fill="none" stroke="#9B9688" stroke-width="2.6" stroke-linecap="round" marker-end="url(#arrow)" opacity=".68"></path>
+<path d="M540 773 C540 785 670 785 670 797" fill="none" stroke="#4F9D69" stroke-width="2.6" stroke-linecap="round" marker-end="url(#arrow)" opacity=".68"></path>
+<rect x="456" y="214" width="168" height="80" rx="11" fill="rgba(255,255,255,.72)" stroke="#D6D4C8" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="456" y="214" width="6" height="80" rx="3.0" fill="#4F9D69"/>
+<circle cx="479" cy="236" r="8" fill="#4F9D69"/><path d="M475 236 l3 3 l6 -7" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="495" y="240" font-size="11" font-weight="800" fill="#8A5FBF" text-anchor="start" letter-spacing="1.0">APPROVAL</text>
+<text x="471" y="262" font-size="14" font-weight="700" fill="#191919" text-anchor="start" letter-spacing="0">Fisch Hermes AWS</text>
+<text x="471" y="278" font-size="14" font-weight="700" fill="#191919" text-anchor="start" letter-spacing="0">install</text>
+<rect x="456" y="332" width="168" height="80" rx="11" fill="rgba(255,255,255,.72)" stroke="#D6D4C8" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="456" y="332" width="6" height="80" rx="3.0" fill="#8A5FBF"/>
+<circle cx="479" cy="354" r="8" fill="none" stroke="#8A5FBF" stroke-width="2" stroke-dasharray="11 7"><animateTransform attributeName="transform" type="rotate" from="0 479 354" to="360 479 354" dur="1.7s" repeatCount="indefinite"/></circle>
+<text x="495" y="358" font-size="11" font-weight="800" fill="#8A5FBF" text-anchor="start" letter-spacing="1.0">AGENT</text>
+<text x="471" y="380" font-size="14" font-weight="700" fill="#191919" text-anchor="start" letter-spacing="0">tac-director</text>
+<text x="471" y="402" font-size="10" font-weight="400" fill="rgba(25,25,25,.58)" text-anchor="start" letter-spacing="0">intake, route, frame</text>
+<rect x="326" y="450" width="168" height="80" rx="11" fill="rgba(255,255,255,.72)" stroke="#D6D4C8" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="326" y="450" width="6" height="80" rx="3.0" fill="#9B9688"/>
+<circle cx="349" cy="472" r="8" fill="none" stroke="#9B9688" stroke-width="2"/>
+<text x="365" y="476" font-size="11" font-weight="800" fill="#8A5FBF" text-anchor="start" letter-spacing="1.0">AGENT</text>
+<text x="341" y="498" font-size="14" font-weight="700" fill="#191919" text-anchor="start" letter-spacing="0">tac-researcher</text>
+<text x="341" y="520" font-size="10" font-weight="400" fill="rgba(25,25,25,.58)" text-anchor="start" letter-spacing="0">TAC sources and component</text>
+<rect x="586" y="450" width="168" height="80" rx="11" fill="rgba(255,255,255,.72)" stroke="#D6D4C8" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="586" y="450" width="6" height="80" rx="3.0" fill="#9B9688"/>
+<circle cx="609" cy="472" r="8" fill="none" stroke="#9B9688" stroke-width="2"/>
+<text x="625" y="476" font-size="11" font-weight="800" fill="#8A5FBF" text-anchor="start" letter-spacing="1.0">AGENT</text>
+<text x="601" y="498" font-size="14" font-weight="700" fill="#191919" text-anchor="start" letter-spacing="0">tac-architect</text>
+<text x="601" y="520" font-size="10" font-weight="400" fill="rgba(25,25,25,.58)" text-anchor="start" letter-spacing="0">PRD, design, team handoff</text>
+<rect x="456" y="568" width="168" height="80" rx="11" fill="rgba(255,255,255,.72)" stroke="#D6D4C8" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="456" y="568" width="6" height="80" rx="3.0" fill="#9B9688"/>
+<circle cx="479" cy="590" r="8" fill="none" stroke="#9B9688" stroke-width="2"/>
+<text x="495" y="594" font-size="11" font-weight="800" fill="#8A5FBF" text-anchor="start" letter-spacing="1.0">AGENT</text>
+<text x="471" y="616" font-size="14" font-weight="700" fill="#191919" text-anchor="start" letter-spacing="0">tac-builder</text>
+<text x="471" y="638" font-size="10" font-weight="400" fill="rgba(25,25,25,.58)" text-anchor="start" letter-spacing="0">scoped worktree changes</text>
+<rect x="456" y="686" width="168" height="80" rx="11" fill="rgba(255,255,255,.72)" stroke="#D6D4C8" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="456" y="686" width="6" height="80" rx="3.0" fill="#9B9688"/>
+<circle cx="479" cy="708" r="8" fill="none" stroke="#9B9688" stroke-width="2"/>
+<text x="495" y="712" font-size="11" font-weight="800" fill="#8A5FBF" text-anchor="start" letter-spacing="1.0">AGENT</text>
+<text x="471" y="734" font-size="14" font-weight="700" fill="#191919" text-anchor="start" letter-spacing="0">tac-validator</text>
+<text x="471" y="756" font-size="10" font-weight="400" fill="rgba(25,25,25,.58)" text-anchor="start" letter-spacing="0">tests, gates, smoke proof</text>
+<rect x="326" y="804" width="168" height="80" rx="11" fill="rgba(255,255,255,.72)" stroke="#D6D4C8" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="326" y="804" width="6" height="80" rx="3.0" fill="#9B9688"/>
+<circle cx="349" cy="826" r="8" fill="none" stroke="#9B9688" stroke-width="2"/>
+<text x="365" y="830" font-size="11" font-weight="800" fill="#8A5FBF" text-anchor="start" letter-spacing="1.0">AGENT</text>
+<text x="341" y="852" font-size="14" font-weight="700" fill="#191919" text-anchor="start" letter-spacing="0">tac-ops</text>
+<text x="341" y="874" font-size="10" font-weight="400" fill="rgba(25,25,25,.58)" text-anchor="start" letter-spacing="0">receipts and operator</text>
+<rect x="456" y="922" width="168" height="80" rx="11" fill="rgba(255,255,255,.72)" stroke="#D6D4C8" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="456" y="922" width="6" height="80" rx="3.0" fill="#9B9688"/>
+<circle cx="479" cy="944" r="8" fill="none" stroke="#9B9688" stroke-width="2"/>
+<text x="495" y="948" font-size="11" font-weight="800" fill="#8A5FBF" text-anchor="start" letter-spacing="1.0">AGENT</text>
+<text x="471" y="970" font-size="14" font-weight="700" fill="#191919" text-anchor="start" letter-spacing="0">tac-self-improve</text>
+<text x="471" y="992" font-size="10" font-weight="400" fill="rgba(25,25,25,.58)" text-anchor="start" letter-spacing="0">post-run learning and</text>
+<rect x="586" y="804" width="168" height="80" rx="11" fill="rgba(255,255,255,.72)" stroke="#D6D4C8" stroke-width="1.6" filter="url(#shadow)"/>
+<rect x="586" y="804" width="6" height="80" rx="3.0" fill="#4F9D69"/>
+<circle cx="609" cy="826" r="8" fill="#4F9D69"/><path d="M605 826 l3 3 l6 -7" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="625" y="830" font-size="11" font-weight="800" fill="#8A5FBF" text-anchor="start" letter-spacing="1.0">DATA</text>
+<text x="601" y="852" font-size="14" font-weight="700" fill="#191919" text-anchor="start" letter-spacing="0">Langfuse readout</text>
+<text x="601" y="874" font-size="10" font-weight="400" fill="rgba(25,25,25,.58)" text-anchor="start" letter-spacing="0">35 Hermes traces, 630</text>
+<circle cx="112" cy="942" r="9" fill="#4F9D69"/><path d="M108 942 l3 3 l7 -8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="132" y="947" font-size="16" font-weight="700" fill="rgba(25,25,25,.66)" text-anchor="start" letter-spacing="0">done</text>
+<circle cx="254" cy="942" r="9" fill="none" stroke="#8A5FBF" stroke-width="2" stroke-dasharray="12 8"><animateTransform attributeName="transform" type="rotate" from="0 254 942" to="360 254 942" dur="1.7s" repeatCount="indefinite"/></circle>
+<text x="274" y="947" font-size="16" font-weight="700" fill="rgba(25,25,25,.66)" text-anchor="start" letter-spacing="0">active</text>
+<circle cx="396" cy="942" r="9" fill="none" stroke="#9B9688" stroke-width="2"/>
+<text x="416" y="947" font-size="16" font-weight="700" fill="rgba(25,25,25,.66)" text-anchor="start" letter-spacing="0">waiting</text>
+<circle cx="538" cy="942" r="9" fill="#B94A48"/><path d="M534 938 l8 8 M542 938 l-8 8" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+<text x="558" y="947" font-size="16" font-weight="700" fill="rgba(25,25,25,.66)" text-anchor="start" letter-spacing="0">blocked</text>
+<text x="112" y="990" font-size="22" font-weight="800" fill="#8A5FBF" text-anchor="start" letter-spacing="0">Archon rule</text>
+<text x="232" y="990" font-size="23" font-weight="500" fill="#191919" text-anchor="start" letter-spacing="0">Every TAC node needs id, depends_on, type, status, owner, and evidence.</text>
+</svg></button></article><article class="hypeframe" data-hyperframe-id="multi-agent-dag-report:langfuse-trace-format" data-hyperframe-title="multi-agent-dag-report / Langfuse Trace Format"><button type="button" class="hypeframe-open" onclick="return window.openHyperframeReview && window.openHyperframeReview(this)" aria-label="Open SVG review modal for multi-agent-dag-report / Langfuse Trace Format"><svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1080" viewBox="0 0 1080 1080" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" role="img">
+<title>Multi-Agent DAG Report diagram 02: Langfuse Trace Format</title>
+<desc>Multi-agent DAG diagram for Langfuse Trace Format</desc>
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#F3F1E7"/><stop offset="100%" stop-color="#E6E4D9"/></linearGradient>
+<radialGradient id="glow" cx="66%" cy="18%" r="58%"><stop offset="0%" stop-color="#8A5FBF" stop-opacity=".20"/><stop offset="100%" stop-color="#8A5FBF" stop-opacity="0"/></radialGradient>
+<filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#191919" flood-opacity=".08"/></filter>
+<marker id="arrow" markerWidth="16" markerHeight="16" refX="12" refY="5" orient="auto"><path d="M0,0 L12,5 L0,10 z" fill="#8A5FBF"/></marker>
+</defs>
+<rect width="1080" height="1080" fill="url(#bg)"/>
+<rect width="1080" height="1080" fill="url(#glow)"/>
+<rect x="48" y="48" width="984" height="984" rx="20" fill="none" stroke="#D6D4C8" stroke-width="1.2"/>
+<text x="82" y="120" font-size="20" font-weight="800" fill="#8A5FBF" text-anchor="start" letter-spacing="2.2">02 / MULTI-AGENT DAG</text>
+<text x="82" y="178" font-size="48" font-weight="500" fill="#191919" text-anchor="start" letter-spacing="0">Langfuse Trace Format</text>
+<rect x="96" y="286" width="888" height="78" rx="15" fill="rgba(255,255,255,.62)" stroke="#D6D4C8" stroke-width="2" filter="url(#shadow)"/>
+<circle cx="132" cy="325" r="12" fill="#8A5FBF"><animate attributeName="r" values="9;13;9" dur="4s" begin="0.0s" repeatCount="indefinite"/></circle>
+<text x="164" y="334" font-size="25" font-weight="800" fill="#191919" text-anchor="start" letter-spacing="0">Trace summary</text>
+<text x="444" y="334" font-size="22" font-weight="400" fill="rgba(25,25,25,.64)" text-anchor="start" letter-spacing="0">trace_id, session_id, user_id, duration_ms, status</text>
+<rect x="96" y="390" width="888" height="78" rx="15" fill="rgba(255,255,255,.62)" stroke="#D6D4C8" stroke-width="2" filter="url(#shadow)"/>
+<circle cx="132" cy="429" r="12" fill="#8A5FBF"><animate attributeName="r" values="9;13;9" dur="4s" begin="0.18s" repeatCount="indefinite"/></circle>
+<text x="164" y="438" font-size="25" font-weight="800" fill="#191919" text-anchor="start" letter-spacing="0">Rollup metrics</text>
+<text x="444" y="438" font-size="22" font-weight="400" fill="rgba(25,25,25,.64)" text-anchor="start" letter-spacing="0">input_tokens, output_tokens, cost, span_count</text>
+<rect x="96" y="494" width="888" height="78" rx="15" fill="rgba(255,255,255,.62)" stroke="#D6D4C8" stroke-width="2" filter="url(#shadow)"/>
+<circle cx="132" cy="533" r="12" fill="#8A5FBF"><animate attributeName="r" values="9;13;9" dur="4s" begin="0.36s" repeatCount="indefinite"/></circle>
+<text x="164" y="542" font-size="25" font-weight="800" fill="#191919" text-anchor="start" letter-spacing="0">Agent list</text>
+<text x="444" y="542" font-size="22" font-weight="400" fill="rgba(25,25,25,.64)" text-anchor="start" letter-spacing="0">agents_delegated in first-use order</text>
+<rect x="96" y="598" width="888" height="78" rx="15" fill="rgba(255,255,255,.62)" stroke="#D6D4C8" stroke-width="2" filter="url(#shadow)"/>
+<circle cx="132" cy="637" r="12" fill="#8A5FBF"><animate attributeName="r" values="9;13;9" dur="4s" begin="0.54s" repeatCount="indefinite"/></circle>
+<text x="164" y="646" font-size="25" font-weight="800" fill="#191919" text-anchor="start" letter-spacing="0">Tool list</text>
+<text x="444" y="646" font-size="22" font-weight="400" fill="rgba(25,25,25,.64)" text-anchor="start" letter-spacing="0">tools_called in first-use order</text>
+<rect x="96" y="702" width="888" height="78" rx="15" fill="rgba(255,255,255,.62)" stroke="#D6D4C8" stroke-width="2" filter="url(#shadow)"/>
+<circle cx="132" cy="741" r="12" fill="#8A5FBF"><animate attributeName="r" values="9;13;9" dur="4s" begin="0.72s" repeatCount="indefinite"/></circle>
+<text x="164" y="750" font-size="25" font-weight="800" fill="#191919" text-anchor="start" letter-spacing="0">Span rows</text>
+<text x="444" y="750" font-size="22" font-weight="400" fill="rgba(25,25,25,.64)" text-anchor="start" letter-spacing="0">name, span_type, duration_ms, parent_id, metadata</text>
+<rect x="96" y="806" width="888" height="78" rx="15" fill="rgba(255,255,255,.62)" stroke="#D6D4C8" stroke-width="2" filter="url(#shadow)"/>
+<circle cx="132" cy="845" r="12" fill="#8A5FBF"><animate attributeName="r" values="9;13;9" dur="4s" begin="0.8999999999999999s" repeatCount="indefinite"/></circle>
+<text x="164" y="854" font-size="25" font-weight="800" fill="#191919" text-anchor="start" letter-spacing="0">Observations</text>
+<text x="444" y="854" font-size="22" font-weight="400" fill="rgba(25,25,25,.64)" text-anchor="start" letter-spacing="0">GENERATION, SPAN, EVENT with model and tokens</text>
+<text x="96" y="944" font-size="24" font-weight="800" fill="#8A5FBF" text-anchor="start" letter-spacing="0">Preferred format from Eagle scaffold</text>
+<text x="96" y="982" font-size="25" font-weight="500" fill="#191919" text-anchor="start" letter-spacing="0">Compact summary first. Ordered spans second. Raw trace only when needed.</text>
+</svg></button></article><article class="hypeframe" data-hyperframe-id="multi-agent-dag-report:workflow-gates-proof" data-hyperframe-title="multi-agent-dag-report / Workflow Gates And Proof"><button type="button" class="hypeframe-open" onclick="return window.openHyperframeReview && window.openHyperframeReview(this)" aria-label="Open SVG review modal for multi-agent-dag-report / Workflow Gates And Proof"><svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1080" viewBox="0 0 1080 1080" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" role="img">
+<title>Multi-Agent DAG Report diagram 03: Workflow Gates And Proof</title>
+<desc>Multi-agent DAG diagram for Workflow Gates And Proof</desc>
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#F3F1E7"/><stop offset="100%" stop-color="#E6E4D9"/></linearGradient>
+<radialGradient id="glow" cx="66%" cy="18%" r="58%"><stop offset="0%" stop-color="#8A5FBF" stop-opacity=".20"/><stop offset="100%" stop-color="#8A5FBF" stop-opacity="0"/></radialGradient>
+<filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#191919" flood-opacity=".08"/></filter>
+<marker id="arrow" markerWidth="16" markerHeight="16" refX="12" refY="5" orient="auto"><path d="M0,0 L12,5 L0,10 z" fill="#8A5FBF"/></marker>
+</defs>
+<rect width="1080" height="1080" fill="url(#bg)"/>
+<rect width="1080" height="1080" fill="url(#glow)"/>
+<rect x="48" y="48" width="984" height="984" rx="20" fill="none" stroke="#D6D4C8" stroke-width="1.2"/>
+<text x="82" y="120" font-size="20" font-weight="800" fill="#8A5FBF" text-anchor="start" letter-spacing="2.2">03 / MULTI-AGENT DAG</text>
+<text x="82" y="178" font-size="48" font-weight="500" fill="#191919" text-anchor="start" letter-spacing="0">Workflow Gates And Proof</text>
+<rect x="104" y="286" width="872" height="92" rx="18" fill="rgba(255,255,255,.62)" stroke="#D6D4C8" stroke-width="2" filter="url(#shadow)"/>
+<text x="138" y="326" font-size="30" font-weight="800" fill="#191919" text-anchor="start" letter-spacing="0">Approval</text>
+<text x="338" y="326" font-size="23" font-weight="400" fill="rgba(25,25,25,.64)" text-anchor="start" letter-spacing="0">operator approves PRD / live writes</text>
+<rect x="812" y="310" width="118" height="34" rx="17" fill="#8A5FBF" opacity=".13" stroke="#8A5FBF"/>
+<text x="871" y="334" font-size="14" font-weight="800" fill="#8A5FBF" text-anchor="middle" letter-spacing="1.5">PENDING</text>
+<path d="M540 378 C540 378 540 412 540 412" fill="none" stroke="#8A5FBF" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow)" opacity=".72"><animate attributeName="stroke-dashoffset" from="64" to="0" dur="4s" repeatCount="indefinite"/></path>
+<rect x="104" y="412" width="872" height="92" rx="18" fill="rgba(255,255,255,.62)" stroke="#D6D4C8" stroke-width="2" filter="url(#shadow)"/>
+<text x="138" y="452" font-size="30" font-weight="800" fill="#191919" text-anchor="start" letter-spacing="0">Build</text>
+<text x="338" y="452" font-size="23" font-weight="400" fill="rgba(25,25,25,.64)" text-anchor="start" letter-spacing="0">code changes and generated artifacts</text>
+<rect x="812" y="436" width="118" height="34" rx="17" fill="#8A5FBF" opacity=".13" stroke="#8A5FBF"/>
+<text x="871" y="460" font-size="14" font-weight="800" fill="#8A5FBF" text-anchor="middle" letter-spacing="1.5">ACTIVE</text>
+<path d="M540 504 C540 504 540 538 540 538" fill="none" stroke="#8A5FBF" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow)" opacity=".72"><animate attributeName="stroke-dashoffset" from="64" to="0" dur="4s" repeatCount="indefinite"/></path>
+<rect x="104" y="538" width="872" height="92" rx="18" fill="rgba(255,255,255,.62)" stroke="#D6D4C8" stroke-width="2" filter="url(#shadow)"/>
+<text x="138" y="578" font-size="30" font-weight="800" fill="#191919" text-anchor="start" letter-spacing="0">Tests</text>
+<text x="338" y="578" font-size="23" font-weight="400" fill="rgba(25,25,25,.64)" text-anchor="start" letter-spacing="0">unit, integration, browser, smoke</text>
+<rect x="812" y="562" width="118" height="34" rx="17" fill="#8A5FBF" opacity=".13" stroke="#8A5FBF"/>
+<text x="871" y="586" font-size="14" font-weight="800" fill="#8A5FBF" text-anchor="middle" letter-spacing="1.5">REQUIRED</text>
+<path d="M540 630 C540 630 540 664 540 664" fill="none" stroke="#8A5FBF" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow)" opacity=".72"><animate attributeName="stroke-dashoffset" from="64" to="0" dur="4s" repeatCount="indefinite"/></path>
+<rect x="104" y="664" width="872" height="92" rx="18" fill="rgba(255,255,255,.62)" stroke="#D6D4C8" stroke-width="2" filter="url(#shadow)"/>
+<text x="138" y="704" font-size="30" font-weight="800" fill="#191919" text-anchor="start" letter-spacing="0">Data</text>
+<text x="338" y="704" font-size="23" font-weight="400" fill="rgba(25,25,25,.64)" text-anchor="start" letter-spacing="0">receipt, manifest, schema, row counts</text>
+<rect x="812" y="688" width="118" height="34" rx="17" fill="#8A5FBF" opacity=".13" stroke="#8A5FBF"/>
+<text x="871" y="712" font-size="14" font-weight="800" fill="#8A5FBF" text-anchor="middle" letter-spacing="1.5">REQUIRED</text>
+<path d="M540 756 C540 756 540 790 540 790" fill="none" stroke="#8A5FBF" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow)" opacity=".72"><animate attributeName="stroke-dashoffset" from="64" to="0" dur="4s" repeatCount="indefinite"/></path>
+<rect x="104" y="790" width="872" height="92" rx="18" fill="rgba(255,255,255,.62)" stroke="#D6D4C8" stroke-width="2" filter="url(#shadow)"/>
+<text x="138" y="830" font-size="30" font-weight="800" fill="#191919" text-anchor="start" letter-spacing="0">Publish</text>
+<text x="338" y="830" font-size="23" font-weight="400" fill="rgba(25,25,25,.64)" text-anchor="start" letter-spacing="0">HTML report, PR link, Telegram/email</text>
+<rect x="812" y="814" width="118" height="34" rx="17" fill="#8A5FBF" opacity=".13" stroke="#8A5FBF"/>
+<text x="871" y="838" font-size="14" font-weight="800" fill="#8A5FBF" text-anchor="middle" letter-spacing="1.5">READY</text>
+<text x="104" y="952" font-size="24" font-weight="800" fill="#8A5FBF" text-anchor="start" letter-spacing="0">Trust rule</text>
+<text x="104" y="988" font-size="27" font-weight="500" fill="#191919" text-anchor="start" letter-spacing="0">A TAC build is not done until gates and proof agree.</text>
+</svg></button></article></div></section><details class="section" id="section-01" open><summary><span class="section-index">01</span><span class="section-title">Overview</span><span class="section-count">83 words</span></summary><div class="section-body"><p>This report turns a recent TAC/Hermes run into a reusable multi-agent workflow artifact. The case study is the Fisch Group AWS Hermes install request: EC2 nano, Hermes runtime, Finn profile, Telegram hello world, Supabase/Langfuse integrations, CI/CD first deployment, and cleanup/rollback runbook.</p>
+<p>The run is useful because it exercises the full pattern: plan with TAC retrieval, dispatch a specialist team, write Hermes Kanban cards, validate local artifacts, publish production board tasks, and compare the work against a Langfuse evidence window.</p></div></details>
+<details class="section" id="section-02"><summary><span class="section-index">02</span><span class="section-title">TAC Plan And Retrieval</span><span class="section-count">97 words</span></summary><div class="section-body"><p>The report itself was generated through the updated TAC plan route. The plan recorded <code>schema_version: tac-cli.plan.v1</code>, <code>status: plan_ready</code>, and <code>selected_components: 12</code>.</p>
+<p>The important change is retrieval provenance. The TAC plan requires two separate receipts for every plan run:</p>
+<table><thead><tr><th>Receipt</th><th>Path</th></tr></thead><tbody><tr><td>Knowledge query</td><td><code>second-brain/intelligence/tac-retrievals/tac-plan-gbautomation-20260610T063939Z-build-a-multi-agent-workflow-report-from-the-fis-knowledge.json</code></td></tr><tr><td>Component retrieval</td><td><code>second-brain/intelligence/tac-retrievals/tac-plan-gbautomation-20260610T063939Z-build-a-multi-agent-workflow-report-from-the-fis-components.json</code></td></tr></tbody></table>
+<p>The top retrieved patterns were multi-agent orchestration, build-with-report contracts, context hydration before execution, review-agent validation, and parallel sandbox workflows. Those are the right primitives for this report type: route once, hydrate context, fan out specialists, validate, and publish a durable report.</p></div></details>
+<details class="section" id="section-03"><summary><span class="section-index">03</span><span class="section-title">Workflow Request</span><span class="section-count">57 words</span></summary><div class="section-body"><p>The source team request was:</p>
+<blockquote>Full Fisch Group Hermes AWS install: EC2 nano, Hermes runtime, Finn profile,</blockquote>
+<blockquote>Telegram hello world, Supabase/Langfuse integrations, CI/CD first deployment,</blockquote>
+<blockquote>and cleanup/rollback runbook.</blockquote>
+<p>The TAC dispatch selected <code>team: tac-hermes</code>, <code>client: fisch-group</code>, and <code>entry_profile: tac-director</code>. The prompt format was <code>level_4_delegation_prompt</code>, with required sections for purpose, variables, instructions, workflow, and report.</p></div></details>
+<details class="section" id="section-04"><summary><span class="section-index">04</span><span class="section-title">Agent Team DAG</span><span class="section-count">102 words</span></summary><div class="section-body"><p>The team sequence is simple enough to read, but important enough to visualize: director starts the run, researcher and architect split from the director, builder joins both streams, validator gates the build, ops publishes receipts, and self-improve turns the run into durable system improvements.</p>
+<table><thead><tr><th>Agent</th><th>Production Task</th><th>Status In Dispatch Report</th><th>Dependency</th></tr></thead><tbody><tr><td><code>tac-director</code></td><td><code>t_1909be87</code></td><td>running</td><td>none</td></tr><tr><td><code>tac-researcher</code></td><td><code>t_63c4efc6</code></td><td>todo</td><td><code>tac-director</code></td></tr><tr><td><code>tac-architect</code></td><td><code>t_b2488afc</code></td><td>todo</td><td><code>tac-director</code></td></tr><tr><td><code>tac-builder</code></td><td><code>t_347b408c</code></td><td>todo</td><td><code>tac-researcher</code>, <code>tac-architect</code></td></tr><tr><td><code>tac-validator</code></td><td><code>t_b7b9fd19</code></td><td>todo</td><td><code>tac-builder</code></td></tr><tr><td><code>tac-ops</code></td><td><code>t_f4c84aca</code></td><td>todo</td><td><code>tac-validator</code></td></tr><tr><td><code>tac-self-improve</code></td><td><code>t_6718b7c1</code></td><td>todo</td><td><code>tac-ops</code></td></tr></tbody></table>
+<p>The first SVG reads <code>dag-nodes.json</code>, so the visual frame is driven by the same IDs and dependencies as the report.</p></div></details>
+<details class="section" id="section-05"><summary><span class="section-index">05</span><span class="section-title">Hermes Kanban Execution</span><span class="section-count">95 words</span></summary><div class="section-body"><p>The dry-run card file records <code>schema_version: hermes-tac-team-runner.v1</code>, <code>mode: dry-run</code>, <code>team: tac-hermes</code>, and <code>client: fisch-group</code>. It defines the same seven cards and dependency chain that were later written to the production Hermes Kanban board.</p>
+<p>The production board path in the dispatch note is:</p>
+<pre><code>/Users/greg/.hermes/kanban/boards/gbautomation/kanban.db</code></pre>
+<p>One operational caveat matters: the first production board write used <code>/Users/greg/.hermes/scripts/tacdispatch.py</code> because the Mac Mini checkout did not contain <code>scripts/hermes_tac_team_runner.py</code>. TAC Ops should either sync the checkout or move the runner into the production Hermes scripts path.</p></div></details>
+<details class="section" id="section-06"><summary><span class="section-index">06</span><span class="section-title">Langfuse Telemetry</span><span class="section-count">91 words</span></summary><div class="section-body"><p>The Langfuse evidence window was generated at <code>2026-06-10 04:27:38Z</code> and starts at <code>2026-06-09 04:27:32Z</code>.</p>
+<table><thead><tr><th>Metric</th><th>Count</th></tr></thead><tbody><tr><td>Langfuse traces</td><td>754</td></tr><tr><td>Embedded observation/event IDs</td><td>2,518</td></tr><tr><td>Hermes traces</td><td>35</td></tr><tr><td>Hermes events</td><td>630</td></tr><tr><td>Hermes Kanban runner traces</td><td>19</td></tr><tr><td>Hermes Kanban runner events</td><td>171</td></tr><tr><td><code>proposal_action:approve</code> traces</td><td>2</td></tr><tr><td><code>proposal_action:approve</code> events</td><td>8</td></tr></tbody></table>
+<p>The strongest specific trigger for this workflow family is <code>hermes_tac_team_runner:write-kanban</code>, which produced 19 traces and 171 events. That is enough to show the Kanban runner lane in the report, even though a card-to-trace join still needs hardening.</p></div></details>
+<details class="section" id="section-07"><summary><span class="section-index">07</span><span class="section-title">Validation Gates</span><span class="section-count">91 words</span></summary><div class="section-body"><p>The dispatch report names the validation proof already present:</p>
+<table><thead><tr><th>Gate</th><th>Evidence</th></tr></thead><tbody><tr><td>Installer tests</td><td><code>python -m pytest tests/test_install_hermes_agent_profile.py tests/test_fisch_group_digitalocean_setup.py -q</code> passed, 6 tests</td></tr><tr><td>Metadata parse</td><td>Runbook-linked workflow, roadmap, and skill metadata parsed successfully</td></tr><tr><td>Local smoke</td><td><code>python scripts/finn_hello_world_smoke.py</code> passed locally</td></tr><tr><td>Profile access</td><td>Finn profile carries <code>tac_team_access</code> metadata for <code>tac-hermes</code></td></tr><tr><td>Production profiles</td><td>All seven TAC profiles were present on the Mac Mini</td></tr></tbody></table>
+<p>These gates are the minimum proof spine for a multi-agent workflow report: route, retrieval, execution cards, smoke or test evidence, production state, and post-run improvement requirement.</p></div></details>
+<details class="section" id="section-08"><summary><span class="section-index">08</span><span class="section-title">Evidence Gaps</span><span class="section-count">89 words</span></summary><div class="section-body"><p>The report should stay honest about missing observability. The evidence window has zero traces with token usage populated, so cost reporting is not trustworthy yet. It also has 78 traces missing trigger source, 42 traces with missing or weak working-directory source, and 48 traces still unclassified after enhanced rules.</p>
+<p>Those are not blockers for this report, but they are blockers for production quality telemetry. The next run should emit usageDetails and should attach <code>card_id</code>, <code>trace_id</code>, <code>profile</code>, <code>trigger</code>, <code>cwd</code>, <code>repo</code>, <code>branch</code>, <code>session_id</code>, and <code>artifact_path</code> to root traces and child observations.</p></div></details>
+<details class="section" id="section-09"><summary><span class="section-index">09</span><span class="section-title">Reusable Pattern</span><span class="section-count">56 words</span></summary><div class="section-body"><p>This report establishes the pattern for <code>multi-agent-workflows</code>:</p>
+<ol><li>Start from a TAC plan with knowledge and component retrieval receipts.</li><li>Select a real team run with route, cards, artifacts, tests, and telemetry.</li><li>Store <code>dag-nodes.json</code> for actual dependency visualization.</li><li>Limit the primary SVGs to three data-backed frames.</li><li>Keep the report candid about coverage gaps and next instrumentation joins.</li></ol></div></details>
+<details class="section" id="section-10"><summary><span class="section-index">10</span><span class="section-title">Artifacts</span><span class="section-count">47 words</span></summary><div class="section-body"><table><thead><tr><th>Artifact</th><th>Path</th></tr></thead><tbody><tr><td>PRD source</td><td><code>second-brain/intelligence/reports/experiments/2026-06-10-multi-agent-workflows/prd.md</code></td></tr><tr><td>DAG report source</td><td><code>second-brain/intelligence/reports/experiments/2026-06-10-multi-agent-workflows/multi-agent-dag-report.md</code></td></tr><tr><td>Visual brief</td><td><code>second-brain/intelligence/reports/experiments/2026-06-10-multi-agent-workflows/report-visuals.json</code></td></tr><tr><td>DAG nodes</td><td><code>second-brain/intelligence/reports/experiments/2026-06-10-multi-agent-workflows/dag-nodes.json</code></td></tr><tr><td>Manifest</td><td><code>second-brain/intelligence/reports/experiments/2026-06-10-multi-agent-workflows/manifest.json</code></td></tr></tbody></table></div></details>
+<details class="section" id="section-11"><summary><span class="section-index">11</span><span class="section-title">Next Steps</span><span class="section-count">39 words</span></summary><div class="section-body"><p>The next production improvement is the card-to-trace join. Once Hermes emits the Kanban card ID into Langfuse root traces and local receipts, the report can show exact trace IDs per agent node instead of aggregate telemetry plus task IDs.</p></div></details></div></div><footer class="report-metadata" aria-label="Report metadata"><h2>Metadata</h2><div class="metadata-grid"><div class="meta-item"><span>Report</span><strong>Multi-Agent DAG Report</strong></div><div class="meta-item"><span>Source</span><strong>multi-agent-dag-report.md</strong></div><div class="meta-item"><span>Rendered</span><strong>multi-agent-dag-report.html</strong></div><div class="meta-item"><span>Package</span><strong>C:\Users\gblac\OneDrive\Desktop\gbauto\gbautomation\second-brain\intelligence\reports\experiments\2026-06-10-multi-agent-workflows</strong></div><div class="meta-item"><span>Generated</span><strong>2026-06-10T19:04:20+00:00</strong></div><div class="meta-item"><span>Schema Version</span><strong>gbauto-report.v1</strong></div><div class="meta-item"><span>Report Type</span><strong>multi_agent_dag_report</strong></div><div class="meta-item"><span>Slug</span><strong>multi-agent-workflows-fisch-hermes-tac-run</strong></div><div class="meta-item"><span>Client</span><strong>gbautomation</strong></div><div class="meta-item"><span>Created At</span><strong>2026-06-10T07:05:00Z</strong></div><div class="meta-item"><span>Owner</span><strong>codex</strong></div><div class="meta-item"><span>Status</span><strong>ready_for_review</strong></div><div class="meta-item"><span>Audience</span><strong>operator</strong></div><div class="meta-item"><span>Tags</span><strong>multi-agent-workflows, tac, hermes, langfuse, kanban, telemetry, fisch-group, approved-svgs</strong></div></div></footer></main>
+<script>
+const sections=[...document.querySelectorAll('details.section')];
+const controls=[...document.querySelectorAll('[data-target]')];
+const setActive=id=>controls.forEach(control=>control.classList.toggle('active',control.dataset.target===id));
+controls.forEach(control=>control.addEventListener('click',event=>{
+  event.preventDefault();
+  const section=document.getElementById(control.dataset.target);
+  if(!section) return;
+  section.open=true;
+  setActive(section.id);
+  section.scrollIntoView({behavior:'smooth',block:'start'});
+}));
+document.querySelectorAll('[data-action="expand"]').forEach(button=>button.addEventListener('click',()=>sections.forEach(section=>section.open=true)));
+document.querySelectorAll('[data-action="collapse"]').forEach(button=>button.addEventListener('click',()=>sections.forEach((section,index)=>section.open=index===0)));
+sections.forEach(section=>section.addEventListener('toggle',()=>{if(section.open)setActive(section.id);}));
+if(sections[0])setActive(sections[0].id);
+const hideHyperframePreview=()=>{
+  document.querySelectorAll('.modal[data-svg-modal="report"]').forEach(modal=>modal.remove());
+};
+const showHyperframePreview=card=>{
+  const svg=card.querySelector('svg');
+  if(!svg)return;
+  hideHyperframePreview();
+  const modal=document.createElement('div');
+  modal.className='modal';
+  modal.dataset.svgModal='report';
+  modal.setAttribute('role','dialog');
+  modal.setAttribute('aria-modal','true');
+  modal.innerHTML='<div class="modal-inner">'+svg.outerHTML+'</div>';
+  modal.addEventListener('click',()=>modal.remove());
+  modal.querySelector('.modal-inner').addEventListener('click',event=>event.stopPropagation());
+  document.body.appendChild(modal);
+};
+window.openHyperframeReview=button=>{
+  const card=button.closest('.hypeframe');
+  if(card)showHyperframePreview(card);
+  return false;
+};
+document.querySelectorAll('.hypeframe').forEach(card=>{
+  const opener=card.querySelector('.hypeframe-open');
+  if(opener&&!opener.hasAttribute('onclick'))opener.addEventListener('click',event=>{
+    event.preventDefault();
+    showHyperframePreview(card);
+  });
+});
+document.addEventListener('keydown',event=>{if(event.key==='Escape')hideHyperframePreview();});
+</script>
+</body></html>

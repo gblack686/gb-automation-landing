@@ -1,0 +1,111 @@
+{
+  "schema_version": "gbauto-dag-nodes.v1",
+  "source": "second-brain/intelligence/test-runs/2026-06-10/fisch-group-aws-hermes-full-install-dispatch.md",
+  "nodes": [
+    {
+      "id": "operator.request",
+      "label": "Fisch Hermes AWS install",
+      "nodeType": "approval",
+      "status": "completed",
+      "summary": "EC2 nano, Hermes, Finn, Telegram, Supabase, Langfuse, CI/CD",
+      "metadata": {
+        "evidence": "operator request routed to tac-hermes"
+      }
+    },
+    {
+      "id": "tac-director",
+      "label": "tac-director",
+      "nodeType": "agent",
+      "status": "running",
+      "summary": "intake, route, frame",
+      "depends_on": ["operator.request"],
+      "metadata": {
+        "task_id": "t_1909be87",
+        "evidence": "production Kanban task running"
+      }
+    },
+    {
+      "id": "tac-researcher",
+      "label": "tac-researcher",
+      "nodeType": "agent",
+      "status": "pending",
+      "summary": "TAC sources and component patterns",
+      "depends_on": ["tac-director"],
+      "metadata": {
+        "task_id": "t_63c4efc6",
+        "evidence": "todo card depends on director"
+      }
+    },
+    {
+      "id": "tac-architect",
+      "label": "tac-architect",
+      "nodeType": "agent",
+      "status": "pending",
+      "summary": "PRD, design, team handoff",
+      "depends_on": ["tac-director"],
+      "metadata": {
+        "task_id": "t_b2488afc",
+        "evidence": "todo card depends on director"
+      }
+    },
+    {
+      "id": "tac-builder",
+      "label": "tac-builder",
+      "nodeType": "agent",
+      "status": "pending",
+      "summary": "scoped worktree changes",
+      "depends_on": ["tac-researcher", "tac-architect"],
+      "metadata": {
+        "task_id": "t_347b408c",
+        "evidence": "joins retrieval and design"
+      }
+    },
+    {
+      "id": "tac-validator",
+      "label": "tac-validator",
+      "nodeType": "agent",
+      "status": "pending",
+      "summary": "tests, gates, smoke proof",
+      "depends_on": ["tac-builder"],
+      "metadata": {
+        "task_id": "t_b7b9fd19",
+        "evidence": "validation follows build"
+      }
+    },
+    {
+      "id": "tac-ops",
+      "label": "tac-ops",
+      "nodeType": "agent",
+      "status": "pending",
+      "summary": "receipts and operator summary",
+      "depends_on": ["tac-validator"],
+      "metadata": {
+        "task_id": "t_f4c84aca",
+        "evidence": "publishes after validation"
+      }
+    },
+    {
+      "id": "tac-self-improve",
+      "label": "tac-self-improve",
+      "nodeType": "agent",
+      "status": "pending",
+      "summary": "post-run learning and hardening",
+      "depends_on": ["tac-ops"],
+      "metadata": {
+        "task_id": "t_6718b7c1",
+        "evidence": "durable improvement tail"
+      }
+    },
+    {
+      "id": "langfuse.readout",
+      "label": "Langfuse readout",
+      "nodeType": "data",
+      "status": "completed",
+      "summary": "35 Hermes traces, 630 events",
+      "depends_on": ["tac-validator"],
+      "metadata": {
+        "evidence": "2026-06-10 Langfuse analysis"
+      }
+    }
+  ]
+}
