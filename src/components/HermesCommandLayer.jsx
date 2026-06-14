@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   BookOpen,
   BriefcaseBusiness,
@@ -10,6 +11,7 @@ import {
   Send,
   Sparkles,
   UserRound,
+  Workflow,
   X,
 } from 'lucide-react';
 import { fetchPublicOpsFeed, insertWebsiteFeedback } from '../lib/supabaseOps';
@@ -56,6 +58,14 @@ const shortcuts = [
     label: 'AI Library',
     description: 'Find skills, AGENTS.md files, prompts, profiles, and templates.',
     icon: Library,
+  },
+  {
+    id: 'observability',
+    keys: ['Ctrl', '.'],
+    label: 'Observability',
+    description: 'Agent DAGs and Langfuse traces from the build pipeline.',
+    icon: Workflow,
+    href: '/observability',
   },
   {
     id: 'shortcuts',
@@ -175,6 +185,18 @@ function HermesCommandLayer() {
   const [opsFeed, setOpsFeed] = useState([]);
   const [opsFeedStatus, setOpsFeedStatus] = useState('idle');
   const inputRef = useRef(null);
+  const navigate = useNavigate();
+
+  // Panel shortcuts open an in-modal view; href shortcuts navigate to a route.
+  function activateShortcut(shortcut) {
+    if (shortcut.href) {
+      setOpen(false);
+      navigate(shortcut.href);
+      return;
+    }
+    setActivePanel(shortcut.id);
+    setQuery('');
+  }
 
   const active = panels[activePanel] ?? panels.chat;
   const filteredShortcuts = useMemo(() => {
@@ -201,12 +223,19 @@ function HermesCommandLayer() {
         b: 'brain',
         m: 'board',
         ';': 'library',
+        '.': 'observability',
         '/': 'shortcuts',
       };
 
       const nextPanel = shortcutMap[key];
       if (nextPanel) {
         event.preventDefault();
+        const shortcut = shortcuts.find((s) => s.id === nextPanel);
+        if (shortcut?.href) {
+          setOpen(false);
+          navigate(shortcut.href);
+          return;
+        }
         setActivePanel(nextPanel);
         setOpen(true);
       }
@@ -214,7 +243,7 @@ function HermesCommandLayer() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     if (open) {
@@ -312,10 +341,7 @@ function HermesCommandLayer() {
                 <button
                   key={shortcut.id}
                   type="button"
-                  onClick={() => {
-                    setActivePanel(shortcut.id);
-                    setQuery('');
-                  }}
+                  onClick={() => activateShortcut(shortcut)}
                   className={`flex min-h-12 items-center gap-3 rounded-lg border px-3 py-2 text-left transition ${
                     isActive
                       ? 'border-[#D97757] bg-white/70 text-[#191919]'
@@ -445,10 +471,7 @@ function HermesCommandLayer() {
                           <button
                             key={shortcut.id}
                             type="button"
-                            onClick={() => {
-                              setActivePanel(shortcut.id);
-                              setQuery('');
-                            }}
+                            onClick={() => activateShortcut(shortcut)}
                             className="flex min-h-12 items-center gap-3 rounded-lg border border-[#D6D4C8] bg-white/50 px-3 py-2 text-left transition hover:border-[#D97757]"
                           >
                             <Icon size={16} className="text-[#D97757]" />
