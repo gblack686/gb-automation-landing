@@ -15,6 +15,8 @@ import PRDIndex from './pages/PRDIndex';
 import PRDView from './pages/PRDView';
 import ObservabilityIndex from './pages/ObservabilityIndex';
 import DagView from './pages/DagView';
+import Overview from './pages/Overview';
+import Repos from './pages/Repos';
 import HermesCommandLayer from './components/HermesCommandLayer';
 import RequireAuth from './components/RequireAuth';
 import GbautomationPortal from './clients/gbautomation/routes';
@@ -32,6 +34,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/prds" element={<PRDIndex />} />
           <Route path="/prds/:slug" element={<PRDView />} />
+          <Route path="/overview" element={<Overview />} />
+          <Route path="/repos" element={<Repos />} />
           <Route path="/observability" element={<ObservabilityIndex />} />
           <Route path="/observability/:slug" element={<DagView />} />
           <Route path="/tac" element={<TacCatalog />} />
