@@ -9,6 +9,13 @@
 # IMPORTANT: extensionless rule MUST come before the SPA catch-all, otherwise
 # /prds/foo falls through to /index.html (this was the 2026-05-20 bug).
 
+# Public agent/style surfaces are real static files. Serve them as-is before
+# the SPA catch-all so agents receive JSON/Markdown/CSS instead of index.html.
+/llms.txt                  /llms.txt                      200!
+/tac/*.json                /tac/:splat.json               200!
+/tac/*.md                  /tac/:splat.md                 200!
+/tac/*.css                 /tac/:splat.css                200!
+
 /prds/prds-manifest.json   /prds/prds-manifest.json       200
 /prds/*.html               /prds/:splat.html              200
 /prds/*.json               /prds/:splat.json              200
