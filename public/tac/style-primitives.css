@@ -1,0 +1,111 @@
+/* GBAutomation public style primitives
+   Source: src/index.css in gb-automation-landing.
+   Use with the tokens in /tac/style.json. */
+
+:root {
+  --cream-bg: #F3F1E7;
+  --cream-panel: #E6E4D9;
+  --text-main: #191919;
+  --text-muted: #5C5C5C;
+  --text-light: #8C8A84;
+  --border: #D6D4C8;
+  --terracotta: #D97757;
+}
+
+.glass-panel {
+  background: rgba(230, 228, 217, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(214, 212, 200, 0.6);
+  transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@property --gradient-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.hover-shiny {
+  --shiny-bg: #E6E4D9;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-shiny:hover {
+  background: linear-gradient(var(--shiny-bg), var(--shiny-bg)) padding-box,
+    conic-gradient(from var(--gradient-angle), transparent 20%, #D97757 50%, transparent 80%) border-box !important;
+  border-color: transparent !important;
+  animation: border-spin 3s linear infinite;
+  box-shadow: 0 12px 40px -12px rgba(217, 119, 87, 0.15);
+  transform: translateY(-4px);
+}
+
+@keyframes border-spin {
+  from { --gradient-angle: 0deg; }
+  to { --gradient-angle: 360deg; }
+}
+
+.hover-mini {
+  transition: all 0.2s ease-out;
+}
+
+.hover-mini:hover {
+  transform: translateY(-2px);
+}
+
+.input-field {
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px solid #D6D4C8;
+  color: #191919;
+  transition: all 0.3s ease;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--terracotta);
+  background: white;
+  box-shadow: 0 0 0 1px var(--terracotta);
+}
+
+.input-field::placeholder {
+  color: #8C8A84;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hover-shiny,
+  .hover-shiny:hover,
+  .hover-mini,
+  .hover-mini:hover,
+  .reveal,
+  .reveal.active,
+  .animate-marquee {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transform: none !important;
+  }
+}

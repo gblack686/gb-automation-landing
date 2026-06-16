@@ -1,0 +1,118 @@
+{
+  "schema_version": "gbauto-public-style.v1",
+  "updated_at": "2026-06-16T00:00:00Z",
+  "status": "public_read_only",
+  "purpose": "Small public style packet for agents that need to produce GBAutomation-branded frontend components, reports, decks, PDFs, SVGs, or image prompts.",
+  "canonical_skill": "get-gbauto-theme",
+  "public_endpoints": {
+    "json": "/tac/style.json",
+    "markdown": "/tac/style.md",
+    "agent_markdown": "/tac/agent-style.md",
+    "llms": "/llms.txt",
+    "catalog": "/tac/catalog.json",
+    "style_primitives_css": "/tac/style-primitives.css",
+    "assets_json": "/tac/assets.json",
+    "assets_markdown": "/tac/assets.md"
+  },
+  "brand": {
+    "colors": {
+      "terracotta": "#D97757",
+      "terracotta_hover": "#B75F43",
+      "ink": "#191919",
+      "cream_bg": "#F3F1E7",
+      "cream_2": "#E6E4D9",
+      "stone": "#D6D4C8",
+      "text_mute": "#8C8A84",
+      "text_muted_2": "#5C5C5C"
+    },
+    "typography": {
+      "headline": "Newsreader",
+      "body_ui": "Inter",
+      "google_fonts_href": "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&display=swap"
+    },
+    "style_primitives": [
+      "glass-panel",
+      "hover-shiny",
+      "hover-mini",
+      "input-field",
+      "reveal",
+      "animate-marquee"
+    ],
+    "style_primitives_detail": {
+      "glass-panel": {
+        "purpose": "Cream translucent panel with 12px backdrop blur and stone border.",
+        "css": "background: rgba(230, 228, 217, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(214, 212, 200, 0.6); transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);"
+      },
+      "hover-shiny": {
+        "purpose": "Hover shine/border animation for cream cards and panels.",
+        "requires": "Set --shiny-bg to the panel background when not using #E6E4D9.",
+        "animation": "On hover, spins --gradient-angle through a terracotta conic-gradient border via border-spin 3s linear infinite.",
+        "css_contract": "Use linear-gradient(var(--shiny-bg), var(--shiny-bg)) padding-box plus conic-gradient(from var(--gradient-angle), transparent 20%, #D97757 50%, transparent 80%) border-box; border-color: transparent; transform: translateY(-4px); box-shadow: 0 12px 40px -12px rgba(217,119,87,.15).",
+        "accessibility": "Disable or reduce animation under prefers-reduced-motion."
+      },
+      "hover-mini": {
+        "purpose": "Small tactile lift for buttons/links.",
+        "css": "transition: all 0.2s ease-out; transform: translateY(-2px) on hover."
+      },
+      "input-field": {
+        "purpose": "Cream-compatible input styling.",
+        "css": "rgba(255,255,255,.4) background, stone border, ink text, terracotta focus border/outline."
+      },
+      "reveal": {
+        "purpose": "Scroll/reveal state primitive controlled by adding .active.",
+        "css": "opacity 0 and translateY(20px), then opacity 1 and translateY(0) when .active."
+      },
+      "animate-marquee": {
+        "purpose": "Horizontal marquee track for tech/logo ribbons.",
+        "css": "marquee 30s linear infinite; pause on hover."
+      }
+    }
+  },
+  "frontend_rules": [
+    "Load get-gbauto-theme before specifying or implementing any GB-branded frontend or visual output.",
+    "Use Newsreader for headlines and Inter for body/UI.",
+    "Use #F3F1E7 cream for page backgrounds.",
+    "Use cream-2 or glass-panel for card/panel surfaces.",
+    "Use stone borders and dividers.",
+    "Use terracotta for CTAs, highlights, glows, charts, badges, and selected states.",
+    "Use ink for text and primary CTA fills only. Do not use ink as card or panel background.",
+    "Use Tailwind arbitrary-value classes or CSS variables that match the canonical tokens exactly.",
+    "Reuse glass-panel, hover-shiny, hover-mini, and input-field where applicable.",
+    "Verify with a screenshot/browser/render check when practical.",
+    "For shine animation, use the documented hover-shiny conic-gradient border spin from /tac/style-primitives.css; do not invent blue/purple shimmer variants.",
+    "Reference public assets via /tac/assets.json; do not expose private client or second-brain asset paths."
+  ],
+  "forbidden": [
+    "Pure white page backgrounds (#FFFFFF)",
+    "Pure black page backgrounds (#000000)",
+    "Ink or black card panels",
+    "Generic Tailwind blues/grays as primary palette",
+    "JetBrains Mono, system-ui, Helvetica, Arial, or Roboto for branded output",
+    "Self-shipped theme.json files as the source of truth for brand validation"
+  ],
+  "tailwind_examples": {
+    "section": "bg-[#F3F1E7] text-[#191919]",
+    "card": "rounded-lg border border-[#D6D4C8] bg-[#E6E4D9] p-6 hover-shiny",
+    "primary_button": "bg-[#191919] hover:bg-[#333] text-[#F3F1E7] font-semibold uppercase tracking-wider rounded-lg hover-mini",
+    "terracotta_button": "bg-[#D97757] hover:bg-[#B75F43] text-[#F3F1E7] font-semibold uppercase tracking-wider rounded-lg hover-mini",
+    "input": "input-field",
+    "shiny_card": "glass-panel hover-shiny rounded-lg border border-[#D6D4C8] p-6 [--shiny-bg:#E6E4D9]"
+  },
+  "agent_instruction": "When asked to design or review GBAutomation-branded UI, use this style packet as the public contract. If a task needs private TAC inventory, authenticated agent dispatch, or internal second-brain paths, stop and request the private TAC surface instead.",
+  "source_evidence": {
+    "css_primitives_source": "src/index.css",
+    "tailwind_config_source": "tailwind.config.js",
+    "public_assets_source": "public/"
+  },
+  "assets": {
+    "manifest": "/tac/assets.json",
+    "markdown": "/tac/assets.md",
+    "recommended_identity_assets": [
+      "/gb-logo.png",
+      "/gb-signature.png"
+    ],
+    "avoid_as_brand_assets": [
+      "/vite.svg"
+    ]
+  }
+}
