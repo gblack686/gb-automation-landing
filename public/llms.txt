@@ -1,0 +1,19 @@
+# gbautomation.xyz agent surfaces
+
+Public read-only surfaces for agents:
+
+- GBauto style JSON: https://gbautoxyz.netlify.app/tac/style.json
+- GBauto style markdown: https://gbautoxyz.netlify.app/tac/style.md
+- Agent style instructions: https://gbautoxyz.netlify.app/tac/agent-style.md
+- Style primitives CSS: https://gbautoxyz.netlify.app/tac/style-primitives.css
+- Public assets JSON: https://gbautoxyz.netlify.app/tac/assets.json
+- Public assets markdown: https://gbautoxyz.netlify.app/tac/assets.md
+- TAC catalog JSON: https://gbautoxyz.netlify.app/tac/catalog.json
+- TAC catalog UI: https://gbautoxyz.netlify.app/tac
+
+Rules:
+
+- Public surfaces are read-only and cacheable.
+- Do not expect public endpoints to dispatch agents or expose private TAC inventory.
+- For GB-branded frontend work, use `get-gbauto-theme` and the style packet above.
+- Private TAC execution, client records, and internal second-brain paths require an authenticated/private surface.

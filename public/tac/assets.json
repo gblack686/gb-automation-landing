@@ -1,0 +1,54 @@
+{
+  "schema_version": "gbauto-public-assets.v1",
+  "updated_at": "2026-06-16T00:00:00Z",
+  "status": "public_read_only",
+  "purpose": "Public GB Automation brand/website asset references for agents. Use URLs as references; do not embed private files.",
+  "base_url": "https://gbautoxyz.netlify.app",
+  "recommended_assets": [
+    {
+      "path": "/gb-logo.png",
+      "source_path": "public/gb-logo.png",
+      "bytes": 302668,
+      "sha256": "ccc593ef48d9c40041acbcd45e877ad084d02c323335192added215f32770af0",
+      "kind": "raster",
+      "role": "brand_identity",
+      "notes": "GB Automation identity mark. Recommended for public GB-branded outputs."
+    },
+    {
+      "path": "/gb-signature.png",
+      "source_path": "public/gb-signature.png",
+      "bytes": 302668,
+      "sha256": "ccc593ef48d9c40041acbcd45e877ad084d02c323335192added215f32770af0",
+      "kind": "raster",
+      "role": "brand_identity",
+      "notes": "GB Automation signature/identity mark. Recommended for public GB-branded outputs."
+    },
+    {
+      "path": "/portfolio/samples/logo-motion/poster.png",
+      "source_path": "public/portfolio/samples/logo-motion/poster.png",
+      "bytes": 1568492,
+      "sha256": "d840efa02797d6582aad2586c9d6538adb4ca689bf8e28246b1361523c79dd7b",
+      "kind": "raster",
+      "role": "portfolio_reference",
+      "notes": "Public portfolio/logo-motion poster reference. Use as inspiration, not a canonical logo."
+    }
+  ],
+  "non_brand_assets_observed": [
+    {
+      "path": "/vite.svg",
+      "source_path": "public/vite.svg",
+      "bytes": 1497,
+      "sha256": "4a748afd443918bb16591c834c401dae33e87861ab5dbad0811c3a3b4a9214fb",
+      "kind": "vector",
+      "role": "non_brand_scaffold",
+      "notes": "Scaffold/sample SVG found in public/. Do not use as GB branding."
+    }
+  ],
+  "rules": [
+    "Prefer /gb-logo.png or /gb-signature.png for GB Automation identity marks.",
+    "Do not use /vite.svg or framework sample SVGs as GB brand assets.",
+    "Do not promote client-specific assets through this public style guide.",
+    "When generating new SVGs, use the canonical cream/terracotta/ink palette from /tac/style.json.",
+    "Never expose private client assets or internal second-brain paths on this public surface."
+  ]
+}
