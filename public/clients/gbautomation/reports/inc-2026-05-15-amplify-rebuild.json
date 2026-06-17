@@ -5,12 +5,12 @@
   "window": "2026-05-15 21:11 to 22:30 UTC",
   "published_at": "2026-05-15T22:40:00Z",
   "author": "Greg",
-  "summary": "Amplify build held 18 minutes waiting on a stale submodule pointer. Resolved by manual PAT rotation. Postmortem inside.",
+  "summary": "Amplify build held waiting on a stale submodule pointer. Resolved by manual PAT rotation. Postmortem inside.",
   "sections": [
     {
       "heading": "Impact",
       "bullets": [
-        "One Amplify rebuild for the parent site blocked for 18 minutes.",
+        "One Amplify rebuild for the parent site blocked on a stale submodule pointer.",
         "No client surfaces were degraded. The previous deploy continued to serve."
       ]
     },
@@ -25,7 +25,7 @@
       "heading": "Fix",
       "bullets": [
         "Rotated the parent PAT. Restarted the Amplify build.",
-        "Added a calendar reminder 7 days ahead of the next PAT expiry."
+        "Added a calendar reminder ahead of the next PAT expiry."
       ]
     },
     {

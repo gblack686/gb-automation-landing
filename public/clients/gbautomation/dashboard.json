@@ -4,46 +4,62 @@
   "headline": "Template tenant is the canonical surface every new client portal forks from.",
   "metrics": [
     {
-      "label": "Apps in portfolio",
-      "value": "6",
-      "detail": "Mirrors public apps-registry.json. Two are tenant-private.",
+      "label": "Apps portfolio",
+      "value": "Catalogued",
+      "detail": "Mirrors public apps-registry.json. Tenant-private entries are labeled without numeric proof claims.",
       "accent": "default"
     },
     {
       "label": "Open artifacts",
-      "value": "4",
+      "value": "Tracked",
       "detail": "Briefs, PRDs, and TAC build reports awaiting publish.",
       "accent": "default"
     },
     {
       "label": "Last sync",
-      "value": "3m",
-      "detail": "repository_dispatch from gbauto/gbautomation succeeded.",
-      "accent": "good"
+      "value": "Pending proof",
+      "detail": "repository_dispatch proof requires a source-backed smoke receipt before a timing claim is shown.",
+      "accent": "default"
     },
     {
       "label": "Validation",
       "value": "Pass",
-      "detail": "TAC receipt written 2026-05-10. Next sweep 2026-06-07.",
+      "detail": "TAC receipt written 2026-05-10.",
       "accent": "good"
     }
   ],
   "status_rail": [
-    { "label": "Auth", "state": "ok", "detail": "Cognito group tenant-gbautomation reachable." },
-    { "label": "CI", "state": "ok", "detail": "Last 12 amplify builds green." },
-    { "label": "Sync", "state": "ok", "detail": "Submodule pointer up to date." },
-    { "label": "Drift", "state": "watch", "detail": "Artifacts manifest lags disk tree." }
+    {
+      "label": "Auth",
+      "state": "ok",
+      "detail": "Cognito group tenant-gbautomation reachable."
+    },
+    {
+      "label": "CI",
+      "state": "watch",
+      "detail": "Amplify build counts omitted until a source-backed deploy receipt is attached."
+    },
+    {
+      "label": "Sync",
+      "state": "watch",
+      "detail": "Submodule and repository_dispatch proof require a smoke receipt."
+    },
+    {
+      "label": "Drift",
+      "state": "watch",
+      "detail": "Artifacts manifest lags disk tree."
+    }
   ],
   "activity": [
     {
       "timestamp": "2026-05-31T14:21:00Z",
       "title": "Mall Scanner cycle completed",
-      "detail": "112 brand pages diffed. 4 sale alerts dispatched via Hermes."
+      "detail": "Brand pages were diffed and sale-alert dispatch is tracked as an experimental operations workflow."
     },
     {
       "timestamp": "2026-05-30T09:42:00Z",
       "title": "Weekly TAC report published",
-      "detail": "5 wins, 1 blocker rolled to next week. See report wk-2026-22."
+      "detail": "Weekly wins and blockers are available in report wk-2026-22."
     },
     {
       "timestamp": "2026-05-28T18:05:00Z",
@@ -53,7 +69,7 @@
     {
       "timestamp": "2026-05-22T11:08:00Z",
       "title": "Tenant submodule bumped",
-      "detail": "Amplify deployment 8e3a4c2 promoted to production."
+      "detail": "Amplify deployment proof requires a source-backed receipt before public quantified status is shown."
     }
   ],
   "next_steps": [

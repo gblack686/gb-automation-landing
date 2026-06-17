@@ -25,26 +25,26 @@ export default function Process() {
     {
       number: '01',
       title: 'Vibe Discovery',
-      duration: '2 Weeks',
+      duration: 'Discovery',
       description: 'Map workflows, define validation gates, and understand your business context deeply to calibrate the agents.'
     },
     {
       number: '02',
       title: 'Development Sprint',
-      duration: '6 Weeks',
+      duration: 'Sprint',
       description: 'Build internal + external apps, integrate agents, and establish core functionality using iterative vibe coding sessions.'
     },
     {
       number: '03',
       title: 'Agent Orchestration & Training',
-      duration: '2 Weeks',
+      duration: 'Orchestration',
       description: 'RAG setup, specialized agent training, and system optimization for autonomy.'
     },
     {
       number: '04',
       title: 'Handoff & Enablement',
-      duration: 'Final Week',
-      description: 'CloudFormation kit, team training, documentation, and full system transfer. After 90 days, you own the infrastructure.'
+      duration: 'Handoff',
+      description: 'CloudFormation kit, team training, documentation, and full system transfer plan.'
     }
   ];
 
@@ -58,7 +58,7 @@ export default function Process() {
             Methodology
           </span>
           <h2 className="text-4xl font-serif font-medium text-[#191919] tracking-tight mt-2">
-            The 90-Day Process
+            The Implementation Process
           </h2>
           <p className="text-[#5C5C5C] text-sm mt-2">
             A structured approach to building production-ready AI systems.

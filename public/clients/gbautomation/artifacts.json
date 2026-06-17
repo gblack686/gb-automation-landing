@@ -5,7 +5,7 @@
     {
       "id": "wk-2026-22-tac-report",
       "title": "TAC Weekly Report, Week 22",
-      "summary": "5 wins, 1 blocker rolled. Includes Mall Scanner sale-alert delta and YouTube Intel coverage.",
+      "summary": "Weekly TAC roll-up with Mall Scanner sale-alert delta and YouTube Intel coverage.",
       "kind": "report",
       "status": "shipped",
       "owner": "Greg",
@@ -35,7 +35,7 @@
     {
       "id": "adjust-ai-7-day-developer-observability",
       "title": "PRD: Adjust AI 7-Day Developer Observability Build",
-      "summary": "Adjust AI prospect PRD. Pinpoints the 7-day proof gate before any code is shipped.",
+      "summary": "Adjust AI prospect PRD. Frames a proof gate before any code is shipped.",
       "kind": "prd",
       "status": "shipped",
       "owner": "Greg",

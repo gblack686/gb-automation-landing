@@ -31,7 +31,7 @@ export const portfolioItems = [
       architecture: 'Multi-agent system with specialized subagents for different AWS services, orchestrated through a central Slack interface for seamless operations.',
       integrations: ['Slack', 'AWS CloudWatch', 'AWS CDK', 'AWS Lambda', 'EventBridge'],
       benefits: [
-        'Reduce manual AWS console navigation by 80%',
+        'Reduce manual AWS console navigation',
         'Instant access to logs and metrics from Slack',
         'Automated compliance reporting',
         'User-level context for personalized operations'
@@ -69,7 +69,7 @@ export const portfolioItems = [
       architecture: 'Orchestrated development pipeline with planning, implementation, and validation stages. Maintains stateful context across development sessions for continuity.',
       integrations: ['AWS CDK', 'AWS Cognito', 'Git', 'Linear', 'Jira', 'Slack'],
       benefits: [
-        'Reduce feature development time by 60%',
+        'Reduce feature development cycle time',
         'Ensure AWS best practices compliance',
         'Maintain stateful context across development sessions',
         'Isolated agent permissions via Cognito'
@@ -107,8 +107,8 @@ export const portfolioItems = [
       architecture: 'Multi-modal orchestrator with specialized subagents for video, image, and style consistency. Powered by Google Veo 3.1 and Imagen 3 for state-of-the-art generation.',
       integrations: ['Google Veo 3.1', 'Imagen 3', 'Slack', 'Telegram', 'Cloud Storage', 'FFmpeg'],
       benefits: [
-        'Reduce content production time by 90%',
-        '79% cost reduction vs traditional agencies',
+        'Reduce content production time',
+        'Lower production cost versus traditional agencies',
         'Maintain brand consistency across all assets',
         'Instant content generation via Slack or Telegram'
       ],
@@ -145,7 +145,7 @@ export const portfolioItems = [
       architecture: 'Extensible harness with hook system, custom skills, and platform-agnostic task management. Expert agents learn from completed tasks and improve over time.',
       integrations: ['Linear', 'Jira', 'GitHub', 'GitLab', 'Azure DevOps', 'Langfuse', 'Custom APIs'],
       benefits: [
-        'Build custom agents in hours vs weeks',
+        'Accelerate custom agent builds',
         'Complete observability with Langfuse integration',
         'Agents learn and improve from completed tasks',
         'Task management system agnostic'

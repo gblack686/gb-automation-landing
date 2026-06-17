@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-06-11T19:37:27Z",
+  "contract": "ClaimSource from PRD section 8",
+  "claims_scanned": {
+    "src_public_client_pages": [
+      "src/pages/*.jsx",
+      "src/components/*.jsx",
+      "src/clients/**/*.jsx",
+      "src/clients/**/*.js",
+      "src/data/portfolioData.js"
+    ],
+    "public_registries": [
+      "public/portfolio/*.json",
+      "public/portfolio/*.md",
+      "public/clients/**/*.json",
+      "public/artifacts/manifest.json",
+      "public/prds/prds-manifest.json"
+    ],
+    "named_or_numeric_claim_groups_reviewed": 24
+  },
+  "records": [
+    {
+      "claim": "The GBAutomation client portal route was implemented behind the existing auth gate and validated with test/build/browser checks.",
+      "clientSlug": "gbautomation",
+      "sourcePath": "/Users/greg/repos/gbautomation/second-brain/plans/2026-05-10-client-portal-validation-gbautomation.md",
+      "sourceQuote": "Implemented 2026-05-10 in `gb-automation-landing`: Added `/clients/gbautomation/*` behind the existing `RequireAuth` sign-in gate... Validation: `npm run test:tenant` passed... `npm run build` passed. Local Vite route returned HTTP 200 at `/clients/gbautomation`.",
+      "verdict": "substantiated"
+    },
+    {
+      "claim": "The GBAutomation portal validation has a TAC receipt with tac_status validated.",
+      "clientSlug": "gbautomation",
+      "sourcePath": "/Users/greg/repos/gbautomation/second-brain/intelligence/tac-validations/2026-05-10-client-portal-validation-gbautomation.json",
+      "sourceQuote": "\"tac_status\": \"validated\", \"validated_at\": \"2026-05-11T00:04:50.808732+00:00\"",
+      "verdict": "substantiated"
+    },
+    {
+      "claim": "YouTube Intel is a GBAutomation operations app for channel allowlists, transcripts, summaries, and dashboard/reporting workflows.",
+      "clientSlug": "gbautomation",
+      "sourcePath": "/Users/greg/repos/gbautomation/second-brain/plans/2026-05-11-deployed-architectures-extension-plan.md",
+      "sourceQuote": "Scans Greg's liked-videos and a curated channel list on a launchd schedule, fetches transcripts + descriptions, generates summaries via Claude, writes to a local SQLite store, and serves a single-page HTML dashboard for reviewing recent intel.",
+      "verdict": "substantiated"
+    },
+    {
+      "claim": "The YouTube Intel workflow had real workflow evidence, including a database and dashboard artifacts.",
+      "clientSlug": "gbautomation",
+      "sourcePath": "/Users/greg/repos/gbautomation/second-brain/plans/2026-05-10-hermes-seven-level-enable-plan.md",
+      "sourceQuote": "Real workflow evidence: Parent task created `second-brain/intelligence/transcripts/youtube/youtube_intel.db`. Parent task created `second-brain/intelligence/transcripts/youtube/DASHBOARD.md`.",
+      "verdict": "substantiated"
+    },
+    {
+      "claim": "Logo Motion is a logo-driven motion-image app using OpenAI image generation and FFmpeg interpolation.",
+      "sourcePath": "/Users/greg/repos/gbautomation/resources/skills/tac-process/scripts/_requests/logo-motion-app.md",
+      "sourceQuote": "Build an app that generates motion images using OpenAI's new image generator \"image 2\"... The app is logo-driven: user drops in their company logo... export the final clip.",
+      "verdict": "substantiated"
+    },
+    {
+      "claim": "Jason Diaz / PMC is an active client profile with a gbauto/jid5274 repository and a private client portal route.",
+      "clientSlug": "jid5274",
+      "sourcePath": "/Users/greg/repos/gbautomation/second-brain/clients/jason-diaz/profile.md; /Users/greg/repos/gb-automation-landing-worktrees/portal-proof-vetting/src/clients/shared/tenantConfig.js",
+      "sourceQuote": "profile.md: \"display_name: Jason Diaz (PMC)\" and \"GitHub: github.com/gbauto/jid5274\"; tenantConfig.js: \"slug: 'jid5274'\", \"name: 'Jason Diaz'\", \"repository: 'gbauto/jid5274'\".",
+      "verdict": "substantiated"
+    },
+    {
+      "claim": "Adjust AI is an inbound prospect with a proposed developer-observability PRD/deliverable.",
+      "clientSlug": "adjust-ai",
+      "sourcePath": "/Users/greg/repos/gbautomation/second-brain/clients/adjust-ai/profile.md",
+      "sourceQuote": "Inbound prospect run by Max Rosenbloom... Proposed deliverable: 7-day, 3-step Hermes multi-agent build for developer observability... Pre-call PRD drafted.",
+      "verdict": "substantiated"
+    },
+    {
+      "claim": "The public artifact manifest contained a pytest Acme Co artifact path.",
+      "clientSlug": "acme-co",
+      "sourcePath": "/Users/greg/repos/gb-automation-landing-worktrees/portal-proof-vetting/public/artifacts/manifest.json",
+      "sourceQuote": "Removed during proof vetting: prior manifest entry pointed at /private/.../pytest-of-greg/.../clients/Acme Co/outputs/brief.html.",
+      "verdict": "remove"
+    },
+    {
+      "claim": "Legacy public portfolio files asserted RevStar, aggregate project counts, percentage reductions, and quantified business outcomes without source-backed proof records.",
+      "sourcePath": "/Users/greg/repos/gb-automation-landing-worktrees/portal-proof-vetting/public/portfolio/portfolio.json",
+      "sourceQuote": "Rewritten during proof vetting to capability examples; counts and ROI figures intentionally removed pending source-backed proof records.",
+      "verdict": "rewrite-as-capability"
+    },
+    {
+      "claim": "Legacy Claude Code future-development registry asserted ROI, budgets, token volumes, cost savings, satisfaction ratings, and performance percentages without source-backed proof records.",
+      "sourcePath": "/Users/greg/repos/gb-automation-landing-worktrees/portal-proof-vetting/public/portfolio/claude-code-projects.json",
+      "sourceQuote": "Rewritten during proof vetting as Claude Code Capability Concepts with no ROI, cost-savings, or client-outcome claims.",
+      "verdict": "rewrite-as-capability"
+    },
+    {
+      "claim": "Landing-page portfolio cards used numeric percentage benefit claims.",
+      "sourcePath": "/Users/greg/repos/gb-automation-landing-worktrees/portal-proof-vetting/src/data/portfolioData.js",
+      "sourceQuote": "Rewritten during proof vetting from numeric benefit claims to qualitative capability statements.",
+      "verdict": "rewrite-as-capability"
+    },
+    {
+      "claim": "Landing-page pricing/process/contact copy used uncited numeric timing/monitoring claims.",
+      "sourcePath": "/Users/greg/repos/gb-automation-landing-worktrees/portal-proof-vetting/src/components/Pricing.jsx; /Users/greg/repos/gb-automation-landing-worktrees/portal-proof-vetting/src/components/Process.jsx; /Users/greg/repos/gb-automation-landing-worktrees/portal-proof-vetting/src/components/ContactForm.jsx",
+      "sourceQuote": "Rewritten during proof vetting to avoid unsupported timing promises and monitoring quantities.",
+      "verdict": "rewrite-as-capability"
+    },
+    {
+      "claim": "Landing-page pricing amounts are current GBAutomation offer copy rather than client proof.",
+      "sourcePath": "/Users/greg/repos/gb-automation-landing-worktrees/portal-proof-vetting/src/components/Pricing.jsx",
+      "sourceQuote": "tiers = [{ title: 'System Blueprint', price: '$500' }, { title: 'Agent Implementation', price: '$4,999' }, { title: 'Development Leadership', price: '$9,999' }]",
+      "verdict": "substantiated"
+    },
+    {
+      "claim": "GBAutomation dashboard/report fixtures previously showed app/artifact/sync/build/sale-alert numeric rollups without source-backed receipts.",
+      "clientSlug": "gbautomation",
+      "sourcePath": "/Users/greg/repos/gb-automation-landing-worktrees/portal-proof-vetting/public/clients/gbautomation/dashboard.json; /Users/greg/repos/gb-automation-landing-worktrees/portal-proof-vetting/public/clients/gbautomation/reports/wk-2026-22-tac-report.json; /Users/greg/repos/gb-automation-landing-worktrees/portal-proof-vetting/src/clients/gbautomation/data/portalData.js",
+      "sourceQuote": "Rewritten during proof vetting to use Catalogued/Tracked/Pending proof labels and to omit numeric rollups until source-backed receipts are attached.",
+      "verdict": "rewrite-as-capability"
+    },
+    {
+      "claim": "Logo Motion and YouTube Intel app registry latest_run entries contained numeric or pass/fail run assertions without source-backed run receipts in second-brain or repo sources.",
+      "clientSlug": "gbautomation",
+      "sourcePath": "/Users/greg/repos/gb-automation-landing-worktrees/portal-proof-vetting/public/portfolio/apps-registry.json",
+      "sourceQuote": "Rewritten during proof vetting: Logo Motion latest_run and YouTube Intel latest_run are null pending source-backed run receipts; Logo Motion description now states public run metrics are withheld until a source-backed receipt is attached.",
+      "verdict": "rewrite-as-capability"
+    },
+    {
+      "claim": "The embedded JID5274 Archon bundle contains Jason/PMC business stats and named downstream-practice references in a minified static asset.",
+      "clientSlug": "jid5274",
+      "sourcePath": "/Users/greg/repos/gb-automation-landing-worktrees/portal-proof-vetting/public/clients/jid5274/archon/assets/index-nD_mwmsc.js",
+      "sourceQuote": "Unpatched bundle snippets found during proof scan include \"Brochure Stats\", \"4\u00d7 faster implementation\", \"PMC Clients\", \"EWC \u2014 Elevated Wellness Center\", and \"Precision Health by Science\".",
+      "verdict": "remove"
+    }
+  ]
+}

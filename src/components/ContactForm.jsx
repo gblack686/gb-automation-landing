@@ -175,7 +175,7 @@ export default function ContactForm() {
               </div>
               <h3 className="text-xl font-serif font-medium text-[#191919] mb-2">Thank You!</h3>
               <p className="text-[#5C5C5C] text-sm mb-1">Your message has been received.</p>
-              <p className="text-[#5C5C5C] text-sm">We'll get back to you within 24 hours.</p>
+              <p className="text-[#5C5C5C] text-sm">We'll get back to you as soon as possible.</p>
               <button
                 type="button"
                 onClick={() => setSubmitStatus(null)}

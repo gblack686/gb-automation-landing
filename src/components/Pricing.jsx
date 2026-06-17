@@ -61,7 +61,7 @@ export default function Pricing() {
       title: 'Development Leadership',
       price: '$9,999',
       period: '/ Month',
-      features: ['Full Development Leadership', 'Unlimited Agent Support', 'Strategic Planning Sessions', 'Code Review & Optimization', 'Priority Access & Response', '24/7 System Monitoring'],
+      features: ['Full Development Leadership', 'Unlimited Agent Support', 'Strategic Planning Sessions', 'Code Review & Optimization', 'Priority Access & Response', 'Continuous System Monitoring'],
       cta: 'Apply Now',
       primary: false
     }
@@ -120,7 +120,7 @@ export default function Pricing() {
         </div>
 
         <p className="text-xs text-[#8C8A84] italic">
-          *After 90 days, you own the complete AI infrastructure, deployment automation, and trained development team.
+          *Engagement scope is finalized in the implementation plan before work begins.
         </p>
       </div>
     </section>

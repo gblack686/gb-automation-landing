@@ -5,7 +5,7 @@
       "id": "wk-2026-22-tac-report",
       "period": "weekly",
       "title": "TAC Weekly Report, Week 22",
-      "summary": "Mall Scanner shipped its first sale-alert cycle. Portal validation accepted. One blocker on artifact manifest drift.",
+      "summary": "Mall Scanner shipped a sale-alert cycle. Portal validation accepted. Artifact manifest drift remained the blocker.",
       "published_at": "2026-05-30T09:42:00Z",
       "window": "2026-05-24 to 2026-05-30",
       "author": "Greg"
@@ -32,7 +32,7 @@
       "id": "inc-2026-05-15-amplify-rebuild",
       "period": "incident",
       "title": "Incident: Amplify rebuild stuck on submodule fetch",
-      "summary": "Amplify build held for 18 minutes waiting on a stale submodule pointer. Resolved by manual PAT rotation. Postmortem inside.",
+      "summary": "Amplify build held waiting on a stale submodule pointer. Resolved by manual PAT rotation. Postmortem inside.",
       "published_at": "2026-05-15T22:40:00Z",
       "window": "2026-05-15 21:11 to 22:30",
       "author": "Greg"

@@ -1,32 +1,5 @@
 {
-  "artifacts": [
-    {
-      "archive_reason": null,
-      "archived": false,
-      "archived_at": null,
-      "artifact_id": "brief-bdfbfda44fbb",
-      "artifact_kind": null,
-      "asset_url": "/artifacts/acme-co/brief-bdfbfda44fbb/brief.html",
-      "client": "acme-co",
-      "created_at": "2026-05-21T20:41:39Z",
-      "drive": {
-        "enabled": false,
-        "reason": "dry-run enabled",
-        "status": "dry-run"
-      },
-      "filename": "brief.html",
-      "mime_type": "text/html; charset=utf-8",
-      "project": null,
-      "public_path": "/Users/greg/repos/gb-automation-landing/public/artifacts/acme-co/brief-bdfbfda44fbb/brief.html",
-      "registry_path": "/private/var/folders/2l/jq039tfd4klckl_r7sjhl6hm0000gn/T/pytest-of-greg/pytest-86/test_manifest_idempotency_and_0/registry/acme-co/brief-bdfbfda44fbb/brief.html",
-      "sha256": "bdfbfda44fbb43453a9d8a6e08d71af89e85a46192de589860eca73ada723499",
-      "size": 14,
-      "source_path": "/private/var/folders/2l/jq039tfd4klckl_r7sjhl6hm0000gn/T/pytest-of-greg/pytest-86/test_manifest_idempotency_and_0/clients/Acme Co/outputs/brief.html",
-      "tags": [],
-      "type": "html",
-      "web_route": "/artifacts/acme-co/brief-bdfbfda44fbb"
-    }
-  ],
+  "artifacts": [],
   "schema_version": 1,
-  "updated_at": "2026-05-21T20:41:39Z"
+  "updated_at": "2026-06-11T00:00:00Z"
 }

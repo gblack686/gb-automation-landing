@@ -7,9 +7,9 @@ export const portalData = {
     repository: 'gbauto/gbautomation',
   },
   metrics: [
-    { label: 'Active clients', value: '7', detail: 'Tracked in second-brain client profiles' },
-    { label: 'TTFW milestones', value: '5', detail: 'Standard client onboarding journey' },
-    { label: 'Sync target', value: '<5m', detail: 'Push to visible portal update' },
+    { label: 'Client profiles', value: 'Tracked', detail: 'Tracked in second-brain client profiles' },
+    { label: 'TTFW path', value: 'Mapped', detail: 'Standard client onboarding journey' },
+    { label: 'Sync target', value: 'Planned', detail: 'Push to visible portal update after smoke event is installed' },
     { label: 'Validation', value: 'Pass', detail: 'TAC receipt written 2026-05-10' },
   ],
   activity: [
