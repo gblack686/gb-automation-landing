@@ -1,5 +1,16 @@
 [
   {
+    "slug": "2026-06-17-openclaw-retirement-hermes-migration-prd",
+    "title": "Retire OpenClaw (Jerry) on the Mac Mini entirely, migrate its functions to the Hermes harness, un-nest all repos/client ",
+    "date": "2026-06-17",
+    "status": "draft",
+    "client": "gbautomation",
+    "priority": "high",
+    "description": "Retire OpenClaw (Jerry) on the Mac Mini entirely, migrate its functions to the Hermes harness, un-nest all repos/client work out of ~/.openclaw/workspace/ into /Users/greg/repos/ + per-client <client>/hermes/, repoint the cron coupling, decommission ~/.openclaw/, and fix the embedded-token remotes.",
+    "category": "plan",
+    "public_url": "https://gbautomation.xyz/prds/2026-06-17-openclaw-retirement-hermes-migration-prd"
+  },
+  {
     "slug": "2026-06-12-prd-supabase-spine-and-enforcement-prd",
     "title": "PRD Supabase Spine and Schema Enforcement",
     "date": "2026-06-12",

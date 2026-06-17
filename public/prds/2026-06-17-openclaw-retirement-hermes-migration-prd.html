@@ -1,0 +1,634 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OpenClaw Retirement → Hermes Migration + Un-nest to `repos/` Schema — PRD | GBAutomation</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&display=swap');
+    :root {
+      --cream-bg: #F3F1E7;
+      --cream-panel: #E6E4D9;
+      --text-main: #191919;
+      --text-muted: #5C5C5C;
+      --text-light: #8C8A84;
+      --border: #D6D4C8;
+      --terracotta: #D97757;
+      --paper: #FFFFFF;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text-main);
+      background: var(--cream-bg);
+      font-size: 14px;
+      line-height: 1.58;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+    a { color: var(--text-main); text-decoration-color: var(--terracotta); text-underline-offset: 3px; }
+    button { font: inherit; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(214, 212, 200, .7);
+      background: rgba(243, 241, 231, .93);
+      backdrop-filter: blur(12px);
+    }
+    .topbar-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 13px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .brand-lockup { display: inline-flex; align-items: center; gap: 9px; min-height: 28px; }
+    .brand-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(217, 119, 87, .18);
+    }
+    .brand-dot::after { content: ""; width: 8px; height: 8px; border-radius: 999px; background: var(--terracotta); }
+    .brand-text {
+      font-family: Newsreader, serif;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-size: 12px;
+    }
+    .source-name { color: var(--text-muted); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    header {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 34px 24px 26px;
+    }
+    .eyebrow {
+      color: var(--terracotta);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    h1 {
+      max-width: 920px;
+      margin: 10px 0 18px;
+      font-family: Newsreader, serif;
+      font-size: clamp(30px, 4vw, 48px);
+      font-weight: 500;
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+    .summary-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+    .summary-meta li {
+      min-height: 30px;
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, .45);
+      padding: 5px 9px;
+      border-radius: 6px;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .taxonomy-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0 0 14px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      min-height: 23px;
+      padding: 2px 8px;
+      border: 1px solid;
+      border-radius: 999px;
+      line-height: 1;
+    }
+    .pill-facet {
+      font-size: 8.5px;
+      font-weight: 700;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+    .pill-value {
+      color: var(--text-main);
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .layout {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 22px 24px 56px;
+      display: grid;
+      grid-template-columns: 252px minmax(0, 1fr);
+      gap: 22px;
+      align-items: start;
+    }
+    .section-menu {
+      position: sticky;
+      top: 64px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(230, 228, 217, .62);
+      backdrop-filter: blur(12px);
+      padding: 12px;
+    }
+    .menu-title {
+      margin: 0 0 10px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .menu-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+    .menu-actions button,
+    .section-menu nav button {
+      min-height: 34px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .46);
+      color: rgba(25, 25, 25, .72);
+      cursor: pointer;
+      transition: border-color .18s ease, color .18s ease, background .18s ease;
+    }
+    .menu-actions button { padding: 0 8px; font-size: 11px; font-weight: 700; }
+    .section-menu nav { display: grid; gap: 5px; }
+    .section-menu nav button {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 30px 1fr;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      text-align: left;
+      font-size: 12px;
+      line-height: 1.25;
+    }
+    .section-menu nav button span { color: var(--terracotta); font-size: 10px; font-weight: 700; letter-spacing: .08em; }
+    .menu-actions button:hover,
+    .section-menu nav button:hover,
+    .section-menu nav button.active {
+      border-color: var(--terracotta);
+      background: rgba(255, 255, 255, .72);
+      color: var(--text-main);
+    }
+    .sections { display: grid; gap: 10px; }
+    details.section {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .5);
+      overflow: hidden;
+    }
+    details.section[open] { background: rgba(255, 255, 255, .68); }
+    details.section summary {
+      min-height: 52px;
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 12px 14px;
+      cursor: pointer;
+      list-style: none;
+    }
+    details.section summary::-webkit-details-marker { display: none; }
+    .section-index {
+      color: var(--terracotta);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+    }
+    .section-title {
+      font-family: Newsreader, serif;
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.18;
+    }
+    .section-count {
+      color: var(--text-light);
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .section-body {
+      border-top: 1px solid rgba(214, 212, 200, .75);
+      padding: 4px 18px 18px 68px;
+    }
+    .section-body h2,
+    .section-body h3,
+    .section-body h4,
+    .section-body h5 {
+      margin: 18px 0 8px;
+      color: var(--text-main);
+      font-family: Newsreader, serif;
+      font-weight: 500;
+      line-height: 1.2;
+    }
+    .section-body h2 { font-size: 19px; }
+    .section-body h3 { font-size: 17px; }
+    .section-body h4,
+    .section-body h5 {
+      font-family: Inter, sans-serif;
+      color: var(--text-light);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+    .section-body p,
+    .section-body li { color: var(--text-muted); font-size: 14px; line-height: 1.66; }
+    .section-body p { margin: 10px 0; }
+    .section-body ul,
+    .section-body ol { margin: 10px 0 10px 18px; padding: 0; }
+    .section-body li { margin: 5px 0; padding-left: 2px; }
+    .section-body .task { list-style: none; margin-left: -18px; display: flex; gap: 8px; align-items: flex-start; }
+    .section-body input[type="checkbox"] { margin-top: 4px; accent-color: var(--terracotta); }
+    code {
+      border: 1px solid rgba(217, 119, 87, .22);
+      border-radius: 4px;
+      background: rgba(217, 119, 87, .10);
+      padding: 1px 4px;
+      color: var(--text-main);
+      font-size: .92em;
+    }
+    pre {
+      overflow: auto;
+      margin: 12px 0;
+      border-radius: 8px;
+      background: #191919;
+      color: #F3F1E7;
+      padding: 14px;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+    pre code { border: 0; background: transparent; color: inherit; padding: 0; }
+    blockquote {
+      margin: 12px 0;
+      padding: 10px 12px;
+      border-left: 3px solid var(--terracotta);
+      background: rgba(230, 228, 217, .5);
+    }
+    hr { border: 0; border-top: 1px solid var(--border); margin: 18px 0; }
+    .table-wrap { overflow-x: auto; margin: 12px 0; border: 1px solid var(--border); border-radius: 8px; }
+    table { width: 100%; border-collapse: collapse; min-width: 560px; background: rgba(255, 255, 255, .5); }
+    th,
+    td { border-bottom: 1px solid rgba(214, 212, 200, .75); padding: 8px 10px; text-align: left; font-size: 12px; vertical-align: top; }
+    th { color: var(--text-main); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; }
+    tr:last-child td { border-bottom: 0; }
+    .empty { color: var(--text-light); font-style: italic; }
+    footer {
+      border-top: 1px solid rgba(214, 212, 200, .78);
+      background: rgba(230, 228, 217, .45);
+    }
+    .footer-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    .footer-label {
+      margin-bottom: 12px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .metadata-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .meta-item {
+      min-width: 0;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .42);
+      padding: 9px 10px;
+    }
+    .meta-item span {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .meta-item strong {
+      display: block;
+      overflow-wrap: anywhere;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.35;
+    }
+    @media (max-width: 860px) {
+      .topbar-inner,
+      header,
+      .layout,
+      .footer-inner { padding-left: 16px; padding-right: 16px; }
+      .layout { display: block; }
+      .section-menu { position: static; margin-bottom: 14px; }
+      .section-body { padding-left: 18px; }
+      .metadata-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 540px) {
+      .topbar-inner { align-items: flex-start; flex-direction: column; gap: 6px; }
+      details.section summary { grid-template-columns: 34px 1fr; }
+      .section-count { grid-column: 2; }
+      h1 { font-size: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand-lockup"><span class="brand-dot"></span><span class="brand-text">GBAutomation</span></div>
+      <div class="source-name">2026-06-17-openclaw-retirement-hermes-migration-prd.md</div>
+    </div>
+  </div>
+  <header>
+    <div class="eyebrow">Plan Brief</div>
+    <h1>OpenClaw Retirement → Hermes Migration + Un-nest to `repos/` Schema — PRD</h1>
+    <div class="taxonomy-pills"><span class="pill" style="background:rgba(181, 65, 58, 0.12);border-color:rgba(181, 65, 58, 0.42);"><span class="pill-facet" style="color:#B5413A;">service</span><span class="pill-value">openclaw</span></span><span class="pill" style="background:rgba(194, 138, 45, 0.12);border-color:rgba(194, 138, 45, 0.42);"><span class="pill-facet" style="color:#C28A2D;">domain</span><span class="pill-value">build</span></span></div>
+    <ul class="summary-meta">
+      <li>Client: gbautomation</li><li>Priority: high</li><li>Status: draft</li><li>domain/gbautomation</li>
+      <li>Owner: greg-black</li>
+      <li>Created: 2026-06-17</li>
+      <li>9 sections</li>
+      <li>1,512 words</li>
+    </ul>
+  </header>
+  <main class="layout">
+    <aside class="section-menu" aria-label="Plan sections">
+  <div class="menu-title">Sections</div>
+  <div class="menu-actions">
+    <button type="button" data-action="expand">Expand all</button>
+    <button type="button" data-action="collapse">Collapse all</button>
+  </div>
+  <nav><button type="button" data-target="overview"><span>01</span>Overview</button>
+<button type="button" data-target="1-summary"><span>02</span>1. Summary</button>
+<button type="button" data-target="2-why-now"><span>03</span>2. Why now</button>
+<button type="button" data-target="3-current-state-verified-2026-06-17-read-only"><span>04</span>3. Current state (verified 2026-06-17, read-only)</button>
+<button type="button" data-target="4-target-logical-schema"><span>05</span>4. Target logical schema</button>
+<button type="button" data-target="5-phases"><span>06</span>5. Phases</button>
+<button type="button" data-target="6-risks"><span>07</span>6. Risks</button>
+<button type="button" data-target="7-definition-of-done"><span>08</span>7. Definition of Done</button>
+<button type="button" data-target="8-open-questions"><span>09</span>8. Open questions</button></nav>
+</aside>
+    <div class="sections">
+      <details class="section" id="overview" open>
+  <summary>
+    <span class="section-index">01</span>
+    <span class="section-title">Overview</span>
+    <span class="section-count">28 words</span>
+  </summary>
+  <div class="section-body">
+    <p><strong>Date:</strong> 2026-06-17 · <strong>Owner:</strong> Greg Black · <strong>Status:</strong> draft (v1) <strong>Decision:</strong> Drop OpenClaw entirely. <strong>Jerry → Hermes.</strong> Hermes (<code>~/.hermes/</code>) becomes the single agent harness on the Mac Mini; <code>~/.openclaw/</code> is decommissioned.</p>
+<hr>
+  </div>
+</details>
+<details class="section" id="1-summary">
+  <summary>
+    <span class="section-index">02</span>
+    <span class="section-title">1. Summary</span>
+    <span class="section-count">116 words</span>
+  </summary>
+  <div class="section-body">
+    <p>OpenClaw (Jerry, <code>~/.openclaw/</code>) and Hermes (Gelby, <code>~/.hermes/</code>) currently run side-by-side on the Mac Mini as user <code>greg</code>. We are <strong>retiring OpenClaw</strong>: migrate Jerry&#x27;s functions (4 internal agents + cron fleet + skills) onto Hermes profiles, <strong>un-nest</strong> all repos and client work out of the <code>~/.openclaw/workspace/</code> junk-drawer into the canonical <code>/Users/greg/repos/</code> (with per-client agent config landing in each client repo&#x27;s <code>hermes/</code> dir, per the Carlos precedent), <strong>repoint</strong> the 69 cron references, then <strong>decommission <code>~/.openclaw/</code></strong> and reclaim its ~4.7 GB of ephemeral data. Embedded-token git remotes get fixed + rotated along the way.</p>
+<p><strong>Thesis:</strong> one harness (Hermes), one source-of-truth tree (<code>/Users/greg/repos/</code>), runtime homes that hold runtime only. No agent work buried under a platform-specific path.</p>
+  </div>
+</details>
+<details class="section" id="2-why-now">
+  <summary>
+    <span class="section-index">03</span>
+    <span class="section-title">2. Why now</span>
+    <span class="section-count">92 words</span>
+  </summary>
+  <div class="section-body">
+    <ul>
+<li><strong>Hermes is already canonical</strong> — Gelby runs on Hermes; the website Hermes-Hub plan commits to per-client Hermes instances; <code>agent-role-map</code> makes Hermes the forward harness. OpenClaw is redundant.</li>
+<li><strong>The nesting is a liability</strong> — <code>~/.openclaw/workspace/</code> mixes runtime, logs, artifacts, and <strong>redundant clones</strong> of client repos (confirmed: <code>~/.openclaw/workspace/gbauto/&lt;client&gt;</code> are the <em>same</em> <code>gbauto/&lt;client&gt;.git</code> repos already cloned canonically at <code>/Users/greg/repos/&lt;client&gt;</code>). It caused branch-switch friction and is a second source of truth.</li>
+<li><strong>Two harnesses double the maintenance + secret surface</strong> (two auth stacks, two cron systems, two sets of embedded-token remotes).</li>
+</ul>
+  </div>
+</details>
+<details class="section" id="3-current-state-verified-2026-06-17-read-only">
+  <summary>
+    <span class="section-index">04</span>
+    <span class="section-title">3. Current state (verified 2026-06-17, read-only)</span>
+    <span class="section-count">156 words</span>
+  </summary>
+  <div class="section-body">
+    <ul>
+<li><strong>OpenClaw home <code>~/.openclaw/</code>:</strong> <code>agents/{main, claude-code, expert-scheduler, forge, apply1-5}</code> (479 MB), <code>cron/</code> (10 MB, <strong>69 references</strong> into <code>workspace/gbauto/<em></code> — <code>hiringcafe</code> alone 56×, plus <code>workspace/skills</code> 16×, <code>workspace/scripts</code> 7×, <code>workspace/hermes-agent</code> 5×), <code>credentials/</code>, <code>identity/</code>, <code>memory/</code>, <code>openclaw.json</code> (+ 6 <code>.bak</em></code>), <code>logs/</code> (180 MB), <code>browser/</code> (4.2 GB), <code>media/</code> (237 MB), <code>backups/</code> (306 MB).</li>
+<li><strong><code>~/.openclaw/workspace/</code></strong> is a junk-drawer: <code>gbauto/&lt;client&gt;</code> clones (7 clients, each a git repo), standalone repos <code>ecom_runtime_bundle</code> + <code>hermes-agent</code>, plus <code>logs/screenshots/artifacts/_quarantine/plans/memory/inbox/.netlify</code> and <strong>double-nest junk</strong> (<code>workspace/.openclaw/</code>, <code>gbauto/gbauto/</code>).</li>
+<li><strong>Hermes home <code>~/.hermes/</code>:</strong> 14 profiles (<code>gbautomation</code>=Gelby, <code>ops</code>, <code>sysadmin</code>, <code>coder</code>, <code>dbforge</code>, <code>researcher</code>, <code>reviewer</code>, <code>outbound</code>, <code>mall-scraper</code>, <code>jason-va</code>, <code>test-clients-carlos</code>, <code>gelby-deep</code>, <code>gelby-codex-fallback</code>, <code>hello-world</code>) — the migration target.</li>
+<li><strong>Canonical repo tree <code>/Users/greg/repos/</code></strong> already holds the client repos + products (jid5274, fisch-group, ecom, gb-automation-landing, hermes-agent, agent-harness, consulting-co, …).</li>
+<li><strong>Security:</strong> every Mini remote embeds a plaintext token — <code>/Users/greg/repos/<em></code> an <code>x-access-token:github_pat_</em></code>, <code>~/.openclaw/<em></code> a <code>gho_</em></code> OAuth token. Known issue (reference_browser_harness_checkout_and_pat); rotate + switch to a credential helper.</li>
+</ul>
+  </div>
+</details>
+<details class="section" id="4-target-logical-schema">
+  <summary>
+    <span class="section-index">05</span>
+    <span class="section-title">4. Target logical schema</span>
+    <span class="section-count">150 words</span>
+  </summary>
+  <div class="section-body">
+    <pre><code>SOURCE OF TRUTH — git, canonical          /Users/greg/repos/&lt;repo&gt;
+  per-client agent config (Carlos pattern) /Users/greg/repos/&lt;client&gt;/hermes/   ← Hermes-forward
+  products/runtime engines                 /Users/greg/repos/{hermes-agent, ecom_runtime_bundle, …}
+
+RUNTIME — single harness, NOT git, ephemeral OK
+  ~/.hermes/profiles/&lt;profile&gt;/{SOUL, cron, sessions, skills, state}   ← the ONLY harness
+
+RETIRED — removed by this PRD
+  ~/.openclaw/  (entire tree: agents, workspace, cron, browser, media, backups, openclaw.json)</code></pre>
+<p><strong>Mapping Jerry → Hermes</strong> (Phase 2 finalizes):</p>
+<div class="table-wrap"><table><thead><tr><th>OpenClaw (Jerry)</th><th>Hermes target</th></tr></thead><tbody><tr><td>agent <code>main</code></td><td>a Hermes profile (<code>jerry</code> or fold into <code>ops</code>/<code>gbautomation</code>)</td></tr>
+<tr><td>agent <code>claude-code</code></td><td>Hermes <code>coder</code> profile (Claude Code runner)</td></tr>
+<tr><td>agent <code>expert-scheduler</code></td><td>Hermes cron (<code>~/.hermes/profiles/&lt;p&gt;/cron/</code>)</td></tr>
+<tr><td>agent <code>forge</code></td><td>Hermes <code>coder</code>/<code>dbforge</code></td></tr>
+<tr><td><code>apply1-5</code></td><td>per-task Hermes runs / cron, not standing agents</td></tr>
+<tr><td><code>~/.openclaw/cron/jobs</code> (69 workspace refs)</td><td>Hermes cron jobs, repointed to <code>/Users/greg/repos/*</code></td></tr>
+<tr><td><code>~/.openclaw/workspace/skills/</code></td><td>Hermes skills (<code>~/.hermes/.../skills/</code> or client-repo skills)</td></tr>
+<tr><td>per-client <code>workspace/gbauto/&lt;c&gt;</code></td><td>already canonical at <code>/Users/greg/repos/&lt;c&gt;</code>; config → <code>&lt;c&gt;/hermes/</code></td></tr></tbody></table></div>
+  </div>
+</details>
+<details class="section" id="5-phases">
+  <summary>
+    <span class="section-index">06</span>
+    <span class="section-title">5. Phases</span>
+    <span class="section-count">519 words</span>
+  </summary>
+  <div class="section-body">
+    <h4>Phase 0 — Inventory, freeze, snapshot</h4>
+<ul>
+<li>Enumerate Jerry&#x27;s standing agents, every cron job (id/schedule/prompt/script/paused), skills, and each <code>workspace/*</code> dependency. Freeze the OpenClaw gateway + disarm OpenClaw cron so nothing mutates mid-migration.</li>
+<li>Snapshot <code>~/.openclaw/</code> (config + memory + cron defs; <strong>exclude</strong> browser/media/backups) to a recovery archive before any deletion. Park any uncommitted work in the nested clones per the <code>git-workspace-cleanup</code> Mini pass.</li>
+<li><strong>Acceptance:</strong> complete agent/cron/skill inventory; freeze confirmed; recovery snapshot exists.</li>
+</ul>
+<h4>Phase 1 — Path-remap inventory (the 69 references)</h4>
+<ul>
+<li>Produce a table: every <code>~/.openclaw/workspace/...</code> path referenced by cron/<code>openclaw.json</code>/skills → its <code>/Users/greg/repos/...</code> (or <code>&lt;client&gt;/hermes/</code>) destination. Flag any reference with <strong>no</strong> canonical destination (real work that only exists nested) for hoisting.</li>
+<li><strong>Acceptance:</strong> every one of the 69 references has a mapped destination or a &quot;hoist&quot; flag; zero unmapped.</li>
+</ul>
+<h4>Phase 2 — Map Jerry&#x27;s agents + cron to Hermes</h4>
+<ul>
+<li>Decide the profile mapping (§4 table) and create/extend the Hermes profiles. Translate each OpenClaw cron job to a Hermes cron job (<code>hermes-cron-runner</code> pattern), repointed to canonical paths, <strong>paused</strong> initially.</li>
+<li><strong>Acceptance:</strong> each Jerry function has a named Hermes home; cron jobs authored (paused), reviewed.</li>
+</ul>
+<h4>Phase 3 — Migrate per-client config into client repos (<code>&lt;client&gt;/hermes/</code>)</h4>
+<ul>
+<li>For each client (jid5274 already done via <code>carlos-config-to-jid5274</code>; repeat for fisch-group, greg-trading, sylvan-hills, loren-piretra, pbauer, cruz-creations): copy the sanitized agent config from the nested workspace into <code>&lt;client&gt;/hermes/</code> in the canonical repo, following the Carlos sanitizer rules (never copy <code>.env</code>/<code>auth.json</code>/state DBs; redact tokens). Commit per client.</li>
+<li><strong>Acceptance:</strong> every active client repo has a sanitized <code>hermes/</code> config tracked; no secrets committed (gitleaks-clean).</li>
+</ul>
+<h4>Phase 4 — Repoint + cut over cron to Hermes</h4>
+<ul>
+<li>Switch Hermes cron jobs from paused → live (pointing at <code>/Users/greg/repos/*</code>), confirm each fires correctly (receipts), then <strong>disable the equivalent OpenClaw cron jobs</strong>. Validate with <code>validate-cron-deploy</code> where applicable.</li>
+<li><strong>Acceptance:</strong> every migrated job runs green on Hermes; the OpenClaw cron fleet is fully disabled; no job lost.</li>
+</ul>
+<h4>Phase 5 — Hoist non-client repos</h4>
+<ul>
+<li>Move <code>ecom_runtime_bundle</code>, <code>hermes-agent</code>, and any other standalone repo out of <code>~/.openclaw/workspace/</code> to <code>/Users/greg/repos/</code> siblings (or confirm a canonical clone already exists and drop the nested one). Update any references.</li>
+<li><strong>Acceptance:</strong> no git repos remain under <code>~/.openclaw/workspace/</code>.</li>
+</ul>
+<h4>Phase 6 — Decommission <code>~/.openclaw/</code></h4>
+<ul>
+<li>Stop + remove the OpenClaw gateway/launchd jobs; remove <code>~/.openclaw/</code> (after the Phase-0 snapshot), reclaiming ~4.7 GB (browser 4.2 GB + media 237 MB + backups 306 MB + logs 180 MB). Remove the <code>Jerry</code>/OpenClaw entries from running services.</li>
+<li><strong>Acceptance:</strong> OpenClaw no longer runs; <code>~/.openclaw/</code> removed (or reduced to an empty/archived stub); disk reclaimed; Hermes is the only harness.</li>
+</ul>
+<h4>Phase 7 — Fix embedded-token remotes + rotate</h4>
+<ul>
+<li>Replace embedded-token remote URLs (both <code>github_pat_<em></code> and <code>gho_</em></code>) with token-less URLs + a git credential helper across all Mini repos. Rotate the leaked tokens (folds into the credential-rotation incident).</li>
+<li><strong>Acceptance:</strong> no <code>.git/config</code> on the Mini contains an inline token; leaked tokens rotated; pushes still work via the helper.</li>
+</ul>
+<h4>Phase 8 — Update the vault</h4>
+<ul>
+<li><code>agent-role-map</code> (drop Jerry/OpenClaw, Hermes-only), <code>systems/harnesses/openclaw.md</code> → marked retired, <code>CLAUDE.md</code> stack line, and any skill/doc that references <code>~/.openclaw/</code> paths.</li>
+<li><strong>Acceptance:</strong> vault reflects a single Hermes harness; no live doc instructs use of <code>~/.openclaw/</code>.</li>
+</ul>
+  </div>
+</details>
+<details class="section" id="6-risks">
+  <summary>
+    <span class="section-index">07</span>
+    <span class="section-title">6. Risks</span>
+    <span class="section-count">140 words</span>
+  </summary>
+  <div class="section-body">
+    <div class="table-wrap"><table><thead><tr><th>#</th><th>Risk</th><th>Mitigation</th></tr></thead><tbody><tr><td>R1</td><td><strong>Cron coupling (69 refs)</strong> — repointing breaks a job</td><td>Phase 1 maps every ref; Phase 4 cuts over job-by-job with receipts before disabling the OpenClaw original</td></tr>
+<tr><td>R2</td><td>Deleting <code>~/.openclaw/</code> loses unique work</td><td>Phase 0 snapshot + nested-clone parking first; verify canonical clones are current (Phase 1)</td></tr>
+<tr><td>R3</td><td>A Jerry function has no clean Hermes equivalent</td><td>Phase 2 surfaces it explicitly; keep a minimal OpenClaw stub only if a function genuinely can&#x27;t move (flagged, not silent)</td></tr>
+<tr><td>R4</td><td><strong>Sebastian (trading) + Lightsail OpenClaw</strong> are separate from Jerry</td><td>Out of scope (see §8 Q1) — confirm before any global &quot;drop all OpenClaw&quot; action touches them</td></tr>
+<tr><td>R5</td><td>Embedded-token remotes leak / break on rewrite</td><td>Phase 7 uses a credential helper; rotate after; test a push per repo</td></tr>
+<tr><td>R6</td><td>Mac Mini access / FileVault during the work</td><td>Route via <code>mm.sh</code>; never schedule an unattended reboot (known issue)</td></tr></tbody></table></div>
+  </div>
+</details>
+<details class="section" id="7-definition-of-done">
+  <summary>
+    <span class="section-index">08</span>
+    <span class="section-title">7. Definition of Done</span>
+    <span class="section-count">100 words</span>
+  </summary>
+  <div class="section-body">
+    <ol>
+<li>Hermes is the <strong>only</strong> harness on the Mac Mini; Jerry&#x27;s agents + cron fleet run as Hermes profiles/jobs.</li>
+<li>No git repos or client work remain under <code>~/.openclaw/workspace/</code>; <code>/Users/greg/repos/</code> is the canonical tree; per-client config lives in <code>&lt;client&gt;/hermes/</code>.</li>
+<li>Every migrated cron job runs green on Hermes; the OpenClaw cron fleet is disabled; nothing lost.</li>
+<li><code>~/.openclaw/</code> is decommissioned + disk reclaimed.</li>
+<li>No Mini <code>.git/config</code> embeds an inline token; leaked tokens rotated.</li>
+<li>The vault reflects the single-harness reality (<code>agent-role-map</code>, <code>openclaw.md</code> retired, <code>CLAUDE.md</code>).</li>
+<li>Nothing deleted without a prior snapshot/parked copy.</li>
+</ol>
+  </div>
+</details>
+<details class="section" id="8-open-questions">
+  <summary>
+    <span class="section-index">09</span>
+    <span class="section-title">8. Open questions</span>
+    <span class="section-count">176 words</span>
+  </summary>
+  <div class="section-body">
+    <ol>
+<li><strong>Scope of &quot;all OpenClaw&quot;:</strong> does this include the <strong>Lightsail</strong> OpenClaw instance and the <strong>planned Sebastian</strong> (<code>~/openclaw-greg-trading/</code>), or just Jerry on the Mac Mini? (Default: <strong>Jerry/Mac-Mini only</strong> this PRD; Lightsail + Sebastian tracked separately.)</li>
+<li><strong>Jerry&#x27;s <code>main</code> agent:</strong> fold into the existing <code>gbautomation</code>/<code>ops</code> Hermes profile, or stand up a dedicated <code>jerry</code> profile to preserve its persona/cron identity? (Default: fold into <code>ops</code> unless its cron identity must persist.)</li>
+<li><strong><code>apply1-5</code> agents</strong> (the job-application runners) — migrate as Hermes cron, or retire if the outreach/apply flow is superseded? (Needs a product call.)</li>
+<li><strong><code>~/.openclaw/</code> final state:</strong> hard-delete after snapshot, or keep an archived tarball for N days? (Default: archive tarball 30 days, then delete.)</li>
+</ol>
+<hr>
+<p><em>Sequenced so each phase is independently safe: inventory + snapshot (0–1) before any change; Hermes targets stood up + cron cut over with receipts (2–4) before anything is disabled; repos hoisted (5) before <code>~/.openclaw/</code> is removed (6); token hygiene (7) and vault truth (8) close it. Builds on the Carlos config-in-client-repo precedent and the per-client Hermes model from the Hermes-Hub website plan.</em></p>
+  </div>
+</details>
+    </div>
+  </main>
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-label">Metadata</div>
+      <div class="metadata-grid">
+        <div class="meta-item"><span>Source</span><strong>C:\Users\gblac\OneDrive\Desktop\gbauto\gbautomation\second-brain\plans\2026-06-17-openclaw-retirement-hermes-migration-prd.md</strong></div>
+<div class="meta-item"><span>Generated</span><strong>2026-06-17T13:09:43-07:00</strong></div>
+<div class="meta-item"><span>Source modified</span><strong>2026-06-17T13:09:39-07:00</strong></div>
+<div class="meta-item"><span>Source size</span><strong>12,242 bytes</strong></div>
+<div class="meta-item"><span>Word count</span><strong>1,512</strong></div>
+<div class="meta-item"><span>Sections</span><strong>9</strong></div>
+<div class="meta-item"><span>Renderer</span><strong>resources/skills/netlify-cli/scripts/render_plan_page.py</strong></div>
+<div class="meta-item"><span>Type</span><strong>plan</strong></div>
+<div class="meta-item"><span>Status</span><strong>draft</strong></div>
+<div class="meta-item"><span>Date</span><strong>2026-06-17</strong></div>
+<div class="meta-item"><span>Description</span><strong>Retire OpenClaw (Jerry) on the Mac Mini entirely, migrate its functions to the Hermes harness, un-nest all repos/client work out of ~/.openclaw/workspace/ into /Users/greg/repos/ + per-client &lt;client&gt;/hermes/, repoint the cron coupling, decommission ~/.openclaw/, and fix the embedded-token remotes.</strong></div>
+<div class="meta-item"><span>Client</span><strong>gbautomation</strong></div>
+<div class="meta-item"><span>Owner</span><strong>greg-black</strong></div>
+<div class="meta-item"><span>Priority</span><strong>high</strong></div>
+<div class="meta-item"><span>Tags</span><strong>domain/gbautomation, domain/openclaw, phase/build</strong></div>
+<div class="meta-item"><span>Related</span><strong>[[CLAUDE]], [[agent-role-map]], [[2026-05-20-prd-carlos-config-to-jid5274]], [[2026-06-17-cross-harness-git-hygiene-remediation-prd]], [[reference_browser_harness_checkout_and_pat]]</strong></div>
+      </div>
+    </div>
+  </footer>
+  <script>
+    const sections = Array.from(document.querySelectorAll('details.section'));
+    const menuButtons = Array.from(document.querySelectorAll('[data-target]'));
+    const setActive = (id) => {
+      menuButtons.forEach((button) => button.classList.toggle('active', button.dataset.target === id));
+    };
+    menuButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const section = document.getElementById(button.dataset.target);
+        if (!section) return;
+        section.open = true;
+        setActive(section.id);
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+    document.querySelector('[data-action="expand"]').addEventListener('click', () => sections.forEach((section) => section.open = true));
+    document.querySelector('[data-action="collapse"]').addEventListener('click', () => sections.forEach((section, index) => section.open = index === 0));
+    sections.forEach((section) => {
+      section.addEventListener('toggle', () => {
+        if (section.open) setActive(section.id);
+      });
+    });
+    if (sections[0]) setActive(sections[0].id);
+  </script>
+</body>
+</html>
