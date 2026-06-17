@@ -1,0 +1,90 @@
+{
+  "created": "2026-06-05",
+  "manifest": [
+    {
+      "file": "00-workspace-overview.png",
+      "url": "http://127.0.0.1:5175/mini-apps/ui-agents/index.html#/gbautomation/site",
+      "expectedText": "GBAutomation"
+    },
+    {
+      "file": "01-hero-video-hero.png",
+      "url": "http://127.0.0.1:5175/mini-apps/ui-agents/index.html#/gbautomation/site/gallery/hero/hero-v1",
+      "expectedText": "AI that builds"
+    },
+    {
+      "file": "02-hero-exact-site-match.png",
+      "url": "http://127.0.0.1:5175/mini-apps/ui-agents/index.html#/gbautomation/site/gallery/hero/hero-v2-exact",
+      "expectedText": "Build smarter"
+    },
+    {
+      "file": "03-portfolio-sliding.png",
+      "url": "http://127.0.0.1:5175/mini-apps/ui-agents/index.html#/gbautomation/site/gallery/portfolio/portfolio-v1",
+      "expectedText": "Trusted by industry leaders"
+    },
+    {
+      "file": "04-portfolio-tailwind.png",
+      "url": "http://127.0.0.1:5175/mini-apps/ui-agents/index.html#/gbautomation/site/gallery/portfolio/portfolio-v2-tailwind",
+      "expectedText": "AI Agent Portfolio"
+    },
+    {
+      "file": "05-features-agentic-systems.png",
+      "url": "http://127.0.0.1:5175/mini-apps/ui-agents/index.html#/gbautomation/site/gallery/features/agentic-systems-v1",
+      "expectedText": "Agentic systems"
+    },
+    {
+      "file": "06-features-owned-stack.png",
+      "url": "http://127.0.0.1:5175/mini-apps/ui-agents/index.html#/gbautomation/site/gallery/features/owned-stack-v1",
+      "expectedText": "Your AI systems"
+    },
+    {
+      "file": "07-automation-loop-transcript-to-pr.png",
+      "url": "http://127.0.0.1:5175/mini-apps/ui-agents/index.html#/gbautomation/site/gallery/automation-loop/transcript-to-pr-v1",
+      "expectedText": "From transcript"
+    },
+    {
+      "file": "08-hermes-dedicated-ai-companion.png",
+      "url": "http://127.0.0.1:5175/mini-apps/ui-agents/index.html#/gbautomation/site/gallery/hermes/dedicated-ai-companion-v1",
+      "expectedText": "dedicated AI companion"
+    },
+    {
+      "file": "09-team-session-ai-team-hour.png",
+      "url": "http://127.0.0.1:5175/mini-apps/ui-agents/index.html#/gbautomation/site/gallery/team-session/ai-team-hour-v1",
+      "expectedText": "Your AI team"
+    },
+    {
+      "file": "10-process-90-day-roadmap.png",
+      "url": "http://127.0.0.1:5175/mini-apps/ui-agents/index.html#/gbautomation/site/gallery/process/ninety-day-roadmap-v1",
+      "expectedText": "practical roadmap"
+    },
+    {
+      "file": "11-pricing-three-tier.png",
+      "url": "http://127.0.0.1:5175/mini-apps/ui-agents/index.html#/gbautomation/site/gallery/pricing/pricing-v1",
+      "expectedText": "Investment"
+    },
+    {
+      "file": "12-testimonials-trust-stack.png",
+      "url": "http://127.0.0.1:5175/mini-apps/ui-agents/index.html#/gbautomation/site/gallery/testimonials/trust-stack-v1",
+      "expectedText": "Trust signals"
+    },
+    {
+      "file": "13-contact-consultation.png",
+      "url": "http://127.0.0.1:5175/mini-apps/ui-agents/index.html#/gbautomation/site/gallery/contact/consultation-v1",
+      "expectedText": "Tell us where work gets stuck"
+    },
+    {
+      "file": "14-about-operator-story.png",
+      "url": "http://127.0.0.1:5175/mini-apps/ui-agents/index.html#/gbautomation/site/gallery/about/operator-story-v1",
+      "expectedText": "Built by operators"
+    },
+    {
+      "file": "15-insights-index.png",
+      "url": "http://127.0.0.1:5175/mini-apps/ui-agents/index.html#/gbautomation/site/gallery/blog/insights-index-v1",
+      "expectedText": "Writing that shows"
+    },
+    {
+      "file": "16-roi-calculator.png",
+      "url": "http://127.0.0.1:5175/mini-apps/ui-agents/index.html#/gbautomation/site/gallery/calculator/roi-calculator-v1",
+      "expectedText": "business case"
+    }
+  ]
+}

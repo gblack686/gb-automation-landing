@@ -1,0 +1,173 @@
+functionsDirectory = "C:\\Users\\gblac\\OneDrive\\Desktop\\gbauto\\gb-automation-landing\\netlify\\functions"
+functionsDirectoryOrigin = "default"
+plugins = []
+headers = []
+
+[build]
+publish = "C:\\Users\\gblac\\OneDrive\\Desktop\\gbauto\\gb-automation-landing\\dist"
+publishOrigin = "ui"
+commandOrigin = "ui"
+command = "npm run build"
+functions = "C:\\Users\\gblac\\OneDrive\\Desktop\\gbauto\\gb-automation-landing\\netlify\\functions"
+
+[build.environment]
+
+[build.processing]
+
+[build.processing.css]
+
+[build.processing.html]
+
+[build.processing.images]
+
+[build.processing.js]
+
+[build.services]
+
+[functions]
+
+[functions."*"]
+
+[[redirects]]
+from = "/prds/prds-manifest.json"
+to = "/prds/prds-manifest.json"
+status = 200.0
+force = false
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/prds/*.html"
+to = "/prds/:splat.html"
+status = 200.0
+force = false
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/prds/*.json"
+to = "/prds/:splat.json"
+status = 200.0
+force = false
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/prds/*"
+to = "/prds/:splat.html"
+status = 200.0
+force = true
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/previews/report-artifacts/prd-email-artifact.html"
+to = "/previews/report-artifacts/prd-email-artifact.html"
+status = 200.0
+force = true
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/previews/report-artifacts/build-report-artifact.html"
+to = "/previews/report-artifacts/build-report-artifact.html"
+status = 200.0
+force = true
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/previews/report-artifacts/prd-email-artifact"
+to = "/previews/report-artifacts/prd-email-artifact.html"
+status = 200.0
+force = true
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/previews/report-artifacts/build-report-artifact"
+to = "/previews/report-artifacts/build-report-artifact.html"
+status = 200.0
+force = true
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/previews/*.html"
+to = "/previews/:splat.html"
+status = 200.0
+force = true
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/previews/*"
+to = "/previews/:splat"
+status = 200.0
+force = true
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/api/mall-scanner/*"
+to = "/.netlify/functions/mall-scanner/:splat"
+status = 200.0
+force = true
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200.0
+force = false
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
