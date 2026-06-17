@@ -1,0 +1,592 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hermes template — Canopy parameterization + shared-core extraction | GBAutomation</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&display=swap');
+    :root {
+      --cream-bg: #F3F1E7;
+      --cream-panel: #E6E4D9;
+      --text-main: #191919;
+      --text-muted: #5C5C5C;
+      --text-light: #8C8A84;
+      --border: #D6D4C8;
+      --terracotta: #D97757;
+      --paper: #FFFFFF;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text-main);
+      background: var(--cream-bg);
+      font-size: 14px;
+      line-height: 1.58;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+    a { color: var(--text-main); text-decoration-color: var(--terracotta); text-underline-offset: 3px; }
+    button { font: inherit; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(214, 212, 200, .7);
+      background: rgba(243, 241, 231, .93);
+      backdrop-filter: blur(12px);
+    }
+    .topbar-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 13px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .brand-lockup { display: inline-flex; align-items: center; gap: 9px; min-height: 28px; }
+    .brand-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(217, 119, 87, .18);
+    }
+    .brand-dot::after { content: ""; width: 8px; height: 8px; border-radius: 999px; background: var(--terracotta); }
+    .brand-text {
+      font-family: Newsreader, serif;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-size: 12px;
+    }
+    .source-name { color: var(--text-muted); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    header {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 34px 24px 26px;
+    }
+    .eyebrow {
+      color: var(--terracotta);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    h1 {
+      max-width: 920px;
+      margin: 10px 0 18px;
+      font-family: Newsreader, serif;
+      font-size: clamp(30px, 4vw, 48px);
+      font-weight: 500;
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+    .summary-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+    .summary-meta li {
+      min-height: 30px;
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, .45);
+      padding: 5px 9px;
+      border-radius: 6px;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .taxonomy-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0 0 14px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      min-height: 23px;
+      padding: 2px 8px;
+      border: 1px solid;
+      border-radius: 999px;
+      line-height: 1;
+    }
+    .pill-facet {
+      font-size: 8.5px;
+      font-weight: 700;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+    .pill-value {
+      color: var(--text-main);
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .layout {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 22px 24px 56px;
+      display: grid;
+      grid-template-columns: 252px minmax(0, 1fr);
+      gap: 22px;
+      align-items: start;
+    }
+    .section-menu {
+      position: sticky;
+      top: 64px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(230, 228, 217, .62);
+      backdrop-filter: blur(12px);
+      padding: 12px;
+    }
+    .menu-title {
+      margin: 0 0 10px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .menu-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+    .menu-actions button,
+    .section-menu nav button {
+      min-height: 34px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .46);
+      color: rgba(25, 25, 25, .72);
+      cursor: pointer;
+      transition: border-color .18s ease, color .18s ease, background .18s ease;
+    }
+    .menu-actions button { padding: 0 8px; font-size: 11px; font-weight: 700; }
+    .section-menu nav { display: grid; gap: 5px; }
+    .section-menu nav button {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 30px 1fr;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      text-align: left;
+      font-size: 12px;
+      line-height: 1.25;
+    }
+    .section-menu nav button span { color: var(--terracotta); font-size: 10px; font-weight: 700; letter-spacing: .08em; }
+    .menu-actions button:hover,
+    .section-menu nav button:hover,
+    .section-menu nav button.active {
+      border-color: var(--terracotta);
+      background: rgba(255, 255, 255, .72);
+      color: var(--text-main);
+    }
+    .sections { display: grid; gap: 10px; }
+    details.section {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .5);
+      overflow: hidden;
+    }
+    details.section[open] { background: rgba(255, 255, 255, .68); }
+    details.section summary {
+      min-height: 52px;
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 12px 14px;
+      cursor: pointer;
+      list-style: none;
+    }
+    details.section summary::-webkit-details-marker { display: none; }
+    .section-index {
+      color: var(--terracotta);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+    }
+    .section-title {
+      font-family: Newsreader, serif;
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.18;
+    }
+    .section-count {
+      color: var(--text-light);
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .section-body {
+      border-top: 1px solid rgba(214, 212, 200, .75);
+      padding: 4px 18px 18px 68px;
+    }
+    .section-body h2,
+    .section-body h3,
+    .section-body h4,
+    .section-body h5 {
+      margin: 18px 0 8px;
+      color: var(--text-main);
+      font-family: Newsreader, serif;
+      font-weight: 500;
+      line-height: 1.2;
+    }
+    .section-body h2 { font-size: 19px; }
+    .section-body h3 { font-size: 17px; }
+    .section-body h4,
+    .section-body h5 {
+      font-family: Inter, sans-serif;
+      color: var(--text-light);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+    .section-body p,
+    .section-body li { color: var(--text-muted); font-size: 14px; line-height: 1.66; }
+    .section-body p { margin: 10px 0; }
+    .section-body ul,
+    .section-body ol { margin: 10px 0 10px 18px; padding: 0; }
+    .section-body li { margin: 5px 0; padding-left: 2px; }
+    .section-body .task { list-style: none; margin-left: -18px; display: flex; gap: 8px; align-items: flex-start; }
+    .section-body input[type="checkbox"] { margin-top: 4px; accent-color: var(--terracotta); }
+    code {
+      border: 1px solid rgba(217, 119, 87, .22);
+      border-radius: 4px;
+      background: rgba(217, 119, 87, .10);
+      padding: 1px 4px;
+      color: var(--text-main);
+      font-size: .92em;
+    }
+    pre {
+      overflow: auto;
+      margin: 12px 0;
+      border-radius: 8px;
+      background: #191919;
+      color: #F3F1E7;
+      padding: 14px;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+    pre code { border: 0; background: transparent; color: inherit; padding: 0; }
+    blockquote {
+      margin: 12px 0;
+      padding: 10px 12px;
+      border-left: 3px solid var(--terracotta);
+      background: rgba(230, 228, 217, .5);
+    }
+    hr { border: 0; border-top: 1px solid var(--border); margin: 18px 0; }
+    .table-wrap { overflow-x: auto; margin: 12px 0; border: 1px solid var(--border); border-radius: 8px; }
+    table { width: 100%; border-collapse: collapse; min-width: 560px; background: rgba(255, 255, 255, .5); }
+    th,
+    td { border-bottom: 1px solid rgba(214, 212, 200, .75); padding: 8px 10px; text-align: left; font-size: 12px; vertical-align: top; }
+    th { color: var(--text-main); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; }
+    tr:last-child td { border-bottom: 0; }
+    .empty { color: var(--text-light); font-style: italic; }
+    footer {
+      border-top: 1px solid rgba(214, 212, 200, .78);
+      background: rgba(230, 228, 217, .45);
+    }
+    .footer-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    .footer-label {
+      margin-bottom: 12px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .metadata-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .meta-item {
+      min-width: 0;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .42);
+      padding: 9px 10px;
+    }
+    .meta-item span {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .meta-item strong {
+      display: block;
+      overflow-wrap: anywhere;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.35;
+    }
+    @media (max-width: 860px) {
+      .topbar-inner,
+      header,
+      .layout,
+      .footer-inner { padding-left: 16px; padding-right: 16px; }
+      .layout { display: block; }
+      .section-menu { position: static; margin-bottom: 14px; }
+      .section-body { padding-left: 18px; }
+      .metadata-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 540px) {
+      .topbar-inner { align-items: flex-start; flex-direction: column; gap: 6px; }
+      details.section summary { grid-template-columns: 34px 1fr; }
+      .section-count { grid-column: 2; }
+      h1 { font-size: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand-lockup"><span class="brand-dot"></span><span class="brand-text">GBAutomation</span></div>
+      <div class="source-name">2026-06-17-hermes-template-canopy-parameterization-and-shared-core-plan.md</div>
+    </div>
+  </div>
+  <header>
+    <div class="eyebrow">Plan Brief</div>
+    <h1>Hermes template — Canopy parameterization + shared-core extraction</h1>
+    <div class="taxonomy-pills"><span class="pill" style="background:rgba(90, 125, 140, 0.12);border-color:rgba(90, 125, 140, 0.42);"><span class="pill-facet" style="color:#5A7D8C;">domain</span><span class="pill-value">hermes</span></span></div>
+    <ul class="summary-meta">
+      <li>Client: gbautomation</li><li>Priority: high</li><li>Status: active</li><li>hermes/template</li><li>canopy</li>
+      <li>Owner: GBAutomation</li>
+      <li>Created: 2026-06-17</li>
+      <li>8 sections</li>
+      <li>940 words</li>
+    </ul>
+  </header>
+  <main class="layout">
+    <aside class="section-menu" aria-label="Plan sections">
+  <div class="menu-title">Sections</div>
+  <div class="menu-actions">
+    <button type="button" data-action="expand">Expand all</button>
+    <button type="button" data-action="collapse">Collapse all</button>
+  </div>
+  <nav><button type="button" data-target="overview"><span>01</span>Overview</button>
+<button type="button" data-target="1-the-three-layer-model-don-t-build-three-competing-systems"><span>02</span>1. The three-layer model (don&#x27;t build three competing systems)</button>
+<button type="button" data-target="2-canopy-what-it-is-and-the-step-1-constraint"><span>03</span>2. Canopy — what it is and the Step-1 constraint</button>
+<button type="button" data-target="3-parameterization-map-copier-vars-canopy-params"><span>04</span>3. Parameterization map (copier vars + Canopy params)</button>
+<button type="button" data-target="4-recent-infra-to-fold-in"><span>05</span>4. Recent-infra to fold in</button>
+<button type="button" data-target="5-shared-hermes-core-to-extract-from-ecom-decision-include"><span>06</span>5. Shared Hermes core to extract (from ecom — decision: include)</button>
+<button type="button" data-target="6-sequencing"><span>07</span>6. Sequencing</button>
+<button type="button" data-target="7-open-prerequisites-risks"><span>08</span>7. Open prerequisites / risks</button></nav>
+</aside>
+    <div class="sections">
+      <details class="section" id="overview" open>
+  <summary>
+    <span class="section-index">01</span>
+    <span class="section-title">Overview</span>
+    <span class="section-count">35 words</span>
+  </summary>
+  <div class="section-body">
+    <p>Synthesis of three parallel research passes (2026-06-17): the Canopy prompt-inheritance adapter, the gbautomation 48h Hermes-runtime commits, and the ecom 48h runtime infra. Decisions confirmed by operator 2026-06-17. Anchors the work begun in <code>hermes-gbauto</code> PR #4.</p>
+  </div>
+</details>
+<details class="section" id="1-the-three-layer-model-don-t-build-three-competing-systems">
+  <summary>
+    <span class="section-index">02</span>
+    <span class="section-title">1. The three-layer model (don&#x27;t build three competing systems)</span>
+    <span class="section-count">139 words</span>
+  </summary>
+  <div class="section-body">
+    <p>The recent work produced three overlapping &quot;stop hand-editing configs&quot; mechanisms. The ecom <strong>Client-Contained Hermes Runtime Boundary ADR</strong> (<code>ecom@879831c</code>) defines how they layer:</p>
+<div class="table-wrap"><table><thead><tr><th>Layer</th><th>Mechanism</th><th>Owns</th><th>Status</th></tr></thead><tbody><tr><td><strong>1. Scaffold (template-time)</strong></td><td><strong>Copier</strong> (<code>gbauto/hermes-gbauto</code>)</td><td>static <code>hermes/</code> files, <code>config.yaml</code>, engine pin</td><td>PR #4 upgraded the example config to the proven v23 Finn line</td></tr>
+<tr><td><strong>2. Prompt (runtime)</strong></td><td><strong>Canopy</strong> adapter (<code>hermes prompts</code>)</td><td><code>SOUL.md</code> + <code>system_prompt_addendum</code> via base + mixins + params</td><td>engine <strong>Step-1 only</strong> (gelby-default); multi-profile/cross-tenant deferred upstream</td></tr>
+<tr><td><strong>3. Shared Hermes core</strong></td><td>promoted ecom contracts</td><td>CDP lease v2, browser-profile registry, cron libs, green-claim validator</td><td>built in ecom; needs promotion to shared core</td></tr></tbody></table></div>
+<p><strong>Rule (from the boundary ADR):</strong> shared Hermes owns framework + profile registry + lease/CDP primitives + Kanban resolution + TAC gates. Clients own workflow controllers, prompts, validators, tests. The template (<code>hermes-gbauto</code>) renders the client-local layer; the shared core is referenced/pinned, never copied per-client.</p>
+  </div>
+</details>
+<details class="section" id="2-canopy-what-it-is-and-the-step-1-constraint">
+  <summary>
+    <span class="section-index">03</span>
+    <span class="section-title">2. Canopy — what it is and the Step-1 constraint</span>
+    <span class="section-count">177 words</span>
+  </summary>
+  <div class="section-body">
+    <ul>
+<li><strong>Canopy</strong> = <code>jayminwest/canopy</code>, CLI binary <code>cn</code> (pinned <code>0.2.6</code>). Prompt composition:</li>
+<p><strong>base prompt + mixins (<code>inherits:</code>) + variables (<code>{{var}}</code>) + section overrides</strong>.</p>
+<li><strong>Hermes adapter</strong>: <code>hermes_agent/prompt_library/</code> (engine commit <code>96d222e52</code>), CLI</li>
+<p><code>hermes prompts {render,apply,list,receipts,doctor}</code>. Manifests at <code>~/.hermes/prompt-library/profiles/&lt;profile&gt;.yaml</code>, schema <code>hermes.prompt_profile.v1</code>. Manifest keys: <code>profile</code>, <code>tenant</code>, <code>owner</code>, <code>render.prompt</code>, <code>targets</code> (soul / config_addendum), <code>section_routes</code>, <code>params</code> (scalars only), <code>cross_tenant_inherit_allow</code>. Validation V1–V15 (V14 = cross-tenant guard; V15 = gelby-default has no config_addendum). Apply emits a fossilization warning + auto-backup.</p>
+<li><strong>CONSTRAINT (load-bearing):</strong> the adapter is <strong>Step-1 only</strong> — only <code>gelby-default</code> is live.</li>
+<p>Steps 2–5 (Ecom, Carlos, TAC Director, team handoffs, cross-tenant inheritance) are deferred <strong>upstream in hermes-agent</strong>. Also requires the external <code>cn</code> binary on PATH.</p>
+</ul>
+<p><strong>Decision (operator, 2026-06-17): scaffold now, activate at Step 2.</strong> Add the Canopy structure to the template now (base persona + the shared TAC-contract mixin + per-client params, all parameterized via copier), but keep the flat <code>config.yaml</code> <code>system_prompt_addendum</code> as the <strong>active</strong> path. Switch the runtime <code>hermes prompts apply</code> path on when engine Step 2 ships. Zero engine dependency to land the scaffold; kills prompt duplication immediately.</p>
+  </div>
+</details>
+<details class="section" id="3-parameterization-map-copier-vars-canopy-params">
+  <summary>
+    <span class="section-index">04</span>
+    <span class="section-title">3. Parameterization map (copier vars + Canopy params)</span>
+    <span class="section-count">117 words</span>
+  </summary>
+  <div class="section-body">
+    <p>Currently duplicated across <code>resources/skills/hermes-profile-templates/profiles/*.yaml</code>. Each becomes a copier variable (template-time) that also feeds the Canopy manifest <code>params</code>:</p>
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Var / param</th><th>Lives in</th></tr></thead><tbody><tr><td><code>system_prompt_addendum</code> (persona)</td><td>content</td><td><code>SYSTEM_PROMPT_ADDENDUM</code></td><td>Canopy section → config_addendum</td></tr>
+<tr><td>TAC prompt-quality contract</td><td>content</td><td>(shared <strong>mixin</strong> <code>tac-contract-shared</code>)</td><td>Canopy mixin, authored once</td></tr>
+<tr><td><code>skills.suggested_skills[]</code></td><td>list</td><td><code>SUGGESTED_SKILLS</code></td><td>profile layer</td></tr>
+<tr><td><code>model.default</code></td><td>scalar</td><td><code>default_model</code></td><td>copier ✓ (PR #4)</td></tr>
+<tr><td><code>timezone</code></td><td>scalar</td><td><code>timezone</code></td><td>copier ✓ (PR #4)</td></tr>
+<tr><td><code>discord_channel</code></td><td>scalar</td><td><code>discord_channel</code></td><td>copier ✓ (PR #4)</td></tr>
+<tr><td><code>telegram allowedUsers/homeChannel</code></td><td>scalar</td><td><code>principal_telegram_id</code></td><td>copier + manifest</td></tr>
+<tr><td><code>agent.max_turns</code>, <code>gateway_timeout</code></td><td>scalar</td><td><code>max_turns</code>, <code>gateway_timeout</code></td><td>copier</td></tr>
+<tr><td><code>compression.threshold/target_ratio</code></td><td>scalar</td><td><code>compression_threshold</code>, <code>compression_ratio</code></td><td>copier</td></tr>
+<tr><td><code>display.personality</code></td><td>scalar</td><td><code>display_personality</code></td><td>copier</td></tr>
+<tr><td><code>delegation.max_concurrent_children/max_spawn_depth</code></td><td>scalar</td><td><code>max_concurrent_children</code>, <code>max_spawn_depth</code></td><td>copier</td></tr>
+<tr><td><code>approvals.mode</code> (manual/smart/auto)</td><td>scalar</td><td><code>approval_mode</code></td><td>copier</td></tr>
+<tr><td><code>memory_char_limit</code>, <code>user_char_limit</code></td><td>scalar</td><td><code>memory_char_limit</code>, <code>user_char_limit</code></td><td>copier</td></tr></tbody></table></div>
+  </div>
+</details>
+<details class="section" id="4-recent-infra-to-fold-in">
+  <summary>
+    <span class="section-index">05</span>
+    <span class="section-title">4. Recent-infra to fold in</span>
+    <span class="section-count">123 words</span>
+  </summary>
+  <div class="section-body">
+    <ul>
+<li><strong>Runtime-path contract change</strong> (<code>gbautomation codex/carlos-hermes-runtime-path@034f6714</code>,</li>
+<p>parked): <code>working_directory</code> → <code>~/.hermes/runtime/hermes-agent</code> (off the old <code>.openclaw/workspace</code> path). Template + profile spec must adopt. Migration script exists at <code>second-brain/clients/jason-diaz/agents/carlos/scripts/migrate-hermes-runtime-path.sh</code>.</p>
+<li><strong>config-composer skill</strong> (<code>...@d527df48</code>, parked): <code>render_hermes_config.py</code> composes a</li>
+<p>deployment-ready <code>config.yaml</code> from intake JSON + base + skills/experts inventory. Reconcile with copier: copier owns the static template; config-composer becomes the intake→answers front-end (or is folded into the bootstrap flow).</p>
+<li><strong>5 parked feat commits</strong> on <code>codex/carlos-hermes-runtime-path</code> (runtime-path, config-composer,</li>
+<p>context-primer, agent-expert-builder) + <code>codex/tac-hermes-profiles@ae594e88</code> (TAC profile team specs). <strong>Decision: cherry-pick to main + fold into template.</strong></p>
+<li><strong>launchd installer pattern</strong> (<code>...@1f75916e</code> langfuse-error-monitor): reusable Mac-Mini</li>
+<p>scheduled-task installer (env-ref tokens, dedupe state file, Telegram/email notify). Model for the Phase-4 Hermes cron jobs.</p>
+</ul>
+  </div>
+</details>
+<details class="section" id="5-shared-hermes-core-to-extract-from-ecom-decision-include">
+  <summary>
+    <span class="section-index">06</span>
+    <span class="section-title">5. Shared Hermes core to extract (from ecom — decision: include)</span>
+    <span class="section-count">116 words</span>
+  </summary>
+  <div class="section-body">
+    <p>Promote these client-agnostic contracts out of <code>ecom</code> into a shared Hermes core skill/module (referenced/pinned by clients, never copied):</p>
+<div class="table-wrap"><table><thead><tr><th>Contract</th><th>Source (ecom)</th><th>Target</th></tr></thead><tbody><tr><td>Browser-profile registry (forbidden-key scanner, public-catalog guard, lease singleton)</td><td><code>ecom_runtime/browser_profile_registry.py@217c2ae</code></td><td>shared <code>hermes_runtime/browser_profile_registry.py</code></td></tr>
+<tr><td>CDP lease schema v2 (ownership, TTL, secret-safety)</td><td><code>scripts/lib/cdp_lease.mjs@217c2ae</code></td><td>shared <code>hermes/modules/cdp_lease.mjs</code></td></tr>
+<tr><td>One-prompt stage-graph workflow (dry-run-first, deterministic validators, specialist routing)</td><td><code>skills/ecom-one-prompt-workflow@0174132</code></td><td>template pattern <code>patterns/stage-graph-workflow.md</code></td></tr>
+<tr><td>Green-claim three-boolean contract (route/full_site/production green)</td><td>ADR <code>fbdcea6</code></td><td>shared <code>validators/greenline-validator.py</code></td></tr>
+<tr><td>Cron credential-resolver (AWS SM + fallback tiers)</td><td><code>scripts/cron/ecom-env.sh@0ed8e58</code></td><td>shared <code>hermes/scripts/lib/credential-resolver.sh</code></td></tr>
+<tr><td>Cron bounded-runner + JSONL receipts</td><td><code>scripts/cron/ecom-green-sites-hourly-master.sh@b12f0e7</code></td><td>template <code>patterns/cron-bounded-runner.sh</code></td></tr></tbody></table></div>
+  </div>
+</details>
+<details class="section" id="6-sequencing">
+  <summary>
+    <span class="section-index">07</span>
+    <span class="section-title">6. Sequencing</span>
+    <span class="section-count">119 words</span>
+  </summary>
+  <div class="section-body">
+    <p><strong>Phase 0 — landable now (no engine dependency):</strong></p>
+<ol>
+<li>Extend <code>hermes-gbauto</code> PR #4: full copier param set (§3) + Canopy scaffold</li>
+<p>(<code>.canopy/prompts/</code> base + <code>tac-contract-shared</code> mixin + persona; <code>profiles/&lt;name&gt;.manifest.yaml.jinja</code>) + runtime-path contract (<code>~/.hermes/runtime/hermes-agent</code>).</p>
+<li>Cherry-pick the 5 parked feat commits to <code>gbautomation</code> main; wire config-composer + runtime-path.</li>
+<li>Extract the ecom shared-core contracts (§5) into a shared Hermes core skill/module.</li>
+</ol>
+<p><strong>Phase 1 — blocked on hermes-agent Step 2 (upstream):</strong></p>
+<ol>
+<li>Wire the runtime <code>hermes prompts apply</code> path: migrate <code>fisch-group</code>/<code>gbautomation</code>/<code>carlos</code></li>
+<p>profiles from flat YAML addendum → Canopy-backed manifests; enable cross-tenant TAC mixin.</p>
+<li>Add <code>cn</code> binary install to <code>bootstrap.sh</code> / provisioning prereqs.</li>
+</ol>
+<p><strong>Phase 2:</strong> update <code>provision_client.sh</code> to invoke copier + <code>hermes prompts apply</code> instead of hand-merging template YAML.</p>
+  </div>
+</details>
+<details class="section" id="7-open-prerequisites-risks">
+  <summary>
+    <span class="section-index">08</span>
+    <span class="section-title">7. Open prerequisites / risks</span>
+    <span class="section-count">62 words</span>
+  </summary>
+  <div class="section-body">
+    <ul>
+<li>hermes-agent <strong>Step 2</strong> is upstream and unscheduled — Phase 1 is gated on it.</li>
+<li><code>cn</code> binary must be installed per host (exit code 3 if missing).</li>
+<li>Verify <code>_config_version: 23</code> (PR #4) against the pinned engine <code>v2026.6.17-gbauto.1</code> on first</li>
+<p><code>gateway start</code> before fleet rollout.</p>
+<li>The runtime-path migration is phase-based (OpenClaw retirement Phase 5–6); don&#x27;t move live</li>
+<p>homes ahead of that.</p>
+</ul>
+  </div>
+</details>
+    </div>
+  </main>
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-label">Metadata</div>
+      <div class="metadata-grid">
+        <div class="meta-item"><span>Source</span><strong>C:\Users\gblac\OneDrive\Desktop\gbauto\gbautomation\second-brain\plans\2026-06-17-hermes-template-canopy-parameterization-and-shared-core-plan.md</strong></div>
+<div class="meta-item"><span>Generated</span><strong>2026-06-17T16:26:20-07:00</strong></div>
+<div class="meta-item"><span>Source modified</span><strong>2026-06-17T16:26:18-07:00</strong></div>
+<div class="meta-item"><span>Source size</span><strong>8,830 bytes</strong></div>
+<div class="meta-item"><span>Word count</span><strong>940</strong></div>
+<div class="meta-item"><span>Sections</span><strong>8</strong></div>
+<div class="meta-item"><span>Renderer</span><strong>resources/skills/netlify-cli/scripts/render_plan_page.py</strong></div>
+<div class="meta-item"><span>Kind</span><strong>plan</strong></div>
+<div class="meta-item"><span>Purpose</span><strong>architecture</strong></div>
+<div class="meta-item"><span>Status</span><strong>active</strong></div>
+<div class="meta-item"><span>Client</span><strong>gbautomation</strong></div>
+<div class="meta-item"><span>Priority</span><strong>high</strong></div>
+<div class="meta-item"><span>Slug</span><strong>hermes-template-canopy-parameterization-shared-core</strong></div>
+<div class="meta-item"><span>Created</span><strong>2026-06-17</strong></div>
+<div class="meta-item"><span>Target Date</span><strong>2026-06-24</strong></div>
+<div class="meta-item"><span>Domain</span><strong>hermes</strong></div>
+<div class="meta-item"><span>Service</span><strong>hermes-gbauto</strong></div>
+<div class="meta-item"><span>Tags</span><strong>plan, domain/hermes, hermes/template, canopy</strong></div>
+<div class="meta-item"><span>Related</span><strong>[[2026-06-17-openclaw-retirement-hermes-migration-prd]], [[2026-06-12-gbautomation-hermes-hub-build-plan]], [[reference_agent_role_map]]</strong></div>
+      </div>
+    </div>
+  </footer>
+  <script>
+    const sections = Array.from(document.querySelectorAll('details.section'));
+    const menuButtons = Array.from(document.querySelectorAll('[data-target]'));
+    const setActive = (id) => {
+      menuButtons.forEach((button) => button.classList.toggle('active', button.dataset.target === id));
+    };
+    menuButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const section = document.getElementById(button.dataset.target);
+        if (!section) return;
+        section.open = true;
+        setActive(section.id);
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+    document.querySelector('[data-action="expand"]').addEventListener('click', () => sections.forEach((section) => section.open = true));
+    document.querySelector('[data-action="collapse"]').addEventListener('click', () => sections.forEach((section, index) => section.open = index === 0));
+    sections.forEach((section) => {
+      section.addEventListener('toggle', () => {
+        if (section.open) setActive(section.id);
+      });
+    });
+    if (sections[0]) setActive(sections[0].id);
+  </script>
+</body>
+</html>
