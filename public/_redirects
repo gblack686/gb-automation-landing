@@ -14,6 +14,11 @@
 /prds/*.json               /prds/:splat.json              200
 /prds/*                    /prds/:splat.html              200!
 
+# Public TAC / agent style assets.
+/tac/*.json                /tac/:splat.json               200
+/tac/*.md                  /tac/:splat.md                 200
+/llms.txt                  /llms.txt                      200
+
 # Preview artifacts are standalone static HTML, not React routes.
 # Explicit forced rewrites beat the SPA catch-all and avoid Netlify wildcard quirks.
 /previews/report-artifacts/prd-email-artifact.html          /previews/report-artifacts/prd-email-artifact.html          200!

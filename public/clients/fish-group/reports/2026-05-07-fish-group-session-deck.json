@@ -1,0 +1,29 @@
+{
+  "content": "Delivered file: 2026-05-07-fish-group-session-deck.pptx",
+  "generated_at": "2026-06-12T00:00:00Z",
+  "proof": {
+    "sourcePath": "clients/fish-group/deliverables/2026-05-07-fish-group-session-deck.pptx",
+    "sourceQuote": "2026-05-07-fish-group-session-deck.pptx",
+    "status": "source-backed"
+  },
+  "report": {
+    "asset_url": "/clients/fish-group/artifacts/2026-05-07-fish-group-session-deck",
+    "id": "2026-05-07-fish-group-session-deck",
+    "kind": "report",
+    "owner": "GBAutomation",
+    "proof": {
+      "sourcePath": "clients/fish-group/deliverables/2026-05-07-fish-group-session-deck.pptx",
+      "sourceQuote": "2026-05-07-fish-group-session-deck.pptx",
+      "status": "source-backed"
+    },
+    "sourcePath": "clients/fish-group/deliverables/2026-05-07-fish-group-session-deck.pptx",
+    "sourceQuote": "2026-05-07-fish-group-session-deck.pptx",
+    "status": "published",
+    "summary": "Delivered file: 2026-05-07-fish-group-session-deck.pptx",
+    "title": "2026-05-07-fish-group-session-deck.pptx",
+    "updated_at": "2026-06-06T00:00:00Z"
+  },
+  "schema_version": 1,
+  "sourcePath": "clients/fish-group/deliverables/2026-05-07-fish-group-session-deck.pptx",
+  "sourceQuote": "2026-05-07-fish-group-session-deck.pptx"
+}

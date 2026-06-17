@@ -1,32 +1,703 @@
 {
+  "schema_version": 1,
+  "updated_at": "2026-06-11T21:41:37.877Z",
+  "source": "gbautomation/second-brain/clients",
   "artifacts": [
     {
-      "archive_reason": null,
-      "archived": false,
-      "archived_at": null,
-      "artifact_id": "brief-bdfbfda44fbb",
-      "artifact_kind": null,
-      "asset_url": "/artifacts/acme-co/brief-bdfbfda44fbb/brief.html",
-      "client": "acme-co",
-      "created_at": "2026-05-21T20:41:39Z",
-      "drive": {
-        "enabled": false,
-        "reason": "dry-run enabled",
-        "status": "dry-run"
+      "id": "pre-call-prd-md",
+      "title": " Pre Call Prd",
+      "kind": "report",
+      "owner": "Adjust AI",
+      "status": "source-backed",
+      "summary": "# Pre-Call PRD -- pointer Canonical PRD lives in the plans tree. This stub keeps it discoverable from the client folder. - **Vault canonical:** [[plans/2026-05-26-adjust-ai-dev-observability-prd|2026-05-26-adjust-ai-dev-",
+      "asset_url": null,
+      "source": {
+        "source_path": "clients/adjust-ai/deliverables/_pre-call-prd.md",
+        "sourcePath": "clients/adjust-ai/deliverables/_pre-call-prd.md",
+        "proof": {
+          "status": "source-backed",
+          "sourcePath": "clients/adjust-ai/deliverables/_pre-call-prd.md",
+          "quote": "Pre Call Prd"
+        }
       },
-      "filename": "brief.html",
-      "mime_type": "text/html; charset=utf-8",
-      "project": null,
-      "public_path": "/Users/greg/repos/gb-automation-landing/public/artifacts/acme-co/brief-bdfbfda44fbb/brief.html",
-      "registry_path": "/private/var/folders/2l/jq039tfd4klckl_r7sjhl6hm0000gn/T/pytest-of-greg/pytest-86/test_manifest_idempotency_and_0/registry/acme-co/brief-bdfbfda44fbb/brief.html",
-      "sha256": "bdfbfda44fbb43453a9d8a6e08d71af89e85a46192de589860eca73ada723499",
-      "size": 14,
-      "source_path": "/private/var/folders/2l/jq039tfd4klckl_r7sjhl6hm0000gn/T/pytest-of-greg/pytest-86/test_manifest_idempotency_and_0/clients/Acme Co/outputs/brief.html",
-      "tags": [],
-      "type": "html",
-      "web_route": "/artifacts/acme-co/brief-bdfbfda44fbb"
+      "sourcePath": "clients/adjust-ai/deliverables/_pre-call-prd.md",
+      "proof": {
+        "status": "source-backed",
+        "sourcePath": "clients/adjust-ai/deliverables/_pre-call-prd.md",
+        "quote": "Pre Call Prd"
+      },
+      "updated_at": "2026-06-11T21:41:37.877Z",
+      "client": "adjust-ai",
+      "client_name": "Adjust AI",
+      "artifact_id": "pre-call-prd-md",
+      "registry_path": "public/clients/adjust-ai/artifacts.json"
+    },
+    {
+      "id": "2026-05-11-tac-team-runner-verifier-dcae88ee-pdf",
+      "title": "2026 05 11 Tac Team Runner Verifier Dcae88ee",
+      "kind": "artifact",
+      "owner": "GBAutomation",
+      "status": "source-backed",
+      "summary": "2026 05 11 Tac Team Runner Verifier Dcae88ee",
+      "asset_url": null,
+      "source": {
+        "source_path": "clients/gbautomation/deliverables/2026-05-11-tac-team-runner-verifier-dcae88ee.pdf",
+        "sourcePath": "clients/gbautomation/deliverables/2026-05-11-tac-team-runner-verifier-dcae88ee.pdf",
+        "proof": {
+          "status": "source-backed",
+          "sourcePath": "clients/gbautomation/deliverables/2026-05-11-tac-team-runner-verifier-dcae88ee.pdf",
+          "quote": "2026 05 11 Tac Team Runner Verifier Dcae88ee"
+        }
+      },
+      "sourcePath": "clients/gbautomation/deliverables/2026-05-11-tac-team-runner-verifier-dcae88ee.pdf",
+      "proof": {
+        "status": "source-backed",
+        "sourcePath": "clients/gbautomation/deliverables/2026-05-11-tac-team-runner-verifier-dcae88ee.pdf",
+        "quote": "2026 05 11 Tac Team Runner Verifier Dcae88ee"
+      },
+      "updated_at": "2026-06-11T21:41:37.877Z",
+      "client": "gbautomation",
+      "client_name": "GBAutomation",
+      "artifact_id": "2026-05-11-tac-team-runner-verifier-dcae88ee-pdf",
+      "registry_path": "public/clients/gbautomation/artifacts.json"
+    },
+    {
+      "id": "2026-05-12-tac-build-report-1fafe5cb-pdf",
+      "title": "2026 05 12 Tac Build Report 1fafe5cb",
+      "kind": "report",
+      "owner": "GBAutomation",
+      "status": "source-backed",
+      "summary": "2026 05 12 Tac Build Report 1fafe5cb",
+      "asset_url": null,
+      "source": {
+        "source_path": "clients/gbautomation/deliverables/2026-05-12-tac-build-report-1fafe5cb.pdf",
+        "sourcePath": "clients/gbautomation/deliverables/2026-05-12-tac-build-report-1fafe5cb.pdf",
+        "proof": {
+          "status": "source-backed",
+          "sourcePath": "clients/gbautomation/deliverables/2026-05-12-tac-build-report-1fafe5cb.pdf",
+          "quote": "2026 05 12 Tac Build Report 1fafe5cb"
+        }
+      },
+      "sourcePath": "clients/gbautomation/deliverables/2026-05-12-tac-build-report-1fafe5cb.pdf",
+      "proof": {
+        "status": "source-backed",
+        "sourcePath": "clients/gbautomation/deliverables/2026-05-12-tac-build-report-1fafe5cb.pdf",
+        "quote": "2026 05 12 Tac Build Report 1fafe5cb"
+      },
+      "updated_at": "2026-06-11T21:41:37.877Z",
+      "client": "gbautomation",
+      "client_name": "GBAutomation",
+      "artifact_id": "2026-05-12-tac-build-report-1fafe5cb-pdf",
+      "registry_path": "public/clients/gbautomation/artifacts.json"
+    },
+    {
+      "id": "2026-05-12-tac-build-report-7ffc00bf-pdf",
+      "title": "2026 05 12 Tac Build Report 7ffc00bf",
+      "kind": "report",
+      "owner": "GBAutomation",
+      "status": "source-backed",
+      "summary": "2026 05 12 Tac Build Report 7ffc00bf",
+      "asset_url": null,
+      "source": {
+        "source_path": "clients/gbautomation/deliverables/2026-05-12-tac-build-report-7ffc00bf.pdf",
+        "sourcePath": "clients/gbautomation/deliverables/2026-05-12-tac-build-report-7ffc00bf.pdf",
+        "proof": {
+          "status": "source-backed",
+          "sourcePath": "clients/gbautomation/deliverables/2026-05-12-tac-build-report-7ffc00bf.pdf",
+          "quote": "2026 05 12 Tac Build Report 7ffc00bf"
+        }
+      },
+      "sourcePath": "clients/gbautomation/deliverables/2026-05-12-tac-build-report-7ffc00bf.pdf",
+      "proof": {
+        "status": "source-backed",
+        "sourcePath": "clients/gbautomation/deliverables/2026-05-12-tac-build-report-7ffc00bf.pdf",
+        "quote": "2026 05 12 Tac Build Report 7ffc00bf"
+      },
+      "updated_at": "2026-06-11T21:41:37.877Z",
+      "client": "gbautomation",
+      "client_name": "GBAutomation",
+      "artifact_id": "2026-05-12-tac-build-report-7ffc00bf-pdf",
+      "registry_path": "public/clients/gbautomation/artifacts.json"
+    },
+    {
+      "id": "prds-2026-06-10-agent-harness-improvements-2026-06-10-carlos-harness-reliability",
+      "title": "2026 06 10 Carlos Harness Reliability Improvements",
+      "kind": "report",
+      "owner": "Jason Diaz (PMC)",
+      "status": "source-backed",
+      "summary": "# Carlos Harness Reliability Improvements PRD ## 1. Product Overview This product turns Carlos from a janky chat bot into an auditable agent harness Jason can trust for daily business execution. It prioritizes determinis",
+      "asset_url": null,
+      "source": {
+        "source_path": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/2026-06-10-carlos-harness-reliability-improvements.md",
+        "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/2026-06-10-carlos-harness-reliability-improvements.md",
+        "proof": {
+          "status": "source-backed",
+          "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/2026-06-10-carlos-harness-reliability-improvements.md",
+          "quote": "2026 06 10 Carlos Harness Reliability Improvements"
+        }
+      },
+      "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/2026-06-10-carlos-harness-reliability-improvements.md",
+      "proof": {
+        "status": "source-backed",
+        "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/2026-06-10-carlos-harness-reliability-improvements.md",
+        "quote": "2026 06 10 Carlos Harness Reliability Improvements"
+      },
+      "updated_at": "2026-06-11T21:41:37.877Z",
+      "client": "jason-diaz",
+      "client_name": "Jason Diaz (PMC)",
+      "artifact_id": "prds-2026-06-10-agent-harness-improvements-2026-06-10-carlos-harness-reliability",
+      "registry_path": "public/clients/jason-diaz/artifacts.json"
+    },
+    {
+      "id": "prds-2026-06-10-agent-harness-improvements-2026-06-10-google-drive-saving-fix-md",
+      "title": "2026 06 10 Google Drive Saving Fix",
+      "kind": "report",
+      "owner": "Jason Diaz (PMC)",
+      "status": "source-backed",
+      "summary": "# Google Drive Saving and File Retrieval Fix PRD ## 1. Product Overview This product fixes the file trust gap: Jason should not have to resend a clip or attachment that arrived earlier in the same chat. Carlos will save ",
+      "asset_url": null,
+      "source": {
+        "source_path": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/2026-06-10-google-drive-saving-fix.md",
+        "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/2026-06-10-google-drive-saving-fix.md",
+        "proof": {
+          "status": "source-backed",
+          "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/2026-06-10-google-drive-saving-fix.md",
+          "quote": "2026 06 10 Google Drive Saving Fix"
+        }
+      },
+      "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/2026-06-10-google-drive-saving-fix.md",
+      "proof": {
+        "status": "source-backed",
+        "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/2026-06-10-google-drive-saving-fix.md",
+        "quote": "2026 06 10 Google Drive Saving Fix"
+      },
+      "updated_at": "2026-06-11T21:41:37.877Z",
+      "client": "jason-diaz",
+      "client_name": "Jason Diaz (PMC)",
+      "artifact_id": "prds-2026-06-10-agent-harness-improvements-2026-06-10-google-drive-saving-fix-md",
+      "registry_path": "public/clients/jason-diaz/artifacts.json"
+    },
+    {
+      "id": "prds-2026-06-10-agent-harness-improvements-2026-06-10-perplexity-exa-research-ag",
+      "title": "2026 06 10 Perplexity Exa Research Agent Team",
+      "kind": "report",
+      "owner": "Jason Diaz (PMC)",
+      "status": "source-backed",
+      "summary": "# Perplexity and Exa Research Agent Team for Carlos PRD ## 1. Product Overview This product gives Carlos a real research lane for prospecting and market research instead of brittle one-off web searches. It wires Perplexi",
+      "asset_url": null,
+      "source": {
+        "source_path": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/2026-06-10-perplexity-exa-research-agent-team.md",
+        "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/2026-06-10-perplexity-exa-research-agent-team.md",
+        "proof": {
+          "status": "source-backed",
+          "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/2026-06-10-perplexity-exa-research-agent-team.md",
+          "quote": "2026 06 10 Perplexity Exa Research Agent Team"
+        }
+      },
+      "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/2026-06-10-perplexity-exa-research-agent-team.md",
+      "proof": {
+        "status": "source-backed",
+        "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/2026-06-10-perplexity-exa-research-agent-team.md",
+        "quote": "2026 06 10 Perplexity Exa Research Agent Team"
+      },
+      "updated_at": "2026-06-11T21:41:37.877Z",
+      "client": "jason-diaz",
+      "client_name": "Jason Diaz (PMC)",
+      "artifact_id": "prds-2026-06-10-agent-harness-improvements-2026-06-10-perplexity-exa-research-ag",
+      "registry_path": "public/clients/jason-diaz/artifacts.json"
+    },
+    {
+      "id": "prds-2026-06-10-agent-harness-improvements-2026-06-10-second-brain-cleanup-team-",
+      "title": "2026 06 10 Second Brain Cleanup Team",
+      "kind": "report",
+      "owner": "Jason Diaz (PMC)",
+      "status": "source-backed",
+      "summary": "# Jason Second Brain Cleanup Team PRD ## 1. Product Overview This product makes Jason and Carlos trust the second brain as the source of truth. It audits clutter, links active business work, and creates summaries that ma",
+      "asset_url": null,
+      "source": {
+        "source_path": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/2026-06-10-second-brain-cleanup-team.md",
+        "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/2026-06-10-second-brain-cleanup-team.md",
+        "proof": {
+          "status": "source-backed",
+          "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/2026-06-10-second-brain-cleanup-team.md",
+          "quote": "2026 06 10 Second Brain Cleanup Team"
+        }
+      },
+      "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/2026-06-10-second-brain-cleanup-team.md",
+      "proof": {
+        "status": "source-backed",
+        "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/2026-06-10-second-brain-cleanup-team.md",
+        "quote": "2026 06 10 Second Brain Cleanup Team"
+      },
+      "updated_at": "2026-06-11T21:41:37.877Z",
+      "client": "jason-diaz",
+      "client_name": "Jason Diaz (PMC)",
+      "artifact_id": "prds-2026-06-10-agent-harness-improvements-2026-06-10-second-brain-cleanup-team-",
+      "registry_path": "public/clients/jason-diaz/artifacts.json"
+    },
+    {
+      "id": "prds-2026-06-10-agent-harness-improvements-2026-06-10-trace-extraction-skill-cre",
+      "title": "2026 06 10 Trace Extraction Skill Creation Team",
+      "kind": "report",
+      "owner": "Jason Diaz (PMC)",
+      "status": "source-backed",
+      "summary": "# Trace Extraction and Skill Creation Team PRD ## 1. Product Overview This product turns Carlos interaction history into a skill-improvement pipeline for Jason. It extracts pain points, repeated tasks, tool failures, and",
+      "asset_url": null,
+      "source": {
+        "source_path": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/2026-06-10-trace-extraction-skill-creation-team.md",
+        "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/2026-06-10-trace-extraction-skill-creation-team.md",
+        "proof": {
+          "status": "source-backed",
+          "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/2026-06-10-trace-extraction-skill-creation-team.md",
+          "quote": "2026 06 10 Trace Extraction Skill Creation Team"
+        }
+      },
+      "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/2026-06-10-trace-extraction-skill-creation-team.md",
+      "proof": {
+        "status": "source-backed",
+        "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/2026-06-10-trace-extraction-skill-creation-team.md",
+        "quote": "2026 06 10 Trace Extraction Skill Creation Team"
+      },
+      "updated_at": "2026-06-11T21:41:37.877Z",
+      "client": "jason-diaz",
+      "client_name": "Jason Diaz (PMC)",
+      "artifact_id": "prds-2026-06-10-agent-harness-improvements-2026-06-10-trace-extraction-skill-cre",
+      "registry_path": "public/clients/jason-diaz/artifacts.json"
+    },
+    {
+      "id": "prds-2026-06-10-agent-harness-improvements-readme-md",
+      "title": "README",
+      "kind": "report",
+      "owner": "Jason Diaz (PMC)",
+      "status": "source-backed",
+      "summary": "# Jason Diaz Agent Harness PRD Review Package Created: 2026-06-10 ## PRDs - [Trace Extraction and Skill Creation Team PRD](2026-06-10-trace-extraction-skill-creation-team.md) - HTML: html/2026-06-10-trace-extraction-skil",
+      "asset_url": null,
+      "source": {
+        "source_path": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/README.md",
+        "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/README.md",
+        "proof": {
+          "status": "source-backed",
+          "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/README.md",
+          "quote": "README"
+        }
+      },
+      "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/README.md",
+      "proof": {
+        "status": "source-backed",
+        "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/README.md",
+        "quote": "README"
+      },
+      "updated_at": "2026-06-11T21:41:37.877Z",
+      "client": "jason-diaz",
+      "client_name": "Jason Diaz (PMC)",
+      "artifact_id": "prds-2026-06-10-agent-harness-improvements-readme-md",
+      "registry_path": "public/clients/jason-diaz/artifacts.json"
+    },
+    {
+      "id": "prds-2026-06-10-agent-harness-improvements-html-2026-06-10-carlos-harness-reliab",
+      "title": "2026 06 10 Carlos Harness Reliability Improvements",
+      "kind": "report",
+      "owner": "Jason Diaz (PMC)",
+      "status": "source-backed",
+      "summary": "2026 06 10 Carlos Harness Reliability Improvements",
+      "asset_url": null,
+      "source": {
+        "source_path": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/html/2026-06-10-carlos-harness-reliability-improvements.html",
+        "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/html/2026-06-10-carlos-harness-reliability-improvements.html",
+        "proof": {
+          "status": "source-backed",
+          "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/html/2026-06-10-carlos-harness-reliability-improvements.html",
+          "quote": "2026 06 10 Carlos Harness Reliability Improvements"
+        }
+      },
+      "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/html/2026-06-10-carlos-harness-reliability-improvements.html",
+      "proof": {
+        "status": "source-backed",
+        "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/html/2026-06-10-carlos-harness-reliability-improvements.html",
+        "quote": "2026 06 10 Carlos Harness Reliability Improvements"
+      },
+      "updated_at": "2026-06-11T21:41:37.877Z",
+      "client": "jason-diaz",
+      "client_name": "Jason Diaz (PMC)",
+      "artifact_id": "prds-2026-06-10-agent-harness-improvements-html-2026-06-10-carlos-harness-reliab",
+      "registry_path": "public/clients/jason-diaz/artifacts.json"
+    },
+    {
+      "id": "prds-2026-06-10-agent-harness-improvements-html-2026-06-10-google-drive-saving-f",
+      "title": "2026 06 10 Google Drive Saving Fix",
+      "kind": "report",
+      "owner": "Jason Diaz (PMC)",
+      "status": "source-backed",
+      "summary": "2026 06 10 Google Drive Saving Fix",
+      "asset_url": null,
+      "source": {
+        "source_path": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/html/2026-06-10-google-drive-saving-fix.html",
+        "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/html/2026-06-10-google-drive-saving-fix.html",
+        "proof": {
+          "status": "source-backed",
+          "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/html/2026-06-10-google-drive-saving-fix.html",
+          "quote": "2026 06 10 Google Drive Saving Fix"
+        }
+      },
+      "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/html/2026-06-10-google-drive-saving-fix.html",
+      "proof": {
+        "status": "source-backed",
+        "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/html/2026-06-10-google-drive-saving-fix.html",
+        "quote": "2026 06 10 Google Drive Saving Fix"
+      },
+      "updated_at": "2026-06-11T21:41:37.877Z",
+      "client": "jason-diaz",
+      "client_name": "Jason Diaz (PMC)",
+      "artifact_id": "prds-2026-06-10-agent-harness-improvements-html-2026-06-10-google-drive-saving-f",
+      "registry_path": "public/clients/jason-diaz/artifacts.json"
+    },
+    {
+      "id": "prds-2026-06-10-agent-harness-improvements-html-2026-06-10-perplexity-exa-resear",
+      "title": "2026 06 10 Perplexity Exa Research Agent Team",
+      "kind": "report",
+      "owner": "Jason Diaz (PMC)",
+      "status": "source-backed",
+      "summary": "2026 06 10 Perplexity Exa Research Agent Team",
+      "asset_url": null,
+      "source": {
+        "source_path": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/html/2026-06-10-perplexity-exa-research-agent-team.html",
+        "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/html/2026-06-10-perplexity-exa-research-agent-team.html",
+        "proof": {
+          "status": "source-backed",
+          "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/html/2026-06-10-perplexity-exa-research-agent-team.html",
+          "quote": "2026 06 10 Perplexity Exa Research Agent Team"
+        }
+      },
+      "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/html/2026-06-10-perplexity-exa-research-agent-team.html",
+      "proof": {
+        "status": "source-backed",
+        "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/html/2026-06-10-perplexity-exa-research-agent-team.html",
+        "quote": "2026 06 10 Perplexity Exa Research Agent Team"
+      },
+      "updated_at": "2026-06-11T21:41:37.877Z",
+      "client": "jason-diaz",
+      "client_name": "Jason Diaz (PMC)",
+      "artifact_id": "prds-2026-06-10-agent-harness-improvements-html-2026-06-10-perplexity-exa-resear",
+      "registry_path": "public/clients/jason-diaz/artifacts.json"
+    },
+    {
+      "id": "prds-2026-06-10-agent-harness-improvements-html-2026-06-10-second-brain-cleanup-",
+      "title": "2026 06 10 Second Brain Cleanup Team",
+      "kind": "report",
+      "owner": "Jason Diaz (PMC)",
+      "status": "source-backed",
+      "summary": "2026 06 10 Second Brain Cleanup Team",
+      "asset_url": null,
+      "source": {
+        "source_path": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/html/2026-06-10-second-brain-cleanup-team.html",
+        "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/html/2026-06-10-second-brain-cleanup-team.html",
+        "proof": {
+          "status": "source-backed",
+          "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/html/2026-06-10-second-brain-cleanup-team.html",
+          "quote": "2026 06 10 Second Brain Cleanup Team"
+        }
+      },
+      "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/html/2026-06-10-second-brain-cleanup-team.html",
+      "proof": {
+        "status": "source-backed",
+        "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/html/2026-06-10-second-brain-cleanup-team.html",
+        "quote": "2026 06 10 Second Brain Cleanup Team"
+      },
+      "updated_at": "2026-06-11T21:41:37.877Z",
+      "client": "jason-diaz",
+      "client_name": "Jason Diaz (PMC)",
+      "artifact_id": "prds-2026-06-10-agent-harness-improvements-html-2026-06-10-second-brain-cleanup-",
+      "registry_path": "public/clients/jason-diaz/artifacts.json"
+    },
+    {
+      "id": "prds-2026-06-10-agent-harness-improvements-html-2026-06-10-trace-extraction-skil",
+      "title": "2026 06 10 Trace Extraction Skill Creation Team",
+      "kind": "report",
+      "owner": "Jason Diaz (PMC)",
+      "status": "source-backed",
+      "summary": "2026 06 10 Trace Extraction Skill Creation Team",
+      "asset_url": null,
+      "source": {
+        "source_path": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/html/2026-06-10-trace-extraction-skill-creation-team.html",
+        "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/html/2026-06-10-trace-extraction-skill-creation-team.html",
+        "proof": {
+          "status": "source-backed",
+          "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/html/2026-06-10-trace-extraction-skill-creation-team.html",
+          "quote": "2026 06 10 Trace Extraction Skill Creation Team"
+        }
+      },
+      "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/html/2026-06-10-trace-extraction-skill-creation-team.html",
+      "proof": {
+        "status": "source-backed",
+        "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/html/2026-06-10-trace-extraction-skill-creation-team.html",
+        "quote": "2026 06 10 Trace Extraction Skill Creation Team"
+      },
+      "updated_at": "2026-06-11T21:41:37.877Z",
+      "client": "jason-diaz",
+      "client_name": "Jason Diaz (PMC)",
+      "artifact_id": "prds-2026-06-10-agent-harness-improvements-html-2026-06-10-trace-extraction-skil",
+      "registry_path": "public/clients/jason-diaz/artifacts.json"
+    },
+    {
+      "id": "prds-2026-06-10-agent-harness-improvements-jason-diaz-agent-harness-prds-2026-06",
+      "title": "Jason Diaz Agent Harness Prds 2026 06 10",
+      "kind": "report",
+      "owner": "Jason Diaz (PMC)",
+      "status": "source-backed",
+      "summary": "Jason Diaz Agent Harness Prds 2026 06 10",
+      "asset_url": null,
+      "source": {
+        "source_path": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/jason-diaz-agent-harness-prds-2026-06-10.zip",
+        "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/jason-diaz-agent-harness-prds-2026-06-10.zip",
+        "proof": {
+          "status": "source-backed",
+          "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/jason-diaz-agent-harness-prds-2026-06-10.zip",
+          "quote": "Jason Diaz Agent Harness Prds 2026 06 10"
+        }
+      },
+      "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/jason-diaz-agent-harness-prds-2026-06-10.zip",
+      "proof": {
+        "status": "source-backed",
+        "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/jason-diaz-agent-harness-prds-2026-06-10.zip",
+        "quote": "Jason Diaz Agent Harness Prds 2026 06 10"
+      },
+      "updated_at": "2026-06-11T21:41:37.877Z",
+      "client": "jason-diaz",
+      "client_name": "Jason Diaz (PMC)",
+      "artifact_id": "prds-2026-06-10-agent-harness-improvements-jason-diaz-agent-harness-prds-2026-06",
+      "registry_path": "public/clients/jason-diaz/artifacts.json"
+    },
+    {
+      "id": "prds-2026-06-10-agent-harness-improvements-manifest-json",
+      "title": "Manifest",
+      "kind": "report",
+      "owner": "Jason Diaz (PMC)",
+      "status": "source-backed",
+      "summary": "{ \"created\": \"2026-06-10\", \"source_transcript\": \"[local-path-redacted]\", \"prds\": [ { \"slug\": \"trace-extraction-skill-creation-team\", \"title\": \"Trace Extraction and Skill Creation Team PRD\", \"markdown\": \"[local-path-redac",
+      "asset_url": null,
+      "source": {
+        "source_path": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/manifest.json",
+        "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/manifest.json",
+        "proof": {
+          "status": "source-backed",
+          "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/manifest.json",
+          "quote": "Manifest"
+        }
+      },
+      "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/manifest.json",
+      "proof": {
+        "status": "source-backed",
+        "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/manifest.json",
+        "quote": "Manifest"
+      },
+      "updated_at": "2026-06-11T21:41:37.877Z",
+      "client": "jason-diaz",
+      "client_name": "Jason Diaz (PMC)",
+      "artifact_id": "prds-2026-06-10-agent-harness-improvements-manifest-json",
+      "registry_path": "public/clients/jason-diaz/artifacts.json"
+    },
+    {
+      "id": "prds-2026-06-10-agent-harness-improvements-pdf-2026-06-10-carlos-harness-reliabi",
+      "title": "2026 06 10 Carlos Harness Reliability Improvements",
+      "kind": "report",
+      "owner": "Jason Diaz (PMC)",
+      "status": "source-backed",
+      "summary": "2026 06 10 Carlos Harness Reliability Improvements",
+      "asset_url": null,
+      "source": {
+        "source_path": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/pdf/2026-06-10-carlos-harness-reliability-improvements.pdf",
+        "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/pdf/2026-06-10-carlos-harness-reliability-improvements.pdf",
+        "proof": {
+          "status": "source-backed",
+          "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/pdf/2026-06-10-carlos-harness-reliability-improvements.pdf",
+          "quote": "2026 06 10 Carlos Harness Reliability Improvements"
+        }
+      },
+      "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/pdf/2026-06-10-carlos-harness-reliability-improvements.pdf",
+      "proof": {
+        "status": "source-backed",
+        "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/pdf/2026-06-10-carlos-harness-reliability-improvements.pdf",
+        "quote": "2026 06 10 Carlos Harness Reliability Improvements"
+      },
+      "updated_at": "2026-06-11T21:41:37.877Z",
+      "client": "jason-diaz",
+      "client_name": "Jason Diaz (PMC)",
+      "artifact_id": "prds-2026-06-10-agent-harness-improvements-pdf-2026-06-10-carlos-harness-reliabi",
+      "registry_path": "public/clients/jason-diaz/artifacts.json"
+    },
+    {
+      "id": "prds-2026-06-10-agent-harness-improvements-pdf-2026-06-10-google-drive-saving-fi",
+      "title": "2026 06 10 Google Drive Saving Fix",
+      "kind": "report",
+      "owner": "Jason Diaz (PMC)",
+      "status": "source-backed",
+      "summary": "2026 06 10 Google Drive Saving Fix",
+      "asset_url": null,
+      "source": {
+        "source_path": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/pdf/2026-06-10-google-drive-saving-fix.pdf",
+        "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/pdf/2026-06-10-google-drive-saving-fix.pdf",
+        "proof": {
+          "status": "source-backed",
+          "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/pdf/2026-06-10-google-drive-saving-fix.pdf",
+          "quote": "2026 06 10 Google Drive Saving Fix"
+        }
+      },
+      "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/pdf/2026-06-10-google-drive-saving-fix.pdf",
+      "proof": {
+        "status": "source-backed",
+        "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/pdf/2026-06-10-google-drive-saving-fix.pdf",
+        "quote": "2026 06 10 Google Drive Saving Fix"
+      },
+      "updated_at": "2026-06-11T21:41:37.877Z",
+      "client": "jason-diaz",
+      "client_name": "Jason Diaz (PMC)",
+      "artifact_id": "prds-2026-06-10-agent-harness-improvements-pdf-2026-06-10-google-drive-saving-fi",
+      "registry_path": "public/clients/jason-diaz/artifacts.json"
+    },
+    {
+      "id": "prds-2026-06-10-agent-harness-improvements-pdf-2026-06-10-perplexity-exa-researc",
+      "title": "2026 06 10 Perplexity Exa Research Agent Team",
+      "kind": "report",
+      "owner": "Jason Diaz (PMC)",
+      "status": "source-backed",
+      "summary": "2026 06 10 Perplexity Exa Research Agent Team",
+      "asset_url": null,
+      "source": {
+        "source_path": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/pdf/2026-06-10-perplexity-exa-research-agent-team.pdf",
+        "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/pdf/2026-06-10-perplexity-exa-research-agent-team.pdf",
+        "proof": {
+          "status": "source-backed",
+          "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/pdf/2026-06-10-perplexity-exa-research-agent-team.pdf",
+          "quote": "2026 06 10 Perplexity Exa Research Agent Team"
+        }
+      },
+      "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/pdf/2026-06-10-perplexity-exa-research-agent-team.pdf",
+      "proof": {
+        "status": "source-backed",
+        "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/pdf/2026-06-10-perplexity-exa-research-agent-team.pdf",
+        "quote": "2026 06 10 Perplexity Exa Research Agent Team"
+      },
+      "updated_at": "2026-06-11T21:41:37.877Z",
+      "client": "jason-diaz",
+      "client_name": "Jason Diaz (PMC)",
+      "artifact_id": "prds-2026-06-10-agent-harness-improvements-pdf-2026-06-10-perplexity-exa-researc",
+      "registry_path": "public/clients/jason-diaz/artifacts.json"
+    },
+    {
+      "id": "prds-2026-06-10-agent-harness-improvements-pdf-2026-06-10-second-brain-cleanup-t",
+      "title": "2026 06 10 Second Brain Cleanup Team",
+      "kind": "report",
+      "owner": "Jason Diaz (PMC)",
+      "status": "source-backed",
+      "summary": "2026 06 10 Second Brain Cleanup Team",
+      "asset_url": null,
+      "source": {
+        "source_path": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/pdf/2026-06-10-second-brain-cleanup-team.pdf",
+        "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/pdf/2026-06-10-second-brain-cleanup-team.pdf",
+        "proof": {
+          "status": "source-backed",
+          "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/pdf/2026-06-10-second-brain-cleanup-team.pdf",
+          "quote": "2026 06 10 Second Brain Cleanup Team"
+        }
+      },
+      "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/pdf/2026-06-10-second-brain-cleanup-team.pdf",
+      "proof": {
+        "status": "source-backed",
+        "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/pdf/2026-06-10-second-brain-cleanup-team.pdf",
+        "quote": "2026 06 10 Second Brain Cleanup Team"
+      },
+      "updated_at": "2026-06-11T21:41:37.877Z",
+      "client": "jason-diaz",
+      "client_name": "Jason Diaz (PMC)",
+      "artifact_id": "prds-2026-06-10-agent-harness-improvements-pdf-2026-06-10-second-brain-cleanup-t",
+      "registry_path": "public/clients/jason-diaz/artifacts.json"
+    },
+    {
+      "id": "prds-2026-06-10-agent-harness-improvements-pdf-2026-06-10-trace-extraction-skill",
+      "title": "2026 06 10 Trace Extraction Skill Creation Team",
+      "kind": "report",
+      "owner": "Jason Diaz (PMC)",
+      "status": "source-backed",
+      "summary": "2026 06 10 Trace Extraction Skill Creation Team",
+      "asset_url": null,
+      "source": {
+        "source_path": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/pdf/2026-06-10-trace-extraction-skill-creation-team.pdf",
+        "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/pdf/2026-06-10-trace-extraction-skill-creation-team.pdf",
+        "proof": {
+          "status": "source-backed",
+          "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/pdf/2026-06-10-trace-extraction-skill-creation-team.pdf",
+          "quote": "2026 06 10 Trace Extraction Skill Creation Team"
+        }
+      },
+      "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/pdf/2026-06-10-trace-extraction-skill-creation-team.pdf",
+      "proof": {
+        "status": "source-backed",
+        "sourcePath": "clients/jason-diaz/deliverables/prds/2026-06-10-agent-harness-improvements/pdf/2026-06-10-trace-extraction-skill-creation-team.pdf",
+        "quote": "2026 06 10 Trace Extraction Skill Creation Team"
+      },
+      "updated_at": "2026-06-11T21:41:37.877Z",
+      "client": "jason-diaz",
+      "client_name": "Jason Diaz (PMC)",
+      "artifact_id": "prds-2026-06-10-agent-harness-improvements-pdf-2026-06-10-trace-extraction-skill",
+      "registry_path": "public/clients/jason-diaz/artifacts.json"
+    },
+    {
+      "id": "baseline-ig-scrape-2026-05-18-md",
+      "title": " Baseline Ig Scrape 2026 05 18",
+      "kind": "artifact",
+      "owner": "The Mall App",
+      "status": "source-backed",
+      "summary": "# The Mall App — Baseline IG Scrape (2026-05-18) Pre-engagement IG scrape captured by the Hermes `mall-scraper` profile. Useful for Session 1 prep: shows posting cadence, engagement tier, brand-curation patterns, and the",
+      "asset_url": null,
+      "source": {
+        "source_path": "clients/the-mall/deliverables/_baseline-ig-scrape-2026-05-18.md",
+        "sourcePath": "clients/the-mall/deliverables/_baseline-ig-scrape-2026-05-18.md",
+        "proof": {
+          "status": "source-backed",
+          "sourcePath": "clients/the-mall/deliverables/_baseline-ig-scrape-2026-05-18.md",
+          "quote": "Baseline Ig Scrape 2026 05 18"
+        }
+      },
+      "sourcePath": "clients/the-mall/deliverables/_baseline-ig-scrape-2026-05-18.md",
+      "proof": {
+        "status": "source-backed",
+        "sourcePath": "clients/the-mall/deliverables/_baseline-ig-scrape-2026-05-18.md",
+        "quote": "Baseline Ig Scrape 2026 05 18"
+      },
+      "updated_at": "2026-06-11T21:41:37.877Z",
+      "client": "the-mall",
+      "client_name": "The Mall App",
+      "artifact_id": "baseline-ig-scrape-2026-05-18-md",
+      "registry_path": "public/clients/the-mall/artifacts.json"
+    },
+    {
+      "id": "sprint-1-prd-md",
+      "title": " Sprint 1 Prd",
+      "kind": "report",
+      "owner": "The Mall App",
+      "status": "source-backed",
+      "summary": "# Sprint 1 PRD -- pointer The canonical PRD lives in the plans tree, not here. This stub keeps it visible from the client folder. - **Vault canonical:** [[plans/2026-05-26-the-mall-sprint-1-prd|2026-05-26-the-mall-sprint",
+      "asset_url": null,
+      "source": {
+        "source_path": "clients/the-mall/deliverables/_sprint-1-prd.md",
+        "sourcePath": "clients/the-mall/deliverables/_sprint-1-prd.md",
+        "proof": {
+          "status": "source-backed",
+          "sourcePath": "clients/the-mall/deliverables/_sprint-1-prd.md",
+          "quote": "Sprint 1 Prd"
+        }
+      },
+      "sourcePath": "clients/the-mall/deliverables/_sprint-1-prd.md",
+      "proof": {
+        "status": "source-backed",
+        "sourcePath": "clients/the-mall/deliverables/_sprint-1-prd.md",
+        "quote": "Sprint 1 Prd"
+      },
+      "updated_at": "2026-06-11T21:41:37.877Z",
+      "client": "the-mall",
+      "client_name": "The Mall App",
+      "artifact_id": "sprint-1-prd-md",
+      "registry_path": "public/clients/the-mall/artifacts.json"
     }
-  ],
-  "schema_version": 1,
-  "updated_at": "2026-05-21T20:41:39Z"
+  ]
 }

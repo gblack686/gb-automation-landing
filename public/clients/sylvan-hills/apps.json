@@ -1,0 +1,22 @@
+{
+  "apps": [
+    {
+      "id": "github-repository",
+      "kind": "repository",
+      "name": "GitHub repository",
+      "proof": {
+        "sourcePath": "clients/sylvan-hills/profile.md",
+        "sourceQuote": "Canonical profile for Sylvan Hills engagement. Garrett Shuster, men's apparel DTC brand. Sebastian daily brief active. Single source of truth for routing and integrations.",
+        "status": "source-backed"
+      },
+      "sourcePath": "clients/sylvan-hills/profile.md",
+      "sourceQuote": "Canonical profile for Sylvan Hills engagement. Garrett Shuster, men's apparel DTC brand. Sebastian daily brief active. Single source of truth for routing and integrations.",
+      "status": "active",
+      "summary": "Source repository for Sylvan Hills.",
+      "url": "https://github.com/gbauto/sylvan-hills"
+    }
+  ],
+  "generated_at": "2026-06-12T00:00:00Z",
+  "schema_version": 1,
+  "source": "second-brain client profile"
+}

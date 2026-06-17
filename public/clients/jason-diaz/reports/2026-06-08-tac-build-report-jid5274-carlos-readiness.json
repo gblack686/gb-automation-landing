@@ -1,0 +1,29 @@
+{
+  "content": "Delivered file: 2026-06-08-tac-build-report-jid5274-carlos-readiness.pdf",
+  "generated_at": "2026-06-12T00:00:00Z",
+  "proof": {
+    "sourcePath": "clients/jason-diaz/deliverables/2026-06-08-tac-build-report-jid5274-carlos-readiness.pdf",
+    "sourceQuote": "2026-06-08-tac-build-report-jid5274-carlos-readiness.pdf",
+    "status": "source-backed"
+  },
+  "report": {
+    "asset_url": "/clients/jason-diaz/artifacts/2026-06-08-tac-build-report-jid5274-carlos-readiness",
+    "id": "2026-06-08-tac-build-report-jid5274-carlos-readiness",
+    "kind": "report",
+    "owner": "GBAutomation",
+    "proof": {
+      "sourcePath": "clients/jason-diaz/deliverables/2026-06-08-tac-build-report-jid5274-carlos-readiness.pdf",
+      "sourceQuote": "2026-06-08-tac-build-report-jid5274-carlos-readiness.pdf",
+      "status": "source-backed"
+    },
+    "sourcePath": "clients/jason-diaz/deliverables/2026-06-08-tac-build-report-jid5274-carlos-readiness.pdf",
+    "sourceQuote": "2026-06-08-tac-build-report-jid5274-carlos-readiness.pdf",
+    "status": "published",
+    "summary": "Delivered file: 2026-06-08-tac-build-report-jid5274-carlos-readiness.pdf",
+    "title": "2026-06-08-tac-build-report-jid5274-carlos-readiness.pdf",
+    "updated_at": "2026-06-13T00:00:00Z"
+  },
+  "schema_version": 1,
+  "sourcePath": "clients/jason-diaz/deliverables/2026-06-08-tac-build-report-jid5274-carlos-readiness.pdf",
+  "sourceQuote": "2026-06-08-tac-build-report-jid5274-carlos-readiness.pdf"
+}

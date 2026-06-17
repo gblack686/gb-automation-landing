@@ -51,7 +51,6 @@ export default function ClientArtifactList({
           {artifacts.map((a) => {
             const Icon = iconFor(a.kind);
             const tone = STATUS_TONE[a.status] || STATUS_TONE.review;
-            const detailHref = detailBaseUrl ? `${detailBaseUrl}/${a.id}` : a.asset_url;
             return (
               <tr
                 key={a.id}

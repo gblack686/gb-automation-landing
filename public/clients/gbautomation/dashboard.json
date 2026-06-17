@@ -1,64 +1,63 @@
 {
-  "schema_version": 1,
-  "generated_at": "2026-05-31T18:00:00Z",
-  "headline": "Template tenant is the canonical surface every new client portal forks from.",
+  "generated_at": "2026-06-12T00:00:00Z",
   "metrics": [
     {
-      "label": "Apps in portfolio",
-      "value": "6",
-      "detail": "Mirrors public apps-registry.json. Two are tenant-private.",
-      "accent": "default"
+      "id": "apps",
+      "label": "Apps",
+      "proof": {
+        "sourcePath": "clients/gbautomation/profile.md",
+        "sourceQuote": "Internal dogfood client. GBAutomation is Greg's AI automation consultancy, using its own tooling as the first client.",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/gbautomation/profile.md",
+      "sourceQuote": "Internal dogfood client. GBAutomation is Greg's AI automation consultancy, using its own tooling as the first client.",
+      "value": 1
     },
     {
-      "label": "Open artifacts",
-      "value": "4",
-      "detail": "Briefs, PRDs, and TAC build reports awaiting publish.",
-      "accent": "default"
+      "id": "artifacts",
+      "label": "Artifacts",
+      "proof": {
+        "sourcePath": "clients/gbautomation/profile.md",
+        "sourceQuote": "Internal dogfood client. GBAutomation is Greg's AI automation consultancy, using its own tooling as the first client.",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/gbautomation/profile.md",
+      "sourceQuote": "Internal dogfood client. GBAutomation is Greg's AI automation consultancy, using its own tooling as the first client.",
+      "value": 5
     },
     {
-      "label": "Last sync",
-      "value": "3m",
-      "detail": "repository_dispatch from gbauto/gbautomation succeeded.",
-      "accent": "good"
+      "id": "reports",
+      "label": "Reports",
+      "proof": {
+        "sourcePath": "clients/gbautomation/profile.md",
+        "sourceQuote": "Internal dogfood client. GBAutomation is Greg's AI automation consultancy, using its own tooling as the first client.",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/gbautomation/profile.md",
+      "sourceQuote": "Internal dogfood client. GBAutomation is Greg's AI automation consultancy, using its own tooling as the first client.",
+      "value": 17
     },
     {
-      "label": "Validation",
-      "value": "Pass",
-      "detail": "TAC receipt written 2026-05-10. Next sweep 2026-06-07.",
-      "accent": "good"
+      "id": "receipts",
+      "label": "Receipts",
+      "proof": {
+        "sourcePath": "clients/gbautomation/profile.md",
+        "sourceQuote": "Internal dogfood client. GBAutomation is Greg's AI automation consultancy, using its own tooling as the first client.",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/gbautomation/profile.md",
+      "sourceQuote": "Internal dogfood client. GBAutomation is Greg's AI automation consultancy, using its own tooling as the first client.",
+      "value": 1
     }
   ],
-  "status_rail": [
-    { "label": "Auth", "state": "ok", "detail": "Cognito group tenant-gbautomation reachable." },
-    { "label": "CI", "state": "ok", "detail": "Last 12 amplify builds green." },
-    { "label": "Sync", "state": "ok", "detail": "Submodule pointer up to date." },
-    { "label": "Drift", "state": "watch", "detail": "Artifacts manifest lags disk tree." }
-  ],
-  "activity": [
-    {
-      "timestamp": "2026-05-31T14:21:00Z",
-      "title": "Mall Scanner cycle completed",
-      "detail": "112 brand pages diffed. 4 sale alerts dispatched via Hermes."
-    },
-    {
-      "timestamp": "2026-05-30T09:42:00Z",
-      "title": "Weekly TAC report published",
-      "detail": "5 wins, 1 blocker rolled to next week. See report wk-2026-22."
-    },
-    {
-      "timestamp": "2026-05-28T18:05:00Z",
-      "title": "Apps registry updated",
-      "detail": "client-portal-gbautomation marked validated. Mall scanner promoted to experimental."
-    },
-    {
-      "timestamp": "2026-05-22T11:08:00Z",
-      "title": "Tenant submodule bumped",
-      "detail": "Amplify deployment 8e3a4c2 promoted to production."
-    }
-  ],
-  "next_steps": [
-    "Reconcile public/artifacts/manifest.json with disk tree before next deploy.",
-    "Promote the boxed-icon header to the shared PageHeader primitive.",
-    "Wire repository_dispatch smoke event after parent PAT rotation."
-  ]
+  "schema_version": 1,
+  "tenant": {
+    "name": "GBAutomation",
+    "slug": "gbautomation",
+    "status": "active"
+  }
 }

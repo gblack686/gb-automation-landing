@@ -1,0 +1,22 @@
+{
+  "apps": [
+    {
+      "id": "github-repository",
+      "kind": "repository",
+      "name": "GitHub repository",
+      "proof": {
+        "sourcePath": "clients/eagle-app/profile.md",
+        "sourceQuote": "Eagle Acquisitions",
+        "status": "source-backed"
+      },
+      "sourcePath": "clients/eagle-app/profile.md",
+      "sourceQuote": "Eagle Acquisitions",
+      "status": "active",
+      "summary": "Source repository for Eagle Acquisitions.",
+      "url": "https://github.com/gbauto/sm-eagle-scaffold"
+    }
+  ],
+  "generated_at": "2026-06-12T00:00:00Z",
+  "schema_version": 1,
+  "source": "second-brain client profile"
+}

@@ -1,0 +1,63 @@
+{
+  "generated_at": "2026-06-12T00:00:00Z",
+  "metrics": [
+    {
+      "id": "apps",
+      "label": "Apps",
+      "proof": {
+        "sourcePath": "clients/sylvan-hills/profile.md",
+        "sourceQuote": "Canonical profile for Sylvan Hills engagement. Garrett Shuster, men's apparel DTC brand. Sebastian daily brief active. Single source of truth for routing and integrations.",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/sylvan-hills/profile.md",
+      "sourceQuote": "Canonical profile for Sylvan Hills engagement. Garrett Shuster, men's apparel DTC brand. Sebastian daily brief active. Single source of truth for routing and integrations.",
+      "value": 1
+    },
+    {
+      "id": "artifacts",
+      "label": "Artifacts",
+      "proof": {
+        "sourcePath": "clients/sylvan-hills/profile.md",
+        "sourceQuote": "Canonical profile for Sylvan Hills engagement. Garrett Shuster, men's apparel DTC brand. Sebastian daily brief active. Single source of truth for routing and integrations.",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/sylvan-hills/profile.md",
+      "sourceQuote": "Canonical profile for Sylvan Hills engagement. Garrett Shuster, men's apparel DTC brand. Sebastian daily brief active. Single source of truth for routing and integrations.",
+      "value": 0
+    },
+    {
+      "id": "reports",
+      "label": "Reports",
+      "proof": {
+        "sourcePath": "clients/sylvan-hills/profile.md",
+        "sourceQuote": "Canonical profile for Sylvan Hills engagement. Garrett Shuster, men's apparel DTC brand. Sebastian daily brief active. Single source of truth for routing and integrations.",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/sylvan-hills/profile.md",
+      "sourceQuote": "Canonical profile for Sylvan Hills engagement. Garrett Shuster, men's apparel DTC brand. Sebastian daily brief active. Single source of truth for routing and integrations.",
+      "value": 12
+    },
+    {
+      "id": "receipts",
+      "label": "Receipts",
+      "proof": {
+        "sourcePath": "clients/sylvan-hills/profile.md",
+        "sourceQuote": "Canonical profile for Sylvan Hills engagement. Garrett Shuster, men's apparel DTC brand. Sebastian daily brief active. Single source of truth for routing and integrations.",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/sylvan-hills/profile.md",
+      "sourceQuote": "Canonical profile for Sylvan Hills engagement. Garrett Shuster, men's apparel DTC brand. Sebastian daily brief active. Single source of truth for routing and integrations.",
+      "value": 1
+    }
+  ],
+  "schema_version": 1,
+  "tenant": {
+    "name": "Sylvan Hills",
+    "slug": "sylvan-hills",
+    "status": "active"
+  }
+}

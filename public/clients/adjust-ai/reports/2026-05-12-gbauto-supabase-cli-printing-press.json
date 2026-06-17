@@ -1,0 +1,27 @@
+{
+  "content": "Build a purpose-built `gbauto-supabase` CLI (Printing Press pattern) as the single, isolated Supabase tool surface for every environment — Mac Mini, Windows dev, Linear CI, future per-client agents. Lives in services/gbauto_supabase/, installable via `uv tool install` so no global brew/npm dependency, no MCP per session, and one secret resolver everywhere.",
+  "generated_at": "2026-06-12T00:00:00Z",
+  "proof": {
+    "sourcePath": "intelligence/decisions/2026-05-12-gbauto-supabase-cli-printing-press.md",
+    "sourceQuote": "ADR 2026-05-12 — `gbauto-supabase` CLI via Printing Press pattern",
+    "status": "source-backed"
+  },
+  "report": {
+    "id": "2026-05-12-gbauto-supabase-cli-printing-press",
+    "kind": "report",
+    "proof": {
+      "sourcePath": "intelligence/decisions/2026-05-12-gbauto-supabase-cli-printing-press.md",
+      "sourceQuote": "ADR 2026-05-12 — `gbauto-supabase` CLI via Printing Press pattern",
+      "status": "source-backed"
+    },
+    "sourcePath": "intelligence/decisions/2026-05-12-gbauto-supabase-cli-printing-press.md",
+    "sourceQuote": "ADR 2026-05-12 — `gbauto-supabase` CLI via Printing Press pattern",
+    "status": "published",
+    "summary": "Build a purpose-built `gbauto-supabase` CLI (Printing Press pattern) as the single, isolated Supabase tool surface for every environment — Mac Mini, Windows dev, Linear CI, future per-client agents. Lives in services/gbauto_supabase/, installable via `uv tool install` so no global brew/npm dependency, no MCP per session, and one secret resolver everywhere.",
+    "title": "ADR 2026-05-12 — `gbauto-supabase` CLI via Printing Press pattern",
+    "updated_at": "2026-05-12T00:00:00Z"
+  },
+  "schema_version": 1,
+  "sourcePath": "intelligence/decisions/2026-05-12-gbauto-supabase-cli-printing-press.md",
+  "sourceQuote": "ADR 2026-05-12 — `gbauto-supabase` CLI via Printing Press pattern"
+}

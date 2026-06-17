@@ -1,0 +1,130 @@
+{
+  "claims": [
+    {
+      "citations": [
+        {
+          "proof": {
+            "sourcePath": "clients/gbautomation/profile.md",
+            "sourceQuote": "Internal dogfood client. GBAutomation is Greg's AI automation consultancy, using its own tooling as the first client.",
+            "status": "source-backed"
+          },
+          "proofStatus": "source-backed",
+          "sourcePath": "clients/gbautomation/profile.md",
+          "sourceQuote": "Internal dogfood client. GBAutomation is Greg's AI automation consultancy, using its own tooling as the first client."
+        }
+      ],
+      "claim": "GBAutomation is in build phase with active status.",
+      "id": "client-status",
+      "proof_status": "source-backed",
+      "sourcePath": "clients/gbautomation/profile.md",
+      "sourceQuote": "Internal dogfood client. GBAutomation is Greg's AI automation consultancy, using its own tooling as the first client.",
+      "visibility": "client"
+    },
+    {
+      "citations": [
+        {
+          "proof": {
+            "sourcePath": "clients/gbautomation/deliverables/2026-06-09-tac-build-report-example-component-lineage.pdf",
+            "sourceQuote": "2026-06-09-tac-build-report-example-component-lineage.pdf",
+            "status": "source-backed"
+          },
+          "sourcePath": "clients/gbautomation/deliverables/2026-06-09-tac-build-report-example-component-lineage.pdf",
+          "sourceQuote": "2026-06-09-tac-build-report-example-component-lineage.pdf"
+        },
+        {
+          "proof": {
+            "sourcePath": "clients/gbautomation/deliverables/2026-05-11-tac-team-runner-verifier-dcae88ee.pdf",
+            "sourceQuote": "2026-05-11-tac-team-runner-verifier-dcae88ee.pdf",
+            "status": "source-backed"
+          },
+          "sourcePath": "clients/gbautomation/deliverables/2026-05-11-tac-team-runner-verifier-dcae88ee.pdf",
+          "sourceQuote": "2026-05-11-tac-team-runner-verifier-dcae88ee.pdf"
+        },
+        {
+          "proof": {
+            "sourcePath": "clients/gbautomation/deliverables/2026-05-12-tac-build-report-1fafe5cb.pdf",
+            "sourceQuote": "2026-05-12-tac-build-report-1fafe5cb.pdf",
+            "status": "source-backed"
+          },
+          "sourcePath": "clients/gbautomation/deliverables/2026-05-12-tac-build-report-1fafe5cb.pdf",
+          "sourceQuote": "2026-05-12-tac-build-report-1fafe5cb.pdf"
+        },
+        {
+          "proof": {
+            "sourcePath": "clients/gbautomation/deliverables/2026-05-12-tac-build-report-7ffc00bf.pdf",
+            "sourceQuote": "2026-05-12-tac-build-report-7ffc00bf.pdf",
+            "status": "source-backed"
+          },
+          "sourcePath": "clients/gbautomation/deliverables/2026-05-12-tac-build-report-7ffc00bf.pdf",
+          "sourceQuote": "2026-05-12-tac-build-report-7ffc00bf.pdf"
+        },
+        {
+          "proof": {
+            "sourcePath": "clients/gbautomation/deliverables/2026-04-01-session-recap.md",
+            "sourceQuote": "Kickoff Session Recap - 2026-04-01",
+            "status": "source-backed"
+          },
+          "sourcePath": "clients/gbautomation/deliverables/2026-04-01-session-recap.md",
+          "sourceQuote": "Kickoff Session Recap - 2026-04-01"
+        }
+      ],
+      "claim": "5 published artifacts are available in this portal snapshot.",
+      "id": "artifact-count",
+      "proof_status": "source-backed",
+      "sourcePath": "clients/gbautomation/deliverables/2026-06-09-tac-build-report-example-component-lineage.pdf",
+      "sourceQuote": "2026-06-09-tac-build-report-example-component-lineage.pdf",
+      "visibility": "client"
+    },
+    {
+      "citations": [
+        {
+          "proof": {
+            "sourcePath": "intelligence/integration-experts/receipts/t_a06bea61-content-system-contract-no-secrets.json",
+            "sourceQuote": "{",
+            "status": "source-backed"
+          },
+          "sourcePath": "intelligence/integration-experts/receipts/t_a06bea61-content-system-contract-no-secrets.json",
+          "sourceQuote": "{"
+        }
+      ],
+      "claim": "1 receipt records are included for validation and handoff history.",
+      "id": "receipt-count",
+      "proof_status": "source-backed",
+      "sourcePath": "intelligence/integration-experts/receipts/t_a06bea61-content-system-contract-no-secrets.json",
+      "sourceQuote": "{",
+      "visibility": "internal"
+    },
+    {
+      "citations": [
+        {
+          "proof": {
+            "sourcePath": "clients/gbautomation/deliverables/2026-06-09-tac-build-report-example-component-lineage.pdf",
+            "sourceQuote": "2026-06-09-tac-build-report-example-component-lineage.pdf",
+            "status": "source-backed"
+          },
+          "sourcePath": "clients/gbautomation/deliverables/2026-06-09-tac-build-report-example-component-lineage.pdf",
+          "sourceQuote": "2026-06-09-tac-build-report-example-component-lineage.pdf"
+        }
+      ],
+      "claim": "Latest report in the portal snapshot: 2026-06-09-tac-build-report-example-component-lineage.pdf.",
+      "id": "latest-report",
+      "proof_status": "source-backed",
+      "sourcePath": "clients/gbautomation/deliverables/2026-06-09-tac-build-report-example-component-lineage.pdf",
+      "sourceQuote": "2026-06-09-tac-build-report-example-component-lineage.pdf",
+      "visibility": "client"
+    }
+  ],
+  "generated_at": "2026-06-12T00:00:00Z",
+  "redaction_policy": {
+    "citation_requirement": "Every named-client, external, or quantified claim must cite sourcePath and sourceQuote before publication.",
+    "forbidden_patterns": [
+      "absolute home directories",
+      "file URLs",
+      "secret material",
+      "tokens",
+      "passwords"
+    ],
+    "summary": "Browser JSON may include second-brain-relative citation paths and short quotes, never raw local filesystem paths or secret material."
+  },
+  "schema_version": 1
+}

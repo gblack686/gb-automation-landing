@@ -1,66 +1,92 @@
 {
-  "schema_version": 1,
-  "source": "Tenant-scoped slice of public/artifacts/manifest.json. Mirrors the on-disk tree under public/artifacts/gbautomation/.",
   "artifacts": [
     {
-      "id": "wk-2026-22-tac-report",
-      "title": "TAC Weekly Report, Week 22",
-      "summary": "5 wins, 1 blocker rolled. Includes Mall Scanner sale-alert delta and YouTube Intel coverage.",
-      "kind": "report",
-      "status": "shipped",
-      "owner": "Greg",
-      "updated_at": "2026-05-30T09:42:00Z",
-      "asset_url": "/clients/gbautomation/reports/wk-2026-22-tac-report"
+      "asset_url": "/clients/gbautomation/artifacts/2026-06-09-tac-build-report-example-component-lineage",
+      "id": "2026-06-09-tac-build-report-example-component-lineage",
+      "kind": "artifact",
+      "owner": "GBAutomation",
+      "proof": {
+        "sourcePath": "clients/gbautomation/deliverables/2026-06-09-tac-build-report-example-component-lineage.pdf",
+        "sourceQuote": "2026-06-09-tac-build-report-example-component-lineage.pdf",
+        "status": "source-backed"
+      },
+      "sourcePath": "clients/gbautomation/deliverables/2026-06-09-tac-build-report-example-component-lineage.pdf",
+      "sourceQuote": "2026-06-09-tac-build-report-example-component-lineage.pdf",
+      "status": "published",
+      "summary": "Delivered file: 2026-06-09-tac-build-report-example-component-lineage.pdf",
+      "title": "2026-06-09-tac-build-report-example-component-lineage.pdf",
+      "updated_at": "2026-06-13T00:00:00Z"
     },
     {
-      "id": "prd-client-portal-shell-v2",
-      "title": "PRD: Client Portal Shell v2",
-      "summary": "Promote boxed-icon header to shared PageHeader. Adopt :clientSlug route pattern with tenant config registry.",
-      "kind": "prd",
-      "status": "review",
-      "owner": "Greg",
-      "updated_at": "2026-05-28T16:11:00Z",
-      "asset_url": "/prds/the-mall-app-sprint-1-crawl-map-watch"
+      "asset_url": "/clients/gbautomation/artifacts/2026-05-11-tac-team-runner-verifier-dcae88ee",
+      "id": "2026-05-11-tac-team-runner-verifier-dcae88ee",
+      "kind": "artifact",
+      "owner": "GBAutomation",
+      "proof": {
+        "sourcePath": "clients/gbautomation/deliverables/2026-05-11-tac-team-runner-verifier-dcae88ee.pdf",
+        "sourceQuote": "2026-05-11-tac-team-runner-verifier-dcae88ee.pdf",
+        "status": "source-backed"
+      },
+      "sourcePath": "clients/gbautomation/deliverables/2026-05-11-tac-team-runner-verifier-dcae88ee.pdf",
+      "sourceQuote": "2026-05-11-tac-team-runner-verifier-dcae88ee.pdf",
+      "status": "published",
+      "summary": "Delivered file: 2026-05-11-tac-team-runner-verifier-dcae88ee.pdf",
+      "title": "2026-05-11-tac-team-runner-verifier-dcae88ee.pdf",
+      "updated_at": "2026-06-06T00:00:00Z"
     },
     {
-      "id": "brief-mall-app-sprint-2",
-      "title": "Brief: Mall App Sprint 2 — Catalog Diff",
-      "summary": "Scope for surfacing daily diffs, alert grouping, and cost guards on the price-drop watcher.",
-      "kind": "brief",
-      "status": "draft",
-      "owner": "Greg",
-      "updated_at": "2026-05-25T20:30:00Z",
-      "asset_url": "/artifacts/gbautomation/brief-mall-app-sprint-2"
+      "asset_url": "/clients/gbautomation/artifacts/2026-05-12-tac-build-report-1fafe5cb",
+      "id": "2026-05-12-tac-build-report-1fafe5cb",
+      "kind": "artifact",
+      "owner": "GBAutomation",
+      "proof": {
+        "sourcePath": "clients/gbautomation/deliverables/2026-05-12-tac-build-report-1fafe5cb.pdf",
+        "sourceQuote": "2026-05-12-tac-build-report-1fafe5cb.pdf",
+        "status": "source-backed"
+      },
+      "sourcePath": "clients/gbautomation/deliverables/2026-05-12-tac-build-report-1fafe5cb.pdf",
+      "sourceQuote": "2026-05-12-tac-build-report-1fafe5cb.pdf",
+      "status": "published",
+      "summary": "Delivered file: 2026-05-12-tac-build-report-1fafe5cb.pdf",
+      "title": "2026-05-12-tac-build-report-1fafe5cb.pdf",
+      "updated_at": "2026-06-06T00:00:00Z"
     },
     {
-      "id": "adjust-ai-7-day-developer-observability",
-      "title": "PRD: Adjust AI 7-Day Developer Observability Build",
-      "summary": "Adjust AI prospect PRD. Pinpoints the 7-day proof gate before any code is shipped.",
-      "kind": "prd",
-      "status": "shipped",
-      "owner": "Greg",
-      "updated_at": "2026-05-26T13:00:00Z",
-      "asset_url": "/prds/adjust-ai-7-day-developer-observability-build"
+      "asset_url": "/clients/gbautomation/artifacts/2026-05-12-tac-build-report-7ffc00bf",
+      "id": "2026-05-12-tac-build-report-7ffc00bf",
+      "kind": "artifact",
+      "owner": "GBAutomation",
+      "proof": {
+        "sourcePath": "clients/gbautomation/deliverables/2026-05-12-tac-build-report-7ffc00bf.pdf",
+        "sourceQuote": "2026-05-12-tac-build-report-7ffc00bf.pdf",
+        "status": "source-backed"
+      },
+      "sourcePath": "clients/gbautomation/deliverables/2026-05-12-tac-build-report-7ffc00bf.pdf",
+      "sourceQuote": "2026-05-12-tac-build-report-7ffc00bf.pdf",
+      "status": "published",
+      "summary": "Delivered file: 2026-05-12-tac-build-report-7ffc00bf.pdf",
+      "title": "2026-05-12-tac-build-report-7ffc00bf.pdf",
+      "updated_at": "2026-06-06T00:00:00Z"
     },
     {
-      "id": "build-report-2026-05-30",
-      "title": "TAC Build Report, 2026-05-30",
-      "summary": "Static preview of the canonical build report artifact. Pinned in _redirects under /previews/.",
-      "kind": "html",
-      "status": "shipped",
-      "owner": "Pipeline",
-      "updated_at": "2026-05-30T18:14:00Z",
-      "asset_url": "/previews/report-artifacts/build-report-artifact.html"
-    },
-    {
-      "id": "prd-email-artifact-template",
-      "title": "PRD Email Artifact Template",
-      "summary": "Reference email artifact used by every TAC-driven prospect outreach.",
-      "kind": "html",
-      "status": "archived",
-      "owner": "Pipeline",
-      "updated_at": "2026-05-18T08:00:00Z",
-      "asset_url": "/previews/report-artifacts/prd-email-artifact.html"
+      "asset_url": "/clients/gbautomation/artifacts/2026-04-01-session-recap",
+      "id": "2026-04-01-session-recap",
+      "kind": "artifact",
+      "owner": "GBAutomation",
+      "proof": {
+        "sourcePath": "clients/gbautomation/deliverables/2026-04-01-session-recap.md",
+        "sourceQuote": "Kickoff Session Recap - 2026-04-01",
+        "status": "source-backed"
+      },
+      "sourcePath": "clients/gbautomation/deliverables/2026-04-01-session-recap.md",
+      "sourceQuote": "Kickoff Session Recap - 2026-04-01",
+      "status": "published",
+      "summary": "# Kickoff Session Recap - 2026-04-01",
+      "title": "Kickoff Session Recap - 2026-04-01",
+      "updated_at": "2026-04-01T00:00:00Z"
     }
-  ]
+  ],
+  "generated_at": "2026-06-12T00:00:00Z",
+  "schema_version": 1,
+  "source": "second-brain/clients/gbautomation/deliverables"
 }

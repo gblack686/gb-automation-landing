@@ -1,0 +1,45 @@
+{
+  "generated_at": "2026-06-12T00:00:00Z",
+  "schema_version": 1,
+  "sources": [
+    {
+      "proof": {
+        "sourcePath": "clients/fish-group/profile.md",
+        "sourceQuote": "Canonical profile for Fish Group / Piermont Brands engagement. POC Michael Fisch (Managing Partner, mike@piermontbrands.com), technical contact Emil Caplow. Single Hermes agent (Finn) generated via agent-harness, OpenRouter interim; Carlos-style deployment dir",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/fish-group/profile.md",
+      "sourceQuote": "Canonical profile for Fish Group / Piermont Brands engagement. POC Michael Fisch (Managing Partner, mike@piermontbrands.com), technical contact Emil Caplow. Single Hermes agent (Finn) generated via agent-harness, OpenRouter interim; Carlos-style deployment dir"
+    }
+  ],
+  "tenant": {
+    "client": "fish-group",
+    "date": "2026-03-05",
+    "description": "Canonical profile for Fish Group / Piermont Brands engagement. POC Michael Fisch (Managing Partner, mike@piermontbrands.com), technical contact Emil Caplow. Single Hermes agent (Finn) generated via agent-harness, OpenRouter interim; Carlos-style deployment dir at clients/fish-group/agents/finn/. Stripe billing $50/hr active. Weekly Thursday 1:45 PT sessions. Single source of truth for routing, billing, repos, and integrations.",
+    "display_name": "Fish Group",
+    "engaged_since": "2026-03-05",
+    "name": "Fish Group",
+    "openclaw": {
+      "namespace": "fish-group"
+    },
+    "phase": "monitor",
+    "poc": {
+      "name": "Michael Fisch"
+    },
+    "proof": {
+      "sourcePath": "clients/fish-group/profile.md",
+      "sourceQuote": "Canonical profile for Fish Group / Piermont Brands engagement. POC Michael Fisch (Managing Partner, mike@piermontbrands.com), technical contact Emil Caplow. Single Hermes agent (Finn) generated via agent-harness, OpenRouter interim; Carlos-style deployment dir",
+      "status": "source-backed"
+    },
+    "proofStatus": "source-backed",
+    "repos": {
+      "github": "gbauto/fisch-group"
+    },
+    "slug": "fish-group",
+    "sourcePath": "clients/fish-group/profile.md",
+    "sourceQuote": "Canonical profile for Fish Group / Piermont Brands engagement. POC Michael Fisch (Managing Partner, mike@piermontbrands.com), technical contact Emil Caplow. Single Hermes agent (Finn) generated via agent-harness, OpenRouter interim; Carlos-style deployment dir",
+    "status": "active",
+    "timezone": "America/New_York"
+  }
+}

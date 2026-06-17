@@ -1,0 +1,22 @@
+{
+  "apps": [
+    {
+      "id": "github-repository",
+      "kind": "repository",
+      "name": "GitHub repository",
+      "proof": {
+        "sourcePath": "clients/pbauer/profile.md",
+        "sourceQuote": "Patrick Bauer",
+        "status": "source-backed"
+      },
+      "sourcePath": "clients/pbauer/profile.md",
+      "sourceQuote": "Patrick Bauer",
+      "status": "active",
+      "summary": "Source repository for Patrick Bauer.",
+      "url": "https://github.com/gbauto/pbauer"
+    }
+  ],
+  "generated_at": "2026-06-12T00:00:00Z",
+  "schema_version": 1,
+  "source": "second-brain client profile"
+}

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Bot, Clock, GripVertical, RefreshCw, X } from 'lucide-react';
 import { opsData } from '../data/opsData';
+import { getMirrorFreshness, freshnessTone } from '../data/mirrorFreshness';
 import { StatusBadge } from '../components/OpsCards';
 
 const fallbackMirror = {
@@ -81,6 +82,14 @@ export default function HermesKanban() {
     [mirror, selectedBoardSlug],
   );
 
+  const freshness = useMemo(
+    () => getMirrorFreshness(mirror.generatedAt, { maxAgeMinutes: mirror.maxAgeMinutes || 90 }),
+    [mirror.generatedAt, mirror.maxAgeMinutes],
+  );
+  const mirrorLabel = loadState === 'loading'
+    ? 'Loading mirror'
+    : freshness.label;
+
   return (
     <div className="space-y-8">
       <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
@@ -96,12 +105,18 @@ export default function HermesKanban() {
         <div className="rounded-md border border-[#D6D4C8] bg-white/45 p-4">
           <div className="flex items-center gap-2 text-xs font-semibold uppercase text-[#191919]/45">
             <RefreshCw className="h-3.5 w-3.5 text-[#D97757]" />
-            {loadState === 'live' ? 'Live mirror' : loadState === 'loading' ? 'Loading mirror' : 'Fallback data'}
+            {mirrorLabel}
           </div>
           <p className="mt-2 font-mono text-sm text-[#191919]">{formatGeneratedAt(mirror.generatedAt)}</p>
           <p className="mt-2 text-xs text-[#191919]/55">{mirror.source.host} - {mirror.source.mode}</p>
         </div>
       </div>
+
+      {loadState !== 'loading' && freshness.state !== 'current' && (
+        <section className={`rounded-md border p-4 text-sm leading-6 ${freshnessTone(freshness.state)}`}>
+          <strong>{freshness.label}:</strong> {freshness.detail}
+        </section>
+      )}
 
       <section className="grid gap-4 md:grid-cols-4">
         <article className="rounded-md border border-[#D6D4C8] bg-white/45 p-4">

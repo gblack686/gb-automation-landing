@@ -1,0 +1,22 @@
+{
+  "apps": [
+    {
+      "id": "github-repository",
+      "kind": "repository",
+      "name": "GitHub repository",
+      "proof": {
+        "sourcePath": "clients/fish-group/profile.md",
+        "sourceQuote": "Canonical profile for Fish Group / Piermont Brands engagement. POC Michael Fisch (Managing Partner, mike@piermontbrands.com), technical contact Emil Caplow. Single Hermes agent (Finn) generated via agent-harness, OpenRouter interim; Carlos-style deployment dir",
+        "status": "source-backed"
+      },
+      "sourcePath": "clients/fish-group/profile.md",
+      "sourceQuote": "Canonical profile for Fish Group / Piermont Brands engagement. POC Michael Fisch (Managing Partner, mike@piermontbrands.com), technical contact Emil Caplow. Single Hermes agent (Finn) generated via agent-harness, OpenRouter interim; Carlos-style deployment dir",
+      "status": "active",
+      "summary": "Source repository for Fish Group.",
+      "url": "https://github.com/gbauto/fisch-group"
+    }
+  ],
+  "generated_at": "2026-06-12T00:00:00Z",
+  "schema_version": 1,
+  "source": "second-brain client profile"
+}

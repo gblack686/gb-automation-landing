@@ -1,0 +1,27 @@
+{
+  "content": "Every Windows Task Scheduler GBAutomation-* job runs through scripts/Invoke-WithReceipt.ps1, which emits a host-job-run.v1 receipt, pushes it to public.host_job_runs in Supabase, and edge-triggers a Telegram nudge on ok->failed transition. Validation gates every new task through resources/skills/validate-cron-deploy/.",
+  "generated_at": "2026-06-12T00:00:00Z",
+  "proof": {
+    "sourcePath": "intelligence/decisions/2026-05-16-scheduled-task-receipts.md",
+    "sourceQuote": "ADR 2026-05-16 — scheduled-task receipts + validate gate",
+    "status": "source-backed"
+  },
+  "report": {
+    "id": "2026-05-16-scheduled-task-receipts",
+    "kind": "report",
+    "proof": {
+      "sourcePath": "intelligence/decisions/2026-05-16-scheduled-task-receipts.md",
+      "sourceQuote": "ADR 2026-05-16 — scheduled-task receipts + validate gate",
+      "status": "source-backed"
+    },
+    "sourcePath": "intelligence/decisions/2026-05-16-scheduled-task-receipts.md",
+    "sourceQuote": "ADR 2026-05-16 — scheduled-task receipts + validate gate",
+    "status": "published",
+    "summary": "Every Windows Task Scheduler GBAutomation-* job runs through scripts/Invoke-WithReceipt.ps1, which emits a host-job-run.v1 receipt, pushes it to public.host_job_runs in Supabase, and edge-triggers a Telegram nudge on ok->failed transition. Validation gates every new task through resources/skills/validate-cron-deploy/.",
+    "title": "ADR 2026-05-16 — scheduled-task receipts + validate gate",
+    "updated_at": "2026-05-16T00:00:00Z"
+  },
+  "schema_version": 1,
+  "sourcePath": "intelligence/decisions/2026-05-16-scheduled-task-receipts.md",
+  "sourceQuote": "ADR 2026-05-16 — scheduled-task receipts + validate gate"
+}

@@ -1,0 +1,29 @@
+{
+  "content": "Pointer stub for the Sprint 1 PRD. Canonical document at second-brain/plans/2026-05-26-the-mall-sprint-1-prd.md and published HTML at https://gbautomation.xyz/prds/the-mall-sprint-1. Keeps the PRD visible from the client folder.",
+  "generated_at": "2026-06-12T00:00:00Z",
+  "proof": {
+    "sourcePath": "clients/the-mall/deliverables/_sprint-1-prd.md",
+    "sourceQuote": "The Mall App -- Sprint 1 PRD (deliverable stub)",
+    "status": "source-backed"
+  },
+  "report": {
+    "asset_url": "/clients/the-mall/artifacts/sprint-1-prd",
+    "id": "sprint-1-prd",
+    "kind": "report",
+    "owner": "GBAutomation",
+    "proof": {
+      "sourcePath": "clients/the-mall/deliverables/_sprint-1-prd.md",
+      "sourceQuote": "The Mall App -- Sprint 1 PRD (deliverable stub)",
+      "status": "source-backed"
+    },
+    "sourcePath": "clients/the-mall/deliverables/_sprint-1-prd.md",
+    "sourceQuote": "The Mall App -- Sprint 1 PRD (deliverable stub)",
+    "status": "published",
+    "summary": "Pointer stub for the Sprint 1 PRD. Canonical document at second-brain/plans/2026-05-26-the-mall-sprint-1-prd.md and published HTML at https://gbautomation.xyz/prds/the-mall-sprint-1. Keeps the PRD visible from the client folder.",
+    "title": "The Mall App -- Sprint 1 PRD (deliverable stub)",
+    "updated_at": "2026-05-26T00:00:00Z"
+  },
+  "schema_version": 1,
+  "sourcePath": "clients/the-mall/deliverables/_sprint-1-prd.md",
+  "sourceQuote": "The Mall App -- Sprint 1 PRD (deliverable stub)"
+}

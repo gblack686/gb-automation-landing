@@ -1,0 +1,27 @@
+{
+  "content": "The gbautomation.xyz contact form lost [redacted-local-path]5 months of lead notifications after its contact-notify Lambda was deleted. Rebuilt the notifier as a cron poll, migrated the form off a stale standalone Supabase project onto the canonical gbauto project, locked the leads table with RLS, and deployed the poller as a Mac Mini launchd job.",
+  "generated_at": "2026-06-12T00:00:00Z",
+  "proof": {
+    "sourcePath": "intelligence/decisions/2026-05-19-contact-form-notifier-gbauto-migration.md",
+    "sourceQuote": "ADR 2026-05-19 — contact-form notifier + gbauto Supabase migration",
+    "status": "source-backed"
+  },
+  "report": {
+    "id": "2026-05-19-contact-form-notifier-gbauto-migration",
+    "kind": "report",
+    "proof": {
+      "sourcePath": "intelligence/decisions/2026-05-19-contact-form-notifier-gbauto-migration.md",
+      "sourceQuote": "ADR 2026-05-19 — contact-form notifier + gbauto Supabase migration",
+      "status": "source-backed"
+    },
+    "sourcePath": "intelligence/decisions/2026-05-19-contact-form-notifier-gbauto-migration.md",
+    "sourceQuote": "ADR 2026-05-19 — contact-form notifier + gbauto Supabase migration",
+    "status": "published",
+    "summary": "The gbautomation.xyz contact form lost [redacted-local-path]5 months of lead notifications after its contact-notify Lambda was deleted. Rebuilt the notifier as a cron poll, migrated the form off a stale standalone Supabase project onto the canonical gbauto project, locked the leads table with RLS, and deployed the poller as a Mac Mini launchd job.",
+    "title": "ADR 2026-05-19 — contact-form notifier + gbauto Supabase migration",
+    "updated_at": "2026-05-19T00:00:00Z"
+  },
+  "schema_version": 1,
+  "sourcePath": "intelligence/decisions/2026-05-19-contact-form-notifier-gbauto-migration.md",
+  "sourceQuote": "ADR 2026-05-19 — contact-form notifier + gbauto Supabase migration"
+}

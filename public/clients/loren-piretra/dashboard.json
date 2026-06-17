@@ -1,0 +1,63 @@
+{
+  "generated_at": "2026-06-12T00:00:00Z",
+  "metrics": [
+    {
+      "id": "apps",
+      "label": "Apps",
+      "proof": {
+        "sourcePath": "clients/loren-piretra/profile.md",
+        "sourceQuote": "Loren Piretra",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/loren-piretra/profile.md",
+      "sourceQuote": "Loren Piretra",
+      "value": 0
+    },
+    {
+      "id": "artifacts",
+      "label": "Artifacts",
+      "proof": {
+        "sourcePath": "clients/loren-piretra/profile.md",
+        "sourceQuote": "Loren Piretra",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/loren-piretra/profile.md",
+      "sourceQuote": "Loren Piretra",
+      "value": 0
+    },
+    {
+      "id": "reports",
+      "label": "Reports",
+      "proof": {
+        "sourcePath": "clients/loren-piretra/profile.md",
+        "sourceQuote": "Loren Piretra",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/loren-piretra/profile.md",
+      "sourceQuote": "Loren Piretra",
+      "value": 12
+    },
+    {
+      "id": "receipts",
+      "label": "Receipts",
+      "proof": {
+        "sourcePath": "clients/loren-piretra/profile.md",
+        "sourceQuote": "Loren Piretra",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/loren-piretra/profile.md",
+      "sourceQuote": "Loren Piretra",
+      "value": 1
+    }
+  ],
+  "schema_version": 1,
+  "tenant": {
+    "name": "Loren Piretra",
+    "slug": "loren-piretra",
+    "status": "active"
+  }
+}

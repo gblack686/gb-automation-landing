@@ -1,0 +1,33 @@
+{
+  "generated_at": "2026-06-12T00:00:00Z",
+  "schema_version": 1,
+  "sources": [
+    {
+      "proof": {
+        "sourcePath": "clients/fisch-group/profile.md",
+        "sourceQuote": "Secrets config for Fisch Group -- 1Password backend (Client-FischGroup vault, openclaw-fischgroup service account) routed via get_secret() adapter (FSH-5).",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/fisch-group/profile.md",
+      "sourceQuote": "Secrets config for Fisch Group -- 1Password backend (Client-FischGroup vault, openclaw-fischgroup service account) routed via get_secret() adapter (FSH-5)."
+    }
+  ],
+  "tenant": {
+    "client": "fisch-group",
+    "date": "2026-05-08",
+    "description": "Secrets config for Fisch Group -- 1Password backend (Client-FischGroup vault, openclaw-fischgroup service account) routed via get_secret() adapter (FSH-5).",
+    "display_name": "Fisch Group",
+    "name": "Fisch Group",
+    "proof": {
+      "sourcePath": "clients/fisch-group/profile.md",
+      "sourceQuote": "Secrets config for Fisch Group -- 1Password backend (Client-FischGroup vault, openclaw-fischgroup service account) routed via get_secret() adapter (FSH-5).",
+      "status": "source-backed"
+    },
+    "proofStatus": "source-backed",
+    "slug": "fisch-group",
+    "sourcePath": "clients/fisch-group/profile.md",
+    "sourceQuote": "Secrets config for Fisch Group -- 1Password backend (Client-FischGroup vault, openclaw-fischgroup service account) routed via get_secret() adapter (FSH-5).",
+    "status": "active"
+  }
+}

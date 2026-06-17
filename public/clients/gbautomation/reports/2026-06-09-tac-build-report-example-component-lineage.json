@@ -1,0 +1,29 @@
+{
+  "content": "Delivered file: 2026-06-09-tac-build-report-example-component-lineage.pdf",
+  "generated_at": "2026-06-12T00:00:00Z",
+  "proof": {
+    "sourcePath": "clients/gbautomation/deliverables/2026-06-09-tac-build-report-example-component-lineage.pdf",
+    "sourceQuote": "2026-06-09-tac-build-report-example-component-lineage.pdf",
+    "status": "source-backed"
+  },
+  "report": {
+    "asset_url": "/clients/gbautomation/artifacts/2026-06-09-tac-build-report-example-component-lineage",
+    "id": "2026-06-09-tac-build-report-example-component-lineage",
+    "kind": "report",
+    "owner": "GBAutomation",
+    "proof": {
+      "sourcePath": "clients/gbautomation/deliverables/2026-06-09-tac-build-report-example-component-lineage.pdf",
+      "sourceQuote": "2026-06-09-tac-build-report-example-component-lineage.pdf",
+      "status": "source-backed"
+    },
+    "sourcePath": "clients/gbautomation/deliverables/2026-06-09-tac-build-report-example-component-lineage.pdf",
+    "sourceQuote": "2026-06-09-tac-build-report-example-component-lineage.pdf",
+    "status": "published",
+    "summary": "Delivered file: 2026-06-09-tac-build-report-example-component-lineage.pdf",
+    "title": "2026-06-09-tac-build-report-example-component-lineage.pdf",
+    "updated_at": "2026-06-13T00:00:00Z"
+  },
+  "schema_version": 1,
+  "sourcePath": "clients/gbautomation/deliverables/2026-06-09-tac-build-report-example-component-lineage.pdf",
+  "sourceQuote": "2026-06-09-tac-build-report-example-component-lineage.pdf"
+}

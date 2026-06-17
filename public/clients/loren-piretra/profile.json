@@ -1,0 +1,39 @@
+{
+  "generated_at": "2026-06-12T00:00:00Z",
+  "schema_version": 1,
+  "sources": [
+    {
+      "proof": {
+        "sourcePath": "clients/loren-piretra/profile.md",
+        "sourceQuote": "Loren Piretra",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/loren-piretra/profile.md",
+      "sourceQuote": "Loren Piretra"
+    }
+  ],
+  "tenant": {
+    "client": "loren-piretra",
+    "display_name": "Loren Piretra",
+    "engaged_since": "2026-04-03",
+    "name": "Loren Piretra",
+    "openclaw": {
+      "namespace": "loren-piretra"
+    },
+    "phase": "monitor",
+    "poc": {
+      "name": "Loren Piretra"
+    },
+    "proof": {
+      "sourcePath": "clients/loren-piretra/profile.md",
+      "sourceQuote": "Loren Piretra",
+      "status": "source-backed"
+    },
+    "proofStatus": "source-backed",
+    "slug": "loren-piretra",
+    "sourcePath": "clients/loren-piretra/profile.md",
+    "sourceQuote": "Loren Piretra",
+    "status": "active"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "content": "# ADR: Linear Pipeline Codex Subscription Headless Lane",
+  "generated_at": "2026-06-12T00:00:00Z",
+  "proof": {
+    "sourcePath": "intelligence/decisions/2026-05-28-linear-pipeline-codex-subscription-headless-lane.md",
+    "sourceQuote": "ADR: Linear pipeline moves to Codex subscription headless builds",
+    "status": "source-backed"
+  },
+  "report": {
+    "id": "2026-05-28-linear-pipeline-codex-subscription-headless-lane",
+    "kind": "report",
+    "proof": {
+      "sourcePath": "intelligence/decisions/2026-05-28-linear-pipeline-codex-subscription-headless-lane.md",
+      "sourceQuote": "ADR: Linear pipeline moves to Codex subscription headless builds",
+      "status": "source-backed"
+    },
+    "sourcePath": "intelligence/decisions/2026-05-28-linear-pipeline-codex-subscription-headless-lane.md",
+    "sourceQuote": "ADR: Linear pipeline moves to Codex subscription headless builds",
+    "status": "published",
+    "summary": "# ADR: Linear Pipeline Codex Subscription Headless Lane",
+    "title": "ADR: Linear pipeline moves to Codex subscription headless builds",
+    "updated_at": "2026-05-28T00:00:00Z"
+  },
+  "schema_version": 1,
+  "sourcePath": "intelligence/decisions/2026-05-28-linear-pipeline-codex-subscription-headless-lane.md",
+  "sourceQuote": "ADR: Linear pipeline moves to Codex subscription headless builds"
+}

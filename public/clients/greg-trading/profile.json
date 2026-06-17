@@ -1,0 +1,42 @@
+{
+  "generated_at": "2026-06-12T00:00:00Z",
+  "schema_version": 1,
+  "sources": [
+    {
+      "proof": {
+        "sourcePath": "clients/greg-trading/profile.md",
+        "sourceQuote": "Canonical profile for Greg Trading internal project. Sebastian agent deployment, Z.AI GLM models, multi-agent trading system. Single source of truth for routing and integrations.",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/greg-trading/profile.md",
+      "sourceQuote": "Canonical profile for Greg Trading internal project. Sebastian agent deployment, Z.AI GLM models, multi-agent trading system. Single source of truth for routing and integrations."
+    }
+  ],
+  "tenant": {
+    "client": "greg-trading",
+    "date": "2026-02-21",
+    "description": "Canonical profile for Greg Trading internal project. Sebastian agent deployment, Z.AI GLM models, multi-agent trading system. Single source of truth for routing and integrations.",
+    "display_name": "Greg Trading",
+    "engaged_since": "2026-02-21",
+    "name": "Greg Trading",
+    "openclaw": {
+      "namespace": "greg-trading"
+    },
+    "phase": "deploy",
+    "poc": {
+      "name": "Greg Black"
+    },
+    "proof": {
+      "sourcePath": "clients/greg-trading/profile.md",
+      "sourceQuote": "Canonical profile for Greg Trading internal project. Sebastian agent deployment, Z.AI GLM models, multi-agent trading system. Single source of truth for routing and integrations.",
+      "status": "source-backed"
+    },
+    "proofStatus": "source-backed",
+    "slug": "greg-trading",
+    "sourcePath": "clients/greg-trading/profile.md",
+    "sourceQuote": "Canonical profile for Greg Trading internal project. Sebastian agent deployment, Z.AI GLM models, multi-agent trading system. Single source of truth for routing and integrations.",
+    "status": "active",
+    "timezone": "America/Los_Angeles"
+  }
+}

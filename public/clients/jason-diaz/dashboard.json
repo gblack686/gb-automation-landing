@@ -1,0 +1,63 @@
+{
+  "generated_at": "2026-06-12T00:00:00Z",
+  "metrics": [
+    {
+      "id": "apps",
+      "label": "Apps",
+      "proof": {
+        "sourcePath": "clients/jason-diaz/profile.md",
+        "sourceQuote": "Canonical profile for Jason Diaz / PMC engagement — POC, billing, repos, Linear/GCal/Gmail integrations, OpenClaw config, deliverables index. Single source of truth for client routing.",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/jason-diaz/profile.md",
+      "sourceQuote": "Canonical profile for Jason Diaz / PMC engagement — POC, billing, repos, Linear/GCal/Gmail integrations, OpenClaw config, deliverables index. Single source of truth for client routing.",
+      "value": 1
+    },
+    {
+      "id": "artifacts",
+      "label": "Artifacts",
+      "proof": {
+        "sourcePath": "clients/jason-diaz/profile.md",
+        "sourceQuote": "Canonical profile for Jason Diaz / PMC engagement — POC, billing, repos, Linear/GCal/Gmail integrations, OpenClaw config, deliverables index. Single source of truth for client routing.",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/jason-diaz/profile.md",
+      "sourceQuote": "Canonical profile for Jason Diaz / PMC engagement — POC, billing, repos, Linear/GCal/Gmail integrations, OpenClaw config, deliverables index. Single source of truth for client routing.",
+      "value": 2
+    },
+    {
+      "id": "reports",
+      "label": "Reports",
+      "proof": {
+        "sourcePath": "clients/jason-diaz/profile.md",
+        "sourceQuote": "Canonical profile for Jason Diaz / PMC engagement — POC, billing, repos, Linear/GCal/Gmail integrations, OpenClaw config, deliverables index. Single source of truth for client routing.",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/jason-diaz/profile.md",
+      "sourceQuote": "Canonical profile for Jason Diaz / PMC engagement — POC, billing, repos, Linear/GCal/Gmail integrations, OpenClaw config, deliverables index. Single source of truth for client routing.",
+      "value": 14
+    },
+    {
+      "id": "receipts",
+      "label": "Receipts",
+      "proof": {
+        "sourcePath": "clients/jason-diaz/profile.md",
+        "sourceQuote": "Canonical profile for Jason Diaz / PMC engagement — POC, billing, repos, Linear/GCal/Gmail integrations, OpenClaw config, deliverables index. Single source of truth for client routing.",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/jason-diaz/profile.md",
+      "sourceQuote": "Canonical profile for Jason Diaz / PMC engagement — POC, billing, repos, Linear/GCal/Gmail integrations, OpenClaw config, deliverables index. Single source of truth for client routing.",
+      "value": 1
+    }
+  ],
+  "schema_version": 1,
+  "tenant": {
+    "name": "Jason Diaz (PMC)",
+    "slug": "jason-diaz",
+    "status": "active"
+  }
+}

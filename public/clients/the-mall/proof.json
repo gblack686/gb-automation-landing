@@ -1,0 +1,103 @@
+{
+  "claims": [
+    {
+      "citations": [
+        {
+          "proof": {
+            "sourcePath": "clients/the-mall/profile.md",
+            "sourceQuote": "Canonical profile for The Mall App engagement. Fashion-tech consumer app run by co-founders Sreya Halder and Ellie (last name TBD). Product is a personal-mall app — \"the easiest way to keep up with the brands you love\" — pre-App-Store launch with waitlist. Dis",
+            "status": "source-backed"
+          },
+          "proofStatus": "source-backed",
+          "sourcePath": "clients/the-mall/profile.md",
+          "sourceQuote": "Canonical profile for The Mall App engagement. Fashion-tech consumer app run by co-founders Sreya Halder and Ellie (last name TBD). Product is a personal-mall app — \"the easiest way to keep up with the brands you love\" — pre-App-Store launch with waitlist. Dis"
+        }
+      ],
+      "claim": "The Mall App is in discover phase with active status.",
+      "id": "client-status",
+      "proof_status": "source-backed",
+      "sourcePath": "clients/the-mall/profile.md",
+      "sourceQuote": "Canonical profile for The Mall App engagement. Fashion-tech consumer app run by co-founders Sreya Halder and Ellie (last name TBD). Product is a personal-mall app — \"the easiest way to keep up with the brands you love\" — pre-App-Store launch with waitlist. Dis",
+      "visibility": "client"
+    },
+    {
+      "citations": [
+        {
+          "proof": {
+            "sourcePath": "clients/the-mall/deliverables/_sprint-1-prd.md",
+            "sourceQuote": "The Mall App -- Sprint 1 PRD (deliverable stub)",
+            "status": "source-backed"
+          },
+          "sourcePath": "clients/the-mall/deliverables/_sprint-1-prd.md",
+          "sourceQuote": "The Mall App -- Sprint 1 PRD (deliverable stub)"
+        },
+        {
+          "proof": {
+            "sourcePath": "clients/the-mall/deliverables/_baseline-ig-scrape-2026-05-18.md",
+            "sourceQuote": "The Mall App — Baseline IG Scrape (2026-05-18)",
+            "status": "source-backed"
+          },
+          "sourcePath": "clients/the-mall/deliverables/_baseline-ig-scrape-2026-05-18.md",
+          "sourceQuote": "The Mall App — Baseline IG Scrape (2026-05-18)"
+        }
+      ],
+      "claim": "2 published artifacts are available in this portal snapshot.",
+      "id": "artifact-count",
+      "proof_status": "source-backed",
+      "sourcePath": "clients/the-mall/deliverables/_sprint-1-prd.md",
+      "sourceQuote": "The Mall App -- Sprint 1 PRD (deliverable stub)",
+      "visibility": "client"
+    },
+    {
+      "citations": [
+        {
+          "proof": {
+            "sourcePath": "intelligence/integration-experts/receipts/t_a06bea61-content-system-contract-no-secrets.json",
+            "sourceQuote": "{",
+            "status": "source-backed"
+          },
+          "sourcePath": "intelligence/integration-experts/receipts/t_a06bea61-content-system-contract-no-secrets.json",
+          "sourceQuote": "{"
+        }
+      ],
+      "claim": "1 receipt records are included for validation and handoff history.",
+      "id": "receipt-count",
+      "proof_status": "source-backed",
+      "sourcePath": "intelligence/integration-experts/receipts/t_a06bea61-content-system-contract-no-secrets.json",
+      "sourceQuote": "{",
+      "visibility": "internal"
+    },
+    {
+      "citations": [
+        {
+          "proof": {
+            "sourcePath": "intelligence/decisions/2026-06-11-strict-tac-and-kanban-board-worktrees.md",
+            "sourceQuote": "Strict TAC mode and Kanban board worktrees",
+            "status": "source-backed"
+          },
+          "sourcePath": "intelligence/decisions/2026-06-11-strict-tac-and-kanban-board-worktrees.md",
+          "sourceQuote": "Strict TAC mode and Kanban board worktrees"
+        }
+      ],
+      "claim": "Latest report in the portal snapshot: Strict TAC mode and Kanban board worktrees.",
+      "id": "latest-report",
+      "proof_status": "source-backed",
+      "sourcePath": "intelligence/decisions/2026-06-11-strict-tac-and-kanban-board-worktrees.md",
+      "sourceQuote": "Strict TAC mode and Kanban board worktrees",
+      "visibility": "client"
+    }
+  ],
+  "generated_at": "2026-06-12T00:00:00Z",
+  "redaction_policy": {
+    "citation_requirement": "Every named-client, external, or quantified claim must cite sourcePath and sourceQuote before publication.",
+    "forbidden_patterns": [
+      "absolute home directories",
+      "file URLs",
+      "secret material",
+      "tokens",
+      "passwords"
+    ],
+    "summary": "Browser JSON may include second-brain-relative citation paths and short quotes, never raw local filesystem paths or secret material."
+  },
+  "schema_version": 1
+}

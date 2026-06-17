@@ -1,0 +1,41 @@
+{
+  "artifacts": [
+    {
+      "asset_url": "/clients/jason-diaz/artifacts/2026-06-08-jid5274-weekly-report-2026-05-27-to-2026-06-03",
+      "id": "2026-06-08-jid5274-weekly-report-2026-05-27-to-2026-06-03",
+      "kind": "artifact",
+      "owner": "GBAutomation",
+      "proof": {
+        "sourcePath": "clients/jason-diaz/deliverables/2026-06-08-jid5274-weekly-report-2026-05-27-to-2026-06-03.pdf",
+        "sourceQuote": "2026-06-08-jid5274-weekly-report-2026-05-27-to-2026-06-03.pdf",
+        "status": "source-backed"
+      },
+      "sourcePath": "clients/jason-diaz/deliverables/2026-06-08-jid5274-weekly-report-2026-05-27-to-2026-06-03.pdf",
+      "sourceQuote": "2026-06-08-jid5274-weekly-report-2026-05-27-to-2026-06-03.pdf",
+      "status": "published",
+      "summary": "Delivered file: 2026-06-08-jid5274-weekly-report-2026-05-27-to-2026-06-03.pdf",
+      "title": "2026-06-08-jid5274-weekly-report-2026-05-27-to-2026-06-03.pdf",
+      "updated_at": "2026-06-13T00:00:00Z"
+    },
+    {
+      "asset_url": "/clients/jason-diaz/artifacts/2026-06-08-tac-build-report-jid5274-carlos-readiness",
+      "id": "2026-06-08-tac-build-report-jid5274-carlos-readiness",
+      "kind": "artifact",
+      "owner": "GBAutomation",
+      "proof": {
+        "sourcePath": "clients/jason-diaz/deliverables/2026-06-08-tac-build-report-jid5274-carlos-readiness.pdf",
+        "sourceQuote": "2026-06-08-tac-build-report-jid5274-carlos-readiness.pdf",
+        "status": "source-backed"
+      },
+      "sourcePath": "clients/jason-diaz/deliverables/2026-06-08-tac-build-report-jid5274-carlos-readiness.pdf",
+      "sourceQuote": "2026-06-08-tac-build-report-jid5274-carlos-readiness.pdf",
+      "status": "published",
+      "summary": "Delivered file: 2026-06-08-tac-build-report-jid5274-carlos-readiness.pdf",
+      "title": "2026-06-08-tac-build-report-jid5274-carlos-readiness.pdf",
+      "updated_at": "2026-06-13T00:00:00Z"
+    }
+  ],
+  "generated_at": "2026-06-12T00:00:00Z",
+  "schema_version": 1,
+  "source": "second-brain/clients/jason-diaz/deliverables"
+}

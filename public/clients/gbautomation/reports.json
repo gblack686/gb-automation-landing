@@ -1,41 +1,272 @@
 {
-  "schema_version": 1,
+  "generated_at": "2026-06-12T00:00:00Z",
   "reports": [
     {
-      "id": "wk-2026-22-tac-report",
-      "period": "weekly",
-      "title": "TAC Weekly Report, Week 22",
-      "summary": "Mall Scanner shipped its first sale-alert cycle. Portal validation accepted. One blocker on artifact manifest drift.",
-      "published_at": "2026-05-30T09:42:00Z",
-      "window": "2026-05-24 to 2026-05-30",
-      "author": "Greg"
+      "asset_url": "/clients/gbautomation/artifacts/2026-06-09-tac-build-report-example-component-lineage",
+      "id": "2026-06-09-tac-build-report-example-component-lineage",
+      "kind": "report",
+      "owner": "GBAutomation",
+      "proof": {
+        "sourcePath": "clients/gbautomation/deliverables/2026-06-09-tac-build-report-example-component-lineage.pdf",
+        "sourceQuote": "2026-06-09-tac-build-report-example-component-lineage.pdf",
+        "status": "source-backed"
+      },
+      "sourcePath": "clients/gbautomation/deliverables/2026-06-09-tac-build-report-example-component-lineage.pdf",
+      "sourceQuote": "2026-06-09-tac-build-report-example-component-lineage.pdf",
+      "status": "published",
+      "summary": "Delivered file: 2026-06-09-tac-build-report-example-component-lineage.pdf",
+      "title": "2026-06-09-tac-build-report-example-component-lineage.pdf",
+      "updated_at": "2026-06-13T00:00:00Z"
     },
     {
-      "id": "wk-2026-21-tac-report",
-      "period": "weekly",
-      "title": "TAC Weekly Report, Week 21",
-      "summary": "Apps registry refresh. UI Agent surface taxonomy mapped. Tenant submodule pattern documented.",
-      "published_at": "2026-05-23T10:18:00Z",
-      "window": "2026-05-17 to 2026-05-23",
-      "author": "Greg"
+      "id": "2026-06-11-strict-tac-and-kanban-board-worktrees",
+      "kind": "report",
+      "proof": {
+        "sourcePath": "intelligence/decisions/2026-06-11-strict-tac-and-kanban-board-worktrees.md",
+        "sourceQuote": "Strict TAC mode and Kanban board worktrees",
+        "status": "source-backed"
+      },
+      "sourcePath": "intelligence/decisions/2026-06-11-strict-tac-and-kanban-board-worktrees.md",
+      "sourceQuote": "Strict TAC mode and Kanban board worktrees",
+      "status": "published",
+      "summary": "# Strict TAC Mode And Kanban Board Worktrees",
+      "title": "Strict TAC mode and Kanban board worktrees",
+      "updated_at": "2026-06-11T00:00:00Z"
     },
     {
-      "id": "may-2026-monthly",
-      "period": "monthly",
-      "title": "GBAutomation Monthly, May 2026",
-      "summary": "Roll-up of all four weekly TAC reports for May. Client portal validation closed out the month.",
-      "published_at": "2026-06-01T08:00:00Z",
-      "window": "2026-05",
-      "author": "Greg"
+      "id": "2026-06-07-hook-registry-source-of-truth",
+      "kind": "report",
+      "proof": {
+        "sourcePath": "intelligence/decisions/2026-06-07-hook-registry-source-of-truth.md",
+        "sourceQuote": "Hook registry is the source of truth for GBAutomation hook handlers",
+        "status": "source-backed"
+      },
+      "sourcePath": "intelligence/decisions/2026-06-07-hook-registry-source-of-truth.md",
+      "sourceQuote": "Hook registry is the source of truth for GBAutomation hook handlers",
+      "status": "published",
+      "summary": "# Hook Registry Source Of Truth",
+      "title": "Hook registry is the source of truth for GBAutomation hook handlers",
+      "updated_at": "2026-06-07T00:00:00Z"
     },
     {
-      "id": "inc-2026-05-15-amplify-rebuild",
-      "period": "incident",
-      "title": "Incident: Amplify rebuild stuck on submodule fetch",
-      "summary": "Amplify build held for 18 minutes waiting on a stale submodule pointer. Resolved by manual PAT rotation. Postmortem inside.",
-      "published_at": "2026-05-15T22:40:00Z",
-      "window": "2026-05-15 21:11 to 22:30",
-      "author": "Greg"
+      "asset_url": "/clients/gbautomation/artifacts/2026-05-11-tac-team-runner-verifier-dcae88ee",
+      "id": "2026-05-11-tac-team-runner-verifier-dcae88ee",
+      "kind": "report",
+      "owner": "GBAutomation",
+      "proof": {
+        "sourcePath": "clients/gbautomation/deliverables/2026-05-11-tac-team-runner-verifier-dcae88ee.pdf",
+        "sourceQuote": "2026-05-11-tac-team-runner-verifier-dcae88ee.pdf",
+        "status": "source-backed"
+      },
+      "sourcePath": "clients/gbautomation/deliverables/2026-05-11-tac-team-runner-verifier-dcae88ee.pdf",
+      "sourceQuote": "2026-05-11-tac-team-runner-verifier-dcae88ee.pdf",
+      "status": "published",
+      "summary": "Delivered file: 2026-05-11-tac-team-runner-verifier-dcae88ee.pdf",
+      "title": "2026-05-11-tac-team-runner-verifier-dcae88ee.pdf",
+      "updated_at": "2026-06-06T00:00:00Z"
+    },
+    {
+      "asset_url": "/clients/gbautomation/artifacts/2026-05-12-tac-build-report-1fafe5cb",
+      "id": "2026-05-12-tac-build-report-1fafe5cb",
+      "kind": "report",
+      "owner": "GBAutomation",
+      "proof": {
+        "sourcePath": "clients/gbautomation/deliverables/2026-05-12-tac-build-report-1fafe5cb.pdf",
+        "sourceQuote": "2026-05-12-tac-build-report-1fafe5cb.pdf",
+        "status": "source-backed"
+      },
+      "sourcePath": "clients/gbautomation/deliverables/2026-05-12-tac-build-report-1fafe5cb.pdf",
+      "sourceQuote": "2026-05-12-tac-build-report-1fafe5cb.pdf",
+      "status": "published",
+      "summary": "Delivered file: 2026-05-12-tac-build-report-1fafe5cb.pdf",
+      "title": "2026-05-12-tac-build-report-1fafe5cb.pdf",
+      "updated_at": "2026-06-06T00:00:00Z"
+    },
+    {
+      "asset_url": "/clients/gbautomation/artifacts/2026-05-12-tac-build-report-7ffc00bf",
+      "id": "2026-05-12-tac-build-report-7ffc00bf",
+      "kind": "report",
+      "owner": "GBAutomation",
+      "proof": {
+        "sourcePath": "clients/gbautomation/deliverables/2026-05-12-tac-build-report-7ffc00bf.pdf",
+        "sourceQuote": "2026-05-12-tac-build-report-7ffc00bf.pdf",
+        "status": "source-backed"
+      },
+      "sourcePath": "clients/gbautomation/deliverables/2026-05-12-tac-build-report-7ffc00bf.pdf",
+      "sourceQuote": "2026-05-12-tac-build-report-7ffc00bf.pdf",
+      "status": "published",
+      "summary": "Delivered file: 2026-05-12-tac-build-report-7ffc00bf.pdf",
+      "title": "2026-05-12-tac-build-report-7ffc00bf.pdf",
+      "updated_at": "2026-06-06T00:00:00Z"
+    },
+    {
+      "id": "2026-06-06-hermes-default-agent-runtime",
+      "kind": "report",
+      "proof": {
+        "sourcePath": "intelligence/decisions/2026-06-06-hermes-default-agent-runtime.md",
+        "sourceQuote": "Hermes is the default runtime for new agents and profiles",
+        "status": "source-backed"
+      },
+      "sourcePath": "intelligence/decisions/2026-06-06-hermes-default-agent-runtime.md",
+      "sourceQuote": "Hermes is the default runtime for new agents and profiles",
+      "status": "published",
+      "summary": "# Hermes Default Agent Runtime",
+      "title": "Hermes is the default runtime for new agents and profiles",
+      "updated_at": "2026-06-06T00:00:00Z"
+    },
+    {
+      "id": "2026-06-05-hermes-agent-teams-use-claude-code-tui",
+      "kind": "report",
+      "proof": {
+        "sourcePath": "intelligence/decisions/2026-06-05-hermes-agent-teams-use-claude-code-tui.md",
+        "sourceQuote": "Hermes Agent Teams Prefer Hermes Workflow; Claude Code TUI Is Option B",
+        "status": "source-backed"
+      },
+      "sourcePath": "intelligence/decisions/2026-06-05-hermes-agent-teams-use-claude-code-tui.md",
+      "sourceQuote": "Hermes Agent Teams Prefer Hermes Workflow; Claude Code TUI Is Option B",
+      "status": "published",
+      "summary": "# Hermes Agent Teams Prefer Hermes Workflow; Claude Code TUI Is Option B",
+      "title": "Hermes Agent Teams Prefer Hermes Workflow; Claude Code TUI Is Option B",
+      "updated_at": "2026-06-05T00:00:00Z"
+    },
+    {
+      "id": "2026-06-02-trace-attribution-standard",
+      "kind": "report",
+      "proof": {
+        "sourcePath": "intelligence/decisions/2026-06-02-trace-attribution-standard.md",
+        "sourceQuote": "ADR 2026-06-02 — Full-Tree Trace Attribution Standard",
+        "status": "source-backed"
+      },
+      "sourcePath": "intelligence/decisions/2026-06-02-trace-attribution-standard.md",
+      "sourceQuote": "ADR 2026-06-02 — Full-Tree Trace Attribution Standard",
+      "status": "published",
+      "summary": "GBAutomation adopts full-tree trace attribution as the standard level of observability detail. Every agent runtime must emit the complete Langfuse observation tree (CHAIN/SPAN/TOOL/GENERATION linked by parentObservationId) with resolved model, usageDetails (incl. cache reads), tool names + args, and structured repo/slug/branch tags. The telemetry-report skill is the canonical consumer and must attribute token spend by tool and by output file type.",
+      "title": "ADR 2026-06-02 — Full-Tree Trace Attribution Standard",
+      "updated_at": "2026-06-02T00:00:00Z"
+    },
+    {
+      "id": "2026-05-28-linear-pipeline-codex-subscription-headless-lane",
+      "kind": "report",
+      "proof": {
+        "sourcePath": "intelligence/decisions/2026-05-28-linear-pipeline-codex-subscription-headless-lane.md",
+        "sourceQuote": "ADR: Linear pipeline moves to Codex subscription headless builds",
+        "status": "source-backed"
+      },
+      "sourcePath": "intelligence/decisions/2026-05-28-linear-pipeline-codex-subscription-headless-lane.md",
+      "sourceQuote": "ADR: Linear pipeline moves to Codex subscription headless builds",
+      "status": "published",
+      "summary": "# ADR: Linear Pipeline Codex Subscription Headless Lane",
+      "title": "ADR: Linear pipeline moves to Codex subscription headless builds",
+      "updated_at": "2026-05-28T00:00:00Z"
+    },
+    {
+      "id": "2026-05-19-sunset-obsidian-approval-path",
+      "kind": "report",
+      "proof": {
+        "sourcePath": "intelligence/decisions/2026-05-19-sunset-obsidian-approval-path.md",
+        "sourceQuote": "Sunset Obsidian-form approval path; Linear + Telegram is the canonical dispatch",
+        "status": "source-backed"
+      },
+      "sourcePath": "intelligence/decisions/2026-05-19-sunset-obsidian-approval-path.md",
+      "sourceQuote": "Sunset Obsidian-form approval path; Linear + Telegram is the canonical dispatch",
+      "status": "published",
+      "summary": "# Sunset Obsidian-form approval path; Linear + Telegram is the canonical dispatch",
+      "title": "Sunset Obsidian-form approval path; Linear + Telegram is the canonical dispatch",
+      "updated_at": "2026-05-19T00:00:00Z"
+    },
+    {
+      "id": "2026-05-19-contact-form-notifier-gbauto-migration",
+      "kind": "report",
+      "proof": {
+        "sourcePath": "intelligence/decisions/2026-05-19-contact-form-notifier-gbauto-migration.md",
+        "sourceQuote": "ADR 2026-05-19 — contact-form notifier + gbauto Supabase migration",
+        "status": "source-backed"
+      },
+      "sourcePath": "intelligence/decisions/2026-05-19-contact-form-notifier-gbauto-migration.md",
+      "sourceQuote": "ADR 2026-05-19 — contact-form notifier + gbauto Supabase migration",
+      "status": "published",
+      "summary": "The gbautomation.xyz contact form lost [redacted-local-path]5 months of lead notifications after its contact-notify Lambda was deleted. Rebuilt the notifier as a cron poll, migrated the form off a stale standalone Supabase project onto the canonical gbauto project, locked the leads table with RLS, and deployed the poller as a Mac Mini launchd job.",
+      "title": "ADR 2026-05-19 — contact-form notifier + gbauto Supabase migration",
+      "updated_at": "2026-05-19T00:00:00Z"
+    },
+    {
+      "id": "2026-05-18-hermes-kanban-as-autonomous-worker-queue",
+      "kind": "report",
+      "proof": {
+        "sourcePath": "intelligence/decisions/2026-05-18-hermes-kanban-as-autonomous-worker-queue.md",
+        "sourceQuote": "Hermes Kanban as autonomous worker queue — adopt dispatcher, end Linear-only operation",
+        "status": "source-backed"
+      },
+      "sourcePath": "intelligence/decisions/2026-05-18-hermes-kanban-as-autonomous-worker-queue.md",
+      "sourceQuote": "Hermes Kanban as autonomous worker queue — adopt dispatcher, end Linear-only operation",
+      "status": "published",
+      "summary": "ADR to actually use the Hermes Kanban board as a live worker queue. Linear stays the source-of-truth for shipped work; Kanban becomes the durable claim/run/heartbeat layer that lets autonomous agents pick up ready tasks without Greg-in-the-loop dispatch.",
+      "title": "Hermes Kanban as autonomous worker queue — adopt dispatcher, end Linear-only operation",
+      "updated_at": "2026-05-18T00:00:00Z"
+    },
+    {
+      "id": "2026-05-16-scheduled-task-receipts",
+      "kind": "report",
+      "proof": {
+        "sourcePath": "intelligence/decisions/2026-05-16-scheduled-task-receipts.md",
+        "sourceQuote": "ADR 2026-05-16 — scheduled-task receipts + validate gate",
+        "status": "source-backed"
+      },
+      "sourcePath": "intelligence/decisions/2026-05-16-scheduled-task-receipts.md",
+      "sourceQuote": "ADR 2026-05-16 — scheduled-task receipts + validate gate",
+      "status": "published",
+      "summary": "Every Windows Task Scheduler GBAutomation-* job runs through scripts/Invoke-WithReceipt.ps1, which emits a host-job-run.v1 receipt, pushes it to public.host_job_runs in Supabase, and edge-triggers a Telegram nudge on ok->failed transition. Validation gates every new task through resources/skills/validate-cron-deploy/.",
+      "title": "ADR 2026-05-16 — scheduled-task receipts + validate gate",
+      "updated_at": "2026-05-16T00:00:00Z"
+    },
+    {
+      "id": "2026-05-16-host-job-runs-unification",
+      "kind": "report",
+      "proof": {
+        "sourcePath": "intelligence/decisions/2026-05-16-host-job-runs-unification.md",
+        "sourceQuote": "ADR 2026-05-16 — `host-job-runs` unification",
+        "status": "source-backed"
+      },
+      "sourcePath": "intelligence/decisions/2026-05-16-host-job-runs-unification.md",
+      "sourceQuote": "ADR 2026-05-16 — `host-job-runs` unification",
+      "status": "published",
+      "summary": "Fold mac-mini-job-run.v1 + scheduled-task-run.v1 into one host-job-run.v1 envelope; rename public.mac_mini_runs → public.host_job_runs with additive columns; preserve legacy rows; deprecate insert_mac_mini_run_to_supabase.py as a re-exec for one release cycle.",
+      "title": "ADR 2026-05-16 — `host-job-runs` unification",
+      "updated_at": "2026-05-16T00:00:00Z"
+    },
+    {
+      "id": "2026-05-12-gbauto-supabase-cli-printing-press",
+      "kind": "report",
+      "proof": {
+        "sourcePath": "intelligence/decisions/2026-05-12-gbauto-supabase-cli-printing-press.md",
+        "sourceQuote": "ADR 2026-05-12 — `gbauto-supabase` CLI via Printing Press pattern",
+        "status": "source-backed"
+      },
+      "sourcePath": "intelligence/decisions/2026-05-12-gbauto-supabase-cli-printing-press.md",
+      "sourceQuote": "ADR 2026-05-12 — `gbauto-supabase` CLI via Printing Press pattern",
+      "status": "published",
+      "summary": "Build a purpose-built `gbauto-supabase` CLI (Printing Press pattern) as the single, isolated Supabase tool surface for every environment — Mac Mini, Windows dev, Linear CI, future per-client agents. Lives in services/gbauto_supabase/, installable via `uv tool install` so no global brew/npm dependency, no MCP per session, and one secret resolver everywhere.",
+      "title": "ADR 2026-05-12 — `gbauto-supabase` CLI via Printing Press pattern",
+      "updated_at": "2026-05-12T00:00:00Z"
+    },
+    {
+      "asset_url": "/clients/gbautomation/artifacts/2026-04-01-session-recap",
+      "id": "2026-04-01-session-recap",
+      "kind": "report",
+      "owner": "GBAutomation",
+      "proof": {
+        "sourcePath": "clients/gbautomation/deliverables/2026-04-01-session-recap.md",
+        "sourceQuote": "Kickoff Session Recap - 2026-04-01",
+        "status": "source-backed"
+      },
+      "sourcePath": "clients/gbautomation/deliverables/2026-04-01-session-recap.md",
+      "sourceQuote": "Kickoff Session Recap - 2026-04-01",
+      "status": "published",
+      "summary": "# Kickoff Session Recap - 2026-04-01",
+      "title": "Kickoff Session Recap - 2026-04-01",
+      "updated_at": "2026-04-01T00:00:00Z"
     }
-  ]
+  ],
+  "schema_version": 1,
+  "source": "second-brain deliverables and decisions"
 }

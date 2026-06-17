@@ -1,0 +1,27 @@
+{
+  "content": "ADR to actually use the Hermes Kanban board as a live worker queue. Linear stays the source-of-truth for shipped work; Kanban becomes the durable claim/run/heartbeat layer that lets autonomous agents pick up ready tasks without Greg-in-the-loop dispatch.",
+  "generated_at": "2026-06-12T00:00:00Z",
+  "proof": {
+    "sourcePath": "intelligence/decisions/2026-05-18-hermes-kanban-as-autonomous-worker-queue.md",
+    "sourceQuote": "Hermes Kanban as autonomous worker queue — adopt dispatcher, end Linear-only operation",
+    "status": "source-backed"
+  },
+  "report": {
+    "id": "2026-05-18-hermes-kanban-as-autonomous-worker-queue",
+    "kind": "report",
+    "proof": {
+      "sourcePath": "intelligence/decisions/2026-05-18-hermes-kanban-as-autonomous-worker-queue.md",
+      "sourceQuote": "Hermes Kanban as autonomous worker queue — adopt dispatcher, end Linear-only operation",
+      "status": "source-backed"
+    },
+    "sourcePath": "intelligence/decisions/2026-05-18-hermes-kanban-as-autonomous-worker-queue.md",
+    "sourceQuote": "Hermes Kanban as autonomous worker queue — adopt dispatcher, end Linear-only operation",
+    "status": "published",
+    "summary": "ADR to actually use the Hermes Kanban board as a live worker queue. Linear stays the source-of-truth for shipped work; Kanban becomes the durable claim/run/heartbeat layer that lets autonomous agents pick up ready tasks without Greg-in-the-loop dispatch.",
+    "title": "Hermes Kanban as autonomous worker queue — adopt dispatcher, end Linear-only operation",
+    "updated_at": "2026-05-18T00:00:00Z"
+  },
+  "schema_version": 1,
+  "sourcePath": "intelligence/decisions/2026-05-18-hermes-kanban-as-autonomous-worker-queue.md",
+  "sourceQuote": "Hermes Kanban as autonomous worker queue — adopt dispatcher, end Linear-only operation"
+}

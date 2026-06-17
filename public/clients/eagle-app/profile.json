@@ -1,0 +1,38 @@
+{
+  "generated_at": "2026-06-12T00:00:00Z",
+  "schema_version": 1,
+  "sources": [
+    {
+      "proof": {
+        "sourcePath": "clients/eagle-app/profile.md",
+        "sourceQuote": "Eagle Acquisitions",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/eagle-app/profile.md",
+      "sourceQuote": "Eagle Acquisitions"
+    }
+  ],
+  "tenant": {
+    "client": "eagle-app",
+    "display_name": "Eagle Acquisitions",
+    "name": "Eagle Acquisitions",
+    "openclaw": {
+      "namespace": "eagle-app"
+    },
+    "phase": "discover",
+    "proof": {
+      "sourcePath": "clients/eagle-app/profile.md",
+      "sourceQuote": "Eagle Acquisitions",
+      "status": "source-backed"
+    },
+    "proofStatus": "source-backed",
+    "repos": {
+      "github": "gbauto/sm-eagle-scaffold"
+    },
+    "slug": "eagle-app",
+    "sourcePath": "clients/eagle-app/profile.md",
+    "sourceQuote": "Eagle Acquisitions",
+    "status": "active"
+  }
+}

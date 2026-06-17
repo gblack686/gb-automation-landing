@@ -1,0 +1,41 @@
+{
+  "artifacts": [
+    {
+      "asset_url": "/clients/the-mall/artifacts/sprint-1-prd",
+      "id": "sprint-1-prd",
+      "kind": "artifact",
+      "owner": "GBAutomation",
+      "proof": {
+        "sourcePath": "clients/the-mall/deliverables/_sprint-1-prd.md",
+        "sourceQuote": "The Mall App -- Sprint 1 PRD (deliverable stub)",
+        "status": "source-backed"
+      },
+      "sourcePath": "clients/the-mall/deliverables/_sprint-1-prd.md",
+      "sourceQuote": "The Mall App -- Sprint 1 PRD (deliverable stub)",
+      "status": "published",
+      "summary": "Pointer stub for the Sprint 1 PRD. Canonical document at second-brain/plans/2026-05-26-the-mall-sprint-1-prd.md and published HTML at https://gbautomation.xyz/prds/the-mall-sprint-1. Keeps the PRD visible from the client folder.",
+      "title": "The Mall App -- Sprint 1 PRD (deliverable stub)",
+      "updated_at": "2026-05-26T00:00:00Z"
+    },
+    {
+      "asset_url": "/clients/the-mall/artifacts/baseline-ig-scrape-2026-05-18",
+      "id": "baseline-ig-scrape-2026-05-18",
+      "kind": "artifact",
+      "owner": "GBAutomation",
+      "proof": {
+        "sourcePath": "clients/the-mall/deliverables/_baseline-ig-scrape-2026-05-18.md",
+        "sourceQuote": "The Mall App — Baseline IG Scrape (2026-05-18)",
+        "status": "source-backed"
+      },
+      "sourcePath": "clients/the-mall/deliverables/_baseline-ig-scrape-2026-05-18.md",
+      "sourceQuote": "The Mall App — Baseline IG Scrape (2026-05-18)",
+      "status": "published",
+      "summary": "Session-0 baseline scrape of @themall.app Instagram public feed, captured 2026-05-18 by the Hermes `mall-scraper` profile before the engagement was formally registered. 12-post catalog with avg 63.2 likes (top 207), date range 2025-12-17 → 2026-05-16. Raw artifacts live on Mac Mini; this note is the vault pointer.",
+      "title": "The Mall App — Baseline IG Scrape (2026-05-18)",
+      "updated_at": "2026-05-18T00:00:00Z"
+    }
+  ],
+  "generated_at": "2026-06-12T00:00:00Z",
+  "schema_version": 1,
+  "source": "second-brain/clients/the-mall/deliverables"
+}

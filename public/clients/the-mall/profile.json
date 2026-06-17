@@ -1,0 +1,45 @@
+{
+  "generated_at": "2026-06-12T00:00:00Z",
+  "schema_version": 1,
+  "sources": [
+    {
+      "proof": {
+        "sourcePath": "clients/the-mall/profile.md",
+        "sourceQuote": "Canonical profile for The Mall App engagement. Fashion-tech consumer app run by co-founders Sreya Halder and Ellie (last name TBD). Product is a personal-mall app — \"the easiest way to keep up with the brands you love\" — pre-App-Store launch with waitlist. Dis",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/the-mall/profile.md",
+      "sourceQuote": "Canonical profile for The Mall App engagement. Fashion-tech consumer app run by co-founders Sreya Halder and Ellie (last name TBD). Product is a personal-mall app — \"the easiest way to keep up with the brands you love\" — pre-App-Store launch with waitlist. Dis"
+    }
+  ],
+  "tenant": {
+    "client": "the-mall",
+    "date": "2026-05-26",
+    "description": "Canonical profile for The Mall App engagement. Fashion-tech consumer app run by co-founders Sreya Halder and Ellie (last name TBD). Product is a personal-mall app — \"the easiest way to keep up with the brands you love\" — pre-App-Store launch with waitlist. Discovery phase, recurring Monday 5pm ET sessions. Hermes mall-scraper profile pivoted to client-dedicated 2026-05-26. Baseline IG scrape (12 posts, avg 63.2 likes) archived from 2026-05-18 on Mac Mini. Single source of truth for routing, billing, repos, and integrations.",
+    "display_name": "The Mall App",
+    "engaged_since": "2026-05-26",
+    "name": "The Mall App",
+    "openclaw": {
+      "namespace": "the-mall"
+    },
+    "phase": "discover",
+    "poc": {
+      "name": "Sreya Halder"
+    },
+    "proof": {
+      "sourcePath": "clients/the-mall/profile.md",
+      "sourceQuote": "Canonical profile for The Mall App engagement. Fashion-tech consumer app run by co-founders Sreya Halder and Ellie (last name TBD). Product is a personal-mall app — \"the easiest way to keep up with the brands you love\" — pre-App-Store launch with waitlist. Dis",
+      "status": "source-backed"
+    },
+    "proofStatus": "source-backed",
+    "repos": {
+      "github": "gbauto/the-mall"
+    },
+    "slug": "the-mall",
+    "sourcePath": "clients/the-mall/profile.md",
+    "sourceQuote": "Canonical profile for The Mall App engagement. Fashion-tech consumer app run by co-founders Sreya Halder and Ellie (last name TBD). Product is a personal-mall app — \"the easiest way to keep up with the brands you love\" — pre-App-Store launch with waitlist. Dis",
+    "status": "active",
+    "timezone": "America/New_York"
+  }
+}

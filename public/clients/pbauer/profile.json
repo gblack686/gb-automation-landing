@@ -1,0 +1,41 @@
+{
+  "generated_at": "2026-06-12T00:00:00Z",
+  "schema_version": 1,
+  "sources": [
+    {
+      "proof": {
+        "sourcePath": "clients/pbauer/profile.md",
+        "sourceQuote": "Patrick Bauer",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/pbauer/profile.md",
+      "sourceQuote": "Patrick Bauer"
+    }
+  ],
+  "tenant": {
+    "client": "pbauer",
+    "display_name": "Patrick Bauer",
+    "name": "Patrick Bauer",
+    "openclaw": {
+      "namespace": "pbauer"
+    },
+    "phase": "discover",
+    "poc": {
+      "name": "Patrick Bauer"
+    },
+    "proof": {
+      "sourcePath": "clients/pbauer/profile.md",
+      "sourceQuote": "Patrick Bauer",
+      "status": "source-backed"
+    },
+    "proofStatus": "source-backed",
+    "repos": {
+      "github": "gbauto/pbauer"
+    },
+    "slug": "pbauer",
+    "sourcePath": "clients/pbauer/profile.md",
+    "sourceQuote": "Patrick Bauer",
+    "status": "active"
+  }
+}

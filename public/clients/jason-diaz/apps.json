@@ -1,0 +1,22 @@
+{
+  "apps": [
+    {
+      "id": "github-repository",
+      "kind": "repository",
+      "name": "GitHub repository",
+      "proof": {
+        "sourcePath": "clients/jason-diaz/profile.md",
+        "sourceQuote": "Canonical profile for Jason Diaz / PMC engagement — POC, billing, repos, Linear/GCal/Gmail integrations, OpenClaw config, deliverables index. Single source of truth for client routing.",
+        "status": "source-backed"
+      },
+      "sourcePath": "clients/jason-diaz/profile.md",
+      "sourceQuote": "Canonical profile for Jason Diaz / PMC engagement — POC, billing, repos, Linear/GCal/Gmail integrations, OpenClaw config, deliverables index. Single source of truth for client routing.",
+      "status": "active",
+      "summary": "Source repository for Jason Diaz (PMC).",
+      "url": "https://github.com/gbauto/jid5274"
+    }
+  ],
+  "generated_at": "2026-06-12T00:00:00Z",
+  "schema_version": 1,
+  "source": "second-brain client profile"
+}

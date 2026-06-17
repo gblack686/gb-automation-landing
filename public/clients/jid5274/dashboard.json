@@ -1,0 +1,63 @@
+{
+  "generated_at": "2026-06-12T00:00:00Z",
+  "metrics": [
+    {
+      "id": "apps",
+      "label": "Apps",
+      "proof": {
+        "sourcePath": "clients/jid5274/profile.md",
+        "sourceQuote": "# jid5274 Profile",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/jid5274/profile.md",
+      "sourceQuote": "# jid5274 Profile",
+      "value": 0
+    },
+    {
+      "id": "artifacts",
+      "label": "Artifacts",
+      "proof": {
+        "sourcePath": "clients/jid5274/profile.md",
+        "sourceQuote": "# jid5274 Profile",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/jid5274/profile.md",
+      "sourceQuote": "# jid5274 Profile",
+      "value": 0
+    },
+    {
+      "id": "reports",
+      "label": "Reports",
+      "proof": {
+        "sourcePath": "clients/jid5274/profile.md",
+        "sourceQuote": "# jid5274 Profile",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/jid5274/profile.md",
+      "sourceQuote": "# jid5274 Profile",
+      "value": 12
+    },
+    {
+      "id": "receipts",
+      "label": "Receipts",
+      "proof": {
+        "sourcePath": "clients/jid5274/profile.md",
+        "sourceQuote": "# jid5274 Profile",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/jid5274/profile.md",
+      "sourceQuote": "# jid5274 Profile",
+      "value": 1
+    }
+  ],
+  "schema_version": 1,
+  "tenant": {
+    "name": "jid5274",
+    "slug": "jid5274",
+    "status": "sanitized-placeholder"
+  }
+}

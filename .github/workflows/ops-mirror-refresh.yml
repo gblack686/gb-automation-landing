@@ -1,0 +1,36 @@
+name: Ops mirror refresh
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ops-mirror-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: npm ci --cache .npm --prefer-offline
+      - name: Refresh sanitized mirrors
+        run: npm run ops:mirrors:refresh
+      - name: Guard browser artifacts
+        run: npm run test:observability
+      - name: Commit mirror updates
+        run: |
+          if git diff --quiet -- public/ops/hermes-kanban.json public/team/cockpit.json; then
+            echo "No mirror changes to commit."
+            exit 0
+          fi
+          git config user.name "ops-mirror-bot"
+          git config user.email "bot@gbautomation.xyz"
+          git add public/ops/hermes-kanban.json public/team/cockpit.json
+          git commit -m "chore(ops): refresh sanitized mirrors"
+          git push

@@ -1,0 +1,75 @@
+{
+  "claims": [
+    {
+      "citations": [
+        {
+          "proof": {
+            "sourcePath": "clients/pbauer/profile.md",
+            "sourceQuote": "Patrick Bauer",
+            "status": "source-backed"
+          },
+          "proofStatus": "source-backed",
+          "sourcePath": "clients/pbauer/profile.md",
+          "sourceQuote": "Patrick Bauer"
+        }
+      ],
+      "claim": "Patrick Bauer is in discover phase with active status.",
+      "id": "client-status",
+      "proof_status": "source-backed",
+      "sourcePath": "clients/pbauer/profile.md",
+      "sourceQuote": "Patrick Bauer",
+      "visibility": "client"
+    },
+    {
+      "citations": [
+        {
+          "proof": {
+            "sourcePath": "intelligence/integration-experts/receipts/t_a06bea61-content-system-contract-no-secrets.json",
+            "sourceQuote": "{",
+            "status": "source-backed"
+          },
+          "sourcePath": "intelligence/integration-experts/receipts/t_a06bea61-content-system-contract-no-secrets.json",
+          "sourceQuote": "{"
+        }
+      ],
+      "claim": "1 receipt records are included for validation and handoff history.",
+      "id": "receipt-count",
+      "proof_status": "source-backed",
+      "sourcePath": "intelligence/integration-experts/receipts/t_a06bea61-content-system-contract-no-secrets.json",
+      "sourceQuote": "{",
+      "visibility": "internal"
+    },
+    {
+      "citations": [
+        {
+          "proof": {
+            "sourcePath": "intelligence/decisions/2026-06-11-strict-tac-and-kanban-board-worktrees.md",
+            "sourceQuote": "Strict TAC mode and Kanban board worktrees",
+            "status": "source-backed"
+          },
+          "sourcePath": "intelligence/decisions/2026-06-11-strict-tac-and-kanban-board-worktrees.md",
+          "sourceQuote": "Strict TAC mode and Kanban board worktrees"
+        }
+      ],
+      "claim": "Latest report in the portal snapshot: Strict TAC mode and Kanban board worktrees.",
+      "id": "latest-report",
+      "proof_status": "source-backed",
+      "sourcePath": "intelligence/decisions/2026-06-11-strict-tac-and-kanban-board-worktrees.md",
+      "sourceQuote": "Strict TAC mode and Kanban board worktrees",
+      "visibility": "client"
+    }
+  ],
+  "generated_at": "2026-06-12T00:00:00Z",
+  "redaction_policy": {
+    "citation_requirement": "Every named-client, external, or quantified claim must cite sourcePath and sourceQuote before publication.",
+    "forbidden_patterns": [
+      "absolute home directories",
+      "file URLs",
+      "secret material",
+      "tokens",
+      "passwords"
+    ],
+    "summary": "Browser JSON may include second-brain-relative citation paths and short quotes, never raw local filesystem paths or secret material."
+  },
+  "schema_version": 1
+}

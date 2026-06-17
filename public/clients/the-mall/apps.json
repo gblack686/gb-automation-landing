@@ -1,0 +1,22 @@
+{
+  "apps": [
+    {
+      "id": "github-repository",
+      "kind": "repository",
+      "name": "GitHub repository",
+      "proof": {
+        "sourcePath": "clients/the-mall/profile.md",
+        "sourceQuote": "Canonical profile for The Mall App engagement. Fashion-tech consumer app run by co-founders Sreya Halder and Ellie (last name TBD). Product is a personal-mall app — \"the easiest way to keep up with the brands you love\" — pre-App-Store launch with waitlist. Dis",
+        "status": "source-backed"
+      },
+      "sourcePath": "clients/the-mall/profile.md",
+      "sourceQuote": "Canonical profile for The Mall App engagement. Fashion-tech consumer app run by co-founders Sreya Halder and Ellie (last name TBD). Product is a personal-mall app — \"the easiest way to keep up with the brands you love\" — pre-App-Store launch with waitlist. Dis",
+      "status": "active",
+      "summary": "Source repository for The Mall App.",
+      "url": "https://github.com/gbauto/the-mall"
+    }
+  ],
+  "generated_at": "2026-06-12T00:00:00Z",
+  "schema_version": 1,
+  "source": "second-brain client profile"
+}

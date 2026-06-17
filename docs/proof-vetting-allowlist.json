@@ -1,0 +1,216 @@
+{
+  "schema_version": 1,
+  "purpose": "Temporary baseline for claims that existed before the proof-vetting gate. New named-client or quantified claims must carry sourcePath and sourceQuote instead of being added here.",
+  "allowedClaims": [
+    {
+      "id": "e91eb4d0846b0afe",
+      "file": "public/clients/gbautomation/artifacts.json",
+      "jsonPath": "artifacts.0.summary",
+      "claimText": "5 wins, 1 blocker rolled. Includes Mall Scanner sale-alert delta and YouTube Intel coverage.",
+      "requiredAction": "Add sourcePath/sourceQuote from second-brain intelligence report or remove the quantified 5 wins / 1 blocker wording."
+    },
+    {
+      "id": "6622dda585a4c1de",
+      "file": "public/clients/gbautomation/artifacts.json",
+      "jsonPath": "artifacts.3.summary",
+      "claimText": "Adjust AI prospect PRD. Pinpoints the 7-day proof gate before any code is shipped.",
+      "requiredAction": "Add sourcePath/sourceQuote proving the 7-day gate or remove the quantified timing claim."
+    },
+    {
+      "id": "4458626c2aef5123",
+      "file": "public/clients/gbautomation/dashboard.json",
+      "jsonPath": "activity.0.title",
+      "claimText": "Mall Scanner cycle completed",
+      "requiredAction": "Add sourcePath/sourceQuote from Mall Scanner run evidence or change to an unassertive label."
+    },
+    {
+      "id": "e71de47e5943a8dd",
+      "file": "public/clients/gbautomation/dashboard.json",
+      "jsonPath": "activity.0.detail",
+      "claimText": "112 brand pages diffed. 4 sale alerts dispatched via Hermes.",
+      "requiredAction": "Add sourcePath/sourceQuote proving the 112 pages and 4 alerts or remove the numbers."
+    },
+    {
+      "id": "cfbb2117cda455f0",
+      "file": "public/clients/gbautomation/dashboard.json",
+      "jsonPath": "activity.1.detail",
+      "claimText": "5 wins, 1 blocker rolled to next week. See report wk-2026-22.",
+      "requiredAction": "Add sourcePath/sourceQuote from the weekly report source or remove the counts."
+    },
+    {
+      "id": "72c3c90dd67a04f6",
+      "file": "public/clients/gbautomation/dashboard.json",
+      "jsonPath": "activity.2.detail",
+      "claimText": "client-portal-gbautomation marked validated. Mall scanner promoted to experimental.",
+      "requiredAction": "Add sourcePath/sourceQuote for validation and promotion status or remove the status assertion."
+    },
+    {
+      "id": "7c27267a041358fb",
+      "file": "public/clients/gbautomation/reports/inc-2026-05-15-amplify-rebuild.json",
+      "jsonPath": "summary",
+      "claimText": "Amplify build held 18 minutes waiting on a stale submodule pointer. Resolved by manual PAT rotation. Postmortem inside.",
+      "requiredAction": "Add sourcePath/sourceQuote proving the 18-minute wait and PAT rotation or remove the details."
+    },
+    {
+      "id": "2e3aa19f9387d3ba",
+      "file": "public/clients/gbautomation/reports/inc-2026-05-15-amplify-rebuild.json",
+      "jsonPath": "sections.0.bullets.0",
+      "claimText": "One Amplify rebuild for the parent site blocked for 18 minutes.",
+      "requiredAction": "Add sourcePath/sourceQuote proving the 18-minute block or remove the timing."
+    },
+    {
+      "id": "1152ab0b339f038e",
+      "file": "public/clients/gbautomation/reports/inc-2026-05-15-amplify-rebuild.json",
+      "jsonPath": "sections.2.bullets.1",
+      "claimText": "Added a calendar reminder 7 days ahead of the next PAT expiry.",
+      "requiredAction": "Add sourcePath/sourceQuote proving the 7-day reminder or remove the timing."
+    },
+    {
+      "id": "4f9453a64a8d921b",
+      "file": "public/clients/gbautomation/reports/may-2026-monthly.json",
+      "jsonPath": "summary",
+      "claimText": "Roll-up of four weekly TAC reports. Client portal validation closed out the month. Mall Scanner went live.",
+      "requiredAction": "Add sourcePath/sourceQuote for the report count, validation, and live status or soften the summary."
+    },
+    {
+      "id": "2bf7901a06e88404",
+      "file": "public/clients/gbautomation/reports/may-2026-monthly.json",
+      "jsonPath": "sections.0.bullets.0",
+      "claimText": "Validated the reusable tenant portal end to end on the GBAutomation template.",
+      "requiredAction": "Add sourcePath/sourceQuote for tenant portal validation or remove the validation assertion."
+    },
+    {
+      "id": "697493ae128cb1d3",
+      "file": "public/clients/gbautomation/reports/may-2026-monthly.json",
+      "jsonPath": "sections.0.bullets.1",
+      "claimText": "Mall Scanner moved from prototype to scheduled cycle. Hermes alerts wired.",
+      "requiredAction": "Add sourcePath/sourceQuote for scheduled-cycle and alert wiring or remove the assertion."
+    },
+    {
+      "id": "f062bc63a070be69",
+      "file": "public/clients/gbautomation/reports/wk-2026-22-tac-report.json",
+      "jsonPath": "summary",
+      "claimText": "Mall Scanner shipped its first sale-alert cycle. Client portal validation accepted. One blocker on artifact manifest drift.",
+      "requiredAction": "Add sourcePath/sourceQuote for sale-alert, validation, and blocker claims or remove them."
+    },
+    {
+      "id": "22d7df443eb40f32",
+      "file": "public/clients/gbautomation/reports/wk-2026-22-tac-report.json",
+      "jsonPath": "sections.0.bullets.0",
+      "claimText": "Mall Scanner cycle ran end to end. 112 brand pages diffed, 4 sale alerts dispatched.",
+      "requiredAction": "Add sourcePath/sourceQuote proving end-to-end run, 112 pages, and 4 alerts or remove the numbers."
+    },
+    {
+      "id": "0ce92692b3aa520f",
+      "file": "public/clients/gbautomation/reports/wk-2026-22-tac-report.json",
+      "jsonPath": "sections.0.bullets.1",
+      "claimText": "Client Portal validation receipt written. Cognito group plus email allowlist verified.",
+      "requiredAction": "Add sourcePath/sourceQuote for validation receipt and auth verification or remove the assertion."
+    },
+    {
+      "id": "9c5b63689a8e25e8",
+      "file": "public/clients/gbautomation/reports/wk-2026-22-tac-report.json",
+      "jsonPath": "sections.0.bullets.3",
+      "claimText": "Apps registry promoted to status validated for client-portal-gbautomation.",
+      "requiredAction": "Add sourcePath/sourceQuote for registry promotion or remove the validation status."
+    },
+    {
+      "id": "4f1cc5dbed053f30",
+      "file": "public/clients/gbautomation/reports.json",
+      "jsonPath": "reports.0.summary",
+      "claimText": "Mall Scanner shipped its first sale-alert cycle. Portal validation accepted. One blocker on artifact manifest drift.",
+      "requiredAction": "Mirror sourcePath/sourceQuote from the referenced report or remove the summarized claims."
+    },
+    {
+      "id": "689739dbe5322ce8",
+      "file": "public/clients/gbautomation/reports.json",
+      "jsonPath": "reports.3.summary",
+      "claimText": "Amplify build held for 18 minutes waiting on a stale submodule pointer. Resolved by manual PAT rotation. Postmortem inside.",
+      "requiredAction": "Mirror sourcePath/sourceQuote from the incident report or remove the timing and fix claims."
+    },
+    {
+      "id": "d69c048c439365ff",
+      "file": "src/components/ContactForm.jsx",
+      "line": 178,
+      "claimText": "We'll get back to you within 24 hours.",
+      "requiredAction": "Add sourcePath/sourceQuote for SLA evidence or change to a non-guaranteed response expectation."
+    },
+    {
+      "id": "3c1c4cfd54741fb6",
+      "file": "src/pages/PRDIndex.jsx",
+      "line": 164,
+      "claimText": "These are live strategy artifacts from GBAutomation's build pipeline.",
+      "requiredAction": "Add sourcePath/sourceQuote for build-pipeline publication or soften to generic artifact copy."
+    },
+    {
+      "id": "9f0338845c9e3cb4",
+      "file": "public/clients/gbautomation/dashboard.json",
+      "jsonPath": "headline",
+      "claimText": "GBAutomation portal snapshot generated from redacted second-brain sources.",
+      "requiredAction": "Add sourcePath/sourceQuote from the portal export receipt proving redacted second-brain generation, or soften the headline to an inventory label."
+    },
+    {
+      "id": "4d9bbbb834fd19ef",
+      "file": "public/clients/gbautomation/reports.json",
+      "jsonPath": "reports.4.summary",
+      "claimText": "--- title: Carlos deployed + dynamic Hermes context-loading via .hermes.md description: Carlos (Jason Diaz's Hermes agent) is live on Mac Mini under jason-agent with claude-opus-4-7 + bypass patch + auto-stopper at T+72h.",
+      "requiredAction": "Mirror sourcePath/sourceQuote from the source decision/report for the Carlos deployment claim, or remove the deployment/runtime details from the registry summary."
+    },
+    {
+      "id": "359a74b9f413900e",
+      "file": "public/clients/gbautomation/reports.json",
+      "jsonPath": "reports.8.summary",
+      "claimText": "--- title: launchd plists MUST NOT carry inline secrets - the wrapper-script standard description: After two leak incidents in 12 days (4/23 openclaw.json, 5/4 ai.openclaw.gateway.plist) where inline secret values in config files spilled in",
+      "requiredAction": "Mirror sourcePath/sourceQuote from the source ADR for the two leak incidents and dates, or remove the quantified incident language."
+    },
+    {
+      "id": "1ed77f16093d4d49",
+      "file": "public/clients/gbautomation/reports.json",
+      "jsonPath": "reports.9.summary",
+      "claimText": "--- title: Hermes proven-working configuration (5/4 supplement to the 5/1 patch ADR) description: Locks in the validated end-to-end configuration that makes Hermes call Anthropic Sonnet/Opus via Greg's Claude Max plan.",
+      "requiredAction": "Mirror sourcePath/sourceQuote from the source ADR for the validated configuration claim, or remove the validation/provider details."
+    },
+    {
+      "id": "cbd9835190191983",
+      "file": "public/clients/gbautomation/reports.json",
+      "jsonPath": "reports.21.summary",
+      "claimText": "--- title: TTFW in 24 hours — autonomous Linear-driven onboarding flow date: 2026-04-27 status: accepted type: ADR deciders: [greg-black] tags: - adr - ttfw - phase/onboard - domain/gbautomation - domain/openclaw - automation related: - \"[[",
+      "requiredAction": "Mirror sourcePath/sourceQuote from the source ADR for the 24-hour TTFW claim, or remove the quantified timing from the summary."
+    },
+    {
+      "id": "d65e8606e60f5a22",
+      "file": "public/clients/gbautomation/reports.json",
+      "jsonPath": "reports.21.title",
+      "claimText": "Time-To-First-Win in 24 Hours — Autonomous Linear-Driven Onboarding",
+      "requiredAction": "Mirror sourcePath/sourceQuote from the source ADR for the 24-hour title claim, or change the title to remove the quantified timing."
+    },
+    {
+      "id": "38fb0b8c54262fe2",
+      "file": "public/clients/gbautomation/reports.json",
+      "jsonPath": "reports.22.summary",
+      "claimText": "--- type: architecture-decision-record id: ADR-005 title: \"Session Capture — Tier 1 portable Stop hook + slug-routed markdown archive\" status: accepted date: 2026-04-25 accepted: 2026-04-25 author: Greg Black related: - \"[[intelligence/deci",
+      "requiredAction": "Mirror sourcePath/sourceQuote from ADR-005 for the Tier 1/session capture status, or remove the tier/status wording from the summary."
+    },
+    {
+      "id": "f1ea5617c66863eb",
+      "file": "public/clients/gbautomation/reports.json",
+      "jsonPath": "reports.24.summary",
+      "claimText": "--- type: architecture-decision-record id: ADR-001 title: \"Workspace Isolation — Mac Mini as primary host, per-client Unix user\" status: accepted date: 2026-04-23 author: Greg Black related: - \"[[knowledge/concepts/per-client-isolation]]\" -",
+      "requiredAction": "Mirror sourcePath/sourceQuote from ADR-001 for the workspace isolation claim, or remove the host/isolation details from the summary."
+    },
+    {
+      "id": "7e4d825708b2db67",
+      "file": "public/clients/gbautomation/reports.json",
+      "jsonPath": "reports.25.summary",
+      "claimText": "--- type: architecture-decision-record id: ADR-002 title: \"Browser automation primitive — openclaw browser (not Steer, not Apify, not Chrome DevTools MCP)\" status: accepted date: 2026-04-23 author: Greg Black related: - \"[[2026-04-23-worksp",
+      "requiredAction": "Mirror sourcePath/sourceQuote from ADR-002 for the browser automation primitive choice, or remove the comparative tool claims."
+    },
+    {
+      "id": "16161c68d030d488",
+      "file": "public/clients/gbautomation/reports.json",
+      "jsonPath": "reports.26.summary",
+      "claimText": "--- type: architecture-decision-record id: ADR-003 title: \"OpenClaw bindings schema shift — keyword routing gone, agent reasoning takes over\" status: accepted date: 2026-04-23 author: Greg Black related: - \"[[2026-04-23-workspace-isolation]",
+      "requiredAction": "Mirror sourcePath/sourceQuote from ADR-003 for the bindings schema shift claim, or remove the status/assertive wording."
+    }
+  ]
+}

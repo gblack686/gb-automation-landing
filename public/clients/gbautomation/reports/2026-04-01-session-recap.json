@@ -1,0 +1,29 @@
+{
+  "content": "# Kickoff Session Recap - 2026-04-01",
+  "generated_at": "2026-06-12T00:00:00Z",
+  "proof": {
+    "sourcePath": "clients/gbautomation/deliverables/2026-04-01-session-recap.md",
+    "sourceQuote": "Kickoff Session Recap - 2026-04-01",
+    "status": "source-backed"
+  },
+  "report": {
+    "asset_url": "/clients/gbautomation/artifacts/2026-04-01-session-recap",
+    "id": "2026-04-01-session-recap",
+    "kind": "report",
+    "owner": "GBAutomation",
+    "proof": {
+      "sourcePath": "clients/gbautomation/deliverables/2026-04-01-session-recap.md",
+      "sourceQuote": "Kickoff Session Recap - 2026-04-01",
+      "status": "source-backed"
+    },
+    "sourcePath": "clients/gbautomation/deliverables/2026-04-01-session-recap.md",
+    "sourceQuote": "Kickoff Session Recap - 2026-04-01",
+    "status": "published",
+    "summary": "# Kickoff Session Recap - 2026-04-01",
+    "title": "Kickoff Session Recap - 2026-04-01",
+    "updated_at": "2026-04-01T00:00:00Z"
+  },
+  "schema_version": 1,
+  "sourcePath": "clients/gbautomation/deliverables/2026-04-01-session-recap.md",
+  "sourceQuote": "Kickoff Session Recap - 2026-04-01"
+}

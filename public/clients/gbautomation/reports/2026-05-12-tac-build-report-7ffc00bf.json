@@ -1,0 +1,29 @@
+{
+  "content": "Delivered file: 2026-05-12-tac-build-report-7ffc00bf.pdf",
+  "generated_at": "2026-06-12T00:00:00Z",
+  "proof": {
+    "sourcePath": "clients/gbautomation/deliverables/2026-05-12-tac-build-report-7ffc00bf.pdf",
+    "sourceQuote": "2026-05-12-tac-build-report-7ffc00bf.pdf",
+    "status": "source-backed"
+  },
+  "report": {
+    "asset_url": "/clients/gbautomation/artifacts/2026-05-12-tac-build-report-7ffc00bf",
+    "id": "2026-05-12-tac-build-report-7ffc00bf",
+    "kind": "report",
+    "owner": "GBAutomation",
+    "proof": {
+      "sourcePath": "clients/gbautomation/deliverables/2026-05-12-tac-build-report-7ffc00bf.pdf",
+      "sourceQuote": "2026-05-12-tac-build-report-7ffc00bf.pdf",
+      "status": "source-backed"
+    },
+    "sourcePath": "clients/gbautomation/deliverables/2026-05-12-tac-build-report-7ffc00bf.pdf",
+    "sourceQuote": "2026-05-12-tac-build-report-7ffc00bf.pdf",
+    "status": "published",
+    "summary": "Delivered file: 2026-05-12-tac-build-report-7ffc00bf.pdf",
+    "title": "2026-05-12-tac-build-report-7ffc00bf.pdf",
+    "updated_at": "2026-06-06T00:00:00Z"
+  },
+  "schema_version": 1,
+  "sourcePath": "clients/gbautomation/deliverables/2026-05-12-tac-build-report-7ffc00bf.pdf",
+  "sourceQuote": "2026-05-12-tac-build-report-7ffc00bf.pdf"
+}

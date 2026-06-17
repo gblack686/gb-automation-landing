@@ -1,0 +1,30 @@
+{
+  "generated_at": "2026-06-12T00:00:00Z",
+  "schema_version": 1,
+  "sources": [
+    {
+      "proof": {
+        "sourcePath": "clients/jid5274/profile.md",
+        "sourceQuote": "# jid5274 Profile",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/jid5274/profile.md",
+      "sourceQuote": "# jid5274 Profile"
+    }
+  ],
+  "tenant": {
+    "client": "jid5274",
+    "name": "jid5274",
+    "proof": {
+      "sourcePath": "clients/jid5274/profile.md",
+      "sourceQuote": "# jid5274 Profile",
+      "status": "source-backed"
+    },
+    "proofStatus": "source-backed",
+    "slug": "jid5274",
+    "sourcePath": "clients/jid5274/profile.md",
+    "sourceQuote": "# jid5274 Profile",
+    "status": "sanitized-placeholder"
+  }
+}

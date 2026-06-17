@@ -12,12 +12,19 @@ import UiAgent from './pages/UiAgent';
 import Login from './pages/Login';
 import PRDIndex from './pages/PRDIndex';
 import PRDView from './pages/PRDView';
+import TacCatalog from './pages/TacCatalog';
+import Welcome from './pages/Welcome';
+import SalesHowItWorks from './pages/SalesHowItWorks';
 import RequireAuth from './components/RequireAuth';
-import GbautomationPortal from './clients/gbautomation/routes';
-import Jid5274Portal from './clients/jid5274/routes';
+import ClientPortalBoundary from './clients/ClientPortalBoundary';
 import OpsRoutes from './ops/routes';
+import TeamRoutes from './team/routes';
+import { getRouteAuthPolicy } from './clients/shared/tenantConfig';
 
 function App() {
+  const opsAuthPolicy = getRouteAuthPolicy('ops');
+  const teamAuthPolicy = getRouteAuthPolicy('team');
+
   return (
     <Authenticator.Provider>
       <Router>
@@ -27,6 +34,9 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/prds" element={<PRDIndex />} />
           <Route path="/prds/:slug" element={<PRDView />} />
+          <Route path="/tac" element={<TacCatalog />} />
+          <Route path="/welcome" element={<Welcome />} />
+          <Route path="/sales/how-it-works" element={<SalesHowItWorks />} />
 
           {/* Gated — everything behind sign-in */}
           <Route
@@ -69,35 +79,25 @@ function App() {
             path="/ops/*"
             element={
               <RequireAuth
-                allowedGroups={['tenant-gbautomation']}
-                allowedEmails={['gblack686@gmail.com', 'greg@gbautomation.xyz']}
+                allowedGroups={opsAuthPolicy.allowedGroups}
+                allowedEmails={opsAuthPolicy.allowedEmails}
               >
                 <OpsRoutes />
               </RequireAuth>
             }
           />
           <Route
-            path="/clients/gbautomation/*"
+            path="/team/*"
             element={
               <RequireAuth
-                allowedGroups={['tenant-gbautomation']}
-                allowedEmails={['gblack686@gmail.com']}
+                allowedGroups={teamAuthPolicy.allowedGroups}
+                allowedEmails={teamAuthPolicy.allowedEmails}
               >
-                <GbautomationPortal />
+                <TeamRoutes />
               </RequireAuth>
             }
           />
-          <Route
-            path="/clients/jid5274/*"
-            element={
-              <RequireAuth
-                allowedGroups={['tenant-jid5274']}
-                allowedEmails={['jid5274@gmail.com']}
-              >
-                <Jid5274Portal />
-              </RequireAuth>
-            }
-          />
+          <Route path="/clients/:clientSlug/*" element={<ClientPortalBoundary />} />
         </Routes>
       </Router>
     </Authenticator.Provider>

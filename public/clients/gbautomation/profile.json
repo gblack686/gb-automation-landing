@@ -1,23 +1,47 @@
 {
+  "generated_at": "2026-06-12T00:00:00Z",
   "schema_version": 1,
+  "sources": [
+    {
+      "proof": {
+        "sourcePath": "clients/gbautomation/profile.md",
+        "sourceQuote": "Internal dogfood client. GBAutomation is Greg's AI automation consultancy, using its own tooling as the first client.",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/gbautomation/profile.md",
+      "sourceQuote": "Internal dogfood client. GBAutomation is Greg's AI automation consultancy, using its own tooling as the first client."
+    }
+  ],
   "tenant": {
-    "slug": "gbautomation",
+    "client": "gbautomation",
+    "description": "Internal dogfood client. GBAutomation is Greg's AI automation consultancy, using its own tooling as the first client.",
+    "display_name": "GBAutomation",
+    "engaged_since": "2026-04-01",
+    "hermes": {
+      "chat_url": "https://hermes-mini.gbautomation.xyz"
+    },
     "name": "GBAutomation",
-    "eyebrow": "Internal Client Portal",
-    "productLabel": "Template Tenant",
-    "tagline": "The reference configuration every new client portal forks from.",
-    "repository": "gbauto/gbautomation",
-    "primary_contact": {
-      "name": "Greg Black",
-      "role": "Owner",
-      "handle": "@greg"
+    "openclaw": {
+      "namespace": "gbautomation"
     },
-    "sla": {
-      "sync_target_minutes": 5,
-      "uptime_target": "99.9%",
-      "review_cadence": "weekly"
+    "phase": "build",
+    "poc": {
+      "name": "Greg Black"
     },
-    "registered_at": "2026-04-12",
-    "validated_at": "2026-05-10"
+    "proof": {
+      "sourcePath": "clients/gbautomation/profile.md",
+      "sourceQuote": "Internal dogfood client. GBAutomation is Greg's AI automation consultancy, using its own tooling as the first client.",
+      "status": "source-backed"
+    },
+    "proofStatus": "source-backed",
+    "repos": {
+      "github": "gbautomation"
+    },
+    "slug": "gbautomation",
+    "sourcePath": "clients/gbautomation/profile.md",
+    "sourceQuote": "Internal dogfood client. GBAutomation is Greg's AI automation consultancy, using its own tooling as the first client.",
+    "status": "active",
+    "timezone": "America/Los_Angeles"
   }
 }

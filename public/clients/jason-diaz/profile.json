@@ -1,0 +1,44 @@
+{
+  "generated_at": "2026-06-12T00:00:00Z",
+  "schema_version": 1,
+  "sources": [
+    {
+      "proof": {
+        "sourcePath": "clients/jason-diaz/profile.md",
+        "sourceQuote": "Canonical profile for Jason Diaz / PMC engagement — POC, billing, repos, Linear/GCal/Gmail integrations, OpenClaw config, deliverables index. Single source of truth for client routing.",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/jason-diaz/profile.md",
+      "sourceQuote": "Canonical profile for Jason Diaz / PMC engagement — POC, billing, repos, Linear/GCal/Gmail integrations, OpenClaw config, deliverables index. Single source of truth for client routing."
+    }
+  ],
+  "tenant": {
+    "client": "jason-diaz",
+    "date": "2026-01-30",
+    "description": "Canonical profile for Jason Diaz / PMC engagement — POC, billing, repos, Linear/GCal/Gmail integrations, OpenClaw config, deliverables index. Single source of truth for client routing.",
+    "display_name": "Jason Diaz (PMC)",
+    "engaged_since": "2026-01-30",
+    "name": "Jason Diaz (PMC)",
+    "openclaw": {
+      "namespace": "jason-diaz"
+    },
+    "phase": "discover",
+    "poc": {
+      "name": "Jason Diaz"
+    },
+    "proof": {
+      "sourcePath": "clients/jason-diaz/profile.md",
+      "sourceQuote": "Canonical profile for Jason Diaz / PMC engagement — POC, billing, repos, Linear/GCal/Gmail integrations, OpenClaw config, deliverables index. Single source of truth for client routing.",
+      "status": "source-backed"
+    },
+    "proofStatus": "source-backed",
+    "repos": {
+      "github": "gbauto/jid5274"
+    },
+    "slug": "jason-diaz",
+    "sourcePath": "clients/jason-diaz/profile.md",
+    "sourceQuote": "Canonical profile for Jason Diaz / PMC engagement — POC, billing, repos, Linear/GCal/Gmail integrations, OpenClaw config, deliverables index. Single source of truth for client routing.",
+    "status": "active"
+  }
+}

@@ -1,4 +1,4 @@
-import { AlertTriangle, CheckCircle2, CircleDashed, Clock } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, CircleDashed, Clock, ExternalLink } from 'lucide-react';
 
 const stateStyles = {
   online: 'border-emerald-200 bg-emerald-50 text-emerald-700',
@@ -72,17 +72,49 @@ export function SystemCard({ system }) {
   );
 }
 
+function formatTimestamp(value) {
+  if (!value) return 'n/a';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toISOString().replace('T', ' ').replace('.000Z', ' UTC');
+}
+
 export function RunRow({ run }) {
+  const runId = run.run_id || run.id;
+  const taskId = run.task_id || 'n/a';
+  const owner = run.assignee || run.profile || run.agent || 'unassigned';
+  const started = run.started_at || run.started;
+  const ended = run.ended_at;
+  const timestampLabel = ended
+    ? `${formatTimestamp(started)} to ${formatTimestamp(ended)}`
+    : formatTimestamp(started);
+  const detail = run.title || run.output || run.trace_name || 'Safe receipt row';
+
   return (
-    <article className="grid gap-4 border-b border-[#D6D4C8] p-5 last:border-b-0 lg:grid-cols-[1.1fr_0.8fr_0.8fr_auto] lg:items-center">
+    <article className="grid gap-4 border-b border-[#D6D4C8] p-5 last:border-b-0 lg:grid-cols-[1.1fr_0.85fr_0.85fr_auto] lg:items-center">
       <div>
-        <h3 className="font-medium text-[#191919]">{run.id}</h3>
-        <p className="mt-1 text-sm text-[#191919]/60">{run.output}</p>
+        <h3 className="font-medium text-[#191919]">{runId}</h3>
+        <p className="mt-1 text-sm text-[#191919]/60">{detail}</p>
+        <p className="mt-2 text-xs font-semibold uppercase text-[#191919]/45">Task {taskId}</p>
       </div>
-      <p className="text-sm text-[#191919]/65">{run.agent}</p>
+      <div className="space-y-1 text-sm text-[#191919]/65">
+        <p>{owner}</p>
+        {run.profile && run.profile !== owner && <p className="text-xs text-[#191919]/45">profile {run.profile}</p>}
+        {run.langfuse_url && (
+          <a
+            href={run.langfuse_url}
+            className="inline-flex items-center gap-1 text-xs font-semibold uppercase text-[#D97757] hover:text-[#B75F43]"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Langfuse
+            <ExternalLink className="h-3 w-3" />
+          </a>
+        )}
+      </div>
       <div className="flex items-center gap-2 text-sm text-[#191919]/60">
-        <Clock className="h-3.5 w-3.5 text-[#D97757]" />
-        <span>{run.started} · {run.duration}</span>
+        <Clock className="h-3.5 w-3.5 shrink-0 text-[#D97757]" />
+        <span>{timestampLabel}</span>
       </div>
       <StatusBadge state={run.status} />
     </article>

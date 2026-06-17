@@ -1,0 +1,29 @@
+{
+  "content": "Delivered file: 2026-05-11-tac-team-runner-verifier-dcae88ee.pdf",
+  "generated_at": "2026-06-12T00:00:00Z",
+  "proof": {
+    "sourcePath": "clients/gbautomation/deliverables/2026-05-11-tac-team-runner-verifier-dcae88ee.pdf",
+    "sourceQuote": "2026-05-11-tac-team-runner-verifier-dcae88ee.pdf",
+    "status": "source-backed"
+  },
+  "report": {
+    "asset_url": "/clients/gbautomation/artifacts/2026-05-11-tac-team-runner-verifier-dcae88ee",
+    "id": "2026-05-11-tac-team-runner-verifier-dcae88ee",
+    "kind": "report",
+    "owner": "GBAutomation",
+    "proof": {
+      "sourcePath": "clients/gbautomation/deliverables/2026-05-11-tac-team-runner-verifier-dcae88ee.pdf",
+      "sourceQuote": "2026-05-11-tac-team-runner-verifier-dcae88ee.pdf",
+      "status": "source-backed"
+    },
+    "sourcePath": "clients/gbautomation/deliverables/2026-05-11-tac-team-runner-verifier-dcae88ee.pdf",
+    "sourceQuote": "2026-05-11-tac-team-runner-verifier-dcae88ee.pdf",
+    "status": "published",
+    "summary": "Delivered file: 2026-05-11-tac-team-runner-verifier-dcae88ee.pdf",
+    "title": "2026-05-11-tac-team-runner-verifier-dcae88ee.pdf",
+    "updated_at": "2026-06-06T00:00:00Z"
+  },
+  "schema_version": 1,
+  "sourcePath": "clients/gbautomation/deliverables/2026-05-11-tac-team-runner-verifier-dcae88ee.pdf",
+  "sourceQuote": "2026-05-11-tac-team-runner-verifier-dcae88ee.pdf"
+}

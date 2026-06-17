@@ -1,0 +1,27 @@
+{
+  "content": "GBAutomation adopts full-tree trace attribution as the standard level of observability detail. Every agent runtime must emit the complete Langfuse observation tree (CHAIN/SPAN/TOOL/GENERATION linked by parentObservationId) with resolved model, usageDetails (incl. cache reads), tool names + args, and structured repo/slug/branch tags. The telemetry-report skill is the canonical consumer and must attribute token spend by tool and by output file type.",
+  "generated_at": "2026-06-12T00:00:00Z",
+  "proof": {
+    "sourcePath": "intelligence/decisions/2026-06-02-trace-attribution-standard.md",
+    "sourceQuote": "ADR 2026-06-02 — Full-Tree Trace Attribution Standard",
+    "status": "source-backed"
+  },
+  "report": {
+    "id": "2026-06-02-trace-attribution-standard",
+    "kind": "report",
+    "proof": {
+      "sourcePath": "intelligence/decisions/2026-06-02-trace-attribution-standard.md",
+      "sourceQuote": "ADR 2026-06-02 — Full-Tree Trace Attribution Standard",
+      "status": "source-backed"
+    },
+    "sourcePath": "intelligence/decisions/2026-06-02-trace-attribution-standard.md",
+    "sourceQuote": "ADR 2026-06-02 — Full-Tree Trace Attribution Standard",
+    "status": "published",
+    "summary": "GBAutomation adopts full-tree trace attribution as the standard level of observability detail. Every agent runtime must emit the complete Langfuse observation tree (CHAIN/SPAN/TOOL/GENERATION linked by parentObservationId) with resolved model, usageDetails (incl. cache reads), tool names + args, and structured repo/slug/branch tags. The telemetry-report skill is the canonical consumer and must attribute token spend by tool and by output file type.",
+    "title": "ADR 2026-06-02 — Full-Tree Trace Attribution Standard",
+    "updated_at": "2026-06-02T00:00:00Z"
+  },
+  "schema_version": 1,
+  "sourcePath": "intelligence/decisions/2026-06-02-trace-attribution-standard.md",
+  "sourceQuote": "ADR 2026-06-02 — Full-Tree Trace Attribution Standard"
+}

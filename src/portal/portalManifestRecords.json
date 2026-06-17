@@ -1,0 +1,567 @@
+{
+  "schema_version": "gbautomation.portal-manifest-source.v1",
+  "owner": "gbautomation",
+  "canonical_sources": [
+    "gbautomation/second-brain/client records",
+    "gbautomation/public portfolio and artifact registries",
+    "hermes-agent kanban board export for ops read models",
+    "gb-automation-landing/src/routes/routeManifest.js for route inventory"
+  ],
+  "manifests": {
+    "public/clients/gbautomation/profile.json": {
+      "generated_at": "2026-06-11T00:00:00Z",
+      "schema_version": 1,
+      "sources": [
+        {
+          "quote": "Internal dogfood client. GBAutomation is Greg's AI automation consultancy, using its own tooling as the first client.",
+          "source_path": "second-brain/clients/gbautomation/profile.md"
+        }
+      ],
+      "tenant": {
+        "engaged_since": "2026-04-01",
+        "hermes_chat_url": "https://hermes-mini.gbautomation.xyz",
+        "name": "GBAutomation",
+        "phase": "build",
+        "primary_contact": {
+          "handle": null,
+          "name": "Greg Black",
+          "role": "Primary contact"
+        },
+        "repository": "gbautomation",
+        "slug": "gbautomation",
+        "status": "active",
+        "tagline": "Internal dogfood client. GBAutomation is Greg's AI automation consultancy, using its own tooling as the first client.",
+        "timezone": "America/Los_Angeles"
+      }
+    },
+    "public/clients/gbautomation/dashboard.json": {
+      "activity": [
+        {
+          "detail": "Observability and control-plane contracts",
+          "timestamp": "2026-06-11T00:00:00Z",
+          "title": "t-ee9bd5a1-observability-control-plane-contracts"
+        },
+        {
+          "detail": "Integration Expert Report: Canopy / Prompt Composition Adapter",
+          "timestamp": "2026-06-11T00:00:00Z",
+          "title": "t-ab364d74-canopy-prompt-composition-adapter"
+        },
+        {
+          "detail": "Integration Expert Report \u2014 Reusable Templates and TAC Canon",
+          "timestamp": "2026-06-11T00:00:00Z",
+          "title": "t-7b436ca1-reusable-templates-tac-canon"
+        },
+        {
+          "detail": "Website and Client Portal Rewrite Tracks",
+          "timestamp": "2026-06-11T00:00:00Z",
+          "title": "t-704d3e0b-portal-rewrite-tracks"
+        },
+        {
+          "detail": "Split Vue/FastAPI Client Portal Runtime Retirement Plan",
+          "timestamp": "2026-06-11T00:00:00Z",
+          "title": "t-5500391a-client-portal-runtime-retirement-plan"
+        }
+      ],
+      "generated_at": "2026-06-11T00:00:00Z",
+      "headline": "GBAutomation portal snapshot generated from redacted second-brain sources.",
+      "metrics": [
+        {
+          "accent": "default",
+          "detail": "Published deliverables discovered under the client workspace.",
+          "label": "Artifacts",
+          "value": "4"
+        },
+        {
+          "accent": "default",
+          "detail": "Client deliverables plus bounded intelligence reports.",
+          "label": "Reports",
+          "value": "27"
+        },
+        {
+          "accent": "default",
+          "detail": "Validation and integration receipt records.",
+          "label": "Receipts",
+          "value": "15"
+        },
+        {
+          "accent": "good",
+          "detail": "Current client status: active.",
+          "label": "Phase",
+          "value": "build"
+        }
+      ],
+      "next_steps": [
+        "Review proof.json before exposing new claims externally.",
+        "Promote generated files to the landing public client directory."
+      ],
+      "schema_version": 1,
+      "status_rail": [
+        {
+          "detail": "Static JSON schema validation passed at export time.",
+          "label": "Data",
+          "state": "ok"
+        },
+        {
+          "detail": "Browser payloads use second-brain-relative citations only.",
+          "label": "Paths",
+          "state": "ok"
+        },
+        {
+          "detail": "External claims must cite proof.json before publication.",
+          "label": "Proof",
+          "state": "watch"
+        }
+      ]
+    },
+    "public/clients/gbautomation/apps.json": {
+      "apps": [
+        {
+          "app_path": "/clients/gbautomation",
+          "name": "Client Portal",
+          "slug": "client-portal",
+          "status": "active",
+          "surface": "Portal",
+          "tech_stack": [
+            "react",
+            "static-json",
+            "second-brain"
+          ]
+        },
+        {
+          "app_path": null,
+          "name": "Hermes Chat",
+          "slug": "hermes-chat",
+          "status": "active",
+          "surface": "Assistant",
+          "tech_stack": [
+            "hermes",
+            "gateway"
+          ]
+        }
+      ],
+      "generated_at": "2026-06-11T00:00:00Z",
+      "schema_version": 1,
+      "source": "second-brain client profile feature_flags"
+    },
+    "public/clients/gbautomation/artifacts.json": {
+      "artifacts": [
+        {
+          "asset_url": "/clients/gbautomation/artifacts/2026-05-12-tac-build-report-7ffc00bf",
+          "id": "2026-05-12-tac-build-report-7ffc00bf",
+          "kind": "report",
+          "owner": "GBAutomation",
+          "source": {
+            "quote": "Tac Build Report 7Ffc00Bf",
+            "source_path": "second-brain/clients/gbautomation/deliverables/2026-05-12-tac-build-report-7ffc00bf.pdf"
+          },
+          "status": "published",
+          "summary": "%PDF-1.4 %\ufffd\ufffd\ufffd\ufffd ReportLab Generated PDF document (opensource) 1 0 obj << /F1 2 0 R /F2 3 0 R >> endobj 2 0 obj << /BaseFont /Helvetica /Encoding /WinAnsiEncoding /Name /F1 /Subtype /Type1 /Type /Font >> endobj 3 0 obj << /BaseFont /Helvetica",
+          "title": "Tac Build Report 7Ffc00Bf",
+          "updated_at": "2026-05-12T00:00:00Z"
+        },
+        {
+          "asset_url": "/clients/gbautomation/artifacts/2026-05-12-tac-build-report-1fafe5cb",
+          "id": "2026-05-12-tac-build-report-1fafe5cb",
+          "kind": "report",
+          "owner": "GBAutomation",
+          "source": {
+            "quote": "Tac Build Report 1Fafe5Cb",
+            "source_path": "second-brain/clients/gbautomation/deliverables/2026-05-12-tac-build-report-1fafe5cb.pdf"
+          },
+          "status": "published",
+          "summary": "%PDF-1.4 %\ufffd\ufffd\ufffd\ufffd ReportLab Generated PDF document (opensource) 1 0 obj << /F1 2 0 R /F2 3 0 R >> endobj 2 0 obj << /BaseFont /Helvetica /Encoding /WinAnsiEncoding /Name /F1 /Subtype /Type1 /Type /Font >> endobj 3 0 obj << /BaseFont /Helvetica",
+          "title": "Tac Build Report 1Fafe5Cb",
+          "updated_at": "2026-05-12T00:00:00Z"
+        },
+        {
+          "asset_url": "/clients/gbautomation/artifacts/2026-05-11-tac-team-runner-verifier-dcae88ee",
+          "id": "2026-05-11-tac-team-runner-verifier-dcae88ee",
+          "kind": "artifact",
+          "owner": "GBAutomation",
+          "source": {
+            "quote": "Tac Team Runner Verifier Dcae88Ee",
+            "source_path": "second-brain/clients/gbautomation/deliverables/2026-05-11-tac-team-runner-verifier-dcae88ee.pdf"
+          },
+          "status": "published",
+          "summary": "%PDF-1.4 %\ufffd\ufffd\ufffd\ufffd ReportLab Generated PDF document (opensource) 1 0 obj << /F1 2 0 R /F2 3 0 R >> endobj 2 0 obj << /BaseFont /Helvetica /Encoding /WinAnsiEncoding /Name /F1 /Subtype /Type1 /Type /Font >> endobj 3 0 obj << /BaseFont /Helvetica",
+          "title": "Tac Team Runner Verifier Dcae88Ee",
+          "updated_at": "2026-05-11T00:00:00Z"
+        },
+        {
+          "asset_url": "/clients/gbautomation/artifacts/2026-04-01-session-recap",
+          "id": "2026-04-01-session-recap",
+          "kind": "artifact",
+          "owner": "GBAutomation",
+          "source": {
+            "quote": "Kickoff Session Recap - 2026-04-01",
+            "source_path": "second-brain/clients/gbautomation/deliverables/2026-04-01-session-recap.md"
+          },
+          "status": "published",
+          "summary": ".",
+          "title": "Kickoff Session Recap - 2026-04-01",
+          "updated_at": "2026-04-01T00:00:00Z"
+        }
+      ],
+      "generated_at": "2026-06-11T00:00:00Z",
+      "schema_version": 1,
+      "source": "second-brain/clients/gbautomation/deliverables plus bounded intelligence report citations"
+    },
+    "public/clients/gbautomation/reports.json": {
+      "generated_at": "2026-06-11T00:00:00Z",
+      "reports": [
+        {
+          "author": "GBAutomation",
+          "id": "2026-05-12-tac-build-report-7ffc00bf",
+          "period": "deliverable",
+          "published_at": "2026-05-12T00:00:00Z",
+          "source": {
+            "quote": "Tac Build Report 7Ffc00Bf",
+            "source_path": "second-brain/clients/gbautomation/deliverables/2026-05-12-tac-build-report-7ffc00bf.pdf"
+          },
+          "summary": "%PDF-1.4 %\ufffd\ufffd\ufffd\ufffd ReportLab Generated PDF document (opensource) 1 0 obj << /F1 2 0 R /F2 3 0 R >> endobj 2 0 obj << /BaseFont /Helvetica /Encoding /WinAnsiEncoding /Name /F1 /Subtype /Type1 /Type /Font >> endobj 3 0 obj << /BaseFont /Helvetica",
+          "title": "Tac Build Report 7Ffc00Bf",
+          "window": "2026-05-12"
+        },
+        {
+          "author": "GBAutomation",
+          "id": "2026-05-12-tac-build-report-1fafe5cb",
+          "period": "deliverable",
+          "published_at": "2026-05-12T00:00:00Z",
+          "source": {
+            "quote": "Tac Build Report 1Fafe5Cb",
+            "source_path": "second-brain/clients/gbautomation/deliverables/2026-05-12-tac-build-report-1fafe5cb.pdf"
+          },
+          "summary": "%PDF-1.4 %\ufffd\ufffd\ufffd\ufffd ReportLab Generated PDF document (opensource) 1 0 obj << /F1 2 0 R /F2 3 0 R >> endobj 2 0 obj << /BaseFont /Helvetica /Encoding /WinAnsiEncoding /Name /F1 /Subtype /Type1 /Type /Font >> endobj 3 0 obj << /BaseFont /Helvetica",
+          "title": "Tac Build Report 1Fafe5Cb",
+          "window": "2026-05-12"
+        },
+        {
+          "author": "GBAutomation",
+          "id": "2026-05-08-autonomous-agent-v1-milestone",
+          "period": "intelligence",
+          "published_at": "2026-05-08T00:00:00Z",
+          "source": {
+            "quote": "ADR -- Autonomous Linear Coding Agent v1: operational milestone",
+            "source_path": "second-brain/intelligence/decisions/2026-05-08-autonomous-agent-v1-milestone.md"
+          },
+          "summary": "--- type: architecture-decision-record id: ADR-2026-05-08-autonomous-agent-v1-milestone title: Autonomous Linear Coding Agent v1 -- operational milestone description: Marks the first stable, durable, end-to-end working state of the autonomo",
+          "title": "ADR -- Autonomous Linear Coding Agent v1: operational milestone",
+          "window": "2026-05-08"
+        },
+        {
+          "author": "GBAutomation",
+          "id": "2026-05-05-hermes-config-lock-three-layers",
+          "period": "intelligence",
+          "published_at": "2026-05-05T00:00:00Z",
+          "source": {
+            "quote": "Hermes config is LOCKED \u2014 three-layer guardrail",
+            "source_path": "second-brain/intelligence/decisions/2026-05-05-hermes-config-lock-three-layers.md"
+          },
+          "summary": "--- title: Hermes config is LOCKED \u2014 three-layer guardrail against rogue agent edits description: After two incidents in five days where the OpenClaw main agent (glm-5.1) reverted Hermes config to outdated patterns (wrong model, ANTHROPIC_A",
+          "title": "Hermes config is LOCKED \u2014 three-layer guardrail",
+          "window": "2026-05-05"
+        },
+        {
+          "author": "GBAutomation",
+          "id": "2026-05-05-carlos-deployed-and-dynamic-context-loading",
+          "period": "intelligence",
+          "published_at": "2026-05-05T00:00:00Z",
+          "source": {
+            "quote": "Carlos deployed + dynamic Hermes context-loading",
+            "source_path": "second-brain/intelligence/decisions/2026-05-05-carlos-deployed-and-dynamic-context-loading.md"
+          },
+          "summary": "--- title: Carlos deployed + dynamic Hermes context-loading via .hermes.md description: Carlos (Jason Diaz's Hermes agent) is live on Mac Mini under jason-agent with claude-opus-4-7 + bypass patch + auto-stopper at T+72h.",
+          "title": "Carlos deployed + dynamic Hermes context-loading",
+          "window": "2026-05-05"
+        },
+        {
+          "author": "GBAutomation",
+          "id": "2026-05-05-carlos-context-loading-trap-trio",
+          "period": "intelligence",
+          "published_at": "2026-05-05T00:00:00Z",
+          "source": {
+            "quote": "Carlos context-loading trap trio",
+            "source_path": "second-brain/intelligence/decisions/2026-05-05-carlos-context-loading-trap-trio.md"
+          },
+          "summary": "--- title: Carlos context-loading trap trio \u2014 TERMINAL_CWD plist, state.db cache, script chmod description: Three latent bugs caused multi-hour debug session 2026-05-05 17:30\u219220:00 PT.",
+          "title": "Carlos context-loading trap trio",
+          "window": "2026-05-05"
+        },
+        {
+          "author": "GBAutomation",
+          "id": "2026-05-04-per-client-github-actions-billing-deferred",
+          "period": "intelligence",
+          "published_at": "2026-05-04T00:00:00Z",
+          "source": {
+            "quote": "ADR \u2014 Per-client GitHub Actions billing (deferred)",
+            "source_path": "second-brain/intelligence/decisions/2026-05-04-per-client-github-actions-billing-deferred.md"
+          },
+          "summary": "--- type: architecture-decision-record id: ADR-2026-05-04-gha-billing-deferred title: Per-client GitHub Actions billing \u2014 deferred until day-30 usage data description: Nightly Linear agent runs on GitHub Actions in the gbauto org for now.",
+          "title": "ADR \u2014 Per-client GitHub Actions billing (deferred)",
+          "window": "2026-05-04"
+        },
+        {
+          "author": "GBAutomation",
+          "id": "2026-05-04-linear-oauth-bot-actor",
+          "period": "intelligence",
+          "published_at": "2026-05-04T00:00:00Z",
+          "source": {
+            "quote": "ADR \u2014 Linear OAuth bot actor for automation comments",
+            "source_path": "second-brain/intelligence/decisions/2026-05-04-linear-oauth-bot-actor.md"
+          },
+          "summary": "--- type: architecture-decision-record id: ADR-2026-05-04-linear-oauth-bot-actor title: Linear OAuth bot actor for automation comments description: All scripts that POST to Linear (issue creation, comment creation, state updates) authentica",
+          "title": "ADR \u2014 Linear OAuth bot actor for automation comments",
+          "window": "2026-05-04"
+        },
+        {
+          "author": "GBAutomation",
+          "id": "2026-05-04-launchd-secrets-wrapper-standard",
+          "period": "intelligence",
+          "published_at": "2026-05-04T00:00:00Z",
+          "source": {
+            "quote": "launchd plists MUST NOT carry inline secrets",
+            "source_path": "second-brain/intelligence/decisions/2026-05-04-launchd-secrets-wrapper-standard.md"
+          },
+          "summary": "--- title: launchd plists MUST NOT carry inline secrets - the wrapper-script standard description: After two leak incidents in 12 days (4/23 openclaw.json, 5/4 ai.openclaw.gateway.plist) where inline secret values in config files spilled in",
+          "title": "launchd plists MUST NOT carry inline secrets",
+          "window": "2026-05-04"
+        },
+        {
+          "author": "GBAutomation",
+          "id": "2026-05-04-hermes-proven-pattern",
+          "period": "intelligence",
+          "published_at": "2026-05-04T00:00:00Z",
+          "source": {
+            "quote": "Hermes proven-working configuration (5/4 supplement)",
+            "source_path": "second-brain/intelligence/decisions/2026-05-04-hermes-proven-pattern.md"
+          },
+          "summary": "--- title: Hermes proven-working configuration (5/4 supplement to the 5/1 patch ADR) description: Locks in the validated end-to-end configuration that makes Hermes call Anthropic Sonnet/Opus via Greg's Claude Max plan.",
+          "title": "Hermes proven-working configuration (5/4 supplement)",
+          "window": "2026-05-04"
+        },
+        {
+          "author": "GBAutomation",
+          "id": "2026-05-01-personal-project-audience-exclusion",
+          "period": "intelligence",
+          "published_at": "2026-05-01T00:00:00Z",
+          "source": {
+            "quote": "ADR \u2014 Personal-project audience exclusion",
+            "source_path": "second-brain/intelligence/decisions/2026-05-01-personal-project-audience-exclusion.md"
+          },
+          "summary": "--- type: architecture-decision-record id: ADR-2026-05-01-personal-project-audience-exclusion title: Personal-project topics never propagate to client vaults description: Items extracted from a client session that touch Greg's personal proj",
+          "title": "ADR \u2014 Personal-project audience exclusion",
+          "window": "2026-05-01"
+        },
+        {
+          "author": "GBAutomation",
+          "id": "2026-05-01-hermes-claude-auth-patch",
+          "period": "intelligence",
+          "published_at": "2026-05-01T00:00:00Z",
+          "source": {
+            "quote": "Adopt hermes-claude-auth patch on Mac Mini",
+            "source_path": "second-brain/intelligence/decisions/2026-05-01-hermes-claude-auth-patch.md"
+          },
+          "summary": "--- title: Adopt hermes-claude-auth patch on Mac Mini to use Claude Max with Hermes description: Anthropic's 2026-04-04 third-party app gate makes our Max plan no longer cover Hermes/OpenClaw API calls.",
+          "title": "Adopt hermes-claude-auth patch on Mac Mini",
+          "window": "2026-05-01"
+        },
+        {
+          "author": "GBAutomation",
+          "id": "2026-05-01-1password-default-for-client-secrets",
+          "period": "intelligence",
+          "published_at": "2026-05-01T00:00:00Z",
+          "source": {
+            "quote": "1Password is the default for client secret management",
+            "source_path": "second-brain/intelligence/decisions/2026-05-01-1password-default-for-client-secrets.md"
+          },
+          "summary": "--- title: 1Password Service Accounts are the default for client secret management description: GBAutomation defaults to 1Password Service Accounts for managing client-owned credentials.",
+          "title": "1Password is the default for client secret management",
+          "window": "2026-05-01"
+        },
+        {
+          "author": "GBAutomation",
+          "id": "2026-04-30-load-context-reuse-policy",
+          "period": "intelligence",
+          "published_at": "2026-04-30T00:00:00Z",
+          "source": {
+            "quote": "`load_context.py` is the canonical dual-source vault walker",
+            "source_path": "second-brain/intelligence/decisions/2026-04-30-load-context-reuse-policy.md"
+          },
+          "summary": "--- title: load_context.py is the canonical dual-source vault walker \u2014 reuse, do not reinvent description: Any new skill that needs vault context must extend resources/skills/extract-session-todos/scripts/load_context.py rather than build a",
+          "title": "`load_context.py` is the canonical dual-source vault walker",
+          "window": "2026-04-30"
+        },
+        {
+          "author": "GBAutomation",
+          "id": "2026-04-30-lightsail-decommission",
+          "period": "intelligence",
+          "published_at": "2026-04-30T00:00:00Z",
+          "source": {
+            "quote": "ADR \u2014 AWS Lightsail decommission",
+            "source_path": "second-brain/intelligence/decisions/2026-04-30-lightsail-decommission.md"
+          },
+          "summary": "--- type: architecture-decision-record id: ADR-2026-04-30-lightsail-decommission title: AWS Lightsail decommission \u2014 Mac Mini becomes sole agent host description: Decommissioning AWS Lightsail (18.234.126.236) as the secondary OpenClaw host",
+          "title": "ADR \u2014 AWS Lightsail decommission",
+          "window": "2026-04-30"
+        },
+        {
+          "author": "GBAutomation",
+          "id": "2026-04-29-tac-kb-local-only",
+          "period": "intelligence",
+          "published_at": "2026-04-29T00:00:00Z",
+          "source": {
+            "quote": "TAC KB Query Path \u2014 Local-Only",
+            "source_path": "second-brain/intelligence/decisions/2026-04-29-tac-kb-local-only.md"
+          },
+          "summary": "--- title: TAC KB query path \u2014 single local bundle, drop Graphiti + Supabase description: Decision to lean fully local for TAC KB queries via grep against second-brain/knowledge/tac-kb.md.",
+          "title": "TAC KB Query Path \u2014 Local-Only",
+          "window": "2026-04-29"
+        },
+        {
+          "author": "GBAutomation",
+          "id": "2026-04-29-claude-oauth-only-runtime-contract",
+          "period": "intelligence",
+          "published_at": "2026-04-29T00:00:00Z",
+          "source": {
+            "quote": "ADR \u2014 Claude CLI subprocess: OAuth-only runtime contract",
+            "source_path": "second-brain/intelligence/decisions/2026-04-29-claude-oauth-only-runtime-contract.md"
+          },
+          "summary": "--- type: architecture-decision-record id: ADR-2026-04-29-claude-oauth-only title: Claude CLI subprocess \u2014 OAuth-only runtime contract description: All GBAutomation skills that shell out to `claude` MUST authenticate via [home-path-redacted",
+          "title": "ADR \u2014 Claude CLI subprocess: OAuth-only runtime contract",
+          "window": "2026-04-29"
+        },
+        {
+          "author": "GBAutomation",
+          "id": "2026-04-28-second-brain-entry-point",
+          "period": "intelligence",
+          "published_at": "2026-04-28T00:00:00Z",
+          "source": {
+            "quote": "Second-Brain Canonical Entry Point \u2014 `second-brain/CLAUDE.md`",
+            "source_path": "second-brain/intelligence/decisions/2026-04-28-second-brain-entry-point.md"
+          },
+          "summary": "--- title: Second-brain canonical entry point \u2014 second-brain/CLAUDE.md description: Decision to make second-brain/CLAUDE.md the single canonical entry for the gbautomation vault.",
+          "title": "Second-Brain Canonical Entry Point \u2014 `second-brain/CLAUDE.md`",
+          "window": "2026-04-28"
+        },
+        {
+          "author": "GBAutomation",
+          "id": "2026-04-28-no-index-md-convention",
+          "period": "intelligence",
+          "published_at": "2026-04-28T00:00:00Z",
+          "source": {
+            "quote": "No `_index.md` \u2014 use `_<folder>.md` for index/MOC notes",
+            "source_path": "second-brain/intelligence/decisions/2026-04-28-no-index-md-convention.md"
+          },
+          "summary": "--- title: No _index.md \u2014 use _<folder>.md for index/MOC notes description: Index/MOC notes must be named _<folder>.md, never _index.md.",
+          "title": "No `_index.md` \u2014 use `_<folder>.md` for index/MOC notes",
+          "window": "2026-04-28"
+        },
+        {
+          "author": "GBAutomation",
+          "id": "2026-04-28-nightly-linear-agent-architecture",
+          "period": "intelligence",
+          "published_at": "2026-04-28T00:00:00Z",
+          "source": {
+            "quote": "Nightly Autonomous Linear Coding Agent",
+            "source_path": "second-brain/intelligence/decisions/2026-04-28-nightly-linear-agent-architecture.md"
+          },
+          "summary": "--- title: Nightly autonomous Linear coding agent \u2014 Mac Mini launchd, TAC default, dry-run progression description: ADR for the overnight autonomous loop that processes Linear Backlog/Todo issues while Greg sleeps.",
+          "title": "Nightly Autonomous Linear Coding Agent",
+          "window": "2026-04-28"
+        },
+        {
+          "author": "GBAutomation",
+          "id": "2026-04-28-graph-hygiene-tactics",
+          "period": "intelligence",
+          "published_at": "2026-04-28T00:00:00Z",
+          "source": {
+            "quote": "Obsidian Graph Hygiene \u2014 Tactics for a Connected Vault",
+            "source_path": "second-brain/intelligence/decisions/2026-04-28-graph-hygiene-tactics.md"
+          },
+          "summary": "--- title: Obsidian graph hygiene \u2014 what shows, what hides, how we connect description: Tactics for keeping the graph readable as the vault scales \u2014 exclude noisy paths, disable Tags filter, install File Ignore plugin, name MOCs distinctly,",
+          "title": "Obsidian Graph Hygiene \u2014 Tactics for a Connected Vault",
+          "window": "2026-04-28"
+        },
+        {
+          "author": "GBAutomation",
+          "id": "2026-04-27-ttfw-24hr-flow",
+          "period": "intelligence",
+          "published_at": "2026-04-27T00:00:00Z",
+          "source": {
+            "quote": "Time-To-First-Win in 24 Hours \u2014 Autonomous Linear-Driven Onboarding",
+            "source_path": "second-brain/intelligence/decisions/2026-04-27-ttfw-24hr-flow.md"
+          },
+          "summary": "--- title: TTFW in 24 hours \u2014 autonomous Linear-driven onboarding flow date: 2026-04-27 status: accepted type: ADR deciders: [greg-black] tags: - adr - ttfw - phase/onboard - domain/gbautomation - domain/openclaw - automation related: - \"[[",
+          "title": "Time-To-First-Win in 24 Hours \u2014 Autonomous Linear-Driven Onboarding",
+          "window": "2026-04-27"
+        },
+        {
+          "author": "GBAutomation",
+          "id": "2026-04-25-session-capture",
+          "period": "intelligence",
+          "published_at": "2026-04-25T00:00:00Z",
+          "source": {
+            "quote": "ADR-005 \u2014 Session Capture: Tier 1 portable Stop hook + slug-routed markdown archive",
+            "source_path": "second-brain/intelligence/decisions/2026-04-25-session-capture.md"
+          },
+          "summary": "--- type: architecture-decision-record id: ADR-005 title: \"Session Capture \u2014 Tier 1 portable Stop hook + slug-routed markdown archive\" status: accepted date: 2026-04-25 accepted: 2026-04-25 author: Greg Black related: - \"[[intelligence/deci",
+          "title": "ADR-005 \u2014 Session Capture: Tier 1 portable Stop hook + slug-routed markdown archive",
+          "window": "2026-04-25"
+        },
+        {
+          "author": "GBAutomation",
+          "id": "2026-04-24-github-ownership",
+          "period": "intelligence",
+          "published_at": "2026-04-24T00:00:00Z",
+          "source": {
+            "quote": "ADR-004 \u2014 GitHub Repo Ownership: gbauto creates, client holds admin + transfer rights",
+            "source_path": "second-brain/intelligence/decisions/2026-04-24-github-ownership.md"
+          },
+          "summary": "--- type: architecture-decision-record id: ADR-004 title: \"GitHub Repo Ownership \u2014 gbauto creates, client holds admin + transfer rights\" status: proposed date: 2026-04-24 author: Greg Black related: - \"[[intelligence/decisions/2026-04-23-wo",
+          "title": "ADR-004 \u2014 GitHub Repo Ownership: gbauto creates, client holds admin + transfer rights",
+          "window": "2026-04-24"
+        },
+        {
+          "author": "GBAutomation",
+          "id": "2026-04-23-workspace-isolation",
+          "period": "intelligence",
+          "published_at": "2026-04-23T00:00:00Z",
+          "source": {
+            "quote": "ADR-001 \u2014 Workspace Isolation: Mac Mini as primary host, per-client Unix user",
+            "source_path": "second-brain/intelligence/decisions/2026-04-23-workspace-isolation.md"
+          },
+          "summary": "--- type: architecture-decision-record id: ADR-001 title: \"Workspace Isolation \u2014 Mac Mini as primary host, per-client Unix user\" status: accepted date: 2026-04-23 author: Greg Black related: - \"[[knowledge/concepts/per-client-isolation]]\" -",
+          "title": "ADR-001 \u2014 Workspace Isolation: Mac Mini as primary host, per-client Unix user",
+          "window": "2026-04-23"
+        },
+        {
+          "author": "GBAutomation",
+          "id": "2026-04-23-browser-automation-primitive",
+          "period": "intelligence",
+          "published_at": "2026-04-23T00:00:00Z",
+          "source": {
+            "quote": "ADR-002 \u2014 Browser automation primitive for client-research skills",
+            "source_path": "second-brain/intelligence/decisions/2026-04-23-browser-automation-primitive.md"
+          },
+          "summary": "--- type: architecture-decision-record id: ADR-002 title: \"Browser automation primitive \u2014 openclaw browser (not Steer, not Apify, not Chrome DevTools MCP)\" status: accepted date: 2026-04-23 author: Greg Black related: - \"[[2026-04-23-worksp",
+          "title": "ADR-002 \u2014 Browser automation primitive for client-research skills",
+          "window": "2026-04-23"
+        },
+        {
+          "author": "GBAutomation",
+          "id": "2026-04-23-bindings-schema-shift",
+          "period": "intelligence",
+          "published_at": "2026-04-23T00:00:00Z",
+          "source": {
+            "quote": "ADR-003 \u2014 Bindings schema shift",
+            "source_path": "second-brain/intelligence/decisions/2026-04-23-bindings-schema-shift.md"
+          },
+          "summary": "--- type: architecture-decision-record id: ADR-003 title: \"OpenClaw bindings schema shift \u2014 keyword routing gone, agent reasoning takes over\" status: accepted date: 2026-04-23 author: Greg Black related: - \"[[2026-04-23-workspace-isolation]",
+          "title": "ADR-003 \u2014 Bindings schema shift",
+          "window": "2026-04-23"
+        }
+      ],
+      "schema_version": 1
+    }
+  }
+}

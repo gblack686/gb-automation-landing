@@ -1,0 +1,27 @@
+{
+  "content": "# Hook Registry Source Of Truth",
+  "generated_at": "2026-06-12T00:00:00Z",
+  "proof": {
+    "sourcePath": "intelligence/decisions/2026-06-07-hook-registry-source-of-truth.md",
+    "sourceQuote": "Hook registry is the source of truth for GBAutomation hook handlers",
+    "status": "source-backed"
+  },
+  "report": {
+    "id": "2026-06-07-hook-registry-source-of-truth",
+    "kind": "report",
+    "proof": {
+      "sourcePath": "intelligence/decisions/2026-06-07-hook-registry-source-of-truth.md",
+      "sourceQuote": "Hook registry is the source of truth for GBAutomation hook handlers",
+      "status": "source-backed"
+    },
+    "sourcePath": "intelligence/decisions/2026-06-07-hook-registry-source-of-truth.md",
+    "sourceQuote": "Hook registry is the source of truth for GBAutomation hook handlers",
+    "status": "published",
+    "summary": "# Hook Registry Source Of Truth",
+    "title": "Hook registry is the source of truth for GBAutomation hook handlers",
+    "updated_at": "2026-06-07T00:00:00Z"
+  },
+  "schema_version": 1,
+  "sourcePath": "intelligence/decisions/2026-06-07-hook-registry-source-of-truth.md",
+  "sourceQuote": "Hook registry is the source of truth for GBAutomation hook handlers"
+}

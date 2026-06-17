@@ -1,0 +1,63 @@
+{
+  "generated_at": "2026-06-12T00:00:00Z",
+  "metrics": [
+    {
+      "id": "apps",
+      "label": "Apps",
+      "proof": {
+        "sourcePath": "clients/eagle-app/profile.md",
+        "sourceQuote": "Eagle Acquisitions",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/eagle-app/profile.md",
+      "sourceQuote": "Eagle Acquisitions",
+      "value": 1
+    },
+    {
+      "id": "artifacts",
+      "label": "Artifacts",
+      "proof": {
+        "sourcePath": "clients/eagle-app/profile.md",
+        "sourceQuote": "Eagle Acquisitions",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/eagle-app/profile.md",
+      "sourceQuote": "Eagle Acquisitions",
+      "value": 0
+    },
+    {
+      "id": "reports",
+      "label": "Reports",
+      "proof": {
+        "sourcePath": "clients/eagle-app/profile.md",
+        "sourceQuote": "Eagle Acquisitions",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/eagle-app/profile.md",
+      "sourceQuote": "Eagle Acquisitions",
+      "value": 12
+    },
+    {
+      "id": "receipts",
+      "label": "Receipts",
+      "proof": {
+        "sourcePath": "clients/eagle-app/profile.md",
+        "sourceQuote": "Eagle Acquisitions",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/eagle-app/profile.md",
+      "sourceQuote": "Eagle Acquisitions",
+      "value": 1
+    }
+  ],
+  "schema_version": 1,
+  "tenant": {
+    "name": "Eagle Acquisitions",
+    "slug": "eagle-app",
+    "status": "active"
+  }
+}

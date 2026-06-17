@@ -1,0 +1,63 @@
+{
+  "generated_at": "2026-06-12T00:00:00Z",
+  "metrics": [
+    {
+      "id": "apps",
+      "label": "Apps",
+      "proof": {
+        "sourcePath": "clients/greg-trading/profile.md",
+        "sourceQuote": "Canonical profile for Greg Trading internal project. Sebastian agent deployment, Z.AI GLM models, multi-agent trading system. Single source of truth for routing and integrations.",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/greg-trading/profile.md",
+      "sourceQuote": "Canonical profile for Greg Trading internal project. Sebastian agent deployment, Z.AI GLM models, multi-agent trading system. Single source of truth for routing and integrations.",
+      "value": 0
+    },
+    {
+      "id": "artifacts",
+      "label": "Artifacts",
+      "proof": {
+        "sourcePath": "clients/greg-trading/profile.md",
+        "sourceQuote": "Canonical profile for Greg Trading internal project. Sebastian agent deployment, Z.AI GLM models, multi-agent trading system. Single source of truth for routing and integrations.",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/greg-trading/profile.md",
+      "sourceQuote": "Canonical profile for Greg Trading internal project. Sebastian agent deployment, Z.AI GLM models, multi-agent trading system. Single source of truth for routing and integrations.",
+      "value": 0
+    },
+    {
+      "id": "reports",
+      "label": "Reports",
+      "proof": {
+        "sourcePath": "clients/greg-trading/profile.md",
+        "sourceQuote": "Canonical profile for Greg Trading internal project. Sebastian agent deployment, Z.AI GLM models, multi-agent trading system. Single source of truth for routing and integrations.",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/greg-trading/profile.md",
+      "sourceQuote": "Canonical profile for Greg Trading internal project. Sebastian agent deployment, Z.AI GLM models, multi-agent trading system. Single source of truth for routing and integrations.",
+      "value": 12
+    },
+    {
+      "id": "receipts",
+      "label": "Receipts",
+      "proof": {
+        "sourcePath": "clients/greg-trading/profile.md",
+        "sourceQuote": "Canonical profile for Greg Trading internal project. Sebastian agent deployment, Z.AI GLM models, multi-agent trading system. Single source of truth for routing and integrations.",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/greg-trading/profile.md",
+      "sourceQuote": "Canonical profile for Greg Trading internal project. Sebastian agent deployment, Z.AI GLM models, multi-agent trading system. Single source of truth for routing and integrations.",
+      "value": 1
+    }
+  ],
+  "schema_version": 1,
+  "tenant": {
+    "name": "Greg Trading",
+    "slug": "greg-trading",
+    "status": "active"
+  }
+}

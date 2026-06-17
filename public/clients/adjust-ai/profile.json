@@ -1,0 +1,41 @@
+{
+  "generated_at": "2026-06-12T00:00:00Z",
+  "schema_version": 1,
+  "sources": [
+    {
+      "proof": {
+        "sourcePath": "clients/adjust-ai/profile.md",
+        "sourceQuote": "Canonical profile for Adjust AI engagement. Hot inbound prospect — Max Rosenbloom (engineering lead) submitted gbautomation.xyz contact form 2026-05-11 asking for help \"build up your own knowledge so you can be more involved with your development team.\" V1 dis",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/adjust-ai/profile.md",
+      "sourceQuote": "Canonical profile for Adjust AI engagement. Hot inbound prospect — Max Rosenbloom (engineering lead) submitted gbautomation.xyz contact form 2026-05-11 asking for help \"build up your own knowledge so you can be more involved with your development team.\" V1 dis"
+    }
+  ],
+  "tenant": {
+    "client": "adjust-ai",
+    "date": "2026-05-26",
+    "description": "Canonical profile for Adjust AI engagement. Hot inbound prospect — Max Rosenbloom (engineering lead) submitted gbautomation.xyz contact form 2026-05-11 asking for help \"build up your own knowledge so you can be more involved with your development team.\" V1 discovery reply sent 2026-05-19, discovery call booked for 2026-05-27. Proposed deliverable: 7-day, 3-step Hermes multi-agent build for developer observability (daily commit briefs, weekly per-dev digests, queryable history). Pre-call PRD sent 2026-05-26.",
+    "display_name": "Adjust AI",
+    "engaged_since": "2026-05-11",
+    "name": "Adjust AI",
+    "openclaw": {
+      "namespace": "adjust-ai"
+    },
+    "phase": "discover",
+    "poc": {
+      "name": "Max Rosenbloom"
+    },
+    "proof": {
+      "sourcePath": "clients/adjust-ai/profile.md",
+      "sourceQuote": "Canonical profile for Adjust AI engagement. Hot inbound prospect — Max Rosenbloom (engineering lead) submitted gbautomation.xyz contact form 2026-05-11 asking for help \"build up your own knowledge so you can be more involved with your development team.\" V1 dis",
+      "status": "source-backed"
+    },
+    "proofStatus": "source-backed",
+    "slug": "adjust-ai",
+    "sourcePath": "clients/adjust-ai/profile.md",
+    "sourceQuote": "Canonical profile for Adjust AI engagement. Hot inbound prospect — Max Rosenbloom (engineering lead) submitted gbautomation.xyz contact form 2026-05-11 asking for help \"build up your own knowledge so you can be more involved with your development team.\" V1 dis",
+    "status": "active"
+  }
+}

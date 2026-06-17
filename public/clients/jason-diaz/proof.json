@@ -1,0 +1,103 @@
+{
+  "claims": [
+    {
+      "citations": [
+        {
+          "proof": {
+            "sourcePath": "clients/jason-diaz/profile.md",
+            "sourceQuote": "Canonical profile for Jason Diaz / PMC engagement — POC, billing, repos, Linear/GCal/Gmail integrations, OpenClaw config, deliverables index. Single source of truth for client routing.",
+            "status": "source-backed"
+          },
+          "proofStatus": "source-backed",
+          "sourcePath": "clients/jason-diaz/profile.md",
+          "sourceQuote": "Canonical profile for Jason Diaz / PMC engagement — POC, billing, repos, Linear/GCal/Gmail integrations, OpenClaw config, deliverables index. Single source of truth for client routing."
+        }
+      ],
+      "claim": "Jason Diaz (PMC) is in discover phase with active status.",
+      "id": "client-status",
+      "proof_status": "source-backed",
+      "sourcePath": "clients/jason-diaz/profile.md",
+      "sourceQuote": "Canonical profile for Jason Diaz / PMC engagement — POC, billing, repos, Linear/GCal/Gmail integrations, OpenClaw config, deliverables index. Single source of truth for client routing.",
+      "visibility": "client"
+    },
+    {
+      "citations": [
+        {
+          "proof": {
+            "sourcePath": "clients/jason-diaz/deliverables/2026-06-08-jid5274-weekly-report-2026-05-27-to-2026-06-03.pdf",
+            "sourceQuote": "2026-06-08-jid5274-weekly-report-2026-05-27-to-2026-06-03.pdf",
+            "status": "source-backed"
+          },
+          "sourcePath": "clients/jason-diaz/deliverables/2026-06-08-jid5274-weekly-report-2026-05-27-to-2026-06-03.pdf",
+          "sourceQuote": "2026-06-08-jid5274-weekly-report-2026-05-27-to-2026-06-03.pdf"
+        },
+        {
+          "proof": {
+            "sourcePath": "clients/jason-diaz/deliverables/2026-06-08-tac-build-report-jid5274-carlos-readiness.pdf",
+            "sourceQuote": "2026-06-08-tac-build-report-jid5274-carlos-readiness.pdf",
+            "status": "source-backed"
+          },
+          "sourcePath": "clients/jason-diaz/deliverables/2026-06-08-tac-build-report-jid5274-carlos-readiness.pdf",
+          "sourceQuote": "2026-06-08-tac-build-report-jid5274-carlos-readiness.pdf"
+        }
+      ],
+      "claim": "2 published artifacts are available in this portal snapshot.",
+      "id": "artifact-count",
+      "proof_status": "source-backed",
+      "sourcePath": "clients/jason-diaz/deliverables/2026-06-08-jid5274-weekly-report-2026-05-27-to-2026-06-03.pdf",
+      "sourceQuote": "2026-06-08-jid5274-weekly-report-2026-05-27-to-2026-06-03.pdf",
+      "visibility": "client"
+    },
+    {
+      "citations": [
+        {
+          "proof": {
+            "sourcePath": "intelligence/integration-experts/receipts/t_a06bea61-content-system-contract-no-secrets.json",
+            "sourceQuote": "{",
+            "status": "source-backed"
+          },
+          "sourcePath": "intelligence/integration-experts/receipts/t_a06bea61-content-system-contract-no-secrets.json",
+          "sourceQuote": "{"
+        }
+      ],
+      "claim": "1 receipt records are included for validation and handoff history.",
+      "id": "receipt-count",
+      "proof_status": "source-backed",
+      "sourcePath": "intelligence/integration-experts/receipts/t_a06bea61-content-system-contract-no-secrets.json",
+      "sourceQuote": "{",
+      "visibility": "internal"
+    },
+    {
+      "citations": [
+        {
+          "proof": {
+            "sourcePath": "clients/jason-diaz/deliverables/2026-06-08-jid5274-weekly-report-2026-05-27-to-2026-06-03.pdf",
+            "sourceQuote": "2026-06-08-jid5274-weekly-report-2026-05-27-to-2026-06-03.pdf",
+            "status": "source-backed"
+          },
+          "sourcePath": "clients/jason-diaz/deliverables/2026-06-08-jid5274-weekly-report-2026-05-27-to-2026-06-03.pdf",
+          "sourceQuote": "2026-06-08-jid5274-weekly-report-2026-05-27-to-2026-06-03.pdf"
+        }
+      ],
+      "claim": "Latest report in the portal snapshot: 2026-06-08-jid5274-weekly-report-2026-05-27-to-2026-06-03.pdf.",
+      "id": "latest-report",
+      "proof_status": "source-backed",
+      "sourcePath": "clients/jason-diaz/deliverables/2026-06-08-jid5274-weekly-report-2026-05-27-to-2026-06-03.pdf",
+      "sourceQuote": "2026-06-08-jid5274-weekly-report-2026-05-27-to-2026-06-03.pdf",
+      "visibility": "client"
+    }
+  ],
+  "generated_at": "2026-06-12T00:00:00Z",
+  "redaction_policy": {
+    "citation_requirement": "Every named-client, external, or quantified claim must cite sourcePath and sourceQuote before publication.",
+    "forbidden_patterns": [
+      "absolute home directories",
+      "file URLs",
+      "secret material",
+      "tokens",
+      "passwords"
+    ],
+    "summary": "Browser JSON may include second-brain-relative citation paths and short quotes, never raw local filesystem paths or secret material."
+  },
+  "schema_version": 1
+}

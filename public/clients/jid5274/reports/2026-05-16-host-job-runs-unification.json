@@ -1,0 +1,27 @@
+{
+  "content": "Fold mac-mini-job-run.v1 + scheduled-task-run.v1 into one host-job-run.v1 envelope; rename public.mac_mini_runs → public.host_job_runs with additive columns; preserve legacy rows; deprecate insert_mac_mini_run_to_supabase.py as a re-exec for one release cycle.",
+  "generated_at": "2026-06-12T00:00:00Z",
+  "proof": {
+    "sourcePath": "intelligence/decisions/2026-05-16-host-job-runs-unification.md",
+    "sourceQuote": "ADR 2026-05-16 — `host-job-runs` unification",
+    "status": "source-backed"
+  },
+  "report": {
+    "id": "2026-05-16-host-job-runs-unification",
+    "kind": "report",
+    "proof": {
+      "sourcePath": "intelligence/decisions/2026-05-16-host-job-runs-unification.md",
+      "sourceQuote": "ADR 2026-05-16 — `host-job-runs` unification",
+      "status": "source-backed"
+    },
+    "sourcePath": "intelligence/decisions/2026-05-16-host-job-runs-unification.md",
+    "sourceQuote": "ADR 2026-05-16 — `host-job-runs` unification",
+    "status": "published",
+    "summary": "Fold mac-mini-job-run.v1 + scheduled-task-run.v1 into one host-job-run.v1 envelope; rename public.mac_mini_runs → public.host_job_runs with additive columns; preserve legacy rows; deprecate insert_mac_mini_run_to_supabase.py as a re-exec for one release cycle.",
+    "title": "ADR 2026-05-16 — `host-job-runs` unification",
+    "updated_at": "2026-05-16T00:00:00Z"
+  },
+  "schema_version": 1,
+  "sourcePath": "intelligence/decisions/2026-05-16-host-job-runs-unification.md",
+  "sourceQuote": "ADR 2026-05-16 — `host-job-runs` unification"
+}

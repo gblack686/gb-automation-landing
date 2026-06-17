@@ -1,0 +1,27 @@
+{
+  "content": "# Hermes Default Agent Runtime",
+  "generated_at": "2026-06-12T00:00:00Z",
+  "proof": {
+    "sourcePath": "intelligence/decisions/2026-06-06-hermes-default-agent-runtime.md",
+    "sourceQuote": "Hermes is the default runtime for new agents and profiles",
+    "status": "source-backed"
+  },
+  "report": {
+    "id": "2026-06-06-hermes-default-agent-runtime",
+    "kind": "report",
+    "proof": {
+      "sourcePath": "intelligence/decisions/2026-06-06-hermes-default-agent-runtime.md",
+      "sourceQuote": "Hermes is the default runtime for new agents and profiles",
+      "status": "source-backed"
+    },
+    "sourcePath": "intelligence/decisions/2026-06-06-hermes-default-agent-runtime.md",
+    "sourceQuote": "Hermes is the default runtime for new agents and profiles",
+    "status": "published",
+    "summary": "# Hermes Default Agent Runtime",
+    "title": "Hermes is the default runtime for new agents and profiles",
+    "updated_at": "2026-06-06T00:00:00Z"
+  },
+  "schema_version": 1,
+  "sourcePath": "intelligence/decisions/2026-06-06-hermes-default-agent-runtime.md",
+  "sourceQuote": "Hermes is the default runtime for new agents and profiles"
+}

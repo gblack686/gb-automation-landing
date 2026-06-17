@@ -24,7 +24,6 @@ from __future__ import annotations
 import json
 import re
 import socket
-import time
 from dataclasses import asdict
 from datetime import datetime, timezone
 
@@ -40,57 +39,71 @@ COLUMN_LABELS = {
     "archived": "Archived",
 }
 COLUMN_ORDER = ["triage", "todo", "ready", "running", "blocked", "done"]
+SECRET_WORDS = re.compile(r"(?i)(token|secret|password|passwd|private[_-]?key|authorization|bearer|oauth|cookie)")
+ENV_WORDS = re.compile(r"\b[A-Z][A-Z0-9_]{2,}\b")
+ABS_PATH = re.compile(r"(?:/Users/[A-Za-z0-9._-]+|/var/folders|/tmp|/private/tmp|/opt/homebrew|/usr/local|/home/[A-Za-z0-9._-]+)(?:/[^\s'\"),;]+)*")
+HOME_PATH = re.compile(r"~/(?:\.hermes|\.openclaw|repos|Library)(?:/[^\s'\"),;]+)*")
+LOG_HINTS = re.compile(r"(?i)(traceback|stack trace|raw log|stderr|stdout|prompt|payload)")
+
 
 def iso(ts):
     if not ts:
         return None
     return datetime.fromtimestamp(int(ts), tz=timezone.utc).isoformat()
 
-def preview(value, limit=220):
+
+def sanitize_text(value, limit=220):
     if value is None:
         return None
-    text = re.sub(r"\s+", " ", str(value)).strip()
-    text = re.sub(r"/Users/[A-Za-z0-9._-]+/[^\\s'\"),]+", "[mac-path]", text)
-    text = re.sub(r"~/(?:\\.hermes|\\.openclaw)/[^\\s'\"),]+", "[mac-path]", text)
-    text = re.sub(r"\\bHERMES_[A-Z0-9_]+\\b", "[env-var]", text)
-    text = re.sub(r"\\b[A-Z0-9_]*(?:TOKEN|SECRET|KEY|PASSWORD)[A-Z0-9_]*\\b", "[secret-name]", text)
+    text = re.sub(r"\\s+", " ", str(value)).strip()
+    text = ABS_PATH.sub("[redacted-path]", text)
+    text = HOME_PATH.sub("[redacted-path]", text)
+    text = SECRET_WORDS.sub("[redacted-secret-word]", text)
+    text = ENV_WORDS.sub(lambda m: "[redacted-env]" if "_" in m.group(0) else m.group(0), text)
+    text = LOG_HINTS.sub("[redacted-operational-detail]", text)
     if len(text) <= limit:
         return text
     return text[: limit - 1].rstrip() + "..."
 
+
+def sanitize_id(value):
+    return sanitize_text(value, 96) or "unknown"
+
+
 def safe_task(task, latest_summary, counts):
     data = asdict(task)
     return {
-        "id": data["id"],
-        "title": data["title"],
-        "status": data["status"],
-        "assignee": data.get("assignee") or "unassigned",
-        "tenant": data.get("tenant") or "gbautomation",
+        "id": sanitize_id(data["id"]),
+        "title": sanitize_text(data["title"], 140) or "Untitled task",
+        "status": sanitize_id(data["status"]),
+        "assignee": sanitize_id(data.get("assignee") or "unassigned"),
+        "tenant": sanitize_id(data.get("tenant") or "gbautomation"),
         "priority": data.get("priority") or 0,
-        "createdBy": data.get("created_by") or "hermes",
+        "createdBy": sanitize_id(data.get("created_by") or "hermes"),
         "createdAt": iso(data.get("created_at")),
         "startedAt": iso(data.get("started_at")),
         "completedAt": iso(data.get("completed_at")),
         "claimExpiresAt": iso(data.get("claim_expires")),
         "lastHeartbeatAt": iso(data.get("last_heartbeat_at")),
         "currentRunId": data.get("current_run_id"),
-        "currentStepKey": data.get("current_step_key"),
-        "workflowTemplateId": data.get("workflow_template_id"),
-        "workspaceKind": data.get("workspace_kind"),
+        "currentStepKey": sanitize_text(data.get("current_step_key"), 80),
+        "workflowTemplateId": sanitize_text(data.get("workflow_template_id"), 80),
+        "workspaceKind": sanitize_text(data.get("workspace_kind"), 40),
         "hasWorkspace": bool(data.get("workspace_path")),
         "maxRuntimeSeconds": data.get("max_runtime_seconds"),
         "consecutiveFailures": data.get("consecutive_failures") or 0,
-        "lastFailurePreview": preview(data.get("last_failure_error"), 180),
-        "skills": data.get("skills") or [],
-        "bodyPreview": preview(data.get("body")),
-        "resultPreview": preview(data.get("result")),
-        "latestSummary": preview(latest_summary),
+        "lastFailurePreview": sanitize_text(data.get("last_failure_error"), 180),
+        "skills": [sanitize_id(skill) for skill in (data.get("skills") or [])[:8]],
+        "bodyPreview": sanitize_text(data.get("body")),
+        "resultPreview": sanitize_text(data.get("result")),
+        "latestSummary": sanitize_text(latest_summary),
         "commentCount": counts.get("comments", 0),
         "eventCount": counts.get("events", 0),
         "runCount": counts.get("runs", 0),
         "childrenCount": counts.get("children", 0),
         "parentsCount": counts.get("parents", 0),
     }
+
 
 def counts_for(conn):
     counts = {}
@@ -104,6 +117,7 @@ def counts_for(conn):
         for row in conn.execute(sql).fetchall():
             counts.setdefault(row["task_id"], {})[name] = int(row["n"])
     return counts
+
 
 def board_payload(meta, active_board):
     slug = meta["slug"]
@@ -123,9 +137,9 @@ def board_payload(meta, active_board):
         conn.close()
 
     return {
-        "slug": slug,
-        "name": meta.get("name") or slug,
-        "description": meta.get("description") or "",
+        "slug": sanitize_id(slug),
+        "name": sanitize_text(meta.get("name") or slug, 80),
+        "description": sanitize_text(meta.get("description") or "", 160),
         "active": slug == active_board,
         "latestEventId": int(latest_event_id),
         "latestRunId": int(latest_run_id),
@@ -138,6 +152,7 @@ def board_payload(meta, active_board):
             for status in COLUMN_ORDER
         ],
     }
+
 
 def main():
     kb.init_db()
@@ -154,15 +169,22 @@ def main():
         "done": sum(len(column["tasks"]) for board in boards for column in board["columns"] if column["name"] == "done"),
     }
     print(json.dumps({
-        "schemaVersion": 1,
+        "schemaVersion": 2,
         "generatedAt": datetime.now(timezone.utc).isoformat(),
+        "maxAgeMinutes": 90,
         "source": {
-            "host": socket.gethostname(),
+            "host": sanitize_text(socket.gethostname(), 80),
             "app": "hermes-agent",
-            "path": "~/.hermes/kanban.db",
             "mode": "sanitized-read-only",
+            "contract": "bounded-kanban-mirror-v2",
         },
-        "activeBoard": active_board,
+        "redaction": {
+            "absolutePathsIncluded": False,
+            "envNamesIncluded": False,
+            "logTextIncluded": False,
+            "payloadBodiesIncluded": False,
+        },
+        "activeBoard": sanitize_id(active_board),
         "totals": totals,
         "boards": boards,
     }, ensure_ascii=False, indent=2))

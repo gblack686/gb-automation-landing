@@ -1,0 +1,143 @@
+{
+  "schema_version": "portal-content.v1",
+  "generated_at": "2026-06-16T13:11:42Z",
+  "generator": {
+    "name": "kanban-task-t_2bf5ed80-static-artifact",
+    "version": "0.1.0",
+    "mode": "allowlist-redacted-static-json"
+  },
+  "source_policy": {
+    "canonical_truth": "gbautomation repo docs",
+    "portal_may_edit": false,
+    "redaction_required": true,
+    "source_ref_required": true,
+    "client_specific_claims_require_proof": true
+  },
+  "routes": {
+    "/welcome": {
+      "hero": {
+        "id": "welcome-hero",
+        "title": "Welcome to your AI agent setup",
+        "body_markdown": "Your setup session turns your workflows, tools, and recurring tasks into a concrete agent build plan. The portal copy uses the central welcome template and marks unsourced variants as needing approval.",
+        "source_refs": ["welcome-email"],
+        "proof": { "status": "derived_from_source", "source_refs": ["welcome-email"], "verifier": "generator", "verified_at": "2026-06-16T13:11:42Z" }
+      },
+      "welcome_templates": [
+        {
+          "id": "openclaw-setup-session",
+          "variant": "openclaw_setup_session",
+          "subject": "Your OpenClaw Agent Setup Session - What to Expect",
+          "body_markdown": "Hi {client_name},\n\nWelcome. We're excited to build your personal AI agent. Your 90-minute setup session is confirmed for {session_date} at {session_time} {timezone}.\n\nBefore the call, complete the prep guide so we can start with your goals, tools, workflows, and preferences. After the call, GBAutomation builds and deploys the agent system within {delivery_window}.\n\nIf you have questions before the call, reply by email or message {support_channel}.",
+          "variables": [
+            { "key": "client_name", "label": "Client name", "required": true, "source_refs": ["welcome-email"] },
+            { "key": "session_date", "label": "Session date", "required": true, "source_refs": ["welcome-email"] },
+            { "key": "session_time", "label": "Session time", "required": true, "source_refs": ["welcome-email"] },
+            { "key": "timezone", "label": "Timezone", "required": true, "source_refs": ["welcome-email"] },
+            { "key": "delivery_window", "label": "Delivery window", "required": true, "source_refs": ["welcome-email"] },
+            { "key": "support_channel", "label": "Support channel", "required": true, "source_refs": ["welcome-email"] }
+          ],
+          "audience": "new_client",
+          "status": "ready",
+          "source_refs": ["welcome-email"],
+          "proof": { "status": "source_verified", "source_refs": ["welcome-email"], "verifier": "generator", "verified_at": "2026-06-16T13:11:42Z" }
+        },
+        {
+          "id": "runtime-neutral-setup-session",
+          "variant": "general_ai_agent_setup",
+          "subject": "Your AI Agent Setup Session - What to Expect",
+          "body_markdown": "This runtime-neutral variant is safe for portal preview, but it needs human approval because the canonical source currently names OpenClaw while newer runtime policy defaults to Hermes.",
+          "variables": [],
+          "audience": "new_client",
+          "status": "needs_source",
+          "source_refs": ["welcome-email", "architecture-contract"],
+          "proof": { "status": "needs_human_approval", "source_refs": ["welcome-email", "architecture-contract"], "notes": "Resolve Hermes vs OpenClaw vs runtime-neutral naming before sending." }
+        }
+      ],
+      "before_call_checklist": [
+        { "id": "daily-tools", "label": "List daily apps and tools", "description": "Include whether each tool has an API or export path.", "category": "meeting_prep", "status": "required", "owner_role": "client", "due_trigger": "before_intake_session", "proof_required": false, "source_refs": ["welcome-email"], "proof": { "status": "source_verified", "source_refs": ["welcome-email"] } },
+        { "id": "departments", "label": "Name the 3 to 5 areas of your work", "description": "These become the first map for agent departments and skills.", "category": "meeting_prep", "status": "recommended", "owner_role": "client", "due_trigger": "before_intake_session", "proof_required": false, "source_refs": ["welcome-email"], "proof": { "status": "source_verified", "source_refs": ["welcome-email"] } },
+        { "id": "recurring-task", "label": "Pick the most annoying recurring task", "description": "Bring one concrete task that repeats often and drains attention.", "category": "meeting_prep", "status": "recommended", "owner_role": "client", "due_trigger": "before_intake_session", "proof_required": false, "source_refs": ["welcome-email"], "proof": { "status": "source_verified", "source_refs": ["welcome-email"] } }
+      ],
+      "proof": { "status": "derived_from_source", "source_refs": ["welcome-email"] }
+    },
+    "/clients/:slug/getting-started": {
+      "steps": [
+        { "id": "research", "order": 1, "title": "Start with context", "body_markdown": "GBAutomation reviews prospect and personal context before the first workflow decisions are made.", "audience": "client", "source_refs": ["client-onboarding"], "proof": { "status": "derived_from_source", "source_refs": ["client-onboarding"] } },
+        { "id": "workspace", "order": 2, "title": "Create the engagement workspace", "body_markdown": "A Drive folder and starter documents establish the working surface for the engagement.", "audience": "client", "source_refs": ["client-onboarding"], "proof": { "status": "derived_from_source", "source_refs": ["client-onboarding"] } },
+        { "id": "discovery", "order": 3, "title": "Hold discovery and intake", "body_markdown": "Discovery aligns scope. Intake captures goals, tools, workflows, and preferences for the build team.", "audience": "client", "source_refs": ["client-onboarding", "welcome-email"], "proof": { "status": "derived_from_source", "source_refs": ["client-onboarding", "welcome-email"] } },
+        { "id": "build", "order": 4, "title": "Build and deploy the agent", "body_markdown": "The transcript is converted into workspace materials, expert systems, repository setup, and deployment tasks.", "audience": "client", "source_refs": ["client-onboarding"], "proof": { "status": "derived_from_source", "source_refs": ["client-onboarding"] } },
+        { "id": "monitor", "order": 5, "title": "Register support and monitoring", "body_markdown": "The engagement is registered in client logs, async channels, and monitoring routines so follow-up work is visible.", "audience": "client", "source_refs": ["client-onboarding"], "proof": { "status": "derived_from_source", "source_refs": ["client-onboarding"] } }
+      ],
+      "key_links": [
+        { "id": "requirements", "label": "Review requirements", "href": "requirements", "kind": "portal-route", "source_refs": ["requirements-yaml"] },
+        { "id": "admin-checklists", "label": "Review admin checklist", "href": "admin-checklists", "kind": "portal-route", "source_refs": ["client-onboarding", "requirements-yaml"] }
+      ],
+      "client_context_fields": [
+        { "key": "client_slug", "label": "Client slug", "required": true, "source_refs": ["requirements-yaml"], "proof": { "status": "derived_from_source", "source_refs": ["requirements-yaml"] } },
+        { "key": "lifecycle_stage", "label": "Lifecycle stage", "required": true, "source_refs": ["architecture-contract"], "proof": { "status": "derived_from_source", "source_refs": ["architecture-contract"] } }
+      ],
+      "proof": { "status": "derived_from_source", "source_refs": ["client-onboarding"] }
+    },
+    "/clients/:slug/requirements": {
+      "requirements_checklists": [
+        { "id": "workspace-vault", "label": "Client second-brain workspace exists", "description": "The engagement needs a client workspace with canonical context, contacts, intelligence, tasks, and knowledge areas.", "category": "workspace", "status": "required", "owner_role": "gbautomation", "due_trigger": "before_build_start", "proof_required": true, "source_refs": ["requirements-yaml"], "proof": { "status": "source_verified", "source_refs": ["requirements-yaml"] } },
+        { "id": "github-repo", "label": "Client repository follows gbauto/{client-slug}", "description": "Top-level client repositories are the expected placement for client builds.", "category": "infrastructure", "status": "required", "owner_role": "gbautomation", "due_trigger": "before_build_start", "proof_required": true, "source_refs": ["requirements-yaml"], "proof": { "status": "source_verified", "source_refs": ["requirements-yaml"] } },
+        { "id": "meeting-attendees", "label": "External meeting attendee mapping is captured", "description": "Calendar prep depends on mapping external attendee addresses to a client slug. Email values are not rendered here.", "category": "meeting_prep", "status": "recommended", "owner_role": "shared", "due_trigger": "before_discovery_call", "proof_required": true, "source_refs": ["requirements-yaml"], "proof": { "status": "redacted", "source_refs": ["requirements-yaml"], "notes": "Personal email mappings are intentionally not included in the portal artifact." } }
+      ],
+      "integration_requirements": [
+        { "id": "google-workspace", "label": "Google Workspace access path", "description": "The central requirements baseline includes Google Workspace for Gmail, Calendar, Drive, Docs, and Sheets workflows.", "category": "accounts", "status": "required", "owner_role": "shared", "due_trigger": "before_build_start", "proof_required": true, "source_refs": ["requirements-yaml"], "proof": { "status": "source_verified", "source_refs": ["requirements-yaml"] } },
+        { "id": "github", "label": "GitHub repository access", "description": "Client work expects a repository under the top-level gbauto client slug convention.", "category": "infrastructure", "status": "required", "owner_role": "shared", "due_trigger": "before_build_start", "proof_required": true, "source_refs": ["requirements-yaml"], "proof": { "status": "source_verified", "source_refs": ["requirements-yaml"] } }
+      ],
+      "missing_inputs": [
+        { "id": "client-proof-source", "label": "Client-specific proof source", "description": "No canonical client-specific proof index was found for sales or delivery claims.", "category": "delivery", "status": "blocked", "owner_role": "unknown", "due_trigger": "unknown", "proof_required": true, "source_refs": ["architecture-contract"], "proof": { "status": "unsupported_gap", "source_refs": ["architecture-contract"] } }
+      ],
+      "proof": { "status": "derived_from_source", "source_refs": ["requirements-yaml", "architecture-contract"] }
+    },
+    "/clients/:slug/admin-checklists": {
+      "admin_checklists": [
+        { "id": "drive-folder", "label": "Create Drive folder and starter docs", "description": "Admin setup includes a welcome email and starter documents before discovery and intake.", "category": "workspace", "status": "required", "owner_role": "gbautomation", "due_trigger": "before_discovery_call", "proof_required": true, "source_refs": ["client-onboarding"], "proof": { "status": "derived_from_source", "source_refs": ["client-onboarding"] } },
+        { "id": "agent-deploy", "label": "Deploy agent runtime", "description": "Deployment target is selected by the engagement; internal host and port details are intentionally excluded.", "category": "infrastructure", "status": "required", "owner_role": "gbautomation", "due_trigger": "before_deployment", "proof_required": true, "source_refs": ["client-onboarding", "requirements-yaml"], "proof": { "status": "redacted", "source_refs": ["client-onboarding", "requirements-yaml"], "notes": "Internal host, account, and secret details are omitted." } },
+        { "id": "monitoring", "label": "Start monitoring and client logs", "description": "Daily client logs and inbox monitoring are the source-backed operational follow-up paths.", "category": "monitoring", "status": "required", "owner_role": "gbautomation", "due_trigger": "after_deployment", "proof_required": true, "source_refs": ["client-onboarding", "requirements-yaml"], "proof": { "status": "derived_from_source", "source_refs": ["client-onboarding", "requirements-yaml"] } }
+      ],
+      "gbautomation_owned_tasks": ["drive-folder", "agent-deploy", "monitoring"],
+      "client_owned_tasks": ["daily-tools", "recurring-task", "google-workspace"],
+      "proof": { "status": "derived_from_source", "source_refs": ["client-onboarding", "requirements-yaml"] }
+    },
+    "/sales/how-it-works": {
+      "pillars": [
+        { "id": "logged-runs", "order": 1, "title": "Every run is logged", "body_markdown": "Agent execution is designed to leave auditable records instead of black-box claims.", "source_refs": ["sales-how-it-works"], "proof": { "status": "source_verified", "source_refs": ["sales-how-it-works"] } },
+        { "id": "tracing", "order": 2, "title": "Tracing and telemetry are built in", "body_markdown": "The source sales material presents end-to-end tracing, token spend, latency, and error visibility as a production guardrail.", "source_refs": ["sales-how-it-works"], "proof": { "status": "source_verified", "source_refs": ["sales-how-it-works"] } },
+        { "id": "plan-review", "order": 3, "title": "Plan before build, review before merge", "body_markdown": "The pipeline keeps human approval at plan and merge checkpoints.", "source_refs": ["sales-how-it-works"], "proof": { "status": "source_verified", "source_refs": ["sales-how-it-works"] } },
+        { "id": "silent-fail", "order": 4, "title": "Silent failures get caught", "body_markdown": "The sales source explicitly calls out output scanning for failure markers even when exit codes are clean.", "source_refs": ["sales-how-it-works"], "proof": { "status": "source_verified", "source_refs": ["sales-how-it-works"] } }
+      ],
+      "build_flow_steps": [
+        { "id": "prd", "order": 1, "title": "PRD approved", "body_markdown": "Work starts from an approved plan, not an improvised chat request.", "audience": "prospect", "source_refs": ["sales-how-it-works"], "proof": { "status": "source_verified", "source_refs": ["sales-how-it-works"] } },
+        { "id": "issue", "order": 2, "title": "Issue and routing", "body_markdown": "The build is routed through the right workflow and agent team.", "audience": "prospect", "source_refs": ["sales-how-it-works"], "proof": { "status": "source_verified", "source_refs": ["sales-how-it-works"] } },
+        { "id": "verify", "order": 3, "title": "Verify before shipping", "body_markdown": "Telemetry, silent-failure checks, disk verification, pull request review, and human approval are the final gates.", "audience": "prospect", "source_refs": ["sales-how-it-works"], "proof": { "status": "source_verified", "source_refs": ["sales-how-it-works"] } }
+      ],
+      "trust_claims": [
+        { "id": "no-black-box", "claim": "actions are traceable", "display_copy": "You can see what the AI did and why.", "source_refs": ["sales-how-it-works"], "proof": { "status": "source_verified", "source_refs": ["sales-how-it-works"] } },
+        { "id": "client-specific-proof", "claim": "client-specific results", "display_copy": "Client-specific proof requires a client proof source before it can be shown here.", "source_refs": ["architecture-contract"], "proof": { "status": "unsupported_gap", "source_refs": ["architecture-contract"] } }
+      ],
+      "proof": { "status": "source_verified", "source_refs": ["sales-how-it-works"] }
+    }
+  },
+  "clients": {},
+  "shared": {
+    "source_refs": [
+      { "id": "welcome-email", "repo": "gbautomation", "path": "resources/skills/consulting-intake/client-facing/welcome-email.md", "line_start": 3, "line_end": 59, "source_kind": "markdown", "canonical": true, "last_verified_at": "2026-06-16T13:11:42Z" },
+      { "id": "client-onboarding", "repo": "gbautomation", "path": "second-brain/workflows/client-onboarding.md", "line_start": 8, "line_end": 16, "source_kind": "markdown", "canonical": true, "last_verified_at": "2026-06-16T13:11:42Z" },
+      { "id": "requirements-yaml", "repo": "gbautomation", "path": "resources/requirements.yaml", "line_start": 8, "line_end": 493, "source_kind": "yaml", "canonical": true, "last_verified_at": "2026-06-16T13:11:42Z" },
+      { "id": "sales-how-it-works", "repo": "gbautomation", "path": "second-brain/systems/sales-materials/tac-pipeline-production-readiness.html", "line_start": 179, "line_end": 414, "source_kind": "html", "canonical": true, "last_verified_at": "2026-06-16T13:11:42Z" },
+      { "id": "architecture-contract", "repo": "gbautomation", "path": "second-brain/intelligence/integration-experts/t_a06bea61-content-system-source-to-portal-contract.md", "line_start": 8, "line_end": 492, "source_kind": "markdown", "canonical": true, "last_verified_at": "2026-06-16T13:11:42Z" }
+    ]
+  },
+  "validation": {
+    "generated_at": "2026-06-16T13:11:42Z",
+    "source_refs_resolved": 5,
+    "source_refs_missing": [],
+    "redaction_scan_status": "passed",
+    "unsupported_claims": ["client-specific sales proof source is not available"],
+    "human_approval_required": ["runtime-neutral welcome template needs naming approval", "client route sensitivity boundary remains gated behind tenant auth"]
+  }
+}

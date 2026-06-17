@@ -1,0 +1,63 @@
+{
+  "generated_at": "2026-06-12T00:00:00Z",
+  "metrics": [
+    {
+      "id": "apps",
+      "label": "Apps",
+      "proof": {
+        "sourcePath": "clients/generic-openclaw-clients/profile.md",
+        "sourceQuote": "# Generic OpenClaw Clients Profile",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/generic-openclaw-clients/profile.md",
+      "sourceQuote": "# Generic OpenClaw Clients Profile",
+      "value": 0
+    },
+    {
+      "id": "artifacts",
+      "label": "Artifacts",
+      "proof": {
+        "sourcePath": "clients/generic-openclaw-clients/profile.md",
+        "sourceQuote": "# Generic OpenClaw Clients Profile",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/generic-openclaw-clients/profile.md",
+      "sourceQuote": "# Generic OpenClaw Clients Profile",
+      "value": 0
+    },
+    {
+      "id": "reports",
+      "label": "Reports",
+      "proof": {
+        "sourcePath": "clients/generic-openclaw-clients/profile.md",
+        "sourceQuote": "# Generic OpenClaw Clients Profile",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/generic-openclaw-clients/profile.md",
+      "sourceQuote": "# Generic OpenClaw Clients Profile",
+      "value": 12
+    },
+    {
+      "id": "receipts",
+      "label": "Receipts",
+      "proof": {
+        "sourcePath": "clients/generic-openclaw-clients/profile.md",
+        "sourceQuote": "# Generic OpenClaw Clients Profile",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/generic-openclaw-clients/profile.md",
+      "sourceQuote": "# Generic OpenClaw Clients Profile",
+      "value": 1
+    }
+  ],
+  "schema_version": 1,
+  "tenant": {
+    "name": "generic-openclaw-clients",
+    "slug": "generic-openclaw-clients",
+    "status": "sanitized-placeholder"
+  }
+}

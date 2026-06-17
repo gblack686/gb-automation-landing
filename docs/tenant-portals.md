@@ -48,8 +48,10 @@ Use the plain sign-in gate for internal validation routes until Cognito groups a
 ## Local Validation
 
 ```bash
+npm run portal:manifests
+npm run test:generated-manifests
 npm run test:tenant
 npm run build
 ```
 
-The tenant validation script checks the internal route files, parent workflow, source workflow template, and app registry entry.
+The tenant validation script checks the internal route files, parent workflow, source workflow template, app registry entry, route/source matrix, and generated manifest metadata.

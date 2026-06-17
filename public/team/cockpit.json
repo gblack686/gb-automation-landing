@@ -1,0 +1,398 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-06-11T21:42:36.163Z",
+  "maxAgeMinutes": 90,
+  "source": {
+    "mode": "static-read-only",
+    "description": "Generated teammate cockpit receipts. Browser clients may read this file but must not mutate Kanban or dispatch builds.",
+    "inputs": [
+      "prds-manifest",
+      "hermes-kanban-mirror",
+      "artifact-manifest"
+    ]
+  },
+  "redaction": {
+    "absolutePathsIncluded": false,
+    "envNamesIncluded": false,
+    "logTextIncluded": false,
+    "payloadBodiesIncluded": false
+  },
+  "approvedPrds": [
+    {
+      "id": "graphify-sync-local-execution-lakehouse-countable-taxonomies",
+      "title": "Graphify-Sync: Local Execution + Lakehouse + Countable Taxonomies",
+      "status": "mirrored",
+      "priority": "medium",
+      "owner": "TAC PRD queue",
+      "url": "/prds/graphify-sync-local-execution-lakehouse-countable-taxonomies",
+      "receipt": "Mirrored from approved PRD manifest. Browser surface is read-only."
+    },
+    {
+      "id": "graphify-sync-wave-3-intelligence-layer",
+      "title": "graphify-sync Wave-3 — Intelligence Layer",
+      "status": "mirrored",
+      "priority": "medium",
+      "owner": "TAC PRD queue",
+      "url": "/prds/graphify-sync-wave-3-intelligence-layer",
+      "receipt": "Mirrored from approved PRD manifest. Browser surface is read-only."
+    },
+    {
+      "id": "hourly-job-stats-telegram-ping-1h-24h-rollup-with-linked-prd-titles",
+      "title": "Hourly Job-Stats Telegram Ping — 1h + 24h rollup with linked PRD titles",
+      "status": "mirrored",
+      "priority": "medium",
+      "owner": "TAC PRD queue",
+      "url": "/prds/hourly-job-stats-telegram-ping-1h-24h-rollup-with-linked-prd-titles",
+      "receipt": "Mirrored from approved PRD manifest. Browser surface is read-only."
+    },
+    {
+      "id": "prd-render-email-pipeline-branded-delivery-for-every-dispatched-prd",
+      "title": "PRD Render &amp; Email Pipeline — branded delivery for every dispatched PRD",
+      "status": "mirrored",
+      "priority": "medium",
+      "owner": "TAC PRD queue",
+      "url": "/prds/prd-render-email-pipeline-branded-delivery-for-every-dispatched-prd",
+      "receipt": "Mirrored from approved PRD manifest. Browser surface is read-only."
+    },
+    {
+      "id": "template-improvements-discovered-during-test-clients-dry-run",
+      "title": "Template Improvements — discovered during test-clients dry-run",
+      "status": "mirrored",
+      "priority": "medium",
+      "owner": "TAC PRD queue",
+      "url": "/prds/template-improvements-discovered-during-test-clients-dry-run",
+      "receipt": "Mirrored from approved PRD manifest. Browser surface is read-only."
+    },
+    {
+      "id": "test-clients-hermes-iac-prd",
+      "title": "test-clients Hermes IaC PRD",
+      "status": "mirrored",
+      "priority": "medium",
+      "owner": "TAC PRD queue",
+      "url": "/prds/test-clients-hermes-iac-prd",
+      "receipt": "Mirrored from approved PRD manifest. Browser surface is read-only."
+    },
+    {
+      "id": "test-clients-linear-stack-prd-dry-run",
+      "title": "test-clients Linear Stack PRD Dry Run",
+      "status": "mirrored",
+      "priority": "medium",
+      "owner": "TAC PRD queue",
+      "url": "/prds/test-clients-linear-stack-prd-dry-run",
+      "receipt": "Mirrored from approved PRD manifest. Browser surface is read-only."
+    },
+    {
+      "id": "adjust-ai-7-day-developer-observability-build",
+      "title": "Adjust Ai 7 Day Developer Observability Build",
+      "status": "mirrored",
+      "priority": "medium",
+      "owner": "TAC PRD queue",
+      "url": "/prds/adjust-ai-7-day-developer-observability-build",
+      "receipt": "Mirrored from approved PRD manifest. Browser surface is read-only."
+    }
+  ],
+  "buildStatus": {
+    "queueLabel": "Hermes Kanban mirror",
+    "summary": "Read-only build queue projection. Use the operator Kanban board for mutations.",
+    "activeTasks": [
+      {
+        "id": "t_4736631e",
+        "title": "[sysadmin] repair Hermes Kanban worker health watchdog",
+        "status": "ready",
+        "assignee": "sysadmin",
+        "priority": 100,
+        "receipt": "Incident: Hermes Kanban workers were crash-looping with `pid not alive` on 2026-06-10. Findings from Codex ops audit: - `gateway/kanban_watchers.py` called `hermes_cli.kanban_db.r..."
+      },
+      {
+        "id": "t_4736631e",
+        "title": "[sysadmin] repair Hermes Kanban worker health watchdog",
+        "status": "ready",
+        "assignee": "sysadmin",
+        "priority": 100,
+        "receipt": "Incident: Hermes Kanban workers were crash-looping with `pid not alive` on 2026-06-10. Findings from Codex ops audit: - `gateway/kanban_watchers.py` called `hermes_cli.kanban_db.r..."
+      },
+      {
+        "id": "t_4736631e",
+        "title": "[sysadmin] repair Hermes Kanban worker health watchdog",
+        "status": "ready",
+        "assignee": "sysadmin",
+        "priority": 100,
+        "receipt": "Incident: Hermes Kanban workers were crash-looping with `pid not alive` on 2026-06-10. Findings from Codex ops audit: - `gateway/kanban_watchers.py` called `hermes_cli.kanban_db.r..."
+      },
+      {
+        "id": "t_4736631e",
+        "title": "[sysadmin] repair Hermes Kanban worker health watchdog",
+        "status": "ready",
+        "assignee": "sysadmin",
+        "priority": 100,
+        "receipt": "Incident: Hermes Kanban workers were crash-looping with `pid not alive` on 2026-06-10. Findings from Codex ops audit: - `gateway/kanban_watchers.py` called `hermes_cli.kanban_db.r..."
+      },
+      {
+        "id": "t_e2cc3ad2",
+        "title": "build: minimal Canopy-backed Hermes [redacted-operational-detail] profile adapter",
+        "status": "blocked",
+        "assignee": "tac-builder",
+        "priority": 95,
+        "receipt": "review-required: Canopy [redacted-operational-detail] library adapter shipped on feat/[redacted-operational-detail]-library-canopy-adapter (commit 96d222e52). 39/39 tests pass. Fu..."
+      },
+      {
+        "id": "t_e2cc3ad2",
+        "title": "build: minimal Canopy-backed Hermes [redacted-operational-detail] profile adapter",
+        "status": "blocked",
+        "assignee": "tac-builder",
+        "priority": 95,
+        "receipt": "review-required: Canopy [redacted-operational-detail] library adapter shipped on feat/[redacted-operational-detail]-library-canopy-adapter (commit 96d222e52). 39/39 tests pass. Fu..."
+      },
+      {
+        "id": "t_e2cc3ad2",
+        "title": "build: minimal Canopy-backed Hermes [redacted-operational-detail] profile adapter",
+        "status": "blocked",
+        "assignee": "tac-builder",
+        "priority": 95,
+        "receipt": "review-required: Canopy [redacted-operational-detail] library adapter shipped on feat/[redacted-operational-detail]-library-canopy-adapter (commit 96d222e52). 39/39 tests pass. Fu..."
+      },
+      {
+        "id": "t_e2cc3ad2",
+        "title": "build: minimal Canopy-backed Hermes [redacted-operational-detail] profile adapter",
+        "status": "blocked",
+        "assignee": "tac-builder",
+        "priority": 95,
+        "receipt": "review-required: Canopy [redacted-operational-detail] library adapter shipped on feat/[redacted-operational-detail]-library-canopy-adapter (commit 96d222e52). 39/39 tests pass. Fu..."
+      },
+      {
+        "id": "t_e15f97c4",
+        "title": "[homepage-docs] research: locate portal, Kanban, documents, [redacted-operational-detail]s assets",
+        "status": "blocked",
+        "assignee": "tac-researcher",
+        "priority": 93,
+        "receipt": "Research slice for parent t_a55b46c9. Tasks: - Inspect [redacted-path] if present. - Locate the GB Automation styled Hermes/Kanban dashboard source components, routes, design [red..."
+      },
+      {
+        "id": "t_2b58d1e7",
+        "title": "[homepage-docs] research: locate portal assets (no forced skills)",
+        "status": "blocked",
+        "assignee": "tac-researcher",
+        "priority": 93,
+        "receipt": "Research slice for homepage/documents architecture. Supersedes blocked card t_e15f97c4, which failed because check-langfuse-logs is not installed in this Hermes profile. Tasks: -..."
+      },
+      {
+        "id": "t_e15f97c4",
+        "title": "[homepage-docs] research: locate portal, Kanban, documents, [redacted-operational-detail]s assets",
+        "status": "blocked",
+        "assignee": "tac-researcher",
+        "priority": 93,
+        "receipt": "Research slice for parent t_a55b46c9. Tasks: - Inspect [redacted-path] if present. - Locate the GB Automation styled Hermes/Kanban dashboard source components, routes, design [red..."
+      },
+      {
+        "id": "t_2b58d1e7",
+        "title": "[homepage-docs] research: locate portal assets (no forced skills)",
+        "status": "blocked",
+        "assignee": "tac-researcher",
+        "priority": 93,
+        "receipt": "Research slice for homepage/documents architecture. Supersedes blocked card t_e15f97c4, which failed because check-langfuse-logs is not installed in this Hermes profile. Tasks: -..."
+      }
+    ]
+  },
+  "artifactReceipts": [
+    {
+      "id": "pre-call-prd-md",
+      "title": "Pre Call Prd",
+      "status": "source-backed",
+      "kind": "report",
+      "url": "/artifacts",
+      "receipt": "Mirrored artifact row with bounded browser fields only."
+    },
+    {
+      "id": "2026-05-11-tac-team-runner-verifier-dcae88ee-pdf",
+      "title": "2026 05 11 Tac Team Runner Verifier Dcae88ee",
+      "status": "source-backed",
+      "kind": "artifact",
+      "url": "/artifacts",
+      "receipt": "Mirrored artifact row with bounded browser fields only."
+    },
+    {
+      "id": "2026-05-12-tac-build-report-1fafe5cb-pdf",
+      "title": "2026 05 12 Tac Build Report 1fafe5cb",
+      "status": "source-backed",
+      "kind": "report",
+      "url": "/artifacts",
+      "receipt": "Mirrored artifact row with bounded browser fields only."
+    },
+    {
+      "id": "2026-05-12-tac-build-report-7ffc00bf-pdf",
+      "title": "2026 05 12 Tac Build Report 7ffc00bf",
+      "status": "source-backed",
+      "kind": "report",
+      "url": "/artifacts",
+      "receipt": "Mirrored artifact row with bounded browser fields only."
+    },
+    {
+      "id": "prds-2026-06-10-agent-harness-improvements-2026-06-10-carlos-harness-reliability",
+      "title": "2026 06 10 Carlos Harness Reliability Improvements",
+      "status": "source-backed",
+      "kind": "report",
+      "url": "/artifacts",
+      "receipt": "Mirrored artifact row with bounded browser fields only."
+    },
+    {
+      "id": "prds-2026-06-10-agent-harness-improvements-2026-06-10-google-drive-saving-fix-md",
+      "title": "2026 06 10 Google Drive Saving Fix",
+      "status": "source-backed",
+      "kind": "report",
+      "url": "/artifacts",
+      "receipt": "Mirrored artifact row with bounded browser fields only."
+    },
+    {
+      "id": "prds-2026-06-10-agent-harness-improvements-2026-06-10-perplexity-exa-research-ag",
+      "title": "2026 06 10 Perplexity Exa Research Agent Team",
+      "status": "source-backed",
+      "kind": "report",
+      "url": "/artifacts",
+      "receipt": "Mirrored artifact row with bounded browser fields only."
+    },
+    {
+      "id": "prds-2026-06-10-agent-harness-improvements-2026-06-10-second-brain-cleanup-team-",
+      "title": "2026 06 10 Second Brain Cleanup Team",
+      "status": "source-backed",
+      "kind": "report",
+      "url": "/artifacts",
+      "receipt": "Mirrored artifact row with bounded browser fields only."
+    }
+  ],
+  "runReceipts": [
+    {
+      "id": "run-t_2b4589e7",
+      "title": "[carlos-traces] A — ingest, sampling plan, inventory + error triage",
+      "status": "unknown",
+      "actor": "unassigned",
+      "receipt": "Run receipt mirrored from sanitized Kanban state.",
+      "evidence": [
+        "task t_2b4589e7",
+        "461 runs",
+        "2979 events"
+      ]
+    },
+    {
+      "id": "run-t_4736631e",
+      "title": "[sysadmin] repair Hermes Kanban worker health watchdog",
+      "status": "ready",
+      "actor": "sysadmin",
+      "receipt": "Run receipt mirrored from sanitized Kanban state.",
+      "evidence": [
+        "task t_4736631e",
+        "177 runs",
+        "1063 events"
+      ]
+    },
+    {
+      "id": "run-t_4fbfcf46",
+      "title": "Fix cron 'ecom-inbox-pickup' (b28b227caa95): missing script path",
+      "status": "ready",
+      "actor": "sysadmin",
+      "receipt": "Run receipt mirrored from sanitized Kanban state.",
+      "evidence": [
+        "task t_4fbfcf46",
+        "360 runs",
+        "2332 events"
+      ]
+    },
+    {
+      "id": "run-t_09f82180",
+      "title": "Fix failing cron 'kanban-ready-zero-proposals' (db54d90e5481): missing script",
+      "status": "ready",
+      "actor": "sysadmin",
+      "receipt": "Run receipt mirrored from sanitized Kanban state.",
+      "evidence": [
+        "task t_09f82180",
+        "359 runs",
+        "2338 events"
+      ]
+    },
+    {
+      "id": "run-t_c69d2e86",
+      "title": "Investigate kanban-steward-5min cron failures (HTTP 429 rate limit)",
+      "status": "ready",
+      "actor": "sysadmin",
+      "receipt": "Run receipt mirrored from sanitized Kanban state.",
+      "evidence": [
+        "task t_c69d2e86",
+        "347 runs",
+        "2272 events"
+      ]
+    },
+    {
+      "id": "run-t_00874416",
+      "title": "Investigate and resume auto-paused cron 'kanban-steward-5min' (4255ef0eafbb)",
+      "status": "ready",
+      "actor": "sysadmin",
+      "receipt": "Run receipt mirrored from sanitized Kanban state.",
+      "evidence": [
+        "task t_00874416",
+        "332 runs",
+        "2159 events"
+      ]
+    },
+    {
+      "id": "run-t_ac626a3d",
+      "title": "Reload launchd job com.gbautomation.linear-cron and verify",
+      "status": "ready",
+      "actor": "sysadmin",
+      "receipt": "invariant recovery on re-claim",
+      "evidence": [
+        "task t_ac626a3d",
+        "297 runs",
+        "1800 events"
+      ]
+    },
+    {
+      "id": "run-t_596b22cb",
+      "title": "Integrate Eagle-style Microsoft Teams notifications into GitHub Actions",
+      "status": "ready",
+      "actor": "tac-builder",
+      "receipt": "Hermes tac-builder forced skills now resolve; current blocker is openai-codex HTTP 401 [redacted-[redacted-secret-word]-word]_expired. Pause retries until Hermes/Codex auth is ref...",
+      "evidence": [
+        "task t_596b22cb",
+        "20 runs",
+        "508 events"
+      ]
+    },
+    {
+      "id": "run-t_fd5f6cee",
+      "title": "INTEGRATION EXPERT: tenant workspace integration map",
+      "status": "running",
+      "actor": "ops",
+      "receipt": "Run receipt mirrored from sanitized Kanban state.",
+      "evidence": [
+        "task t_fd5f6cee",
+        "1 runs",
+        "22 events"
+      ]
+    },
+    {
+      "id": "run-t_0ef72231",
+      "title": "Implement repo-boundary validator for integration cards and reports",
+      "status": "running",
+      "actor": "tac-builder",
+      "receipt": "Run receipt mirrored from sanitized Kanban state.",
+      "evidence": [
+        "task t_0ef72231",
+        "1 runs",
+        "20 events"
+      ]
+    }
+  ],
+  "releaseReceipts": [
+    {
+      "id": "release-static-cockpit-v2",
+      "title": "Team cockpit generated read model",
+      "status": "mirrored",
+      "version": "v2",
+      "date": "2026-06-11",
+      "evidence": [
+        "Generated from bounded manifests",
+        "Static JSON reads only",
+        "No browser dispatch or mutation controls"
+      ]
+    }
+  ]
+}

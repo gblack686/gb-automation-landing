@@ -1,0 +1,20 @@
+{
+  "generated_at": "2026-06-12T00:00:00Z",
+  "receipts": [
+    {
+      "id": "t-a06bea61-content-system-contract-no-secrets",
+      "kind": "receipt",
+      "proof": {
+        "sourcePath": "intelligence/integration-experts/receipts/t_a06bea61-content-system-contract-no-secrets.json",
+        "sourceQuote": "{",
+        "status": "source-backed"
+      },
+      "sourcePath": "intelligence/integration-experts/receipts/t_a06bea61-content-system-contract-no-secrets.json",
+      "sourceQuote": "{",
+      "status": "available",
+      "title": "t_a06bea61-content-system-contract-no-secrets.json"
+    }
+  ],
+  "schema_version": 1,
+  "source": "second-brain receipts"
+}

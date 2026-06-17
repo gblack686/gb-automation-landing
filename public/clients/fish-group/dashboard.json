@@ -1,0 +1,63 @@
+{
+  "generated_at": "2026-06-12T00:00:00Z",
+  "metrics": [
+    {
+      "id": "apps",
+      "label": "Apps",
+      "proof": {
+        "sourcePath": "clients/fish-group/profile.md",
+        "sourceQuote": "Canonical profile for Fish Group / Piermont Brands engagement. POC Michael Fisch (Managing Partner, mike@piermontbrands.com), technical contact Emil Caplow. Single Hermes agent (Finn) generated via agent-harness, OpenRouter interim; Carlos-style deployment dir",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/fish-group/profile.md",
+      "sourceQuote": "Canonical profile for Fish Group / Piermont Brands engagement. POC Michael Fisch (Managing Partner, mike@piermontbrands.com), technical contact Emil Caplow. Single Hermes agent (Finn) generated via agent-harness, OpenRouter interim; Carlos-style deployment dir",
+      "value": 1
+    },
+    {
+      "id": "artifacts",
+      "label": "Artifacts",
+      "proof": {
+        "sourcePath": "clients/fish-group/profile.md",
+        "sourceQuote": "Canonical profile for Fish Group / Piermont Brands engagement. POC Michael Fisch (Managing Partner, mike@piermontbrands.com), technical contact Emil Caplow. Single Hermes agent (Finn) generated via agent-harness, OpenRouter interim; Carlos-style deployment dir",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/fish-group/profile.md",
+      "sourceQuote": "Canonical profile for Fish Group / Piermont Brands engagement. POC Michael Fisch (Managing Partner, mike@piermontbrands.com), technical contact Emil Caplow. Single Hermes agent (Finn) generated via agent-harness, OpenRouter interim; Carlos-style deployment dir",
+      "value": 1
+    },
+    {
+      "id": "reports",
+      "label": "Reports",
+      "proof": {
+        "sourcePath": "clients/fish-group/profile.md",
+        "sourceQuote": "Canonical profile for Fish Group / Piermont Brands engagement. POC Michael Fisch (Managing Partner, mike@piermontbrands.com), technical contact Emil Caplow. Single Hermes agent (Finn) generated via agent-harness, OpenRouter interim; Carlos-style deployment dir",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/fish-group/profile.md",
+      "sourceQuote": "Canonical profile for Fish Group / Piermont Brands engagement. POC Michael Fisch (Managing Partner, mike@piermontbrands.com), technical contact Emil Caplow. Single Hermes agent (Finn) generated via agent-harness, OpenRouter interim; Carlos-style deployment dir",
+      "value": 13
+    },
+    {
+      "id": "receipts",
+      "label": "Receipts",
+      "proof": {
+        "sourcePath": "clients/fish-group/profile.md",
+        "sourceQuote": "Canonical profile for Fish Group / Piermont Brands engagement. POC Michael Fisch (Managing Partner, mike@piermontbrands.com), technical contact Emil Caplow. Single Hermes agent (Finn) generated via agent-harness, OpenRouter interim; Carlos-style deployment dir",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/fish-group/profile.md",
+      "sourceQuote": "Canonical profile for Fish Group / Piermont Brands engagement. POC Michael Fisch (Managing Partner, mike@piermontbrands.com), technical contact Emil Caplow. Single Hermes agent (Finn) generated via agent-harness, OpenRouter interim; Carlos-style deployment dir",
+      "value": 1
+    }
+  ],
+  "schema_version": 1,
+  "tenant": {
+    "name": "Fish Group",
+    "slug": "fish-group",
+    "status": "active"
+  }
+}

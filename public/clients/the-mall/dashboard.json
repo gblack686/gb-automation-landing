@@ -1,0 +1,63 @@
+{
+  "generated_at": "2026-06-12T00:00:00Z",
+  "metrics": [
+    {
+      "id": "apps",
+      "label": "Apps",
+      "proof": {
+        "sourcePath": "clients/the-mall/profile.md",
+        "sourceQuote": "Canonical profile for The Mall App engagement. Fashion-tech consumer app run by co-founders Sreya Halder and Ellie (last name TBD). Product is a personal-mall app — \"the easiest way to keep up with the brands you love\" — pre-App-Store launch with waitlist. Dis",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/the-mall/profile.md",
+      "sourceQuote": "Canonical profile for The Mall App engagement. Fashion-tech consumer app run by co-founders Sreya Halder and Ellie (last name TBD). Product is a personal-mall app — \"the easiest way to keep up with the brands you love\" — pre-App-Store launch with waitlist. Dis",
+      "value": 1
+    },
+    {
+      "id": "artifacts",
+      "label": "Artifacts",
+      "proof": {
+        "sourcePath": "clients/the-mall/profile.md",
+        "sourceQuote": "Canonical profile for The Mall App engagement. Fashion-tech consumer app run by co-founders Sreya Halder and Ellie (last name TBD). Product is a personal-mall app — \"the easiest way to keep up with the brands you love\" — pre-App-Store launch with waitlist. Dis",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/the-mall/profile.md",
+      "sourceQuote": "Canonical profile for The Mall App engagement. Fashion-tech consumer app run by co-founders Sreya Halder and Ellie (last name TBD). Product is a personal-mall app — \"the easiest way to keep up with the brands you love\" — pre-App-Store launch with waitlist. Dis",
+      "value": 2
+    },
+    {
+      "id": "reports",
+      "label": "Reports",
+      "proof": {
+        "sourcePath": "clients/the-mall/profile.md",
+        "sourceQuote": "Canonical profile for The Mall App engagement. Fashion-tech consumer app run by co-founders Sreya Halder and Ellie (last name TBD). Product is a personal-mall app — \"the easiest way to keep up with the brands you love\" — pre-App-Store launch with waitlist. Dis",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/the-mall/profile.md",
+      "sourceQuote": "Canonical profile for The Mall App engagement. Fashion-tech consumer app run by co-founders Sreya Halder and Ellie (last name TBD). Product is a personal-mall app — \"the easiest way to keep up with the brands you love\" — pre-App-Store launch with waitlist. Dis",
+      "value": 14
+    },
+    {
+      "id": "receipts",
+      "label": "Receipts",
+      "proof": {
+        "sourcePath": "clients/the-mall/profile.md",
+        "sourceQuote": "Canonical profile for The Mall App engagement. Fashion-tech consumer app run by co-founders Sreya Halder and Ellie (last name TBD). Product is a personal-mall app — \"the easiest way to keep up with the brands you love\" — pre-App-Store launch with waitlist. Dis",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/the-mall/profile.md",
+      "sourceQuote": "Canonical profile for The Mall App engagement. Fashion-tech consumer app run by co-founders Sreya Halder and Ellie (last name TBD). Product is a personal-mall app — \"the easiest way to keep up with the brands you love\" — pre-App-Store launch with waitlist. Dis",
+      "value": 1
+    }
+  ],
+  "schema_version": 1,
+  "tenant": {
+    "name": "The Mall App",
+    "slug": "the-mall",
+    "status": "active"
+  }
+}

@@ -7,6 +7,7 @@ const requiredPaths = [
   'src/clients/shared/ClientPortalHeader.jsx',
   'src/clients/shared/ClientPortalLayout.jsx',
   'src/clients/shared/tenantConfig.js',
+  'src/clients/registry/tenantRegistry.js',
   'src/clients/gbautomation/pages/DashboardPage.jsx',
   'src/clients/gbautomation/pages/TenantDashboardPage.jsx',
   'src/clients/gbautomation/pages/AppsPage.jsx',
@@ -26,6 +27,11 @@ const requiredPaths = [
   '.github/workflows/jid5274-archon-sync.yml',
   'docs/tenant-source-notify-parent.yml',
   'docs/tenant-portals.md',
+  'docs/portal-route-source-matrix.md',
+  'src/routes/routeManifest.js',
+  'src/portal/portalManifestRecords.json',
+  'scripts/generate-portal-manifests.mjs',
+  'scripts/validate-generated-manifests.mjs',
 ];
 
 const failures = [];
@@ -36,13 +42,25 @@ for (const path of requiredPaths) {
   }
 }
 
+const { getTenantAuthPolicy, getTenantContract } = await import(`file://${resolve(root, 'src/clients/registry/tenantRegistry.js')}`);
 const app = readFileSync(resolve(root, 'src/App.jsx'), 'utf8');
-if (!app.includes('/clients/gbautomation/*')) {
-  failures.push('src/App.jsx does not mount /clients/gbautomation/*');
+if (!app.includes('ClientPortalBoundary') || !app.includes('/clients/:clientSlug/*')) {
+  failures.push('src/App.jsx does not render the generic client portal boundary');
 }
 
-if (!app.includes('/clients/jid5274/*')) {
-  failures.push('src/App.jsx does not mount /clients/jid5274/*');
+for (const slug of ['gbautomation', 'jid5274']) {
+  const tenant = getTenantContract(slug);
+  if (!tenant) {
+    failures.push(`tenant registry cannot resolve ${slug}`);
+    continue;
+  }
+  if (tenant.routes?.basePath !== `/clients/${slug}`) {
+    failures.push(`${slug} tenant basePath is not /clients/${slug}`);
+  }
+  const auth = getTenantAuthPolicy(slug);
+  if (!auth?.allowedGroups?.length && !auth?.allowedEmails?.length) {
+    failures.push(`${slug} tenant auth policy is empty`);
+  }
 }
 
 const requireAuth = readFileSync(resolve(root, 'src/components/RequireAuth.jsx'), 'utf8');
@@ -51,6 +69,9 @@ if (!requireAuth.includes('allowedGroups')) {
 }
 
 const registry = JSON.parse(readFileSync(resolve(root, 'public/portfolio/apps-registry.json'), 'utf8'));
+const generatedValidator = await import(`file://${resolve(root, 'scripts/validate-generated-manifests.mjs')}`);
+void generatedValidator;
+
 const portalEntry = registry.apps?.find((appEntry) => appEntry.slug === 'client-portal-gbautomation');
 if (!portalEntry) {
   failures.push('apps registry is missing client-portal-gbautomation');

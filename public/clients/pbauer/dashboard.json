@@ -1,0 +1,63 @@
+{
+  "generated_at": "2026-06-12T00:00:00Z",
+  "metrics": [
+    {
+      "id": "apps",
+      "label": "Apps",
+      "proof": {
+        "sourcePath": "clients/pbauer/profile.md",
+        "sourceQuote": "Patrick Bauer",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/pbauer/profile.md",
+      "sourceQuote": "Patrick Bauer",
+      "value": 1
+    },
+    {
+      "id": "artifacts",
+      "label": "Artifacts",
+      "proof": {
+        "sourcePath": "clients/pbauer/profile.md",
+        "sourceQuote": "Patrick Bauer",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/pbauer/profile.md",
+      "sourceQuote": "Patrick Bauer",
+      "value": 0
+    },
+    {
+      "id": "reports",
+      "label": "Reports",
+      "proof": {
+        "sourcePath": "clients/pbauer/profile.md",
+        "sourceQuote": "Patrick Bauer",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/pbauer/profile.md",
+      "sourceQuote": "Patrick Bauer",
+      "value": 12
+    },
+    {
+      "id": "receipts",
+      "label": "Receipts",
+      "proof": {
+        "sourcePath": "clients/pbauer/profile.md",
+        "sourceQuote": "Patrick Bauer",
+        "status": "source-backed"
+      },
+      "proofStatus": "source-backed",
+      "sourcePath": "clients/pbauer/profile.md",
+      "sourceQuote": "Patrick Bauer",
+      "value": 1
+    }
+  ],
+  "schema_version": 1,
+  "tenant": {
+    "name": "Patrick Bauer",
+    "slug": "pbauer",
+    "status": "active"
+  }
+}
