@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "node test-site.js",
+    "test:routes": "node scripts/validate-route-map.mjs",
     "test:tenant": "node scripts/validate-tenant-portal.mjs",
     "ops:kanban:export": "node scripts/export-hermes-kanban.mjs",
     "youtube-intel:scrape": "node scripts/youtube-intel/scrape.mjs",
