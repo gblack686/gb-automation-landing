@@ -1,0 +1,114 @@
+PORTAL SCAFFOLD COMPLETE
+
+repo: /Users/greg/repos/gb-automation-landing-worktrees/portal-scaffold
+source_repo: /Users/greg/repos/gb-automation-landing
+branch: wt/t_373cac5a
+base_commit: 4783d1a
+prd: /Users/greg/repos/gbautomation/second-brain/inbox/plans/2026-06-11-five-day-website-client-portal-sprint.md
+created_at: 2026-06-11T19:30Z
+
+GIT PROOF
+- assigned worktree path was missing at dispatch; created it from target repo HEAD with `git worktree add /Users/greg/repos/gb-automation-landing-worktrees/portal-scaffold -b wt/t_373cac5a HEAD`.
+- main repo branch/status observed before creation: kanban/t_abf65b2b-amplify-prds-rewrites with existing dirty files; no main repo clean/reset was run.
+- worktree status after setup: branch wt/t_373cac5a; expected scaffold files copied from main dirty branch; package-lock reverted after install.
+
+DEPENDENCY PROOF
+- package manager: npm, confirmed by package-lock.json.
+- node_modules was missing in assigned worktree before install.
+- command: npm install
+- result: exit 0; added 2810 packages; audited 3672 packages; npm reported 102 vulnerabilities (7 low, 61 moderate, 31 high, 3 critical).
+- lockfile: package-lock.json restored to tracked version after npm install modified optional platform packages.
+
+MINIMAL SCAFFOLD UNBLOCKERS
+- amplify_outputs.json placeholder copied from target repo working copy because src/main.jsx imports ../amplify_outputs.json and build could not resolve it. This file is gitignored and contains placeholder auth values only.
+- Copied existing dirty-branch scaffold assets from target repo into assigned worktree so App.jsx imports resolve without editing feature code:
+  - src/pages/MallScanner.jsx
+  - src/pages/TacCatalog.jsx
+  - src/lib/mallScannerClient.js
+  - scripts/build-tac-catalog.mjs
+  - public/portfolio/samples/mall-scanner/
+  - public/tac/
+
+SCRIPT INVENTORY
+- dev: vite
+- build: vite build
+- lint: eslint .
+- preview: vite preview
+- test: node test-site.js
+- test:tenant: node scripts/validate-tenant-portal.mjs
+- ops:kanban:export: node scripts/export-hermes-kanban.mjs
+- youtube-intel:scrape: node scripts/youtube-intel/scrape.mjs
+- youtube-intel:scrape:sample: node scripts/youtube-intel/scrape.mjs --sample
+- youtube-intel:scrape:dry: node scripts/youtube-intel/scrape.mjs --dry-run
+- amplify:sandbox: ampx sandbox
+- amplify:deploy: ampx sandbox --once
+
+ROUTE INVENTORY
+Public routes in src/App.jsx:
+- /
+- /login
+- /prds
+- /prds/:slug
+
+Authenticated routes in src/App.jsx:
+- /plan
+- /apps
+- /artifacts
+- /artifacts/archive
+- /artifacts/:client/:artifactId
+- /blockers
+- /apps/youtube-intel
+- /apps/mall-scanner
+- /ui-agent
+
+Tenant/auth routes:
+- /clients/gbautomation/* gated by RequireAuth allowedGroups ['tenant-gbautomation'] and allowedEmails ['gblack686@gmail.com'].
+- /clients/jid5274/* gated by RequireAuth allowedGroups ['tenant-jid5274'] and allowedEmails ['jid5274@gmail.com'].
+- /ops/* gated by RequireAuth allowedGroups ['tenant-gbautomation'] and allowedEmails ['gblack686@gmail.com', 'greg@gbautomation.xyz'].
+
+GBAutomation client portal nested routes:
+- index -> DashboardPage
+- dashboard -> TenantDashboardPage
+- apps -> AppsPage
+- artifacts -> ArtifactsPage
+- artifacts/:artifactId -> ArtifactDetailPage
+- reports -> ReportsPage
+- reports/:reportId -> ReportDetailPage
+- sync -> SyncPage
+- validation -> ValidationPage
+
+Ops nested routes:
+- index -> OpsOverview
+- systems -> OpsSystems
+- runs -> OpsRuns
+- kanban -> HermesKanban
+- data -> OpsData
+
+AUTH SHELL INVENTORY
+- src/components/RequireAuth.jsx uses aws-amplify/auth getCurrentUser and fetchAuthSession.
+- Unauthenticated users redirect to /login?next=<path>.
+- Group/email mismatch renders 403 Tenant access required.
+- App.jsx wraps all gated routes in <RequireAuth> inside <Authenticator.Provider>.
+
+CLIENT PORTAL SHARED COMPONENT INVENTORY
+- src/clients/shared/ClientPortalLayout.jsx
+- src/clients/shared/ClientPortalHeader.jsx
+- src/clients/shared/ClientSection.jsx
+- src/clients/shared/ClientMetric.jsx
+- src/clients/shared/ClientArtifactList.jsx
+- src/clients/shared/ClientAppsList.jsx
+- src/clients/shared/ClientReportList.jsx
+- src/clients/shared/tenantConfig.js
+
+COMMAND OUTPUT SUMMARY
+- npm install: PASS, exit 0; node_modules present; audit reports 102 vulnerabilities.
+- npm run build before unblockers: FAIL, missing ../amplify_outputs.json then missing ./pages/MallScanner.
+- npm run build after unblockers: PASS, exit 0; dist/index.html 3.98 kB, CSS 374.58 kB gzip 41.23 kB, JS 1,253.20 kB gzip 354.43 kB; Vite warned chunk >500 kB and stale browsers data.
+- npm test: FAIL, exit 1; test-site.js attaches to first common Vite port. Existing sibling server on 5173 redirects to /app, so source-file probes return 404. Assigned worktree server was forced onto a later port by collision.
+- npm run lint: FAIL, exit 1; primary failures are generated public/clients/jid5274/archon/assets/index-nD_mwmsc.js plus existing source lint issues (ClientArtifactList detailHref unused, PRDGenerator unused/case declaration, ParticleHero scale unused, YouTubeIntel Icon unused, test-site process globals).
+
+BLOCKERS / NOTES
+- No fabricated client proof was added.
+- No destructive git cleanup/reset was run.
+- Build is unblocked in assigned worktree with placeholder Amplify config and copied existing scaffold files.
+- test-site.js is not reliable while another Vite server occupies 5173.
