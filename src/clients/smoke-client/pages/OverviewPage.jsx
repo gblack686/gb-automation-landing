@@ -127,13 +127,14 @@ export default function OverviewPage() {
         <CollapsibleSection
           eyebrow="03"
           title="Navigate"
-          meta={<span className="gb-pill">3 views</span>}
+          meta={<span className="gb-pill">4 views</span>}
         >
-          <div className="grid gap-3 md:grid-cols-3">
+          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
             {[
               { label: 'Schedules', detail: 'Cron lanes, state, and last green time.' },
               { label: 'Runs', detail: 'Per-tick outcomes with per-run drill-down.' },
               { label: 'Board', detail: 'Cards grouped by their current status.' },
+              { label: 'Data', detail: 'Curated dataset explorer — search, sort, export.' },
             ].map((item) => (
               <div
                 key={item.label}

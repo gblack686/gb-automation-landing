@@ -98,3 +98,27 @@ export async function fetchSmokeBoard({ limit = 100 } = {}) {
 
   return supabaseFetch(`obs_smoke_board?${params.toString()}`);
 }
+
+/**
+ * Generic, registry-driven view reader for the curated data explorer.
+ *
+ * SECURITY: this issues a plain anon REST GET against a single curated,
+ * already-tenant-scoped view. It accepts NO raw SQL and NO arbitrary filters —
+ * isolation is enforced server-side by the view. The caller is expected to pass
+ * `view` + `select` straight from a dataset-registry allowlist entry; the
+ * `view` name is additionally shape-validated here as defence-in-depth. Only
+ * the params that are provided are appended to the query string.
+ */
+export async function fetchView(view, { select, order, limit } = {}) {
+  if (!view || typeof view !== 'string' || !/^[a-zA-Z0-9_]+$/.test(view)) {
+    throw new Error('fetchView: invalid view name');
+  }
+
+  const params = new URLSearchParams();
+  if (select) params.set('select', select);
+  if (order) params.set('order', order);
+  if (limit != null) params.set('limit', String(limit));
+
+  const qs = params.toString();
+  return supabaseFetch(qs ? `${view}?${qs}` : view);
+}

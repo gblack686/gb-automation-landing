@@ -4,6 +4,7 @@ import OverviewPage from './pages/OverviewPage';
 import SchedulesPage from './pages/SchedulesPage';
 import RunsPage from './pages/RunsPage';
 import BoardPage from './pages/BoardPage';
+import DataPage from './pages/DataPage';
 
 export default function SmokeClientPortal() {
   return (
@@ -15,6 +16,7 @@ export default function SmokeClientPortal() {
           <Route path="schedules" element={<SchedulesPage />} />
           <Route path="runs" element={<RunsPage />} />
           <Route path="board" element={<BoardPage />} />
+          <Route path="data" element={<DataPage />} />
           <Route path="*" element={<Navigate to="/clients/smoke-client" replace />} />
         </Routes>
       </main>

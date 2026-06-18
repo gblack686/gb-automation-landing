@@ -7,6 +7,7 @@ const navItems = [
   { label: 'Schedules', to: '/clients/smoke-client/schedules' },
   { label: 'Runs', to: '/clients/smoke-client/runs' },
   { label: 'Board', to: '/clients/smoke-client/board' },
+  { label: 'Data', to: '/clients/smoke-client/data' },
 ];
 
 export default function PortalHeader() {
