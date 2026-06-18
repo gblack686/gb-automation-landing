@@ -195,5 +195,16 @@
     "description": ">-",
     "category": "plan",
     "public_url": "https://gbautomation.xyz/prds/2026-06-17-hermes-cron-llm-manager-and-1h-smoke-test"
+  },
+  {
+    "slug": "2026-06-17-hermes-skillify-followup-integration",
+    "title": ">-",
+    "date": "",
+    "status": "active",
+    "client": "gbautomation",
+    "priority": "high",
+    "description": ">-",
+    "category": "plan",
+    "public_url": "https://gbautomation.xyz/prds/2026-06-17-hermes-skillify-followup-integration"
   }
 ]
