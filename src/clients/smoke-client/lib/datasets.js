@@ -49,6 +49,22 @@ export const SMOKE_CLIENT_DATASETS = [
       'run_id,task_id,client_slug,board_slug,profile,assignee,title,status,started_at,ended_at,created_at,updated_at,step_key',
     defaultSort: { col: 'updated_at', dir: 'desc' },
   },
+  {
+    view: 'obs_smoke_scrape_receipts',
+    label: 'Scrape Receipts',
+    description: 'Per-run browser-scrape receipts — route/site/production greenline, counts, duration, and cost.',
+    select:
+      'run_id,job_id,domain_module,target_url,registrable_domain,route_type,status,status_family,greenline_status,route_green,full_site_green,production_green,write_mode,target_count,visited_count,extracted_count,blocked_count,captcha_count,started_at,ended_at,duration_ms,cost_usd,token_count,failure_reason,created_at',
+    defaultSort: { col: 'created_at', dir: 'desc' },
+  },
+  {
+    view: 'obs_smoke_scrape_health',
+    label: 'Scrape Health',
+    description: 'Browser-scrape health rollup per domain module — run/ok/fail/greenline counts and latest run.',
+    select:
+      'client_slug,domain_module,run_count,ok_count,failed_count,greenline_pass_count,production_green_count,latest_run_at',
+    defaultSort: { col: 'latest_run_at', dir: 'desc' },
+  },
 ];
 
 /** Lookup a registry entry by view name (null if not allow-listed). */
