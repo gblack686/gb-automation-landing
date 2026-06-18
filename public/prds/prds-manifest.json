@@ -184,5 +184,16 @@
     "description": ">-",
     "category": "plan",
     "public_url": "https://gbautomation.xyz/prds/2026-06-17-hermes-step3-shared-core-and-canopy-lint-workstream"
+  },
+  {
+    "slug": "2026-06-17-hermes-cron-llm-manager-and-1h-smoke-test",
+    "title": ">-",
+    "date": "",
+    "status": "active",
+    "client": "gbautomation",
+    "priority": "high",
+    "description": ">-",
+    "category": "plan",
+    "public_url": "https://gbautomation.xyz/prds/2026-06-17-hermes-cron-llm-manager-and-1h-smoke-test"
   }
 ]

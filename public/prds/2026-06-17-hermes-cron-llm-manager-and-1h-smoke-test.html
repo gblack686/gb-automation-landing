@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hermes cron — LLM-manager contract + 1-hour condensed-24h smoke test | GBAutomation</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&display=swap');
+    :root {
+      --cream-bg: #F3F1E7;
+      --cream-panel: #E6E4D9;
+      --text-main: #191919;
+      --text-muted: #5C5C5C;
+      --text-light: #8C8A84;
+      --border: #D6D4C8;
+      --terracotta: #D97757;
+      --paper: #FFFFFF;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text-main);
+      background: var(--cream-bg);
+      font-size: 14px;
+      line-height: 1.58;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+    a { color: var(--text-main); text-decoration-color: var(--terracotta); text-underline-offset: 3px; }
+    button { font: inherit; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(214, 212, 200, .7);
+      background: rgba(243, 241, 231, .93);
+      backdrop-filter: blur(12px);
+    }
+    .topbar-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 13px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .brand-lockup { display: inline-flex; align-items: center; gap: 9px; min-height: 28px; }
+    .brand-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(217, 119, 87, .18);
+    }
+    .brand-dot::after { content: ""; width: 8px; height: 8px; border-radius: 999px; background: var(--terracotta); }
+    .brand-text {
+      font-family: Newsreader, serif;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-size: 12px;
+    }
+    .source-name { color: var(--text-muted); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    header {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 34px 24px 26px;
+    }
+    .eyebrow {
+      color: var(--terracotta);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    h1 {
+      max-width: 920px;
+      margin: 10px 0 18px;
+      font-family: Newsreader, serif;
+      font-size: clamp(30px, 4vw, 48px);
+      font-weight: 500;
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+    .summary-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+    .summary-meta li {
+      min-height: 30px;
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, .45);
+      padding: 5px 9px;
+      border-radius: 6px;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .taxonomy-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0 0 14px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      min-height: 23px;
+      padding: 2px 8px;
+      border: 1px solid;
+      border-radius: 999px;
+      line-height: 1;
+    }
+    .pill-facet {
+      font-size: 8.5px;
+      font-weight: 700;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+    .pill-value {
+      color: var(--text-main);
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .layout {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 22px 24px 56px;
+      display: grid;
+      grid-template-columns: 252px minmax(0, 1fr);
+      gap: 22px;
+      align-items: start;
+    }
+    .section-menu {
+      position: sticky;
+      top: 64px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(230, 228, 217, .62);
+      backdrop-filter: blur(12px);
+      padding: 12px;
+    }
+    .menu-title {
+      margin: 0 0 10px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .menu-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+    .menu-actions button,
+    .section-menu nav button {
+      min-height: 34px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .46);
+      color: rgba(25, 25, 25, .72);
+      cursor: pointer;
+      transition: border-color .18s ease, color .18s ease, background .18s ease;
+    }
+    .menu-actions button { padding: 0 8px; font-size: 11px; font-weight: 700; }
+    .section-menu nav { display: grid; gap: 5px; }
+    .section-menu nav button {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 30px 1fr;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      text-align: left;
+      font-size: 12px;
+      line-height: 1.25;
+    }
+    .section-menu nav button span { color: var(--terracotta); font-size: 10px; font-weight: 700; letter-spacing: .08em; }
+    .menu-actions button:hover,
+    .section-menu nav button:hover,
+    .section-menu nav button.active {
+      border-color: var(--terracotta);
+      background: rgba(255, 255, 255, .72);
+      color: var(--text-main);
+    }
+    .sections { display: grid; gap: 10px; }
+    details.section {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .5);
+      overflow: hidden;
+    }
+    details.section[open] { background: rgba(255, 255, 255, .68); }
+    details.section summary {
+      min-height: 52px;
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 12px 14px;
+      cursor: pointer;
+      list-style: none;
+    }
+    details.section summary::-webkit-details-marker { display: none; }
+    .section-index {
+      color: var(--terracotta);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+    }
+    .section-title {
+      font-family: Newsreader, serif;
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.18;
+    }
+    .section-count {
+      color: var(--text-light);
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .section-body {
+      border-top: 1px solid rgba(214, 212, 200, .75);
+      padding: 4px 18px 18px 68px;
+    }
+    .section-body h2,
+    .section-body h3,
+    .section-body h4,
+    .section-body h5 {
+      margin: 18px 0 8px;
+      color: var(--text-main);
+      font-family: Newsreader, serif;
+      font-weight: 500;
+      line-height: 1.2;
+    }
+    .section-body h2 { font-size: 19px; }
+    .section-body h3 { font-size: 17px; }
+    .section-body h4,
+    .section-body h5 {
+      font-family: Inter, sans-serif;
+      color: var(--text-light);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+    .section-body p,
+    .section-body li { color: var(--text-muted); font-size: 14px; line-height: 1.66; }
+    .section-body p { margin: 10px 0; }
+    .section-body ul,
+    .section-body ol { margin: 10px 0 10px 18px; padding: 0; }
+    .section-body li { margin: 5px 0; padding-left: 2px; }
+    .section-body .task { list-style: none; margin-left: -18px; display: flex; gap: 8px; align-items: flex-start; }
+    .section-body input[type="checkbox"] { margin-top: 4px; accent-color: var(--terracotta); }
+    code {
+      border: 1px solid rgba(217, 119, 87, .22);
+      border-radius: 4px;
+      background: rgba(217, 119, 87, .10);
+      padding: 1px 4px;
+      color: var(--text-main);
+      font-size: .92em;
+    }
+    pre {
+      overflow: auto;
+      margin: 12px 0;
+      border-radius: 8px;
+      background: #191919;
+      color: #F3F1E7;
+      padding: 14px;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+    pre code { border: 0; background: transparent; color: inherit; padding: 0; }
+    blockquote {
+      margin: 12px 0;
+      padding: 10px 12px;
+      border-left: 3px solid var(--terracotta);
+      background: rgba(230, 228, 217, .5);
+    }
+    hr { border: 0; border-top: 1px solid var(--border); margin: 18px 0; }
+    .table-wrap { overflow-x: auto; margin: 12px 0; border: 1px solid var(--border); border-radius: 8px; }
+    table { width: 100%; border-collapse: collapse; min-width: 560px; background: rgba(255, 255, 255, .5); }
+    th,
+    td { border-bottom: 1px solid rgba(214, 212, 200, .75); padding: 8px 10px; text-align: left; font-size: 12px; vertical-align: top; }
+    th { color: var(--text-main); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; }
+    tr:last-child td { border-bottom: 0; }
+    .empty { color: var(--text-light); font-style: italic; }
+    footer {
+      border-top: 1px solid rgba(214, 212, 200, .78);
+      background: rgba(230, 228, 217, .45);
+    }
+    .footer-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    .footer-label {
+      margin-bottom: 12px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .metadata-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .meta-item {
+      min-width: 0;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .42);
+      padding: 9px 10px;
+    }
+    .meta-item span {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .meta-item strong {
+      display: block;
+      overflow-wrap: anywhere;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.35;
+    }
+    @media (max-width: 860px) {
+      .topbar-inner,
+      header,
+      .layout,
+      .footer-inner { padding-left: 16px; padding-right: 16px; }
+      .layout { display: block; }
+      .section-menu { position: static; margin-bottom: 14px; }
+      .section-body { padding-left: 18px; }
+      .metadata-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 540px) {
+      .topbar-inner { align-items: flex-start; flex-direction: column; gap: 6px; }
+      details.section summary { grid-template-columns: 34px 1fr; }
+      .section-count { grid-column: 2; }
+      h1 { font-size: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand-lockup"><span class="brand-dot"></span><span class="brand-text">GBAutomation</span></div>
+      <div class="source-name">2026-06-17-hermes-cron-llm-manager-and-1h-smoke-test.md</div>
+    </div>
+  </div>
+  <header>
+    <div class="eyebrow">Plan Brief</div>
+    <h1>Hermes cron — LLM-manager contract + 1-hour condensed-24h smoke test</h1>
+    <div class="taxonomy-pills"><span class="pill" style="background:rgba(90, 125, 140, 0.12);border-color:rgba(90, 125, 140, 0.42);"><span class="pill-facet" style="color:#5A7D8C;">domain</span><span class="pill-value">hermes</span></span><span class="pill" style="background:rgba(90, 125, 140, 0.12);border-color:rgba(90, 125, 140, 0.42);"><span class="pill-facet" style="color:#5A7D8C;">domain</span><span class="pill-value">observability</span></span></div>
+    <ul class="summary-meta">
+      <li>Client: gbautomation</li><li>Priority: high</li><li>Status: active</li><li>hermes/cron</li>
+      <li>Owner: GBAutomation</li>
+      <li>Created: 2026-06-17</li>
+      <li>5 sections</li>
+      <li>883 words</li>
+    </ul>
+  </header>
+  <main class="layout">
+    <aside class="section-menu" aria-label="Plan sections">
+  <div class="menu-title">Sections</div>
+  <div class="menu-actions">
+    <button type="button" data-action="expand">Expand all</button>
+    <button type="button" data-action="collapse">Collapse all</button>
+  </div>
+  <nav><button type="button" data-target="overview"><span>01</span>Overview</button>
+<button type="button" data-target="a-infra-hooks-integration-points-to-capture-cherry-pick-hermes-gbauto-config"><span>02</span>A. Infra hooks + integration points to capture (cherry-pick → hermes-gbauto config)</button>
+<button type="button" data-target="b-the-llm-as-manager-cron-contract-new-supersedes-no-agent-script-mode"><span>03</span>B. The LLM-as-manager cron contract (NEW — supersedes no-agent script mode)</button>
+<button type="button" data-target="c-1-hour-condensed-24h-cron-smoke-test"><span>04</span>C. 1-hour condensed-24h cron smoke test</button>
+<button type="button" data-target="sequencing"><span>05</span>Sequencing</button></nav>
+</aside>
+    <div class="sections">
+      <details class="section" id="overview" open>
+  <summary>
+    <span class="section-index">01</span>
+    <span class="section-title">Overview</span>
+    <span class="section-count">28 words</span>
+  </summary>
+  <div class="section-body">
+    <p>Two deliverables: (A) the infra-hook capture catalog cherry-picked into the <code>hermes-gbauto</code> config, and (B) a 1-hour smoke that condenses a 24-hour cron cadence and proves every integration point.</p>
+  </div>
+</details>
+<details class="section" id="a-infra-hooks-integration-points-to-capture-cherry-pick-hermes-gbauto-config">
+  <summary>
+    <span class="section-index">02</span>
+    <span class="section-title">A. Infra hooks + integration points to capture (cherry-pick → hermes-gbauto config)</span>
+    <span class="section-count">253 words</span>
+  </summary>
+  <div class="section-body">
+    <p>The proven hooks across our systems, and how each wires into the template so rendered clients inherit them by default:</p>
+<div class="table-wrap"><table><thead><tr><th>Integration point</th><th>Source (proven)</th><th>What it gives</th><th>Wire into hermes-gbauto</th></tr></thead><tbody><tr><td><strong>Supabase cron receipts</strong> <code>cron_runs</code> + <code>cron_run_outputs</code></td><td>gbautomation (<code>20260517000003</code>)</td><td>per-tick telemetry (elapsed, ok/fail, cost)</td><td>every cron emits one via the bounded-runner</td></tr>
+<tr><td><strong>Unified host receipts</strong> <code>host_job_runs</code></td><td>gbautomation</td><td>host-level run ledger</td><td>cron wrapper writes one</td></tr>
+<tr><td><strong>Kanban mirror</strong> <code>agent_runs</code> + <code>hermes-card-observability.v1</code></td><td>gbautomation</td><td>per-card run rows + lifecycle contract</td><td>every team cron creates/updates a card</td></tr>
+<tr><td><strong>Cron definition index</strong> <code>hermes_cron_catalog</code></td><td>this session (Gelby dispatch)</td><td>registry of all crons (schedule/mode/bucket/last-green)</td><td>seed from <code>hermes/cron/crons.manifest.yaml</code></td></tr>
+<tr><td><strong>Canopy apply audit</strong> <code>prompt_profile_applies</code></td><td>this session (#214)</td><td>every <code>hermes prompts apply</code> audited</td><td><code>ship_prompt_profile_apply.py</code> post-apply hook</td></tr>
+<tr><td><strong>Langfuse traces</strong> + <code>check-langfuse-logs</code> skill</td><td>gbautomation observability contract</td><td>every agent turn traced + reviewable</td><td>observability-contract lint enforces it</td></tr>
+<tr><td><strong>Worktree observability</strong> (isolation + receipts)</td><td>gbautomation worktree policy</td><td>per-session isolation, no cross-contamination</td><td>build/mutating crons run in a worktree, auto-cleaned</td></tr>
+<tr><td><strong>cron-bounded-runner</strong> (atomic lock, budget, JSONL)</td><td>ecom → <code>hermes-runtime-core</code> (#213)</td><td>safe bounded execution + receipts</td><td>the cron runner pattern</td></tr>
+<tr><td><strong>browser-profile registry + CDP lease v2</strong></td><td>ecom → <code>hermes-runtime-core</code> (#213)</td><td>browser safety (forbidden-key, lease singleton)</td><td>browser crons acquire a lease</td></tr>
+<tr><td><strong>greenline validator</strong> (route/full/production)</td><td>ecom → <code>hermes-runtime-core</code> (#213)</td><td>honest done-claims</td><td>any staged cron uses it</td></tr>
+<tr><td><strong>Finn v23 runtime config</strong> (agent/compression/curator/security/approvals)</td><td>Finn → template (#4)</td><td>tuned, hardened runtime</td><td>already in <code>config/hermes.example.yaml.jinja</code></td></tr>
+<tr><td><strong>morning-brief</strong></td><td>gbautomation</td><td>daily digest aggregator</td><td>the cron <strong>reporter</strong> sink</td></tr>
+<tr><td><strong>LLM-as-manager cron wrapper</strong></td><td>NEW (§B)</td><td>every cron is a manager+reporter, not a bare script</td><td>the cron contract below</td></tr></tbody></table></div>
+  </div>
+</details>
+<details class="section" id="b-the-llm-as-manager-cron-contract-new-supersedes-no-agent-script-mode">
+  <summary>
+    <span class="section-index">03</span>
+    <span class="section-title">B. The LLM-as-manager cron contract (NEW — supersedes no-agent script mode)</span>
+    <span class="section-count">155 words</span>
+  </summary>
+  <div class="section-body">
+    <p><strong>Today</strong> most Hermes crons run <code>mode: no-agent</code> (<code>Script: foo.sh</code>, stdout delivered raw). <strong>New contract:</strong> every cron is a Hermes cron that invokes a <strong>cheap manager-tier LLM</strong> (e.g. <code>gpt-5-mini</code> / the current mini model — set in config, NOT the expensive build model) as a <strong>manager + reporter</strong>:</p>
+<ol>
+<li><strong>Run</strong> the underlying skill/script (the heavy work — scrape, build, brief — may still be a tool).</li>
+<li><strong>Assess</strong> the result → structured <code>{outcome: ok|partial|fail, why, metrics}</code> (LLM judgment, not exit code only).</li>
+<li><strong>Receipt</strong> → write <code>cron_runs</code> (+ <code>cron_run_outputs</code>) + update <code>hermes_cron_catalog.last_green_at</code>.</li>
+<li><strong>Trace</strong> → Langfuse span for the turn; <strong>Card</strong> → Hermes Kanban card create/update.</li>
+<li><strong>Report</strong> → one-line digest appended to the morning-brief feed (<code>deliver: origin</code> only if action needed).</li>
+</ol>
+<p>Manifest change: each <code>hermes/cron/crons.manifest.yaml</code> entry gets <code>mode: managed</code> + <code>manager_model</code> + <code>tool: &lt;script|skill&gt;</code> instead of <code>mode: script</code>. The manager prompt is a shared template (carries the TAC prompt-format contract; authored once, like the Canopy <code>tac-contract-shared</code> mixin).</p>
+  </div>
+</details>
+<details class="section" id="c-1-hour-condensed-24h-cron-smoke-test">
+  <summary>
+    <span class="section-index">04</span>
+    <span class="section-title">C. 1-hour condensed-24h cron smoke test</span>
+    <span class="section-count">343 words</span>
+  </summary>
+  <div class="section-body">
+    <p>Goal: prove the full integration stack in one hour by <strong>accelerating schedules</strong> so a 24h cadence runs in 60 min. Runs on the Mac Mini (Gelby), all crons in <strong>managed (LLM) mode</strong>, on a smoke profile.</p>
+<h4>Jobs exercised (representative slice — each in managed mode)</h4>
+<div class="table-wrap"><table><thead><tr><th>Job</th><th>Normal cadence</th><th>Smoke cadence (1h)</th><th>Proves</th></tr></thead><tbody><tr><td>morning-brief</td><td>daily</td><td>once @ T+2m</td><td>reporter aggregation + digest</td></tr>
+<tr><td>worktree-build (a TAC card)</td><td>on-demand</td><td>once @ T+10m</td><td><strong>worktree observability</strong> + isolation + cleanup</td></tr>
+<tr><td>git-sync (commit/push)</td><td>hourly</td><td>every 15m (4×)</td><td><strong>proper git</strong> (branch→PR→squash, no dirty main)</td></tr>
+<tr><td>gmail-monitor (skill)</td><td>every 5m</td><td>every 5m (12×)</td><td><strong>skill triggered by cron</strong> + receipt per tick</td></tr>
+<tr><td>reddit/youtube (skill+browser)</td><td>daily</td><td>once @ T+20m</td><td>browser lease + skill-via-cron</td></tr>
+<tr><td>heartbeat</td><td>every 30m</td><td>every 5m</td><td>liveness + cheap-manager cost floor</td></tr></tbody></table></div>
+<h4>Acceptance matrix (GREEN = all true)</h4>
+<ul>
+<li><strong>Supabase receipts:</strong> every fired tick wrote a <code>cron_runs</code> row; <code>hermes_cron_catalog.last_green_at</code> advanced for each.</li>
+<li><strong>LLM-manager:</strong> every tick produced a structured <code>outcome</code> (ok/partial/fail + why) — not raw stdout. Confirm via <code>cron_run_outputs.agent_summary</code> non-empty.</li>
+<li><strong>Kanban:</strong> each managed cron created/updated a card (<code>agent_runs</code> row); card observability contract present.</li>
+<li><strong>Langfuse:</strong> every tick has a trace; <code>check-langfuse-logs</code> returns the window&#x27;s spans.</li>
+<li><strong>morning-brief:</strong> the digest aggregated the window&#x27;s runs (counts match <code>cron_runs</code>).</li>
+<li><strong>worktree:</strong> the build cron ran in an isolated worktree and cleaned up (no leftover worktree, no dirty main).</li>
+<li><strong>git:</strong> the git cron landed via branch→PR→squash; <code>main</code> clean; no force-push to main.</li>
+<li><strong>cost:</strong> total manager spend within a small budget (e.g. &lt; $1) — proves gpt-mini is the manager tier.</li>
+</ul>
+<h4>Procedure (Gelby, on the Mini)</h4>
+<ol>
+<li>Render a <strong>smoke profile</strong> from <code>hermes-gbauto</code> (managed-mode crons) on the Mini; install all crons <strong>PAUSED</strong>.</li>
+<li>Apply the <strong>smoke schedule override</strong> (the accelerated cadences above) — a separate overlay, not the prod manifest.</li>
+<li><code>hermes cron resume</code> the smoke set; run for 60 min; capture receipts.</li>
+<li>Validate the acceptance matrix from Supabase (<code>cron_runs</code>/<code>cron_run_outputs</code>/<code>hermes_cron_catalog</code>) + Kanban (<code>agent_runs</code>) + Langfuse.</li>
+<li>Tear down: pause + remove the smoke crons + the schedule override; emit a smoke report (per-job green/red + cost).</li>
+<li>Only after GREEN: promote the managed-mode contract to the prod manifest + proceed with the Phase-4 cutover.</li>
+</ol>
+  </div>
+</details>
+<details class="section" id="sequencing">
+  <summary>
+    <span class="section-index">05</span>
+    <span class="section-title">Sequencing</span>
+    <span class="section-count">69 words</span>
+  </summary>
+  <div class="section-body">
+    <ol>
+<li><strong>Template (PC):</strong> add the <code>manager_prompt</code> shared template + <code>mode: managed</code> schema to the cron</li>
+<p>manifest convention; document the LLM-manager contract in <code>hermes/cron/README.md</code>. (canopy-lint-style)</p>
+<li><strong>Capture (PC):</strong> ensure the §A hooks are referenced in the template config (most already are via</li>
+<p>the Finn v23 config + observability lint + hermes-runtime-core).</p>
+<li><strong>Smoke (Mini / Gelby):</strong> §C — fold into the existing <code>phase4-gelby-dispatch</code> (the smoke is the</li>
+<p>gate before the real cutover).</p>
+</ol>
+  </div>
+</details>
+    </div>
+  </main>
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-label">Metadata</div>
+      <div class="metadata-grid">
+        <div class="meta-item"><span>Source</span><strong>C:\Users\gblac\OneDrive\Desktop\gbauto\gbautomation\second-brain\plans\2026-06-17-hermes-cron-llm-manager-and-1h-smoke-test.md</strong></div>
+<div class="meta-item"><span>Generated</span><strong>2026-06-17T17:49:09-07:00</strong></div>
+<div class="meta-item"><span>Source modified</span><strong>2026-06-17T17:49:06-07:00</strong></div>
+<div class="meta-item"><span>Source size</span><strong>7,878 bytes</strong></div>
+<div class="meta-item"><span>Word count</span><strong>883</strong></div>
+<div class="meta-item"><span>Sections</span><strong>5</strong></div>
+<div class="meta-item"><span>Renderer</span><strong>resources/skills/netlify-cli/scripts/render_plan_page.py</strong></div>
+<div class="meta-item"><span>Kind</span><strong>plan</strong></div>
+<div class="meta-item"><span>Purpose</span><strong>tac-build</strong></div>
+<div class="meta-item"><span>Status</span><strong>active</strong></div>
+<div class="meta-item"><span>Client</span><strong>gbautomation</strong></div>
+<div class="meta-item"><span>Priority</span><strong>high</strong></div>
+<div class="meta-item"><span>Slug</span><strong>hermes-cron-llm-manager-1h-smoke</strong></div>
+<div class="meta-item"><span>Created</span><strong>2026-06-17</strong></div>
+<div class="meta-item"><span>Target Date</span><strong>2026-06-24</strong></div>
+<div class="meta-item"><span>Domain</span><strong>hermes</strong></div>
+<div class="meta-item"><span>Service</span><strong>hermes-cron</strong></div>
+<div class="meta-item"><span>Description</span><strong>&gt;-</strong></div>
+<div class="meta-item"><span>Tags</span><strong>plan, domain/hermes, hermes/cron, observability</strong></div>
+<div class="meta-item"><span>Related</span><strong>[[phase4-cron-reconciliation-2026-06-17]], [[phase4-gelby-dispatch-2026-06-17]], [[2026-06-17-hermes-template-canopy-parameterization-and-shared-core-plan]], [[2026-06-17-hermes-step3-shared-core-and-canopy-lint-workstream]]</strong></div>
+      </div>
+    </div>
+  </footer>
+  <script>
+    const sections = Array.from(document.querySelectorAll('details.section'));
+    const menuButtons = Array.from(document.querySelectorAll('[data-target]'));
+    const setActive = (id) => {
+      menuButtons.forEach((button) => button.classList.toggle('active', button.dataset.target === id));
+    };
+    menuButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const section = document.getElementById(button.dataset.target);
+        if (!section) return;
+        section.open = true;
+        setActive(section.id);
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+    document.querySelector('[data-action="expand"]').addEventListener('click', () => sections.forEach((section) => section.open = true));
+    document.querySelector('[data-action="collapse"]').addEventListener('click', () => sections.forEach((section, index) => section.open = index === 0));
+    sections.forEach((section) => {
+      section.addEventListener('toggle', () => {
+        if (section.open) setActive(section.id);
+      });
+    });
+    if (sections[0]) setActive(sections[0].id);
+  </script>
+</body>
+</html>
