@@ -91,6 +91,28 @@ const schema = a.schema({
       allow.authenticated(),
       allow.publicApiKey().to(['read']),
     ]),
+
+  // Capability catalog (skills / commands / experts / agents) mirrored from the
+  // gbautomation repo by scripts/publish_capabilities.py (GitHub Action). The repo
+  // is PRIVATE, so bodyMd carries internal detail — reads are Cognito-only and the
+  // public API key gets WRITE only (never read). Rendered by /ops/capabilities/*.
+  Capability: a
+    .model({
+      slug: a.string().required(),
+      kind: a.string().required(), // skill | command | expert | agent
+      owner: a.string(),
+      description: a.string(),
+      triggers: a.string(),
+      model: a.string(),
+      path: a.string().required(),
+      bodyMd: a.string(),
+      sha: a.string(),
+      updatedAt: a.datetime(),
+    })
+    .authorization((allow) => [
+      allow.authenticated().to(['read']),
+      allow.publicApiKey().to(['create', 'update', 'delete']),
+    ]),
 });
 
 export type Schema = ClientSchema<typeof schema>;
