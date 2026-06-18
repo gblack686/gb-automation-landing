@@ -12,6 +12,21 @@
   --text-light: #8C8A84;
   --border: #D6D4C8;
   --terracotta: #D97757;
+
+  /* GBAuto canonical theme tokens (see second-brain/systems/brand/gbauto-brand-tokens.md) */
+  --terracotta-hover: #B75F43;
+  --ink: #191919;
+  --cream-2: #E6E4D9;
+  --stone: #D6D4C8;
+  --text-mute: #8C8A84;
+  --text-muted-2: #5C5C5C;
+  --status-green: #4F9D69;
+  --status-amber: #C08A3E;
+  --status-blue: #3D6EA8;
+  --status-red: #B94A48;
+  --font-sans: 'Inter', sans-serif;
+  --font-serif: 'Newsreader', serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
 }
 
 @layer base {
@@ -277,6 +292,223 @@
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
   }
+}
+
+/* ===========================================================================
+   GBAuto theme chrome — ported from outputs/ai-resume + collapsible-report-template
+   Reusable presentation primitives for the /ops surface. Presentation only.
+   =========================================================================== */
+
+/* Ambient background gradients (page shell renders this fixed layer) */
+.gb-ambient {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -10;
+  overflow: hidden;
+}
+.gb-ambient .g1 {
+  position: absolute;
+  top: -12%;
+  left: -12%;
+  width: 48%;
+  height: 48%;
+  background: rgba(217, 119, 87, 0.05);
+  border-radius: 50%;
+  filter: blur(120px);
+}
+.gb-ambient .g2 {
+  position: absolute;
+  bottom: -12%;
+  right: -12%;
+  width: 48%;
+  height: 48%;
+  background: rgba(194, 109, 82, 0.09);
+  border-radius: 50%;
+  filter: blur(120px);
+}
+
+/* Eyebrow / uppercase metadata label */
+.gb-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+  font-weight: 600;
+}
+
+/* Section header: number + Newsreader title + trailing rule */
+.sec-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+.sec-head .num {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--terracotta);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.sec-head h2 {
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin: 0;
+}
+.sec-head .rule {
+  flex: 1;
+  height: 1px;
+  background: var(--stone);
+}
+
+/* Compact taxonomy pill */
+.gb-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 23px;
+  padding: 2px 8px;
+  border: 1px solid var(--stone);
+  border-radius: 999px;
+  line-height: 1;
+  background: rgba(255, 255, 255, 0.45);
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* Compact tag (keyword chip), with .key terracotta variant */
+.gb-tag {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  border: 1px solid var(--stone);
+  background: rgba(255, 255, 255, 0.5);
+  padding: 6px 11px;
+  border-radius: 7px;
+  color: var(--text-muted-2);
+  transition: all 0.2s ease;
+}
+.gb-tag:hover {
+  color: var(--cream-bg);
+  background: var(--ink);
+  border-color: var(--ink);
+}
+.gb-tag.key {
+  border-color: rgba(217, 119, 87, 0.4);
+  background: rgba(217, 119, 87, 0.08);
+  color: var(--terracotta-hover);
+}
+.gb-tag.key:hover {
+  background: var(--terracotta);
+  color: #fff;
+  border-color: var(--terracotta);
+}
+
+/* Status chips */
+.gb-chip {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 9px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+}
+.gb-chip-green { color: var(--status-green); background: rgba(79, 157, 105, 0.12); border-color: rgba(79, 157, 105, 0.25); }
+.gb-chip-amber { color: var(--status-amber); background: rgba(192, 138, 62, 0.12); border-color: rgba(192, 138, 62, 0.25); }
+.gb-chip-blue  { color: var(--status-blue);  background: rgba(61, 110, 168, 0.12); border-color: rgba(61, 110, 168, 0.25); }
+.gb-chip-red   { color: var(--status-red);   background: rgba(185, 74, 72, 0.12);  border-color: rgba(185, 74, 72, 0.25); }
+
+/* Collapsible / accordion chrome (mirrors collapsible-report-template <details>) */
+.gb-collapse {
+  border: 1px solid var(--stone);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.5);
+  overflow: hidden;
+  transition: background 0.2s ease;
+}
+.gb-collapse.is-open {
+  background: rgba(255, 255, 255, 0.68);
+}
+.gb-collapse-summary {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 14px 16px;
+  min-height: 52px;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  text-align: left;
+  font-family: inherit;
+  color: inherit;
+}
+.gb-collapse-index {
+  font-family: var(--font-mono);
+  color: var(--terracotta);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+.gb-collapse-title {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.18;
+  color: var(--ink);
+}
+.gb-collapse-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-mute);
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.gb-chevron {
+  color: var(--text-mute);
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  flex-shrink: 0;
+}
+.gb-collapse.is-open .gb-chevron {
+  transform: rotate(180deg);
+}
+/* Smooth height transition via grid-template-rows 0fr -> 1fr */
+.gb-collapse-region {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.gb-collapse.is-open .gb-collapse-region {
+  grid-template-rows: 1fr;
+}
+.gb-collapse-region > .gb-collapse-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+.gb-collapse-body {
+  border-top: 1px solid rgba(214, 212, 200, 0.75);
+  padding: 14px 18px 18px;
+  color: var(--text-muted-2);
+  font-size: 14px;
+  line-height: 1.7;
+}
+.gb-collapse-body strong { color: var(--ink); font-weight: 600; }
+
+/* Global prefers-reduced-motion guard for theme motion */
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1 !important; transform: none !important; }
+  .gb-chevron,
+  .gb-collapse-region { transition: none !important; }
 }
 
 @media (max-width: 768px) {

@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Download, ExternalLink, File, Folder } from 'lucide-react';
+import OpsPageShell from '../../../ops/components/OpsPageShell';
+import CollapsibleSection from '../../../ops/components/CollapsibleSection';
 
 function assetPath(artifact) {
   return `/artifacts/${encodeURIComponent(artifact.client)}/${encodeURIComponent(artifact.artifact_id)}/${encodeURIComponent(artifact.filename)}`;
@@ -90,77 +92,117 @@ export default function ArtifactsPage() {
 
   const selected = artifacts.find((artifact) => artifact.artifact_id === selectedId) || artifacts[0];
 
+  const hasStatus = Boolean(error) || (!manifest && !error) || Boolean(manifest && !artifacts.length);
+
   return (
-    <div>
-      <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-widest text-[#D97757]">Artifact Registry</p>
-          <h1 className="mt-2 font-serif text-4xl font-medium text-[#191919]">GBAutomation Files</h1>
-          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[#191919]/65">
-            {artifacts.length || 0} mirrored folders from the production artifact registry.
-          </p>
-        </div>
-        <input
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          placeholder="Search files"
-          className="h-11 w-full rounded-md border border-[#D6D4C8] bg-white/80 px-4 text-sm text-[#191919] outline-none focus:border-[#D97757] md:max-w-sm"
-        />
+    <OpsPageShell
+      eyebrow="Artifact Registry"
+      title="GBAutomation Files"
+      meta={<span className="gb-pill">{artifacts.length || 0} folders</span>}
+    >
+      <div className="space-y-3">
+        <CollapsibleSection
+          eyebrow="01"
+          title="Registry Overview"
+          meta={<span className="gb-chip gb-chip-green">{artifacts.length || 0} mirrored</span>}
+        >
+          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <p className="max-w-2xl text-sm leading-7 text-[#191919]/70">
+              <span className="font-semibold text-[#191919]">{artifacts.length || 0}</span> mirrored folders from the
+              production artifact registry. Search across artifact ids, filenames, projects, and types.
+            </p>
+            <input
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Search files"
+              className="input-field h-11 w-full md:max-w-sm"
+            />
+          </div>
+        </CollapsibleSection>
+
+        {hasStatus && (
+          <CollapsibleSection
+            eyebrow="02"
+            title="Status"
+            meta={
+              error ? (
+                <span className="gb-chip gb-chip-red">Error</span>
+              ) : !manifest ? (
+                <span className="gb-chip gb-chip-blue">Loading</span>
+              ) : (
+                <span className="gb-chip gb-chip-amber">Empty</span>
+              )
+            }
+            defaultOpen={Boolean(error)}
+          >
+            {error && (
+              <p className="rounded-2xl border border-red-200 bg-red-50 p-5 text-sm text-red-700">{error}</p>
+            )}
+            {!manifest && !error && <p className="text-sm text-[#191919]/60">Loading artifacts...</p>}
+            {manifest && !artifacts.length && <p className="text-sm text-[#191919]/60">No artifacts matched.</p>}
+          </CollapsibleSection>
+        )}
+
+        {selected && (
+          <CollapsibleSection
+            eyebrow="03"
+            title="Browse Artifacts"
+            meta={<span className="gb-pill">{artifacts.length} {artifacts.length === 1 ? 'file' : 'files'}</span>}
+            defaultOpen
+          >
+            <div className="grid gap-5 lg:grid-cols-[360px_minmax(0,1fr)]">
+              <aside className="glass-panel reveal max-h-[760px] overflow-auto rounded-2xl">
+                {artifacts.map((artifact) => (
+                  <button
+                    key={artifact.artifact_id}
+                    type="button"
+                    onClick={() => setSelectedId(artifact.artifact_id)}
+                    className={`grid w-full grid-cols-[24px_1fr] gap-3 border-b border-[#D6D4C8] px-4 py-4 text-left transition last:border-b-0 ${
+                      artifact.artifact_id === selected.artifact_id ? 'bg-[#191919] text-[#F3F1E7]' : 'text-[#191919] hover:bg-white/70'
+                    }`}
+                  >
+                    <Folder className="mt-0.5 h-4 w-4 text-[#D97757]" />
+                    <span className="min-w-0">
+                      <span className="block break-words text-sm font-semibold">{artifact.artifact_id}</span>
+                      <span className={`mt-1 block text-xs ${artifact.artifact_id === selected.artifact_id ? 'text-[#F3F1E7]/60' : 'text-[#191919]/50'}`}>
+                        {formatDate(artifact.created_at)} · {typeLabel(artifact)}
+                      </span>
+                    </span>
+                  </button>
+                ))}
+              </aside>
+
+              <section className="glass-panel reveal min-w-0 rounded-2xl p-5">
+                <div className="mb-5 flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
+                  <div className="min-w-0">
+                    <p className="gb-eyebrow break-words text-[#191919]/45">Artifact Registry / gbautomation / {selected.artifact_id}</p>
+                    <h2 className="mt-2 break-words font-serif text-3xl font-medium text-[#191919]">{selected.filename}</h2>
+                    <p className="mt-2 flex flex-wrap items-center gap-2 text-sm text-[#191919]/55">
+                      <span className="gb-tag key">{typeLabel(selected)}</span>
+                      <span>{selected.mime_type} · {formatSize(selected.size)}</span>
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <a href={assetPath(selected)} className="hover-shiny inline-flex items-center gap-2 rounded-md bg-[#191919] px-4 py-2 text-xs font-bold uppercase tracking-widest text-[#F3F1E7] hover:bg-[#D97757]">
+                      <Download className="h-3.5 w-3.5" />
+                      Raw
+                    </a>
+                    {selected.drive?.url && (
+                      <a href={selected.drive.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-md border border-[#D97757] px-4 py-2 text-xs font-bold uppercase tracking-widest text-[#D97757] hover:bg-[#D97757] hover:text-white">
+                        <ExternalLink className="h-3.5 w-3.5" />
+                        Drive
+                      </a>
+                    )}
+                  </div>
+                </div>
+                <div className="grid min-h-[460px] place-items-center rounded-3xl bg-[#F3F1E7] p-3">
+                  <Preview artifact={selected} />
+                </div>
+              </section>
+            </div>
+          </CollapsibleSection>
+        )}
       </div>
-
-      {error && <p className="rounded-2xl border border-red-200 bg-red-50 p-5 text-sm text-red-700">{error}</p>}
-      {!manifest && !error && <p className="text-sm text-[#191919]/60">Loading artifacts...</p>}
-      {manifest && !artifacts.length && <p className="text-sm text-[#191919]/60">No artifacts matched.</p>}
-
-      {selected && (
-        <div className="grid gap-5 lg:grid-cols-[360px_minmax(0,1fr)]">
-          <aside className="max-h-[760px] overflow-auto rounded-2xl border border-[#D6D4C8] bg-white/55">
-            {artifacts.map((artifact) => (
-              <button
-                key={artifact.artifact_id}
-                type="button"
-                onClick={() => setSelectedId(artifact.artifact_id)}
-                className={`grid w-full grid-cols-[24px_1fr] gap-3 border-b border-[#D6D4C8] px-4 py-4 text-left transition last:border-b-0 ${
-                  artifact.artifact_id === selected.artifact_id ? 'bg-[#191919] text-[#F3F1E7]' : 'text-[#191919] hover:bg-white'
-                }`}
-              >
-                <Folder className="mt-0.5 h-4 w-4 text-[#D97757]" />
-                <span className="min-w-0">
-                  <span className="block break-words text-sm font-semibold">{artifact.artifact_id}</span>
-                  <span className={`mt-1 block text-xs ${artifact.artifact_id === selected.artifact_id ? 'text-[#F3F1E7]/60' : 'text-[#191919]/50'}`}>
-                    {formatDate(artifact.created_at)} · {typeLabel(artifact)}
-                  </span>
-                </span>
-              </button>
-            ))}
-          </aside>
-
-          <section className="min-w-0 rounded-2xl border border-[#D6D4C8] bg-white/65 p-5 shadow-sm">
-            <div className="mb-5 flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
-              <div className="min-w-0">
-                <p className="break-words text-xs uppercase tracking-widest text-[#191919]/45">Artifact Registry / gbautomation / {selected.artifact_id}</p>
-                <h2 className="mt-2 break-words font-serif text-3xl font-medium text-[#191919]">{selected.filename}</h2>
-                <p className="mt-2 text-sm text-[#191919]/55">{selected.mime_type} · {formatSize(selected.size)}</p>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                <a href={assetPath(selected)} className="inline-flex items-center gap-2 rounded-md bg-[#191919] px-4 py-2 text-xs font-bold uppercase tracking-widest text-[#F3F1E7] hover:bg-[#D97757]">
-                  <Download className="h-3.5 w-3.5" />
-                  Raw
-                </a>
-                {selected.drive?.url && (
-                  <a href={selected.drive.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-md border border-[#D97757] px-4 py-2 text-xs font-bold uppercase tracking-widest text-[#D97757] hover:bg-[#D97757] hover:text-white">
-                    <ExternalLink className="h-3.5 w-3.5" />
-                    Drive
-                  </a>
-                )}
-              </div>
-            </div>
-            <div className="grid min-h-[460px] place-items-center rounded-3xl bg-[#F3F1E7] p-3">
-              <Preview artifact={selected} />
-            </div>
-          </section>
-        </div>
-      )}
-    </div>
+    </OpsPageShell>
   );
 }

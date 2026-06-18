@@ -20,6 +20,7 @@ import Repos from './pages/Repos';
 import HermesCommandLayer from './components/HermesCommandLayer';
 import RequireAuth from './components/RequireAuth';
 import GbautomationPortal from './clients/gbautomation/routes';
+import SmokeClientPortal from './clients/smoke-client/routes';
 import Jid5274Portal from './clients/jid5274/routes';
 import OpsRoutes from './ops/routes';
 
@@ -96,6 +97,14 @@ function App() {
                 allowedEmails={['gblack686@gmail.com']}
               >
                 <GbautomationPortal />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/clients/smoke-client/*"
+            element={
+              <RequireAuth allowedGroups={['tenant-smoke-client']}>
+                <SmokeClientPortal />
               </RequireAuth>
             }
           />

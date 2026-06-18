@@ -11,7 +11,11 @@ import OpsMacMini from './pages/OpsMacMini';
 
 export default function OpsRoutes() {
   return (
-    <div className="min-h-screen bg-[#F3F1E7] selection:bg-[#D97757] selection:text-white">
+    <div className="relative min-h-screen overflow-hidden bg-[#F3F1E7] selection:bg-[#D97757] selection:text-white">
+      <div className="gb-ambient" aria-hidden="true">
+        <div className="g1" />
+        <div className="g2" />
+      </div>
       <OpsHeader />
       <main className="mx-auto max-w-7xl px-6 py-10 md:py-14">
         <Routes>
