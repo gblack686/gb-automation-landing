@@ -1,22 +1,59 @@
 import { opsData } from '../data/opsData';
 import { SystemCard } from '../components/OpsCards';
+import OpsPageShell from '../components/OpsPageShell';
+import CollapsibleSection from '../components/CollapsibleSection';
 
 export default function OpsSystems() {
+  const systems = opsData.systems;
+  const onlineCount = systems.filter((s) => s.state === 'online').length;
+  const degradedCount = systems.filter((s) => s.state === 'degraded').length;
+
   return (
-    <div className="space-y-8">
-      <div>
-        <span className="text-xs font-bold uppercase text-[#D97757]">Runtime Inventory</span>
-        <h1 className="mt-3 font-serif text-4xl text-[#191919] md:text-5xl">Systems Dashboard</h1>
-        <p className="mt-3 max-w-3xl text-sm leading-6 text-[#191919]/70">
+    <OpsPageShell>
+      {/* Header — Runtime Inventory eyebrow + title + intro. Open by default so
+          the page isn't empty on load. */}
+      <CollapsibleSection
+        className="reveal"
+        eyebrow="Runtime Inventory"
+        title="Systems Dashboard"
+        defaultOpen
+        meta={
+          <span className="gb-pill">
+            {systems.length} systems
+          </span>
+        }
+      >
+        <p className="max-w-3xl text-sm leading-7 text-[#191919]/70">
           Curated state for the infrastructure that should be mirrored from the Mac Mini and
           supporting cloud services.
         </p>
-      </div>
-      <section className="grid gap-5 xl:grid-cols-2">
-        {opsData.systems.map((system) => (
-          <SystemCard key={system.name} system={system} />
-        ))}
-      </section>
-    </div>
+        <div className="mt-4 flex flex-wrap gap-2">
+          <span className="gb-chip gb-chip-green">
+            <span className="inline-block h-1.5 w-1.5 rounded-full bg-current" />
+            {onlineCount} online
+          </span>
+          {degradedCount > 0 ? (
+            <span className="gb-chip gb-chip-amber">
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-current" />
+              {degradedCount} degraded
+            </span>
+          ) : null}
+        </div>
+      </CollapsibleSection>
+
+      {/* Systems grid — collapsed by default. */}
+      <CollapsibleSection
+        className="reveal"
+        eyebrow="Inventory"
+        title="Service Catalog"
+        meta={<span className="gb-pill">{systems.length} entries</span>}
+      >
+        <section className="grid gap-5 xl:grid-cols-2">
+          {systems.map((system) => (
+            <SystemCard key={system.name} system={system} />
+          ))}
+        </section>
+      </CollapsibleSection>
+    </OpsPageShell>
   );
 }

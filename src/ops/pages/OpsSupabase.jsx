@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Activity, AlertTriangle, Database, ExternalLink, Search } from 'lucide-react';
+import OpsPageShell from '../components/OpsPageShell';
+import CollapsibleSection from '../components/CollapsibleSection';
 
 const preferredColumns = {
   cron_runs: ['cron_name', 'started_at', 'picked_count', 'ok_count', 'fail_count', 'skipped_count', 'host'],
@@ -151,7 +153,6 @@ function ActivityChart({ table }) {
       <div className="mt-3 flex h-24 items-end gap-1">
         {buckets.map((value, index) => (
           <span
-            // eslint-disable-next-line react/no-array-index-key
             key={index}
             className={`flex-1 rounded-t-sm ${value ? 'bg-[#2E6F64]' : 'bg-[#E6E4D9]'}`}
             title={`${value} rows`}
@@ -207,7 +208,6 @@ function DataTable({ table, rows }) {
         </thead>
         <tbody>
           {rows.map((row, index) => (
-            // eslint-disable-next-line react/no-array-index-key
             <tr key={index} className="border-b border-[#D6D4C8]/70 last:border-b-0">
               {columns.map((column) => <td key={column} className="max-w-xs px-3 py-2 align-top text-[#191919]/70"><Cell column={column} value={row[column]} /></td>)}
             </tr>
@@ -222,13 +222,17 @@ function DashboardCard({ table, query }) {
   const rows = table.rows.filter((row) => !query || JSON.stringify(row).toLowerCase().includes(query));
   const chartCounts = table.status_col ? table.summary.status_counts : table.summary.top_groups;
   return (
-    <article className="overflow-hidden rounded-md border border-[#D6D4C8] bg-white/45">
+    <article className="glass-panel overflow-hidden rounded-lg border border-[#D6D4C8]">
       <div className="flex flex-col gap-3 border-b border-[#D6D4C8] bg-white/35 p-5 lg:flex-row lg:items-start lg:justify-between">
         <div>
-          <h2 className="font-serif text-2xl text-[#191919]">{table.label}</h2>
+          <p className="gb-eyebrow flex items-center gap-2 text-[#D97757]">
+            <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#D97757]" aria-hidden="true" />
+            {table.name}
+          </p>
+          <h3 className="mt-2 font-serif text-2xl text-[#191919]">{table.label}</h3>
           <p className="mt-1 max-w-3xl text-sm leading-6 text-[#191919]/60">{table.description}</p>
         </div>
-        <span className="inline-flex min-h-0 w-fit rounded-md bg-[#191919] px-3 py-2 text-sm font-bold text-[#F3F1E7]">{rows.length}</span>
+        <span className="gb-pill h-fit shrink-0">{rows.length} rows</span>
       </div>
 
       <div className="grid gap-3 border-b border-[#D6D4C8] p-4 md:grid-cols-4">
@@ -294,72 +298,110 @@ export default function OpsSupabase() {
   }
 
   return (
-    <div className="space-y-8">
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <div>
-          <span className="text-xs font-bold uppercase text-[#D97757]">Supabase Mirror</span>
-          <h1 className="mt-3 font-serif text-4xl text-[#191919] md:text-5xl">Dashboard Series</h1>
-          <p className="mt-3 max-w-3xl text-sm leading-6 text-[#191919]/70">
+    <OpsPageShell>
+      <div className="space-y-3">
+        {/* Header — Supabase Mirror eyebrow + Dashboard Series title + snapshot freshness */}
+        <CollapsibleSection
+          eyebrow="Supabase Mirror"
+          title="Dashboard Series"
+          meta={
+            <span className={`gb-chip ${snapshot.live ? 'gb-chip-green' : 'gb-chip-amber'}`}>
+              {snapshot.live ? 'Live snapshot' : 'Offline snapshot'}
+            </span>
+          }
+        >
+          <p className="max-w-3xl text-sm leading-7 text-[#191919]/70">
             Sanitized, read-only operations data generated server-side from Supabase and rendered
             here without exposing service-role credentials to the browser.
           </p>
-        </div>
-        <div className="flex flex-wrap gap-2 text-xs font-semibold uppercase text-[#191919]/55">
-          <span className="rounded-md border border-[#D6D4C8] bg-white/45 px-3 py-2">{snapshot.live ? 'Live snapshot' : 'Offline snapshot'}</span>
-          <span className="rounded-md border border-[#D6D4C8] bg-white/45 px-3 py-2">{formatDate(snapshot.generated_at)}</span>
-        </div>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <span className={`gb-chip ${snapshot.live ? 'gb-chip-green' : 'gb-chip-amber'}`}>
+              {snapshot.live ? 'Live snapshot' : 'Offline snapshot'}
+            </span>
+            <span className="gb-chip gb-chip-blue">Generated {formatDate(snapshot.generated_at)}</span>
+          </div>
+        </CollapsibleSection>
+
+        {/* Summary metrics row */}
+        <CollapsibleSection
+          eyebrow="01"
+          title="Summary Metrics"
+          meta={<span className="gb-pill">{tables.length} tables in view</span>}
+        >
+          <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            <Metric label="Rows Loaded" value={visibleRows} />
+            <Metric label="Tables In View" value={tables.length} />
+            <Metric label="Failures" value={failureCount} />
+            <Metric label="Latest Event" value={formatDate(latest)} />
+          </section>
+        </CollapsibleSection>
+
+        {/* Dashboard selector + table filter + row search */}
+        <CollapsibleSection
+          eyebrow="02"
+          title="Dashboard Controls"
+          meta={<span className="gb-pill">{dashboards[active]?.title || active}</span>}
+        >
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex flex-wrap gap-2">
+              {dashboardKeys.map((key) => (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => { setActive(key); setTableFilter('all'); }}
+                  className={`min-h-0 rounded-md px-3 py-2 text-xs font-bold uppercase ${active === key ? 'bg-[#191919] text-[#F3F1E7]' : 'bg-white/60 text-[#191919]/60 hover:text-[#191919]'}`}
+                >
+                  {dashboards[key].title}
+                </button>
+              ))}
+            </div>
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <select value={tableFilter} onChange={(event) => setTableFilter(event.target.value)} className="rounded-md border border-[#D6D4C8] bg-white/70 px-3 py-2 text-sm text-[#191919]">
+                <option value="all">All tables</option>
+                {snapshot.tables.filter((table) => table.dashboard === active).map((table) => (
+                  <option key={table.name} value={table.name}>{table.label}</option>
+                ))}
+              </select>
+              <label className="flex min-h-0 items-center gap-2 rounded-md border border-[#D6D4C8] bg-white/70 px-3 py-2 text-sm text-[#191919]/65">
+                <Search className="h-4 w-4 text-[#D97757]" />
+                <input value={query} onChange={(event) => setQuery(event.target.value.toLowerCase())} placeholder="Search rows" className="min-h-0 border-0 bg-transparent p-0 text-sm outline-none" />
+              </label>
+            </div>
+          </div>
+        </CollapsibleSection>
+
+        {/* Dashboard cards — one per table */}
+        <CollapsibleSection
+          eyebrow="03"
+          title="Dashboard Tables"
+          defaultOpen
+          meta={<span className="gb-pill">{tables.length} in view</span>}
+        >
+          <div className="space-y-6">
+            {tables.map((table) => <DashboardCard key={table.name} table={table} query={query} />)}
+          </div>
+        </CollapsibleSection>
+
+        {/* Data Boundary callout */}
+        <CollapsibleSection
+          eyebrow="04"
+          title="Data Boundary"
+          meta={<span className="gb-chip gb-chip-amber">Boundary</span>}
+        >
+          <div className="rounded-md border border-amber-200 bg-amber-50 p-5 text-amber-900">
+            <div className="flex items-center gap-2">
+              <Database className="h-4 w-4" />
+              <h3 className="font-serif text-xl">Data Boundary</h3>
+            </div>
+            <p className="mt-3 max-w-4xl text-sm leading-6">
+              This page consumes a sanitized JSON snapshot from the website public folder. Live Supabase
+              reads, AWS Secrets Manager, and service-role keys stay in the generator process.
+            </p>
+          </div>
+        </CollapsibleSection>
       </div>
-
-      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <Metric label="Rows Loaded" value={visibleRows} />
-        <Metric label="Tables In View" value={tables.length} />
-        <Metric label="Failures" value={failureCount} />
-        <Metric label="Latest Event" value={formatDate(latest)} />
-      </section>
-
-      <section className="flex flex-col gap-3 rounded-md border border-[#D6D4C8] bg-[#E6E4D9]/60 p-3 lg:flex-row lg:items-center lg:justify-between">
-        <div className="flex flex-wrap gap-2">
-          {dashboardKeys.map((key) => (
-            <button
-              key={key}
-              type="button"
-              onClick={() => { setActive(key); setTableFilter('all'); }}
-              className={`min-h-0 rounded-md px-3 py-2 text-xs font-bold uppercase ${active === key ? 'bg-[#191919] text-[#F3F1E7]' : 'bg-white/60 text-[#191919]/60 hover:text-[#191919]'}`}
-            >
-              {dashboards[key].title}
-            </button>
-          ))}
-        </div>
-        <div className="flex flex-col gap-2 sm:flex-row">
-          <select value={tableFilter} onChange={(event) => setTableFilter(event.target.value)} className="rounded-md border border-[#D6D4C8] bg-white/70 px-3 py-2 text-sm text-[#191919]">
-            <option value="all">All tables</option>
-            {snapshot.tables.filter((table) => table.dashboard === active).map((table) => (
-              <option key={table.name} value={table.name}>{table.label}</option>
-            ))}
-          </select>
-          <label className="flex min-h-0 items-center gap-2 rounded-md border border-[#D6D4C8] bg-white/70 px-3 py-2 text-sm text-[#191919]/65">
-            <Search className="h-4 w-4 text-[#D97757]" />
-            <input value={query} onChange={(event) => setQuery(event.target.value.toLowerCase())} placeholder="Search rows" className="min-h-0 border-0 bg-transparent p-0 text-sm outline-none" />
-          </label>
-        </div>
-      </section>
-
-      <div className="space-y-6">
-        {tables.map((table) => <DashboardCard key={table.name} table={table} query={query} />)}
-      </div>
-
-      <section className="rounded-md border border-amber-200 bg-amber-50 p-5 text-amber-900">
-        <div className="flex items-center gap-2">
-          <Database className="h-4 w-4" />
-          <h2 className="font-serif text-2xl">Data Boundary</h2>
-        </div>
-        <p className="mt-3 max-w-4xl text-sm leading-6">
-          This page consumes a sanitized JSON snapshot from the website public folder. Live Supabase
-          reads, AWS Secrets Manager, and service-role keys stay in the generator process.
-        </p>
-      </section>
 
       <div className="hidden" aria-hidden="true"><Activity /></div>
-    </div>
+    </OpsPageShell>
   );
 }
