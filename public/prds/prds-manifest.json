@@ -206,5 +206,16 @@
     "description": ">-",
     "category": "plan",
     "public_url": "https://gbautomation.xyz/prds/2026-06-17-hermes-skillify-followup-integration"
+  },
+  {
+    "slug": "2026-06-17-hermes-cron-wiring-completion-and-dataout-plan",
+    "title": ">-",
+    "date": "",
+    "status": "active",
+    "client": "gbautomation",
+    "priority": "high",
+    "description": ">-",
+    "category": "plan",
+    "public_url": "https://gbautomation.xyz/prds/2026-06-17-hermes-cron-wiring-completion-and-dataout-plan"
   }
 ]

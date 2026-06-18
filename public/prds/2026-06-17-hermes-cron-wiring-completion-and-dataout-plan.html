@@ -1,0 +1,663 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hermes cron wiring completion + data-output strategy | GBAutomation</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&display=swap');
+    :root {
+      --cream-bg: #F3F1E7;
+      --cream-panel: #E6E4D9;
+      --text-main: #191919;
+      --text-muted: #5C5C5C;
+      --text-light: #8C8A84;
+      --border: #D6D4C8;
+      --terracotta: #D97757;
+      --paper: #FFFFFF;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text-main);
+      background: var(--cream-bg);
+      font-size: 14px;
+      line-height: 1.58;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+    a { color: var(--text-main); text-decoration-color: var(--terracotta); text-underline-offset: 3px; }
+    button { font: inherit; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(214, 212, 200, .7);
+      background: rgba(243, 241, 231, .93);
+      backdrop-filter: blur(12px);
+    }
+    .topbar-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 13px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .brand-lockup { display: inline-flex; align-items: center; gap: 9px; min-height: 28px; }
+    .brand-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(217, 119, 87, .18);
+    }
+    .brand-dot::after { content: ""; width: 8px; height: 8px; border-radius: 999px; background: var(--terracotta); }
+    .brand-text {
+      font-family: Newsreader, serif;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-size: 12px;
+    }
+    .source-name { color: var(--text-muted); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    header {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 34px 24px 26px;
+    }
+    .eyebrow {
+      color: var(--terracotta);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    h1 {
+      max-width: 920px;
+      margin: 10px 0 18px;
+      font-family: Newsreader, serif;
+      font-size: clamp(30px, 4vw, 48px);
+      font-weight: 500;
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+    .summary-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+    .summary-meta li {
+      min-height: 30px;
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, .45);
+      padding: 5px 9px;
+      border-radius: 6px;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .taxonomy-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0 0 14px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      min-height: 23px;
+      padding: 2px 8px;
+      border: 1px solid;
+      border-radius: 999px;
+      line-height: 1;
+    }
+    .pill-facet {
+      font-size: 8.5px;
+      font-weight: 700;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+    .pill-value {
+      color: var(--text-main);
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .layout {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 22px 24px 56px;
+      display: grid;
+      grid-template-columns: 252px minmax(0, 1fr);
+      gap: 22px;
+      align-items: start;
+    }
+    .section-menu {
+      position: sticky;
+      top: 64px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(230, 228, 217, .62);
+      backdrop-filter: blur(12px);
+      padding: 12px;
+    }
+    .menu-title {
+      margin: 0 0 10px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .menu-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+    .menu-actions button,
+    .section-menu nav button {
+      min-height: 34px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .46);
+      color: rgba(25, 25, 25, .72);
+      cursor: pointer;
+      transition: border-color .18s ease, color .18s ease, background .18s ease;
+    }
+    .menu-actions button { padding: 0 8px; font-size: 11px; font-weight: 700; }
+    .section-menu nav { display: grid; gap: 5px; }
+    .section-menu nav button {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 30px 1fr;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      text-align: left;
+      font-size: 12px;
+      line-height: 1.25;
+    }
+    .section-menu nav button span { color: var(--terracotta); font-size: 10px; font-weight: 700; letter-spacing: .08em; }
+    .menu-actions button:hover,
+    .section-menu nav button:hover,
+    .section-menu nav button.active {
+      border-color: var(--terracotta);
+      background: rgba(255, 255, 255, .72);
+      color: var(--text-main);
+    }
+    .sections { display: grid; gap: 10px; }
+    details.section {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .5);
+      overflow: hidden;
+    }
+    details.section[open] { background: rgba(255, 255, 255, .68); }
+    details.section summary {
+      min-height: 52px;
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 12px 14px;
+      cursor: pointer;
+      list-style: none;
+    }
+    details.section summary::-webkit-details-marker { display: none; }
+    .section-index {
+      color: var(--terracotta);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+    }
+    .section-title {
+      font-family: Newsreader, serif;
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.18;
+    }
+    .section-count {
+      color: var(--text-light);
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .section-body {
+      border-top: 1px solid rgba(214, 212, 200, .75);
+      padding: 4px 18px 18px 68px;
+    }
+    .section-body h2,
+    .section-body h3,
+    .section-body h4,
+    .section-body h5 {
+      margin: 18px 0 8px;
+      color: var(--text-main);
+      font-family: Newsreader, serif;
+      font-weight: 500;
+      line-height: 1.2;
+    }
+    .section-body h2 { font-size: 19px; }
+    .section-body h3 { font-size: 17px; }
+    .section-body h4,
+    .section-body h5 {
+      font-family: Inter, sans-serif;
+      color: var(--text-light);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+    .section-body p,
+    .section-body li { color: var(--text-muted); font-size: 14px; line-height: 1.66; }
+    .section-body p { margin: 10px 0; }
+    .section-body ul,
+    .section-body ol { margin: 10px 0 10px 18px; padding: 0; }
+    .section-body li { margin: 5px 0; padding-left: 2px; }
+    .section-body .task { list-style: none; margin-left: -18px; display: flex; gap: 8px; align-items: flex-start; }
+    .section-body input[type="checkbox"] { margin-top: 4px; accent-color: var(--terracotta); }
+    code {
+      border: 1px solid rgba(217, 119, 87, .22);
+      border-radius: 4px;
+      background: rgba(217, 119, 87, .10);
+      padding: 1px 4px;
+      color: var(--text-main);
+      font-size: .92em;
+    }
+    pre {
+      overflow: auto;
+      margin: 12px 0;
+      border-radius: 8px;
+      background: #191919;
+      color: #F3F1E7;
+      padding: 14px;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+    pre code { border: 0; background: transparent; color: inherit; padding: 0; }
+    blockquote {
+      margin: 12px 0;
+      padding: 10px 12px;
+      border-left: 3px solid var(--terracotta);
+      background: rgba(230, 228, 217, .5);
+    }
+    hr { border: 0; border-top: 1px solid var(--border); margin: 18px 0; }
+    .table-wrap { overflow-x: auto; margin: 12px 0; border: 1px solid var(--border); border-radius: 8px; }
+    table { width: 100%; border-collapse: collapse; min-width: 560px; background: rgba(255, 255, 255, .5); }
+    th,
+    td { border-bottom: 1px solid rgba(214, 212, 200, .75); padding: 8px 10px; text-align: left; font-size: 12px; vertical-align: top; }
+    th { color: var(--text-main); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; }
+    tr:last-child td { border-bottom: 0; }
+    .empty { color: var(--text-light); font-style: italic; }
+    footer {
+      border-top: 1px solid rgba(214, 212, 200, .78);
+      background: rgba(230, 228, 217, .45);
+    }
+    .footer-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    .footer-label {
+      margin-bottom: 12px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .metadata-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .meta-item {
+      min-width: 0;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .42);
+      padding: 9px 10px;
+    }
+    .meta-item span {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--text-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .meta-item strong {
+      display: block;
+      overflow-wrap: anywhere;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.35;
+    }
+    @media (max-width: 860px) {
+      .topbar-inner,
+      header,
+      .layout,
+      .footer-inner { padding-left: 16px; padding-right: 16px; }
+      .layout { display: block; }
+      .section-menu { position: static; margin-bottom: 14px; }
+      .section-body { padding-left: 18px; }
+      .metadata-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 540px) {
+      .topbar-inner { align-items: flex-start; flex-direction: column; gap: 6px; }
+      details.section summary { grid-template-columns: 34px 1fr; }
+      .section-count { grid-column: 2; }
+      h1 { font-size: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand-lockup"><span class="brand-dot"></span><span class="brand-text">GBAutomation</span></div>
+      <div class="source-name">2026-06-17-hermes-cron-wiring-completion-and-dataout-plan.md</div>
+    </div>
+  </div>
+  <header>
+    <div class="eyebrow">Plan Brief</div>
+    <h1>Hermes cron wiring completion + data-output strategy</h1>
+    <div class="taxonomy-pills"><span class="pill" style="background:rgba(90, 125, 140, 0.12);border-color:rgba(90, 125, 140, 0.42);"><span class="pill-facet" style="color:#5A7D8C;">domain</span><span class="pill-value">hermes</span></span><span class="pill" style="background:rgba(79, 157, 105, 0.12);border-color:rgba(79, 157, 105, 0.42);"><span class="pill-facet" style="color:#4F9D69;">service</span><span class="pill-value">supabase</span></span><span class="pill" style="background:rgba(124, 108, 203, 0.12);border-color:rgba(124, 108, 203, 0.42);"><span class="pill-facet" style="color:#7C6CCB;">service</span><span class="pill-value">langfuse</span></span><span class="pill" style="background:rgba(90, 125, 140, 0.12);border-color:rgba(90, 125, 140, 0.42);"><span class="pill-facet" style="color:#5A7D8C;">domain</span><span class="pill-value">observability</span></span></div>
+    <ul class="summary-meta">
+      <li>Client: gbautomation</li><li>Priority: high</li><li>Status: active</li><li>hermes/cron</li><li>tac</li>
+      <li>Owner: GBAutomation</li>
+      <li>Created: 2026-06-17</li>
+      <li>8 sections</li>
+      <li>2,137 words</li>
+    </ul>
+  </header>
+  <main class="layout">
+    <aside class="section-menu" aria-label="Plan sections">
+  <div class="menu-title">Sections</div>
+  <div class="menu-actions">
+    <button type="button" data-action="expand">Expand all</button>
+    <button type="button" data-action="collapse">Collapse all</button>
+  </div>
+  <nav><button type="button" data-target="overview"><span>01</span>Overview</button>
+<button type="button" data-target="tl-dr-what-s-missing"><span>02</span>TL;DR — what&#x27;s missing</button>
+<button type="button" data-target="workstream-a-supabase-schema-completion-p0"><span>03</span>Workstream A — Supabase schema completion (P0)</button>
+<button type="button" data-target="workstream-b-langfuse-contracts-advanced-schema-p0"><span>04</span>Workstream B — Langfuse contracts → advanced schema (P0)</button>
+<button type="button" data-target="workstream-c-receipt-contract-conformance-test-coverage-p0-p1"><span>05</span>Workstream C — Receipt-contract conformance + test coverage (P0/P1)</button>
+<button type="button" data-target="workstream-d-data-output-organization-gitignore-p1-pc-doable-now"><span>06</span>Workstream D — Data-output organization + <code>.gitignore</code> (P1, PC-doable now)</button>
+<button type="button" data-target="open-decisions-block-implementation-direction"><span>07</span>Open decisions (block implementation direction)</button>
+<button type="button" data-target="suggested-sequencing"><span>08</span>Suggested sequencing</button></nav>
+</aside>
+    <div class="sections">
+      <details class="section" id="overview" open>
+  <summary>
+    <span class="section-index">01</span>
+    <span class="section-title">Overview</span>
+    <span class="section-count">31 words</span>
+  </summary>
+  <div class="section-body">
+    <p>Audit by 5 parallel investigators (Supabase schema · integration/tests · TAC completeness · data-output/gitignore · Langfuse contracts). High-confidence findings are <strong>corroborated across 2–3 independent agents</strong>. Evidence is cited as <code>file:line</code> throughout.</p>
+  </div>
+</details>
+<details class="section" id="tl-dr-what-s-missing">
+  <summary>
+    <span class="section-index">02</span>
+    <span class="section-title">TL;DR — what&#x27;s missing</span>
+    <span class="section-count">224 words</span>
+  </summary>
+  <div class="section-body">
+    <ol>
+<li><strong><code>hermes_cron_catalog</code> table does not exist and has NO migration</strong> — the wrapper upserts it every</li>
+<p>tick; the insert fails silently (best-effort). <em>(3 agents)</em></p>
+<li><strong>The Langfuse leg is a no-op</strong> — <code>open_langfuse_span()</code> builds a dict and hard-codes</li>
+<p><code>posted=False</code>. No trace/observation/generation/score is ever POSTed, so the 1h-smoke acceptance &quot;every tick has a trace&quot; is <strong>unsatisfiable</strong>. The advanced emitter already exists. <em>(3 agents)</em></p>
+<li><strong>The live persistence path has ZERO test coverage</strong> — every test runs <code>--stub</code>/offline, so</li>
+<p><code>write_receipts()</code> and the whole Supabase/Langfuse/Kanban layer is never exercised. <em>(2 agents)</em></p>
+<li><strong><code>host-job-run.v1</code> receipt is non-conforming</strong> (5 field violations) and the canonical jsonschema</li>
+<p>validator that ships in <code>host-job-data-output</code> is never wired in. <em>(area C)</em></p>
+<li><strong>4 of 5 cron skills bypass <code>run_managed_cron.py</code></strong> with divergent receipt schemas, despite the</li>
+<p>wrapper docstring claiming &quot;EVERY Hermes managed cron is run through this one wrapper.&quot; <em>(area B)</em></p>
+<li><strong>Data-output sprawl</strong> — two untracked trees carry nested <code>.git</code> (CI-checkout hazard), the</li>
+<p><code>prd-index</code> ignore glob is too narrow, 10 loose screenshots bypass the registry, and a complete plan-referenced skill (<code>stale-browser-cron</code>) is parked in a dot-dir. <em>(area D)</em></p>
+</ol>
+<p>The skills the user asked about all <strong>exist</strong> in <code>resources/skills/</code>: TAC data-contract = <code>tac-data-output-patterns</code> + <code>tac-supabase-observability</code>; gbauto schema/CLI = <code>gbauto-supabase</code> + <code>supabase-cli-ops</code>; receipt envelopes = <code>host-job-data-output</code> (<code>host-job-run.v1</code>) + <code>mac-mini-data-output</code>. TAC primitives are correctly <strong>wrapped, not reinvented</strong> — the gap is conformance + wiring, not missing copies.</p>
+<hr>
+  </div>
+</details>
+<details class="section" id="workstream-a-supabase-schema-completion-p0">
+  <summary>
+    <span class="section-index">03</span>
+    <span class="section-title">Workstream A — Supabase schema completion (P0)</span>
+    <span class="section-count">425 words</span>
+  </summary>
+  <div class="section-body">
+    <h4>A1. Author <code>hermes_cron_catalog</code> migration <em>(missing-table, high — 3 agents)</em></h4>
+<p><code>run_managed_cron.py:93,640</code> upserts <code>CATALOG_TABLE=&#x27;hermes_cron_catalog&#x27;</code> on-conflict <code>name</code>; <code>sync_cron_catalog.py:47,126</code> and <code>sprint-manager-cron/run.py:490</code> + <code>artifact-save-cron/run.py:322</code> also write it. <strong>No <code>.sql</code> defines it anywhere</strong> — columns live only in the phase4 plan markdown. <code>build_catalog_row</code> (<code>run_managed_cron.py:523-541</code>) sends 13 keys <strong>un-projected</strong> (no <code>_project</code> guard), so the table must expose all of them.</p>
+<ul>
+<li><strong>Action (PC):</strong> author <code>supabase/migrations/20260617020000_create_hermes_cron_catalog.sql</code>:</li>
+<p><code>name text primary key, host, profile, schedule, mode default &#x27;managed&#x27;, script_or_skill, bucket default &#x27;gap&#x27;, state default &#x27;active&#x27;, openclaw_twin, last_green_at timestamptz, manifest_synced_at timestamptz, schema_version int default 1, tenant text not null default &#x27;gbautomation&#x27;, created_at, updated_at</code> + index <code>(tenant, name)</code> + RLS mirroring <code>host-job-data-output/references/migrations.sql</code>.</p>
+<li><strong>A1a — last_green_at monotonicity</strong> <em>(column-mismatch, med):</em> <code>build_catalog_row:537</code> sends</li>
+<p><code>last_green_at=None</code> on non-ok ticks; a blanket on-conflict <code>SET</code> would clobber the watermark, defeating the docstring&#x27;s &quot;advance last_green_at iff outcome=ok.&quot; Make it monotonic: <code>last_green_at = COALESCE(EXCLUDED.last_green_at, hermes_cron_catalog.last_green_at)</code>.</p>
+<li><strong>A1b — <code>cron_id</code> reconciliation:</strong> <code>sync_cron_catalog.py:14-17</code> lists <code>cron_id</code> as canonical but</li>
+<p>neither row builder emits it. Decide: add to the migration + both builders, or drop from the doc.</p>
+</ul>
+<h4>A2. Apply the three Mini-side migrations <em>(unapplied-migration, high)</em></h4>
+<p>DDL fails DNS from the PC (<code>SELECT</code> works); apply on the Mac Mini via <code>gbauto-supabase migrate</code>. <strong>The <code>supabase_migrations</code> ledger is stale (2 of 31 recorded)</strong> — judge applied-state by table/constraint existence, not the ledger. Apply order:</p>
+<ol>
+<li><code>supabase/migrations/20260617000000_create_prompt_profile_applies.sql</code> — unblocks Canopy</li>
+<p><code>ship_prompt_profile_apply.py</code>. (Not on the cron hot path.)</p>
+<li><strong>NEW</strong> <code>20260617020000_create_hermes_cron_catalog.sql</code> (A1) — unblocks the catalog leg.</li>
+<li><code>resources/skills/hermes-cron-manager/migrations/20260617010000_cron_run_outputs_managed_status.sql</code></li>
+<p>— <strong>only if</strong> adopting Strategy B (see A3). Also: this file lives <strong>outside</strong> <code>supabase/migrations/</code> so the standard migrate flow won&#x27;t pick it up — move or document it.</p>
+</ol>
+<ul>
+<li><strong>Validation:</strong> re-run a <code>--inline</code> (live) managed tick; assert <code>write_result.hermes_cron_catalog.ok</code></li>
+<p>and <code>write_result.cron_run_outputs.ok</code> are both true; readback via <code>gbauto-supabase --json query</code> (POSIX <code>~*</code>, never <code>LIKE %</code>).</p>
+</ul>
+<h4>A3. <code>cron_run_outputs.status</code> — Strategy A vs B <em>(decision)</em></h4>
+<p>Live <code>cron_run_outputs_status_check</code> = <code>{pr_opened, pushed_no_pr, noop, failed_silent, error, timeout}</code> (a real CHECK, <strong>not</strong> free text). Strategy A (default <code>OUTPUT_STATUS_MAP</code> = <code>{ok:noop, partial:failed_silent, fail:error}</code>) <strong>passes today, zero DDL</strong>. Strategy B (<code>managed_ok/partial/fail</code>) needs migration #3 applied <strong>first</strong> or every insert violates the CHECK. <strong>Recommendation:</strong> keep Strategy A unless dashboards must distinguish managed ticks from legacy dispatch outputs. The two constants + the migration must move in lockstep.</p>
+<h4>A4. Clean legs (no action) <em>(low)</em></h4>
+<p><code>cron_runs</code>, <code>cron_run_outputs</code>, <code>host_job_runs</code>, <code>agent_runs</code> were verified structurally clean — the <code>_project()</code> tuples (<code>CRON_RUNS_DB_COLS</code>/<code>CRON_OUTPUTS_DB_COLS</code>) are the reason they don&#x27;t silently fail; keep them in lockstep when adding columns. (Note: <code>host_job_runs</code> <strong>content</strong> is non-conforming — see Workstream C.)</p>
+<hr>
+  </div>
+</details>
+<details class="section" id="workstream-b-langfuse-contracts-advanced-schema-p0">
+  <summary>
+    <span class="section-index">04</span>
+    <span class="section-title">Workstream B — Langfuse contracts → advanced schema (P0)</span>
+    <span class="section-count">413 words</span>
+  </summary>
+  <div class="section-body">
+    <p>The cron stack emits <strong>nothing</strong> to Langfuse: <code>open_langfuse_span()</code> (<code>run_managed_cron.py:662-687</code>) loads creds, sets <code>posted=False</code> (&quot;owned by the runtime tracer&quot;), and the read-back it promises is unimplemented. Meanwhile the <strong>advanced machinery already exists</strong> — this is a pure wiring gap.</p>
+<div class="table-wrap"><table><thead><tr><th>Dimension</th><th>Cron stack</th><th>Advanced standard (already built)</th></tr></thead><tbody><tr><td>trace / observation nesting</td><td>MISSING</td><td><code>resources/lib/tracing.py:529</code> <code>emit_eagle_graph_trace()</code> (AGENT→GENERATION→CHAIN→TOOL, <code>trace.format=eagle-graph.v1</code>)</td></tr>
+<tr><td>generation + model + usage/cost</td><td>PARTIAL (cost→Supabase only)</td><td><code>2026-06-02-trace-attribution-standard-plan.md:74</code> <code>GENERATION.usageDetails{input,output,cache_read,reasoning,total}</code></td></tr>
+<tr><td>scores</td><td>MISSING</td><td><code>scripts/ci/post_langfuse_scores.py:40</code> <code>_post_score()</code> → <code>/api/public/scores</code></td></tr>
+<tr><td>sessions</td><td>MISSING</td><td><code>tracing.py:403</code> maps <code>metadata.session_id</code> → <code>langfuse.session.id</code> (use <code>tick_id</code>)</td></tr>
+<tr><td>environments</td><td>MISSING</td><td><code>resources/cc-otel/cc-log-to-lf.py:23</code> <code>deployment.environment</code></td></tr>
+<tr><td>tags (harness/platform/trigger/env/model)</td><td>MISSING</td><td><code>check-langfuse-logs/SKILL.md:96-159</code> producer-field contract</td></tr>
+<tr><td>trace mirror + readback</td><td>MISSING</td><td><code>tac-supabase-observability</code>: <code>sync_langfuse_traces_to_supabase.py</code> + <code>verify_trace_coverage.py</code></td></tr></tbody></table></div>
+<h4>B1. Wire the emitter <em>(high)</em></h4>
+<p>In <code>run_managed_cron.py</code>, replace the dead <code>open_langfuse_span()</code> with a call to <code>resources.lib.tracing.emit_eagle_graph_trace(name=f&#x27;managed-cron:{name}&#x27;, harness=&#x27;hermes&#x27;, platform=&#x27;cron&#x27;, trigger=f&#x27;managed_cron:{name}&#x27;, generation={&#x27;model&#x27;: manager_model, &#x27;output&#x27;: assessment, &#x27;usage&#x27;: &lt;token usage&gt;}, chain={&#x27;name&#x27;:&#x27;assess&#x27;,&#x27;output&#x27;:metrics}, tags=langfuse_tags, metadata={&#x27;session_id&#x27;: tick_id, &#x27;tenant&#x27;: tenant, &#x27;environment&#x27;: host_class})</code>; capture <code>trace_id</code>/<code>trace_url</code> into the receipt + card.</p>
+<h4>B2. Post the manager verdict as a score <em>(high)</em></h4>
+<p>The manager IS an LLM judge. After emitting the trace, post <code>manager_outcome</code> (ok=1/partial=0.5/ fail=0) and <code>cost_usd</code> scores via a reuse of <code>post_langfuse_scores._post_score</code> (factor it into <code>tracing.py</code> as <code>post_score()</code>; add the names to <code>VALID_SCORE_NAMES</code>).</p>
+<h4>B3. Capture token usage <em>(high)</em></h4>
+<p>Extend <code>_coerce_assessment</code> (<code>run_managed_cron.py:363</code>) + <code>assess_hermes</code>/<code>assess_claude_subprocess</code> to return token usage, and populate <code>GENERATION.usageDetails</code> (closes the &quot;token usage populated: 0&quot; gap from <code>2026-06-10-langfuse-backed-build-report-design.md:66</code>).</p>
+<h4>B4. Extend the tag schema <em>(med)</em></h4>
+<p><code>required_langfuse_tags()</code> (<code>run_managed_cron.py:577</code>) + <code>LANGFUSE_BASE_TAGS</code> in the validator + the 5 <code>managed.yaml</code> <code>langfuse_tags</code> blocks should add <code>harness:hermes, platform:cron, trigger:managed_cron:&lt;name&gt;, env:&lt;host_class&gt;, model:&lt;manager_model&gt;</code>. Prefer <code>tracing.eagle_trace_tags()</code>/<code>eagle_trace_metadata()</code> so the stack inherits the canonical contract. <strong>Decision:</strong> enforce as hard gate now, or metadata-only until source emission is proven by the smoke? <strong>Recommendation:</strong> metadata-only first; gate after B1–B3 land and the smoke shows green read-back.</p>
+<h4>B5. Trace-verify test <em>(high — also closes the smoke gap)</em></h4>
+<p>Add a creds-gated test (skip-when-absent, mirroring <code>tests/test_check_langfuse_logs.py</code>) that runs a live tick and asserts <code>check_langfuse_logs.read_trace_by_id()</code> returns the emitted <code>trace_id</code> with ≥2 observations and non-empty usage. This is what makes the 1h-smoke &quot;every tick has a trace&quot; acceptance satisfiable. Mirror new traces into <code>langfuse_traces</code> via <code>sync_langfuse_traces_to_supabase.py</code> for the dossier join.</p>
+<hr>
+  </div>
+</details>
+<details class="section" id="workstream-c-receipt-contract-conformance-test-coverage-p0-p1">
+  <summary>
+    <span class="section-index">05</span>
+    <span class="section-title">Workstream C — Receipt-contract conformance + test coverage (P0/P1)</span>
+    <span class="section-count">453 words</span>
+  </summary>
+  <div class="section-body">
+    <h4>C1. Conform <code>host-job-run.v1</code> <em>(column-mismatch, high)</em></h4>
+<p><code>build_host_job_receipt</code> (<code>run_managed_cron.py:491-520</code>) violates <code>host-job-data-output/references/host-job-run.schema.json</code> on <strong>5 fields</strong>:</p>
+<ol>
+<li><code>run_id=managed-cron:{name}:{tick}</code> ✗ pattern <code>^(mm|st|hj)-…</code> → emit <code>hj-&lt;YYYYMMDDTHHMMSSZ&gt;-&lt;slug&gt;</code>.</li>
+<li><code>status=outcome</code> where <code>&#x27;fail&#x27;</code> ✗ enum <code>{ok,failed,skipped,blocked,partial}</code> → map <code>fail→failed</code></li>
+<p>(a raw <code>fail</code> already pollutes the canonical table — <code>host_job_runs.status</code> has <strong>no CHECK</strong>).</p>
+<li><code>execution</code> omits required <code>started_at</code> + <code>duration_seconds</code> (emits <code>elapsed_s</code>/<code>ended_at</code>).</li>
+<li><code>host_class=&#x27;mac-mini&#x27;</code> triggers the conditional requiring <code>pathway/source/request/skill_chain</code>;</li>
+<p><code>pathway=&#x27;hermes-cron-managed&#x27;</code> ✗ enum, <code>source</code> missing <code>system</code>, <code>request</code>+<code>skill_chain</code> absent.</p>
+</ol>
+<ul>
+<li><strong>Decision:</strong> keep <code>host_class=&#x27;mac-mini&#x27;</code> (and add the required shape) vs set <code>&#x27;other&#x27;</code> to skip the</li>
+<p>conditional. Either way the run_id/status/execution fixes are mandatory.</p>
+</ul>
+<h4>C2. Wire the canonical validator into tests <em>(missing-test, high)</em></h4>
+<p><code>host-job-data-output/tests/test_schema.py</code> jsonschema-validates against the canonical schema; the cron stack never uses it (<code>insert_host_job_run_to_supabase.py:121</code> checks only <code>schema_version</code>). Add the validator to <code>test_run_managed_cron.py</code> and optionally an envelope-conformance sub-check to <code>hermes-ci-gate</code> so future receipt-builder drift fails the gate.</p>
+<h4>C3. Live persistence round-trip test <em>(missing-test, high — 2 agents)</em></h4>
+<p>The single path that inserts into Supabase (<code>write_receipts</code>, <code>run_managed_cron.py:628</code>) is never run under test — every test passes <code>--stub</code> (offline). Add an env-gated (<code>HCM_LIVE_TEST=1</code>) end-to-end non-stub tick that asserts <code>cron_runs</code>/<code>cron_run_outputs</code>/<code>host_job_runs</code>/<code>agent_runs</code> rows insert + read back (status accepted, <code>agent_summary</code> non-empty, ids match). Also untested: <code>build_card_row</code> + Kanban <code>upsert_row</code>, the Langfuse leg (B5), and the morning-brief digest content/<code>deliver_origin</code>.</p>
+<h4>C4. Unify (or contract-test) the forked receipt chain <em>(missing-integration, high — DECISION)</em></h4>
+<p>Only <code>morning-brief-cron</code> delegates to <code>run_managed_cron.py</code>; <strong>git-sync, prd-index, sprint-manager, artifact-save each ship a parallel <code>run.py</code> with divergent receipt schemas</strong> (e.g. git-sync writes 7 local JSON files; sprint-manager rows lack <code>tick_id</code>/<code>issue_id</code>). The wrapper docstring claims it&#x27;s the one true path. <strong>Decision required:</strong></p>
+<ul>
+<li><strong>(a) Unify</strong> — make each skill&#x27;s <code>run.py</code> a thin tool returning a JSON summary; let</li>
+<p><code>run_managed_cron.py</code> own all 7 receipt legs (the morning-brief pattern). Deletes the per-skill receipt code. <em>(Recommended — single contract, single test surface.)</em></p>
+<li><strong>(b) Keep two-tier</strong> — add a contract test per skill asserting its row shapes match the real DB</li>
+<p>columns. Documents the divergence as intentional.</p>
+</ul>
+<h4>C5. Surface dead receipt legs <em>(missing-integration, med)</em></h4>
+<p><code>write_receipts</code> swallows leg failures; the tick still returns exit 0 and the digest still says <code>outcome:ok</code> even with the catalog leg failing 100%. Promote leg failures into the <code>managed-run.v1</code> risk list + the morning-brief digest, and run <code>validate-cron-deploy</code> before declaring crons live.</p>
+<h4>C6. Gate the per-skill descriptors <em>(missing-integration, med)</em></h4>
+<p><code>hermes-ci-gate</code>&#x27;s <code>managed_manifest</code> check only validates the central <code>crons.manifest.yaml</code> (which rc2-skips by design), so the gate never validates the 5 per-skill <code>managed.yaml</code>. The <code>test_managed_yaml_descriptors.py</code> guard runs only in <code>pr-validate.yml</code>. Add a 6th gate sub-check (or point <code>HERMES_CI_GATE_MANIFEST_FILE</code> per-descriptor) so the merge-gating gate covers them too.</p>
+<hr>
+  </div>
+</details>
+<details class="section" id="workstream-d-data-output-organization-gitignore-p1-pc-doable-now">
+  <summary>
+    <span class="section-index">06</span>
+    <span class="section-title">Workstream D — Data-output organization + <code>.gitignore</code> (P1, PC-doable now)</span>
+    <span class="section-count">421 words</span>
+  </summary>
+  <div class="section-body">
+    <p>The 143-line <code>.gitignore</code> under-covers the current sprawl. <strong>Two untracked trees carry nested <code>.git</code> with no <code>.gitmodules</code></strong> (<code>workflows/triage</code> → <code>gitdir ../../.git/modules/workflows/triage</code>; <code>outputs/_workspace/app-logo-motion/.git</code> on <code>feat/v5-remotion</code>) — staging either recreates the exact orphan-submodule-pointer failure that broke <code>actions/checkout</code> (the reason <code>.gitignore:32-36</code> exists).</p>
+<h4>D1. Recover the parked skill <em>(high — do NOT ignore)</em></h4>
+<p><code>.deferred-skills/stale-browser-cron/</code> is a <strong>complete, plan-referenced skill</strong> (SKILL.md <code>status: active</code>, <code>managed.yaml</code>, <code>scripts/{run.py,cdp_janitor.sh,assess_params.yaml}</code>, tests) — the &quot;Stale browsers&quot; job in the active 1h-smoke plan. <strong>Recover</strong> → <code>resources/skills/stale-browser-cron/</code>, commit alongside the other 5 crons, remove the empty <code>.deferred-skills/</code>. (Per the 2026-06-17-hermes-skillify-followup-integration follow-up, it needs the <code>execute()</code> orchestrator authored first — fold that into the recovery.)</p>
+<h4>D2. <code>.gitignore</code> additions (ready to paste)</h4>
+<pre><code>artifacts/prd-index/                 # whole regenerated index dir (supersedes the *.json-only glob)
+/artifacts/*.png                     # loose root screenshots -&gt; publish to artifact-registry instead
+/artifacts/*.html                    # loose root html -&gt; publish to artifact-registry instead
+workflows/                           # nested .git, no .gitmodules -&gt; orphan-submodule -&gt; breaks CI checkout
+outputs/_workspace/                  # build scratch; carries nested .git; publish only the render
+.tmp-pairing/                        # ephemeral prd&lt;-&gt;task pairing dumps
+**/.skill-sync-state.json            # runtime skill-sync cursor
+second-brain/daily/morning-brief-feed.md   # defensive: wrapper default appends per tick in-repo</code></pre>
+<ul>
+<li>Replace the existing narrow <code>artifacts/prd-index/*.json</code> line with the directory form.</li>
+<li><code>/artifacts/<em>.png|</em>.html</code> are <strong>anchored single-level</strong> so curated subdirs (<code>plan-renders/</code>,</li>
+<p><code>hermes-theme/</code>, <code>artifact-viewer/</code>) stay tracked. Already-tracked root images aren&#x27;t untracked by this; <code>git rm --cached</code> them separately if they should move to the registry (open decision).</p>
+<li><strong><code>out_root</code>/<code>state_dir</code> need NO ignore</strong> — they default to OS tempdir + <code>~/.hermes/state</code></li>
+<p>(outside the repo). If any skill passes <code>--out-root</code> into the tree, fix the skill, don&#x27;t ignore it.</p>
+</ul>
+<h4>D3. Publish loose durable artifacts <em>(do, don&#x27;t commit loose)</em></h4>
+<p>10 loose <code>artifacts/</code> root screenshots/HTML should go through the established pipeline → <code>second-brain/intelligence/artifact-registry/&lt;client&gt;/&lt;artifact_id&gt;/</code> + Drive (<code>gbauto-artifact-pipeline</code>). <code>hermes-theme-options.html</code> was already published correctly as the reference. <strong>Note:</strong> <code>artifact_publish_hook.py</code> accepts only <code>.md/.html/.pdf</code> — PNGs publish via the <code>drive_sync</code>/registry-mirror path, not the <code>.md</code> hook (open question to confirm).</p>
+<h4>D4. Commit (don&#x27;t ignore) convention-consistent outputs <em>(low)</em></h4>
+<p>New untracked <code>codex-sessions/</code>, <code>thinking/session-logs/</code>, <code>artifacts/plan-renders/2026-06-17-*/</code> bundles, and <code>get-gbauto-theme/hermes-dashboard/</code> assets match committed conventions — <strong>commit them to their existing tracked homes</strong> (contrast <code>claude-sessions/</code> which IS ignored). Move <code>.claude/wf-cron-wiring-audit.js</code> → <code>scripts/_wf-cron-wiring-audit.js</code> (auto-ignored) or delete.</p>
+<h4>D5. Canonical output layout (the convention to standardize)</h4>
+<ul>
+<li>Ephemeral/regenerated → <code>.gitignore</code> (indexes, scratch, state sidecars, nested-.git workspaces).</li>
+<li>Durable deliverables (<code>.md/.html/.pdf/.png</code>) → <code>artifact-registry/&lt;client&gt;/&lt;id&gt;/</code> + Drive via the pipeline.</li>
+<li>Tracked-by-convention logs/renders → <code>codex-sessions/</code>, <code>thinking/session-logs/</code>, <code>plan-renders/</code>.</li>
+<li>Managed-cron runtime → OS tempdir + <code>~/.hermes/state</code> (never the repo tree).</li>
+</ul>
+<hr>
+  </div>
+</details>
+<details class="section" id="open-decisions-block-implementation-direction">
+  <summary>
+    <span class="section-index">07</span>
+    <span class="section-title">Open decisions (block implementation direction)</span>
+    <span class="section-count">71 words</span>
+  </summary>
+  <div class="section-body">
+    <ol>
+<li><strong>Cron receipt chain (C4):</strong> unify on <code>run_managed_cron.py</code> (recommended) or keep two-tier + contract-test?</li>
+<li><strong><code>cron_run_outputs.status</code> (A3):</strong> Strategy A (default, zero DDL — recommended) or B (needs migration)?</li>
+<li><strong><code>host_class</code> for managed crons (C1):</strong> <code>mac-mini</code> (+full shape) or <code>other</code> (skip conditional)?</li>
+<li><strong>Migration ownership (A2):</strong> who applies the 3 Mini-side migrations, and when is <code>validate-cron-deploy</code> scheduled?</li>
+<li><strong>Tracked root screenshots (D2):</strong> <code>git rm --cached</code> + re-publish, or leave as a one-time exception?</li>
+</ol>
+  </div>
+</details>
+<details class="section" id="suggested-sequencing">
+  <summary>
+    <span class="section-index">08</span>
+    <span class="section-title">Suggested sequencing</span>
+    <span class="section-count">46 words</span>
+  </summary>
+  <div class="section-body">
+    <ul>
+<li><strong>Now (PC, decision-free):</strong> A1 author catalog migration · D1 recover stale-browser · D2 gitignore · C1 conform host-job receipt · B1–B3 Langfuse wiring · C2/C3/B5 tests (env-gated).</li>
+<li><strong>Mini (after decisions):</strong> A2 apply migrations · live smoke with B5 trace read-back + C3 round-trip.</li>
+<li><strong>Gate:</strong> C6 descriptor sub-check · C2 envelope-conformance check.</li>
+</ul>
+  </div>
+</details>
+    </div>
+  </main>
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-label">Metadata</div>
+      <div class="metadata-grid">
+        <div class="meta-item"><span>Source</span><strong>C:\Users\gblac\OneDrive\Desktop\gbauto\gbautomation\second-brain\plans\2026-06-17-hermes-cron-wiring-completion-and-dataout-plan.md</strong></div>
+<div class="meta-item"><span>Generated</span><strong>2026-06-17T21:08:58-07:00</strong></div>
+<div class="meta-item"><span>Source modified</span><strong>2026-06-17T21:08:56-07:00</strong></div>
+<div class="meta-item"><span>Source size</span><strong>19,188 bytes</strong></div>
+<div class="meta-item"><span>Word count</span><strong>2,137</strong></div>
+<div class="meta-item"><span>Sections</span><strong>8</strong></div>
+<div class="meta-item"><span>Renderer</span><strong>resources/skills/netlify-cli/scripts/render_plan_page.py</strong></div>
+<div class="meta-item"><span>Kind</span><strong>plan</strong></div>
+<div class="meta-item"><span>Purpose</span><strong>tac-build</strong></div>
+<div class="meta-item"><span>Status</span><strong>active</strong></div>
+<div class="meta-item"><span>Client</span><strong>gbautomation</strong></div>
+<div class="meta-item"><span>Priority</span><strong>high</strong></div>
+<div class="meta-item"><span>Slug</span><strong>hermes-cron-wiring-completion-and-dataout</strong></div>
+<div class="meta-item"><span>Created</span><strong>2026-06-17</strong></div>
+<div class="meta-item"><span>Target Date</span><strong>2026-06-24</strong></div>
+<div class="meta-item"><span>Domain</span><strong>hermes</strong></div>
+<div class="meta-item"><span>Service</span><strong>hermes-cron</strong></div>
+<div class="meta-item"><span>Description</span><strong>&gt;-</strong></div>
+<div class="meta-item"><span>Tags</span><strong>plan, domain/hermes, hermes/cron, tac, supabase, langfuse, observability</strong></div>
+<div class="meta-item"><span>Related</span><strong>[[2026-06-17-hermes-cron-llm-manager-and-1h-smoke-test]], [[2026-06-17-hermes-skillify-followup-integration]], [[2026-06-02-trace-attribution-standard-plan]], [[2026-06-10-langfuse-backed-build-report-design]]</strong></div>
+      </div>
+    </div>
+  </footer>
+  <script>
+    const sections = Array.from(document.querySelectorAll('details.section'));
+    const menuButtons = Array.from(document.querySelectorAll('[data-target]'));
+    const setActive = (id) => {
+      menuButtons.forEach((button) => button.classList.toggle('active', button.dataset.target === id));
+    };
+    menuButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const section = document.getElementById(button.dataset.target);
+        if (!section) return;
+        section.open = true;
+        setActive(section.id);
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+    document.querySelector('[data-action="expand"]').addEventListener('click', () => sections.forEach((section) => section.open = true));
+    document.querySelector('[data-action="collapse"]').addEventListener('click', () => sections.forEach((section, index) => section.open = index === 0));
+    sections.forEach((section) => {
+      section.addEventListener('toggle', () => {
+        if (section.open) setActive(section.id);
+      });
+    });
+    if (sections[0]) setActive(sections[0].id);
+  </script>
+</body>
+</html>
