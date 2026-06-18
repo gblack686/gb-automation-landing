@@ -124,15 +124,22 @@
   color: #8C8A84;
 }
 
+/* Mount-time fade-in. Animates on its own (fill-mode `both` holds the final
+   visible state) so content is NEVER gated behind a JS/IntersectionObserver
+   that may not fire for above-the-fold or inside-collapsed-accordion elements. */
 .reveal {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: gb-reveal-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+/* Kept for backward-compat with any `.active` toggling; base already ends visible. */
 .reveal.active {
   opacity: 1;
   transform: translateY(0);
+}
+
+@keyframes gb-reveal-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .no-scrollbar::-webkit-scrollbar {
