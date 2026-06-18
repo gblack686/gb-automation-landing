@@ -8,6 +8,7 @@ const navItems = [
   { label: 'Runs', to: '/clients/smoke-client/runs' },
   { label: 'Board', to: '/clients/smoke-client/board' },
   { label: 'Data', to: '/clients/smoke-client/data' },
+  { label: 'Chat', to: '/clients/smoke-client/chat' },
 ];
 
 export default function PortalHeader() {

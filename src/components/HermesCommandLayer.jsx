@@ -27,6 +27,14 @@ const shortcuts = [
     icon: MessageSquareText,
   },
   {
+    id: 'smoke-chat',
+    keys: ['Ctrl', 'H'],
+    label: 'Chat with Hermes',
+    description: 'Open the smoke-client tenant chat session.',
+    icon: MessageSquareText,
+    href: '/clients/smoke-client/chat',
+  },
+  {
     id: 'session',
     keys: ['Ctrl', 'O'],
     label: 'Open Session',
@@ -236,6 +244,7 @@ function HermesCommandLayer() {
       const key = event.key.toLowerCase();
       const shortcutMap = {
         k: 'chat',
+        h: 'smoke-chat',
         o: 'session',
         j: 'feedback',
         b: 'brain',

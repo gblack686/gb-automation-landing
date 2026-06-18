@@ -1,0 +1,74 @@
+# GBAutomation Hermes dashboard theme — "Paper" for hermes-webui.
+#
+# Drop at ~/.hermes/dashboard-themes/gbauto.yaml (operator step).
+#
+# Brand source of truth (this file ENCODES the tokens for hermes-webui; do NOT
+# duplicate-edit tokens — change them at the source and re-derive here):
+#   gb-automation-landing/src/index.css  (cream/ink/terracotta + .hover-shiny)
+#
+# Engine note (hermes-webui is a 2-color themer): palette.midground IS the body
+# TEXT color, so it must be ink #191919 for a light theme. Brand terracotta is
+# applied to interactive states via customCSS. This theme DOES override fonts to
+# the GBAuto brand stack (Newsreader display, Inter sans).
+name: gbauto
+label: GBAuto
+description: GBAutomation cream + ink + terracotta brand theme for the Hermes dashboard (Newsreader/Inter, GB logo).
+
+palette:
+  background: { hex: "#F3F1E7", alpha: 1 }   # cream-bg page background
+  midground: { hex: "#191919", alpha: 1 }    # ink — drives body TEXT (dark for a light theme)
+  foreground: { hex: "#FFFFFF", alpha: 0 }
+  warmGlow: "rgba(217, 119, 87, 0.28)"       # terracotta brand glow
+  noiseOpacity: 0.05
+
+typography:
+  fontDisplay: "Newsreader"
+  fontSans: "Inter"
+  fontUrl: "https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Inter:wght@400;500;600;700&display=swap"
+  baseSize: "16px"
+  lineHeight: "1.6"
+  letterSpacing: "0"
+
+layout:
+  radius: "0.5rem"
+  density: comfortable
+
+colorOverrides:
+  card: "#E6E4D9"
+  cardForeground: "#191919"
+  border: "#D6D4C8"
+  accent: "#D97757"        # terracotta
+  ring: "#D97757"
+
+componentStyles:
+  card: { background: "rgba(255,255,255,0.5)", borderColor: "#D6D4C8", boxShadow: "0 10px 30px -14px rgba(25,25,25,0.10)" }
+  header: { background: "rgba(243,241,231,0.92)", borderColor: "#D6D4C8" }
+  sidebar: { background: "rgba(230,228,217,0.5)", borderColor: "#D6D4C8" }
+  tab: { background: "transparent", borderColor: "#D6D4C8" }
+  badge: { background: "rgba(217,119,87,0.14)", borderColor: "rgba(217,119,87,0.34)" }
+  backdrop: { background: "linear-gradient(135deg, #F3F1E7 0%, #EFEDE2 55%, #E9E7DC 100%)" }
+  page: { background: "transparent" }
+
+customCSS: |
+  html, body { background: #F3F1E7 !important; color: #191919; font-family: "Inter", system-ui, sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
+  h1, h2, h3, .font-display { font-family: "Newsreader", Georgia, serif !important; }
+  *:focus-visible { outline: 2px solid #D97757 !important; outline-offset: 2px; }
+  ::selection { background: rgba(217,119,87,0.28); color: #191919; }
+  a:hover { color: #B75F43; }
+  [aria-current="page"] { color: #D97757 !important; }
+  /* GB logo to the RIGHT of the "Hermes Agent" wordmark in the sidebar header;
+     terracotta drop-shadow = brand glow. */
+  aside div:has(> span.font-sans.font-bold.text-midground)::after {
+    content: "";
+    display: block;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    margin-left: 10px;
+    background: url("https://gbautomation.xyz/gb-logo.png") center / contain no-repeat;
+    filter: drop-shadow(0 0 9px rgba(217,119,87,0.60));
+  }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: #F3F1E7; }
+  ::-webkit-scrollbar-thumb { background: #D1CEC3; border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: #B0ADA5; }

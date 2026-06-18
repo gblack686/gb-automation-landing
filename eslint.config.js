@@ -27,8 +27,8 @@ export default defineConfig([
     },
   },
   {
-    // Server-side functions (Netlify functions, Lambda) run on Node, not the browser.
-    files: ['netlify/functions/**/*.{js,mjs}', 'lambda/**/*.{js,mjs}'],
+    // Server-side functions (Netlify functions, Lambda, services) run on Node, not the browser.
+    files: ['netlify/functions/**/*.{js,mjs}', 'lambda/**/*.{js,mjs}', 'services/**/*.{js,mjs}'],
     languageOptions: {
       globals: globals.node,
     },
