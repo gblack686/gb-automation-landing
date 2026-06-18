@@ -8,6 +8,7 @@ import OpsData from './pages/OpsData';
 import OpsSupabase from './pages/OpsSupabase';
 import OpsObservability from './pages/OpsObservability';
 import OpsMacMini from './pages/OpsMacMini';
+import OpsCapabilities from './pages/OpsCapabilities';
 
 export default function OpsRoutes() {
   return (
@@ -25,6 +26,8 @@ export default function OpsRoutes() {
           <Route path="runs" element={<OpsRuns />} />
           <Route path="kanban" element={<HermesKanban />} />
           <Route path="data" element={<OpsData />} />
+          <Route path="capabilities" element={<OpsCapabilities />} />
+          <Route path="capabilities/:kind" element={<OpsCapabilities />} />
           <Route path="supabase" element={<OpsSupabase />} />
           <Route path="observability" element={<OpsObservability />} />
           <Route path="observability/traces" element={<OpsObservability />} />
