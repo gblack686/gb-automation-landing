@@ -1,4 +1,5 @@
-﻿import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+﻿import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 import { Authenticator } from '@aws-amplify/ui-react';
 import Home from './pages/Home';
 import Plan from './pages/Plan';
@@ -24,10 +25,25 @@ import SmokeClientPortal from './clients/smoke-client/routes';
 import Jid5274Portal from './clients/jid5274/routes';
 import OpsRoutes from './ops/routes';
 
+// The ElevenLabs convai voice widget is mounted statically in index.html and floats
+// bottom-right on every route. Hide it on the authed dashboards (/ops, /clients/*) where
+// it overlaps controls like bottom-right pagination; keep it on the marketing pages.
+function ConvaiVisibility() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    const widget = document.querySelector('elevenlabs-convai');
+    if (!widget) return;
+    const onDashboard = /^\/(ops|clients)(\/|$)/.test(pathname);
+    widget.style.display = onDashboard ? 'none' : '';
+  }, [pathname]);
+  return null;
+}
+
 function App() {
   return (
     <Authenticator.Provider>
       <Router>
+        <ConvaiVisibility />
         <HermesCommandLayer />
         <Routes>
           {/* Public — homepage + PRDs */}
