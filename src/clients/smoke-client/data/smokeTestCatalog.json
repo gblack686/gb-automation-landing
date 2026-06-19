@@ -1,0 +1,885 @@
+{
+  "generated_from": "second-brain/systems/hermes-profiles/smoke-client/smoke-tests.yaml",
+  "total": 96,
+  "by_category": {
+    "browser": 6,
+    "cron": 15,
+    "failure": 8,
+    "lineage": 16,
+    "prd": 9,
+    "render": 10,
+    "skill": 16,
+    "tac": 8,
+    "trace": 8
+  },
+  "by_mode": {
+    "live-mini": 78,
+    "offline-ci": 18
+  },
+  "tests": [
+    {
+      "key": "BS-01",
+      "category": "browser",
+      "mode": "live-mini",
+      "title": "Browser: portal capture 5 pages",
+      "description": "Drives browser-harness isolated Chrome (127.0.0.1:9222) to capture each smoke-client portal page; writes 5 browser_control_runs rows (skill=smoke-portal-capture).",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "BS-02",
+      "category": "browser",
+      "mode": "live-mini",
+      "title": "Browser: QA-agent scripted user story",
+      "description": "Runs browser-qa-agent against the smoke portal as a scripted user story; writes 1 browser_scrape_runs (qa) + 3 page rows.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "BS-03",
+      "category": "browser",
+      "mode": "live-mini",
+      "title": "Browser: fixture scrape telemetry-only",
+      "description": "Runs a browser-harness scrape against the static /clients/smoke-client/_fixture page; writes 1 browser_scrape_runs (generic, write_mode=telemetry_only).",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "BS-04",
+      "category": "browser",
+      "mode": "live-mini",
+      "title": "Browser: render-fidelity screenshot proof",
+      "description": "Headless Chrome loads /clients/smoke-client/runs (obs_smoke_runs), capture_screenshot + page_info; writes 1 browser_scrape_runs (render-fidelity).",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "BS-05",
+      "category": "browser",
+      "mode": "live-mini",
+      "title": "Browser: DOM tenant-isolation scan",
+      "description": "Headless Chrome loads each portal page and extracts full DOM text via page_info; asserts text contains 'smoke-client' but NO other tenant token; writes 1 browser_scrape_runs (tenant-isolation).",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "BS-06",
+      "category": "browser",
+      "mode": "offline-ci",
+      "title": "Browser: offline local-bundle fixture render",
+      "description": "Headless render of the locally-built portal bundle (apps/client-portal/frontend/dist) seeded with a committed fixture row matching obs_smoke_browser_runs; writes 1 fixture snapshot row to the local CI spine fixture.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "cron-stress-01",
+      "category": "cron",
+      "mode": "live-mini",
+      "title": "Cron stress: all 6 smoke crons single fire",
+      "description": "Fires all 6 smoke managed crons once each (run_managed_cron.py --backend stub --tenant smoke-client); writes cron_runs x6 + cron_run_outputs x6 + hermes_cron_catalog x6 + host_job_runs x6.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "cron-stress-02",
+      "category": "cron",
+      "mode": "live-mini",
+      "title": "Cron stress: git-sync 4 fires over 1h",
+      "description": "Fires smoke-git-sync-cron every 15m for 1h (4 fires at +0/15/30/45m); writes cron_runs>=4 + cron_run_outputs>=4; bumps catalog last_green.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "cron-stress-03",
+      "category": "cron",
+      "mode": "live-mini",
+      "title": "Cron stress: artifact-save 20x rapid",
+      "description": "Loops smoke-artifact-save-cron 20x with no sleep; writes cron_runs x20 (distinct tick_id) + cron_run_outputs x20.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "cron-stress-04",
+      "category": "cron",
+      "mode": "live-mini",
+      "title": "Cron stress: prd-index last_green monotonic",
+      "description": "Fires smoke-prd-index-cron 2x ok; upserts hermes_cron_catalog + cron_runs x2; checks last_green_at monotonic advance.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "cron-stress-05",
+      "category": "cron",
+      "mode": "live-mini",
+      "title": "Cron stress: fault + partial mix",
+      "description": "Fires smoke-fault-cron (exit!=0) + smoke-partial-cron (delivered=false); writes cron_runs fail_count>=1 + skipped_count>=1; run_outputs error + failed_silent.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "cron-stress-06",
+      "category": "cron",
+      "mode": "live-mini",
+      "title": "Cron stress: real-model manager + traces",
+      "description": "Fires smoke-morning-brief + smoke-sprint-manager via --backend hermes --model gpt-5-mini (token-bearing); writes langfuse_traces x2 + cron_runs total_cost_usd>0 + run_outputs trace_id.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "cron-stress-07",
+      "category": "cron",
+      "mode": "live-mini",
+      "title": "Cron stress: 36-tick fleet soak",
+      "description": "Fires all 6 crons x 6 hourly buckets (36 fires, stub backend); writes cron_runs x36 + cron_run_outputs x36; catalog 6 green.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "cron-stress-08",
+      "category": "cron",
+      "mode": "live-mini",
+      "title": "Cron stress: host-job-run.v1 leg",
+      "description": "Fires a smoke cron and verifies the host-job-run.v1 leg via insert_host_job_run_to_supabase.py; writes host_job_runs (host_class=mac-mini).",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "cron-stress-09",
+      "category": "cron",
+      "mode": "live-mini",
+      "title": "Cron stress: 4 crons in parallel",
+      "description": "Fires 4 smoke crons in PARALLEL (lock + insert atomicity stress); writes cron_runs x4 + cron_run_outputs x4 + host_job_runs x4.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "cron:artifact-save-cron",
+      "category": "cron",
+      "mode": "offline-ci",
+      "title": "Artifact-save managed cron",
+      "description": "Captures session artifacts into the registry; managed via run_managed_cron.py. Backfilled for smoke coverage (had no test before).",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "cron:git-sync-cron",
+      "category": "cron",
+      "mode": "offline-ci",
+      "title": "Git-sync managed cron",
+      "description": "Stages-exact-paths and pushes a WIP snapshot, emitting a JSON landing summary; managed via run_managed_cron.py.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "cron:morning-brief-cron",
+      "category": "cron",
+      "mode": "offline-ci",
+      "title": "Morning-brief managed cron",
+      "description": "Rolls up the daily morning-brief feed digest; managed via run_managed_cron.py.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "cron:prd-index-cron",
+      "category": "cron",
+      "mode": "offline-ci",
+      "title": "PRD-index managed cron",
+      "description": "Re-indexes the PRD/plan spine and syncs prd_artifacts; managed via run_managed_cron.py.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "cron:sprint-manager-cron",
+      "category": "cron",
+      "mode": "offline-ci",
+      "title": "Sprint-manager managed cron",
+      "description": "Reconciles sprint/Kanban state; managed via run_managed_cron.py.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "cron:stale-browser-cron",
+      "category": "cron",
+      "mode": "offline-ci",
+      "title": "Stale-browser managed cron",
+      "description": "Recovers a stale browser-harness session; managed via run_managed_cron.py.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "smoke-fail-429-05",
+      "category": "failure",
+      "mode": "live-mini",
+      "title": "Failure: 429 backoff then give-up",
+      "description": "Fires smoke-backoff-cron simulating 429 retry/backoff then give-up; writes cron_runs fail/skip + cron_run_outputs status=timeout, payload.attempts.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "smoke-fail-blocked-04",
+      "category": "failure",
+      "mode": "live-mini",
+      "title": "Failure: blocked gate + blocker link",
+      "description": "Dispatches a team with a missing hard_gate -> blocked card + blocker link; writes agent_runs status blocked + prd_kanban_dispatch_links relationship blocker.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "smoke-fail-breaker-06",
+      "category": "failure",
+      "mode": "live-mini",
+      "title": "Failure: circuit-breaker trip -> paused",
+      "description": "Consecutive smoke-fail-cron fails trip the breaker; hermes_cron_catalog.state flips to paused (stale last_green_at + fail streak).",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "smoke-fail-cron-01",
+      "category": "failure",
+      "mode": "live-mini",
+      "title": "Failure: smoke-fail-cron exit 1 x12",
+      "description": "Fires smoke-fail-cron LIVE (tool exit 1) looped 12x; writes cron_runs fail_count=1 + cron_run_outputs error + agent_runs failed card + catalog.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "smoke-fail-edge-02",
+      "category": "failure",
+      "mode": "live-mini",
+      "title": "Failure: ok->failed host-receipt edge",
+      "description": "Writes sequential host receipts ok then failed (ok->failed edge) via insert_host_job_run_to_supabase.py; writes host_job_runs 1 ok + 1 failed.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "smoke-fail-replay-08",
+      "category": "failure",
+      "mode": "live-mini",
+      "title": "Failure: push-failed receipt replay",
+      "description": "Writes host-job receipts with .push-failed.json sidecars then runs replay_failed_host_job_receipts.py (3 sidecars); writes host_job_runs on replay.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "smoke-fail-skill-03",
+      "category": "failure",
+      "mode": "live-mini",
+      "title": "Failure: throwing smoke skill error",
+      "description": "Runs a throwing smoke skill under the universal hook -> status=error; writes skill_runs status error + skill_outputs error payload (10 err / 5 ok mix).",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "smoke-fail-storm-07",
+      "category": "failure",
+      "mode": "live-mini",
+      "title": "Failure: crash storm dedup + alert",
+      "description": "Writes ~25 crashed agent_runs for ONE task then runs kanban_crash_storm_alert.py --threshold 20.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "lineage-concurrency-thread-03",
+      "category": "lineage",
+      "mode": "live-mini",
+      "title": "Lineage: 3 concurrent threads",
+      "description": "Seeds 3 distinct smoke PRDs (3 nonces) and drives all three through the funnel concurrently; writes prd_artifacts x3 + dispatch_links x3 + agent_runs ~3x9 cards.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "lineage-cost-rollup-06",
+      "category": "lineage",
+      "mode": "live-mini",
+      "title": "Lineage: cost rollup integrity",
+      "description": "Runs the token-bearing thread variant (hermes_tac_team_runner --backend hermes --model gpt-5-mini for the build leg); writes langfuse_traces (total_cost>0) + tac_build_runs (total_cost_usd) + host_job_runs.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "lineage-failure-thread-02",
+      "category": "lineage",
+      "mode": "live-mini",
+      "title": "Lineage: failure thread (blocked validator)",
+      "description": "Seeds ONE smoke PRD whose dispatch carries a failing hard_gate; runs the same funnel; writes prd_artifacts + dispatch_links (blocker) + agent_runs (validator blocked).",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "lineage-golden-thread-01",
+      "category": "lineage",
+      "mode": "live-mini",
+      "title": "Lineage: golden happy-path thread",
+      "description": "Seeds ONE fixture PRD (unique nonce slug -> deterministic prd_id) and drives the full funnel; writes prd_artifacts -> prd_kanban_dispatch_links -> agent_runs(board) -> tac_build_runs -> langfuse_traces -> report.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "lineage-golden-thread-07",
+      "category": "lineage",
+      "mode": "live-mini",
+      "title": "Lineage: taxonomy survival (domain/service/client_tier triple)",
+      "description": "Seeds ONE PRD carrying a (domain,service,client_tier) frontmatter triple; threads frontmatter -> dispatch evidence -> Kanban labels -> obs_smoke_taxonomy pills via golden_thread.py taxonomy-survival.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "lineage-golden-thread-08",
+      "category": "lineage",
+      "mode": "live-mini",
+      "title": "Lineage: tag correction (re-tag with provenance)",
+      "description": "Seeds ONE deliberately mis-tagged PRD; a normalization step re-tags it; tracks before->after via golden_thread.py tag-correction.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "lineage-golden-thread-09",
+      "category": "lineage",
+      "mode": "live-mini",
+      "title": "Lineage: cross-taxonomy aggregation (3 domains, 1 sprint)",
+      "description": "Seeds 3 PRDs of distinct domain sharing one sprint_id; asserts the per-domain breakdown sums correctly via golden_thread.py cross-taxonomy-agg.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "lineage-golden-thread-10",
+      "category": "lineage",
+      "mode": "live-mini",
+      "title": "Lineage: sprint composition (correlation key = sprint_id)",
+      "description": "Batches N PRDs into one sprint and asserts all N fan out from and back into the same sprint_id via golden_thread.py sprint-composition.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "lineage-golden-thread-11",
+      "category": "lineage",
+      "mode": "live-mini",
+      "title": "Lineage: reprioritization (P2 -> P0 mid-sprint)",
+      "description": "A PRD enters P2 and the sprint manager promotes it to P0 mid-sprint; tracks the priority-change event via golden_thread.py reprioritization.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "lineage-golden-thread-12",
+      "category": "lineage",
+      "mode": "live-mini",
+      "title": "Lineage: sprint carryover (same prd_id across sprint N -> N+1)",
+      "description": "The same prd_id carries from sprint N to N+1; asserts carryover recorded in both sprint reports with a provenance edge via golden_thread.py sprint-carryover.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "lineage-golden-thread-13",
+      "category": "lineage",
+      "mode": "live-mini",
+      "title": "Lineage: sprint retro (headline == sum of board card states)",
+      "description": "The sprint manager closes a sprint and emits a retro; reconciles per-PRD board end-states into a velocity rollup via golden_thread.py sprint-retro.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "lineage-golden-thread-14",
+      "category": "lineage",
+      "mode": "live-mini",
+      "title": "Lineage: WIP capacity (admitted vs deferred)",
+      "description": "Feeds more PRDs than the WIP limit and tracks admitted vs deferred via golden_thread.py wip-capacity.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "lineage-golden-thread-15",
+      "category": "lineage",
+      "mode": "live-mini",
+      "title": "Lineage: fan-out / fan-in (one PRD -> N agents -> one dossier)",
+      "description": "One PRD fans out to a TAC team of N agents and back into one reconciled dossier via golden_thread.py fan-out-fan-in.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "lineage-golden-thread-16",
+      "category": "lineage",
+      "mode": "live-mini",
+      "title": "Lineage: isolation negative-control (smoke vs decoy tenant)",
+      "description": "Runs the smoke thread alongside an in-memory tenant:__not-smoke decoy and proves the obs view filters the decoy out at every stage via golden_thread.py isolation-negative (decoy is never persisted).",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "lineage-report-fidelity-04",
+      "category": "lineage",
+      "mode": "live-mini",
+      "title": "Lineage: report cited-id fidelity",
+      "description": "After the happy-path producer, runs extract_agent_team_report.py / render_tac_report_package.py + build_plan_execution_dossiers.py; writes host_job_runs (render-gate-lineage-fidelity receipt listing cited ids).",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "lineage-wallclock-05",
+      "category": "lineage",
+      "mode": "live-mini",
+      "title": "Lineage: wall-clock monotonic stages",
+      "description": "Reads per-stage timestamps from the spine for the happy-path thread; writes host_job_runs (render-gate-lineage-wallclock receipt with per-stage timestamps + monotonic verdict).",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "smoke-prd-bulk-40",
+      "category": "prd",
+      "mode": "live-mini",
+      "title": "PRD stress: bulk-index 40 fixtures",
+      "description": "Indexes 40 fixture PRDs under artifacts/plan-renders/smoke-client/ via index_prds.py --client smoke-client --sync-supabase; writes prd_artifacts x40.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "smoke-prd-drift",
+      "category": "prd",
+      "mode": "live-mini",
+      "title": "PRD stress: drift in-place update",
+      "description": "Indexes a fixture, edits body, re-indexes; prd_id stable, body_sha256 changes; updates prd_artifacts in place.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "smoke-prd-priority",
+      "category": "prd",
+      "mode": "live-mini",
+      "title": "PRD stress: priority spread",
+      "description": "Indexes fixtures critical/urgent/high/medium/low; writes prd_artifacts >=4 distinct priority.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "smoke-prd-reindex",
+      "category": "prd",
+      "mode": "live-mini",
+      "title": "PRD stress: re-index idempotency",
+      "description": "Runs index_prds.py --sync-supabase TWICE over an unchanged set; re-upserts same prd_id, indexed_at advances.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "smoke-prd-schema-gap",
+      "category": "prd",
+      "mode": "live-mini",
+      "title": "PRD stress: schema-gap fixtures",
+      "description": "Indexes broken fixtures (missing sections / missing frontmatter / malformed YAML); writes prd_artifacts index_status in {missing_required_sections, schema_gap, parse_error}.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "smoke-prd-schema-ok",
+      "category": "prd",
+      "mode": "live-mini",
+      "title": "PRD stress: fully-compliant fixtures",
+      "description": "Indexes fully-compliant fixtures (all 7 REQUIRED_SECTIONS); writes prd_artifacts schema_contract_ok=true, index_status=indexed.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "smoke-prd-status",
+      "category": "prd",
+      "mode": "live-mini",
+      "title": "PRD stress: full status enum",
+      "description": "Indexes fixtures carrying full status enum; writes prd_artifacts >=7 distinct status.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "smoke-prd-tac-level",
+      "category": "prd",
+      "mode": "live-mini",
+      "title": "PRD stress: tac_level L1-L7 spread",
+      "description": "Indexes fixtures with tac_level L1-L7, tac_status, team_runner_required, agent_team; writes prd_artifacts distinct tac_level/tac_status/team_runner.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "smoke-prd-yaml",
+      "category": "prd",
+      "mode": "live-mini",
+      "title": "PRD stress: .yaml whole-file specs",
+      "description": "Indexes .yaml whole-file plan specs via the parse_yaml_source branch; writes prd_artifacts source_format=yaml, synthesized section_count.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "render-anon-isolation",
+      "category": "render",
+      "mode": "offline-ci",
+      "title": "Render gate: anon isolation negative-control",
+      "description": "Asserts every obs_smoke view row carries smoke-client and raw base tables anon -> denied/empty; emits render-gate-isolation receipt.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "render-board-fresh",
+      "category": "render",
+      "mode": "live-mini",
+      "title": "Render gate: board fresh+non-empty",
+      "description": "Anon GET obs_smoke_board (exact browser contract); asserts fresh+non-empty; emits render-gate-board host_job_runs receipt.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "render-explorer-sweep",
+      "category": "render",
+      "mode": "offline-ci",
+      "title": "Render gate: 6-dataset explorer sweep",
+      "description": "Drives the 6-dataset registry: 200 + columns subset-of select + non-empty per view; emits render-gate-explorer rollup receipt.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "render-gate-receipt-01",
+      "category": "render",
+      "mode": "live-mini",
+      "title": "Render gate: render-gate host-receipt self-render",
+      "description": "Anon GET obs_smoke_render_gates and emit a render-gate-receipt host_job_runs receipt (task_name like 'render-gate%', tenant smoke-client) via render_gate.py + insert_host_job_run_to_supabase.py, so the render-gate results themselves render on the smoke portal Overview.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "render-prds-nonempty",
+      "category": "render",
+      "mode": "live-mini",
+      "title": "Render gate: PRDs non-empty + link",
+      "description": "After the index producer, anon GET obs_smoke_prds + dispatch link; emits render-gate-prds receipt.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "render-runoutputs-anon",
+      "category": "render",
+      "mode": "offline-ci",
+      "title": "Render gate: run_outputs anon allowlist",
+      "description": "Anon select=* vs obs_smoke_run_outputs allowlist; forbidden select=stderr_tail -> 400; emits render-gate-runoutputs-anon receipt.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "render-runs-count",
+      "category": "render",
+      "mode": "live-mini",
+      "title": "Render gate: runs count reconciliation",
+      "description": "Anon GET obs_smoke_runs with count=exact vs rendered limit=50; emits render-gate-runs receipt (rows_rendered, view_count).",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "render-schedules-green",
+      "category": "render",
+      "mode": "live-mini",
+      "title": "Render gate: schedules latestGreen",
+      "description": "Reproduces Overview latestGreen vs obs_smoke_schedules; emits render-gate-schedules receipt.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "render-spa-e2e",
+      "category": "render",
+      "mode": "live-mini",
+      "title": "Render gate: Playwright SPA end-to-end",
+      "description": "Playwright loads live Amplify /clients/smoke-client/{,/schedules,/runs,/board,/data}; emits render-gate-spa receipt (per-route DOM).",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "render-traces-fresh",
+      "category": "render",
+      "mode": "live-mini",
+      "title": "Render gate: traces fresh+display-safe",
+      "description": "After the trace producer, anon GET obs_smoke_traces fresh+display-safe; emits render-gate-traces receipt.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "skill-burst-30x",
+      "category": "skill",
+      "mode": "live-mini",
+      "title": "Skill stress: session-git-status 30x burst",
+      "description": "Loops session_git_status.py --json 30x under the universal_skill_logger hook (INVOKED_BY=tenant:smoke-client); writes skill_runs x30 + skill_outputs x30.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "skill-canopy-lint-real",
+      "category": "skill",
+      "mode": "live-mini",
+      "title": "Skill stress: canopy lint real",
+      "description": "Runs canopy_lint.py over the smoke-client scaffold (resolves tac-contract-shared mixin); writes skill_runs x1 (canopy) + skill_outputs (canopy_lint_report).",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "skill-ci-gate-real",
+      "category": "skill",
+      "mode": "live-mini",
+      "title": "Skill stress: real CI gate over smoke scaffold",
+      "description": "Runs hermes_ci_gate.py real L1-L6 gate over the smoke scaffold; writes skill_runs x1 ok + skill_outputs (ci_gate_verdict).",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "skill-cron-validate-all6",
+      "category": "skill",
+      "mode": "live-mini",
+      "title": "Skill stress: validate all 6 smoke manifests",
+      "description": "Runs validate_managed_manifest.py over all 6 smoke managed.yaml; writes skill_runs x6 (hermes-cron-manager, category cron).",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "skill-doc-resolve",
+      "category": "skill",
+      "mode": "live-mini",
+      "title": "Skill stress: profile->SKILL.md doc resolve",
+      "description": "Resolves profile primary_tool -> SKILL.md for tac-hermes-dispatch + gbauto-supabase; writes skill_runs x2 (category doc) + skill_outputs x2.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "skill-error-path",
+      "category": "skill",
+      "mode": "live-mini",
+      "title": "Skill stress: error receipt path",
+      "description": "Runs validate_managed_manifest.py against a malformed manifest -> status=error receipt; writes skill_runs x1 status error with error_message.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "skill-fallback-replay",
+      "category": "skill",
+      "mode": "live-mini",
+      "title": "Skill stress: offline queue + replay drain",
+      "description": "Queues 15 skill_runs to registry-fallback.jsonl offline then drains via replay_skill_runs_fallback.py; writes skill_runs x15 on drain.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "skill-nested-validate-cron-deploy",
+      "category": "skill",
+      "mode": "live-mini",
+      "title": "Skill stress: nested parent/child skill_runs",
+      "description": "Runs validate-cron-deploy/validate.py --skip-fire -> parent + child skill_runs (parent_run_id); writes skill_runs 1 parent + N children.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "skill:canopy",
+      "category": "skill",
+      "mode": "offline-ci",
+      "title": "Canopy prompt linter",
+      "description": "Lints the smoke-client Canopy scaffold; proves the tac-contract-shared mixin resolves standalone in-repo.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "skill:check-langfuse-logs",
+      "category": "skill",
+      "mode": "offline-ci",
+      "title": "Check Langfuse logs",
+      "description": "Langfuse trace inspector; --help proves the entrypoint loads its argument contract without needing live Langfuse creds/network.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "skill:gbauto-supabase",
+      "category": "skill",
+      "mode": "offline-ci",
+      "title": "gbauto-supabase CLI (supabase tool)",
+      "description": "Doc/contract skill backing the profile primary_tool alias supabase. Resolves the profile->SKILL.md mapping in code and asserts the SKILL.md exists.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "skill:hermes-ci-gate",
+      "category": "skill",
+      "mode": "offline-ci",
+      "title": "Hermes CI gate",
+      "description": "L1-L6 deploy gate for Hermes surfaces; --help proves the gate entrypoint loads and parses its argument contract.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "skill:hermes-cron-manager",
+      "category": "skill",
+      "mode": "offline-ci",
+      "title": "Hermes cron manager",
+      "description": "The keystone managed-cron validator+wrapper; runs validate_managed_manifest.py against a real managed.yaml and asserts it is schema-valid.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "skill:session-git-status",
+      "category": "skill",
+      "mode": "offline-ci",
+      "title": "Session git status",
+      "description": "Canonical git-landing audit; runs against the live worktree and emits the session-status JSON shape (proves it shells git and reports).",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "skill:tac-hermes-dispatch",
+      "category": "skill",
+      "mode": "offline-ci",
+      "title": "TAC Hermes dispatch (hermes-kanban tool)",
+      "description": "Doc/contract skill backing the profile primary_tool alias hermes-kanban. Resolves the profile->SKILL.md mapping in code and asserts the SKILL.md exists.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "skill:validate-cron-deploy",
+      "category": "skill",
+      "mode": "offline-ci",
+      "title": "Validate cron deploy",
+      "description": "11-check Invoke-WithReceipt deploy gate; --help proves the validator entrypoint loads and exposes its check contract without firing.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "tac-dispatch-01",
+      "category": "tac",
+      "mode": "live-mini",
+      "title": "TAC dispatch: tac-hermes 9-profile write-kanban",
+      "description": "Runs hermes_tac_team_runner.py tac-hermes 9-profile write-kanban + kanban_agent_runs_mirror.py; mirrors agent_runs to smoke kanban.db.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "tac-dispatch-02",
+      "category": "tac",
+      "mode": "live-mini",
+      "title": "TAC dispatch: 20x write-kanban burst",
+      "description": "20x write-kanban burst of fixture build-request variants + mirror; writes agent_runs ~180 rows (DISTINCT ON dedup + batch upsert).",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "tac-dispatch-03",
+      "category": "tac",
+      "mode": "live-mini",
+      "title": "TAC dispatch: multi-team fan-out",
+      "description": "Multi-team fan-out tac-hermes + ecom-intelligence + aws-cloud-ops onto one board; writes agent_runs ~29 rows across 3 team_id.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "tac-dispatch-04",
+      "category": "tac",
+      "mode": "live-mini",
+      "title": "TAC dispatch: mirror live round-trip readback",
+      "description": "Runs kanban_agent_runs_mirror.py live round-trip + built-in readback; upserts agent_runs from smoke kanban.db (redaction + PRD_ID infer).",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "tac-dispatch-05",
+      "category": "tac",
+      "mode": "live-mini",
+      "title": "TAC dispatch: prd_kanban_dispatch_sync readback",
+      "description": "Runs prd_kanban_dispatch_sync.py --readback live upsert; writes prd_kanban_dispatch_links (deterministic task_id, evidence smoke-client).",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "tac-dispatch-06",
+      "category": "tac",
+      "mode": "live-mini",
+      "title": "TAC dispatch: drift -> self-improve cards",
+      "description": "Runs select_drifted_wiki_pages.py live -> proposed self-improve cards; writes kanban_tasks kind=self-improve status=proposed (deterministic task_id).",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "tac-dispatch-07",
+      "category": "tac",
+      "mode": "live-mini",
+      "title": "TAC dispatch: 8-step RunReport verify",
+      "description": "Runs verify_tac_team_runner_run.py 8-step RunReport (gate->insert->readback->trace); writes tac_build_runs + langfuse_traces (tac-build-report) + RunReport artifact.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "tac-dispatch-08",
+      "category": "tac",
+      "mode": "live-mini",
+      "title": "TAC dispatch: emit_kanban_trace Eagle graph",
+      "description": "write-kanban with Langfuse keys -> emit_kanban_trace Eagle graph; writes langfuse_traces (hermes-kanban-tac-build, tool span/card).",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "trace-stress-01",
+      "category": "trace",
+      "mode": "live-mini",
+      "title": "Trace stress: 40x single-turn emit + sync",
+      "description": "Runs langfuse_enhanced_tags_smoke.py 40x + sync_langfuse_traces_to_supabase.py --focus tenant:smoke-client; writes langfuse_traces x40 distinct trace_id.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "trace-stress-02",
+      "category": "trace",
+      "mode": "live-mini",
+      "title": "Trace stress: agent+gen+chain+2tools graph",
+      "description": "Runs codex_langfuse_graph_smoke.py variant (agent+gen+chain+2 tools); writes langfuse_traces x1 observation_count>=4 + raw_summary.observation_names.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "trace-stress-03",
+      "category": "trace",
+      "mode": "live-mini",
+      "title": "Trace stress: haiku/sonnet/opus model spread",
+      "description": "Emits ~12 traces across haiku/sonnet/opus model spread; sync focus; writes langfuse_traces x12 spanning >=3 total_cost values.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "trace-stress-04",
+      "category": "trace",
+      "mode": "live-mini",
+      "title": "Trace stress: 0.2s-6s latency spread",
+      "description": "Emits ~20 traces with 0.2s-6s varied work; sync focus; writes langfuse_traces x20 latency_sec spanning >5s.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "trace-stress-05",
+      "category": "trace",
+      "mode": "live-mini",
+      "title": "Trace stress: 25 sequential tool observations",
+      "description": "Runs one trace_agent run with 25 sequential tool observations; sync; writes langfuse_traces x1 observation_count=25.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "trace-stress-06",
+      "category": "trace",
+      "mode": "live-mini",
+      "title": "Trace stress: 10 parallel emitters",
+      "description": "10 parallel subprocesses each emit a distinct trace; barrier; sync; writes langfuse_traces x10 distinct trace_id.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "trace-stress-07",
+      "category": "trace",
+      "mode": "live-mini",
+      "title": "Trace stress: double-sync idempotency",
+      "description": "Emits 5 traces, runs sync TWICE back-to-back; writes langfuse_traces x5 stable across syncs; last_synced_at advances.",
+      "expect": "",
+      "kind": ""
+    },
+    {
+      "key": "trace-stress-08",
+      "category": "trace",
+      "mode": "live-mini",
+      "title": "Trace stress: negative-control isolation",
+      "description": "Emits 1 tenant:smoke-client + 1 tenant:__not-smoke; sync both; writes langfuse_traces x2 (only one smoke-tagged).",
+      "expect": "",
+      "kind": ""
+    }
+  ]
+}

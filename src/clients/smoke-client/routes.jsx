@@ -10,6 +10,7 @@ import JobsPage from './pages/JobsPage';
 import TracesPage from './pages/TracesPage';
 import LineagePage from './pages/LineagePage';
 import VisualPage from './pages/VisualPage';
+import SmokeTestsPage from './pages/SmokeTestsPage';
 
 export default function SmokeClientPortal() {
   return (
@@ -26,6 +27,7 @@ export default function SmokeClientPortal() {
           <Route path="traces" element={<TracesPage />} />
           <Route path="lineage" element={<LineagePage />} />
           <Route path="visual" element={<VisualPage />} />
+          <Route path="tests" element={<SmokeTestsPage />} />
           <Route path="data" element={<DataPage />} />
           <Route path="*" element={<Navigate to="/clients/smoke-client" replace />} />
         </Routes>
