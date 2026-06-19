@@ -12,6 +12,7 @@ const navItems = [
   { label: 'Traces', to: '/clients/smoke-client/traces' },
   { label: 'Lineage', to: '/clients/smoke-client/lineage' },
   { label: 'Visual', to: '/clients/smoke-client/visual' },
+  { label: 'Tests', to: '/clients/smoke-client/tests' },
   { label: 'Data', to: '/clients/smoke-client/data' },
 ];
 

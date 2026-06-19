@@ -122,3 +122,45 @@ export async function fetchView(view, { select, order, limit } = {}) {
   const qs = params.toString();
   return supabaseFetch(qs ? `${view}?${qs}` : view);
 }
+
+/**
+ * Registry-driven freshness probe for a single curated view.
+ *
+ * Returns the live exact row COUNT (read from the PostgREST `Content-Range`
+ * header via `Prefer: count=exact`) plus the single most-recent row, fetched
+ * with `Range: 0-0` so only one row crosses the wire. Callers order by a
+ * timestamp column descending to surface the most-recent timestamp.
+ *
+ * SECURITY: identical posture to `fetchView` — a plain anon REST GET against a
+ * single curated, already-tenant-scoped view. No raw SQL, no arbitrary filters;
+ * the `view` name is shape-validated as defence-in-depth.
+ */
+export async function fetchViewMeta(view, { select, order } = {}) {
+  if (!view || typeof view !== 'string' || !/^[a-zA-Z0-9_]+$/.test(view)) {
+    throw new Error('fetchViewMeta: invalid view name');
+  }
+
+  const params = new URLSearchParams();
+  if (select) params.set('select', select);
+  if (order) params.set('order', order);
+  const qs = params.toString();
+  const path = qs ? `${view}?${qs}` : view;
+
+  const response = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    headers: supabaseHeaders({ Prefer: 'count=exact', Range: '0-0', 'Range-Unit': 'items' }),
+  });
+
+  // PostgREST replies 206 (Partial Content) when a Range is applied, 200 when
+  // the range covers the whole (possibly empty) result.
+  if (!response.ok && response.status !== 206) {
+    const detail = await response.text().catch(() => '');
+    throw new Error(detail || `Supabase request failed with ${response.status}`);
+  }
+
+  const rows = await response.json().catch(() => []);
+  const contentRange = response.headers.get('content-range') || '';
+  const totalPart = contentRange.includes('/') ? contentRange.split('/').pop() : '';
+  const count = /^\d+$/.test(totalPart) ? Number(totalPart) : null;
+
+  return { count, row: Array.isArray(rows) ? rows[0] ?? null : null };
+}
