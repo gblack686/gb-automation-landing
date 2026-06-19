@@ -24,3 +24,41 @@ export async function listCapabilities(kind) {
   if (errors?.length) throw new Error(errors.map((e) => e.message).join('; '));
   return (data || []).slice().sort((a, b) => (a.slug || '').localeCompare(b.slug || ''));
 }
+
+// Fetch every whitelisted second-brain VaultDoc, sorted by path. Same auth posture as
+// listCapabilities (authMode userPool) — bodies are private, so the browser must be a
+// signed-in tenant-gbautomation user. Rows are written by the publish GitHub Action.
+export async function vaultDocList() {
+  const { data, errors } = await client().models.VaultDoc.list({
+    limit: 1000,
+    authMode: 'userPool',
+  });
+  if (errors?.length) throw new Error(errors.map((e) => e.message).join('; '));
+  return (data || []).slice().sort((a, b) => (a.path || '').localeCompare(b.path || ''));
+}
+
+// Agent-mediated, PR-gated writes. These call custom AppSync mutations backed by the
+// capabilityEdit Lambda, which branches + commits the markdown and opens a PR against the
+// gbautomation repo — the browser never holds a GitHub credential and never mutates the
+// catalog directly. Each returns { prUrl } for the success affordance.
+function unwrapEdit({ data, errors }) {
+  if (errors?.length) throw new Error(errors.map((e) => e.message).join('; '));
+  const prUrl = data?.prUrl || null;
+  const branch = data?.branch || null;
+  if (!prUrl) throw new Error('No PR URL returned from capabilityEdit.');
+  return { prUrl, branch };
+}
+
+// input: { kind, path?, title, body, summary? } -> { prUrl, branch }
+export async function createSkill(input) {
+  return unwrapEdit(
+    await client().mutations.createCapabilityDraft(input, { authMode: 'userPool' }),
+  );
+}
+
+// input: { kind, path, title, body, summary? } -> { prUrl, branch }
+export async function editSkill(input) {
+  return unwrapEdit(
+    await client().mutations.editCapability(input, { authMode: 'userPool' }),
+  );
+}

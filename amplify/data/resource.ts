@@ -1,6 +1,7 @@
 import { type ClientSchema, a, defineData } from '@aws-amplify/backend';
 import { langfuseTraces } from '../functions/langfuse-traces/resource';
 import { macMiniOps } from '../functions/mac-mini-ops/resource';
+import { capabilityEdit } from '../functions/capability-edit/resource';
 
 const schema = a.schema({
   LangfuseTracePayload: a.customType({
@@ -113,6 +114,44 @@ const schema = a.schema({
       allow.authenticated().to(['read']),
       allow.publicApiKey().to(['create', 'update', 'delete']),
     ]),
+
+  // Agent-mediated, PR-gated write path. The website NEVER mutates AppSync/GitHub
+  // directly: these mutations delegate to the capabilityEdit Lambda, which branches +
+  // commits the SKILL.md/markdown change in the (private) gbautomation repo and opens a
+  // PR using a fine-grained GitHub PAT read from AWS Secrets Manager (see backend.ts).
+  // GitHub markdown stays canonical; merge re-mirrors to Supabase + AppSync. Writes are
+  // user-gated (authenticated only — never publicApiKey).
+  CapabilityEditResult: a.customType({
+    prUrl: a.string(),
+    branch: a.string(),
+    payload: a.json(),
+  }),
+
+  createCapabilityDraft: a
+    .mutation()
+    .arguments({
+      kind: a.string().required(),
+      path: a.string(),
+      title: a.string(),
+      body: a.string().required(),
+      summary: a.string(),
+    })
+    .returns(a.ref('CapabilityEditResult'))
+    .authorization((allow) => [allow.authenticated()])
+    .handler(a.handler.function(capabilityEdit)),
+
+  editCapability: a
+    .mutation()
+    .arguments({
+      kind: a.string().required(),
+      path: a.string().required(),
+      title: a.string(),
+      body: a.string().required(),
+      summary: a.string(),
+    })
+    .returns(a.ref('CapabilityEditResult'))
+    .authorization((allow) => [allow.authenticated()])
+    .handler(a.handler.function(capabilityEdit)),
 });
 
 export type Schema = ClientSchema<typeof schema>;
