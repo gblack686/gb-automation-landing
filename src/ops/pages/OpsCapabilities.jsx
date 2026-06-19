@@ -1,10 +1,21 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
-import { Bot, Boxes, GraduationCap, RefreshCw, Search, Terminal } from 'lucide-react';
+import {
+  Bot,
+  Boxes,
+  ExternalLink,
+  GraduationCap,
+  Pencil,
+  Plus,
+  RefreshCw,
+  Search,
+  Terminal,
+  X,
+} from 'lucide-react';
 import OpsPageShell from '../components/OpsPageShell';
 import CollapsibleSection from '../components/CollapsibleSection';
-import { listCapabilities } from '../lib/capabilitiesClient';
+import { createSkill, editSkill, listCapabilities } from '../lib/capabilitiesClient';
 
 // Route slug -> catalog definition. `kind` matches Capability.kind in Supabase/AppSync.
 const KINDS = {
@@ -55,11 +66,152 @@ function CatalogIndex() {
   );
 }
 
+// Agent-mediated, PR-gated write affordance. Renders only inside /ops (already gated to
+// authenticated tenant-gbautomation users by RequireAuth in App.jsx). Submitting calls the
+// createCapabilityDraft/editCapability AppSync mutations, which delegate to the
+// capabilityEdit Lambda — the browser never writes GitHub/AppSync directly. On success we
+// surface the returned PR URL; markdown stays canonical until a human merges the PR.
+function SkillEditor({ def, existing, onClose }) {
+  const isEdit = Boolean(existing);
+  const [path, setPath] = useState(existing?.path || '');
+  const [title, setTitle] = useState(existing?.slug || '');
+  const [body, setBody] = useState(existing?.bodyMd || '');
+  const [summary, setSummary] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState(null);
+  const [result, setResult] = useState(null);
+
+  async function submit(e) {
+    e.preventDefault();
+    setSubmitting(true);
+    setError(null);
+    try {
+      const input = { kind: def.kind, path: path || undefined, title, body, summary: summary || undefined };
+      const out = isEdit ? await editSkill(input) : await createSkill(input);
+      setResult(out);
+    } catch (err) {
+      setError(err.message || String(err));
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  return (
+    <div className="rounded-lg border border-[#D97757]/40 bg-white p-5">
+      <div className="mb-4 flex items-center justify-between">
+        <h3 className="font-serif text-lg text-[#191919]">
+          {isEdit ? `Edit ${existing.slug}` : `New ${def.label.replace(/s$/, '').toLowerCase()}`}
+        </h3>
+        <button
+          onClick={onClose}
+          className="inline-flex items-center gap-1.5 text-xs uppercase tracking-widest text-[#191919]/60 transition-colors hover:text-[#D97757]"
+        >
+          <X className="h-3.5 w-3.5" />
+          Close
+        </button>
+      </div>
+
+      {result ? (
+        <div className="rounded-md border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-900">
+          <p className="mb-2 font-medium">Pull request opened — markdown stays canonical until merge.</p>
+          <a
+            href={result.prUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 font-mono text-xs text-[#D97757] hover:underline"
+          >
+            <ExternalLink className="h-3.5 w-3.5" />
+            {result.prUrl}
+          </a>
+          {result.branch && (
+            <p className="mt-2 font-mono text-[11px] text-emerald-900/70">branch: {result.branch}</p>
+          )}
+        </div>
+      ) : (
+        <form onSubmit={submit} className="space-y-4">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <label className="block">
+              <span className="mb-1 block text-xs uppercase tracking-widest text-[#191919]/50">Title / slug</span>
+              <input
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                required
+                placeholder={`my-${def.kind}`}
+                className="w-full rounded-md border border-[#D6D4C8] bg-white px-3 py-2 text-sm text-[#191919] placeholder:text-[#191919]/40 focus:border-[#D97757] focus:outline-none"
+              />
+            </label>
+            <label className="block">
+              <span className="mb-1 block text-xs uppercase tracking-widest text-[#191919]/50">Path</span>
+              <input
+                value={path}
+                onChange={(e) => setPath(e.target.value)}
+                disabled={isEdit}
+                placeholder={def.blurb}
+                className="w-full rounded-md border border-[#D6D4C8] bg-white px-3 py-2 font-mono text-xs text-[#191919] placeholder:text-[#191919]/40 focus:border-[#D97757] focus:outline-none disabled:opacity-60"
+              />
+            </label>
+          </div>
+
+          <div className="grid gap-4 lg:grid-cols-2">
+            <label className="block">
+              <span className="mb-1 block text-xs uppercase tracking-widest text-[#191919]/50">Body (markdown)</span>
+              <textarea
+                value={body}
+                onChange={(e) => setBody(e.target.value)}
+                required
+                rows={14}
+                placeholder="# Title&#10;&#10;What this capability does…"
+                className="w-full rounded-md border border-[#D6D4C8] bg-white px-3 py-2 font-mono text-xs text-[#191919] placeholder:text-[#191919]/40 focus:border-[#D97757] focus:outline-none"
+              />
+            </label>
+            <div>
+              <span className="mb-1 block text-xs uppercase tracking-widest text-[#191919]/50">Preview</span>
+              <div className={`min-h-[14rem] rounded-md border border-[#D6D4C8] bg-[#F3F1E7]/60 p-3 ${PROSE}`}>
+                {body ? <ReactMarkdown>{body}</ReactMarkdown> : (
+                  <p className="text-sm text-[#191919]/40">Nothing to preview yet.</p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <label className="block">
+            <span className="mb-1 block text-xs uppercase tracking-widest text-[#191919]/50">PR summary</span>
+            <input
+              value={summary}
+              onChange={(e) => setSummary(e.target.value)}
+              placeholder="Short description for the PR title/body"
+              className="w-full rounded-md border border-[#D6D4C8] bg-white px-3 py-2 text-sm text-[#191919] placeholder:text-[#191919]/40 focus:border-[#D97757] focus:outline-none"
+            />
+          </label>
+
+          {error && (
+            <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-800">
+              <p className="font-mono text-xs">{error}</p>
+            </div>
+          )}
+
+          <div className="flex items-center gap-3">
+            <button
+              type="submit"
+              disabled={submitting}
+              className="inline-flex items-center gap-2 rounded-md bg-[#191919] px-4 py-2 text-xs font-semibold uppercase tracking-widest text-[#F3F1E7] transition-colors hover:bg-[#D97757] disabled:opacity-50"
+            >
+              {submitting ? 'Opening PR…' : isEdit ? 'Propose edit' : 'Open PR'}
+            </button>
+            <span className="text-xs text-[#191919]/50">Opens a pull request against gbautomation — no direct write.</span>
+          </div>
+        </form>
+      )}
+    </div>
+  );
+}
+
 function Catalog({ def }) {
   const [items, setItems] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [q, setQ] = useState('');
+  const [editor, setEditor] = useState(null); // null | { existing? }
 
   async function load() {
     setLoading(true);
@@ -121,7 +273,18 @@ function Catalog({ def }) {
           <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
           Refresh
         </button>
+        <button
+          onClick={() => setEditor({ existing: null })}
+          className="inline-flex items-center gap-1.5 rounded-md bg-[#191919] px-3 py-2 text-xs font-semibold uppercase tracking-widest text-[#F3F1E7] transition-colors hover:bg-[#D97757]"
+        >
+          <Plus className="h-3.5 w-3.5" />
+          New {def.label.replace(/s$/, '').toLowerCase()}
+        </button>
       </div>
+
+      {editor && (
+        <SkillEditor def={def} existing={editor.existing} onClose={() => setEditor(null)} />
+      )}
 
       {loading && !items && <p className="text-sm text-[#191919]/60">Loading…</p>}
 
@@ -151,10 +314,19 @@ function Catalog({ def }) {
             {it.description && it.description !== '—' && (
               <p className="mb-3 text-sm text-[#191919]/70">{it.description}</p>
             )}
-            <p className="mb-4 font-mono text-[11px] text-[#191919]/45">
-              {it.path}
-              {it.updatedAt ? ` · updated ${new Date(it.updatedAt).toLocaleDateString()}` : ''}
-            </p>
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <p className="font-mono text-[11px] text-[#191919]/45">
+                {it.path}
+                {it.updatedAt ? ` · updated ${new Date(it.updatedAt).toLocaleDateString()}` : ''}
+              </p>
+              <button
+                onClick={() => setEditor({ existing: it })}
+                className="inline-flex shrink-0 items-center gap-1 text-[11px] uppercase tracking-widest text-[#191919]/50 transition-colors hover:text-[#D97757]"
+              >
+                <Pencil className="h-3 w-3" />
+                Edit
+              </button>
+            </div>
             {it.bodyMd ? (
               <div className={PROSE}>
                 <ReactMarkdown>{it.bodyMd}</ReactMarkdown>

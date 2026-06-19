@@ -11,6 +11,8 @@ const navItems = [
   { label: 'Kanban', to: '/ops/kanban' },
   { label: 'Data', to: '/ops/data' },
   { label: 'Capabilities', to: '/ops/capabilities' },
+  { label: 'Second Brain', to: '/ops/second-brain' },
+  { label: 'Library', to: '/ops/library' },
   { label: 'Supabase', to: '/ops/supabase' },
 ];
 

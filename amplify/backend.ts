@@ -4,6 +4,7 @@ import { auth } from './auth/resource';
 import { data } from './data/resource';
 import { langfuseTraces } from './functions/langfuse-traces/resource';
 import { macMiniOps } from './functions/mac-mini-ops/resource';
+import { capabilityEdit } from './functions/capability-edit/resource';
 
 /**
  * @see https://docs.amplify.aws/react/build-a-backend/ to add storage, functions, and more
@@ -13,6 +14,7 @@ const backend = defineBackend({
   data,
   langfuseTraces,
   macMiniOps,
+  capabilityEdit,
 });
 
 backend.langfuseTraces.resources.lambda.addToRolePolicy(
@@ -28,5 +30,15 @@ backend.macMiniOps.resources.lambda.addToRolePolicy(
     effect: Effect.ALLOW,
     actions: ['secretsmanager:GetSecretValue'],
     resources: ['arn:aws:secretsmanager:us-east-1:*:secret:gbautomation/infrastructure/supabase/gbauto-*'],
+  }),
+);
+
+// capabilityEdit opens a PR against the (private) gbautomation repo using a fine-grained
+// GitHub PAT read from AWS Secrets Manager at runtime — never embedded in code/repo.
+backend.capabilityEdit.resources.lambda.addToRolePolicy(
+  new PolicyStatement({
+    effect: Effect.ALLOW,
+    actions: ['secretsmanager:GetSecretValue'],
+    resources: ['arn:aws:secretsmanager:us-east-1:*:secret:gbautomation/github/*'],
   }),
 );

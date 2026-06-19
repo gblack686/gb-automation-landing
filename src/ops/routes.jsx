@@ -9,6 +9,8 @@ import OpsSupabase from './pages/OpsSupabase';
 import OpsObservability from './pages/OpsObservability';
 import OpsMacMini from './pages/OpsMacMini';
 import OpsCapabilities from './pages/OpsCapabilities';
+import OpsSecondBrain from './pages/OpsSecondBrain';
+import OpsLibrary from './pages/OpsLibrary';
 
 export default function OpsRoutes() {
   return (
@@ -28,6 +30,8 @@ export default function OpsRoutes() {
           <Route path="data" element={<OpsData />} />
           <Route path="capabilities" element={<OpsCapabilities />} />
           <Route path="capabilities/:kind" element={<OpsCapabilities />} />
+          <Route path="second-brain" element={<OpsSecondBrain />} />
+          <Route path="library" element={<OpsLibrary />} />
           <Route path="supabase" element={<OpsSupabase />} />
           <Route path="observability" element={<OpsObservability />} />
           <Route path="observability/traces" element={<OpsObservability />} />
