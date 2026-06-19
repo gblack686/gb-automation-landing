@@ -7,6 +7,11 @@ const navItems = [
   { label: 'Schedules', to: '/clients/smoke-client/schedules' },
   { label: 'Runs', to: '/clients/smoke-client/runs' },
   { label: 'Board', to: '/clients/smoke-client/board' },
+  { label: 'Catalog', to: '/clients/smoke-client/catalog' },
+  { label: 'Jobs', to: '/clients/smoke-client/jobs' },
+  { label: 'Traces', to: '/clients/smoke-client/traces' },
+  { label: 'Lineage', to: '/clients/smoke-client/lineage' },
+  { label: 'Visual', to: '/clients/smoke-client/visual' },
   { label: 'Data', to: '/clients/smoke-client/data' },
 ];
 

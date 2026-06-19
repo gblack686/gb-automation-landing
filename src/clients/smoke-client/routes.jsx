@@ -5,6 +5,11 @@ import SchedulesPage from './pages/SchedulesPage';
 import RunsPage from './pages/RunsPage';
 import BoardPage from './pages/BoardPage';
 import DataPage from './pages/DataPage';
+import CatalogPage from './pages/CatalogPage';
+import JobsPage from './pages/JobsPage';
+import TracesPage from './pages/TracesPage';
+import LineagePage from './pages/LineagePage';
+import VisualPage from './pages/VisualPage';
 
 export default function SmokeClientPortal() {
   return (
@@ -16,6 +21,11 @@ export default function SmokeClientPortal() {
           <Route path="schedules" element={<SchedulesPage />} />
           <Route path="runs" element={<RunsPage />} />
           <Route path="board" element={<BoardPage />} />
+          <Route path="catalog" element={<CatalogPage />} />
+          <Route path="jobs" element={<JobsPage />} />
+          <Route path="traces" element={<TracesPage />} />
+          <Route path="lineage" element={<LineagePage />} />
+          <Route path="visual" element={<VisualPage />} />
           <Route path="data" element={<DataPage />} />
           <Route path="*" element={<Navigate to="/clients/smoke-client" replace />} />
         </Routes>
