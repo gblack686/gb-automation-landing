@@ -116,29 +116,11 @@ trees:
         created: "2026-06-07"
         screenshot: null
 
-  - slug: automation-loop
-    name: Automation Loop
-    description: How It Works section from transcript to reviewed pull request
-    icon: git-branch
-    branches:
-      - slug: transcript-to-pr-v1
-        name: Transcript to PR Flow
-        status: validated
-        description: Four-stage workflow connecting meetings, Linear, autonomous builds, and PR review
-        created: "2026-06-05"
-        screenshot: null
-
   - slug: hermes
     name: Hermes Companion
     description: Dedicated per-client Hermes profile model
     icon: bot
     branches:
-      - slug: dedicated-ai-companion-v1
-        name: Dedicated AI Companion
-        status: validated
-        description: Client-isolated Hermes agent section with Telegram and vault-aware positioning
-        created: "2026-06-05"
-        screenshot: null
       - slug: hermes-kanban-board-gbauto
         name: Hermes Kanban Board
         status: validated
@@ -186,18 +168,6 @@ trees:
         status: validated
         description: Shortcut-accessible library for skills, agent.md files, prompts, profiles, templates, and reusable operating patterns
         created: "2026-06-08"
-        screenshot: null
-
-  - slug: team-session
-    name: AI Team Session
-    description: Productized one-hour Hermes team build session
-    icon: users
-    branches:
-      - slug: ai-team-hour-v1
-        name: Your AI Team in an Hour
-        status: validated
-        description: Intake, live build, Telegram launch, deliverables, and pricing callout
-        created: "2026-06-05"
         screenshot: null
 
   - slug: process

@@ -45,7 +45,7 @@ export default function Pricing() {
           <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
         </svg>
       ),
-      title: 'Agent Implementation',
+      title: 'Multi-Agent Implementation',
       price: '$4,999',
       period: 'Single Agent',
       features: ['Full Implementation Plan', 'Custom Agent Development', 'Validation & Testing', 'Deployment Guide', 'Knowledge Base Setup'],
