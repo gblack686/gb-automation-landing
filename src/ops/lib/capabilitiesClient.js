@@ -5,6 +5,7 @@
 // src/ops/lib/macMiniClient.js. Rows are written by the publish-capabilities
 // GitHub Action in the gbautomation repo, never by the browser.
 import { generateClient } from 'aws-amplify/data';
+import { LOCAL_CAPABILITY_PREVIEW } from '../data/localCapabilityPreview';
 
 let _client;
 function client() {
@@ -16,13 +17,24 @@ function client() {
 // sorted by slug. The table is small (~hundreds of rows), so a filtered list is
 // fine; isolation/auth is enforced by the model (authenticated read only).
 export async function listCapabilities(kind) {
-  const { data, errors } = await client().models.Capability.list({
-    filter: { kind: { eq: kind } },
-    limit: 1000,
-    authMode: 'userPool',
-  });
-  if (errors?.length) throw new Error(errors.map((e) => e.message).join('; '));
-  return (data || []).slice().sort((a, b) => (a.slug || '').localeCompare(b.slug || ''));
+  try {
+    const capabilityModel = client().models.Capability;
+    if (!capabilityModel) throw new Error('Capability model is not present in amplify_outputs.json.');
+
+    const { data, errors } = await capabilityModel.list({
+      filter: { kind: { eq: kind } },
+      limit: 1000,
+      authMode: 'userPool',
+    });
+    if (errors?.length) throw new Error(errors.map((e) => e.message).join('; '));
+    return (data || []).slice().sort((a, b) => (a.slug || '').localeCompare(b.slug || ''));
+  } catch (error) {
+    const localDev = import.meta.env.DEV && ['localhost', '127.0.0.1'].includes(window.location.hostname);
+    if (!localDev) throw error;
+    return LOCAL_CAPABILITY_PREVIEW
+      .filter((item) => item.kind === kind)
+      .sort((a, b) => (a.slug || '').localeCompare(b.slug || ''));
+  }
 }
 
 // Fetch every whitelisted second-brain VaultDoc, sorted by path. Same auth posture as

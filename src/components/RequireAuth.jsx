@@ -14,6 +14,12 @@ export default function RequireAuth({ children, allowedGroups = [], allowedEmail
 
   useEffect(() => {
     let cancelled = false;
+    const localDevBypass = import.meta.env.DEV && ['localhost', '127.0.0.1'].includes(window.location.hostname);
+    if (localDevBypass) {
+      setAuthState('authed');
+      return () => { cancelled = true; };
+    }
+
     const requiredGroups = allowedGroupsKey ? allowedGroupsKey.split('|') : [];
     const requiredEmails = allowedEmailsKey ? allowedEmailsKey.split('|') : [];
     getCurrentUser()

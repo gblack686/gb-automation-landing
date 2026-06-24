@@ -15,7 +15,10 @@ import {
 } from 'lucide-react';
 import OpsPageShell from '../components/OpsPageShell';
 import CollapsibleSection from '../components/CollapsibleSection';
+import { ContractCardGrid } from '../components/SupabaseContractCards';
+import { getCapabilityAvatar } from '../lib/avatarAssignments';
 import { createSkill, editSkill, listCapabilities } from '../lib/capabilitiesClient';
+import { contractsForCapabilityKind, loadSupabaseContracts } from '../lib/supabaseContractClient';
 
 // Route slug -> catalog definition. `kind` matches Capability.kind in Supabase/AppSync.
 const KINDS = {
@@ -45,6 +48,7 @@ function CatalogIndex() {
       <div className="grid gap-4 sm:grid-cols-2">
         {Object.entries(KINDS).map(([slug, k]) => {
           const Icon = k.icon;
+          const avatar = getCapabilityAvatar({ kind: k.kind, slug, title: k.label, blurb: k.blurb });
           return (
             <Link
               key={slug}
@@ -52,10 +56,13 @@ function CatalogIndex() {
               className="group rounded-lg border border-[#D6D4C8] bg-white p-5 transition-colors hover:border-[#D97757]"
             >
               <div className="flex items-center gap-3">
-                <span className="flex h-9 w-9 items-center justify-center rounded-md border border-[#D6D4C8] bg-[#191919]">
+                <span className="gb-card-avatar">
+                  <img src={avatar.src} alt={avatar.alt} loading="lazy" />
+                </span>
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-[#D6D4C8] bg-[#191919]">
                   <Icon className="h-4 w-4 text-[#F3F1E7]" />
                 </span>
-                <span className="font-serif text-lg text-[#191919]">{k.label}</span>
+                <span className="min-w-0 font-serif text-lg text-[#191919]">{k.label}</span>
               </div>
               <p className="mt-3 font-mono text-[11px] text-[#191919]/50">{k.blurb}</p>
             </Link>
@@ -208,6 +215,7 @@ function SkillEditor({ def, existing, onClose }) {
 
 function Catalog({ def }) {
   const [items, setItems] = useState(null);
+  const [contracts, setContracts] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [q, setQ] = useState('');
@@ -230,6 +238,14 @@ function Catalog({ def }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [def.kind]);
 
+  useEffect(() => {
+    let cancelled = false;
+    loadSupabaseContracts()
+      .then((data) => { if (!cancelled) setContracts(data); })
+      .catch(() => { if (!cancelled) setContracts(null); });
+    return () => { cancelled = true; };
+  }, []);
+
   const filtered = useMemo(() => {
     const rows = items || [];
     const needle = q.trim().toLowerCase();
@@ -244,6 +260,10 @@ function Catalog({ def }) {
   }, [items, q]);
 
   const label = def.label.toLowerCase();
+  const relatedContracts = useMemo(
+    () => contractsForCapabilityKind(contracts, def.kind),
+    [contracts, def.kind],
+  );
 
   return (
     <OpsPageShell
@@ -286,6 +306,18 @@ function Catalog({ def }) {
         <SkillEditor def={def} existing={editor.existing} onClose={() => setEditor(null)} />
       )}
 
+      <CollapsibleSection
+        eyebrow="Index"
+        title={`${def.label} Supabase Contract`}
+        meta={<span className="gb-pill">{relatedContracts.length} related</span>}
+      >
+        <p className="mb-4 max-w-3xl text-sm leading-6 text-[#191919]/65">
+          Related tables and views from `ops_schema_catalog`. These rows describe how this
+          capability family is indexed, observed, and exposed to dashboard surfaces.
+        </p>
+        <ContractCardGrid contracts={relatedContracts} compact />
+      </CollapsibleSection>
+
       {loading && !items && <p className="text-sm text-[#191919]/60">Loading…</p>}
 
       {error && (
@@ -308,6 +340,7 @@ function Catalog({ def }) {
         {filtered.map((it) => (
           <CollapsibleSection
             key={it.id}
+            avatar={getCapabilityAvatar(it)}
             title={it.slug}
             meta={it.owner ? <span className="gb-pill">{it.owner}</span> : null}
           >

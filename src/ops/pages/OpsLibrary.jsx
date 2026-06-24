@@ -3,7 +3,10 @@ import ReactMarkdown from 'react-markdown';
 import { Bot, Boxes, FileText, RefreshCw, Search, Terminal } from 'lucide-react';
 import OpsPageShell from '../components/OpsPageShell';
 import CollapsibleSection from '../components/CollapsibleSection';
+import { ContractCardGrid } from '../components/SupabaseContractCards';
+import { getCapabilityAvatar } from '../lib/avatarAssignments';
 import { listCapabilities } from '../lib/capabilitiesClient';
+import { contractsForCapabilityKind, loadSupabaseContracts } from '../lib/supabaseContractClient';
 
 // The library unions Capability rows across kinds. Canopy prompts are modeled as
 // Capability rows with kind='prompt' (no separate model). `kind` matches
@@ -22,6 +25,7 @@ const PROSE =
 
 export default function OpsLibrary() {
   const [items, setItems] = useState(null);
+  const [contracts, setContracts] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [q, setQ] = useState('');
@@ -42,6 +46,14 @@ export default function OpsLibrary() {
 
   useEffect(() => {
     load();
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    loadSupabaseContracts()
+      .then((data) => { if (!cancelled) setContracts(data); })
+      .catch(() => { if (!cancelled) setContracts(null); });
+    return () => { cancelled = true; };
   }, []);
 
   const filtered = useMemo(() => {
@@ -130,9 +142,18 @@ export default function OpsLibrary() {
                 <span className="font-mono text-[11px] text-[#191919]/40">{def.blurb}</span>
               </div>
 
+              <CollapsibleSection
+                eyebrow="Index"
+                title={`${def.label} index contract`}
+                meta={<span className="gb-pill">{contractsForCapabilityKind(contracts, def.kind).length} related</span>}
+              >
+                <ContractCardGrid contracts={contractsForCapabilityKind(contracts, def.kind)} compact />
+              </CollapsibleSection>
+
               {rows.map((it) => (
                 <CollapsibleSection
                   key={it.id}
+                  avatar={getCapabilityAvatar(it)}
                   title={it.slug}
                   meta={it.owner ? <span className="gb-pill">{it.owner}</span> : null}
                 >

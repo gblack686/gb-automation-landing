@@ -14,6 +14,7 @@ import { ChevronDown } from 'lucide-react';
  *   - eyebrow     (node)  Small number/index or label rendered before the title
  *                         (e.g. "01" or "SECTION"). Aliased by `number`.
  *   - number      (node)  Alias for eyebrow.
+ *   - avatar      ({src, alt}) Optional image rendered before the title.
  *   - meta        (node)  Right-aligned slot (count, pill, status chip, etc.).
  *   - defaultOpen (bool)  Initial open state. Defaults to FALSE (collapsed).
  *   - className   (string) Extra classes on the outer container.
@@ -23,6 +24,7 @@ export default function CollapsibleSection({
   title,
   eyebrow,
   number,
+  avatar,
   meta,
   defaultOpen = false,
   className = '',
@@ -36,7 +38,7 @@ export default function CollapsibleSection({
     <div className={`gb-collapse ${open ? 'is-open' : ''} ${className}`.trim()}>
       <button
         type="button"
-        className="gb-collapse-summary"
+        className={`gb-collapse-summary ${avatar?.src ? 'has-avatar' : ''}`.trim()}
         aria-expanded={open}
         aria-controls={bodyId}
         onClick={() => setOpen((v) => !v)}
@@ -46,6 +48,11 @@ export default function CollapsibleSection({
         ) : (
           <span aria-hidden="true" />
         )}
+        {avatar?.src ? (
+          <span className="gb-collapse-avatar" aria-hidden="true">
+            <img src={avatar.src} alt="" loading="lazy" />
+          </span>
+        ) : null}
         <span className="gb-collapse-title">{title}</span>
         <span className="gb-collapse-meta">
           {meta}
