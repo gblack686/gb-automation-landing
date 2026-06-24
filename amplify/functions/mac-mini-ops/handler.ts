@@ -4,6 +4,7 @@ import { GetSecretValueCommand, SecretsManagerClient } from '@aws-sdk/client-sec
 //   macMiniTelemetry   (query)    -> { payload: { snapshot, generated_at } }
 //   createMacMiniRequest (mutation) -> { payload: { id, action, status } }
 //   macMiniRequest     (query)    -> { payload: { request } }
+//   smokeClientChat    (mutation) -> { payload: { message, reply, status } }
 //
 // Auth is enforced by AppSync (allow.authenticated()); the requester's email comes from
 // the verified Cognito identity. The Supabase service key never leaves this Lambda — it's
@@ -60,6 +61,71 @@ function emailOf(event: Json): string {
   return String(id?.claims?.email || id?.username || 'ops-user');
 }
 
+function message(role: 'user' | 'assistant' | 'system', text: string): Json {
+  return {
+    id: `${role}-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+    role,
+    text,
+    ts: new Date().toISOString(),
+  };
+}
+
+function parseDispatch(text: string): { matched: boolean; write: boolean; request: string } {
+  const trimmed = text.trim();
+  const lowered = trimmed.toLowerCase();
+  if (!lowered.startsWith('/dispatch')) return { matched: false, write: false, request: '' };
+  const tokens = trimmed.slice('/dispatch'.length).trim().split(/\s+/).filter(Boolean);
+  const kept: string[] = [];
+  let write = false;
+  for (const token of tokens) {
+    if (['--write', '--yes', '--approve', '--approved'].includes(token)) {
+      write = true;
+    } else {
+      kept.push(token);
+    }
+  }
+  return { matched: true, write, request: kept.join(' ').trim() };
+}
+
+function smokeClientReply(text: string): { text: string; mode: string } {
+  const dispatch = parseDispatch(text);
+  if (dispatch.matched) {
+    if (!dispatch.request) {
+      return {
+        mode: 'dispatch-help',
+        text: 'Dispatch command recognized. Use `/dispatch <request>` to stage a dry-run TAC plan for smoke-client.',
+      };
+    }
+    const gate = dispatch.write
+      ? 'Live worker-card writes are still gated on the Mac Mini poller; no cards were created from this Amplify path.'
+      : 'Dry-run only; no worker cards were created.';
+    return {
+      mode: 'dispatch-dry-run',
+      text: [
+        'Planned TAC Hermes worker dispatch for smoke-client.',
+        '',
+        'Mode: `dry-run`',
+        'Cards planned: 8',
+        `Request: ${dispatch.request}`,
+        gate,
+      ].join('\n'),
+    };
+  }
+
+  const lowered = text.toLowerCase();
+  if (lowered.includes('help') || lowered.includes('dispatch') || lowered.includes('kanban')) {
+    return {
+      mode: 'help',
+      text: 'Smoke-client chat is connected through the GB Auto Amplify backend. Use `/dispatch <request>` to stage a tenant-scoped TAC plan.',
+    };
+  }
+
+  return {
+    mode: 'ack',
+    text: 'Smoke-client profile received your message. This tenant is scoped to `tenant=smoke-client`; use `/dispatch <request>` when you want a TAC Kanban plan from this chat.',
+  };
+}
+
 // Route by AppSync field name, falling back to argument shape (the 3 ops have distinct args).
 function opOf(event: Json): string {
   const field = event?.info?.fieldName || event?.fieldName;
@@ -74,6 +140,23 @@ export const handler = async (event: Json) => {
   try {
     const op = opOf(event);
     const args: Json = event?.arguments || {};
+
+    if (op === 'smokeClientChat') {
+      const text = String(args.text || '').trim();
+      if (!text) return { payload: { error: 'Empty message ignored.' } };
+      const reply = smokeClientReply(text);
+      return {
+        payload: {
+          message: message('user', text),
+          reply: message('assistant', reply.text),
+          mode: reply.mode,
+          delivered: true,
+          connected: true,
+          transport: 'amplify-smoke-client',
+          status: 'Delivered',
+        },
+      };
+    }
 
     if (op === 'createMacMiniRequest') {
       const action = String(args.action || '').trim();

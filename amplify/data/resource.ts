@@ -45,6 +45,13 @@ const schema = a.schema({
     .authorization((allow) => [allow.authenticated()])
     .handler(a.handler.function(macMiniOps)),
 
+  smokeClientChat: a
+    .mutation()
+    .arguments({ text: a.string().required() })
+    .returns(a.ref('MacMiniResult'))
+    .authorization((allow) => [allow.authenticated()])
+    .handler(a.handler.function(macMiniOps)),
+
   ContactSubmission: a
     .model({
       name: a.string().required(),

@@ -127,7 +127,7 @@ export default function OverviewPage() {
         <CollapsibleSection
           eyebrow="03"
           title="Navigate"
-          meta={<span className="gb-pill">11 views</span>}
+          meta={<span className="gb-pill">12 views</span>}
         >
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
             {[
@@ -140,6 +140,7 @@ export default function OverviewPage() {
               { label: 'Lineage', detail: 'PRD lifecycle, dispatch edges, and self-improve.' },
               { label: 'Visual', detail: 'Browser-harness capture receipts.' },
               { label: 'Tests', detail: 'Smoke test catalog and live per-view freshness.' },
+              { label: 'Chat', detail: 'Authenticated smoke-client Hermes thread.' },
               { label: 'Data', detail: 'Full curated dataset explorer — search, sort, export.' },
             ].map((item) => (
               <div
