@@ -3,6 +3,7 @@ import { MessageSquare, Send, ShieldCheck, TerminalSquare } from 'lucide-react';
 import OpsPageShell from '../../../ops/components/OpsPageShell';
 import CollapsibleSection from '../../../ops/components/CollapsibleSection';
 import { sendSmokeChat } from '../lib/smokeChatClient';
+import { subscribeAssistant, loadHistory } from '../lib/smokeRealtime';
 
 const STORAGE_KEY = 'gbauto.smoke-client.chat';
 
@@ -14,21 +15,6 @@ function nowMessage(role, text, extras = {}) {
     ts: extras.ts || new Date().toISOString(),
     status: extras.status,
   };
-}
-
-function loadHistory() {
-  try {
-    const saved = JSON.parse(window.localStorage.getItem(STORAGE_KEY) || '[]');
-    if (Array.isArray(saved)) return saved.slice(-80);
-  } catch {
-    // Ignore corrupt local history.
-  }
-  return [
-    nowMessage(
-      'system',
-      'Smoke-client chat is connected through the authenticated GB Auto backend.',
-    ),
-  ];
 }
 
 function formatTime(value) {
@@ -61,13 +47,45 @@ function bubbleClass(role) {
 }
 
 export default function ChatPage() {
-  const [messages, setMessages] = useState(loadHistory);
+  const [messages, setMessages] = useState([]);
   const [draft, setDraft] = useState('');
   const [sending, setSending] = useState(false);
   const [error, setError] = useState('');
   const [transport, setTransport] = useState('amplify-smoke-client');
   const [status, setStatus] = useState('Ready');
   const scrollRef = useRef(null);
+
+  // Mount once: seed from Supabase history, then stream assistant replies via Realtime.
+  useEffect(() => {
+    let active = true;
+
+    loadHistory()
+      .then((rows) => {
+        if (!active) return;
+        setMessages(
+          rows.map((row) =>
+            nowMessage(row.role, row.content, { id: row.id, ts: row.created_at }),
+          ),
+        );
+      })
+      .catch(() => {
+        // History fetch failures are non-fatal; Realtime still streams new turns.
+      });
+
+    const unsub = subscribeAssistant((row) => {
+      setMessages((items) => {
+        // De-dupe: skip if this assistant row is already present.
+        if (items.some((message) => message.id === row.id)) return items;
+        return [...items, nowMessage('assistant', row.content, { id: row.id, ts: row.created_at })];
+      });
+      setStatus('Delivered');
+    });
+
+    return () => {
+      active = false;
+      unsub();
+    };
+  }, []);
 
   useEffect(() => {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(messages.slice(-80)));
@@ -89,17 +107,20 @@ export default function ChatPage() {
     try {
       const response = await sendSmokeChat(text);
       setTransport(response.transport || 'amplify-smoke-client');
-      setStatus(response.status || 'Delivered');
-      const replyText = response.reply?.text || response.message?.text || response.output_text;
-      if (replyText) {
+      if (response.reply?.text) {
+        // Synchronous /dispatch reply — render immediately.
+        setStatus(response.status || 'Delivered');
         setMessages((items) => [
           ...items,
-          nowMessage('assistant', replyText, {
-            id: response.reply?.id,
-            ts: response.reply?.ts,
+          nowMessage('assistant', response.reply.text, {
+            id: response.reply.id,
+            ts: response.reply.ts,
             status: response.mode || response.status,
           }),
         ]);
+      } else {
+        // Normal path — the assistant reply arrives asynchronously via Realtime.
+        setStatus('Hermes is responding…');
       }
     } catch (err) {
       const detail = err.message || 'Unable to send message';
