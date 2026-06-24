@@ -144,16 +144,34 @@ export const handler = async (event: Json) => {
     if (op === 'smokeClientChat') {
       const text = String(args.text || '').trim();
       if (!text) return { payload: { error: 'Empty message ignored.' } };
-      const reply = smokeClientReply(text);
+      const dispatch = parseDispatch(text);
+      if (dispatch.matched) {
+        const reply = smokeClientReply(text);
+        return {
+          payload: {
+            message: message('user', text),
+            reply: message('assistant', reply.text),
+            mode: reply.mode,
+            delivered: true,
+            connected: true,
+            transport: 'amplify-smoke-client',
+            status: 'Delivered',
+          },
+        };
+      }
+      await pgInsert('chat_messages', {
+        tenant: 'smoke-client',
+        session_id: 'web',
+        role: 'user',
+        content: text,
+        status: 'complete',
+      });
       return {
         payload: {
-          message: message('user', text),
-          reply: message('assistant', reply.text),
-          mode: reply.mode,
           delivered: true,
-          connected: true,
           transport: 'amplify-smoke-client',
-          status: 'Delivered',
+          message: message('user', text),
+          status: 'Sent',
         },
       };
     }
