@@ -6,7 +6,7 @@ import { ArrowLeft, LockKeyhole, ShieldCheck } from 'lucide-react';
 function getNextPath(search) {
   const params = new URLSearchParams(search);
   const next = params.get('next');
-  if (!next || !next.startsWith('/')) return '/apps';
+  if (!next || !next.startsWith('/')) return '/clients/smoke-client';
   return next;
 }
 
