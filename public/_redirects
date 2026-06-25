@@ -17,6 +17,8 @@
 /tac/*.css                 /tac/:splat.css                200!
 
 # GBAuto theme surfaces (static files; serve as-is before the SPA catch-all).
+/theme                     /theme/index.html              200!
+/theme/                    /theme/index.html              200!
 /theme/*.html              /theme/:splat.html             200!
 /theme/*.svg               /theme/:splat.svg              200!
 /theme/*.css               /theme/:splat.css             200!
