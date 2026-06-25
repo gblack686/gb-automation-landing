@@ -17,6 +17,7 @@ import {
   X,
 } from 'lucide-react';
 import { fetchPublicOpsFeed, insertWebsiteFeedback } from '../lib/supabaseOps';
+import { buildWebsiteFeedbackPayload, captureFeedbackContext } from '../lib/feedbackContext';
 
 const shortcuts = [
   {
@@ -147,44 +148,6 @@ function KeyCap({ children }) {
   );
 }
 
-function getQueryValue(searchParams, names) {
-  for (const name of names) {
-    const value = searchParams.get(name);
-    if (value) return value;
-  }
-  return null;
-}
-
-function buildFeedbackPayload(message, activePanel) {
-  const url = new URL(window.location.href);
-  const params = url.searchParams;
-
-  return {
-    page_url: url.href,
-    route: `${url.pathname}${url.search}`,
-    client_slug: params.get('client') || 'gbautomation',
-    repo_slug: params.get('repo') || 'gbautomation',
-    board_slug: params.get('board') || 'gbautomation',
-    profile: params.get('profile') || 'website',
-    skill_name: params.get('skill') || null,
-    obs_session_id: getQueryValue(params, ['obs_session_id', 'session_id']),
-    task_id: getQueryValue(params, ['task_id', 'task']),
-    run_id: getQueryValue(params, ['run_id', 'agent_run_id', 'run']),
-    langfuse_trace_id: getQueryValue(params, ['langfuse_trace_id', 'trace_id']),
-    feedback_type: activePanel === 'feedback' ? 'website_feedback' : `website_${activePanel}`,
-    message,
-    user_agent: navigator.userAgent,
-    metadata: {
-      source: 'hermes_command_layer',
-      shortcut_panel: activePanel,
-      viewport: {
-        width: window.innerWidth,
-        height: window.innerHeight,
-      },
-    },
-  };
-}
-
 function formatFeedTime(value) {
   if (!value) return 'recent';
   return new Intl.DateTimeFormat(undefined, {
@@ -199,6 +162,7 @@ function HermesCommandLayer() {
   const [open, setOpen] = useState(false);
   const [activePanel, setActivePanel] = useState('chat');
   const [query, setQuery] = useState('');
+  const [feedbackContext, setFeedbackContext] = useState(null);
   const [feedbackStatus, setFeedbackStatus] = useState('idle');
   const [opsFeed, setOpsFeed] = useState([]);
   const [opsFeedStatus, setOpsFeedStatus] = useState('idle');
@@ -214,6 +178,9 @@ function HermesCommandLayer() {
     }
     setActivePanel(shortcut.id);
     setQuery('');
+    if (shortcut.id === 'feedback') {
+      setFeedbackContext(captureFeedbackContext(window, 'feedback'));
+    }
   }
 
   const active = panels[activePanel] ?? panels.chat;
@@ -257,6 +224,9 @@ function HermesCommandLayer() {
           return;
         }
         setActivePanel(nextPanel);
+        if (nextPanel === 'feedback') {
+          setFeedbackContext(captureFeedbackContext(window, nextPanel));
+        }
         setOpen(true);
       }
     }
@@ -270,6 +240,7 @@ function HermesCommandLayer() {
       window.setTimeout(() => inputRef.current?.focus(), 40);
     } else {
       setQuery('');
+      setFeedbackStatus('idle');
     }
   }, [open, activePanel]);
 
@@ -301,9 +272,10 @@ function HermesCommandLayer() {
 
     try {
       setFeedbackStatus('submitting');
-      await insertWebsiteFeedback(buildFeedbackPayload(message, activePanel));
+      await insertWebsiteFeedback(buildWebsiteFeedbackPayload(message, activePanel, feedbackContext || undefined));
       setFeedbackStatus('success');
       setQuery('');
+      setFeedbackContext(captureFeedbackContext(window, activePanel));
     } catch (error) {
       console.error('Feedback submission failed:', error);
       setFeedbackStatus('error');
@@ -451,6 +423,29 @@ function HermesCommandLayer() {
                     <Send size={17} />
                   </button>
                 </div>
+                {activePanel === 'feedback' && feedbackContext && (
+                  <div className="grid gap-2 px-4 pb-4">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="max-w-full truncate rounded-md border border-[#D6D4C8] bg-[#F3F1E7]/80 px-2 py-1 font-mono text-[11px] text-[#191919]/70">
+                        {feedbackContext.route || feedbackContext.page_url}
+                      </span>
+                      {feedbackContext.page_title && (
+                        <span className="max-w-full truncate rounded-md border border-[#D6D4C8] bg-[#F3F1E7]/80 px-2 py-1 text-[11px] font-semibold text-[#191919]/70">
+                          {feedbackContext.page_title}
+                        </span>
+                      )}
+                      {feedbackContext.selected_text && (
+                        <button
+                          type="button"
+                          onClick={() => setFeedbackContext({ ...feedbackContext, selected_text: null, selected_text_hash: null, selection_context: null })}
+                          className="max-w-full truncate rounded-md border border-[#D97757]/40 bg-[#D97757]/10 px-2 py-1 text-left text-[11px] font-semibold text-[#191919] transition hover:border-[#D97757]"
+                        >
+                          selection: {feedbackContext.selected_text}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                )}
                 {activePanel === 'feedback' && feedbackStatus !== 'idle' && (
                   <p className="px-4 pb-4 text-sm font-semibold text-[#5C5C5C]">
                     {feedbackStatus === 'submitting' && 'Sending feedback...'}
