@@ -1,0 +1,18 @@
+{
+  "schema": "gbauto.client-portal-static-publish.v1",
+  "generated_at": "2026-06-25T04:08:54.603Z",
+  "source_repo": "C:\\Users\\gblac\\OneDrive\\Desktop\\gbauto\\gbautomation",
+  "source_commit": "80b0957584cf5be3680242c7abd7436208c7ec71",
+  "landing_repo": "C:\\Users\\gblac\\OneDrive\\Desktop\\gbauto\\gb-automation-landing",
+  "landing_commit": "ad1924ccb788da079897bddea244bb0d872bea01",
+  "base_path": "/client-portal/",
+  "routes": [
+    "/client-portal/",
+    "/client-portal/clients/smoke-client/dashboard",
+    "/client-portal/clients/smoke-client/tasks",
+    "/client-portal/clients/smoke-client/ops",
+    "/client-portal/clients/smoke-client/activity",
+    "/client-portal/clients/smoke-client/profile"
+  ],
+  "api_base": "runtime configurable via window.__GB_CLIENT_PORTAL_API_BASE__ or VITE_API_BASE; defaults to /api"
+}
