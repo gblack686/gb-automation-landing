@@ -58,7 +58,7 @@ function App() {
           <Route path="/observability/:slug" element={<DagView />} />
           <Route path="/tac" element={<TacCatalog />} />
           <Route
-            path="/chat"
+            path="/chatv0"
             element={
               <RequireAuth allowedGroups={['tenant-smoke-client']}>
                 <SmokeClientChat />
