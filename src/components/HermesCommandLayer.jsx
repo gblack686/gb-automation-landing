@@ -26,7 +26,7 @@ const shortcuts = [
     label: 'Chat with Hermes',
     description: 'Open the always-on website session and ask for help.',
     icon: MessageSquareText,
-    href: '/chat',
+    href: '/chatv0',
   },
   {
     id: 'session',
@@ -288,7 +288,7 @@ function HermesCommandLayer() {
       <button
         type="button"
         onClick={() => {
-          navigate('/chat');
+          navigate('/chatv0');
         }}
         className="fixed bottom-5 right-5 z-50 flex min-h-11 items-center gap-2 rounded-lg border border-[#D6D4C8] bg-[#191919] px-4 py-3 text-sm font-semibold text-white shadow-[0_18px_50px_-28px_rgba(25,25,25,0.8)] transition hover:-translate-y-0.5 hover:bg-[#D97757]"
         aria-label="Open Hermes command layer"
