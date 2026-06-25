@@ -126,6 +126,19 @@ function smokeClientReply(text: string): { text: string; mode: string } {
   };
 }
 
+function parseContext(value: unknown): Json {
+  if (!value) return {};
+  if (typeof value === 'string') {
+    try {
+      const parsed = JSON.parse(value);
+      return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
+    } catch {
+      return {};
+    }
+  }
+  return typeof value === 'object' && !Array.isArray(value) ? value as Json : {};
+}
+
 // Route by AppSync field name, falling back to argument shape (the 3 ops have distinct args).
 function opOf(event: Json): string {
   const field = event?.info?.fieldName || event?.fieldName;
@@ -144,9 +157,29 @@ export const handler = async (event: Json) => {
     if (op === 'smokeClientChat') {
       const text = String(args.text || '').trim();
       if (!text) return { payload: { error: 'Empty message ignored.' } };
+      const context = parseContext(args.context);
       const dispatch = parseDispatch(text);
       if (dispatch.matched) {
         const reply = smokeClientReply(text);
+        await pgInsert('chat_messages', {
+          tenant: 'smoke-client',
+          session_id: String(context?.website_nav?.session_id || 'web'),
+          role: 'user',
+          content: text,
+          status: 'complete',
+          context,
+        });
+        await pgInsert('chat_messages', {
+          tenant: 'smoke-client',
+          session_id: String(context?.website_nav?.session_id || 'web'),
+          role: 'assistant',
+          content: reply.text,
+          status: 'complete',
+          context: {
+            ...context,
+            response_mode: reply.mode,
+          },
+        });
         return {
           payload: {
             message: message('user', text),
@@ -161,10 +194,11 @@ export const handler = async (event: Json) => {
       }
       await pgInsert('chat_messages', {
         tenant: 'smoke-client',
-        session_id: 'web',
+        session_id: String(context?.website_nav?.session_id || 'web'),
         role: 'user',
         content: text,
         status: 'complete',
+        context,
       });
       return {
         payload: {

@@ -20,9 +20,9 @@ function unwrap({ data, errors }) {
   return payload;
 }
 
-export async function sendSmokeChat(text) {
+export async function sendSmokeChat(text, context = null) {
   return unwrap(await client().mutations.smokeClientChat(
-    { text },
+    { text, context },
     { authMode: 'userPool' },
   ));
 }

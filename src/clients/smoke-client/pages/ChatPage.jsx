@@ -4,6 +4,7 @@ import OpsPageShell from '../../../ops/components/OpsPageShell';
 import CollapsibleSection from '../../../ops/components/CollapsibleSection';
 import { sendSmokeChat } from '../lib/smokeChatClient';
 import { subscribeAssistant, loadHistory } from '../lib/smokeRealtime';
+import { buildWebsiteNavContext } from '../../../lib/websiteNavContext';
 
 const STORAGE_KEY = 'gbauto.smoke-client.chat';
 
@@ -105,7 +106,11 @@ export default function ChatPage() {
     setError('');
 
     try {
-      const response = await sendSmokeChat(text);
+      const context = buildWebsiteNavContext(window, {
+        client_slug: 'smoke-client',
+        profile: 'smoke-client',
+      });
+      const response = await sendSmokeChat(text, context);
       setTransport(response.transport || 'amplify-smoke-client');
       if (response.reply?.text) {
         // Synchronous /dispatch reply — render immediately.
