@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1200" viewBox="0 0 1600 1200" role="img">
+<title>Tool Chord Map</title>
+<desc>Curved chords show tool co-use patterns across agents and report stages.</desc>
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#F3F1E7"/><stop offset="100%" stop-color="#E6E4D9"/></linearGradient>
+<radialGradient id="glow" cx="76%" cy="14%" r="70%"><stop offset="0%" stop-color="#3D6EA8" stop-opacity=".16"/><stop offset="100%" stop-color="#3D6EA8" stop-opacity="0"/></radialGradient>
+<pattern id="grain" width="30" height="30" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r="1.1" fill="rgba(25,25,25,.10)"/></pattern>
+</defs>
+<rect width="1600" height="1200" fill="url(#bg)"/>
+<rect width="1600" height="1200" fill="url(#glow)"/>
+<rect x="52" y="52" width="1496" height="1096" rx="24" fill="none" stroke="#D6D4C8" stroke-width="1.4"/>
+<rect x="92" y="260" width="1416" height="780" rx="22" fill="url(#grain)" opacity=".44"/>
+<text x="96.0" y="116.0" font-size="18" font-weight="800" fill="#3D6EA8" text-anchor="start">03 / ADVANCED FORM / CHORD</text>
+<text x="96.0" y="178.0" font-size="56" font-weight="500" fill="#191919" text-anchor="start">Tool Chord Map</text>
+<text x="98.0" y="225.0" font-size="22" font-weight="400" fill="rgba(25,25,25,.62)" text-anchor="start">Curved chords show tool co-use patterns across agents and report stages.</text>
+<circle cx="800.0" cy="320.0" r="34" fill="#3D6EA8" opacity=".24" stroke="#3D6EA8" stroke-width="3"/>
+<text x="800.0" y="327.0" font-size="15" font-weight="800" fill="#191919" text-anchor="middle">planner</text>
+<circle cx="1058.0" cy="444.2" r="34" fill="#3D6EA8" opacity=".24" stroke="#3D6EA8" stroke-width="3"/>
+<text x="1058.0" y="451.2" font-size="15" font-weight="800" fill="#191919" text-anchor="middle">builder</text>
+<circle cx="1121.7" cy="723.4" r="34" fill="#3D6EA8" opacity=".24" stroke="#3D6EA8" stroke-width="3"/>
+<text x="1121.7" y="730.4" font-size="15" font-weight="800" fill="#191919" text-anchor="middle">tester</text>
+<circle cx="943.2" cy="947.3" r="34" fill="#3D6EA8" opacity=".24" stroke="#3D6EA8" stroke-width="3"/>
+<text x="943.2" y="954.3" font-size="15" font-weight="800" fill="#191919" text-anchor="middle">supabase</text>
+<circle cx="656.8" cy="947.3" r="34" fill="#3D6EA8" opacity=".24" stroke="#3D6EA8" stroke-width="3"/>
+<text x="656.8" y="954.3" font-size="15" font-weight="800" fill="#191919" text-anchor="middle">langfuse</text>
+<circle cx="478.3" cy="723.4" r="34" fill="#3D6EA8" opacity=".24" stroke="#3D6EA8" stroke-width="3"/>
+<text x="478.3" y="730.4" font-size="15" font-weight="800" fill="#191919" text-anchor="middle">report</text>
+<circle cx="542.0" cy="444.2" r="34" fill="#3D6EA8" opacity=".24" stroke="#3D6EA8" stroke-width="3"/>
+<text x="542.0" y="451.2" font-size="15" font-weight="800" fill="#191919" text-anchor="middle">client</text>
+<path d="M800.0 320.0 C800.0 650.0 800.0 650.0 1121.7 723.4" fill="none" stroke="#8A5FBF" stroke-width="18" opacity=".28" stroke-linecap="round"/>
+<path d="M800.0 320.0 C800.0 650.0 800.0 650.0 478.3 723.4" fill="none" stroke="#3D6EA8" stroke-width="12" opacity=".28" stroke-linecap="round"/>
+<path d="M1058.0 444.2 C800.0 650.0 800.0 650.0 943.2 947.3" fill="none" stroke="#4F9D69" stroke-width="15" opacity=".28" stroke-linecap="round"/>
+<path d="M943.2 947.3 C800.0 650.0 800.0 650.0 656.8 947.3" fill="none" stroke="#2F8F83" stroke-width="10" opacity=".28" stroke-linecap="round"/>
+<path d="M656.8 947.3 C800.0 650.0 800.0 650.0 478.3 723.4" fill="none" stroke="#C08A3E" stroke-width="16" opacity=".28" stroke-linecap="round"/>
+<path d="M478.3 723.4 C800.0 650.0 800.0 650.0 542.0 444.2" fill="none" stroke="#D97757" stroke-width="20" opacity=".28" stroke-linecap="round"/>
+<path d="M1121.7 723.4 C800.0 650.0 800.0 650.0 478.3 723.4" fill="none" stroke="#B94A48" stroke-width="8" opacity=".28" stroke-linecap="round"/>
+<circle cx="800" cy="650" r="330" fill="none" stroke="#D6D4C8" stroke-width="2"/>
+</svg>

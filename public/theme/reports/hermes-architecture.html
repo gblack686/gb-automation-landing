@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hermes Architecture &amp; Loops — GBAutomation</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,400&display=swap');
+:root{
+  --sans:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --serif:Newsreader,Georgia,serif;
+  --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+  --ink:#191919;--muted:#5C5C5C;--text-mute:#8C8A84;
+  --line:#D6D4C8;--line-soft:rgba(214,212,200,.75);
+  --cream:#F3F1E7;--panel:#E6E4D9;--panel-soft:rgba(230,228,217,.55);
+  --accent:#D97757;
+  --status-green:#4F9D69;--status-amber:#C08A3E;--status-blue:#3D6EA8;--status-red:#B94A48;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--cream);font-size:14px;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+html{scroll-behavior:smooth}
+
+/* topbar */
+.topbar{position:sticky;top:0;z-index:20;border-bottom:1px solid var(--line);background:rgba(243,241,231,.88);backdrop-filter:blur(12px)}
+.topbar-inner,header,main,.report-metadata{max-width:1180px;margin:0 auto}
+.topbar-inner{padding:10px 24px;display:flex;justify-content:space-between;gap:16px;align-items:center}
+.brand-lockup{display:flex;gap:8px;align-items:center;font-weight:700;font-size:12px}
+.brand-dot{width:9px;height:9px;border-radius:999px;background:var(--accent)}
+.source-name{font-size:12px;color:var(--muted)}
+
+/* header */
+header{padding:34px 24px 8px}
+.eyebrow{color:var(--accent);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+h1{font-family:var(--serif);font-weight:500;margin:10px 0 16px;font-size:clamp(30px,4vw,44px);line-height:1.04;letter-spacing:-.01em}
+.sub{max-width:760px;color:rgba(25,25,25,.68);font-size:15px;line-height:1.6}
+.taxonomy-pills{display:flex;flex-wrap:wrap;gap:6px;margin:16px 0 0}
+.taxonomy-pill{border:1px solid rgba(25,25,25,.14);background:rgba(255,255,255,.46);border-radius:999px;padding:5px 10px;font-size:11px;color:rgba(25,25,25,.72);display:inline-flex;align-items:center;min-height:25px;font-weight:650}
+.taxonomy-pill:nth-child(1){background:rgba(217,119,87,.13);border-color:rgba(217,119,87,.32);color:#9A5139}
+.taxonomy-pill:nth-child(2){background:rgba(79,157,105,.13);border-color:rgba(79,157,105,.32);color:#346C48}
+.taxonomy-pill:nth-child(3){background:rgba(61,110,168,.13);border-color:rgba(61,110,168,.30);color:#2B5686}
+.taxonomy-pill:nth-child(4){background:rgba(138,95,191,.13);border-color:rgba(138,95,191,.30);color:#5F3E90}
+.taxonomy-pill:nth-child(5){background:rgba(192,138,62,.13);border-color:rgba(192,138,62,.30);color:#815918}
+
+/* layout */
+main{padding:18px 24px 72px}
+.brief-layout{display:grid;grid-template-columns:248px minmax(0,1fr);gap:24px;align-items:start}
+.toc{position:sticky;top:72px;background:rgba(255,255,255,.48);border:1px solid var(--line);border-radius:8px;padding:14px;backdrop-filter:blur(8px)}
+.toc h2{font-family:var(--sans);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:rgba(25,25,25,.45);margin:0 0 8px}
+.toc-actions{display:flex;gap:6px;margin-bottom:8px}
+.toc-actions button{flex:1;border:1px solid var(--line);background:#fff;border-radius:6px;padding:6px;font:inherit;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);cursor:pointer}
+.toc-actions button:hover{border-color:var(--accent);color:var(--accent)}
+.toc a{display:grid;grid-template-columns:24px 1fr;gap:6px;padding:7px 0;color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line-soft)}
+.toc a:last-child{border-bottom:0}
+.toc a:hover,.toc a.active{color:var(--accent)}
+.toc a span{color:var(--accent);font-weight:700;font-size:11px}
+.toc a strong{font-size:12.5px;font-weight:500}
+.toc a em{grid-column:2;color:rgba(25,25,25,.4);font-size:10.5px;font-style:normal}
+
+/* sections */
+.sections{display:grid;gap:10px}
+.section{background:rgba(255,255,255,.48);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.section[open]{background:rgba(255,255,255,.58)}
+.section summary{display:grid;grid-template-columns:38px 1fr auto;gap:10px;align-items:center;padding:14px 18px;cursor:pointer;list-style:none}
+.section summary::-webkit-details-marker{display:none}
+.section-index{color:var(--accent);font-size:11px;font-weight:700;letter-spacing:.08em;font-family:var(--mono)}
+.section-title{font-family:var(--serif);font-size:18px;font-weight:500}
+.section-count{color:var(--muted);font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
+.section-body{border-top:1px solid var(--line-soft);padding:8px 20px 20px}
+.section-body p{line-height:1.62;color:rgba(25,25,25,.74);margin:10px 0}
+.section-body strong{color:var(--ink);font-weight:600}
+.section-lede{color:rgba(25,25,25,.6);font-style:italic;margin:10px 0!important}
+h3{font-family:var(--serif);font-weight:500;color:var(--ink);font-size:16px;margin:20px 0 6px}
+
+/* rich content */
+table{width:100%;border-collapse:collapse;font-size:12.5px;margin:10px 0}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+th{background:var(--panel-soft);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(25,25,25,.55)}
+ul,ol{margin:8px 0 8px 20px;padding:0}
+li{margin:5px 0;line-height:1.58;color:rgba(25,25,25,.74)}
+code{font-family:var(--mono);font-size:12px;background:rgba(230,228,217,.55);border:1px solid rgba(214,212,200,.8);border-radius:4px;padding:1px 5px;color:#6a4a3a}
+blockquote{border-left:3px solid var(--accent);margin:14px 0;padding:2px 0 2px 14px;color:rgba(25,25,25,.68)}
+blockquote p{margin:6px 0}
+
+/* status chips */
+.chip{display:inline-flex;align-items:center;font-size:11px;font-weight:700;padding:2px 9px;border-radius:999px;border:1px solid transparent}
+.chip-green{color:var(--status-green);background:rgba(79,157,105,.12);border-color:rgba(79,157,105,.25)}
+.chip-amber{color:var(--status-amber);background:rgba(192,138,62,.12);border-color:rgba(192,138,62,.25)}
+.chip-red{color:var(--status-red);background:rgba(185,74,72,.12);border-color:rgba(185,74,72,.25)}
+
+/* callout */
+.callout{display:flex;gap:10px;background:rgba(217,119,87,.08);border:1px solid rgba(217,119,87,.28);border-radius:8px;padding:12px 16px;margin:14px 0;font-size:13px;color:rgba(25,25,25,.74)}
+.callout .ic{color:var(--accent);font-weight:700}
+
+/* diagrams */
+.diagram{background:rgba(255,255,255,.5);border:1px solid var(--line);border-radius:8px;padding:18px;margin:14px 0;text-align:center}
+.diagram .cap{font-size:10px;color:rgba(25,25,25,.45);text-transform:uppercase;letter-spacing:.12em;font-weight:700;margin-bottom:12px}
+.mermaid{display:flex;justify-content:center}
+
+/* metadata footer */
+.report-metadata{border-top:1px solid var(--line);padding:22px 24px 36px}
+.report-metadata h2{margin:0 0 12px;font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(25,25,25,.45)}
+.metadata-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.meta-item{border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.42);padding:10px 12px;min-width:0}
+.meta-item span{display:block;margin-bottom:4px;font-size:9.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:rgba(25,25,25,.43)}
+.meta-item strong{display:block;font-family:var(--serif);font-size:13px;font-weight:500;color:rgba(25,25,25,.72);overflow-wrap:anywhere}
+.meta-item code{font-size:11px}
+
+/* hover-lift affordances */
+.toc,.section,details.section,.report-metadata,.diagram{transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease,background .18s ease}
+.toc:hover,.report-metadata:hover{border-color:var(--accent);background:rgba(255,255,255,.58);box-shadow:0 10px 24px rgba(25,25,25,.08)}
+.section:hover,details.section:hover{border-color:var(--accent);box-shadow:0 12px 28px rgba(25,25,25,.10);transform:translateY(-2px)}
+
+@media(max-width:900px){.brief-layout{grid-template-columns:1fr}.toc{position:static}.metadata-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:720px){h1{font-size:30px}.section summary{grid-template-columns:32px 1fr}.section-count{grid-column:2}.topbar-inner{display:block}header,main,.report-metadata{padding-left:18px;padding-right:18px}}
+@media(prefers-reduced-motion:reduce){.toc,.section,details.section,.report-metadata,.diagram{transition:none}.section:hover,details.section:hover{transform:none}}
+@media print{.topbar,.toc{display:none}body{background:#fff}.brief-layout{display:block}.section{break-inside:avoid;border-color:#ccc}main{max-width:none}}
+</style>
+</head>
+<body>
+
+<div class="topbar"><div class="topbar-inner">
+  <div class="brand-lockup"><span class="brand-dot"></span><span class="brand-text">GBAutomation</span></div>
+  <div class="source-name">systems/hermes-architecture.md</div>
+</div></div>
+
+<header>
+  <div class="eyebrow">System Documentation</div>
+  <h1>Hermes Architecture &amp; Agentic Loops</h1>
+  <p class="sub">How GBAutomation's single agent runtime works — profiles, canopy, managed cron, Kanban dispatch, observability — and the agentic loops built into it, mapped onto the 2026 loop-engineering taxonomy.</p>
+  <div class="taxonomy-pills" aria-label="Report category pills">
+    <span class="taxonomy-pill">system-doc</span>
+    <span class="taxonomy-pill">hermes</span>
+    <span class="taxonomy-pill">smoke-client</span>
+    <span class="taxonomy-pill">architecture</span>
+  </div>
+</header>
+
+<main><div class="brief-layout">
+<aside class="toc">
+  <h2>Sections</h2>
+  <div class="toc-actions">
+    <button type="button" data-action="expand">Expand all</button>
+    <button type="button" data-action="collapse">Collapse all</button>
+  </div>
+  <a href="#section-01" data-target="section-01"><span>01</span><strong>Overview</strong><em>140 words</em></a>
+  <a href="#section-02" data-target="section-02"><span>02</span><strong>System map</strong><em>diagram</em></a>
+  <a href="#section-03" data-target="section-03"><span>03</span><strong>Profiles</strong><em>table</em></a>
+  <a href="#section-04" data-target="section-04"><span>04</span><strong>Canopy</strong><em>diagram</em></a>
+  <a href="#section-05" data-target="section-05"><span>05</span><strong>Managed cron</strong><em>diagram</em></a>
+  <a href="#section-06" data-target="section-06"><span>06</span><strong>Kanban / TAC</strong><em>diagram</em></a>
+  <a href="#section-07" data-target="section-07"><span>07</span><strong>Observability</strong><em>table</em></a>
+  <a href="#section-08" data-target="section-08"><span>08</span><strong>Read surfaces</strong><em>diagram</em></a>
+  <a href="#section-09" data-target="section-09"><span>09</span><strong>Feedback triage</strong><em>diagram</em></a>
+  <a href="#section-10" data-target="section-10"><span>10</span><strong>Loop engineering</strong><em>concept</em></a>
+  <a href="#section-11" data-target="section-11"><span>11</span><strong>Hermes loops</strong><em>scorecard</em></a>
+</aside>
+
+<div class="sections">
+
+<details class="section" id="section-01" open>
+  <summary><span class="section-index">01</span><span class="section-title">Overview</span><span class="section-count">140 words</span></summary>
+  <div class="section-body">
+    <p><strong>Hermes is GBAutomation's single agent runtime</strong> (OpenClaw retired 2026-06-20). It runs on the always-on Mac Mini and is, structurally, a <strong>fleet of agentic loops</strong>: profile-defined agents, cron-triggered with model-assessed receipts, dispatched through one Kanban board, every action traced and written to durable Supabase surfaces.</p>
+    <p>This document maps the seven subsystems and uses the <strong>smoke-client</strong> tenant — the synthetic tenant whose entire purpose is to verify the stack end-to-end — as the worked example throughout. Profile source of truth: <code>second-brain/systems/hermes-profiles/smoke-client/profiles/smoke-client.yaml</code> (schema <code>hermes-profile-spec.v1</code>).</p>
+  </div>
+</details>
+
+<details class="section" id="section-02">
+  <summary><span class="section-index">02</span><span class="section-title">System map</span><span class="section-count">diagram</span></summary>
+  <div class="section-body">
+    <p class="section-lede">The receipt-first dataflow: definition → render → runtime → durable surfaces → read surfaces.</p>
+    <div class="diagram">
+      <div class="cap">10,000ft component map</div>
+      <pre class="mermaid">
+flowchart TB
+    subgraph Authoring["Authoring & definition"]
+        PROF["Hermes Profile<br/>hermes-profile-spec.v1"]
+        CANOPY[".canopy/ prompt sources<br/>config.yaml + prompts/*.md"]
+        CRONDEF["managed.yaml<br/>cron descriptors"]
+    end
+    subgraph Render["Render & index"]
+        CANOPYIDX["index_canopy_prompts.py<br/>→ canopy-prompt-index.json"]
+        SOUL["SOUL.md + config.yaml<br/>rendered system prompt"]
+    end
+    subgraph Runtime["Hermes runtime (Mac Mini)"]
+        AGENT["Hermes agent<br/>model: gpt-5.5"]
+        CRONMGR["run_managed_cron.py<br/>6-stage wrapper"]
+        KANBAN["Hermes Kanban<br/>SQLite system of record"]
+    end
+    subgraph Durable["Durable surfaces (Supabase)"]
+        LF["langfuse_traces"]
+        RUNS["agent_runs"]
+        CR["cron_runs / cron_run_outputs"]
+        CAT["hermes_cron_catalog"]
+        INV["canopy_prompt_inventory"]
+        VIEWS["obs_smoke_* anon views"]
+    end
+    subgraph Surfaces["Read surfaces"]
+        PORTAL["Client Portal<br/>Vue + FastAPI"]
+        MCP["MCP bridges"]
+        BRIEF["Morning-brief / Telegram"]
+    end
+    PROF --> CANOPY --> CANOPYIDX --> SOUL --> AGENT
+    CANOPYIDX --> INV
+    CRONDEF --> CRONMGR --> AGENT
+    CRONMGR --> CR & CAT & LF
+    AGENT --> KANBAN --> RUNS
+    AGENT --> LF
+    CR & RUNS & CAT --> VIEWS --> PORTAL
+    KANBAN --> MCP
+    CR --> BRIEF
+      </pre>
+    </div>
+    <blockquote><p><strong>The receipt-first invariant:</strong> every agent action is traced (Langfuse), every cron outcome is <em>assessed by a mini model</em>, and every unit of unattended work flows through a single Kanban board. Nothing claims to have happened without citing a durable row, trace, or receipt.</p></blockquote>
+  </div>
+</details>
+
+<details class="section" id="section-03">
+  <summary><span class="section-index">03</span><span class="section-title">Profiles</span><span class="section-count">table</span></summary>
+  <div class="section-body">
+    <p class="section-lede">Binding an agent to skills, model, prompts, and the data surfaces it may touch.</p>
+    <p>A <strong>profile</strong> is a YAML spec (<code>hermes-profile-spec.v1</code>) that binds a Hermes agent to its runtime, model, tools/skills, prompt sources, observability contract, and the Supabase <strong>data surfaces</strong> it's allowed to touch.</p>
+    <table>
+    <thead><tr><th>File</th><th>Role</th></tr></thead>
+    <tbody>
+    <tr><td><code>…/hermes-profiles/&lt;tenant&gt;/profiles/&lt;profile&gt;.yaml</code></td><td>Canonical spec (source of truth)</td></tr>
+    <tr><td><code>resources/skills/hermes-profile-templates/profiles/*.yaml</code></td><td>Template library for new tenants</td></tr>
+    <tr><td><code>…/&lt;tenant&gt;/.canopy/</code></td><td>Prompt sources rendered into the agent's SOUL.md</td></tr>
+    <tr><td><code>…/&lt;profile&gt;.manifest.yaml</code></td><td>Canopy manifest — references, never duplicates, pinned fields</td></tr>
+    <tr><td><code>…/hermes-profiles/tac/profiles/tac-*.yaml</code></td><td>The 8-role TAC team profiles</td></tr>
+    </tbody>
+    </table>
+    <p>Key smoke-client fields: <code>model: gpt-5.5</code>, <code>provider: openai-codex</code>, <code>primary_tools</code> (canopy, hermes-ci-gate, hermes-cron-manager, hermes-kanban, langfuse, supabase), <code>observability.telemetry_contract: hermes-card-observability.v1</code>, a 20-table <code>data_surfaces</code> list, and <code>hard_gates</code> (canopy lint, prompt-inventory indexed, profile present, no-real-client-data).</p>
+    <div class="callout"><span class="ic">!</span><div><strong>CI invariant:</strong> three sources pin the same fields (<code>primary_tools</code>, <code>observability.required_skills</code>, <code>data_surfaces</code>). Edit the canonical spec first, reconcile by reference — CI fails on divergence. The smoke-client also runs a two-core second brain: <code>gbauto-core/</code> (public, indexed) + <code>client-core/</code> (real PII, excluded from every anon surface).</div></div>
+  </div>
+</details>
+
+<details class="section" id="section-04">
+  <summary><span class="section-index">04</span><span class="section-title">Canopy</span><span class="section-count">diagram</span></summary>
+  <div class="section-body">
+    <p class="section-lede">The fleet-wide parameterized prompt inventory.</p>
+    <p>Each tenant's <code>.canopy/</code> folder holds <code>config.yaml</code> (project/version/targets) and <code>prompts/*.md</code> (templates with <code>{{UPPERCASE_VARS}}</code>). The manifest routes prompt <strong>sections</strong> into render <strong>targets</strong>.</p>
+    <div class="diagram">
+      <div class="cap">Canopy → SOUL render pipeline</div>
+      <pre class="mermaid">
+flowchart LR
+    subgraph src[".canopy/ sources"]
+        CFG["config.yaml<br/>targets: hermes"]
+        P["prompts/smoke-client.md<br/>persona / workflow<br/>validation / handoff"]
+        SHARED["tac-contract-shared.md<br/>(inherited)"]
+    end
+    MAN["manifest.yaml<br/>section_routes + params"]
+    subgraph out["Render targets"]
+        SOUL["SOUL.md (replace)"]
+        CONF["config.yaml (merge)"]
+    end
+    IDX["index_canopy_prompts.py"]
+    ART["canopy-prompt-index.json"]
+    SUP["canopy_prompt_inventory<br/>(Supabase)"]
+    LINT["canopy_lint.py<br/>no rendered secrets"]
+    P & SHARED --> MAN
+    CFG --> MAN
+    MAN -->|sections| SOUL
+    MAN -->|config_addendum| CONF
+    P & SHARED --> IDX --> ART --> SUP
+    IDX --> LINT
+      </pre>
+    </div>
+    <p>The smoke-client's persona/workflow/validation/handoff sections (with <code>CLIENT_NAME=Smoke Client</code>, <code>TENANT=smoke-client</code>, inheriting <code>tac-contract-shared</code>) render into the agent's <code>SOUL.md</code>, and the same templates are hashed + indexed into the durable <code>canopy_prompt_inventory</code> table. Validation gate: <code>canopy_lint.py</code> enforces no rendered secrets (<code>canopy_lint_passed</code>).</p>
+  </div>
+</details>
+
+<details class="section" id="section-05">
+  <summary><span class="section-index">05</span><span class="section-title">Managed cron</span><span class="section-count">diagram</span></summary>
+  <div class="section-body">
+    <p class="section-lede">The 6-stage receipt pipeline — every job is model-assessed, never just "run".</p>
+    <div class="diagram">
+      <div class="cap">run_managed_cron.py pipeline</div>
+      <pre class="mermaid">
+flowchart LR
+    TRIG(["Trigger: schedule fires"]) --> S1
+    S1["1 · RESOLVE<br/>validate managed.yaml (v2)<br/>fail-fast → exit 2"] --> S2
+    S2["2 · RUN<br/>cron-bounded-runner.sh<br/>atomic lock + budget cap"] --> S3
+    S3["3 · ASSESS<br/>manager-base + tac-contract-managed<br/>→ gpt-5-mini → JSON outcome"] --> S4
+    S4["4 · RECEIPT<br/>cron_runs + cron_run_outputs<br/>host-job-run.v1 + upsert catalog"] --> S5
+    S5["5 · TRACE + CARD<br/>Langfuse span<br/>Kanban card (observability.v1)"] --> S6
+    S6["6 · REPORT<br/>append morning-brief digest<br/>if recommended_action != none"]
+      </pre>
+    </div>
+    <p><strong>Durable outputs per tick:</strong> <code>cron_runs</code> (aggregate: ok/fail counts, elapsed_ms, total_cost_usd), <code>cron_run_outputs</code> (per-tick summary + status), <code>host_job_runs</code> (cross-host receipt), <code>hermes_cron_catalog</code> (<code>last_green_at</code> advanced only on <code>ok</code>), a Langfuse span, and a Kanban card.</p>
+    <p><strong>Paused → active deploy gate</strong> (jobs ship <code>state: paused</code>): (1) <code>validate_managed_manifest.py</code> schema check, then (2) the <code>validate-cron-deploy</code> 11-check skill (task registered, wrapper wired, gbauto-supabase CLI present, smoke-fire, receipt on disk, Supabase row, round-trip ≤60s).</p>
+    <div class="callout"><span class="ic">⚠</span><div>On the Mac Mini, crons shelling <code>gbauto-supabase</code> must <code>export PATH=$HOME/.local/bin</code> or they silently 100%-fail. Windows jobs use <code>Invoke-WithReceipt.ps1</code> instead.</div></div>
+  </div>
+</details>
+
+<details class="section" id="section-06">
+  <summary><span class="section-index">06</span><span class="section-title">Kanban / TAC dispatch</span><span class="section-count">diagram</span></summary>
+  <div class="section-body">
+    <p class="section-lede">The build control plane — one board, eight roles, a validator that bounces work back.</p>
+    <p>The Hermes <strong>Kanban board</strong> (<code>~/.hermes/kanban/boards/gbautomation/kanban.db</code>) is the <strong>sole system of record</strong> for unattended work (Linear retired 2026-06-17).</p>
+    <div class="diagram">
+      <div class="cap">TAC team flow (tac-hermes)</div>
+      <pre class="mermaid">
+flowchart TB
+    OP(["Operator: /dispatch 'build X'"]) --> DISP["tacdispatch.py<br/>generates 8-card plan"]
+    DISP --> LEAD["tac-lead"]
+    LEAD --> DIR["tac-director"]
+    DIR --> RES["tac-researcher"]
+    DIR --> ARCH["tac-architect"]
+    RES --> BUILD["tac-builder"]
+    ARCH --> BUILD
+    BUILD --> VAL["tac-validator<br/>← EVALUATOR"]
+    VAL -->|fail| BUILD
+    VAL -->|pass| OPS["tac-ops<br/>receipts, PR, release"]
+    OPS --> SI["tac-self-improve"]
+    LEAD -.-> SI
+      </pre>
+    </div>
+    <p>Every card body embeds a TAC prompt packet (<code>tac-cli.team-dispatch.v1</code> + <code>tac_prompt_format.v1</code>): purpose, variables, instructions, workflow, report, plus <code>hard_gates</code> (reuse evidence, validation, smoke, PR/commit) and the <code>hermes-card-observability.v1</code> surface spec. <strong>tac-validator is the loop's evaluator</strong> — it can bounce work back to tac-builder. Closeout protocol (2026-06-16): every terminal parent closes as <code>merged</code> (preferred), <code>committed_unmerged</code>, <code>receipt_only</code>, <code>blocked_with_receipt</code>, or <code>superseded</code>.</p>
+  </div>
+</details>
+
+<details class="section" id="section-07">
+  <summary><span class="section-index">07</span><span class="section-title">Observability</span><span class="section-count">table</span></summary>
+  <div class="section-body">
+    <p class="section-lede">The hermes-card-observability.v1 contract ties a card to its trace and Supabase endpoints.</p>
+    <table>
+    <thead><tr><th>Surface</th><th>Holds</th><th>Written by</th></tr></thead>
+    <tbody>
+    <tr><td><code>langfuse_traces</code></td><td>spans, observations, costs per turn</td><td>Hermes + LLM runtimes</td></tr>
+    <tr><td><code>agent_runs</code></td><td>unified run mirror (dedup with <code>DISTINCT ON (task_id)</code>)</td><td>Hermes, cron mirror</td></tr>
+    <tr><td><code>cron_runs</code> / <code>cron_run_outputs</code></td><td>tick aggregates / per-tick summaries</td><td><code>run_managed_cron.py</code></td></tr>
+    <tr><td><code>host_job_runs</code></td><td>Windows/Mac job receipts (host-job-run.v1)</td><td><code>insert_host_job_run_to_supabase.py</code></td></tr>
+    <tr><td><code>canopy_prompt_inventory</code></td><td>fleet prompt index</td><td><code>index_canopy_prompts.py</code></td></tr>
+    <tr><td><code>agent_feedback_events</code></td><td>signal/preference/correction/bug/lesson</td><td>feedback skill</td></tr>
+    </tbody>
+    </table>
+    <p>Tags are the join key across surfaces: <code>runtime:hermes</code>, <code>tenant:smoke-client</code>, <code>profile:&lt;role&gt;</code>, <code>team:tac-hermes</code>, <code>surface:kanban</code>.</p>
+  </div>
+</details>
+
+<details class="section" id="section-08">
+  <summary><span class="section-index">08</span><span class="section-title">Read surfaces</span><span class="section-count">diagram</span></summary>
+  <div class="section-body">
+    <p class="section-lede">MCP bridges for agents; the Vue + FastAPI portal for humans.</p>
+    <p><strong>MCP bridges:</strong> <code>gelby-hermes-readonly</code> (default, safe — list/read/poll, no send; SSH to LAN IP to dodge Tailscale races) and <code>gelby-hermes-orchestrator</code> (write-enabled — adds <code>messages_send</code>, <code>permissions_respond</code>; token+identity auth).</p>
+    <p><strong>Client portal</strong> (<code>apps/client-portal</code> — Vue + Vite, FastAPI on :5480) serves authenticated clients (Cognito) and anon read-only smoke-client views. Chat routes through a pluggable <code>HermesTransport</code> seam:</p>
+    <div class="diagram">
+      <div class="cap">Portal HermesTransport seam</div>
+      <pre class="mermaid">
+flowchart LR
+    UI["Portal frontend"] -->|POST /chat| API["FastAPI chat route"]
+    API --> T{"HermesTransport<br/>PORTAL_HERMES_TRANSPORT"}
+    T -->|unset| D["DisconnectedTransport<br/>honest echo"]
+    T -->|mcp-tailnet| O["OrchestratorMcpTransport<br/>MCP send/poll"]
+    T -->|local| L["LocalHermesTransport<br/>state.db"]
+    UI -->|GET /chat?since=| API
+      </pre>
+    </div>
+    <p>The public smoke-client website (<code>gbautomation.xyz/clients/smoke-client</code>) reads <code>obs_smoke_*</code> anon views (<code>obs_smoke_schedules</code>, <code>obs_smoke_runs</code>, <code>obs_smoke_run_outputs</code>, <code>obs_smoke_board</code>) — RLS denies by default; only these views are granted to <code>anon</code>, read via the <code>gbauto-supabase</code> CLI (never raw PostgREST).</p>
+  </div>
+</details>
+
+<details class="section" id="section-09">
+  <summary><span class="section-index">09</span><span class="section-title">Feedback triage</span><span class="section-count">diagram</span></summary>
+  <div class="section-body">
+    <p class="section-lede">Feedback lands as indexed context first, then a human-gated proposal card.</p>
+    <div class="diagram">
+      <div class="cap">Human-gated triage flow</div>
+      <pre class="mermaid">
+flowchart LR
+    SRC["Telegram / Website / Harness"] --> SK["feedback skill"]
+    SK --> EV["agent_feedback_events"]
+    EV --> IDX["v_feedback_context_index"]
+    IDX --> CARD["triage-board/ proposal<br/>human_gate_required"]
+    CARD --> GATE{"Human gate"}
+    GATE -->|shared/fleetwide| PRD["PRD"]
+    GATE -->|narrow + clear| KB["Kanban card"]
+    GATE -->|defer| SNOOZE["snooze"]
+      </pre>
+    </div>
+    <p>Every card carries <code>severity</code>, <code>complexity</code>, <code>surfaces</code>, <code>blast_radius</code>, <code>plan</code>, and <code>human_gate_required: true</code>. Telegram callbacks (<code>fb:plan</code>, <code>fb:snooze</code>, <code>fb:open</code>) can write a proposal but <strong>cannot dispatch builders</strong> — the human gate is mandatory.</p>
+  </div>
+</details>
+
+<details class="section" id="section-10">
+  <summary><span class="section-index">10</span><span class="section-title">Loop engineering — the concept</span><span class="section-count">180 words</span></summary>
+  <div class="section-body">
+    <p class="section-lede">The 2026 paradigm (Steinberger / Osmani): design the loop, not the prompt.</p>
+    <p>Each layer <strong>wraps</strong> the previous rather than replacing it:</p>
+    <table>
+    <thead><tr><th>Layer</th><th>Era</th><th>What you optimize</th></tr></thead>
+    <tbody>
+    <tr><td>Prompt engineering</td><td>2022–2024</td><td>Word choice of a single turn</td></tr>
+    <tr><td>Context engineering</td><td>2025</td><td>Everything the model sees at inference</td></tr>
+    <tr><td>Harness engineering</td><td>2026</td><td>The full scaffold around the agent</td></tr>
+    <tr><td><strong>Loop engineering</strong></td><td>2026</td><td><strong>The iterative cycle that keeps the agent moving toward a goal unattended</strong></td></tr>
+    </tbody>
+    </table>
+    <blockquote><p><strong>Loop engineering</strong> (Peter Steinberger, June 7 2026; vocabulary by Addy Osmani): <em>"the practice of designing the system that prompts, checks, remembers, and re-runs an AI agent — instead of you typing every next instruction by hand."</em> The leverage moved from the prompt to system architecture: the quality of the trigger, the precision of the goal, and the design of the verification step.</p></blockquote>
+    <h3>The canonical loop anatomy</h3>
+    <p>Every agentic loop reduces to <strong>observe → think → act → evaluate → loop</strong>, and needs: a <strong>trigger</strong>; a <strong>verifiable goal</strong> (testable termination, not a vibe); <strong>environment tools</strong>; <strong>environment feedback</strong> (real results, not just reasoning); a <strong>separate evaluator</strong> that decides if the goal is met; <strong>context management</strong>; and <strong>stop / escalation logic</strong>.</p>
+    <h3>Required safeguards</h3>
+    <p>Or the loop "runs until the money runs out": a hard <strong>iteration cap</strong>, a <strong>token/cost budget</strong>, <strong>no-progress detection</strong>, <strong>circuit breakers</strong>, <strong>verifiable termination</strong> (not the agent's self-assessment), and <strong>human checkpoints</strong> before irreversible actions.</p>
+  </div>
+</details>
+
+<details class="section" id="section-11">
+  <summary><span class="section-index">11</span><span class="section-title">Hermes loops — what's actually built</span><span class="section-count">scorecard</span></summary>
+  <div class="section-body">
+    <p class="section-lede">A dozen loops across five families, each mapped onto the taxonomy — each carrying a wiring status (LIVE / partial / gated).</p>
+    <div class="diagram">
+      <div class="cap">The loop map — five families</div>
+      <pre class="mermaid">
+flowchart LR
+    subgraph CTRL["A · Control & build"]
+        direction TB
+        L1["① Cron receipt<br/>schedule → run → gpt-5-mini ASSESS → catalog"]
+        L2["② TAC build<br/>/dispatch → builder → validator ↺ → merge"]
+    end
+    subgraph INGEST["B · Ingestion"]
+        direction TB
+        L7["⑦ YouTube intel<br/>scan → extract → --sync → obs_youtube_*"]
+        L8["⑧ Meet transcript<br/>Drive doc → extract → triage → Kanban"]
+        L9["⑨ Inbox triage<br/>30-min → classify → draft + Telegram"]
+    end
+    subgraph KNOW["C · Knowledge & analytics"]
+        direction TB
+        L10["⑩ Wiki + tag-lineage<br/>sources → compile + tag-sync → views"]
+        L11["⑪ PRD→commit rollup<br/>commits/PRDs → index + dossiers → brief"]
+        L12["⑫ Error backfill<br/>langfuse/cloudwatch → app_error_events"]
+    end
+    subgraph VERIFY["D · Verification & gate"]
+        direction TB
+        L4["④ Smoke-client<br/>cron → exercise → readback obs_smoke_*"]
+        L3["③ Feedback triage<br/>feedback → card → human gate → PRD/Kanban"]
+    end
+    subgraph LEARN["E · Learning & interaction"]
+        direction TB
+        L5["⑤ Self-improve<br/>build closes → tac-self-improve → KB upgrade"]
+        L6["⑥ MCP / chat poll<br/>message → send → poll → reply"]
+    end
+    CTRL --> INGEST --> KNOW --> VERIFY --> LEARN
+      </pre>
+    </div>
+
+    <h3>A · Control &amp; build</h3>
+    <p><strong>① Cron receipt loop — evaluator-optimizer · <span class="chip chip-green">LIVE</span></strong> &nbsp;The keystone. Trigger: schedule. Evaluator: a separate <code>gpt-5-mini</code> ASSESS step grades the run — textbook "separate evaluator decides if the goal is met". Stop: <code>last_green_at</code> advances only on <code>ok</code>. Safeguards: budget cap + atomic lock, fail-fast schema gate, paused-by-default until the 11-check deploy gate passes.</p>
+    <p><strong>② TAC build loop — multi-agent orchestration + Reflexion · <span class="chip chip-green">LIVE</span></strong> &nbsp;The 8-role Kanban team. Evaluator: <code>tac-validator</code> bounces work back to <code>tac-builder</code> (the Reflexion inner loop). Stop: terminal parent closes in an explicit state. Safeguards are the fragile part (historic retry-cap gap), not the structure.</p>
+
+    <h3>B · Ingestion <span style="color:var(--text-mute);font-size:13px">— observe → extract → store → readback</span></h3>
+    <p><strong>⑦ YouTube intel ingestion loop · <span class="chip chip-amber">partial</span></strong> &nbsp;Scheduled scan → extract intel → <code>--sync-supabase</code> → <code>obs_youtube_*</code> (#322). Evaluator: sync receipt + row presence. <em>0 rows until run on the Mini (PC DNS-blocked); view still TODO.</em></p>
+    <p><strong>⑧ Meet transcript → triage loop · <span class="chip chip-amber">partial</span></strong> &nbsp;Email/Drive trigger → <code>transcript_agent.py</code> → Claude extracts issues + action items → durable session todos → human-gated triage cron (#295) → Kanban. Evaluator: human gate. <em>transcript_agent on-demand (no launchd); triage cron live.</em></p>
+    <p><strong>⑨ Inbox / email-watcher triage loop · <span class="chip chip-green">LIVE</span></strong> &nbsp;<code>email_watcher.py</code> every 30 min → classify → draft replies + Telegram. Evaluator: classifier + draft-first human approval (never auto-sends).</p>
+
+    <h3>C · Knowledge &amp; analytics</h3>
+    <p><strong>⑩ Knowledge-compilation loop (LLM-wiki + QMD tag-lineage) · <span class="chip chip-amber">partial</span></strong> &nbsp;Sources change → <code>compile_wiki</code>/<code>compile_knowledge</code> + graphify + tag extractor <code>--sync-supabase</code> → <code>tag_observations</code> + views + wiki articles (#307-312). Evaluator: tag-lineage golden thread + smoke-validate. <em>Views LIVE; observations 0 until extractor syncs on the Mini.</em></p>
+    <p><strong>⑪ PRD→commit rollup analytics loop · <span class="chip chip-red">advisory</span></strong> &nbsp;Commits + PRDs land → <code>index_prds.py --sync-supabase</code> (227-row spine) + <code>morning_brief.py</code> commits-by-client + <code>build_plan_execution_dossiers.py</code> (joins Kanban + Langfuse + codex + git). Evaluator: <strong>advisory-only — no hard gate</strong>. <em>github_commits spine UNAPPLIED (DNS split).</em></p>
+    <p><strong>⑫ Error-telemetry backfill loop · <span class="chip chip-green">LIVE</span></strong> &nbsp;langfuse / CloudWatch / Hermes → <code>app_error_events</code>, re-runnable (#333/#339). Evaluator: idempotent re-run + row counts. GCS offload leg blocked on reauth.</p>
+
+    <h3>D · Verification &amp; gate</h3>
+    <p><strong>④ Smoke-client verification loop — the loop that tests the loops · <span class="chip chip-green">LIVE</span></strong> &nbsp;The whole smoke-client tenant is one verification loop over the stack. Evaluator: <code>smoke-validate</code> + the hard rule — cite a durable surface or say "unavailable". Stop: all hard gates green.</p>
+    <p><strong>③ Feedback-triage loop — human-checkpoint · <span class="chip chip-green">LIVE</span></strong> &nbsp;Feedback → indexed context → proposal card → mandatory human gate (<code>human_gate_required: true</code>). Telegram callbacks propose but never dispatch. Loops ⑧ and ⑨ feed into it.</p>
+
+    <h3>E · Learning &amp; interaction</h3>
+    <p><strong>⑤ Self-improve loop — Reflexion at the fleet level · <span class="chip chip-amber">partial</span></strong> &nbsp;<code>tac-self-improve</code> + the 14-feedback-loops LEARN tier. Trigger: a build closes. Evaluator: next build's reuse-evidence gate (delayed, soft).</p>
+    <p><strong>⑥ MCP / chat poll loop — ReAct over a transport · <span class="chip chip-amber">gated</span></strong> &nbsp;Portal chat <code>HermesTransport</code> seam + MCP <code>events_poll</code>/<code>events_wait</code>. Wired but gated behind <code>PORTAL_HERMES_TRANSPORT</code>.</p>
+
+    <div class="callout"><span class="ic">+</span><div><strong>Emerging</strong> (loop-shaped, not yet first-class): <code>task-telegram-notify</code> (3 crons → DM fan-out), the Commit Cleaner hourly WIP-snapshot safety loop, and the ECOM hourly monitoring lane — each has a trigger + action but a thin/absent evaluator today.</div></div>
+
+    <h3>Scorecard — how well-engineered is each loop?</h3>
+    <table>
+    <thead><tr><th>Loop</th><th>Family</th><th>Separate evaluator</th><th>Safeguard</th><th>Status</th><th>Grade</th></tr></thead>
+    <tbody>
+    <tr><td>① Cron receipt</td><td>A</td><td>gpt-5-mini assessor</td><td>budget + lock</td><td>LIVE</td><td><span class="chip chip-green">A</span></td></tr>
+    <tr><td>② TAC build</td><td>A</td><td>tac-validator</td><td>retry-cap gap</td><td>LIVE</td><td><span class="chip chip-amber">B</span></td></tr>
+    <tr><td>⑦ YouTube intel</td><td>B</td><td>row-presence (soft)</td><td>Mini/DNS gating</td><td>partial</td><td><span class="chip chip-red">C</span></td></tr>
+    <tr><td>⑧ Meet→triage</td><td>B</td><td>human gate</td><td>no schedule</td><td>partial</td><td><span class="chip chip-amber">B</span></td></tr>
+    <tr><td>⑨ Inbox triage</td><td>B</td><td>classifier + human</td><td>draft-first</td><td>LIVE</td><td><span class="chip chip-amber">B</span></td></tr>
+    <tr><td>⑩ Wiki + tag-lineage</td><td>C</td><td>tag-lineage golden thread</td><td>idempotent</td><td>partial</td><td><span class="chip chip-amber">B</span></td></tr>
+    <tr><td>⑪ PRD→commit rollup</td><td>C</td><td>advisory-only ⚠</td><td>advisory</td><td>partial</td><td><span class="chip chip-red">C</span></td></tr>
+    <tr><td>⑫ Error backfill</td><td>C</td><td>idempotent re-run + counts</td><td>re-runnable</td><td>LIVE</td><td><span class="chip chip-amber">B</span></td></tr>
+    <tr><td>④ Smoke verification</td><td>D</td><td>smoke-validate + cite-or-unavailable</td><td>fixtures only</td><td>LIVE</td><td><span class="chip chip-green">A</span></td></tr>
+    <tr><td>③ Feedback triage</td><td>D</td><td>human</td><td>no auto-dispatch</td><td>LIVE</td><td><span class="chip chip-green">A</span></td></tr>
+    <tr><td>⑤ Self-improve</td><td>E</td><td>reuse gate (delayed)</td><td>n/a</td><td>partial</td><td><span class="chip chip-red">C</span></td></tr>
+    <tr><td>⑥ MCP/chat poll</td><td>E</td><td>none ❌</td><td>no poll cap</td><td>gated</td><td><span class="chip chip-red">C</span></td></tr>
+    </tbody>
+    </table>
+    <p><strong>Reading:</strong> the A-grade loops (①③④) pair a model/human evaluator with hard receipts — textbook loop-engineering. The work is in the <strong>soft-evaluator</strong> loops: give ⑪ PRD→commit rollup a real gate (advisory today), give ⑤ self-improve a verifiable "lesson applied" check, give ⑥ chat-poll an iteration/cost cap, and finish the <strong>partial</strong> ingestion loops (⑦/⑧/⑩) by running their <code>--sync-supabase</code> legs on the Mini.</p>
+  </div>
+</details>
+
+</div>
+</div></main>
+
+<footer class="report-metadata" aria-label="Report metadata">
+  <h2>Metadata</h2>
+  <div class="metadata-grid">
+    <div class="meta-item"><span>Report</span><strong>Hermes Architecture</strong></div>
+    <div class="meta-item"><span>Source</span><strong><code>systems/hermes-architecture.md</code></strong></div>
+    <div class="meta-item"><span>Companion notes</span><strong><code>agentic-loops.md</code>, <code>hermes-loops.md</code></strong></div>
+    <div class="meta-item"><span>Schema Version</span><strong>gbauto-report.v1</strong></div>
+    <div class="meta-item"><span>Renderer</span><strong>canopy <code>artifact:html-report-generation</code></strong></div>
+    <div class="meta-item"><span>Generated</span><strong>2026-06-25</strong></div>
+    <div class="meta-item"><span>Status</span><strong>active</strong></div>
+    <div class="meta-item"><span>Inferred</span><strong>assessor <code>gpt-5-mini</code>; portal <code>:5480</code></strong></div>
+    <div class="meta-item"><span>Loop sources</span><strong>Data Science Dojo · Tosea.ai · Lushbinary</strong></div>
+  </div>
+</footer>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad:false, theme:"base",
+    themeVariables:{
+      fontFamily:"Inter, sans-serif",
+      primaryColor:"#FBF3EE", primaryBorderColor:"#D97757", primaryTextColor:"#191919",
+      lineColor:"#B98A6F", secondaryColor:"#E6E4D9", tertiaryColor:"#FFFFFF",
+      clusterBkg:"#F3F1E7", clusterBorder:"#D6D4C8", edgeLabelBackground:"#F3F1E7"
+    },
+    flowchart:{ curve:"basis", padding:14, useMaxWidth:true }
+  });
+
+  // Lazy-render diagrams (mermaid mis-sizes inside collapsed <details>)
+  async function renderIn(scope){
+    const nodes=[...scope.querySelectorAll('.mermaid:not([data-processed])')];
+    if(nodes.length){ try{ await mermaid.run({nodes}); }catch(e){ console.error(e); } }
+  }
+  const sections=[...document.querySelectorAll('details.section')];
+  sections.filter(s=>s.open).forEach(renderIn);
+  sections.forEach(s=>s.addEventListener('toggle',()=>{ if(s.open) renderIn(s); }));
+
+  // TOC links: open + scroll + active
+  const controls=[...document.querySelectorAll('[data-target]')];
+  const setActive=id=>controls.forEach(c=>c.classList.toggle('active',c.dataset.target===id));
+  controls.forEach(c=>c.addEventListener('click',e=>{
+    e.preventDefault();
+    const s=document.getElementById(c.dataset.target);
+    if(!s) return;
+    s.open=true; renderIn(s); setActive(s.id);
+    s.scrollIntoView({behavior:'smooth',block:'start'});
+  }));
+
+  // Expand / Collapse all (collapse leaves first section open)
+  document.querySelectorAll('[data-action="expand"]').forEach(b=>b.addEventListener('click',()=>sections.forEach(s=>{s.open=true;renderIn(s);})));
+  document.querySelectorAll('[data-action="collapse"]').forEach(b=>b.addEventListener('click',()=>sections.forEach((s,i)=>s.open=i===0)));
+  window.addEventListener('beforeprint',()=>sections.forEach(s=>{s.open=true;renderIn(s);}));
+
+  // Active highlight on scroll
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting) setActive(e.target.id); });
+  },{rootMargin:'-72px 0px -70% 0px',threshold:0});
+  sections.forEach(s=>obs.observe(s));
+</script>
+</body>
+</html>

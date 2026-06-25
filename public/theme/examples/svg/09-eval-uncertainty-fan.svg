@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1200" viewBox="0 0 1600 1200" role="img">
+<title>Eval Uncertainty Fan</title>
+<desc>Prediction bands fan out to show confidence, variance, and missing eval coverage.</desc>
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#F3F1E7"/><stop offset="100%" stop-color="#E6E4D9"/></linearGradient>
+<radialGradient id="glow" cx="76%" cy="14%" r="70%"><stop offset="0%" stop-color="#3D6EA8" stop-opacity=".16"/><stop offset="100%" stop-color="#3D6EA8" stop-opacity="0"/></radialGradient>
+<pattern id="grain" width="30" height="30" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r="1.1" fill="rgba(25,25,25,.10)"/></pattern>
+</defs>
+<rect width="1600" height="1200" fill="url(#bg)"/>
+<rect width="1600" height="1200" fill="url(#glow)"/>
+<rect x="52" y="52" width="1496" height="1096" rx="24" fill="none" stroke="#D6D4C8" stroke-width="1.4"/>
+<rect x="92" y="260" width="1416" height="780" rx="22" fill="url(#grain)" opacity=".44"/>
+<text x="96.0" y="116.0" font-size="18" font-weight="800" fill="#3D6EA8" text-anchor="start">09 / ADVANCED FORM / FAN</text>
+<text x="96.0" y="178.0" font-size="56" font-weight="500" fill="#191919" text-anchor="start">Eval Uncertainty Fan</text>
+<text x="98.0" y="225.0" font-size="22" font-weight="400" fill="rgba(25,25,25,.62)" text-anchor="start">Prediction bands fan out to show confidence, variance, and missing eval coverage.</text>
+<path d="M230 820 C560 360 990 440 1380 370 L1380 980 C980 900 570 1010 230 820 Z" fill="#4F9D69" opacity=".18" stroke="#4F9D69" stroke-width="2"/>
+<path d="M230 820 C560 415 990 495 1380 425 L1380 938 C980 858 570 968 230 820 Z" fill="#3D6EA8" opacity=".18" stroke="#3D6EA8" stroke-width="2"/>
+<path d="M230 820 C560 470 990 550 1380 480 L1380 896 C980 816 570 926 230 820 Z" fill="#C08A3E" opacity=".18" stroke="#C08A3E" stroke-width="2"/>
+<path d="M230 820 C560 525 990 605 1380 535 L1380 854 C980 774 570 884 230 820 Z" fill="#B94A48" opacity=".18" stroke="#B94A48" stroke-width="2"/>
+<text x="230.0" y="930.0" font-size="24" font-weight="800" fill="#3D6EA8" text-anchor="start">fan width = uncertainty; color = eval dimension</text>
+</svg>

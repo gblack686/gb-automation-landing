@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1200" viewBox="0 0 1600 1200" role="img">
+<title>Token Streamgraph</title>
+<desc>Stacked organic streams make token pressure, cache reuse, and output growth readable without bar charts.</desc>
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#F3F1E7"/><stop offset="100%" stop-color="#E6E4D9"/></linearGradient>
+<radialGradient id="glow" cx="76%" cy="14%" r="70%"><stop offset="0%" stop-color="#4F9D69" stop-opacity=".16"/><stop offset="100%" stop-color="#4F9D69" stop-opacity="0"/></radialGradient>
+<pattern id="grain" width="30" height="30" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r="1.1" fill="rgba(25,25,25,.10)"/></pattern>
+</defs>
+<rect width="1600" height="1200" fill="url(#bg)"/>
+<rect width="1600" height="1200" fill="url(#glow)"/>
+<rect x="52" y="52" width="1496" height="1096" rx="24" fill="none" stroke="#D6D4C8" stroke-width="1.4"/>
+<rect x="92" y="260" width="1416" height="780" rx="22" fill="url(#grain)" opacity=".44"/>
+<text x="96.0" y="116.0" font-size="18" font-weight="800" fill="#4F9D69" text-anchor="start">02 / ADVANCED FORM / STREAMGRAPH</text>
+<text x="96.0" y="178.0" font-size="56" font-weight="500" fill="#191919" text-anchor="start">Token Streamgraph</text>
+<text x="98.0" y="225.0" font-size="22" font-weight="400" fill="rgba(25,25,25,.62)" text-anchor="start">Stacked organic streams make token pressure, cache reuse, and output growth readable without bar charts.</text>
+<path d="M160.0 635.0 160.0 635.0 160.0 635.0 C 275.0 618.4 275.0 618.4 275.0 618.4 C 390.0 603.6 390.0 603.6 390.0 603.6 C 505.0 622.9 505.0 622.9 505.0 622.9 C 620.0 570.5 620.0 570.5 620.0 570.5 C 735.0 526.8 735.0 526.8 735.0 526.8 C 850.0 539.0 850.0 539.0 850.0 539.0 C 965.0 495.2 965.0 495.2 965.0 495.2 C 1080.0 443.8 1080.0 443.8 1080.0 443.8 C 1195.0 457.6 1195.0 457.6 1195.0 457.6 C 1310.0 408.2 1310.0 408.2 1310.0 408.2 C 1425.0 430.2 1425.0 430.2 1425.0 430.2 L1425.0 655.2 L1310.0 648.2 L1195.0 647.6 L1080.0 653.8 L965.0 665.2 L850.0 679.0 L735.0 691.8 L620.0 700.5 L505.0 702.9 L390.0 698.6 L275.0 688.4 L160.0 675.0 Z" fill="#4F9D69" opacity=".48" stroke="#4F9D69" stroke-width="2"/>
+<path d="M160.0 575.0 160.0 575.0 160.0 575.0 C 275.0 563.4 275.0 563.4 275.0 563.4 C 390.0 528.6 390.0 528.6 390.0 528.6 C 505.0 512.9 505.0 512.9 505.0 512.9 C 620.0 465.5 620.0 465.5 620.0 465.5 C 735.0 396.8 735.0 396.8 735.0 396.8 C 850.0 359.0 850.0 359.0 850.0 359.0 C 965.0 335.2 965.0 335.2 965.0 335.2 C 1080.0 288.8 1080.0 288.8 1080.0 288.8 C 1195.0 282.6 1195.0 282.6 1195.0 282.6 C 1310.0 258.2 1310.0 258.2 1310.0 258.2 C 1425.0 250.2 1425.0 250.2 1425.0 250.2 L1425.0 430.2 L1310.0 408.2 L1195.0 457.6 L1080.0 443.8 L965.0 495.2 L850.0 539.0 L735.0 526.8 L620.0 570.5 L505.0 622.9 L390.0 603.6 L275.0 618.4 L160.0 635.0 Z" fill="#3D6EA8" opacity=".48" stroke="#3D6EA8" stroke-width="2"/>
+<path d="M160.0 540.0 160.0 540.0 160.0 540.0 C 275.0 518.4 275.0 518.4 275.0 518.4 C 390.0 468.6 390.0 468.6 390.0 468.6 C 505.0 437.9 505.0 437.9 505.0 437.9 C 620.0 375.5 620.0 375.5 620.0 375.5 C 735.0 316.8 735.0 316.8 735.0 316.8 C 850.0 249.0 850.0 249.0 850.0 249.0 C 965.0 215.2 965.0 215.2 965.0 215.2 C 1080.0 188.8 1080.0 188.8 1080.0 188.8 C 1195.0 152.6 1195.0 152.6 1195.0 152.6 C 1310.0 98.2 1310.0 98.2 1310.0 98.2 C 1425.0 100.2 1425.0 100.2 1425.0 100.2 L1425.0 250.2 L1310.0 258.2 L1195.0 282.6 L1080.0 288.8 L965.0 335.2 L850.0 359.0 L735.0 396.8 L620.0 465.5 L505.0 512.9 L390.0 528.6 L275.0 563.4 L160.0 575.0 Z" fill="#8A5FBF" opacity=".48" stroke="#8A5FBF" stroke-width="2"/>
+<text x="160.0" y="945.0" font-size="24" font-weight="800" fill="#4F9D69" text-anchor="start">input / output / cache streams over time</text>
+</svg>

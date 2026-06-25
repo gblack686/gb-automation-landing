@@ -16,6 +16,14 @@
 /tac/*.md                  /tac/:splat.md                 200!
 /tac/*.css                 /tac/:splat.css                200!
 
+# GBAuto theme surfaces (static files; serve as-is before the SPA catch-all).
+/theme/*.html              /theme/:splat.html             200!
+/theme/*.svg               /theme/:splat.svg              200!
+/theme/*.css               /theme/:splat.css             200!
+/theme/*.md                /theme/:splat.md               200!
+/theme/*.json              /theme/:splat.json             200!
+/theme/*.png               /theme/:splat.png             200!
+
 /prds/prds-manifest.json   /prds/prds-manifest.json       200
 /prds/*.html               /prds/:splat.html              200
 /prds/*.json               /prds/:splat.json              200

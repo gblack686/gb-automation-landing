@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1200" viewBox="0 0 1600 1200" role="img">
+<title>Memory Orbit Map</title>
+<desc>Memory reads, writes, and retrieval hits orbit the active task by freshness and confidence.</desc>
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#F3F1E7"/><stop offset="100%" stop-color="#E6E4D9"/></linearGradient>
+<radialGradient id="glow" cx="76%" cy="14%" r="70%"><stop offset="0%" stop-color="#7C6CCB" stop-opacity=".16"/><stop offset="100%" stop-color="#7C6CCB" stop-opacity="0"/></radialGradient>
+<pattern id="grain" width="30" height="30" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r="1.1" fill="rgba(25,25,25,.10)"/></pattern>
+</defs>
+<rect width="1600" height="1200" fill="url(#bg)"/>
+<rect width="1600" height="1200" fill="url(#glow)"/>
+<rect x="52" y="52" width="1496" height="1096" rx="24" fill="none" stroke="#D6D4C8" stroke-width="1.4"/>
+<rect x="92" y="260" width="1416" height="780" rx="22" fill="url(#grain)" opacity=".44"/>
+<text x="96.0" y="116.0" font-size="18" font-weight="800" fill="#7C6CCB" text-anchor="start">08 / ADVANCED FORM / ORBIT</text>
+<text x="96.0" y="178.0" font-size="56" font-weight="500" fill="#191919" text-anchor="start">Memory Orbit Map</text>
+<text x="98.0" y="225.0" font-size="22" font-weight="400" fill="rgba(25,25,25,.62)" text-anchor="start">Memory reads, writes, and retrieval hits orbit the active task by freshness and confidence.</text>
+<circle cx="800" cy="640" r="130" fill="none" stroke="#7C6CCB" stroke-width="2" opacity=".35"/>
+<text x="946.0" y="646.0" font-size="18" font-weight="800" fill="rgba(25,25,25,.62)" text-anchor="start">working</text>
+<circle cx="800" cy="640" r="230" fill="none" stroke="#7C6CCB" stroke-width="2" opacity=".35"/>
+<text x="1046.0" y="646.0" font-size="18" font-weight="800" fill="rgba(25,25,25,.62)" text-anchor="start">retrieved</text>
+<circle cx="800" cy="640" r="330" fill="none" stroke="#7C6CCB" stroke-width="2" opacity=".35"/>
+<text x="1146.0" y="646.0" font-size="18" font-weight="800" fill="rgba(25,25,25,.62)" text-anchor="start">archived</text>
+<circle cx="930.0" cy="640.0" r="8" fill="#4F9D69" opacity=".62"/>
+<circle cx="965.1" cy="800.1" r="9" fill="#3D6EA8" opacity=".62"/>
+<circle cx="810.2" cy="969.8" r="10" fill="#C08A3E" opacity=".62"/>
+<circle cx="712.4" cy="736.1" r="11" fill="#8A5FBF" opacity=".62"/>
+<circle cx="570.4" cy="654.2" r="12" fill="#4F9D69" opacity=".62"/>
+<circle cx="549.4" cy="425.3" r="8" fill="#3D6EA8" opacity=".62"/>
+<circle cx="788.0" cy="510.6" r="9" fill="#C08A3E" opacity=".62"/>
+<circle cx="944.2" cy="460.8" r="10" fill="#8A5FBF" opacity=".62"/>
+<circle cx="1127.5" cy="599.5" r="11" fill="#4F9D69" opacity=".62"/>
+<circle cx="903.7" cy="718.3" r="12" fill="#3D6EA8" opacity=".62"/>
+<circle cx="835.3" cy="867.3" r="8" fill="#C08A3E" opacity=".62"/>
+<circle cx="609.3" cy="909.3" r="9" fill="#8A5FBF" opacity=".62"/>
+<circle cx="672.2" cy="663.9" r="10" fill="#4F9D69" opacity=".62"/>
+<circle cx="608.3" cy="513.0" r="11" fill="#3D6EA8" opacity=".62"/>
+<circle cx="729.4" cy="317.6" r="12" fill="#C08A3E" opacity=".62"/>
+<circle cx="868.4" cy="529.5" r="8" fill="#8A5FBF" opacity=".62"/>
+<circle cx="1023.1" cy="583.9" r="9" fill="#4F9D69" opacity=".62"/>
+<circle cx="1085.8" cy="805.0" r="10" fill="#3D6EA8" opacity=".62"/>
+<circle cx="835.6" cy="765.0" r="11" fill="#C08A3E" opacity=".62"/>
+<circle cx="691.2" cy="842.6" r="12" fill="#8A5FBF" opacity=".62"/>
+<circle cx="485.5" cy="740.0" r="8" fill="#4F9D69" opacity=".62"/>
+<circle cx="683.6" cy="582.0" r="9" fill="#3D6EA8" opacity=".62"/>
+<circle cx="723.6" cy="423.1" r="10" fill="#C08A3E" opacity=".62"/>
+<circle cx="937.9" cy="340.2" r="11" fill="#8A5FBF" opacity=".62"/>
+<circle cx="921.2" cy="593.0" r="12" fill="#4F9D69" opacity=".62"/>
+<circle cx="1011.8" cy="729.7" r="8" fill="#3D6EA8" opacity=".62"/>
+<circle cx="928.6" cy="943.9" r="9" fill="#C08A3E" opacity=".62"/>
+<circle cx="753.0" cy="761.2" r="10" fill="#8A5FBF" opacity=".62"/>
+<circle cx="591.0" cy="736.1" r="11" fill="#4F9D69" opacity=".62"/>
+<circle cx="488.8" cy="530.3" r="12" fill="#3D6EA8" opacity=".62"/>
+<circle cx="742.1" cy="523.6" r="8" fill="#C08A3E" opacity=".62"/>
+<circle cx="869.7" cy="420.8" r="9" fill="#8A5FBF" opacity=".62"/>
+<circle cx="800" cy="640" r="64" fill="rgba(255,255,255,.78)" stroke="#7C6CCB" stroke-width="3"/>
+<text x="800.0" y="648.0" font-size="28" font-weight="800" fill="#191919" text-anchor="middle">task</text>
+</svg>

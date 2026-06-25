@@ -1,0 +1,40 @@
+{
+  "schema": "gbauto-theme-manifest.v1",
+  "base_url": "https://gbautomation.xyz/theme/",
+  "surfaces": [
+    {
+      "title": "Style Index",
+      "path": "index.html",
+      "category": "index"
+    },
+    {
+      "title": "Hermes Architecture & Loops",
+      "path": "reports/hermes-architecture.html",
+      "category": "report"
+    },
+    {
+      "title": "JID5274 Weekly Summary",
+      "path": "reports/weekly-summary.html",
+      "category": "report"
+    },
+    {
+      "title": "Collapsible Report Template",
+      "path": "examples/collapsible-report-template.html",
+      "category": "example"
+    },
+    {
+      "title": "AI Resume",
+      "path": "examples/resume.html",
+      "category": "marketing"
+    },
+    {
+      "title": "Zero-Touch Landing",
+      "path": "examples/landing-page.html",
+      "category": "marketing"
+    }
+  ],
+  "published_reports": [
+    "reports/hermes-architecture.html",
+    "reports/weekly-summary.html"
+  ]
+}

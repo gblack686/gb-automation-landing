@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GBAutomation Style Index — House HTML Surfaces</title>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,400&display=swap');
+:root{
+  --sans:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --serif:Newsreader,Georgia,serif;
+  --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+  --ink:#191919;--muted:#5C5C5C;--text-mute:#8C8A84;
+  --line:#D6D4C8;--line-soft:rgba(214,212,200,.75);
+  --cream:#F3F1E7;--panel:#E6E4D9;--panel-soft:rgba(230,228,217,.55);
+  --accent:#D97757;--accent-deep:#B75F43;
+  --status-green:#4F9D69;--status-amber:#C08A3E;--status-blue:#3D6EA8;--status-red:#B94A48;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--cream);font-size:14px;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+html{scroll-behavior:smooth}
+a{color:inherit;text-decoration:none}
+
+.ambient{position:fixed;inset:0;pointer-events:none;z-index:-1;overflow:hidden}
+.ambient .g1{position:absolute;top:-12%;left:-12%;width:46%;height:46%;background:rgba(217,119,87,.05);border-radius:50%;filter:blur(120px)}
+.ambient .g2{position:absolute;bottom:-12%;right:-12%;width:46%;height:46%;background:rgba(194,109,82,.08);border-radius:50%;filter:blur(120px)}
+
+/* ===== OFFICIAL HEADER (gb logo left) ===== */
+header.nav{position:fixed;top:0;width:100%;z-index:50;border-bottom:1px solid rgba(214,212,200,.6);background:rgba(243,241,231,.82);backdrop-filter:blur(20px)}
+.nav-inner{max-width:1280px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.brand-lockup{display:flex;align-items:center;gap:12px}
+.brand-lockup img{height:30px;width:auto;opacity:.92}
+.brand-lockup .wm{font-family:var(--serif);font-size:1.05rem;font-weight:500;letter-spacing:-.01em;color:var(--ink)}
+.nav-links{display:flex;gap:30px;align-items:center}
+.nav-links a{font-size:11px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--text-mute);transition:color .3s}
+.nav-links a:hover{color:var(--accent)}
+.nav-cta{display:inline-flex;align-items:center;gap:8px;padding:8px 18px;background:#fff;border:1px solid var(--line);color:var(--ink)!important;font-size:11px;letter-spacing:.06em;border-radius:999px;box-shadow:0 1px 2px rgba(0,0,0,.04);transition:all .3s}
+.nav-cta:hover{background:var(--ink);color:var(--cream)!important}
+@media(max-width:760px){.nav-links a:not(.nav-cta){display:none}}
+
+.wrap,header.page,main,footer{max-width:1180px;margin:0 auto}
+header.page{padding:104px 24px 10px}
+.eyebrow{color:var(--accent);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+h1{font-family:var(--serif);font-weight:500;margin:10px 0 14px;font-size:clamp(32px,5vw,52px);line-height:1.02;letter-spacing:-.015em}
+.sub{max-width:760px;color:rgba(25,25,25,.68);font-size:15px;line-height:1.62}
+.taxonomy-pills{display:flex;flex-wrap:wrap;gap:6px;margin:16px 0 0}
+.taxonomy-pill{border:1px solid rgba(25,25,25,.14);background:rgba(255,255,255,.46);border-radius:999px;padding:5px 10px;font-size:11px;color:rgba(25,25,25,.72);min-height:25px;font-weight:650;display:inline-flex;align-items:center}
+.taxonomy-pill:nth-child(1){background:rgba(217,119,87,.13);border-color:rgba(217,119,87,.32);color:#9A5139}
+.taxonomy-pill:nth-child(2){background:rgba(79,157,105,.13);border-color:rgba(79,157,105,.32);color:#346C48}
+.taxonomy-pill:nth-child(3){background:rgba(61,110,168,.13);border-color:rgba(61,110,168,.30);color:#2B5686}
+.taxonomy-pill:nth-child(4){background:rgba(138,95,191,.13);border-color:rgba(138,95,191,.30);color:#5F3E90}
+
+main{padding:26px 24px 220px}
+section{margin:34px 0;scroll-margin-top:84px}
+.sec-head{display:flex;align-items:baseline;gap:12px;margin:0 0 4px}
+.sec-head .n{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--accent);letter-spacing:.08em}
+.sec-head h2{font-family:var(--serif);font-weight:500;font-size:22px;margin:0}
+.sec-sub{color:var(--muted);font-size:13px;margin:0 0 16px}
+
+.grid{display:grid;gap:12px;grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(max-width:760px){.grid{grid-template-columns:1fr}}
+.card{display:block;position:relative;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.5);padding:18px 20px;cursor:pointer;transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease,background .18s ease}
+.card:hover{border-color:var(--accent);background:rgba(255,255,255,.66);box-shadow:0 12px 28px rgba(25,25,25,.10);transform:translateY(-2px)}
+.card .ct{display:flex;align-items:center;gap:9px;margin:0 0 6px}
+.card h3{font-family:var(--serif);font-weight:500;font-size:17px;margin:0;flex:1}
+.card p{margin:0;color:rgba(25,25,25,.66);font-size:12.8px;line-height:1.55}
+.card .path{display:block;margin-top:9px;font-family:var(--mono);font-size:11px;color:var(--text-mute);overflow-wrap:anywhere}
+.card .fav-badge{position:absolute;top:14px;right:14px;color:var(--accent);font-size:14px;opacity:0;transition:opacity .2s}
+.card.favorited .fav-badge{opacity:1}
+.tagchip{font-size:9.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:999px;border:1px solid transparent}
+.t-report{color:var(--status-blue);background:rgba(61,110,168,.12);border-color:rgba(61,110,168,.26)}
+.t-market{color:var(--accent);background:rgba(217,119,87,.12);border-color:rgba(217,119,87,.28)}
+.t-ref{color:var(--status-amber);background:rgba(192,138,62,.12);border-color:rgba(192,138,62,.26)}
+.t-live{color:var(--status-green);background:rgba(79,157,105,.12);border-color:rgba(79,157,105,.26)}
+
+.viz-grid{display:grid;gap:12px;grid-template-columns:repeat(5,minmax(0,1fr))}
+@media(max-width:900px){.viz-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:560px){.viz-grid{grid-template-columns:repeat(2,1fr)}}
+.viz{display:block;border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.5);overflow:hidden;cursor:pointer;transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease}
+.viz:hover{border-color:var(--accent);box-shadow:0 10px 24px rgba(25,25,25,.12);transform:translateY(-2px)}
+.viz img{display:block;width:100%;height:auto;aspect-ratio:1/1;object-fit:contain;background:#F3F1E7;pointer-events:none}
+.viz .vl{display:block;padding:7px 10px;font-size:10.5px;color:var(--muted);border-top:1px solid var(--line-soft);font-weight:600}
+
+footer{border-top:1px solid var(--line);padding:22px 24px 44px;color:var(--text-mute);font-size:12px}
+footer code{font-family:var(--mono);font-size:11px;background:rgba(230,228,217,.55);border:1px solid rgba(214,212,200,.8);border-radius:4px;padding:1px 5px}
+
+/* ===== MODAL FILE VIEWER ===== */
+.viewer{position:fixed;inset:0;z-index:200;display:none;background:rgba(25,25,25,.42);backdrop-filter:blur(4px)}
+.viewer.open{display:block}
+.viewer-stage{position:absolute;inset:2.5vh 0;width:100%;background:var(--cream);border-top:1px solid var(--line);border-bottom:1px solid var(--line);box-shadow:0 30px 90px rgba(25,25,25,.34);overflow:hidden}
+/* hovering controls overlay — always full page width */
+.viewer-controls{position:absolute;top:0;left:0;right:0;z-index:6;display:flex;align-items:center;gap:8px;padding:11px 22px;
+  background:linear-gradient(180deg,rgba(243,241,231,.97) 60%,rgba(243,241,231,0));backdrop-filter:blur(8px)}
+.vc-title{font-family:var(--serif);font-size:15px;font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:46vw}
+.vc-spacer{flex:1}
+.vc-btn{display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:rgba(25,25,25,.7);background:rgba(255,255,255,.7);border:1px solid var(--line);border-radius:999px;padding:7px 13px;cursor:pointer;transition:all .18s}
+.vc-btn:hover{border-color:var(--accent);color:var(--accent-deep);background:#fff}
+.vc-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.viewer-body{position:absolute;inset:0;overflow:auto;padding-top:60px}
+.viewer-body iframe{display:block;width:100%;height:100%;border:0;background:#fff}
+.viewer-body .vframe-wrap{position:absolute;inset:56px 0 0;border:0}
+.viewer-body .vframe-wrap iframe{height:100%}
+.viewer-body .vimg{min-height:100%;display:flex;align-items:center;justify-content:center;padding:24px}
+.viewer-body .vimg img{max-width:96%;max-height:88vh;border:1px solid var(--line);border-radius:8px;background:#fff}
+.viewer-body .md-body,.viewer-body pre.raw{max-width:920px;margin:0 auto;padding:8px 28px 60px}
+.viewer-body .vnote{max-width:760px;margin:8px auto;padding:10px 14px;font-size:12px;color:var(--accent-deep);background:rgba(217,119,87,.1);border:1px solid rgba(217,119,87,.28);border-radius:8px}
+/* comment drawer */
+.viewer-comment{position:absolute;left:0;right:0;bottom:0;z-index:7;transform:translateY(102%);transition:transform .25s cubic-bezier(.2,.8,.2,1);
+  background:rgba(243,241,231,.98);border-top:1px solid var(--line);padding:14px 22px;display:flex;gap:12px;align-items:flex-end;backdrop-filter:blur(8px)}
+.viewer-comment.open{transform:none}
+.viewer-comment textarea{flex:1;min-height:70px;max-height:200px;resize:vertical;font:inherit;font-size:13px;padding:9px 11px;border:1px solid var(--line);border-radius:8px;background:#fff;color:rgba(25,25,25,.82)}
+.vc-send-col{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.vc-status{font-size:10.5px;color:var(--text-mute);font-weight:600;min-height:13px}
+#vcSend{font:inherit;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:var(--ink);color:var(--cream);border:0;border-radius:999px;padding:10px 18px;cursor:pointer;transition:background .2s}
+#vcSend:hover{background:var(--accent-deep)}
+
+/* ===== BOTTOM MARKDOWN VIEWER DOCK ===== */
+.md-dock{position:fixed;left:0;right:0;bottom:0;z-index:120;background:rgba(243,241,231,.97);border-top:1px solid var(--line);backdrop-filter:blur(12px);box-shadow:0 -10px 30px rgba(25,25,25,.08)}
+.md-dock-bar{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:9px 24px;cursor:pointer}
+.md-dock-bar .dk-label{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.md-dock-bar .dk-title{font-family:var(--serif);font-size:14px;color:var(--ink);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.md-dock-bar .dk-toggle{font-size:13px;color:var(--muted);transition:transform .2s}
+.md-dock.collapsed .dk-toggle{transform:rotate(180deg)}
+.md-dock-body{max-width:1180px;margin:0 auto;max-height:42vh;overflow:auto;padding:6px 24px 26px;transition:max-height .25s ease}
+.md-dock.collapsed .md-dock-body{max-height:0;padding-top:0;padding-bottom:0;overflow:hidden}
+
+/* markdown rendering */
+.md-body{font-size:14px;line-height:1.72;color:rgba(25,25,25,.8)}
+.md-body h1,.md-body h2,.md-body h3,.md-body h4{font-family:var(--serif);font-weight:500;color:var(--ink);line-height:1.2}
+.md-body h1{font-size:25px;margin:18px 0 10px}.md-body h2{font-size:20px;margin:18px 0 8px}.md-body h3{font-size:16px;margin:14px 0 6px}
+.md-body p{margin:9px 0}.md-body ul,.md-body ol{margin:8px 0 8px 22px}.md-body li{margin:4px 0}
+.md-body a{color:var(--accent)}
+.md-body code{font-family:var(--mono);font-size:12px;background:rgba(230,228,217,.6);border:1px solid rgba(214,212,200,.8);border-radius:4px;padding:1px 5px;color:#6a4a3a}
+.md-body pre{background:#191919;color:#F3F1E7;border-radius:8px;padding:14px;overflow:auto}.md-body pre code{background:transparent;border:0;color:inherit;padding:0}
+.md-body table{width:100%;border-collapse:collapse;font-size:12.5px;margin:10px 0}.md-body th,.md-body td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line-soft)}.md-body th{background:var(--panel-soft);text-transform:uppercase;font-size:10px;letter-spacing:.08em;color:rgba(25,25,25,.55)}
+.md-body blockquote{border-left:3px solid var(--accent);margin:12px 0;padding:2px 0 2px 14px;color:rgba(25,25,25,.68)}
+pre.raw{font-family:var(--mono);font-size:12px;background:#191919;color:#F3F1E7;border-radius:8px;padding:16px;white-space:pre-wrap;word-break:break-word}
+
+@media(prefers-reduced-motion:reduce){.card,.viz{transition:none}.card:hover,.viz:hover{transform:none}}
+</style>
+</head>
+<body>
+<div class="ambient"><div class="g1"></div><div class="g2"></div></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="#top" class="brand-lockup"><img src="assets/gb-logo-chrome.png" alt="GBAutomation"><span class="wm">GBAutomation</span></a>
+    <nav class="nav-links">
+      <a href="#reports">Reports</a>
+      <a href="#live">Live</a>
+      <a href="#marketing">Marketing</a>
+      <a href="#visual">Visuals</a>
+      <a href="#refs">Brand packet</a>
+    </nav>
+  </div>
+</header>
+
+<header class="page" id="top">
+  <div class="eyebrow">Theme · House Style Index</div>
+  <h1>GBAutomation HTML Style Index</h1>
+  <p class="sub">Every approved HTML surface in one place. Two document classes share one brand: <strong>report surfaces</strong> (<code>gbauto-report.v1</code> — topbar, glass TOC, collapsible sections, taxonomy pills, metadata footer) and <strong>marketing surfaces</strong> (resume / landing — ambient glow, signature watermark, glass panels, scroll reveals). Tokens: terracotta <code>#D97757</code> · cream <code>#F3F1E7</code> · ink <code>#191919</code>, Inter + Newsreader. <strong>Click any card to open it in the in-page viewer</strong> — favorite it, or leave a comment that posts to Supabase.</p>
+  <div class="taxonomy-pills">
+    <span class="taxonomy-pill">brand-tokens</span>
+    <span class="taxonomy-pill">report-surface</span>
+    <span class="taxonomy-pill">marketing-surface</span>
+    <span class="taxonomy-pill">visual-library</span>
+  </div>
+</header>
+
+<main>
+
+<section id="reports">
+  <div class="sec-head"><span class="n">01</span><h2>Report surfaces</h2></div>
+  <p class="sec-sub">Collapsible, evidence-first documents. The canonical <code>gbauto-report.v1</code> shell.</p>
+  <div class="grid">
+    <a class="card" data-viewer href="examples/collapsible-report-template.html">
+      <div class="ct"><h3>Collapsible Report Template</h3><span class="tagchip t-report">shell</span></div>
+      <p>The blank report shell — topbar, left section menu (Open/Close all), collapsible <code>&lt;details&gt;</code> sections, taxonomy pills, metadata footer. Copy this to start a new report.</p>
+      <span class="path">examples/collapsible-report-template.html</span>
+      <span class="fav-badge">★</span>
+    </a>
+    <a class="card" data-viewer href="examples/collapsible-report-mall.html">
+      <div class="ct"><h3>Vans Production Memo</h3><span class="tagchip t-report">example</span></div>
+      <p>A real filled report — "Memo to Sreya: Vans Production &amp; Scraping Infrastructure." Shows the surface with prose, tables, and status chips in situ.</p>
+      <span class="path">examples/collapsible-report-mall.html</span>
+      <span class="fav-badge">★</span>
+    </a>
+  </div>
+</section>
+
+<section id="live">
+  <div class="sec-head"><span class="n">02</span><h2>Live rendered exemplars</h2></div>
+  <p class="sec-sub">Production reports rendered by the report-package / canopy pipeline (paths relative to this file).</p>
+  <div class="grid">
+    <a class="card" data-viewer href="reports/weekly-summary.html">
+      <div class="ct"><h3>JID5274 Weekly Summary</h3><span class="tagchip t-live">rendered</span></div>
+      <p>The authoritative <code>gbauto-report.v1</code> exemplar — sibling-report nav, position-colored pills, glass TOC with word counts, metadata cards. The reference for all report styling.</p>
+      <span class="path">…/jid5274-weekly-report…/weekly-summary.html</span>
+      <span class="fav-badge">★</span>
+    </a>
+    <a class="card" data-viewer href="reports/hermes-architecture.html">
+      <div class="ct"><h3>Hermes Architecture &amp; Loops</h3><span class="tagchip t-live">rendered</span></div>
+      <p>System documentation rendered in the report surface, with live Mermaid diagrams lazy-rendered on section open. Built from the <code>artifact:html-report-generation</code> snippet.</p>
+      <span class="path">second-brain/systems/hermes-architecture.html</span>
+      <span class="fav-badge">★</span>
+    </a>
+  </div>
+</section>
+
+<section id="marketing">
+  <div class="sec-head"><span class="n">03</span><h2>Marketing surfaces</h2></div>
+  <p class="sec-sub">Single-page persuasive surfaces — ambient glow, signature watermark, glass panels, scroll reveals. <em>Do not mix these effects into reports.</em></p>
+  <div class="grid">
+    <a class="card" data-viewer href="examples/resume.html">
+      <div class="ct"><h3>AI Resume — Greg Black</h3><span class="tagchip t-market">marketing</span></div>
+      <p>The "ai-resume" reference. Fixed nav with brand lockup, animated status pill, serif display with terracotta italics, glass skill/experience cards, ATS-friendly print path.</p>
+      <span class="path">examples/resume.html</span>
+      <span class="fav-badge">★</span>
+    </a>
+    <a class="card" data-viewer href="examples/landing-page.html">
+      <div class="ct"><h3>Zero-Touch Engineering</h3><span class="tagchip t-market">marketing</span></div>
+      <p>The GBAutomation landing page — hero, highlight stats, ambient gradients, the full marketing treatment of the house brand. Its fixed logo-left nav is the official header.</p>
+      <span class="path">examples/landing-page.html</span>
+      <span class="fav-badge">★</span>
+    </a>
+  </div>
+</section>
+
+<section id="visual">
+  <div class="sec-head"><span class="n">04</span><h2>Visual library</h2></div>
+  <p class="sec-sub">Ten reusable data-visualization SVGs (image-2 fingerprints). Embed inside report sections. Click to open in the viewer.</p>
+  <div class="viz-grid">
+    <a class="viz" data-viewer href="examples/svg/01-agent-ribbon-flow.svg"><img src="examples/svg/01-agent-ribbon-flow.svg" alt="Agent ribbon flow"><span class="vl">01 · Agent ribbon flow</span></a>
+    <a class="viz" data-viewer href="examples/svg/02-token-streamgraph.svg"><img src="examples/svg/02-token-streamgraph.svg" alt="Token streamgraph"><span class="vl">02 · Token streamgraph</span></a>
+    <a class="viz" data-viewer href="examples/svg/03-tool-chord-map.svg"><img src="examples/svg/03-tool-chord-map.svg" alt="Tool chord map"><span class="vl">03 · Tool chord map</span></a>
+    <a class="viz" data-viewer href="examples/svg/04-evidence-contour-map.svg"><img src="examples/svg/04-evidence-contour-map.svg" alt="Evidence contour map"><span class="vl">04 · Evidence contour</span></a>
+    <a class="viz" data-viewer href="examples/svg/05-latency-violin-lanes.svg"><img src="examples/svg/05-latency-violin-lanes.svg" alt="Latency violin lanes"><span class="vl">05 · Latency violins</span></a>
+    <a class="viz" data-viewer href="examples/svg/06-run-beeswarm.svg"><img src="examples/svg/06-run-beeswarm.svg" alt="Run beeswarm"><span class="vl">06 · Run beeswarm</span></a>
+    <a class="viz" data-viewer href="examples/svg/07-risk-topographic-funnel.svg"><img src="examples/svg/07-risk-topographic-funnel.svg" alt="Risk topographic funnel"><span class="vl">07 · Risk funnel</span></a>
+    <a class="viz" data-viewer href="examples/svg/08-memory-orbit-map.svg"><img src="examples/svg/08-memory-orbit-map.svg" alt="Memory orbit map"><span class="vl">08 · Memory orbit</span></a>
+    <a class="viz" data-viewer href="examples/svg/09-eval-uncertainty-fan.svg"><img src="examples/svg/09-eval-uncertainty-fan.svg" alt="Eval uncertainty fan"><span class="vl">09 · Uncertainty fan</span></a>
+    <a class="viz" data-viewer href="examples/svg/10-architecture-isobars.svg"><img src="examples/svg/10-architecture-isobars.svg" alt="Architecture isobars"><span class="vl">10 · Arch isobars</span></a>
+  </div>
+</section>
+
+<section id="refs">
+  <div class="sec-head"><span class="n">05</span><h2>Brand packet &amp; references</h2></div>
+  <p class="sec-sub">The source-of-truth tokens, component inventory, and prompt packet for reskinning.</p>
+  <div class="grid">
+    <a class="card" data-viewer href="references/gbauto-component-inventory.md">
+      <div class="ct"><h3>Component Inventory</h3><span class="tagchip t-ref">reference</span></div>
+      <p>Catalog of every house component — panels, pills, chips, nav, cards — with the classes and tokens that define them.</p>
+      <span class="path">references/gbauto-component-inventory.md</span>
+      <span class="fav-badge">★</span>
+    </a>
+    <a class="card" data-viewer href="references/gbauto-component-prompt-packet.md">
+      <div class="ct"><h3>Component Prompt Packet</h3><span class="tagchip t-ref">reference</span></div>
+      <p>The prompt packet handed to agents to generate on-brand HTML — the prose contract behind the canopy snippet.</p>
+      <span class="path">references/gbauto-component-prompt-packet.md</span>
+      <span class="fav-badge">★</span>
+    </a>
+    <a class="card" data-viewer href="references/gbauto-image2-fingerprints.md">
+      <div class="ct"><h3>Image-2 Fingerprints</h3><span class="tagchip t-ref">reference</span></div>
+      <p>The visual-language fingerprints behind the SVG library — palette, stroke, and motif rules for new data visuals.</p>
+      <span class="path">references/gbauto-image2-fingerprints.md</span>
+      <span class="fav-badge">★</span>
+    </a>
+    <a class="card" data-viewer href="references/gbauto-aura-dashboard-overrides.css">
+      <div class="ct"><h3>Aura Dashboard Overrides</h3><span class="tagchip t-ref">css</span></div>
+      <p>CSS overrides applying the house brand to the Aura dashboard surface.</p>
+      <span class="path">references/gbauto-aura-dashboard-overrides.css</span>
+      <span class="fav-badge">★</span>
+    </a>
+    <a class="card" data-viewer href="SKILL.md">
+      <div class="ct"><h3>SKILL.md</h3><span class="tagchip t-ref">skill</span></div>
+      <p>The get-gbauto-theme skill definition — when and how to apply the house style.</p>
+      <span class="path">SKILL.md</span>
+      <span class="fav-badge">★</span>
+    </a>
+    <a class="card" data-viewer href="THEME-HANDOFF.md">
+      <div class="ct"><h3>Theme Handoff</h3><span class="tagchip t-ref">guide</span></div>
+      <p>Handoff notes for taking the theme into a new repo or surface.</p>
+      <span class="path">THEME-HANDOFF.md</span>
+      <span class="fav-badge">★</span>
+    </a>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  Canonical authoring contract: canopy snippets <code>artifact:html-report-generation</code> · <code>artifact:official-header</code> · <code>artifact:report-interactive-shell</code>. Blank shell <code>examples/collapsible-report-template.html</code> · rendered reference <code>weekly-summary.html</code> (<code>gbauto-report.v1</code>). Generated 2026-06-25.
+</footer>
+
+<!-- ===== MODAL FILE VIEWER ===== -->
+<div class="viewer" id="viewer" aria-hidden="true" role="dialog" aria-modal="true">
+  <div class="viewer-stage">
+    <div class="viewer-controls">
+      <span class="vc-title" id="vcTitle">—</span>
+      <span class="vc-spacer"></span>
+      <button class="vc-btn" id="vcFav">☆ Favorite</button>
+      <button class="vc-btn" id="vcComment">💬 Comment</button>
+      <a class="vc-btn" id="vcOpen" target="_blank" rel="noopener">↗ New tab</a>
+      <button class="vc-btn" id="vcClose">✕ Close</button>
+    </div>
+    <div class="viewer-body" id="vcBody"></div>
+    <div class="viewer-comment" id="vcDrawer">
+      <textarea id="vcText" placeholder="Add a comment or feedback about this document…"></textarea>
+      <div class="vc-send-col">
+        <span class="vc-status" id="vcStatus"></span>
+        <button id="vcSend">Send feedback</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== BOTTOM MARKDOWN VIEWER DOCK ===== -->
+<aside class="md-dock" id="mdDock">
+  <div class="md-dock-bar" id="mdDockBar">
+    <span class="dk-label">Markdown Viewer</span>
+    <span class="dk-title" id="mdDockTitle">SKILL.md</span>
+    <span class="dk-toggle">▾</span>
+  </div>
+  <div class="md-dock-body md-body" id="mdDockBody">Loading…</div>
+</aside>
+
+<script>
+/* ============================================================
+   GBAuto report interactive shell
+   Configure the feedback webhook (Supabase Edge Function) here.
+   anon INSERT is RLS-blocked, so feedback POSTs to an Edge Function
+   (pattern: smoke-chat-send) that writes to agent_feedback_events.
+   Leave blank to store feedback in localStorage only.
+   ============================================================ */
+const FEEDBACK_URL = "";       // e.g. https://<ref>.functions.supabase.co/report-feedback
+const FEEDBACK_ANON_KEY = "";  // Supabase anon key (sent as apikey + Bearer)
+
+const LS_FAV = "gbauto:favs";
+const LS_FB  = "gbauto:feedback";
+const getFavs = () => JSON.parse(localStorage.getItem(LS_FAV) || "{}");
+const setFavs = o => localStorage.setItem(LS_FAV, JSON.stringify(o));
+
+/* ---- robust local/remote text loader (handles file://) ---- */
+async function loadText(url){
+  try{ const r = await fetch(url); if(r.ok) return await r.text(); }catch(e){}
+  return await new Promise((resolve,reject)=>{
+    const f = document.createElement("iframe");
+    f.style.display = "none";
+    f.onload = ()=>{ try{ resolve(f.contentDocument.body.innerText); }catch(e){ reject(e); } finally{ setTimeout(()=>f.remove(),0); } };
+    f.onerror = ()=> reject(new Error("load failed"));
+    f.src = url; document.body.appendChild(f);
+  });
+}
+const extOf = u => (u.split("?")[0].split("#")[0].split(".").pop() || "").toLowerCase();
+
+/* ---- modal viewer ---- */
+const viewer = document.getElementById("viewer");
+const vcBody = document.getElementById("vcBody");
+const vcTitle = document.getElementById("vcTitle");
+const vcFav = document.getElementById("vcFav");
+const vcOpen = document.getElementById("vcOpen");
+const vcDrawer = document.getElementById("vcDrawer");
+const vcStatus = document.getElementById("vcStatus");
+const vcText = document.getElementById("vcText");
+let currentDoc = null;
+
+async function openViewer(url, title){
+  currentDoc = url;
+  vcTitle.textContent = title || url.split("/").pop();
+  vcOpen.href = url;
+  vcDrawer.classList.remove("open");
+  vcStatus.textContent = ""; vcText.value = "";
+  reflectFav();
+  viewer.classList.add("open");
+  viewer.setAttribute("aria-hidden","false");
+  document.body.style.overflow = "hidden";
+  const ext = extOf(url);
+  vcBody.innerHTML = '<div class="vnote">Loading…</div>';
+  if(["html","htm"].includes(ext)){
+    vcBody.innerHTML = '<div class="vframe-wrap"><iframe src="'+url+'"></iframe></div>';
+  } else if(["svg","png","jpg","jpeg","gif","webp"].includes(ext)){
+    vcBody.innerHTML = '<div class="vimg"><img src="'+url+'" alt=""></div>';
+  } else {
+    try{
+      const text = await loadText(url);
+      if(["md","markdown"].includes(ext) && window.marked){
+        vcBody.innerHTML = '<div class="md-body">'+marked.parse(text)+'</div>';
+      } else {
+        const pre = document.createElement("pre"); pre.className = "raw"; pre.textContent = text;
+        vcBody.innerHTML = ""; vcBody.appendChild(pre);
+      }
+    }catch(e){
+      vcBody.innerHTML = '<div class="vnote">Couldn\'t read the file inline (browsers block reading local text files from <code>file://</code>). Opening raw instead — serve over http for full rendering.</div><div class="vframe-wrap"><iframe src="'+url+'"></iframe></div>';
+    }
+  }
+  // mirror markdown into the bottom dock
+  if(["md","markdown"].includes(ext)) loadDock(url, title);
+}
+function closeViewer(){
+  viewer.classList.remove("open");
+  viewer.setAttribute("aria-hidden","true");
+  document.body.style.overflow = "";
+  vcBody.innerHTML = "";
+}
+function reflectFav(){
+  const fav = !!getFavs()[currentDoc];
+  vcFav.classList.toggle("active", fav);
+  vcFav.textContent = fav ? "★ Favorited" : "☆ Favorite";
+  paintCards();
+}
+vcFav.onclick = ()=>{ const f = getFavs(); f[currentDoc] = !f[currentDoc]; if(!f[currentDoc]) delete f[currentDoc]; setFavs(f); reflectFav(); };
+document.getElementById("vcClose").onclick = closeViewer;
+document.getElementById("vcComment").onclick = ()=> vcDrawer.classList.toggle("open");
+viewer.addEventListener("click", e=>{ if(e.target === viewer) closeViewer(); });
+document.addEventListener("keydown", e=>{ if(e.key === "Escape" && viewer.classList.contains("open")) closeViewer(); });
+
+/* ---- feedback POST (Supabase Edge Function) ---- */
+document.getElementById("vcSend").onclick = async ()=>{
+  const payload = {
+    schema:"gbauto-report-feedback.v1",
+    doc: currentDoc,
+    title: vcTitle.textContent,
+    favorite: !!getFavs()[currentDoc],
+    comment: vcText.value.trim(),
+    url: location.href,
+    ts: new Date().toISOString(),
+    user_agent: navigator.userAgent
+  };
+  if(!payload.comment && !payload.favorite){ vcStatus.textContent = "Add a comment or favorite first."; return; }
+  vcStatus.textContent = "Sending…";
+  if(FEEDBACK_URL){
+    try{
+      const headers = {"Content-Type":"application/json"};
+      if(FEEDBACK_ANON_KEY){ headers["apikey"] = FEEDBACK_ANON_KEY; headers["Authorization"] = "Bearer "+FEEDBACK_ANON_KEY; }
+      const r = await fetch(FEEDBACK_URL, {method:"POST", headers, body:JSON.stringify(payload)});
+      vcStatus.textContent = r.ok ? "Sent to Supabase ✓" : ("Webhook error "+r.status+" — saved locally");
+      if(!r.ok) stashLocal(payload);
+    }catch(e){ vcStatus.textContent = "Network error — saved locally"; stashLocal(payload); }
+  } else {
+    stashLocal(payload);
+    vcStatus.textContent = "Saved locally (no webhook configured)";
+  }
+  vcText.value = "";
+};
+function stashLocal(p){ const a = JSON.parse(localStorage.getItem(LS_FB) || "[]"); a.push(p); localStorage.setItem(LS_FB, JSON.stringify(a)); }
+
+/* ---- wire cards / visuals to the viewer (default = modal, not new page) ---- */
+function cardTitle(el){ const h = el.querySelector("h3"); return h ? h.textContent : (el.querySelector(".vl")?.textContent || el.getAttribute("href")); }
+document.querySelectorAll("[data-viewer]").forEach(el=>{
+  el.addEventListener("click", e=>{
+    if(e.metaKey || e.ctrlKey || e.button === 1) return; // allow open-in-new-tab via modifier
+    e.preventDefault();
+    openViewer(el.getAttribute("href"), cardTitle(el));
+  });
+});
+function paintCards(){
+  const favs = getFavs();
+  document.querySelectorAll(".card[data-viewer]").forEach(c=> c.classList.toggle("favorited", !!favs[c.getAttribute("href")]));
+}
+paintCards();
+
+/* ---- bottom markdown dock ---- */
+const mdDock = document.getElementById("mdDock");
+const mdDockBody = document.getElementById("mdDockBody");
+const mdDockTitle = document.getElementById("mdDockTitle");
+async function loadDock(url, title){
+  mdDockTitle.textContent = title || url.split("/").pop();
+  mdDock.classList.remove("collapsed");
+  try{
+    const text = await loadText(url);
+    mdDockBody.innerHTML = window.marked ? marked.parse(text) : ("<pre class='raw'>"+text.replace(/</g,"&lt;")+"</pre>");
+  }catch(e){
+    mdDockBody.innerHTML = '<p style="color:var(--accent-deep)">Couldn\'t read this markdown from <code>file://</code>. Serve over http (or run a local server) for inline rendering.</p>';
+  }
+}
+document.getElementById("mdDockBar").onclick = ()=> mdDock.classList.toggle("collapsed");
+loadDock("SKILL.md", "SKILL.md");
+</script>
+</body>
+</html>
