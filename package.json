@@ -9,6 +9,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "node test-site.js",
+    "test:feedback": "node scripts/validate-feedback-entrypoints.mjs",
+    "test:feedback:crud": "node scripts/smoke-website-feedback-crud.mjs",
     "test:tenant": "node scripts/validate-tenant-portal.mjs",
     "test:observability": "node scripts/validate-observability.mjs",
     "ops:kanban:export": "node scripts/export-hermes-kanban.mjs",

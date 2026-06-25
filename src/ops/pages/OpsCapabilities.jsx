@@ -17,6 +17,7 @@ import OpsPageShell from '../components/OpsPageShell';
 import CollapsibleSection from '../components/CollapsibleSection';
 import { ContractCardGrid } from '../components/SupabaseContractCards';
 import { getCapabilityAvatar } from '../lib/avatarAssignments';
+import { buildSkillCreatorDraft } from '../lib/agenticEntrypoints';
 import { createSkill, editSkill, listCapabilities } from '../lib/capabilitiesClient';
 import { contractsForCapabilityKind, loadSupabaseContracts } from '../lib/supabaseContractClient';
 
@@ -78,12 +79,12 @@ function CatalogIndex() {
 // createCapabilityDraft/editCapability AppSync mutations, which delegate to the
 // capabilityEdit Lambda — the browser never writes GitHub/AppSync directly. On success we
 // surface the returned PR URL; markdown stays canonical until a human merges the PR.
-function SkillEditor({ def, existing, onClose }) {
+function SkillEditor({ def, existing, draft, onClose }) {
   const isEdit = Boolean(existing);
-  const [path, setPath] = useState(existing?.path || '');
-  const [title, setTitle] = useState(existing?.slug || '');
-  const [body, setBody] = useState(existing?.bodyMd || '');
-  const [summary, setSummary] = useState('');
+  const [path, setPath] = useState(existing?.path || draft?.path || '');
+  const [title, setTitle] = useState(existing?.slug || draft?.title || '');
+  const [body, setBody] = useState(existing?.bodyMd || draft?.body || '');
+  const [summary, setSummary] = useState(draft?.summary || '');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const [result, setResult] = useState(null);
@@ -136,6 +137,14 @@ function SkillEditor({ def, existing, onClose }) {
         </div>
       ) : (
         <form onSubmit={submit} className="space-y-4">
+          {draft?.entrypoint && (
+            <div className="rounded-md border border-[#D6D4C8] bg-[#F3F1E7]/70 p-3 text-xs leading-5 text-[#191919]/65">
+              <p className="font-semibold text-[#191919]">Hermes preset: guided skill creator</p>
+              <p className="mt-1 font-mono">
+                {draft.entrypoint.agent_mode} | {draft.entrypoint.feedback_type} | {draft.entrypoint.response_policy}
+              </p>
+            </div>
+          )}
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="block">
               <span className="mb-1 block text-xs uppercase tracking-widest text-[#191919]/50">Title / slug</span>
@@ -260,6 +269,7 @@ function Catalog({ def }) {
   }, [items, q]);
 
   const label = def.label.toLowerCase();
+  const createLabel = def.kind === 'skill' ? 'Create skill' : `New ${def.label.replace(/s$/, '').toLowerCase()}`;
   const relatedContracts = useMemo(
     () => contractsForCapabilityKind(contracts, def.kind),
     [contracts, def.kind],
@@ -294,16 +304,19 @@ function Catalog({ def }) {
           Refresh
         </button>
         <button
-          onClick={() => setEditor({ existing: null })}
+          onClick={() => setEditor({
+            existing: null,
+            draft: def.kind === 'skill' ? buildSkillCreatorDraft({ route: window.location.pathname }) : null,
+          })}
           className="inline-flex items-center gap-1.5 rounded-md bg-[#191919] px-3 py-2 text-xs font-semibold uppercase tracking-widest text-[#F3F1E7] transition-colors hover:bg-[#D97757]"
         >
           <Plus className="h-3.5 w-3.5" />
-          New {def.label.replace(/s$/, '').toLowerCase()}
+          {createLabel}
         </button>
       </div>
 
       {editor && (
-        <SkillEditor def={def} existing={editor.existing} onClose={() => setEditor(null)} />
+        <SkillEditor def={def} existing={editor.existing} draft={editor.draft} onClose={() => setEditor(null)} />
       )}
 
       <CollapsibleSection
