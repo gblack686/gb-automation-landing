@@ -22,6 +22,7 @@ import HermesCommandLayer from './components/HermesCommandLayer';
 import RequireAuth from './components/RequireAuth';
 import GbautomationPortal from './clients/gbautomation/routes';
 import SmokeClientPortal from './clients/smoke-client/routes';
+import SmokeClientChat from './clients/smoke-client/pages/ChatPage';
 import Jid5274Portal from './clients/jid5274/routes';
 import OpsRoutes from './ops/routes';
 
@@ -56,6 +57,14 @@ function App() {
           <Route path="/observability" element={<ObservabilityIndex />} />
           <Route path="/observability/:slug" element={<DagView />} />
           <Route path="/tac" element={<TacCatalog />} />
+          <Route
+            path="/chat"
+            element={
+              <RequireAuth allowedGroups={['tenant-smoke-client']}>
+                <SmokeClientChat />
+              </RequireAuth>
+            }
+          />
 
           {/* Gated — everything behind sign-in */}
           <Route

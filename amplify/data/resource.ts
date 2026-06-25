@@ -47,7 +47,10 @@ const schema = a.schema({
 
   smokeClientChat: a
     .mutation()
-    .arguments({ text: a.string().required() })
+    .arguments({
+      text: a.string().required(),
+      context: a.json(),
+    })
     .returns(a.ref('MacMiniResult'))
     .authorization((allow) => [allow.authenticated()])
     .handler(a.handler.function(macMiniOps)),
