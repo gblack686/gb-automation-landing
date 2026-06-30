@@ -1,0 +1,47 @@
+[
+  {
+    "table": "host_job_runs",
+    "title": "Host Job Runs",
+    "unit": "runs",
+    "group_count": 11,
+    "row_total": 14,
+    "dims": [
+      "job_name",
+      "host",
+      "status",
+      "scheduler"
+    ],
+    "default": [
+      "job_name",
+      "host",
+      "status"
+    ],
+    "weight": "n",
+    "html": "host_job_runs.html",
+    "data": "host_job_runs.aggregate.json"
+  },
+  {
+    "table": "prd_artifacts",
+    "title": "PRD Artifacts",
+    "unit": "PRDs",
+    "group_count": 12,
+    "row_total": 12,
+    "dims": [
+      "client",
+      "status",
+      "kind",
+      "prd_type",
+      "priority",
+      "tac_status",
+      "agent_team"
+    ],
+    "default": [
+      "client",
+      "status",
+      "kind"
+    ],
+    "weight": "n",
+    "html": "prd_artifacts.html",
+    "data": "prd_artifacts.aggregate.json"
+  }
+]

@@ -16,6 +16,7 @@ import PRDIndex from './pages/PRDIndex';
 import PRDView from './pages/PRDView';
 import ObservabilityIndex from './pages/ObservabilityIndex';
 import DagView from './pages/DagView';
+import SankeyView from './pages/SankeyView';
 import Overview from './pages/Overview';
 import Repos from './pages/Repos';
 import HermesCommandLayer from './components/HermesCommandLayer';
@@ -56,6 +57,8 @@ function App() {
           <Route path="/repos" element={<Repos />} />
           <Route path="/observability" element={<ObservabilityIndex />} />
           <Route path="/observability/:slug" element={<DagView />} />
+          <Route path="/sankey" element={<SankeyView />} />
+          <Route path="/viz" element={<SankeyView />} />
           <Route path="/tac" element={<TacCatalog />} />
           <Route
             path="/chatv0"
