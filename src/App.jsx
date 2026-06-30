@@ -40,6 +40,13 @@ function ConvaiVisibility() {
   return null;
 }
 
+function ChatRedirect() {
+  useEffect(() => {
+    window.location.replace('/clients/gbautomation/chat');
+  }, []);
+  return null;
+}
+
 function App() {
   return (
     <Authenticator.Provider>
@@ -50,6 +57,7 @@ function App() {
           {/* Public — homepage + PRDs */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/chat" element={<ChatRedirect />} />
           <Route path="/prds" element={<PRDIndex />} />
           <Route path="/prds/:slug" element={<PRDView />} />
           <Route path="/overview" element={<Overview />} />
@@ -119,7 +127,7 @@ function App() {
             element={
               <RequireAuth
                 allowedGroups={['tenant-gbautomation']}
-                allowedEmails={['gblack686@gmail.com']}
+                allowedEmails={['gblack686@gmail.com', 'greg@gbautomation.xyz']}
               >
                 <GbautomationPortal />
               </RequireAuth>

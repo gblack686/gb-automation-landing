@@ -4,6 +4,7 @@ import SignOutButton from '../../../components/SignOutButton';
 
 const navItems = [
   { label: 'Dashboard', to: '/clients/gbautomation' },
+  { label: 'Chat', to: '/clients/gbautomation/chat' },
   { label: 'Sync', to: '/clients/gbautomation/sync' },
   { label: 'Validation', to: '/clients/gbautomation/validation' },
   { label: 'Artifacts', to: '/clients/gbautomation/artifacts' },

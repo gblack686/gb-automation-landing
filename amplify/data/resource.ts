@@ -38,6 +38,26 @@ const schema = a.schema({
     .authorization((allow) => [allow.authenticated()])
     .handler(a.handler.function(macMiniOps)),
 
+  gbautomationChatMessages: a
+    .query()
+    .arguments({
+      sessionId: a.string(),
+      limit: a.integer(),
+    })
+    .returns(a.ref('MacMiniResult'))
+    .authorization((allow) => [allow.authenticated()])
+    .handler(a.handler.function(macMiniOps)),
+
+  sendGbautomationChatMessage: a
+    .mutation()
+    .arguments({
+      sessionId: a.string(),
+      content: a.string().required(),
+    })
+    .returns(a.ref('MacMiniResult'))
+    .authorization((allow) => [allow.authenticated()])
+    .handler(a.handler.function(macMiniOps)),
+
   createMacMiniRequest: a
     .mutation()
     .arguments({ action: a.string().required(), params: a.json() })
