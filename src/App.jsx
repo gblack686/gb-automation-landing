@@ -40,6 +40,12 @@ function ConvaiVisibility() {
   return null;
 }
 
+function CommandLayerVisibility() {
+  const { pathname } = useLocation();
+  if (pathname === '/') return null;
+  return <HermesCommandLayer />;
+}
+
 function ChatRedirect() {
   useEffect(() => {
     window.location.replace('/clients/gbautomation/chat');
@@ -52,7 +58,7 @@ function App() {
     <Authenticator.Provider>
       <Router>
         <ConvaiVisibility />
-        <HermesCommandLayer />
+        <CommandLayerVisibility />
         <Routes>
           {/* Public — homepage + PRDs */}
           <Route path="/" element={<Home />} />
