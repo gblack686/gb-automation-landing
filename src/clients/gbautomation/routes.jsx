@@ -4,6 +4,7 @@ import DashboardPage from './pages/DashboardPage';
 import SyncPage from './pages/SyncPage';
 import ValidationPage from './pages/ValidationPage';
 import ArtifactsPage from './pages/ArtifactsPage';
+import ChatPage from './pages/ChatPage';
 
 export default function GbautomationPortal() {
   return (
@@ -15,6 +16,7 @@ export default function GbautomationPortal() {
           <Route path="sync" element={<SyncPage />} />
           <Route path="validation" element={<ValidationPage />} />
           <Route path="artifacts" element={<ArtifactsPage />} />
+          <Route path="chat" element={<ChatPage />} />
           <Route path="*" element={<Navigate to="/clients/gbautomation" replace />} />
         </Routes>
       </main>

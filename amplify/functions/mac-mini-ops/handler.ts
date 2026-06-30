@@ -13,6 +13,9 @@ import { GetSecretValueCommand, SecretsManagerClient } from '@aws-sdk/client-sec
 const SECRET_ID = process.env.SUPABASE_SECRET_ID || 'gbautomation/infrastructure/supabase/gbauto';
 const TELEMETRY_KEY = 'mac-mini-telemetry';
 const ALLOWED_ACTIONS = ['memguard_report', 'tab_stats', 'tab_list', 'tab_dedupe_apply'];
+const CHAT_TENANT = 'gbautomation';
+const GB_AUTOMATION_GROUP = 'tenant-gbautomation';
+const GB_AUTOMATION_EMAILS = new Set(['gblack686@gmail.com', 'greg@gbautomation.xyz']);
 
 type Json = Record<string, any>;
 
@@ -59,6 +62,39 @@ async function pgInsert(table: string, row: Json): Promise<any> {
 function emailOf(event: Json): string {
   const id = event?.identity || {};
   return String(id?.claims?.email || id?.username || 'ops-user');
+}
+
+function groupsOf(event: Json): string[] {
+  const raw = event?.identity?.claims?.['cognito:groups'];
+  if (Array.isArray(raw)) return raw.map(String);
+  if (typeof raw === 'string') return raw.split(',').map((item) => item.trim()).filter(Boolean);
+  return [];
+}
+
+function requireGbautomationAccess(event: Json): void {
+  const email = emailOf(event).toLowerCase();
+  const groups = groupsOf(event);
+  if (groups.includes(GB_AUTOMATION_GROUP) || GB_AUTOMATION_EMAILS.has(email)) return;
+  throw new Error('tenant-gbautomation access required');
+}
+
+function normalizeSessionId(value: unknown): string {
+  const raw = String(value || 'website').trim().toLowerCase();
+  const safe = raw.replace(/[^a-z0-9._:-]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 96);
+  return safe || 'website';
+}
+
+function clampLimit(value: unknown): number {
+  const parsed = Number(value || 80);
+  if (!Number.isFinite(parsed)) return 80;
+  return Math.max(1, Math.min(Math.trunc(parsed), 200));
+}
+
+function normalizeMessageContent(value: unknown): string {
+  const content = String(value || '').trim();
+  if (!content) throw new Error('content is required');
+  if (content.length > 8000) throw new Error('content must be 8000 characters or fewer');
+  return content;
 }
 
 function message(role: 'user' | 'assistant' | 'system', text: string): Json {
@@ -232,6 +268,44 @@ export const handler = async (event: Json) => {
       const sel = 'select=id,action,status,result,error,requested_by,requested_at,completed_at';
       const rows = await pgGet(`mac_mini_action_requests?id=eq.${encodeURIComponent(id)}&${sel}&limit=1`);
       return { payload: { request: Array.isArray(rows) && rows.length ? rows[0] : null } };
+    }
+
+    if (op === 'gbautomationChatMessages') {
+      requireGbautomationAccess(event);
+      const sessionId = normalizeSessionId(args.sessionId);
+      const limit = clampLimit(args.limit);
+      const select = 'select=id,tenant,session_id,role,content,status,seq,created_at';
+      const rows = await pgGet(
+        `chat_messages?tenant=eq.${CHAT_TENANT}&session_id=eq.${encodeURIComponent(sessionId)}&${select}&order=created_at.asc&limit=${limit}`,
+      );
+      return {
+        payload: {
+          tenant: CHAT_TENANT,
+          session_id: sessionId,
+          messages: Array.isArray(rows) ? rows : [],
+        },
+      };
+    }
+
+    if (op === 'sendGbautomationChatMessage') {
+      requireGbautomationAccess(event);
+      const sessionId = normalizeSessionId(args.sessionId);
+      const content = normalizeMessageContent(args.content);
+      const rows = await pgInsert('chat_messages', {
+        tenant: CHAT_TENANT,
+        session_id: sessionId,
+        role: 'user',
+        content,
+        status: 'complete',
+      });
+      const row = Array.isArray(rows) ? rows[0] : rows;
+      return {
+        payload: {
+          tenant: CHAT_TENANT,
+          session_id: sessionId,
+          message: row || null,
+        },
+      };
     }
 
     // default: macMiniTelemetry
