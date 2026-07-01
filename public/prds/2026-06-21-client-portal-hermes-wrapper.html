@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>TAC Kanban Team Resilience Hardening — crash loops, silent deaths, empty blocks | GBAutomation</title>
+  <title>Client Portal → Hermes-dashboard wrapper | GBAutomation</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&display=swap');
     :root {
@@ -420,19 +420,19 @@
   <div class="topbar">
     <div class="topbar-inner">
       <div class="brand-lockup"><span class="brand-dot"></span><span class="brand-text">GBAutomation</span></div>
-      <div class="source-name">2026-06-12-tac-kanban-resilience-hardening-plan.md</div>
+      <div class="source-name">2026-06-21-client-portal-hermes-wrapper.md</div>
     </div>
   </div>
   <header>
     <div class="eyebrow">Plan Brief</div>
-    <h1>TAC Kanban Team Resilience Hardening — crash loops, silent deaths, empty blocks</h1>
+    <h1>Client Portal → Hermes-dashboard wrapper</h1>
     <div class="taxonomy-pills"><span class="pill" style="background:rgba(177, 124, 62, 0.12);border-color:rgba(177, 124, 62, 0.42);"><span class="pill-facet" style="color:#B17C3E;">service</span><span class="pill-value">hermes</span></span></div>
     <ul class="summary-meta">
-      <li>Client: gbautomation</li><li>Priority: high</li><li>Status: draft</li><li>tac</li><li>kanban</li><li>resilience</li><li>hooks</li><li>domain/tac</li><li>domain/gbautomation</li>
+      <li>Status: ready</li><li>client-portal</li><li>dashboard</li><li>frontend</li><li>ecom</li>
       <li>Owner: GBAutomation</li>
-      <li>Created: 2026-06-12</li>
+      <li>Created: 2026-06-21</li>
       <li>6 sections</li>
-      <li>852 words</li>
+      <li>686 words</li>
     </ul>
   </header>
   <main class="layout">
@@ -443,111 +443,115 @@
     <button type="button" data-action="collapse">Collapse all</button>
   </div>
   <nav><button type="button" data-target="overview"><span>01</span>Overview</button>
-<button type="button" data-target="why-the-sprint-plans-graded-shipped-partial"><span>02</span>Why the sprint plans graded SHIPPED·PARTIAL</button>
-<button type="button" data-target="failure-taxonomy-supabase-agent-runs-2026-06-05-12-deduped-run-ids"><span>03</span>Failure taxonomy (Supabase <code>agent_runs</code>, 2026-06-05..12, deduped run ids)</button>
-<button type="button" data-target="hardening-proposals-mapped-to-tac-creed-retrieved-components"><span>04</span>Hardening proposals (mapped to TAC creed + retrieved components)</button>
-<button type="button" data-target="validation"><span>05</span>Validation</button>
-<button type="button" data-target="success-criteria"><span>06</span>Success criteria</button></nav>
+<button type="button" data-target="locked-decisions-2026-06-21-greg"><span>02</span>Locked decisions (2026-06-21, Greg)</button>
+<button type="button" data-target="current-architecture-verified-2026-06-21"><span>03</span>Current architecture (verified 2026-06-21)</button>
+<button type="button" data-target="sidebar-index-tab-map"><span>04</span>Sidebar (index → tab) map</button>
+<button type="button" data-target="phased-build"><span>05</span>Phased build</button>
+<button type="button" data-target="risks-open"><span>06</span>Risks / open</button></nav>
 </aside>
     <div class="sections">
       <details class="section" id="overview" open>
   <summary>
     <span class="section-index">01</span>
     <span class="section-title">Overview</span>
-    <span class="section-count">193 words</span>
+    <span class="section-count">47 words</span>
   </summary>
   <div class="section-body">
-    <p><strong>Why the sprint plans graded SHIPPED·PARTIAL:</strong> The 2026-06-05..12 plans index grades every executed plan <em>partial</em>. The execution dossiers (<code>execution-dossiers.json</code> in the sprint report package) show the mechanism: <strong>the unattended Hermes Kanban lane starves at the head of the pipeline, so net-new plan scope falls back to operator-attended codex sessions</strong> — which ship the baseline but not the plan&#x27;s full spec.</p>
-<p><strong>Failure taxonomy (Supabase <code>agent_runs</code>, 2026-06-05..12, deduped run ids):</strong> dies at ~+39s; dispatcher immediately re-claims; repeat all night. The big loops all run <strong>23:00 → 06:56 PT</strong> unattended. <code>max_retries</code>, <code>max_runtime_seconds</code>, and <code>claim_expires</code> are <strong>null</strong> on every card — no failure cap, no backoff, no circuit breaker. The ~39s lifespan and the <code>rate_limited_reclaim</code> notes point at provider 429/auth errors crashing the worker process instead of soft-failing (the open card &quot;cron driver should soft-fail (not raise RuntimeError) on account-wide HTTP 429&quot; is the same bug class).</p>
-<p><strong>Hardening proposals (mapped to TAC creed + retrieved components):</strong> TAC component retrieval artifact: <code>second-brain/intelligence/tac-retrievals/20260612-kanban-resilience-components.json</code> (1,518 components scanned). Reuse sources named per item; creed mapping per tac-creed (Tactic 4 <em>Stay Out The Loop</em> requires Tactic 5 <em>Always Add Feedback Loops</em> to be safe).</p>
+    <p>Turn <code>apps/client-portal/</code> into a <strong>Hermes-dashboard &quot;wrapper&quot;</strong>: every page inherits a left sidebar; the landing page looks like the Hermes dashboard (GB logo right of the Hermes agent logo); sign in as the ecom client and land on the dashboard; the Chat tab actually communicates with Hermes.</p>
   </div>
 </details>
-<details class="section" id="why-the-sprint-plans-graded-shipped-partial">
+<details class="section" id="locked-decisions-2026-06-21-greg">
   <summary>
     <span class="section-index">02</span>
-    <span class="section-title">Why the sprint plans graded SHIPPED·PARTIAL</span>
-    <span class="section-count">118 words</span>
-  </summary>
-  <div class="section-body">
-    <p>The 2026-06-05..12 plans index grades every executed plan <em>partial</em>. The execution dossiers (<code>execution-dossiers.json</code> in the sprint report package) show the mechanism: <strong>the unattended Hermes Kanban lane starves at the head of the pipeline, so net-new plan scope falls back to operator-attended codex sessions</strong> — which ship the baseline but not the plan&#x27;s full spec.</p>
-<p>Observed on the tac-hermes waves: <code>intake, route, and frame</code> (17 runs, 6 crashed, latest <strong>blocked</strong>) and <code>retrieve TAC sources</code> (15 runs, 10 crashed, <strong>blocked</strong>) die first, so <code>implement scoped worktree changes</code> (<strong>blocked</strong>, 5 runs), <code>validate</code>, <code>publish receipts</code>, and <code>post-run learning</code> (4 cards, <strong>0 runs</strong>) never execute. The TAC dispatch receipts the plans expected were never produced because the team never got past research.</p>
-  </div>
-</details>
-<details class="section" id="failure-taxonomy-supabase-agent-runs-2026-06-05-12-deduped-run-ids">
-  <summary>
-    <span class="section-index">03</span>
-    <span class="section-title">Failure taxonomy (Supabase <code>agent_runs</code>, 2026-06-05..12, deduped run ids)</span>
-    <span class="section-count">238 words</span>
-  </summary>
-  <div class="section-body">
-    <div class="table-wrap"><table><thead><tr><th>#</th><th>Class</th><th>Count</th><th>Evidence</th></tr></thead><tbody><tr><td>1</td><td><code>pid N not alive</code> — silent worker death</td><td><strong>8,827 runs / 72 tasks</strong> (~123 respawns/task)</td><td>worst: 1,472 respawns on one <code>logs</code> card; 678/479/395 on <code>sysadmin</code> cards; 382/379 on <code>tac-researcher</code> cards</td></tr>
-<tr><td>2</td><td>Protocol violation — worker exited rc=0 without calling <code>kanban_complete</code>/<code>kanban_block</code></td><td>79</td><td>dispatcher marks crashed; no cause captured</td></tr>
-<tr><td>3</td><td>Iteration budget exhausted</td><td>7</td><td><code>goal_max_turns</code> hit</td></tr>
-<tr><td>4</td><td>Manual reclaims (operator parking crash loops)</td><td>15</td><td>e.g. &quot;Codex parking after repeated Hermes worker crashes&quot;, &quot;rate_limited_reclaim&quot;, mis-targeted dispatch (rock filename inferred as <code>target_url</code>)</td></tr>
-<tr><td>5</td><td>Blocked cards carry <strong>no reason</strong></td><td>all sampled</td><td><code>last_failure_error</code> and <code>result</code> empty on every blocked tac-hermes/ecom card</td></tr></tbody></table></div>
-<p><strong>Crash-loop anatomy</strong> (sampled <code>task_run</code>): worker spawns, heartbeats at +3s, dies at ~+39s; dispatcher immediately re-claims; repeat all night. The big loops all run <strong>23:00 → 06:56 PT</strong> unattended. <code>max_retries</code>, <code>max_runtime_seconds</code>, and <code>claim_expires</code> are <strong>null</strong> on every card — no failure cap, no backoff, no circuit breaker. The ~39s lifespan and the <code>rate_limited_reclaim</code> notes point at provider 429/auth errors crashing the worker process instead of soft-failing (the open card &quot;cron driver should soft-fail (not raise RuntimeError) on account-wide HTTP 429&quot; is the same bug class).</p>
-<p><strong>Observability gap:</strong> of 2,753 in-window Langfuse traces only 88 carry token usage — all from the Telegram operator lane (&quot;Hermes turn&quot;: 83.8M in / 0.97M out). Kanban worker runs emit zero generation usage, so cost/turn budgets cannot be enforced from traces. Same finding as 2026-06-02-trace-attribution-standard-plan.</p>
-  </div>
-</details>
-<details class="section" id="hardening-proposals-mapped-to-tac-creed-retrieved-components">
-  <summary>
-    <span class="section-index">04</span>
-    <span class="section-title">Hardening proposals (mapped to TAC creed + retrieved components)</span>
-    <span class="section-count">357 words</span>
-  </summary>
-  <div class="section-body">
-    <p>TAC component retrieval artifact: <code>second-brain/intelligence/tac-retrievals/20260612-kanban-resilience-components.json</code> (1,518 components scanned). Reuse sources named per item; creed mapping per tac-creed (Tactic 4 <em>Stay Out The Loop</em> requires Tactic 5 <em>Always Add Feedback Loops</em> to be safe).</p>
-<ol>
-<li><strong>Crash circuit breaker + backoff (dispatcher)</strong> — enforce default</li>
-<p><code>max_retries=3</code> and exponential backoff between respawns; on cap, auto-<code>kanban_block</code> with reason <code>crash_loop</code> + last stderr tail. Reuse: the ecom retry-context ledger shipped this sprint (<code>scripts/ecom_retry_context.py</code>, commit <code>b0938e9d</code>) — port the pattern into the Kanban dispatcher. KPI: Attempts ↓. <em>This single change removes ~8.8k junk runs/week.</em></p>
-<li><strong>Death-note capture (spawn wrapper)</strong> — wrap worker spawn so exit code,</li>
-<p>signal, and stderr tail land in <code>task_run.error</code> instead of <code>pid N not alive</code>; soft-fail provider 429s (park with <code>rate_limited</code> reason + retry-after) rather than crashing. Pairs with the open Hermes-core 429 card.</p>
-<li><strong>Completion-protocol Stop hook (worker)</strong> — Stop/SessionEnd hook checks a</li>
-<p><code>kanban_complete</code>/<code>kanban_block</code> call occurred this session; if not, block exit once with a reminder, then auto-<code>kanban_block</code> with <code>protocol_violation</code> + transcript tail. Reuse: <code>claude-code-hooks-mastery</code> <code>stop.py</code> / <code>subagent_stop.py</code>; <code>agent-experts</code> <code>stop.py</code> (TAC inventory, 276 hook components catalogued).</p>
-<li><strong>Block-reason contract (PreToolUse validator)</strong> — reject <code>kanban_block</code></li>
-<p>calls with empty reason/evidence; mirror reason into the board payload so blocked cards are triageable. Fixes failure class 5. Reuse: <code>agentic-finance-review</code> validator-hook family.</p>
-<li><strong>Respawn continuity via context bundles</strong> — each attempt appends a compact</li>
-<p>bundle (what was tried, what failed, remaining steps); respawned workers resume instead of starting blank (Tactic 2: the agent is brilliant but blind). Reuse: <code>context_bundle_builder.py</code> (<code>agentic-prompt-engineering</code> / <code>building-domain-specific-agents</code>).</p>
-<li><strong>Dispatch preflight (PreToolUse on <code>kanban_create_task</code>)</strong> — validate</li>
-<p><code>target_url</code>/repo/workspace exists and <code>assignee</code> profile is installed before card creation. Evidence: mis-targeted dispatch inferred a rock markdown filename as <code>target_url</code>; profile-missing dispatches dead-end.</p>
-<li><strong>Crash-storm alerting + scorecard KPIs</strong> — Telegram alert when a task</li>
-<p>exceeds N respawns/hour (the 1,472-respawn card should have paged at ~23:30, not been found in the morning); wire the execution-dossier stoppage metrics into <code>sprint_scorecard_metrics</code> weekly (Agentic KPIs: Attempts ↓, Streak ↑, Presence ↓).</p>
-<li><strong>Worker generation-usage emission</strong> — emit token usage on worker traces so</li>
-<p>iteration budgets and cost caps become enforceable; this is the trace-attribution plan&#x27;s emission phase, re-prioritized by this data.</p>
-</ol>
-  </div>
-</details>
-<details class="section" id="validation">
-  <summary>
-    <span class="section-index">05</span>
-    <span class="section-title">Validation</span>
-    <span class="section-count">70 words</span>
+    <span class="section-title">Locked decisions (2026-06-21, Greg)</span>
+    <span class="section-count">98 words</span>
   </summary>
   <div class="section-body">
     <ul>
-<li>Replay a synthetic always-crashing card on a throwaway Kanban DB: expect 3</li>
-<p>attempts, backoff, auto-block with <code>crash_loop</code> reason, one Telegram alert.</p>
-<li>Kill a worker mid-task: expect death-note in <code>task_run.error</code> (no</li>
-<p><code>pid N not alive</code>).</p>
-<li>Worker that &quot;finishes&quot; without completion call: expect Stop-hook reminder,</li>
-<p>then <code>protocol_violation</code> block.</p>
-<li>Re-run <code>build_plan_execution_dossiers.py</code> after one week: stoppage count on</li>
-<p>the TAC plane should drop an order of magnitude; blocked cards all carry reasons.</p>
+<li><strong>Theme = Variant 1 &quot;Report Paper&quot;</strong> from <code>artifacts/hermes-theme-options.html</code> — frosted</li>
+<p>white-on-cream panels, stone borders, restrained terracotta (dot, nav indices, subtle active highlight), 16px base, Newsreader headings + Inter body. Palette: cream <code>#F3F1E7</code>, ink <code>#191919</code>, terracotta <code>#D97757</code>, stone <code>#D6D4C8</code>. (Replaces the current dark <code>#0f1117</code>/<code>#6c63ff</code> portal theme.)</p>
+<li><strong>Chat = native (backend→Hermes)</strong> — NOT an iframe. Backend proxies to the client&#x27;s</li>
+<p>Hermes profile via the orchestrator MCP / send-reply (reference_hermes_orchestrator_mcp_architecture + read path reference_hermes_mcp_bridge). Frontend renders a portal-native chat.</p>
+<li><strong>ecom client = <code>the-mall</code></strong> (existing; Linear team ECOM, dedicated <code>mall-scraper</code> Hermes</li>
+<p>profile, canonical <code>clients/the-mall/hermes/</code>). Give it a Hermes chat binding; no new client dir.</p>
 </ul>
   </div>
 </details>
-<details class="section" id="success-criteria">
+<details class="section" id="current-architecture-verified-2026-06-21">
   <summary>
-    <span class="section-index">06</span>
-    <span class="section-title">Success criteria</span>
-    <span class="section-count">37 words</span>
+    <span class="section-index">03</span>
+    <span class="section-title">Current architecture (verified 2026-06-21)</span>
+    <span class="section-count">119 words</span>
   </summary>
   <div class="section-body">
     <ul>
-<li>Zero unbounded respawn loops (no task &gt;10 runs without a block).</li>
-<li>100% of blocked cards have machine-readable reason + evidence path.</li>
-<li>A full tac-hermes wave (intake → self-improve) completes unattended with</li>
-<p>receipts, proving the lane the sprint plans assumed.</p>
+<li>Frontend: Vue/Vite <code>apps/client-portal/frontend</code> → dev <code>:5173</code>; proxies <code>/api/*</code> → <code>:5480</code>.</li>
+<li>Backend: FastAPI <code>apps/client-portal/backend</code> (<code>main.py</code> + <code>client_reader.py</code>) → <code>:5480</code>;</li>
+<p>reads <code>VAULT_ROOT=second-brain/</code> (profile.md frontmatter, deliverables/, artifact manifest).</p>
+<li>Routes: <code>/clients/:slug/{profile,deliverables,artifacts,transcripts,dashboard,hermes/chat}</code></li>
+<p>+ ClientNotFound. <strong><code>ClientLayout.vue</code> is the only shared wrapper — a TOP header + HORIZONTAL nav</strong> (the thing to refactor into a left sidebar).</p>
+<li><code>HermesChatView</code> + <code>DashboardView</code> currently just <strong>iframe</strong> <code>hermes.chat_url</code> /</li>
+<p><code>hermes_dashboard_url</code> from profile.md — no live Hermes wiring.</p>
+<li>No auth in the app (slug-in-URL only; Caddy basicauth on <code>/clients/*</code> in prod, secret</li>
+<p><code>gbautomation/core/client-portal-basic-auth</code>).</p>
+<li>NOTE: <code>localhost:9119</code> is the <em>separate</em> hermes-agent dashboard (<code>hermes_cli.main web</code>),</li>
+<p>NOT the portal. The portal is its own app styled to look like that dashboard.</p>
+</ul>
+  </div>
+</details>
+<details class="section" id="sidebar-index-tab-map">
+  <summary>
+    <span class="section-index">04</span>
+    <span class="section-title">Sidebar (index → tab) map</span>
+    <span class="section-count">119 words</span>
+  </summary>
+  <div class="section-body">
+    <p>The Report-Paper left nav (<code>.nav a</code>) becomes these tabs, each backed by a source we have:</p>
+<div class="table-wrap"><table><thead><tr><th>Tab</th><th>Source</th><th>Backend route</th><th>Status</th></tr></thead><tbody><tr><td>Dashboard (landing)</td><td>Hermes board snapshot (Kanban / cron_runs / obs_smoke)</td><td>new <code>/api/clients/{slug}/dashboard-data</code></td><td>build</td></tr>
+<tr><td>Chat</td><td>the-mall Hermes profile via orchestrator MCP</td><td>new <code>/api/clients/{slug}/chat</code> (POST send + GET poll)</td><td>build</td></tr>
+<tr><td>Plans</td><td><code>index_prds</code> → <code>prd_artifacts</code> (client-scoped)</td><td>new <code>/api/clients/{slug}/plans</code></td><td>build</td></tr>
+<tr><td>Deliverables</td><td><code>clients/{slug}/deliverables/</code></td><td>existing</td><td>✅</td></tr>
+<tr><td>Artifacts</td><td>artifact-registry manifest</td><td>existing</td><td>✅</td></tr>
+<tr><td>Transcripts</td><td>session-recap deliverables</td><td>existing</td><td>✅</td></tr>
+<tr><td>Tasks / Board</td><td>Hermes Kanban (<code>~/.hermes/kanban/boards/&lt;board&gt;/kanban.db</code> / Supabase mirror)</td><td>new <code>/api/clients/{slug}/tasks</code></td><td>build</td></tr>
+<tr><td>Activity</td><td><code>daily/<em>.md</code> + <code></em>-brief.md</code></td><td>new <code>/api/clients/{slug}/activity</code></td><td>build</td></tr>
+<tr><td>Profile</td><td>profile.md frontmatter</td><td>existing</td><td>✅</td></tr>
+<tr><td><em>(internal)</em> Skills / Commands</td><td><code>capabilities/{skills,commands}-index.md</code></td><td>optional</td><td>defer</td></tr></tbody></table></div>
+  </div>
+</details>
+<details class="section" id="phased-build">
+  <summary>
+    <span class="section-index">05</span>
+    <span class="section-title">Phased build</span>
+    <span class="section-count">193 words</span>
+  </summary>
+  <div class="section-body">
+    <ul>
+<li><strong>P1 — Report Paper shell.</strong> Refactor <code>ClientLayout.vue</code> from horizontal-nav-on-dark to a</li>
+<p>2-column grid: <strong>left sidebar</strong> (<code>.nav</code>) + <strong>topbar</strong> with the brand lockup = <strong>Hermes agent logo, GB logo to its right</strong>. Encode the Variant-1 theme tokens (cream/terracotta) as the portal&#x27;s CSS vars (replace App.vue dark vars). All existing views inherit it unchanged. Demoable at <code>:5173</code>.</p>
+<li><strong>P2 — Sign in as ecom (the-mall).</strong> A <code>/login</code> (or simple client picker) that lands</li>
+<p><code>the-mall</code> on <code>/clients/the-mall/dashboard</code>. Keep it light — reuse the prod Caddy basicauth model; app-level session optional. Add the Dashboard tab as the post-login landing.</p>
+<li><strong>P3 — Native Hermes chat.</strong> Backend <code>POST /api/clients/{slug}/chat</code> → send to the client&#x27;s</li>
+<p>Hermes profile via the orchestrator MCP (<code>send</code>/<code>reply</code>); <code>GET</code> to poll replies (read via the MCP bridge / state.db). Replace the <code>HermesChatView</code> iframe with a native chat UI. <strong>Deepest piece</strong> — the portal backend must reach the Mini&#x27;s Hermes (run the backend on the Mini, or call the orchestrator MCP over the tailnet). This is the &quot;make sure we can communicate with Hermes&quot; deliverable.</p>
+<li><strong>P4 — Index tabs.</strong> Add the Plans / Tasks-Board / Activity routes + views + backend routes</li>
+<p>per the map. Dashboard landing aggregates a board + activity snapshot.</p>
+</ul>
+  </div>
+</details>
+<details class="section" id="risks-open">
+  <summary>
+    <span class="section-index">06</span>
+    <span class="section-title">Risks / open</span>
+    <span class="section-count">90 words</span>
+  </summary>
+  <div class="section-body">
+    <ul>
+<li><strong>P3 reach</strong>: the portal backend needs a path to the Mini Hermes (orchestrator MCP token +</li>
+<p>identity, reference_hermes_orchestrator_mcp_architecture). Decide: backend-on-Mini vs tailnet MCP call. Auth/identity for who-can-chat-as-which-client.</p>
+<li><strong>Auth model</strong>: app sign-in vs lean on Caddy basicauth. For a real client-facing portal,</li>
+<p>a per-client login is eventually needed (the map&#x27;s &quot;sign in as ecom&quot; is a stand-in now).</p>
+<li>Theme port: the variant-1 markup in <code>artifacts/hermes-theme-options.html</code> (<code>.v1</code>) is the</li>
+<p>reference; the brand placeholder (dot + &quot;HERMES&quot;) must become the real Hermes + GB logo lockup (<code>resources/brand/logo-suite/</code> has GB logo renders).</p>
 </ul>
   </div>
 </details>
@@ -557,21 +561,19 @@
     <div class="footer-inner">
       <div class="footer-label">Metadata</div>
       <div class="metadata-grid">
-        <div class="meta-item"><span>Source</span><strong>/Users/greg/repos/gbautomation-main/second-brain/plans/2026-06-12-tac-kanban-resilience-hardening-plan.md</strong></div>
-<div class="meta-item"><span>Generated</span><strong>2026-06-30T17:37:53-07:00</strong></div>
+        <div class="meta-item"><span>Source</span><strong>/Users/greg/repos/gbautomation-main/second-brain/plans/2026-06-21-client-portal-hermes-wrapper.md</strong></div>
+<div class="meta-item"><span>Generated</span><strong>2026-06-30T17:37:54-07:00</strong></div>
 <div class="meta-item"><span>Source modified</span><strong>2026-06-26T16:34:27-07:00</strong></div>
-<div class="meta-item"><span>Source size</span><strong>7,370 bytes</strong></div>
-<div class="meta-item"><span>Word count</span><strong>852</strong></div>
+<div class="meta-item"><span>Source size</span><strong>6,123 bytes</strong></div>
+<div class="meta-item"><span>Word count</span><strong>686</strong></div>
 <div class="meta-item"><span>Sections</span><strong>6</strong></div>
 <div class="meta-item"><span>Renderer</span><strong>resources/skills/netlify-cli/scripts/render_plan_page.py</strong></div>
-<div class="meta-item"><span>Description</span><strong>Evidence-backed hardening plan for the Hermes Kanban TAC team: 8.8k silent pid-not-alive respawns across 72 tasks, protocol-violation exits, and reason-less blocked cards — fixed via circuit breaker, death-note capture, Stop-hook completion enforcement, block-reason contract, context bundles, and dispatch preflight.</strong></div>
-<div class="meta-item"><span>Date</span><strong>2026-06-12</strong></div>
 <div class="meta-item"><span>Type</span><strong>plan</strong></div>
-<div class="meta-item"><span>Status</span><strong>draft</strong></div>
-<div class="meta-item"><span>Client</span><strong>gbautomation</strong></div>
-<div class="meta-item"><span>Priority</span><strong>high</strong></div>
-<div class="meta-item"><span>Tags</span><strong>plan, tac, hermes, kanban, resilience, hooks, domain/tac, domain/gbautomation</strong></div>
-<div class="meta-item"><span>Related</span><strong>[[tac-creed]], [[2026-06-02-trace-attribution-standard-plan]], [[2026-06-07-crawl-resilience-anti-bot-intelligence-prd]], [[2026-06-11-gbautomation-sprint-plan]]</strong></div>
+<div class="meta-item"><span>Description</span><strong>Refactor apps/client-portal into a Hermes-dashboard wrapper: Report-Paper left-sidebar shell (GB logo right of Hermes logo), sign in as the-mall (ecom) onto the dashboard, native backend→Hermes chat, and index→tab pages (Plans/Tasks/Activity). Locked decisions + phased P1–P4 build.</strong></div>
+<div class="meta-item"><span>Date</span><strong>2026-06-21</strong></div>
+<div class="meta-item"><span>Status</span><strong>ready</strong></div>
+<div class="meta-item"><span>Tags</span><strong>plan, client-portal, hermes, dashboard, frontend, ecom</strong></div>
+<div class="meta-item"><span>Related</span><strong>[[hermes-stack-wiring]], [[reference_hermes_orchestrator_mcp_architecture]], [[reference_hermes_mcp_bridge]], [[the-mall-app-client]], [[reference_ops_mac_mini_dashboard]]</strong></div>
       </div>
     </div>
   </footer>
@@ -583,7 +585,7 @@
         <span>On</span>
         <select id="fb-section">
           <option value="">Whole document</option>
-          <option value="Overview">Overview</option><option value="Why the sprint plans graded SHIPPED·PARTIAL">Why the sprint plans graded SHIPPED·PARTIAL</option><option value="Failure taxonomy (Supabase `agent_runs`, 2026-06-05..12, deduped run ids)">Failure taxonomy (Supabase `agent_runs`, 2026-06-05..12, deduped run ids)</option><option value="Hardening proposals (mapped to TAC creed + retrieved components)">Hardening proposals (mapped to TAC creed + retrieved components)</option><option value="Validation">Validation</option><option value="Success criteria">Success criteria</option>
+          <option value="Overview">Overview</option><option value="Locked decisions (2026-06-21, Greg)">Locked decisions (2026-06-21, Greg)</option><option value="Current architecture (verified 2026-06-21)">Current architecture (verified 2026-06-21)</option><option value="Sidebar (index → tab) map">Sidebar (index → tab) map</option><option value="Phased build">Phased build</option><option value="Risks / open">Risks / open</option>
         </select>
       </label>
       <textarea id="fb-msg" rows="3" maxlength="4000"
@@ -626,7 +628,7 @@
     (function () {
       var FN = "https://aejkzyjrlsfryfidwedm.supabase.co/functions/v1/feedback-capture";
       var KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFlamt6eWpybHNmcnlmaWR3ZWRtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1Mzc5MTUsImV4cCI6MjA5NDExMzkxNX0.UFowowM9b9fkIhrUdQ4B8uGJwbEqGPBr-bPSQe8CKA0";
-      var SLUG = "2026-06-12-tac-kanban-resilience-hardening-plan";
+      var SLUG = "2026-06-21-client-portal-hermes-wrapper";
       var form = document.getElementById('fb-form');
       if (!form) return;
       var status = document.getElementById('fb-status');
