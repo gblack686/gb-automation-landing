@@ -228,5 +228,27 @@
     "description": "",
     "category": "plan",
     "public_url": "https://gbautomation.xyz/prds/2026-06-07-crawl-resilience-anti-bot-intelligence-prd"
+  },
+  {
+    "slug": "pr-467-gbauto-cli",
+    "title": "PR #467 — feat(gbauto-cli): branded client CLI + Supabase-relay gateway + operator-gated dispatch (Phase 1)",
+    "date": "",
+    "status": "proposed",
+    "client": "gbautomation",
+    "priority": "",
+    "description": "",
+    "category": "pr-report",
+    "public_url": "https://gbautomation.xyz/prds/pr-467-gbauto-cli"
+  },
+  {
+    "slug": "pr-476-pr-report",
+    "title": "PR #476 — feat(pr-report): branded collapsible HTML report + KPI lineage receipt per merged PR",
+    "date": "",
+    "status": "proposed",
+    "client": "gbautomation",
+    "priority": "",
+    "description": "",
+    "category": "pr-report",
+    "public_url": "https://gbautomation.xyz/prds/pr-476-pr-report"
   }
 ]
