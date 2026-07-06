@@ -250,5 +250,16 @@
     "description": "",
     "category": "pr-report",
     "public_url": "https://gbautomation.xyz/prds/pr-476-pr-report"
+  },
+  {
+    "slug": "pr-481-jid5274-rails",
+    "title": "PR #481 — feat(jid5274): Carlos rails — hermes-profile-spec v1, tenant smoke catalog, client scaffold (jason-va retired)",
+    "date": "",
+    "status": "proposed",
+    "client": "gbautomation",
+    "priority": "",
+    "description": "",
+    "category": "pr-report",
+    "public_url": "https://gbautomation.xyz/prds/pr-481-jid5274-rails"
   }
 ]
