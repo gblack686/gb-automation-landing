@@ -283,5 +283,16 @@
     "description": "",
     "category": "pr-report",
     "public_url": "https://gbautomation.xyz/prds/pr-485-publish-hook-master-guard"
+  },
+  {
+    "slug": "pr-486-provisioner-cli-key",
+    "title": "PR #486 \u2014 feat(provision): step 9 cli-key \u2014 mint gbauto CLI API keys (hash-only staging, 1Password delivery)",
+    "date": "",
+    "status": "proposed",
+    "client": "gbautomation",
+    "priority": "",
+    "description": "",
+    "category": "pr-report",
+    "public_url": "https://gbautomation.xyz/prds/pr-486-provisioner-cli-key"
   }
 ]
