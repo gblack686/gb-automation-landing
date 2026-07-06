@@ -294,5 +294,16 @@
     "description": "",
     "category": "pr-report",
     "public_url": "https://gbautomation.xyz/prds/pr-486-provisioner-cli-key"
+  },
+  {
+    "slug": "pr-487-pr-kpi-rollup",
+    "title": "PR #487 \u2014 feat(pr-report): weekly KPI rollup renderer (pr_kpi_rollup)",
+    "date": "",
+    "status": "proposed",
+    "client": "gbautomation",
+    "priority": "",
+    "description": "",
+    "category": "pr-report",
+    "public_url": "https://gbautomation.xyz/prds/pr-487-pr-kpi-rollup"
   }
 ]
