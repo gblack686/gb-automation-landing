@@ -272,5 +272,16 @@
     "description": "",
     "category": "pr-report",
     "public_url": "https://gbautomation.xyz/prds/pr-488-prepush-report-carveout"
+  },
+  {
+    "slug": "pr-485-publish-hook-master-guard",
+    "title": "PR #485 \u2014 fix(publish): landing-repo master guard \u2014 fail loudly on branch drift",
+    "date": "",
+    "status": "proposed",
+    "client": "gbautomation",
+    "priority": "",
+    "description": "",
+    "category": "pr-report",
+    "public_url": "https://gbautomation.xyz/prds/pr-485-publish-hook-master-guard"
   }
 ]
