@@ -316,5 +316,16 @@
     "description": "",
     "category": "pr-report",
     "public_url": "https://gbautomation.xyz/prds/pr-490-track-backfill-lineage-script"
+  },
+  {
+    "slug": "pr-500-session-exit-summary",
+    "title": "PR #500 \u2014 feat(hooks): session-exit summarizer \u2014 Claude Code + Codex \u2192 second brain + agent_sessions",
+    "date": "",
+    "status": "proposed",
+    "client": "gbautomation",
+    "priority": "",
+    "description": "",
+    "category": "pr-report",
+    "public_url": "https://gbautomation.xyz/prds/pr-500-session-exit-summary"
   }
 ]
