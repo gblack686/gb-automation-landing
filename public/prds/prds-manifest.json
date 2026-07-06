@@ -305,5 +305,16 @@
     "description": "",
     "category": "pr-report",
     "public_url": "https://gbautomation.xyz/prds/pr-487-pr-kpi-rollup"
+  },
+  {
+    "slug": "pr-490-track-backfill-lineage-script",
+    "title": "PR #490 \u2014 fix(provenance): track backfill_prd_github_lineage.py (untracked dependency of pr_report)",
+    "date": "",
+    "status": "proposed",
+    "client": "gbautomation",
+    "priority": "",
+    "description": "",
+    "category": "pr-report",
+    "public_url": "https://gbautomation.xyz/prds/pr-490-track-backfill-lineage-script"
   }
 ]
