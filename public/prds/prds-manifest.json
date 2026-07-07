@@ -327,5 +327,16 @@
     "description": "",
     "category": "pr-report",
     "public_url": "https://gbautomation.xyz/prds/pr-500-session-exit-summary"
+  },
+  {
+    "slug": "pr-534-forest-test-repo-root",
+    "title": "PR #534 \u2014 fix(fleet): forest_gate test REPO_ROOT depth after move to tests/",
+    "date": "",
+    "status": "proposed",
+    "client": "gbautomation",
+    "priority": "",
+    "description": "",
+    "category": "pr-report",
+    "public_url": "https://gbautomation.xyz/prds/pr-534-forest-test-repo-root"
   }
 ]
