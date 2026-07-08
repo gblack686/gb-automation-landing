@@ -353,6 +353,20 @@
     .section-count{color:var(--text-mute,#8C8A84);font-size:14px;font-weight:600;white-space:nowrap;text-transform:none;letter-spacing:0}
     
     
+.feedback{max-width:1360px;margin:0 auto;padding:22px 24px 56px}
+.feedback-label{margin-bottom:10px;color:var(--text-mute,#8C8A84);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+#fb-form{display:flex;flex-direction:column;gap:10px;max-width:640px}
+.fb-row{display:flex;align-items:center;gap:8px;color:var(--text-muted-2,#5C5C5C);font-size:12px}
+#fb-section,#fb-msg{width:100%;border:1px solid var(--stone,#D6D4C8);border-radius:6px;background:rgba(255,255,255,.42);padding:9px 10px;color:var(--ink,#191919);font:inherit;font-size:13px}
+#fb-section{width:auto;flex:1}
+#fb-msg{resize:vertical;line-height:1.4}
+#fb-hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.fb-actions{display:flex;align-items:center;gap:12px}
+#fb-submit{border:0;border-radius:6px;background:var(--terracotta,#D97757);padding:9px 16px;color:#fff;font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+#fb-submit:disabled{opacity:.6;cursor:default}
+.fb-status{color:var(--text-muted-2,#5C5C5C);font-size:12px}
+@media print{.feedback{display:none !important}}
+
   </style>
 </head>
 <body>
@@ -486,14 +500,74 @@
 </details>
     </div>
   </main>
-  <!-- feedback widget disabled (no anon key) -->
+  
+  <section class="feedback" aria-label="Leave feedback on this document">
+    <div class="feedback-label">Leave a comment on this document</div>
+    <form id="fb-form" autocomplete="off">
+      <label class="fb-row">
+        <span>On</span>
+        <select id="fb-section">
+          <option value="">Whole document</option>
+          <option value="Overview">Overview</option><option value="Summary">Summary</option><option value="Outcome">Outcome</option><option value="What Changed">What Changed</option><option value="Commits">Commits</option><option value="Verification">Verification</option><option value="Links &amp; Receipts">Links &amp; Receipts</option>
+        </select>
+      </label>
+      <textarea id="fb-msg" rows="3" maxlength="4000"
+        placeholder="Your comment, question, or correction&#8230;"></textarea>
+      <!-- honeypot: real users never see or fill this -->
+      <input type="text" id="fb-hp" name="website_url" tabindex="-1"
+        autocomplete="off" aria-hidden="true">
+      <div class="fb-actions">
+        <button type="submit" id="fb-submit">Send feedback</button>
+        <span id="fb-status" class="fb-status" aria-live="polite"></span>
+      </div>
+    </form>
+  </section>
+  <script>
+    (function () {
+      var FN = "https://aejkzyjrlsfryfidwedm.supabase.co/functions/v1/feedback-capture";
+      var KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFlamt6eWpybHNmcnlmaWR3ZWRtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1Mzc5MTUsImV4cCI6MjA5NDExMzkxNX0.UFowowM9b9fkIhrUdQ4B8uGJwbEqGPBr-bPSQe8CKA0";
+      var SLUG = "pr-534-forest-test-repo-root";
+      var form = document.getElementById('fb-form');
+      if (!form) return;
+      var status = document.getElementById('fb-status');
+      var submit = document.getElementById('fb-submit');
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var msg = (document.getElementById('fb-msg').value || '').trim();
+        if (msg.length < 2) { status.textContent = 'Please add a comment.'; return; }
+        if (!KEY) { status.textContent = 'Feedback is not configured for this page.'; return; }
+        submit.disabled = true;
+        status.textContent = 'Sending\u2026';
+        fetch(FN, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + KEY,
+            'apikey': KEY,
+          },
+          body: JSON.stringify({
+            message: msg,
+            plan_slug: SLUG,
+            section: document.getElementById('fb-section').value || null,
+            page_url: location.href,
+            website_url: document.getElementById('fb-hp').value,
+          }),
+        }).then(function (r) {
+          if (r.ok) { form.reset(); status.textContent = 'Thanks \u2014 feedback received.'; }
+          else { status.textContent = 'Could not send. Please try again.'; }
+        }).catch(function () {
+          status.textContent = 'Network error. Please try again.';
+        }).finally(function () { submit.disabled = false; });
+      });
+    })();
+  </script>
   <footer>
     <div class="footer-inner">
       <div class="footer-label">Metadata</div>
       <div class="metadata-grid">
         <div class="meta-item"><span>Source</span><strong>C:\Users\gblac\OneDrive\Desktop\gbauto\gbautomation\artifacts\pr-reports\534-forest-test-repo-root\pr-534-forest-test-repo-root.md</strong></div>
-<div class="meta-item"><span>Generated</span><strong>2026-07-06T23:45:32-07:00</strong></div>
-<div class="meta-item"><span>Source modified</span><strong>2026-07-06T23:39:27-07:00</strong></div>
+<div class="meta-item"><span>Generated</span><strong>2026-07-07T18:42:19-07:00</strong></div>
+<div class="meta-item"><span>Source modified</span><strong>2026-07-07T18:41:59-07:00</strong></div>
 <div class="meta-item"><span>Source size</span><strong>2,062 bytes</strong></div>
 <div class="meta-item"><span>Word count</span><strong>196</strong></div>
 <div class="meta-item"><span>Sections</span><strong>7</strong></div>
