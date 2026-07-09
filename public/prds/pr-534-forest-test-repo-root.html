@@ -353,18 +353,31 @@
     .section-count{color:var(--text-mute,#8C8A84);font-size:14px;font-weight:600;white-space:nowrap;text-transform:none;letter-spacing:0}
     
     
-.feedback{max-width:1360px;margin:0 auto;padding:22px 24px 56px}
-.feedback-label{margin-bottom:10px;color:var(--text-mute,#8C8A84);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
-#fb-form{display:flex;flex-direction:column;gap:10px;max-width:640px}
+.feedback{position:fixed;inset:0 0 auto auto;z-index:2147483000;font-size:13px;pointer-events:none}
+.feedback .fb-tab,.feedback .fb-drawer{pointer-events:auto}
+.fb-tab{position:fixed;right:0;top:44%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;border:0;border-radius:9px 0 0 9px;background:var(--terracotta,#D97757);color:#fff;font:inherit;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:16px 8px;cursor:pointer;writing-mode:vertical-rl;text-orientation:mixed;box-shadow:-2px 2px 12px rgba(0,0,0,.18);transition:background .15s,right .22s ease}
+.fb-tab:hover{background:#c8664a}
+.fb-tab-key{margin-top:9px;font-size:9px;font-weight:600;opacity:.82;letter-spacing:.05em}
+.fb-drawer{position:fixed;top:0;right:0;height:100%;width:372px;max-width:88vw;box-sizing:border-box;background:var(--cream,#F3F1E7);border-left:1px solid var(--stone,#D6D4C8);box-shadow:-10px 0 34px rgba(0,0,0,.17);transform:translateX(100%);transition:transform .22s ease;padding:22px 22px 28px;overflow-y:auto;display:flex;flex-direction:column}
+.feedback[data-fb-open="true"] .fb-drawer{transform:translateX(0)}
+.feedback[data-fb-open="true"] .fb-tab{right:372px}
+@media (max-width:560px){.fb-drawer{width:100%;max-width:100%}.feedback[data-fb-open="true"] .fb-tab{right:0;opacity:0;pointer-events:none}}
+.fb-drawer-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
+.feedback-label{color:var(--text-mute,#8C8A84);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;line-height:1.5}
+.fb-close{border:0;background:none;font-size:24px;line-height:1;color:var(--text-muted-2,#5C5C5C);cursor:pointer;padding:0 2px}
+.fb-close:hover{color:var(--ink,#191919)}
+#fb-form{display:flex;flex-direction:column;gap:11px}
 .fb-row{display:flex;align-items:center;gap:8px;color:var(--text-muted-2,#5C5C5C);font-size:12px}
-#fb-section,#fb-msg{width:100%;border:1px solid var(--stone,#D6D4C8);border-radius:6px;background:rgba(255,255,255,.42);padding:9px 10px;color:var(--ink,#191919);font:inherit;font-size:13px}
+#fb-section,#fb-msg{width:100%;border:1px solid var(--stone,#D6D4C8);border-radius:6px;background:rgba(255,255,255,.55);padding:9px 10px;color:var(--ink,#191919);font:inherit;font-size:13px;box-sizing:border-box}
 #fb-section{width:auto;flex:1}
-#fb-msg{resize:vertical;line-height:1.4}
+#fb-msg{resize:vertical;line-height:1.45;min-height:96px}
 #fb-hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
 .fb-actions{display:flex;align-items:center;gap:12px}
 #fb-submit{border:0;border-radius:6px;background:var(--terracotta,#D97757);padding:9px 16px;color:#fff;font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+#fb-submit:hover{background:#c8664a}
 #fb-submit:disabled{opacity:.6;cursor:default}
 .fb-status{color:var(--text-muted-2,#5C5C5C);font-size:12px}
+.fb-hint{margin:2px 0 0;color:var(--text-mute,#8C8A84);font-size:11px;line-height:1.4}
 @media print{.feedback{display:none !important}}
 
   </style>
@@ -501,27 +514,37 @@
     </div>
   </main>
   
-  <section class="feedback" aria-label="Leave feedback on this document">
-    <div class="feedback-label">Leave a comment on this document</div>
-    <form id="fb-form" autocomplete="off">
-      <label class="fb-row">
-        <span>On</span>
-        <select id="fb-section">
-          <option value="">Whole document</option>
-          <option value="Overview">Overview</option><option value="Summary">Summary</option><option value="Outcome">Outcome</option><option value="What Changed">What Changed</option><option value="Commits">Commits</option><option value="Verification">Verification</option><option value="Links &amp; Receipts">Links &amp; Receipts</option>
-        </select>
-      </label>
-      <textarea id="fb-msg" rows="3" maxlength="4000"
-        placeholder="Your comment, question, or correction&#8230;"></textarea>
-      <!-- honeypot: real users never see or fill this -->
-      <input type="text" id="fb-hp" name="website_url" tabindex="-1"
-        autocomplete="off" aria-hidden="true">
-      <div class="fb-actions">
-        <button type="submit" id="fb-submit">Send feedback</button>
-        <span id="fb-status" class="fb-status" aria-live="polite"></span>
+  <div class="feedback" data-fb-open="false">
+    <button type="button" class="fb-tab" aria-expanded="false" aria-controls="fb-drawer">
+      Feedback<span class="fb-tab-key">Ctrl+J</span>
+    </button>
+    <aside id="fb-drawer" class="fb-drawer" role="dialog"
+      aria-label="Leave feedback on this document" aria-hidden="true">
+      <div class="fb-drawer-head">
+        <span class="feedback-label">Leave a comment on this document</span>
+        <button type="button" class="fb-close" aria-label="Close feedback">&#215;</button>
       </div>
-    </form>
-  </section>
+      <form id="fb-form" autocomplete="off">
+        <label class="fb-row">
+          <span>On</span>
+          <select id="fb-section">
+            <option value="">Whole document</option>
+            <option value="Overview">Overview</option><option value="Summary">Summary</option><option value="Outcome">Outcome</option><option value="What Changed">What Changed</option><option value="Commits">Commits</option><option value="Verification">Verification</option><option value="Links &amp; Receipts">Links &amp; Receipts</option>
+          </select>
+        </label>
+        <textarea id="fb-msg" rows="4" maxlength="4000"
+          placeholder="Your comment, question, or correction&#8230;"></textarea>
+        <!-- honeypot: real users never see or fill this -->
+        <input type="text" id="fb-hp" name="website_url" tabindex="-1"
+          autocomplete="off" aria-hidden="true">
+        <div class="fb-actions">
+          <button type="submit" id="fb-submit">Send feedback</button>
+          <span id="fb-status" class="fb-status" aria-live="polite"></span>
+        </div>
+        <p class="fb-hint">Ctrl+Enter to send &middot; Ctrl+J or Esc to close</p>
+      </form>
+    </aside>
+  </div>
   <script>
     (function () {
       var FN = "https://aejkzyjrlsfryfidwedm.supabase.co/functions/v1/feedback-capture";
@@ -529,12 +552,49 @@
       var SLUG = "pr-534-forest-test-repo-root";
       var form = document.getElementById('fb-form');
       if (!form) return;
+      var root = document.querySelector('.feedback');
+      var drawer = document.getElementById('fb-drawer');
+      var tab = root.querySelector('.fb-tab');
+      var closeBtn = root.querySelector('.fb-close');
+      var section = document.getElementById('fb-section');
+      var msg = document.getElementById('fb-msg');
       var status = document.getElementById('fb-status');
       var submit = document.getElementById('fb-submit');
+
+      function setOpen(open) {
+        root.setAttribute('data-fb-open', open ? 'true' : 'false');
+        tab.setAttribute('aria-expanded', open ? 'true' : 'false');
+        drawer.setAttribute('aria-hidden', open ? 'false' : 'true');
+        if (open) { (section || msg).focus(); } else { tab.focus(); }
+      }
+      function toggle() { setOpen(root.getAttribute('data-fb-open') !== 'true'); }
+
+      tab.addEventListener('click', toggle);
+      closeBtn.addEventListener('click', function () { setOpen(false); });
+      // Ctrl+J (or Cmd+J) pops the drawer open/closed; Esc closes it.
+      document.addEventListener('keydown', function (e) {
+        if ((e.ctrlKey || e.metaKey) && (e.key === 'j' || e.key === 'J')) { e.preventDefault(); toggle(); }
+        else if (e.key === 'Escape' && root.getAttribute('data-fb-open') === 'true') { setOpen(false); }
+      });
+      // Ctrl+Enter from the comment box submits.
+      msg.addEventListener('keydown', function (e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+          e.preventDefault();
+          if (form.requestSubmit) form.requestSubmit();
+          else form.dispatchEvent(new Event('submit', { cancelable: true }));
+        }
+      });
+      // Click outside the drawer (and not on the tab) closes it.
+      document.addEventListener('click', function (e) {
+        if (root.getAttribute('data-fb-open') !== 'true') return;
+        if (drawer.contains(e.target) || tab.contains(e.target)) return;
+        setOpen(false);
+      });
+
       form.addEventListener('submit', function (e) {
         e.preventDefault();
-        var msg = (document.getElementById('fb-msg').value || '').trim();
-        if (msg.length < 2) { status.textContent = 'Please add a comment.'; return; }
+        var text = (msg.value || '').trim();
+        if (text.length < 2) { status.textContent = 'Please add a comment.'; return; }
         if (!KEY) { status.textContent = 'Feedback is not configured for this page.'; return; }
         submit.disabled = true;
         status.textContent = 'Sending\u2026';
@@ -546,15 +606,19 @@
             'apikey': KEY,
           },
           body: JSON.stringify({
-            message: msg,
+            message: text,
             plan_slug: SLUG,
-            section: document.getElementById('fb-section').value || null,
+            section: section.value || null,
             page_url: location.href,
             website_url: document.getElementById('fb-hp').value,
           }),
         }).then(function (r) {
-          if (r.ok) { form.reset(); status.textContent = 'Thanks \u2014 feedback received.'; }
-          else { status.textContent = 'Could not send. Please try again.'; }
+          if (r.ok) {
+            form.reset();
+            status.textContent = 'Thanks \u2014 feedback received.';
+            // Drawer closes shortly after a successful send (preferred UX).
+            setTimeout(function () { setOpen(false); status.textContent = ''; }, 1200);
+          } else { status.textContent = 'Could not send. Please try again.'; }
         }).catch(function () {
           status.textContent = 'Network error. Please try again.';
         }).finally(function () { submit.disabled = false; });
@@ -566,8 +630,8 @@
       <div class="footer-label">Metadata</div>
       <div class="metadata-grid">
         <div class="meta-item"><span>Source</span><strong>C:\Users\gblac\OneDrive\Desktop\gbauto\gbautomation\artifacts\pr-reports\534-forest-test-repo-root\pr-534-forest-test-repo-root.md</strong></div>
-<div class="meta-item"><span>Generated</span><strong>2026-07-07T18:42:19-07:00</strong></div>
-<div class="meta-item"><span>Source modified</span><strong>2026-07-07T18:41:59-07:00</strong></div>
+<div class="meta-item"><span>Generated</span><strong>2026-07-08T22:07:02-07:00</strong></div>
+<div class="meta-item"><span>Source modified</span><strong>2026-07-08T18:17:00-07:00</strong></div>
 <div class="meta-item"><span>Source size</span><strong>2,062 bytes</strong></div>
 <div class="meta-item"><span>Word count</span><strong>196</strong></div>
 <div class="meta-item"><span>Sections</span><strong>7</strong></div>
