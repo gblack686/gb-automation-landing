@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Host Job Runs</title>
+<style>
+  :root{
+    --terracotta:#D97757; --cream:#F3F1E7; --ink:#191919;
+    --panel:rgba(25,25,25,.72); --line:rgba(243,241,231,.14);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;overflow:hidden;background:#121110;color:var(--cream);
+    font-family:Inter,-apple-system,"Segoe UI",Roboto,sans-serif;}
+  #app{position:fixed;inset:0}
+  canvas{display:block}
+  .head{position:absolute;top:18px;left:20px;z-index:10;pointer-events:none}
+  .head h1{margin:0;font-family:Newsreader,Georgia,serif;font-weight:500;font-size:22px;letter-spacing:.2px}
+  .head p{margin:4px 0 0;font-size:12px;color:rgba(243,241,231,.55)}
+  .panel{position:absolute;top:18px;right:20px;z-index:10;width:268px;
+    background:var(--panel);backdrop-filter:blur(14px);
+    border:1px solid var(--line);border-radius:14px;padding:14px 14px 12px;
+    box-shadow:0 12px 40px rgba(0,0,0,.45)}
+  .panel .sec{font-size:10px;text-transform:uppercase;letter-spacing:.16em;
+    color:rgba(243,241,231,.45);margin:2px 0 8px}
+  .ctl{margin-bottom:11px}
+  .ctl label{display:flex;align-items:center;gap:8px;font-size:11px;
+    color:rgba(243,241,231,.6);margin-bottom:5px}
+  .dot{width:9px;height:9px;border-radius:3px;flex:0 0 auto}
+  select{width:100%;appearance:none;background:#1d1c1a;color:var(--cream);
+    border:1px solid var(--line);border-radius:9px;padding:8px 10px;font-size:13px;
+    cursor:pointer;font-family:inherit}
+  select:hover{border-color:rgba(217,119,87,.6)}
+  input[type=text]{width:100%;background:#1d1c1a;color:var(--cream);
+    border:1px solid var(--line);border-radius:9px;padding:8px 10px;font-size:13px;
+    font-family:inherit;outline:none}
+  input[type=text]:focus{border-color:rgba(217,119,87,.6)}
+  input[type=text]::placeholder{color:rgba(243,241,231,.35)}
+  .row{display:flex;gap:8px;margin-top:10px}
+  .btn{flex:1;background:#1d1c1a;color:var(--cream);border:1px solid var(--line);
+    border-radius:9px;padding:8px 6px;font-size:11px;cursor:pointer;
+    display:flex;flex-direction:column;align-items:center;gap:3px;font-family:inherit;
+    transition:border-color .15s,background .15s}
+  .btn:hover{border-color:rgba(217,119,87,.6)}
+  .btn.on{background:var(--terracotta);border-color:var(--terracotta);color:#1a1208;font-weight:600}
+  .btn .k{font-size:9px;letter-spacing:.1em;text-transform:uppercase;opacity:.7}
+  .hint{margin-top:11px;font-size:10.5px;line-height:1.5;color:rgba(243,241,231,.4)}
+  .stats{position:absolute;bottom:16px;left:20px;z-index:10;display:flex;gap:22px;
+    font-size:11px;color:rgba(243,241,231,.5)}
+  .stats b{color:var(--cream);font-size:15px;font-weight:600;display:block;
+    font-family:Newsreader,Georgia,serif}
+  #tip{position:fixed;z-index:30;pointer-events:none;opacity:0;transition:opacity .12s;
+    background:rgba(20,19,18,.96);border:1px solid rgba(217,119,87,.5);
+    border-radius:10px;padding:9px 12px;font-size:12px;max-width:240px;
+    box-shadow:0 8px 30px rgba(0,0,0,.5)}
+  #tip .t{font-weight:600;margin-bottom:3px}
+  #tip .s{color:rgba(243,241,231,.6);font-size:11px}
+  #tip .pct{color:var(--terracotta);font-weight:600}
+  .credit{position:absolute;bottom:16px;right:20px;z-index:10;font-size:10px;
+    color:rgba(243,241,231,.3)}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<div class="head">
+  <h1>Host Job Runs</h1>
+  <p>11 runs across three dimensions · drag to orbit, scroll to zoom</p>
+</div>
+
+<div class="panel">
+  <div class="sec">Columns</div>
+  <div class="ctl">
+    <label><span class="dot" style="background:#D97757"></span>Left column</label>
+    <select id="dimA"></select>
+  </div>
+  <div class="ctl">
+    <label><span class="dot" style="background:#6BA8A0"></span>Middle column</label>
+    <select id="dimB"></select>
+  </div>
+  <div class="ctl">
+    <label><span class="dot" style="background:#C9A14A"></span>Right column</label>
+    <select id="dimC"></select>
+  </div>
+
+  <div class="sec" style="margin-top:14px">Find</div>
+  <div class="ctl">
+    <input id="search" type="text" placeholder="Filter categories…" autocomplete="off" spellcheck="false" />
+  </div>
+
+  <div class="sec" id="measSec" style="margin-top:14px;display:none">Measure</div>
+  <div class="row" id="measRow" style="display:none">
+    <button class="btn on" id="mCount"><span class="k">Flow</span>Count</button>
+    <button class="btn" id="mWeight"><span class="k">Flow</span><span id="mWeightLbl">Weight</span></button>
+  </div>
+
+  <div class="sec" style="margin-top:14px">Size mode</div>
+  <div class="row">
+    <button class="btn on" id="mProp"><span class="k">Bars</span>Proportional</button>
+    <button class="btn" id="mEq"><span class="k">Bars</span>Equalized</button>
+  </div>
+  <div class="row">
+    <button class="btn on" id="rotOn"><span class="k">Camera</span>Auto-rotate</button>
+    <button class="btn" id="rotOff"><span class="k">Camera</span>Hold</button>
+  </div>
+
+  <div class="sec" style="margin-top:14px">Actions</div>
+  <div class="row">
+    <button class="btn" id="savePng"><span class="k">Export</span>Save PNG</button>
+    <button class="btn" id="clearPin" style="display:none"><span class="k">Pin</span>Clear</button>
+  </div>
+  <div class="hint"><b>Measure</b> sets what flow thickness counts — record count or a numeric total. <b>Proportional</b> sizes bars by that measure; <b>Equalized</b> gives every category equal height so small ones stay visible. <b>Find</b> dims non-matching categories; <b>click</b> a bar to pin its flows (click again or <b>Clear</b> to release); <b>Save PNG</b> snapshots the current view.</div>
+</div>
+
+<div class="stats">
+  <div><b id="sNodes">0</b>categories</div>
+  <div><b id="sLinks">0</b>flows</div>
+  <div><b id="sTotal">0</b>runs routed</div>
+</div>
+<div class="credit">three.js · sankey3js</div>
+<div id="tip"></div>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+}}
+</script>
+
+<script type="module">
+import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+
+const DATA = {"count":11,"records":[{"job_name":"ecom-hourly-lane","host":"mac-mini","status":"success","scheduler":"launchd","n":2.0},{"job_name":"task-telegram-notify","host":"mac-mini","status":"success","scheduler":"cron","n":2.0},{"job_name":"invoke-with-receipt","host":"windows-pc","status":"success","scheduler":"windows-task","n":2.0},{"job_name":"ecom-hourly-lane","host":"mac-mini","status":"failed","scheduler":"launchd","n":1.0},{"job_name":"prd-index-sync","host":"mac-mini","status":"success","scheduler":"cron","n":1.0},{"job_name":"prd-index-sync","host":"mac-mini","status":"failed","scheduler":"cron","n":1.0},{"job_name":"task-telegram-notify","host":"mac-mini","status":"running","scheduler":"cron","n":1.0},{"job_name":"artifacts-nightly-diff","host":"mac-mini","status":"success","scheduler":"cron","n":1.0},{"job_name":"commit-cleaner","host":"windows-pc","status":"success","scheduler":"windows-task","n":1.0},{"job_name":"commit-cleaner","host":"windows-pc","status":"failed","scheduler":"windows-task","n":1.0},{"job_name":"graphify-sync","host":"mac-mini","status":"success","scheduler":"launchd","n":1.0}]};
+const RECORDS = DATA.records;
+const DIMS = [{"key": "job_name", "label": "Job Name"}, {"key": "host", "label": "Host"}, {"key": "status", "label": "Status"}, {"key": "scheduler", "label": "Scheduler"}];            // [{key,label}, ...]
+let dims = ["job_name", "host", "status"];          // ["keyA","keyB","keyC"]
+const WEIGHT = {"key": "n", "label": "Count"};        // {key,label} | null
+let measure = "count";           // "count" | "weight"
+
+// active per-record contribution to flow size
+function recVal(r){ return (WEIGHT && measure==="weight") ? (+r[WEIGHT.key]||0) : 1; }
+function fmt(n){ n=Math.round(n); return n>=1000 ? (n/1000).toFixed(n>=10000?0:1)+"k" : String(n); }
+function measureLabel(){ return (WEIGHT && measure==="weight") ? WEIGHT.label : "records"; }
+
+const PALETTE = [
+  "#D97757","#6BA8A0","#C9A14A","#7E9CC4","#C77B8B","#8FB36B","#B98AD1",
+  "#D99A4E","#5FA6B5","#CB6F5A","#A9B05E","#9785C9","#D08AA0","#6FB394",
+  "#C5915C","#7FA2B8","#BE7C9C","#9CB071","#C98F66","#86A8C0",
+];
+
+const COL_X = [-9.5, 0, 9.5];
+const COL_H = 11, GAP = 0.16, NODE_W = 0.85, NODE_D = 1.4, SEG = 26;
+const SEP = " ";
+
+const app = document.getElementById("app");
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x121110);
+scene.fog = new THREE.Fog(0x121110, 26, 52);
+const camera = new THREE.PerspectiveCamera(46, innerWidth/innerHeight, 0.1, 200);
+camera.position.set(2, 6, 30);
+const renderer = new THREE.WebGLRenderer({ antialias:true, preserveDrawingBuffer:true });
+renderer.setSize(innerWidth, innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+app.appendChild(renderer.domElement);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true; controls.dampingFactor = 0.08;
+controls.target.set(0,0,0); controls.minDistance = 14; controls.maxDistance = 48;
+controls.autoRotate = true; controls.autoRotateSpeed = 0.45;
+scene.add(new THREE.AmbientLight(0xffffff, 0.85));
+const klight = new THREE.DirectionalLight(0xffffff, 0.9); klight.position.set(6,12,14); scene.add(klight);
+const rim = new THREE.DirectionalLight(0xD97757, 0.35); rim.position.set(-10,4,-8); scene.add(rim);
+
+let mode = "prop", current = null, outgoing = null;
+const clock = new THREE.Clock();
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2(-2,-2);
+let hovered = null;
+let pinned = null, pinnedSel = null, searchTerm = "";
+const TITLE_SLUG = (document.title||"sankey").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"") || "sankey";
+
+function colorFor(i){ return PALETTE[i % PALETTE.length]; }
+function buildColumn(dimKey){
+  const agg=new Map();   // value -> {n, size}
+  for(const r of RECORDS){ const v=r[dimKey] ?? "(none)";
+    const a=agg.get(v)||{n:0,size:0}; a.n+=1; a.size+=recVal(r); agg.set(v,a); }
+  return [...agg.entries()].sort((a,b)=> b[1].size-a[1].size || String(a[0]).localeCompare(String(b[0])))
+    .map(([value,a],i)=>({value:String(value),n:a.n,size:a.size,idx:i}));
+}
+function layoutColumn(nodes, colIndex){
+  const n=nodes.length, total=nodes.reduce((s,x)=>s+x.size,0)||1;
+  const usable=COL_H-GAP*(n-1); let y=COL_H/2; const x=COL_X[colIndex];
+  for(const nd of nodes){
+    const h = mode==="prop" ? (nd.size/total)*usable : usable/n;
+    nd.h=Math.max(h,0.02); nd.yTop=y; nd.yBot=y-nd.h; nd.yc=(y+nd.yBot)/2; nd.x=x; nd.col=colIndex;
+    nd.color=colorFor(colIndex===0?nd.idx:colIndex===1?nd.idx+7:nd.idx+13);
+    y=nd.yBot-GAP;
+  }
+  return nodes;
+}
+function linkPairs(keyA,keyB){
+  const m=new Map();   // "a\0b" -> size
+  for(const r of RECORDS){ const a=r[keyA]??"(none)",b=r[keyB]??"(none)";
+    const k=a+SEP+b; m.set(k,(m.get(k)||0)+recVal(r)); }
+  return m;
+}
+function allocBands(node,links){
+  const sorted=[...links].sort((a,b)=>a.partnerIdx-b.partnerIdx);
+  const total=sorted.reduce((s,x)=>s+x.v,0)||1; let y=node.yTop; const bands=new Map();
+  for(const l of sorted){ const h=(l.v/total)*node.h; bands.set(l.partnerIdx,{top:y,bot:y-h}); y-=h; }
+  return bands;
+}
+function smoother(t){ return t*t*t*(t*(t*6-15)+10); }
+function ribbonGeometry(sx,sTop,sBot,tx,tTop,tBot){
+  const pos=[];
+  for(let i=0;i<=SEG;i++){ const t=i/SEG,e=smoother(t),x=sx+(tx-sx)*t;
+    const top=sTop+(tTop-sTop)*e, bot=sBot+(tBot-sBot)*e; pos.push(x,top,0,x,bot,0); }
+  const idx=[]; for(let i=0;i<SEG;i++){ const a=2*i,b=2*i+1,c=2*i+2,d=2*i+3; idx.push(a,b,d,a,d,c); }
+  const g=new THREE.BufferGeometry();
+  g.setAttribute("position",new THREE.Float32BufferAttribute(pos,3)); g.setIndex(idx); return g;
+}
+function makeLabel(text,count){
+  const pad=14,fs=34,cv=document.createElement("canvas"),ctx=cv.getContext("2d");
+  ctx.font=`600 ${fs}px Inter, sans-serif`;
+  const main=text.length>22?text.slice(0,21)+"…":text, sub=`  ${count}`;
+  const w=Math.ceil(ctx.measureText(main+sub).width)+pad*2, h=fs+pad*2;
+  cv.width=w; cv.height=h; ctx.font=`600 ${fs}px Inter, sans-serif`; ctx.textBaseline="middle";
+  ctx.fillStyle="#F3F1E7"; ctx.fillText(main,pad,h/2);
+  ctx.fillStyle="#D97757"; ctx.fillText(sub,pad+ctx.measureText(main).width,h/2);
+  const tex=new THREE.CanvasTexture(cv); tex.anisotropy=4;
+  const mat=new THREE.SpriteMaterial({map:tex,transparent:true,depthTest:false});
+  const sp=new THREE.Sprite(mat); sp.scale.set(w/h*0.95,0.95,1); sp.userData.aspect=w/h; return sp;
+}
+function buildScene(){
+  const root=new THREE.Group();
+  const cols=dims.map((d,i)=>layoutColumn(buildColumn(d),i));
+  const colIndex=cols.map(c=>{const m=new Map();c.forEach((n,i)=>m.set(n.value,i));return m;});
+  const nodeMeshes=[], ribbonMeshes=[];
+  for(let ci=0;ci<3;ci++){
+    for(const nd of cols[ci]){
+      const geo=new THREE.BoxGeometry(NODE_W,nd.h,NODE_D);
+      const mat=new THREE.MeshStandardMaterial({color:new THREE.Color(nd.color),roughness:.55,metalness:.05,
+        transparent:true,opacity:0,emissive:new THREE.Color(nd.color),emissiveIntensity:.12});
+      const mesh=new THREE.Mesh(geo,mat); mesh.position.set(nd.x,nd.yc,0);
+      mesh.userData={node:nd,kind:"node",baseColor:nd.color}; root.add(mesh); nodeMeshes.push(mesh);
+      if(nd.h>=0.34){
+        const lab=makeLabel(nd.value,fmt(nd.size)); const sx=lab.userData.aspect*0.95;
+        if(ci===1){ lab.position.set(nd.x,nd.yc,NODE_D/2+0.05); lab.scale.set(sx*0.62,0.62,1); }
+        else{ lab.position.set(nd.x+(ci===0?-1:1)*(sx*0.95/2+NODE_W/2+0.25),nd.yc,0); }
+        lab.material.opacity=0; lab.userData={kind:"label"}; root.add(lab);
+      }
+    }
+  }
+  function makeRibbons(lc,rc,leftNodes,rightNodes,lIdx,rIdx){
+    const pairs=linkPairs(dims[lc],dims[rc]);
+    const outByNode=new Map(),inByNode=new Map();
+    for(const [k,v] of pairs){ const [a,b]=k.split(SEP);
+      if(!lIdx.has(a)||!rIdx.has(b))continue;
+      (outByNode.get(a)||outByNode.set(a,[]).get(a)).push({v,partnerIdx:rIdx.get(b)});
+      (inByNode.get(b)||inByNode.set(b,[]).get(b)).push({v,partnerIdx:lIdx.get(a)});
+    }
+    const outBands=new Map(),inBands=new Map();
+    for(const nd of leftNodes) outBands.set(nd.value,allocBands(nd,outByNode.get(nd.value)||[]));
+    for(const nd of rightNodes) inBands.set(nd.value,allocBands(nd,inByNode.get(nd.value)||[]));
+    for(const [k,v] of pairs){ const [a,b]=k.split(SEP);
+      if(!lIdx.has(a)||!rIdx.has(b))continue;
+      const sn=leftNodes[lIdx.get(a)],tn=rightNodes[rIdx.get(b)];
+      const sBand=outBands.get(a).get(rIdx.get(b)), tBand=inBands.get(b).get(lIdx.get(a));
+      if(!sBand||!tBand)continue;
+      const geo=ribbonGeometry(sn.x+NODE_W/2,sBand.top,sBand.bot,tn.x-NODE_W/2,tBand.top,tBand.bot);
+      const mat=new THREE.MeshBasicMaterial({color:new THREE.Color(sn.color),transparent:true,opacity:0,
+        side:THREE.DoubleSide,depthWrite:false});
+      const mesh=new THREE.Mesh(geo,mat); mesh.renderOrder=1;
+      mesh.userData={kind:"ribbon",srcVal:a,dstVal:b,v,baseAlpha:0.42};
+      root.add(mesh); ribbonMeshes.push(mesh);
+    }
+  }
+  makeRibbons(0,1,cols[0],cols[1],colIndex[0],colIndex[1]);
+  makeRibbons(1,2,cols[1],cols[2],colIndex[1],colIndex[2]);
+  document.getElementById("sNodes").textContent=cols.reduce((s,c)=>s+c.length,0);
+  document.getElementById("sLinks").textContent=ribbonMeshes.length;
+  const grand=cols[0].reduce((s,x)=>s+x.size,0);
+  document.getElementById("sTotal").textContent=
+    (WEIGHT&&measure==="weight") ? fmt(grand) : RECORDS.length;
+  scene.add(root);
+  return {root,nodes:nodeMeshes,ribbons:ribbonMeshes,fade:0};
+}
+function disposeGroup(g){ scene.remove(g); g.traverse(o=>{ if(o.geometry)o.geometry.dispose();
+  if(o.material){ if(o.material.map)o.material.map.dispose(); o.material.dispose(); } }); }
+function rebuild(){ if(outgoing){disposeGroup(outgoing.root);outgoing=null;}
+  if(current){outgoing=current;} current=buildScene(); current.fade=0; resolvePin(); }
+function setPin(nd){ pinnedSel = nd ? {value:nd.value,col:nd.col} : null; pinned = nd;
+  document.getElementById("clearPin").style.display = nd ? "" : "none"; }
+function resolvePin(){   // re-bind the pinned selection to a node in the freshly built scene
+  if(!pinnedSel){ pinned=null; document.getElementById("clearPin").style.display="none"; return; }
+  pinned = current.nodes.map(m=>m.userData.node)
+    .find(n=>n.value===pinnedSel.value && n.col===pinnedSel.col) || null;
+  if(!pinned) pinnedSel=null;
+  document.getElementById("clearPin").style.display = pinned ? "" : "none"; }
+function savePng(){   // render-on-demand then capture (renderer uses preserveDrawingBuffer)
+  renderer.render(scene,camera);
+  const a=document.createElement("a"); a.href=renderer.domElement.toDataURL("image/png");
+  a.download=TITLE_SLUG+".png"; document.body.appendChild(a); a.click(); a.remove(); }
+function updateHover(){
+  if(!current)return;
+  raycaster.setFromCamera(mouse,camera);
+  const hits=raycaster.intersectObjects(current.nodes,false);
+  hovered=hits.length?hits[0].object.userData.node:null;
+  const tip=document.getElementById("tip");
+  if(hovered){ const pct=(hovered.n/RECORDS.length*100).toFixed(1);
+    const wbit=(WEIGHT&&measure==="weight") ? ` · <span class="pct">${fmt(hovered.size)}</span> ${WEIGHT.label}` : "";
+    tip.innerHTML=`<div class="t">${hovered.value}</div><div class="s">`+
+      `${DIMS.find(d=>d.key===dims[hovered.col]).label} · <span class="pct">${hovered.n}</span> records · ${pct}%${wbit}</div>`;
+    tip.style.opacity=1; } else tip.style.opacity=0;
+}
+function isNeighbor(nd,on){ for(const m of current.ribbons){
+  if((m.userData.srcVal===on.value&&m.userData.dstVal===nd.value)||
+     (m.userData.dstVal===on.value&&m.userData.srcVal===nd.value))return true; } return false; }
+function searchMatch(v){ return !searchTerm || String(v).toLowerCase().includes(searchTerm); }
+function applyHighlight(){ const on=hovered||pinned;   // hover previews; pin persists
+  for(const m of current.ribbons){ const c=on&&(m.userData.srcVal===on.value||m.userData.dstVal===on.value);
+    let a=!on?m.userData.baseAlpha:c?0.85:0.06;
+    if(searchTerm && !(searchMatch(m.userData.srcVal)||searchMatch(m.userData.dstVal))) a=Math.min(a,0.04);
+    m.userData.targetAlpha=a; }
+  for(const m of current.nodes){ const nd=m.userData.node;
+    let dim=!on?1:(nd.value===on.value||isNeighbor(nd,on)?1:0.25);
+    if(searchTerm && !searchMatch(nd.value)) dim=Math.min(dim,0.12);
+    m.userData.targetDim=dim; }
+}
+function tick(){
+  requestAnimationFrame(tick); const dt=clock.getDelta();
+  if(current){ current.fade=Math.min(1,current.fade+dt/0.5); applyHighlight(); const f=current.fade;
+    for(const m of current.nodes){ const dim=m.userData.targetDim??1;
+      m.material.opacity+=(0.92*f*dim-m.material.opacity)*Math.min(1,dt*12); }
+    for(const m of current.ribbons){ const ta=(m.userData.targetAlpha??m.userData.baseAlpha)*f;
+      m.material.opacity+=(ta-m.material.opacity)*Math.min(1,dt*12); }
+    current.root.traverse(o=>{ if(o.userData.kind==="label") o.material.opacity+=(f-o.material.opacity)*Math.min(1,dt*10); });
+  }
+  if(outgoing){ outgoing.fade=(outgoing.fade??1)-dt/0.32; const f=Math.max(0,outgoing.fade);
+    outgoing.root.traverse(o=>{ if(o.material)o.material.opacity=(o.userData.kind==="ribbon"?f*0.4:f); });
+    if(f<=0){ disposeGroup(outgoing.root); outgoing=null; } }
+  controls.update(); updateHover(); renderer.render(scene,camera);
+}
+function fillSelect(id,val){ const sel=document.getElementById(id); sel.innerHTML="";
+  for(const d of DIMS){ const o=document.createElement("option"); o.value=d.key; o.textContent=d.label;
+    if(d.key===val)o.selected=true; sel.appendChild(o); } }
+fillSelect("dimA",dims[0]); fillSelect("dimB",dims[1]); fillSelect("dimC",dims[2]);
+document.getElementById("dimA").onchange=e=>{dims[0]=e.target.value;rebuild();};
+document.getElementById("dimB").onchange=e=>{dims[1]=e.target.value;rebuild();};
+document.getElementById("dimC").onchange=e=>{dims[2]=e.target.value;rebuild();};
+function setMode(m){ mode=m; document.getElementById("mProp").classList.toggle("on",m==="prop");
+  document.getElementById("mEq").classList.toggle("on",m==="eq"); rebuild(); }
+document.getElementById("mProp").onclick=()=>setMode("prop");
+document.getElementById("mEq").onclick=()=>setMode("eq");
+function setRot(on){ controls.autoRotate=on; document.getElementById("rotOn").classList.toggle("on",on);
+  document.getElementById("rotOff").classList.toggle("on",!on); }
+document.getElementById("rotOn").onclick=()=>setRot(true);
+document.getElementById("rotOff").onclick=()=>setRot(false);
+if(WEIGHT){
+  document.getElementById("measSec").style.display="";
+  document.getElementById("measRow").style.display="";
+  document.getElementById("mWeightLbl").textContent=WEIGHT.label;
+  const setMeasure=m=>{ measure=m; document.getElementById("mCount").classList.toggle("on",m==="count");
+    document.getElementById("mWeight").classList.toggle("on",m==="weight"); rebuild(); };
+  document.getElementById("mCount").onclick=()=>setMeasure("count");
+  document.getElementById("mWeight").onclick=()=>setMeasure("weight");
+}
+addEventListener("mousemove",e=>{ mouse.x=(e.clientX/innerWidth)*2-1; mouse.y=-(e.clientY/innerHeight)*2+1;
+  const tip=document.getElementById("tip"); tip.style.left=(e.clientX+16)+"px"; tip.style.top=(e.clientY+16)+"px"; });
+
+// search/filter: dims non-matching categories (no rebuild; applyHighlight runs each frame)
+document.getElementById("search").addEventListener("input",e=>{ searchTerm=e.target.value.trim().toLowerCase(); });
+// save PNG + clear pin
+document.getElementById("savePng").onclick=savePng;
+document.getElementById("clearPin").onclick=()=>setPin(null);
+// click-to-pin (distinguish click from orbit-drag via pointer travel)
+let _down=null;
+renderer.domElement.addEventListener("pointerdown",e=>{ _down={x:e.clientX,y:e.clientY}; });
+renderer.domElement.addEventListener("pointerup",e=>{
+  if(!_down) return; const moved=Math.abs(e.clientX-_down.x)+Math.abs(e.clientY-_down.y); _down=null;
+  if(moved>6 || !current) return;   // it was a drag (orbit), not a click
+  mouse.x=(e.clientX/innerWidth)*2-1; mouse.y=-(e.clientY/innerHeight)*2+1;
+  raycaster.setFromCamera(mouse,camera);
+  const hits=raycaster.intersectObjects(current.nodes,false);
+  const nd=hits.length?hits[0].object.userData.node:null;
+  if(nd && pinnedSel && pinnedSel.value===nd.value && pinnedSel.col===nd.col) setPin(null);
+  else setPin(nd);   // nd null (empty space) clears the pin
+});
+addEventListener("resize",()=>{ camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth,innerHeight); });
+rebuild(); tick();
+</script>
+</body>
+</html>
