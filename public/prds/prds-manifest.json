@@ -338,5 +338,16 @@
     "description": "",
     "category": "pr-report",
     "public_url": "https://gbautomation.xyz/prds/pr-534-forest-test-repo-root"
+  },
+  {
+    "slug": "pr-589-cc-task-feat-hermes-transcript-orchestration",
+    "title": "PR #589 \u2014 feat(transcript): durable Hermes orchestration dispatch for Meet transcripts (t_075760de)",
+    "date": "",
+    "status": "proposed",
+    "client": "gbautomation",
+    "priority": "",
+    "description": "",
+    "category": "pr-report",
+    "public_url": "https://gbautomation.xyz/prds/pr-589-cc-task-feat-hermes-transcript-orchestration"
   }
 ]
