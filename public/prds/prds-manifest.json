@@ -382,5 +382,16 @@
     "description": "",
     "category": "pr-report",
     "public_url": "https://gbautomation.xyz/prds/pr-601-cc-task-feat-transcript-cutover"
+  },
+  {
+    "slug": "pr-602-cc-task-feat-transcript-report-required",
+    "title": "PR #602 \u2014 feat(transcript): require gbauto.transcript_report.v1 for every processed transcript",
+    "date": "",
+    "status": "proposed",
+    "client": "gbautomation",
+    "priority": "",
+    "description": "",
+    "category": "pr-report",
+    "public_url": "https://gbautomation.xyz/prds/pr-602-cc-task-feat-transcript-report-required"
   }
 ]
