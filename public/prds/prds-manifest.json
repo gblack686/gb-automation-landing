@@ -360,5 +360,16 @@
     "description": "",
     "category": "pr-report",
     "public_url": "https://gbautomation.xyz/prds/pr-591-cc-task-feat-plan-email-live-link-widget"
+  },
+  {
+    "slug": "pr-599-cc-task-feat-jid5274-plan-publisher",
+    "title": "PR #599 \u2014 feat(jid5274): mediated live-page plan publisher + obs_plan_feedback view",
+    "date": "",
+    "status": "proposed",
+    "client": "gbautomation",
+    "priority": "",
+    "description": "",
+    "category": "pr-report",
+    "public_url": "https://gbautomation.xyz/prds/pr-599-cc-task-feat-jid5274-plan-publisher"
   }
 ]
