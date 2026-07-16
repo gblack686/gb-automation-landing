@@ -349,5 +349,16 @@
     "description": "",
     "category": "pr-report",
     "public_url": "https://gbautomation.xyz/prds/pr-589-cc-task-feat-hermes-transcript-orchestration"
+  },
+  {
+    "slug": "pr-591-cc-task-feat-plan-email-live-link-widget",
+    "title": "PR #591 \u2014 feat(plans): live-link emails + feedback widget on all published plans + dispatch feedback digest",
+    "date": "",
+    "status": "proposed",
+    "client": "gbautomation",
+    "priority": "",
+    "description": "",
+    "category": "pr-report",
+    "public_url": "https://gbautomation.xyz/prds/pr-591-cc-task-feat-plan-email-live-link-widget"
   }
 ]
