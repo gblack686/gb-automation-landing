@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { createElement, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ArrowUpRight,
@@ -23,12 +23,12 @@ function cx(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
-function Metric({ icon: Icon, label, value, sub }) {
+function Metric({ icon, label, value, sub }) {
   return (
     <div className="rounded-lg border border-[#D6D4C8] bg-white p-4">
       <div className="mb-3 flex items-center justify-between gap-3">
         <span className="text-[11px] font-bold uppercase tracking-widest text-[#191919]/50">{label}</span>
-        <Icon className="h-4 w-4 text-[#D97757]" />
+        {createElement(icon, { className: 'h-4 w-4 text-[#D97757]' })}
       </div>
       <div className="font-serif text-3xl text-[#191919]">{fmt(value)}</div>
       {sub && <div className="mt-1 text-xs text-[#191919]/55">{sub}</div>}
@@ -89,6 +89,7 @@ export default function TacCatalog() {
   const [repoFilter, setRepoFilter] = useState('');
   const [sourceFilter, setSourceFilter] = useState('');
   const [primitiveFilter, setPrimitiveFilter] = useState('');
+  const [surfaceFilter, setSurfaceFilter] = useState('');
   const [tagFilter, setTagFilter] = useState('');
   const [selectedRepo, setSelectedRepo] = useState('');
 
@@ -120,6 +121,7 @@ export default function TacCatalog() {
     [catalog]
   );
   const primitiveOptions = useMemo(() => (catalog?.primitive_counts || []).map((item) => item.name), [catalog]);
+  const surfaceOptions = useMemo(() => (catalog?.surface_counts || []).map((item) => item.name), [catalog]);
   const tagOptions = useMemo(() => (catalog?.tag_counts || []).slice(0, 80).map((item) => item.name), [catalog]);
 
   const filteredComponents = useMemo(() => {
@@ -129,18 +131,22 @@ export default function TacCatalog() {
       if (repoFilter && component.repo !== repoFilter) return false;
       if (sourceFilter && component.repo_source_label !== sourceFilter) return false;
       if (primitiveFilter && component.primitive !== primitiveFilter) return false;
+      if (surfaceFilter && component.surface !== surfaceFilter) return false;
       if (tagFilter && !component.tags.includes(tagFilter)) return false;
       if (!q) return true;
       return [
         component.repo,
         component.path,
+        component.source_symbol,
         component.name,
         component.primitive,
+        component.surface,
         component.why_use,
+        ...(component.secondary_methods || []),
         ...(component.tags || []),
       ].filter(Boolean).some((value) => String(value).toLowerCase().includes(q));
     });
-  }, [catalog, primitiveFilter, query, repoFilter, sourceFilter, tagFilter]);
+  }, [catalog, primitiveFilter, query, repoFilter, sourceFilter, surfaceFilter, tagFilter]);
 
   const selectedRepoData = useMemo(() => {
     if (!catalog?.repos?.length) return null;
@@ -195,7 +201,7 @@ export default function TacCatalog() {
             </div>
             {loading ? 'Loading catalog...' : error ? error : (
               <>
-                Generated {catalog?.generated_at ? new Date(catalog.generated_at).toLocaleString() : 'unknown'} from local TAC inventory and scale receipts.
+                Generated {catalog?.generated_at ? new Date(catalog.generated_at).toLocaleString() : 'unknown'} from inventory v2. {fmt(catalog?.summary?.unexplained_files)} unexplained files.
               </>
             )}
           </div>
@@ -207,10 +213,11 @@ export default function TacCatalog() {
           </div>
         )}
 
-        <section className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <section className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           <Metric icon={GitBranch} label="Repos" value={catalog?.summary?.repositories} />
           <Metric icon={Database} label="GB Repos" value={catalog?.summary?.gbautomation_repositories} sub={`${fmt(catalog?.summary?.original_tac_repositories)} original TAC`} />
           <Metric icon={Boxes} label="Components" value={catalog?.summary?.components} />
+          <Metric icon={Code2} label="Surfaces" value={catalog?.summary?.surfaces} sub={`${fmt(catalog?.summary?.relationships)} relationships`} />
           <Metric icon={Tags} label="Tags" value={catalog?.summary?.tags} />
         </section>
 
@@ -220,7 +227,7 @@ export default function TacCatalog() {
               <Filter className="h-4 w-4 text-[#D97757]" />
               <h2 className="font-serif text-2xl">Catalog Controls</h2>
             </div>
-            <div className="grid gap-3 md:grid-cols-[1.4fr,1fr,1fr,1fr,1fr]">
+            <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-[1.4fr,1fr,1fr,1fr,1fr,1fr]">
               <label className="min-w-0 text-[11px] font-bold uppercase tracking-widest text-[#191919]/50">
                 Search
                 <span className="relative mt-1 block">
@@ -236,6 +243,7 @@ export default function TacCatalog() {
               <SelectFilter label="Repo" value={repoFilter} options={repoOptions} onChange={setRepoFilter} />
               <SelectFilter label="Source" value={sourceFilter} options={sourceOptions} onChange={setSourceFilter} />
               <SelectFilter label="Primitive" value={primitiveFilter} options={primitiveOptions} onChange={setPrimitiveFilter} />
+              <SelectFilter label="Surface" value={surfaceFilter} options={surfaceOptions} onChange={setSurfaceFilter} />
               <SelectFilter label="Tag" value={tagFilter} options={tagOptions} onChange={setTagFilter} />
             </div>
           </div>
@@ -304,6 +312,7 @@ export default function TacCatalog() {
                   </div>
                   <div className="rounded-md border border-[#D6D4C8] bg-[#F8F7F0] px-3 py-2 text-sm">
                     <strong>{fmt(selectedRepoData.component_count)}</strong> components
+                    <div className="mt-1 text-xs text-[#191919]/50">{fmt(selectedRepoData.surface_counts?.length)} surfaces</div>
                   </div>
                 </div>
                 <div className="mb-5 flex flex-wrap gap-2">
@@ -385,7 +394,7 @@ export default function TacCatalog() {
                 <tr>
                   <th className="px-4 py-3 text-left">Component</th>
                   <th className="px-4 py-3 text-left">Repo</th>
-                  <th className="px-4 py-3 text-left">Primitive</th>
+                  <th className="px-4 py-3 text-left">Method / Surface</th>
                   <th className="px-4 py-3 text-left">Tags</th>
                   <th className="px-4 py-3 text-left">Why Use</th>
                 </tr>
@@ -405,6 +414,7 @@ export default function TacCatalog() {
                           <div className="min-w-0">
                             <div className="break-words font-semibold">{component.name}</div>
                             <div className="mt-1 break-all font-mono text-xs text-[#191919]/45">{component.path}</div>
+                            {component.source_symbol && <div className="mt-1 break-all font-mono text-xs text-[#D97757]">{component.source_symbol}</div>}
                           </div>
                           {href && (
                             <a href={href} target="_blank" rel="noreferrer" className="mt-0.5 shrink-0 text-[#D97757]" aria-label="Open source">
@@ -422,8 +432,13 @@ export default function TacCatalog() {
                       <td className="px-4 py-3">
                         <div className="flex flex-wrap gap-1">
                           <TagPill>{component.primitive}</TagPill>
+                          <TagPill>{component.surface}</TagPill>
+                          {component.component_source_kind !== 'runtime_owned' && <TagPill>{component.component_source_kind}</TagPill>}
                           {used && <span className="rounded-full bg-[#D97757]/10 px-2 py-1 text-[11px] font-semibold text-[#B75F43]">top-used</span>}
                         </div>
+                        {component.relationships?.length > 0 && (
+                          <div className="mt-2 text-xs text-[#191919]/45">{fmt(component.relationships.length)} relationships</div>
+                        )}
                       </td>
                       <td className="min-w-[240px] px-4 py-3">
                         <div className="flex max-w-md flex-wrap gap-1">

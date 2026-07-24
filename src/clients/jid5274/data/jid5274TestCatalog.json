@@ -1,0 +1,59 @@
+{
+  "generated_from": "second-brain/systems/hermes-profiles/jason-diaz/smoke-tests.yaml",
+  "total": 5,
+  "by_category": {
+    "cron": 2,
+    "skill": 1,
+    "doc": 2
+  },
+  "by_mode": {
+    "offline-ci": 5
+  },
+  "tests": [
+    {
+      "key": "validate_managed_manifest",
+      "category": "cron",
+      "mode": "offline-ci",
+      "title": "Carlos/jid5274 task-notify events managed cron",
+      "description": "Edge-triggered done/blocked notices for jid5274 cards on the gbautomation board, sent to Jason's Telegram via the shared task-telegram-notify sender; managed via run_managed_cron.py against managed.jid5274-events.yaml.",
+      "expect": "OK: managed manifest valid",
+      "kind": "bash"
+    },
+    {
+      "key": "dry_run_receipt_chain",
+      "category": "cron",
+      "mode": "offline-ci",
+      "title": "Carlos/jid5274 task-notify events managed cron",
+      "description": "Edge-triggered done/blocked notices for jid5274 cards on the gbautomation board, sent to Jason's Telegram via the shared task-telegram-notify sender; managed via run_managed_cron.py against managed.jid5274-events.yaml.",
+      "expect": "CHAIN_OK",
+      "kind": "bash"
+    },
+    {
+      "key": "offline_unit_tests",
+      "category": "skill",
+      "mode": "offline-ci",
+      "title": "Task-lifecycle Telegram notifier (shared sender Carlos rides on)",
+      "description": "Composes + sends task-complete / blocker notices with artifact links; offline tests cover composers, board queries, edge-triggered events, and artifact-link resolution.",
+      "expect": "passed",
+      "kind": "bash"
+    },
+    {
+      "key": "profile_contract",
+      "category": "doc",
+      "mode": "offline-ci",
+      "title": "Carlos profile spec + runtime copy parity",
+      "description": "Resolves the hermes-profile-spec.v1 spec copy and the runtime template in code \u2014 asserts schema, id, TERMINAL_CWD contract, manual approvals, provider parity, and that no live secret is baked into either file.",
+      "expect": "CARLOS_PROFILE_OK",
+      "kind": "bash"
+    },
+    {
+      "key": "mapping_and_vault_leg",
+      "category": "doc",
+      "mode": "offline-ci",
+      "title": "refresh_hermes_context client->agent mapping for Carlos",
+      "description": "Asserts scripts/refresh_hermes_context.sh still maps jason-diaz -> carlos and that the client vault leg (clients/jason-diaz/profile.md) the loader embeds exists \u2014 the contract behind ~/repos/jid5274/.hermes.md generation on the Mini.",
+      "expect": "CONTEXT_MAPPING_OK",
+      "kind": "bash"
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 [
   {
     "slug": "2026-06-21-client-portal-hermes-wrapper",
-    "title": "Client Portal → Hermes-dashboard wrapper",
+    "title": "Client Portal \u2192 Hermes-dashboard wrapper",
     "date": "2026-06-21",
     "status": "ready",
     "client": "gbautomation",
@@ -23,7 +23,7 @@
   },
   {
     "slug": "2026-06-12-tac-kanban-resilience-hardening-plan",
-    "title": "TAC Kanban Team Resilience Hardening — crash loops, silent deaths, empty blocks",
+    "title": "TAC Kanban Team Resilience Hardening \u2014 crash loops, silent deaths, empty blocks",
     "date": "2026-06-12",
     "status": "draft",
     "client": "gbautomation",
@@ -45,7 +45,7 @@
   },
   {
     "slug": "2026-06-12-ecom-telegram-realtime-updates-plan",
-    "title": "Ecom Telegram realtime updates — single edited message per run",
+    "title": "Ecom Telegram realtime updates \u2014 single edited message per run",
     "date": "2026-06-12",
     "status": "draft",
     "client": "gbautomation",
@@ -61,27 +61,27 @@
     "status": "planned",
     "client": "",
     "priority": "high",
-    "description": "Unify git worktree isolation for interactive Claude Code, Codex, Cursor, and Hermes-delegated coding. Reuse cron_worktree.py; optional per-task trees; registry maps sessions to cwd. Cron lane already isolated — this plan covers human and orchestrator surfaces.",
+    "description": "Unify git worktree isolation for interactive Claude Code, Codex, Cursor, and Hermes-delegated coding. Reuse cron_worktree.py; optional per-task trees; registry maps sessions to cwd. Cron lane already isolated \u2014 this plan covers human and orchestrator surfaces.",
     "category": "plan",
     "public_url": "https://gbautomation.xyz/prds/2026-06-04-harness-per-session-git-worktree-plan"
   },
   {
     "slug": "prd-render-email-pipeline-branded-delivery-for-every-dispatched-prd",
-    "title": "PRD Render &amp; Email Pipeline — branded delivery for every dispatched PRD",
+    "title": "PRD Render &amp; Email Pipeline \u2014 branded delivery for every dispatched PRD",
     "url": "/prds/prd-render-email-pipeline-branded-delivery-for-every-dispatched-prd",
     "date": "2026-05-18",
     "size_kb": 87.6
   },
   {
     "slug": "hourly-job-stats-telegram-ping-1h-24h-rollup-with-linked-prd-titles",
-    "title": "Hourly Job-Stats Telegram Ping — 1h + 24h rollup with linked PRD titles",
+    "title": "Hourly Job-Stats Telegram Ping \u2014 1h + 24h rollup with linked PRD titles",
     "url": "/prds/hourly-job-stats-telegram-ping-1h-24h-rollup-with-linked-prd-titles",
     "date": "2026-05-18",
     "size_kb": 36.0
   },
   {
     "slug": "graphify-sync-wave-3-intelligence-layer",
-    "title": "graphify-sync Wave-3 — Intelligence Layer",
+    "title": "graphify-sync Wave-3 \u2014 Intelligence Layer",
     "url": "/prds/graphify-sync-wave-3-intelligence-layer",
     "date": "2026-05-18",
     "size_kb": 70.6
@@ -137,7 +137,7 @@
   },
   {
     "slug": "template-improvements-discovered-during-test-clients-dry-run",
-    "title": "Template Improvements — discovered during test-clients dry-run",
+    "title": "Template Improvements \u2014 discovered during test-clients dry-run",
     "date": "",
     "status": "",
     "wave": null,
@@ -165,7 +165,7 @@
   },
   {
     "slug": "2026-06-17-hermes-template-canopy-parameterization-and-shared-core-plan",
-    "title": "Hermes template — Canopy parameterization + shared-core extraction",
+    "title": "Hermes template \u2014 Canopy parameterization + shared-core extraction",
     "date": "",
     "status": "active",
     "client": "gbautomation",
@@ -228,5 +228,115 @@
     "description": "",
     "category": "plan",
     "public_url": "https://gbautomation.xyz/prds/2026-06-07-crawl-resilience-anti-bot-intelligence-prd"
+  },
+  {
+    "slug": "pr-467-gbauto-cli",
+    "title": "PR #467 \u2014 feat(gbauto-cli): branded client CLI + Supabase-relay gateway + operator-gated dispatch (Phase 1)",
+    "date": "",
+    "status": "proposed",
+    "client": "gbautomation",
+    "priority": "",
+    "description": "",
+    "category": "pr-report",
+    "public_url": "https://gbautomation.xyz/prds/pr-467-gbauto-cli"
+  },
+  {
+    "slug": "pr-476-pr-report",
+    "title": "PR #476 \u2014 feat(pr-report): branded collapsible HTML report + KPI lineage receipt per merged PR",
+    "date": "",
+    "status": "proposed",
+    "client": "gbautomation",
+    "priority": "",
+    "description": "",
+    "category": "pr-report",
+    "public_url": "https://gbautomation.xyz/prds/pr-476-pr-report"
+  },
+  {
+    "slug": "pr-481-jid5274-rails",
+    "title": "PR #481 \u2014 feat(jid5274): Carlos rails \u2014 hermes-profile-spec v1, tenant smoke catalog, client scaffold (jason-va retired)",
+    "date": "",
+    "status": "proposed",
+    "client": "gbautomation",
+    "priority": "",
+    "description": "",
+    "category": "pr-report",
+    "public_url": "https://gbautomation.xyz/prds/pr-481-jid5274-rails"
+  },
+  {
+    "slug": "pr-488-prepush-report-carveout",
+    "title": "PR #488 \u2014 feat(git-hooks): pre-push carve-out for report-only main pushes (ruling 2026-07-05)",
+    "date": "",
+    "status": "proposed",
+    "client": "gbautomation",
+    "priority": "",
+    "description": "",
+    "category": "pr-report",
+    "public_url": "https://gbautomation.xyz/prds/pr-488-prepush-report-carveout"
+  },
+  {
+    "slug": "pr-485-publish-hook-master-guard",
+    "title": "PR #485 \u2014 fix(publish): landing-repo master guard \u2014 fail loudly on branch drift",
+    "date": "",
+    "status": "proposed",
+    "client": "gbautomation",
+    "priority": "",
+    "description": "",
+    "category": "pr-report",
+    "public_url": "https://gbautomation.xyz/prds/pr-485-publish-hook-master-guard"
+  },
+  {
+    "slug": "pr-486-provisioner-cli-key",
+    "title": "PR #486 \u2014 feat(provision): step 9 cli-key \u2014 mint gbauto CLI API keys (hash-only staging, 1Password delivery)",
+    "date": "",
+    "status": "proposed",
+    "client": "gbautomation",
+    "priority": "",
+    "description": "",
+    "category": "pr-report",
+    "public_url": "https://gbautomation.xyz/prds/pr-486-provisioner-cli-key"
+  },
+  {
+    "slug": "pr-487-pr-kpi-rollup",
+    "title": "PR #487 \u2014 feat(pr-report): weekly KPI rollup renderer (pr_kpi_rollup)",
+    "date": "",
+    "status": "proposed",
+    "client": "gbautomation",
+    "priority": "",
+    "description": "",
+    "category": "pr-report",
+    "public_url": "https://gbautomation.xyz/prds/pr-487-pr-kpi-rollup"
+  },
+  {
+    "slug": "pr-490-track-backfill-lineage-script",
+    "title": "PR #490 \u2014 fix(provenance): track backfill_prd_github_lineage.py (untracked dependency of pr_report)",
+    "date": "",
+    "status": "proposed",
+    "client": "gbautomation",
+    "priority": "",
+    "description": "",
+    "category": "pr-report",
+    "public_url": "https://gbautomation.xyz/prds/pr-490-track-backfill-lineage-script"
+  },
+  {
+    "slug": "pr-500-session-exit-summary",
+    "title": "PR #500 \u2014 feat(hooks): session-exit summarizer \u2014 Claude Code + Codex \u2192 second brain + agent_sessions",
+    "date": "",
+    "status": "proposed",
+    "client": "gbautomation",
+    "priority": "",
+    "description": "",
+    "category": "pr-report",
+    "public_url": "https://gbautomation.xyz/prds/pr-500-session-exit-summary"
+  },
+  {
+    "slug": "pr-534-forest-test-repo-root",
+    "title": "PR #534 \u2014 fix(fleet): forest_gate test REPO_ROOT depth after move to tests/",
+    "date": "",
+    "status": "proposed",
+    "client": "gbautomation",
+    "priority": "",
+    "description": "",
+    "category": "pr-report",
+    "public_url": "https://gbautomation.xyz/prds/pr-534-forest-test-repo-root"
   }
 ]
