@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Florish — Vendor Enrollment Engine MVP Proposal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --terracotta:#D97757; --terracotta-hover:#B75F43; --ink:#191919; --cream-bg:#F3F1E7;
+  --cream-2:#E6E4D9; --stone:#D6D4C8; --text-mute:#8C8A84; --text-muted-2:#5C5C5C;
+  --font-sans:'Inter', sans-serif; --font-serif:'Newsreader', serif;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin:0; background:var(--cream-bg); color:var(--ink); font-family:var(--font-sans); -webkit-font-smoothing:antialiased; }
+a { color: var(--ink); text-decoration-color: var(--terracotta); text-underline-offset: 4px; }
+.gb-ambient { position:fixed; inset:0; pointer-events:none; z-index:-1; background: radial-gradient(circle at 12% 10%, rgba(217,119,87,.23), transparent 28%), radial-gradient(circle at 90% 18%, rgba(217,119,87,.12), transparent 24%); }
+.topbar { position: sticky; top:0; z-index:5; backdrop-filter: blur(14px); background: rgba(243,241,231,.82); border-bottom:1px solid var(--stone); }
+.topbar-inner { max-width:1180px; margin:0 auto; padding:14px 24px; display:flex; align-items:center; justify-content:space-between; gap:18px; }
+.logo { display:flex; align-items:center; gap:10px; font-size:11px; letter-spacing:.24em; text-transform:uppercase; font-weight:600; }
+.logo img { width:34px; height:34px; object-fit:contain; }
+.nav { display:flex; flex-wrap:wrap; gap:12px; font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--text-muted-2); }
+.hero { max-width:1180px; margin:0 auto; padding:78px 24px 46px; display:grid; grid-template-columns:1.15fr .85fr; gap:30px; align-items:stretch; }
+.eyebrow, .gb-eyebrow { color:var(--text-mute); font-size:10px; letter-spacing:.25em; text-transform:uppercase; font-weight:600; }
+h1,h2,h3 { font-family:var(--font-serif); font-weight:500; letter-spacing:-.035em; margin:0; }
+h1 { font-size: clamp(46px, 7vw, 86px); line-height:.91; }
+h1 em { color:var(--terracotta); font-style:italic; }
+.lede { margin-top:24px; color:var(--text-muted-2); font-size:18px; line-height:1.65; max-width:760px; }
+.glass-panel { background:rgba(230,228,217,.68); border:1px solid var(--stone); border-radius:28px; box-shadow:0 20px 60px rgba(25,25,25,.06); backdrop-filter:blur(12px); }
+.hero-card { padding:28px; display:flex; flex-direction:column; justify-content:space-between; gap:20px; }
+.metric-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.metric { background:rgba(255,255,255,.38); border:1px solid var(--stone); border-radius:18px; padding:18px; }
+.metric strong { display:block; font-family:var(--font-serif); font-size:28px; margin-bottom:4px; }
+.metric span { color:var(--text-muted-2); font-size:12px; line-height:1.4; }
+main { max-width:1180px; margin:0 auto; padding:8px 24px 80px; display:grid; grid-template-columns:260px 1fr; gap:32px; }
+.toc { position:sticky; top:86px; align-self:start; padding:22px; }
+.toc a { display:block; padding:10px 0; font-size:11px; letter-spacing:.14em; text-transform:uppercase; text-decoration:none; border-bottom:1px solid rgba(214,212,200,.7); }
+.section { padding:34px; margin-bottom:24px; }
+.sec-head { display:flex; align-items:center; gap:16px; margin-bottom:22px; }
+.sec-head .num { color:var(--terracotta); font-size:12px; letter-spacing:.18em; font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+.sec-head h2 { font-size:34px; }
+.sec-head:after { content:''; height:1px; flex:1; background:var(--stone); }
+p,li { color:var(--text-muted-2); line-height:1.68; }
+ul { padding-left:20px; }
+.gb-pill, .gb-tag { display:inline-flex; align-items:center; border:1px solid var(--stone); background:rgba(255,255,255,.45); color:var(--ink); border-radius:999px; padding:8px 11px; font-size:10px; text-transform:uppercase; letter-spacing:.16em; margin:4px 6px 4px 0; }
+.gb-tag.key { background:rgba(217,119,87,.14); border-color:rgba(217,119,87,.35); }
+pre { white-space:pre-wrap; background:rgba(25,25,25,.035); border:1px solid var(--stone); border-radius:20px; padding:20px; color:var(--ink); line-height:1.45; overflow:auto; }
+.table { display:grid; gap:12px; }
+.row { display:grid; grid-template-columns:170px 1fr; gap:14px; padding:16px; background:rgba(255,255,255,.34); border:1px solid var(--stone); border-radius:18px; }
+.row strong { color:var(--ink); }
+.gb-collapse { border:1px solid var(--stone); border-radius:20px; background:rgba(255,255,255,.36); margin:14px 0; overflow:hidden; }
+.gb-collapse summary { cursor:pointer; list-style:none; padding:18px 20px; display:flex; flex-direction:column; gap:4px; }
+.gb-collapse summary::-webkit-details-marker { display:none; }
+.gb-collapse summary span { font-family:var(--font-serif); font-size:24px; color:var(--ink); }
+.gb-collapse summary em { color:var(--text-mute); font-style:normal; font-size:12px; letter-spacing:.1em; text-transform:uppercase; }
+.gb-collapse ul { margin:0; padding:0 24px 20px 40px; }
+.email-box { white-space:pre-wrap; background:rgba(255,255,255,.46); border:1px solid var(--stone); border-radius:22px; padding:24px; color:var(--text-muted-2); line-height:1.6; }
+.footer { text-align:center; padding:40px 24px 80px; color:var(--text-mute); font-size:12px; }
+@media (max-width: 860px) { .hero, main { grid-template-columns:1fr; } .toc { position:relative; top:0; } .nav { display:none; } .row { grid-template-columns:1fr; } }
+@media print { .topbar,.toc,.gb-ambient { display:none; } body { background:var(--cream-bg); } .hero, main { display:block; padding:18px; } .section,.glass-panel { break-inside:avoid; box-shadow:none; } details { break-inside:avoid; } }
+</style>
+</head>
+<body>
+<div class="gb-ambient"></div>
+<header class="topbar"><div class="topbar-inner"><div class="logo"><img src="assets/gb-logo.png" alt="GB Automation logo">GB Automation</div><nav class="nav"><a href="#mvp">MVP</a><a href="#architecture">Architecture</a><a href="#costs">Costs</a><a href="#roadmap">Roadmap</a><a href="#email">Email draft</a></nav></div></header>
+<section class="hero">
+  <div>
+    <p class="eyebrow">Client proposal · Florish Technologies</p>
+    <h1>Vendor Enrollment <em>Engine</em> MVP.</h1>
+    <p class="lede">A small, measurable first build for agents taking over mundane growth ops: one market, one vendor segment, Supabase as the source of truth, and a human-approved enrollment loop.</p>
+    <div><span class="gb-tag key">Supabase canonical</span><span class="gb-tag">One market</span><span class="gb-tag">Human-approved outreach</span><span class="gb-tag">Paid MVP</span></div>
+  </div>
+  <aside class="hero-card glass-panel">
+    <p class="gb-eyebrow">MVP scorecard</p>
+    <div class="metric-grid">
+      <div class="metric"><strong>1</strong><span>market to prove the growth loop</span></div>
+      <div class="metric"><strong>4</strong><span>core motions: source, enrich, nurture, enroll</span></div>
+      <div class="metric"><strong>3</strong><span>subscription cost bands for planning</span></div>
+      <div class="metric"><strong>6</strong><span>future phases after the wedge works</span></div>
+    </div>
+  </aside>
+</section>
+<main>
+  <aside class="toc glass-panel">
+    <p class="gb-eyebrow">Contents</p>
+    <a href="#mvp">Recommended MVP</a>
+    <a href="#architecture">System design</a>
+    <a href="#costs">Subscription costs</a>
+    <a href="#roadmap">Roadmap</a>
+    <a href="#guardrails">Guardrails</a>
+    <a href="#questions">Call questions</a>
+    <a href="#research">Research note</a>
+    <a href="#email">Eric email draft</a>
+  </aside>
+  <div>
+    <section id="mvp" class="section glass-panel"><div class="sec-head"><span class="num">01</span><h2>Recommended MVP</h2></div><p><strong>Build the Vendor Enrollment Engine for one market.</strong> This is the smallest paid build that can prove the value of agents taking over mundane growth operations without pretending the full Florish platform is ready to automate end-to-end.</p>
+<details class="gb-collapse" open>
+  <summary><span>Recommended MVP</span><em>One-market Vendor Enrollment Engine</em></summary>
+  <ul><li>Focused paid MVP; not a full-platform automation build.</li>
+<li>Supabase canonical system of record.</li>
+<li>Human approval before risky outreach actions.</li>
+<li>Weekly KPI loop around sourced vendors, replies, calls, and enrollments.</li></ul>
+</details>
+
+<details class="gb-collapse" open>
+  <summary><span>System design</span><em>Supabase-backed growth-ops loop</em></summary>
+  <ul><li>Lead source pull through Google Places / SerpAPI / Apify / Apollo / Clay.</li>
+<li>Normalize, dedupe, enrich, and review vendors in Supabase.</li>
+<li>Sequence through GoHighLevel (GHL), Postmark/SendGrid, Instantly/Smartlead, and optional compliant Twilio.</li>
+<li>Calendly or GHL Calendar for booked conversations.</li></ul>
+</details>
+
+<details class="gb-collapse" open>
+  <summary><span>Cost bands</span><em>Monthly subscription estimates excluding development labor</em></summary>
+  <ul><li>Lean MVP: ~$100–$350/month.</li>
+<li>Serious MVP: ~$500–$1,500/month.</li>
+<li>Scale Pilot: ~$2,000–$5,000+/month.</li>
+<li>Final vendor selection should happen after call discovery.</li></ul>
+</details>
+
+<details class="gb-collapse" open>
+  <summary><span>Roadmap</span><em>Expand only after the first loop proves value</em></summary>
+  <ul><li>Multi-market vendor expansion.</li>
+<li>Trade-customer nurture.</li>
+<li>Inventory housekeeping.</li>
+<li>Marketplace distribution with platform guardrails.</li>
+<li>Higher-autonomy agents after auditability is proven.</li></ul>
+</details>
+
+<details class="gb-collapse" open>
+  <summary><span>Guardrails</span><em>Compliance and platform-risk posture</em></summary>
+  <ul><li>Cold SMS requires consent review and opt-out handling.</li>
+<li>CAN-SPAM and TCPA posture must be designed up front.</li>
+<li>Meta / Facebook Marketplace automation is platform-risky.</li>
+<li>Supabase logs source, approval, send, reply, opt-out, and operator actions.</li></ul>
+</details></section>
+    <section id="architecture" class="section glass-panel"><div class="sec-head"><span class="num">02</span><h2>Operating flow</h2></div><pre>Market definition
+  → Lead source pull: Google Places / SerpAPI / Apify / Apollo / Clay
+  → Normalize + dedupe into Supabase vendor records
+  → Enrich website, category, contacts, service area, notes
+  → Human review queue: approve / reject / needs research
+  → Email-first outreach; optional compliant SMS only when appropriate
+  → Conversation capture + calendar booking
+  → Enrollment status + next action in Supabase</pre><p>Supabase should own the durable vendor spine: vendors, locations, contacts, lead sources, outreach events, enrollment status, compliance events, and audit logs.</p></section>
+    <section id="costs" class="section glass-panel"><div class="sec-head"><span class="num">03</span><h2>Monthly software cost bands</h2></div><div class="table"><div class="row"><strong>Lean MVP<br>$100–$350/mo</strong><p>Supabase starter/pro, basic email provider, small sourcing budget, basic deliverability, simple calendar.</p></div><div class="row"><strong>Serious MVP<br>$500–$1,500/mo</strong><p>Supabase Pro, GHL or comparable CRM, Instantly/Smartlead, Apollo/Clay credits, SerpAPI/Apify usage, email deliverability, possible Twilio usage.</p></div><div class="row"><strong>Scale Pilot<br>$2,000–$5,000+/mo</strong><p>Higher-volume enrichment, multiple domains/inboxes, CRM + sequencing + call tracking, expanded logging/analytics, stronger monitoring and QA.</p></div></div><p class="gb-eyebrow">Excludes development labor</p></section>
+    <section id="roadmap" class="section glass-panel"><div class="sec-head"><span class="num">04</span><h2>Future roadmap</h2></div><p>Only expand after the first market proves value.</p><ul><li>Phase 1: Vendor Enrollment Engine.</li><li>Phase 2: Multi-market vendor expansion.</li><li>Phase 3: Trade-customer nurture.</li><li>Phase 4: Inventory housekeeping.</li><li>Phase 5: Marketplace distribution with platform-risk review.</li><li>Phase 6: Higher autonomy after auditability is proven.</li></ul></section>
+    <section id="guardrails" class="section glass-panel"><div class="sec-head"><span class="num">05</span><h2>Compliance guardrails</h2></div><ul><li>Cold SMS requires consent review, TCPA posture, and opt-outs.</li><li>CAN-SPAM basics must be enforced from day one.</li><li>Meta / Facebook Marketplace automation is platform-risky and should not be brittle or policy-violating.</li><li>All source, approval, send, reply, opt-out, and status events should be logged in Supabase.</li></ul></section>
+    <section id="questions" class="section glass-panel"><div class="sec-head"><span class="num">06</span><h2>Discovery questions</h2></div><ul><li>What exact market should the first MVP target?</li><li>What vendor category has the highest supply-side leverage?</li><li>What counts as an enrolled vendor operationally?</li><li>What systems are already in use?</li><li>What outreach channels are acceptable today?</li><li>What weekly KPI would make this MVP obviously worth scaling?</li></ul></section>
+    <section id="research" class="section glass-panel"><div class="sec-head"><span class="num">07</span><h2>Public research note</h2></div><p>Public footprint is limited. Search results show Eric Ferguson associated with Florish Technologies, Inc. and Chandler, AZ signals; the email thread remains the strongest source. This proposal therefore assumes Florish is a plant-material marketplace / sourcing platform and keeps discovery questions explicit.</p></section>
+    <section id="email" class="section glass-panel"><div class="sec-head"><span class="num">08</span><h2>Email draft to Eric</h2></div><div class="email-box">Subject: Florish vendor enrollment MVP
+
+Hi Eric,
+
+Thanks again for the context. I think the best first move is to keep this small and measurable rather than trying to automate the whole Florish growth engine at once.
+
+The wedge I would recommend is a one-market Vendor Enrollment Engine. The idea is to use Supabase as the source of truth, pull together a clean vendor lead pipeline for one target market, enrich and dedupe those records, put the risky steps behind a human approval queue, and then run a measured email-first nurture/enrollment loop.
+
+That gives us a practical way to answer the real question: can agents take meaningful mundane growth-ops work off your plate and create qualified vendor conversations without creating compliance or platform risk?
+
+If that works, the same spine can expand into multi-market vendor coverage, trade-customer nurture, inventory housekeeping, marketplace distribution, and higher-autonomy workflows. But I would rather prove the first loop and then talk about the true compensation for later phases once we can see the value clearly.
+
+For our call, I’d like to pin down:
+
+- the first market,
+- the vendor segment with the most leverage,
+- what “enrolled vendor” means operationally,
+- what systems you already have in place,
+- and what weekly KPI would make this MVP obviously worth scaling.
+
+I put together a short proposal package around that shape so we can use it as the call agenda.
+
+Best,
+Greg
+</div></section>
+  </div>
+</main>
+<footer class="footer">Prepared by GB Automation / GB Auto · 2026-07-05 · Draft for Greg review before sending to Eric</footer>
+</body>
+</html>

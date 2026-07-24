@@ -1,0 +1,697 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GBAutomation TAC Build Readiness Report - 1fafe5cb</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500;6..72,600&display=swap');
+    :root {
+      --ink: #191919;
+      --muted: #5C5C5C;
+      --line: #D6D4C8;
+      --line-soft: rgba(214, 212, 200, 0.6);
+      --paper: #FFFFFF;
+      --paper-soft: rgba(255, 255, 255, 0.55);
+      --panel: #E6E4D9;
+      --panel-soft: rgba(230, 228, 217, 0.6);
+      --cream: #F3F1E7;
+      --accent: #D97757;
+      --ok: #16a34a;
+      --warn: #f59e0b;
+      --bad: #dc2626;
+      --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+      --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: var(--sans); color: var(--ink); background: var(--cream); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+    header, main { max-width: 1280px; margin: 0 auto; }
+    header { padding: 32px 24px 8px; }
+    main { padding: 12px 24px 64px; }
+    h1, h2, h3, h4 { font-family: var(--serif); font-weight: 500; color: var(--ink); }
+    h1 { margin: 0 0 14px; font-size: 44px; line-height: 1.1; letter-spacing: -0.01em; }
+    h2 { margin: 0 0 16px; font-size: 24px; line-height: 1.2; }
+    h3 { margin: 0 0 8px; font-size: 18px; line-height: 1.3; }
+    p { line-height: 1.6; color: rgba(25, 25, 25, 0.72); }
+    a { color: var(--accent); }
+    a:hover { color: var(--ink); }
+    .brief-header { background: transparent; border-bottom: 1px solid var(--line-soft); padding-bottom: 24px; margin-bottom: 4px; }
+    .brief-kicker { color: var(--accent); font-size: 12px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 14px; }
+    .brief-title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
+    .brief-title { max-width: 880px; }
+    .brief-title h1 { color: var(--ink); }
+    .status-chip { display: inline-block; background: var(--ink); color: var(--cream); border-radius: 6px; padding: 6px 12px; font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; white-space: nowrap; font-family: var(--sans); }
+    .brief-meta { display: flex; flex-wrap: wrap; gap: 6px 20px; color: rgba(25, 25, 25, 0.55); font-size: 13px; margin: 12px 0 18px; }
+    .brief-meta strong { color: var(--ink); font-weight: 600; }
+    .brief-stats { display: flex; gap: 12px; margin: 20px 0 4px; }
+    .brief-stat { background: var(--panel-soft); border: 1px solid var(--line); border-radius: 6px; padding: 14px 18px; min-width: 140px; }
+    .brief-stat strong { display: block; font-family: var(--serif); font-size: 30px; line-height: 1; font-weight: 500; }
+    .brief-stat span { display: block; margin-top: 6px; color: rgba(25, 25, 25, 0.45); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; }
+    .eyebrow { color: var(--accent); font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; }
+    .meta { color: var(--muted); margin: 0; }
+    .brief-layout { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 28px; align-items: start; }
+    .toc { position: sticky; top: 18px; background: var(--paper-soft); border: 1px solid var(--line); border-radius: 6px; padding: 18px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+    .toc h2 { font-family: var(--sans); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.18em; color: rgba(25, 25, 25, 0.45); margin: 0 0 10px; }
+    .toc-actions { display: flex; gap: 12px; color: rgba(25, 25, 25, 0.35); font-size: 11px; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.12em; }
+    .toc a { display: grid; grid-template-columns: 32px 1fr; gap: 8px; padding: 10px 0; color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--line-soft); }
+    .toc a:last-child { border-bottom: 0; }
+    .toc a:hover { color: var(--accent); }
+    .toc span { color: var(--accent); font-weight: 700; font-size: 12px; letter-spacing: 0.06em; }
+    .toc strong { font-size: 13px; font-weight: 500; }
+    .toc em { grid-column: 2; color: rgba(25, 25, 25, 0.40); font-size: 11px; font-style: normal; }
+    .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin: 28px 0 24px; }
+    .metric { background: var(--paper-soft); border: 1px solid var(--line); border-radius: 6px; padding: 20px; }
+    .metric strong { display: block; font-family: var(--serif); font-size: 32px; font-weight: 500; margin-top: 8px; color: var(--ink); line-height: 1; }
+    .metric span { color: rgba(25, 25, 25, 0.45); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; }
+    .panel { background: var(--paper-soft); border: 1px solid var(--line); border-radius: 6px; padding: 22px; margin: 18px 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { text-align: left; padding: 12px 12px; border-bottom: 1px solid var(--line-soft); vertical-align: top; color: var(--ink); }
+    th { background: var(--panel-soft); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: rgba(25, 25, 25, 0.55); }
+    code { font-family: 'JetBrains Mono', Consolas, Monaco, monospace; font-size: 12px; color: rgba(25, 25, 25, 0.75); }
+    .pill { display: inline-block; border-radius: 999px; padding: 3px 10px; color: #fff; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-family: var(--sans); }
+    .pill.ok, .pill.pass { background: var(--ok); }
+    .pill.warn, .pill.pending { background: var(--warn); }
+    .pill.error, .pill.fail { background: var(--bad); }
+    .workflow svg { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--paper); }
+    .hypeframes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 14px; }
+    .hypeframe { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+    .hypeframe svg { width: 100%; height: auto; display: block; }
+    .asset-section { margin: 28px 0 32px; }
+    .asset-section h2 { margin-bottom: 8px; }
+    .asset-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-top: 14px; }
+    .asset-card { background: var(--paper); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; min-height: 340px; transition: border-color 0.2s ease; }
+    .asset-card:hover { border-color: var(--accent); }
+    .asset-preview { aspect-ratio: 4 / 3; background: var(--panel); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .asset-preview svg { width: 100%; height: 100%; display: block; object-fit: contain; }
+    .asset-preview video { width: 100%; height: 100%; display: block; object-fit: cover; background: var(--ink); }
+    .asset-placeholder { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; text-align: center; color: rgba(25, 25, 25, 0.50); background: var(--panel); font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; padding: 24px; }
+    .asset-placeholder svg { width: 28px; height: 28px; opacity: 0.55; }
+    .asset-placeholder em { font-style: normal; font-size: 10px; font-weight: 600; letter-spacing: 0.22em; opacity: 0.70; }
+    .html-preview { width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; gap: 10px; padding: 24px; color: var(--ink); background: var(--panel); }
+    .html-preview strong { font-family: var(--serif); font-size: 22px; font-weight: 500; line-height: 1.2; color: var(--ink); }
+    .html-preview span { display: block; color: rgba(25, 25, 25, 0.55); font-size: 13px; line-height: 1.5; }
+    .asset-meta { padding: 18px; flex: 1; display: flex; flex-direction: column; }
+    .asset-meta span { color: var(--accent); font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; }
+    .asset-meta h3 { font-family: var(--serif); margin: 6px 0 8px; font-size: 17px; font-weight: 500; color: var(--ink); }
+    .asset-meta p { margin: 0 0 12px; color: rgba(25, 25, 25, 0.60); font-size: 13px; line-height: 1.5; }
+    .asset-meta code { display: block; padding-top: 10px; margin-top: auto; border-top: 1px solid var(--line-soft); overflow-wrap: anywhere; font-size: 11px; color: rgba(25, 25, 25, 0.50); }
+    .note { color: rgba(25, 25, 25, 0.55); font-size: 13px; line-height: 1.6; }
+    .brand-row { display: flex; align-items: center; gap: 14px; }
+    .logo { width: 44px; height: 44px; object-fit: contain; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 6px; }
+    .two-col { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 18px; }
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+    .tags span { background: var(--cream); border: 1px solid var(--line); color: rgba(25, 25, 25, 0.60); border-radius: 4px; padding: 3px 8px; font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
+    .signoff { border-left: 3px solid var(--accent); padding-left: 14px; margin-top: 20px; color: rgba(25, 25, 25, 0.70); font-size: 13px; line-height: 1.6; }
+    .signoff strong { color: var(--ink); }
+    .scope { background: var(--panel-soft); border: 1px solid var(--line); border-radius: 6px; padding: 18px 20px; margin-top: 18px; }
+    .scope h3 { font-family: var(--serif); margin: 0 0 12px; font-size: 16px; font-weight: 500; color: var(--ink); }
+    .scope p { margin: 6px 0; color: rgba(25, 25, 25, 0.72); font-size: 13px; line-height: 1.6; }
+    .scope strong { color: var(--ink); font-weight: 600; }
+    @media (max-width: 900px) {
+      header { padding: 24px 20px 6px; }
+      main { padding: 12px 20px 56px; }
+      h1 { font-size: 34px; }
+      .grid, .hypeframes, .asset-grid, .two-col, .brief-layout { grid-template-columns: 1fr; }
+      .brief-title-row, .brief-stats { flex-direction: column; }
+      .toc { position: static; }
+    }
+  </style>
+</head>
+<body>
+  <header class="brief-header">
+    <div class="brief-kicker">Plan Brief</div>
+    <div class="brief-title-row">
+      <div class="brief-title">
+        <h1>Final pickup validation</h1>
+        <div class="brief-meta">
+          <span><strong>Status:</strong> dry_run_warn</span>
+          <span><strong>Owner:</strong> GBAutomation</span>
+          <span><strong>Priority:</strong> low</span>
+          <span><strong>Created:</strong> 2026-05-12</span>
+        </div>
+      </div>
+      <img class="logo" src="https://drive.google.com/uc?export=view&id=1q_1Q2nX_PcB15P0DtcJ5BxFc8Q9ojGIR" alt="GBAutomation logo" />
+    </div>
+    <span class="status-chip">TAC Build Readiness Report</span>
+    <div class="brief-stats">
+      <div class="brief-stat"><strong>7</strong><span>sections</span></div>
+      <div class="brief-stat"><strong>291</strong><span>words</span></div>
+    </div>
+  </header>
+  <main>
+    <section class="grid">
+      <div class="metric"><span>Sections</span><strong>7</strong></div>
+      <div class="metric"><span>Words</span><strong>291</strong></div>
+      <div class="metric"><span>Verifier steps</span><strong>8</strong></div>
+      <div class="metric"><span>Passed</span><strong>8</strong></div>
+    </section>
+
+    <div class="brief-layout">
+      <aside class="toc">
+        <h2>Sections</h2>
+        <div class="toc-actions"><span>Expand all</span><span>Collapse all</span></div>
+        <a href="#section-01">
+          <span>01</span>
+          <strong>Overview</strong>
+          <em>128 words</em>
+        </a>
+<a href="#section-02">
+          <span>02</span>
+          <strong>Build metadata</strong>
+          <em>6 words</em>
+        </a>
+<a href="#section-03">
+          <span>03</span>
+          <strong>Codebase integration</strong>
+          <em>33 words</em>
+        </a>
+<a href="#section-04">
+          <span>04</span>
+          <strong>Workflow</strong>
+          <em>13 words</em>
+        </a>
+<a href="#section-05">
+          <span>05</span>
+          <strong>Evidence and validation</strong>
+          <em>12 words</em>
+        </a>
+<a href="#section-06">
+          <span>06</span>
+          <strong>Next steps</strong>
+          <em>54 words</em>
+        </a>
+<a href="#section-07">
+          <span>07</span>
+          <strong>Pointers</strong>
+          <em>45 words</em>
+        </a>
+      </aside>
+      <div>
+        <section class="panel" id="section-01">
+          <h2>01 Overview</h2>
+          <p>Second smoke test after fixing the `timeout` bug. Confirms commit + push to gbauto/gbautomation main works in one cron tick.</p>
+          <p>This plan is intended to make TAC work reviewable and dispatchable: operator intent is captured as a canonical plan, routed through reusable TAC components, validated by a verifier, and packaged into durable evidence for PR and production decisions.</p>
+          <div class="scope">
+            <h3>What actually ran</h3>
+            <p><strong>Ran:</strong> This run executed the TAC verifier/report path: routing validation, source-plan validation, receipt tests, Supabase upsert/readback, Langfuse trace emission, PR status capture, and report packaging.</p>
+            <p><strong>Did not run:</strong> It did not execute the underlying plan workload unless that workload appears as a gate in the evidence table. For a smoke-test candidate, this means the report validates readiness and evidence flow; it is not proof that the cron commit/push tick itself ran.</p>
+            <p><strong>Where:</strong> Local Codex ran the verifier and packaged this report. GitHub Actions only ran the PR Validate test workflow on the branch push; it did not generate this report package or execute the plan workload.</p>
+            <p><strong>Read this as:</strong> The receipt status is dry_run_warn with recommended execution solo_with_oversight. Treat this as build-readiness evidence until a production dispatch or application build step is present in the gates.</p>
+          </div>
+          <p class="note">Website report: Website HTML report link in flight.</p>
+        </section>
+
+        <section class="panel" id="section-02">
+          <h2>02 Build metadata</h2>
+          <table>
+            <tbody>
+              <tr><th>Client</th><td>gbautomation</td></tr>
+              <tr><th>Roadmap</th><td>n/a</td></tr>
+              <tr><th>Pathway</th><td>inbox-tac-build</td></tr>
+              <tr><th>Risk</th><td>low</td></tr>
+              <tr><th>Complexity</th><td>medium</td></tr>
+              <tr><th>Execution</th><td>solo_with_oversight</td></tr>
+              <tr><th>Receipt status</th><td>dry_run_warn</td></tr>
+              <tr><th>PR</th><td>https://github.com/gbauto/gbautomation/pull/43</td></tr>
+              <tr><th>Receipt</th><td>tac-20260512T054211Z-2026-05-09-pickup-final-validation</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="panel" id="section-03">
+          <h2>03 Codebase integration</h2>
+          <p>It fits the existing gbautomation codebase through second-brain plan notes, TAC validation receipts, Supabase observability tables, Langfuse traces, GitHub PR validation, and generated report artifacts under the TAC report package skill.</p>
+          <div class="tags"><span>dashboard</span>
+<span>receipt</span></div>
+        </section>
+
+        <section class="panel workflow" id="section-04">
+          <h2>04 Workflow</h2>
+          <svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1000" viewBox="0 0 1500 1000" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif">
+<title>GBAutomation TAC build workflow DAG</title>
+<desc>Animated directed acyclic graph showing the TAC build workflow from input through retrieval, build, validation, observability, reports, and team handoff.</desc>
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1B1B1B"/><stop offset="100%" stop-color="#191919"/></linearGradient>
+<filter id="softShadow" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur in="SourceAlpha" stdDeviation="3"/><feOffset dx="0" dy="3" result="off"/><feComponentTransfer><feFuncA type="linear" slope="0.45"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#F3F1E7"/></marker>
+</defs>
+<rect width="1500" height="1000" fill="url(#bg)"/>
+<text x="750" y="92" font-family="'Newsreader',Georgia,'Times New Roman',serif" font-size="44" font-weight="500" fill="#F3F1E7" text-anchor="middle" letter-spacing="2.0">GBAutomation</text>
+<text x="750" y="132" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif" font-size="18" font-weight="400" fill="#8A8275" text-anchor="middle" letter-spacing="1.4">TAC build workflow DAG</text>
+<text x="750" y="168" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="14" font-weight="400" fill="#8A8275" text-anchor="middle">tac-build-report  ·  run 1fafe5cb  ·  status OK</text>
+<circle cx="1436" cy="92" r="14" fill="#16a34a" opacity="0.92"/>
+<path id="eInputKb" d="M350 305 L376 305" stroke="#F3F1E7" stroke-width="2.4" fill="none" stroke-linecap="round" opacity="0.65" marker-end="url(#arrow)"/>
+<path id="eKbBuild" d="M660 305 L686 305" stroke="#F3F1E7" stroke-width="2.4" fill="none" stroke-linecap="round" opacity="0.65" marker-end="url(#arrow)"/>
+<path id="eBuildGates" d="M970 305 L996 305" stroke="#F3F1E7" stroke-width="2.4" fill="none" stroke-linecap="round" opacity="0.65" marker-end="url(#arrow)"/>
+<path id="eGatesReports" d="M1140 370 L1140 463 L830 463 L830 556" stroke="#F3F1E7" stroke-width="2.4" fill="none" stroke-linecap="round" opacity="0.65" marker-end="url(#arrow)"/>
+<path id="eReportsDispatch" d="M970 625 L996 625" stroke="#F3F1E7" stroke-width="2.4" fill="none" stroke-linecap="round" opacity="0.65" marker-end="url(#arrow)"/>
+<path id="eBuildObs" d="M830 370 L830 463 L520 463 L520 556" stroke="#F3F1E7" stroke-width="2.4" fill="none" stroke-linecap="round" opacity="0.65" marker-end="url(#arrow)"/>
+<path id="eObsReports" d="M660 625 L686 625" stroke="#F3F1E7" stroke-width="2.4" fill="none" stroke-linecap="round" opacity="0.65" marker-end="url(#arrow)"/>
+<text x="365" y="293" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="12" font-weight="400" fill="#8A8275" text-anchor="middle" letter-spacing="0.8">ingest</text>
+<text x="675" y="293" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="12" font-weight="400" fill="#8A8275" text-anchor="middle" letter-spacing="0.8">retrieve</text>
+<text x="985" y="293" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="12" font-weight="400" fill="#8A8275" text-anchor="middle" letter-spacing="0.8">build</text>
+<text x="999" y="465" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="12" font-weight="400" fill="#8A8275" text-anchor="start" letter-spacing="0.8">evidence</text>
+<text x="985" y="613" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="12" font-weight="400" fill="#8A8275" text-anchor="middle" letter-spacing="0.8">handoff</text>
+<text x="689" y="465" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="12" font-weight="400" fill="#8A8275" text-anchor="start" letter-spacing="0.8">trace</text>
+<text x="675" y="613" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="12" font-weight="400" fill="#8A8275" text-anchor="middle" letter-spacing="0.8">annotate</text>
+<rect x="70" y="240" width="280" height="130" rx="22" ry="22" fill="#202020" stroke="#F3F1E7" stroke-width="2.2" filter="url(#softShadow)"/>
+<text x="92" y="284" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="18" font-weight="500" fill="#F3F1E7" text-anchor="start" letter-spacing="1.0">TAC INPUT</text>
+<text x="92" y="316" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif" font-size="13" font-weight="400" fill="#8A8275" text-anchor="start">plan / prd / receipt</text>
+<rect x="92" y="352" width="40" height="2.5" rx="1.5" fill="#8A8275"/>
+<rect x="380" y="240" width="280" height="130" rx="22" ry="22" fill="#202020" stroke="#F3F1E7" stroke-width="2.2" filter="url(#softShadow)"/>
+<text x="402" y="284" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="18" font-weight="500" fill="#F3F1E7" text-anchor="start" letter-spacing="1.0">KB RETRIEVAL</text>
+<text x="402" y="316" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif" font-size="13" font-weight="400" fill="#8A8275" text-anchor="start">reuse proven TAC components</text>
+<rect x="402" y="352" width="40" height="2.5" rx="1.5" fill="#8A8275"/>
+<rect x="690" y="240" width="280" height="130" rx="22" ry="22" fill="#202020" stroke="#D97757" stroke-width="2.2" filter="url(#softShadow)"/>
+<text x="712" y="284" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="18" font-weight="500" fill="#F3F1E7" text-anchor="start" letter-spacing="1.0">BUILD PATH</text>
+<text x="712" y="316" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif" font-size="13" font-weight="400" fill="#8A8275" text-anchor="start">team-runner + codex verifier</text>
+<rect x="712" y="352" width="40" height="2.5" rx="1.5" fill="#D97757"/>
+<rect x="1000" y="240" width="280" height="130" rx="22" ry="22" fill="#202020" stroke="#16a34a" stroke-width="2.2" filter="url(#softShadow)"/>
+<text x="1022" y="284" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="18" font-weight="500" fill="#F3F1E7" text-anchor="start" letter-spacing="1.0">VALIDATION GATES</text>
+<text x="1022" y="316" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif" font-size="13" font-weight="400" fill="#8A8275" text-anchor="start">tests / receipts / readbacks</text>
+<rect x="1022" y="352" width="40" height="2.5" rx="1.5" fill="#8A8275"/>
+<rect x="380" y="560" width="280" height="130" rx="22" ry="22" fill="#202020" stroke="#F3F1E7" stroke-width="2.2" filter="url(#softShadow)"/>
+<text x="402" y="604" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="18" font-weight="500" fill="#F3F1E7" text-anchor="start" letter-spacing="1.0">OBSERVABILITY</text>
+<text x="402" y="636" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif" font-size="13" font-weight="400" fill="#8A8275" text-anchor="start">langfuse + runtime context</text>
+<rect x="402" y="672" width="40" height="2.5" rx="1.5" fill="#8A8275"/>
+<rect x="690" y="560" width="280" height="130" rx="22" ry="22" fill="#202020" stroke="#F3F1E7" stroke-width="2.2" filter="url(#softShadow)"/>
+<text x="712" y="604" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="18" font-weight="500" fill="#F3F1E7" text-anchor="start" letter-spacing="1.0">REPORT PACKAGE</text>
+<text x="712" y="636" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif" font-size="13" font-weight="400" fill="#8A8275" text-anchor="start">md · pdf · svg · email</text>
+<rect x="712" y="672" width="40" height="2.5" rx="1.5" fill="#8A8275"/>
+<rect x="1000" y="560" width="280" height="130" rx="22" ry="22" fill="#202020" stroke="#F3F1E7" stroke-width="2.2" filter="url(#softShadow)"/>
+<text x="1022" y="604" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="18" font-weight="500" fill="#F3F1E7" text-anchor="start" letter-spacing="1.0">TEAM HANDOFF</text>
+<text x="1022" y="636" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif" font-size="13" font-weight="400" fill="#8A8275" text-anchor="start">pr: https://github.com/gbauto/gbautoma</text>
+<rect x="1022" y="672" width="40" height="2.5" rx="1.5" fill="#8A8275"/>
+<rect x="1000" y="240" width="280" height="130" rx="22" ry="22" fill="none" stroke="#16a34a" stroke-width="2.2" opacity="0"><animate attributeName="opacity" values="0;0;0.85;0;0" keyTimes="0;0.42;0.5;0.58;1" dur="10.0s" repeatCount="indefinite"/><animate attributeName="stroke-width" values="2.2;2.2;6;2.2;2.2" keyTimes="0;0.42;0.5;0.58;1" dur="10.0s" repeatCount="indefinite"/></rect>
+<circle r="8" fill="#F3F1E7" opacity="0"><animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.0080;0.1349;0.1429;1" dur="10.0s" repeatCount="indefinite"/><animateMotion dur="10.0s" repeatCount="indefinite" keyTimes="0;0.0000;0.1429;1" keyPoints="0;0;1;1" calcMode="linear"><mpath href="#eInputKb"/></animateMotion></circle>
+<circle r="8" fill="#D97757" opacity="0"><animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.1509;0.2777;0.2857;1" dur="10.0s" repeatCount="indefinite"/><animateMotion dur="10.0s" repeatCount="indefinite" keyTimes="0;0.1429;0.2857;1" keyPoints="0;0;1;1" calcMode="linear"><mpath href="#eKbBuild"/></animateMotion></circle>
+<circle r="8" fill="#16a34a" opacity="0"><animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.2937;0.4206;0.4286;1" dur="10.0s" repeatCount="indefinite"/><animateMotion dur="10.0s" repeatCount="indefinite" keyTimes="0;0.2857;0.4286;1" keyPoints="0;0;1;1" calcMode="linear"><mpath href="#eBuildGates"/></animateMotion></circle>
+<circle r="8" fill="#F3F1E7" opacity="0"><animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.4366;0.5634;0.5714;1" dur="10.0s" repeatCount="indefinite"/><animateMotion dur="10.0s" repeatCount="indefinite" keyTimes="0;0.4286;0.5714;1" keyPoints="0;0;1;1" calcMode="linear"><mpath href="#eGatesReports"/></animateMotion></circle>
+<circle r="8" fill="#F3F1E7" opacity="0"><animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.5794;0.7063;0.7143;1" dur="10.0s" repeatCount="indefinite"/><animateMotion dur="10.0s" repeatCount="indefinite" keyTimes="0;0.5714;0.7143;1" keyPoints="0;0;1;1" calcMode="linear"><mpath href="#eReportsDispatch"/></animateMotion></circle>
+<circle r="8" fill="#F3F1E7" opacity="0"><animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.7223;0.8491;0.8571;1" dur="10.0s" repeatCount="indefinite"/><animateMotion dur="10.0s" repeatCount="indefinite" keyTimes="0;0.7143;0.8571;1" keyPoints="0;0;1;1" calcMode="linear"><mpath href="#eBuildObs"/></animateMotion></circle>
+<circle r="8" fill="#F3F1E7" opacity="0"><animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.8651;0.9920;1.0000;1" dur="10.0s" repeatCount="indefinite"/><animateMotion dur="10.0s" repeatCount="indefinite" keyTimes="0;0.8571;1.0000;1" keyPoints="0;0;1;1" calcMode="linear"><mpath href="#eObsReports"/></animateMotion></circle>
+<rect x="90" y="870" width="1320" height="64" rx="32" ry="32" fill="#202020" stroke="#F3F1E7" stroke-width="2"/>
+<text x="750" y="910" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="17" font-weight="500" fill="#F3F1E7" text-anchor="middle" letter-spacing="1.2">Team Runner  +  Codex Verifier  +  Supabase Readback  +  Langfuse Trace  +  PR Status</text>
+<text x="750" y="964" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#8A8275" text-anchor="middle">Use the Markdown/PDF report for exact metrics and gate timings. This DAG shows responsibilities, handoffs, and decision flow.</text>
+</svg>
+        </section>
+
+        <section class="panel" id="section-05">
+          <h2>05 Evidence and validation</h2>
+          <p class="note">These rows are verifier/report gates. They are not proof that the underlying plan workload ran unless that workload is listed here.</p>
+          <table>
+            <thead><tr><th>Gate</th><th>Mode</th><th>Status</th><th>Duration</th></tr></thead>
+            <tbody><tr>
+          <td>validate build routing</td>
+          <td>REAL</td>
+          <td><span class="pill ok">ok</span></td>
+          <td>0s</td>
+        </tr>
+<tr>
+          <td>validate plan source</td>
+          <td>REAL</td>
+          <td><span class="pill ok">ok</span></td>
+          <td>0s</td>
+        </tr>
+<tr>
+          <td>run build receipt unit tests</td>
+          <td>REAL</td>
+          <td><span class="pill ok">ok</span></td>
+          <td>5.817s</td>
+        </tr>
+<tr>
+          <td>insert receipt into Supabase</td>
+          <td>REAL</td>
+          <td><span class="pill ok">ok</span></td>
+          <td>2.501s</td>
+        </tr>
+<tr>
+          <td>verify Supabase read-back</td>
+          <td>REAL</td>
+          <td><span class="pill ok">ok</span></td>
+          <td>0.648s</td>
+        </tr>
+<tr>
+          <td>emit Langfuse verifier trace</td>
+          <td>REAL</td>
+          <td><span class="pill ok">ok</span></td>
+          <td>0s</td>
+        </tr>
+<tr>
+          <td>record Codex verifier invocation</td>
+          <td>REAL</td>
+          <td><span class="pill ok">ok</span></td>
+          <td>0s</td>
+        </tr>
+<tr>
+          <td>record PR status</td>
+          <td>REAL</td>
+          <td><span class="pill ok">ok</span></td>
+          <td>0s</td>
+        </tr></tbody>
+          </table>
+          <table>
+            <tbody>
+              <tr><th>Langfuse trace</th><td>tac-build-report:local</td></tr>
+              <tr><th>Span shape</th><td>flat-single-span</td></tr>
+              <tr><th>Total tokens</th><td>not captured</td></tr>
+              <tr><th>Token source</th><td>not captured</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="panel" id="section-06">
+          <h2>06 Next steps</h2>
+          <ol><li>Publish the HTML report to the website and replace the in-flight placeholder with the public URL.</li>
+<li>Improve the visual language of the HTML report and PDF using the consulting collateral style system.</li>
+<li>Promote this report package as the standard output for TAC build runs.</li>
+<li>Keep Supabase and Langfuse readback gates required before production dispatch.</li></ol>
+          <h3>Team hypeframes</h3>
+          <div class="hypeframes"><section class="hypeframe"><svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1080" viewBox="0 0 1080 1080" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif">
+<title>GBAutomation TAC build readiness hypeframe 01 — What This Build Offers</title>
+<desc>A repeatable path from TAC intent to verified team handoff</desc>
+<defs>
+<linearGradient id="fbg" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0%" stop-color="#F3F1E7"/>
+<stop offset="100%" stop-color="#E6E4D9"/>
+</linearGradient>
+</defs>
+<rect width="1080" height="1080" fill="url(#fbg)"/>
+<rect x="48" y="48" width="984" height="984" rx="20" fill="none" stroke="#D6D4C8" stroke-width="1.2"/>
+<text x="96" y="142" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="22" font-weight="700" fill="#D97757" text-anchor="start" letter-spacing="4.0">GBAUTOMATION</text>
+<text x="96" y="174" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="13" font-weight="400" fill="rgba(25,25,25,0.55)" text-anchor="start" letter-spacing="1.2">TAC build readiness · hypeframe</text>
+<g>
+<circle cx="930" cy="158" r="56" fill="rgba(255,255,255,0.55)" stroke="#191919" stroke-width="1.6"><animate attributeName="stroke-width" values="1.6;1.6;3.4;1.6;1.6" keyTimes="0;0.45;0.5;0.55;1" dur="6s" repeatCount="indefinite"/></circle>
+<text x="930" y="172" font-family="'Newsreader',Georgia,'Times New Roman',serif" font-size="38" font-weight="500" fill="#191919" text-anchor="middle">01</text>
+</g>
+<text x="96" y="420" font-family="'Newsreader',Georgia,'Times New Roman',serif" font-size="88" font-weight="500" fill="#191919" text-anchor="start">What This Build</text>
+<text x="96" y="520" font-family="'Newsreader',Georgia,'Times New Roman',serif" font-size="88" font-weight="500" fill="#191919" text-anchor="start">Offers</text>
+<text x="96" y="650" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif" font-size="26" font-weight="400" fill="rgba(25,25,25,0.55)" text-anchor="start">A repeatable path from TAC intent to</text>
+<text x="96" y="686" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif" font-size="26" font-weight="400" fill="rgba(25,25,25,0.55)" text-anchor="start">verified team handoff</text>
+<rect x="96" y="840" width="240" height="6" rx="3" fill="#D97757"/>
+<text x="96" y="900" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="18" font-weight="600" fill="#191919" text-anchor="start" letter-spacing="0.6">run · 1fafe5cb</text>
+<text x="96" y="932" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="14" font-weight="400" fill="rgba(25,25,25,0.55)" text-anchor="start" letter-spacing="0.6">started · 2026-05-12</text>
+<text x="96" y="960" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="14" font-weight="400" fill="rgba(25,25,25,0.55)" text-anchor="start" letter-spacing="0.6">status · OK</text>
+<text x="984" y="960" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="12" font-weight="400" fill="rgba(25,25,25,0.40)" text-anchor="end">gbautomation.xyz</text>
+</svg></section>
+<section class="hypeframe"><svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1080" viewBox="0 0 1080 1080" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif">
+<title>GBAutomation TAC build readiness hypeframe 02 — How The Team Uses It</title>
+<desc>Review the DAG, inspect the report, then decide PR and production route</desc>
+<defs>
+<linearGradient id="fbg" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0%" stop-color="#F3F1E7"/>
+<stop offset="100%" stop-color="#E6E4D9"/>
+</linearGradient>
+</defs>
+<rect width="1080" height="1080" fill="url(#fbg)"/>
+<rect x="48" y="48" width="984" height="984" rx="20" fill="none" stroke="verified team handoff" stroke-width="1.2"/>
+<text x="96" y="142" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="22" font-weight="700" fill="#D97757" text-anchor="start" letter-spacing="4.0">GBAUTOMATION</text>
+<text x="96" y="174" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="13" font-weight="400" fill="rgba(25,25,25,0.55)" text-anchor="start" letter-spacing="1.2">TAC build readiness · hypeframe</text>
+<g>
+<circle cx="930" cy="158" r="56" fill="rgba(255,255,255,0.55)" stroke="#191919" stroke-width="1.6"><animate attributeName="stroke-width" values="1.6;1.6;3.4;1.6;1.6" keyTimes="0;0.45;0.5;0.55;1" dur="6s" repeatCount="indefinite"/></circle>
+<text x="930" y="172" font-family="'Newsreader',Georgia,'Times New Roman',serif" font-size="38" font-weight="500" fill="#191919" text-anchor="middle">02</text>
+</g>
+<text x="96" y="420" font-family="'Newsreader',Georgia,'Times New Roman',serif" font-size="88" font-weight="500" fill="#191919" text-anchor="start">How The Team Uses</text>
+<text x="96" y="520" font-family="'Newsreader',Georgia,'Times New Roman',serif" font-size="88" font-weight="500" fill="#191919" text-anchor="start">It</text>
+<text x="96" y="650" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif" font-size="26" font-weight="400" fill="rgba(25,25,25,0.55)" text-anchor="start">Review the DAG, inspect the report,</text>
+<text x="96" y="686" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif" font-size="26" font-weight="400" fill="rgba(25,25,25,0.55)" text-anchor="start">then decide PR and production route</text>
+<rect x="96" y="840" width="240" height="6" rx="3" fill="#D97757"/>
+<text x="96" y="900" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="18" font-weight="600" fill="#191919" text-anchor="start" letter-spacing="0.6">run · 1fafe5cb</text>
+<text x="96" y="932" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="14" font-weight="400" fill="rgba(25,25,25,0.55)" text-anchor="start" letter-spacing="0.6">started · 2026-05-12</text>
+<text x="96" y="960" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="14" font-weight="400" fill="rgba(25,25,25,0.55)" text-anchor="start" letter-spacing="0.6">status · OK</text>
+<text x="984" y="960" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="12" font-weight="400" fill="rgba(25,25,25,0.40)" text-anchor="end">gbautomation.xyz</text>
+</svg></section>
+<section class="hypeframe"><svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1080" viewBox="0 0 1080 1080" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif">
+<title>GBAutomation TAC build readiness hypeframe 03 — Proof Points</title>
+<desc>Verifier, Supabase, observability, report, and Gmail draft evidence</desc>
+<defs>
+<linearGradient id="fbg" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0%" stop-color="#F3F1E7"/>
+<stop offset="100%" stop-color="#E6E4D9"/>
+</linearGradient>
+</defs>
+<rect width="1080" height="1080" fill="url(#fbg)"/>
+<rect x="48" y="48" width="984" height="984" rx="20" fill="none" stroke="then decide PR and production route" stroke-width="1.2"/>
+<text x="96" y="142" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="22" font-weight="700" fill="#D97757" text-anchor="start" letter-spacing="4.0">GBAUTOMATION</text>
+<text x="96" y="174" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="13" font-weight="400" fill="rgba(25,25,25,0.55)" text-anchor="start" letter-spacing="1.2">TAC build readiness · hypeframe</text>
+<g>
+<circle cx="930" cy="158" r="56" fill="rgba(255,255,255,0.55)" stroke="#191919" stroke-width="1.6"><animate attributeName="stroke-width" values="1.6;1.6;3.4;1.6;1.6" keyTimes="0;0.45;0.5;0.55;1" dur="6s" repeatCount="indefinite"/></circle>
+<text x="930" y="172" font-family="'Newsreader',Georgia,'Times New Roman',serif" font-size="38" font-weight="500" fill="#191919" text-anchor="middle">03</text>
+</g>
+<text x="96" y="470" font-family="'Newsreader',Georgia,'Times New Roman',serif" font-size="88" font-weight="500" fill="#191919" text-anchor="start">Proof Points</text>
+<text x="96" y="600" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif" font-size="26" font-weight="400" fill="rgba(25,25,25,0.55)" text-anchor="start">Verifier, Supabase, observability,</text>
+<text x="96" y="636" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif" font-size="26" font-weight="400" fill="rgba(25,25,25,0.55)" text-anchor="start">report, and Gmail draft evidence</text>
+<rect x="96" y="840" width="240" height="6" rx="3" fill="#D97757"/>
+<text x="96" y="900" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="18" font-weight="600" fill="#191919" text-anchor="start" letter-spacing="0.6">run · 1fafe5cb</text>
+<text x="96" y="932" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="14" font-weight="400" fill="rgba(25,25,25,0.55)" text-anchor="start" letter-spacing="0.6">started · 2026-05-12</text>
+<text x="96" y="960" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="14" font-weight="400" fill="rgba(25,25,25,0.55)" text-anchor="start" letter-spacing="0.6">status · OK</text>
+<text x="984" y="960" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="12" font-weight="400" fill="rgba(25,25,25,0.40)" text-anchor="end">gbautomation.xyz</text>
+</svg></section></div>
+        </section>
+
+        <section class="panel" id="section-07">
+          <h2>07 Pointers</h2>
+          <table>
+            <thead><tr><th>Deliverable</th><th>Use</th><th>Path</th></tr></thead>
+            <tbody><tr>
+          <td>HTML build report</td>
+          <td>Best visual review experience in a browser.</td>
+          <td><code>second-brain/intelligence/reports/2026-05-12/tac-build-report-1fafe5cb/tac-build-report-1fafe5cb.html</code></td>
+        </tr>
+<tr>
+          <td>Markdown source of record</td>
+          <td>Canonical second-brain evidence and metrics.</td>
+          <td><code>second-brain/intelligence/reports/2026-05-12/tac-build-report-1fafe5cb/tac-build-report-1fafe5cb.md</code></td>
+        </tr>
+<tr>
+          <td>Workflow DAG SVG</td>
+          <td>Single-file workflow diagram.</td>
+          <td><code>second-brain/intelligence/reports/2026-05-12/tac-build-report-1fafe5cb/tac-build-report-1fafe5cb.svg</code></td>
+        </tr>
+<tr>
+          <td>Team hypeframe</td>
+          <td>Qualitative team briefing slide.</td>
+          <td><code>second-brain/intelligence/reports/2026-05-12/tac-build-report-1fafe5cb/hypeframes/tac-build-report-1fafe5cb-01-build-offer.svg</code></td>
+        </tr>
+<tr>
+          <td>Team hypeframe</td>
+          <td>Qualitative team briefing slide.</td>
+          <td><code>second-brain/intelligence/reports/2026-05-12/tac-build-report-1fafe5cb/hypeframes/tac-build-report-1fafe5cb-02-team-path.svg</code></td>
+        </tr>
+<tr>
+          <td>Team hypeframe</td>
+          <td>Qualitative team briefing slide.</td>
+          <td><code>second-brain/intelligence/reports/2026-05-12/tac-build-report-1fafe5cb/hypeframes/tac-build-report-1fafe5cb-03-proof-points.svg</code></td>
+        </tr></tbody>
+          </table>
+          <div class="signoff">
+            <p><strong>Prepared by Greg Black</strong><br />GBAutomation<br />greg@gbautomation.xyz</p>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <section class="asset-section" aria-labelledby="asset-cards-title">
+      <h2 id="asset-cards-title">Report asset cards</h2>
+      <p class="note">HTML, SVG, and MP4 deliverables for this report package. MP4 cards populate when motion renders are present in the package folder.</p>
+      <div class="asset-grid"><article class="asset-card">
+        <div class="asset-preview"><div class="html-preview"><strong>TAC Build Readiness Report</strong><span>Final pickup validation</span></div></div>
+        <div class="asset-meta">
+          <span>HTML</span>
+          <h3>HTML report</h3>
+          <p>Primary browser review surface for the plan brief and evidence package.</p>
+          <code>second-brain/intelligence/reports/2026-05-12/tac-build-report-1fafe5cb/tac-build-report-1fafe5cb.html</code>
+        </div>
+      </article>
+<article class="asset-card">
+        <div class="asset-preview"><svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1000" viewBox="0 0 1500 1000" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif">
+<title>GBAutomation TAC build workflow DAG</title>
+<desc>Animated directed acyclic graph showing the TAC build workflow from input through retrieval, build, validation, observability, reports, and team handoff.</desc>
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1B1B1B"/><stop offset="100%" stop-color="#191919"/></linearGradient>
+<filter id="softShadow" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur in="SourceAlpha" stdDeviation="3"/><feOffset dx="0" dy="3" result="off"/><feComponentTransfer><feFuncA type="linear" slope="0.45"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#F3F1E7"/></marker>
+</defs>
+<rect width="1500" height="1000" fill="url(#bg)"/>
+<text x="750" y="92" font-family="'Newsreader',Georgia,'Times New Roman',serif" font-size="44" font-weight="500" fill="#F3F1E7" text-anchor="middle" letter-spacing="2.0">GBAutomation</text>
+<text x="750" y="132" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif" font-size="18" font-weight="400" fill="#8A8275" text-anchor="middle" letter-spacing="1.4">TAC build workflow DAG</text>
+<text x="750" y="168" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="14" font-weight="400" fill="#8A8275" text-anchor="middle">tac-build-report  ·  run 1fafe5cb  ·  status OK</text>
+<circle cx="1436" cy="92" r="14" fill="#16a34a" opacity="0.92"/>
+<path id="eInputKb" d="M350 305 L376 305" stroke="#F3F1E7" stroke-width="2.4" fill="none" stroke-linecap="round" opacity="0.65" marker-end="url(#arrow)"/>
+<path id="eKbBuild" d="M660 305 L686 305" stroke="#F3F1E7" stroke-width="2.4" fill="none" stroke-linecap="round" opacity="0.65" marker-end="url(#arrow)"/>
+<path id="eBuildGates" d="M970 305 L996 305" stroke="#F3F1E7" stroke-width="2.4" fill="none" stroke-linecap="round" opacity="0.65" marker-end="url(#arrow)"/>
+<path id="eGatesReports" d="M1140 370 L1140 463 L830 463 L830 556" stroke="#F3F1E7" stroke-width="2.4" fill="none" stroke-linecap="round" opacity="0.65" marker-end="url(#arrow)"/>
+<path id="eReportsDispatch" d="M970 625 L996 625" stroke="#F3F1E7" stroke-width="2.4" fill="none" stroke-linecap="round" opacity="0.65" marker-end="url(#arrow)"/>
+<path id="eBuildObs" d="M830 370 L830 463 L520 463 L520 556" stroke="#F3F1E7" stroke-width="2.4" fill="none" stroke-linecap="round" opacity="0.65" marker-end="url(#arrow)"/>
+<path id="eObsReports" d="M660 625 L686 625" stroke="#F3F1E7" stroke-width="2.4" fill="none" stroke-linecap="round" opacity="0.65" marker-end="url(#arrow)"/>
+<text x="365" y="293" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="12" font-weight="400" fill="#8A8275" text-anchor="middle" letter-spacing="0.8">ingest</text>
+<text x="675" y="293" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="12" font-weight="400" fill="#8A8275" text-anchor="middle" letter-spacing="0.8">retrieve</text>
+<text x="985" y="293" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="12" font-weight="400" fill="#8A8275" text-anchor="middle" letter-spacing="0.8">build</text>
+<text x="999" y="465" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="12" font-weight="400" fill="#8A8275" text-anchor="start" letter-spacing="0.8">evidence</text>
+<text x="985" y="613" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="12" font-weight="400" fill="#8A8275" text-anchor="middle" letter-spacing="0.8">handoff</text>
+<text x="689" y="465" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="12" font-weight="400" fill="#8A8275" text-anchor="start" letter-spacing="0.8">trace</text>
+<text x="675" y="613" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="12" font-weight="400" fill="#8A8275" text-anchor="middle" letter-spacing="0.8">annotate</text>
+<rect x="70" y="240" width="280" height="130" rx="22" ry="22" fill="#202020" stroke="#F3F1E7" stroke-width="2.2" filter="url(#softShadow)"/>
+<text x="92" y="284" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="18" font-weight="500" fill="#F3F1E7" text-anchor="start" letter-spacing="1.0">TAC INPUT</text>
+<text x="92" y="316" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif" font-size="13" font-weight="400" fill="#8A8275" text-anchor="start">plan / prd / receipt</text>
+<rect x="92" y="352" width="40" height="2.5" rx="1.5" fill="#8A8275"/>
+<rect x="380" y="240" width="280" height="130" rx="22" ry="22" fill="#202020" stroke="#F3F1E7" stroke-width="2.2" filter="url(#softShadow)"/>
+<text x="402" y="284" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="18" font-weight="500" fill="#F3F1E7" text-anchor="start" letter-spacing="1.0">KB RETRIEVAL</text>
+<text x="402" y="316" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif" font-size="13" font-weight="400" fill="#8A8275" text-anchor="start">reuse proven TAC components</text>
+<rect x="402" y="352" width="40" height="2.5" rx="1.5" fill="#8A8275"/>
+<rect x="690" y="240" width="280" height="130" rx="22" ry="22" fill="#202020" stroke="#D97757" stroke-width="2.2" filter="url(#softShadow)"/>
+<text x="712" y="284" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="18" font-weight="500" fill="#F3F1E7" text-anchor="start" letter-spacing="1.0">BUILD PATH</text>
+<text x="712" y="316" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif" font-size="13" font-weight="400" fill="#8A8275" text-anchor="start">team-runner + codex verifier</text>
+<rect x="712" y="352" width="40" height="2.5" rx="1.5" fill="#D97757"/>
+<rect x="1000" y="240" width="280" height="130" rx="22" ry="22" fill="#202020" stroke="#16a34a" stroke-width="2.2" filter="url(#softShadow)"/>
+<text x="1022" y="284" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="18" font-weight="500" fill="#F3F1E7" text-anchor="start" letter-spacing="1.0">VALIDATION GATES</text>
+<text x="1022" y="316" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif" font-size="13" font-weight="400" fill="#8A8275" text-anchor="start">tests / receipts / readbacks</text>
+<rect x="1022" y="352" width="40" height="2.5" rx="1.5" fill="#8A8275"/>
+<rect x="380" y="560" width="280" height="130" rx="22" ry="22" fill="#202020" stroke="#F3F1E7" stroke-width="2.2" filter="url(#softShadow)"/>
+<text x="402" y="604" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="18" font-weight="500" fill="#F3F1E7" text-anchor="start" letter-spacing="1.0">OBSERVABILITY</text>
+<text x="402" y="636" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif" font-size="13" font-weight="400" fill="#8A8275" text-anchor="start">langfuse + runtime context</text>
+<rect x="402" y="672" width="40" height="2.5" rx="1.5" fill="#8A8275"/>
+<rect x="690" y="560" width="280" height="130" rx="22" ry="22" fill="#202020" stroke="#F3F1E7" stroke-width="2.2" filter="url(#softShadow)"/>
+<text x="712" y="604" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="18" font-weight="500" fill="#F3F1E7" text-anchor="start" letter-spacing="1.0">REPORT PACKAGE</text>
+<text x="712" y="636" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif" font-size="13" font-weight="400" fill="#8A8275" text-anchor="start">md · pdf · svg · email</text>
+<rect x="712" y="672" width="40" height="2.5" rx="1.5" fill="#8A8275"/>
+<rect x="1000" y="560" width="280" height="130" rx="22" ry="22" fill="#202020" stroke="#F3F1E7" stroke-width="2.2" filter="url(#softShadow)"/>
+<text x="1022" y="604" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="18" font-weight="500" fill="#F3F1E7" text-anchor="start" letter-spacing="1.0">TEAM HANDOFF</text>
+<text x="1022" y="636" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif" font-size="13" font-weight="400" fill="#8A8275" text-anchor="start">pr: https://github.com/gbauto/gbautoma</text>
+<rect x="1022" y="672" width="40" height="2.5" rx="1.5" fill="#8A8275"/>
+<rect x="1000" y="240" width="280" height="130" rx="22" ry="22" fill="none" stroke="#16a34a" stroke-width="2.2" opacity="0"><animate attributeName="opacity" values="0;0;0.85;0;0" keyTimes="0;0.42;0.5;0.58;1" dur="10.0s" repeatCount="indefinite"/><animate attributeName="stroke-width" values="2.2;2.2;6;2.2;2.2" keyTimes="0;0.42;0.5;0.58;1" dur="10.0s" repeatCount="indefinite"/></rect>
+<circle r="8" fill="#F3F1E7" opacity="0"><animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.0080;0.1349;0.1429;1" dur="10.0s" repeatCount="indefinite"/><animateMotion dur="10.0s" repeatCount="indefinite" keyTimes="0;0.0000;0.1429;1" keyPoints="0;0;1;1" calcMode="linear"><mpath href="#eInputKb"/></animateMotion></circle>
+<circle r="8" fill="#D97757" opacity="0"><animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.1509;0.2777;0.2857;1" dur="10.0s" repeatCount="indefinite"/><animateMotion dur="10.0s" repeatCount="indefinite" keyTimes="0;0.1429;0.2857;1" keyPoints="0;0;1;1" calcMode="linear"><mpath href="#eKbBuild"/></animateMotion></circle>
+<circle r="8" fill="#16a34a" opacity="0"><animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.2937;0.4206;0.4286;1" dur="10.0s" repeatCount="indefinite"/><animateMotion dur="10.0s" repeatCount="indefinite" keyTimes="0;0.2857;0.4286;1" keyPoints="0;0;1;1" calcMode="linear"><mpath href="#eBuildGates"/></animateMotion></circle>
+<circle r="8" fill="#F3F1E7" opacity="0"><animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.4366;0.5634;0.5714;1" dur="10.0s" repeatCount="indefinite"/><animateMotion dur="10.0s" repeatCount="indefinite" keyTimes="0;0.4286;0.5714;1" keyPoints="0;0;1;1" calcMode="linear"><mpath href="#eGatesReports"/></animateMotion></circle>
+<circle r="8" fill="#F3F1E7" opacity="0"><animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.5794;0.7063;0.7143;1" dur="10.0s" repeatCount="indefinite"/><animateMotion dur="10.0s" repeatCount="indefinite" keyTimes="0;0.5714;0.7143;1" keyPoints="0;0;1;1" calcMode="linear"><mpath href="#eReportsDispatch"/></animateMotion></circle>
+<circle r="8" fill="#F3F1E7" opacity="0"><animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.7223;0.8491;0.8571;1" dur="10.0s" repeatCount="indefinite"/><animateMotion dur="10.0s" repeatCount="indefinite" keyTimes="0;0.7143;0.8571;1" keyPoints="0;0;1;1" calcMode="linear"><mpath href="#eBuildObs"/></animateMotion></circle>
+<circle r="8" fill="#F3F1E7" opacity="0"><animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.8651;0.9920;1.0000;1" dur="10.0s" repeatCount="indefinite"/><animateMotion dur="10.0s" repeatCount="indefinite" keyTimes="0;0.8571;1.0000;1" keyPoints="0;0;1;1" calcMode="linear"><mpath href="#eObsReports"/></animateMotion></circle>
+<rect x="90" y="870" width="1320" height="64" rx="32" ry="32" fill="#202020" stroke="#F3F1E7" stroke-width="2"/>
+<text x="750" y="910" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="17" font-weight="500" fill="#F3F1E7" text-anchor="middle" letter-spacing="1.2">Team Runner  +  Codex Verifier  +  Supabase Readback  +  Langfuse Trace  +  PR Status</text>
+<text x="750" y="964" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#8A8275" text-anchor="middle">Use the Markdown/PDF report for exact metrics and gate timings. This DAG shows responsibilities, handoffs, and decision flow.</text>
+</svg></div>
+        <div class="asset-meta">
+          <span>SVG</span>
+          <h3>Workflow DAG</h3>
+          <p>Single-file visual of the TAC readiness path and handoffs.</p>
+          <code>second-brain/intelligence/reports/2026-05-12/tac-build-report-1fafe5cb/tac-build-report-1fafe5cb.svg</code>
+        </div>
+      </article>
+<article class="asset-card">
+        <div class="asset-preview"><svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1080" viewBox="0 0 1080 1080" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif">
+<title>GBAutomation TAC build readiness hypeframe 01 — What This Build Offers</title>
+<desc>A repeatable path from TAC intent to verified team handoff</desc>
+<defs>
+<linearGradient id="fbg" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0%" stop-color="#F3F1E7"/>
+<stop offset="100%" stop-color="#E6E4D9"/>
+</linearGradient>
+</defs>
+<rect width="1080" height="1080" fill="url(#fbg)"/>
+<rect x="48" y="48" width="984" height="984" rx="20" fill="none" stroke="#D6D4C8" stroke-width="1.2"/>
+<text x="96" y="142" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="22" font-weight="700" fill="#D97757" text-anchor="start" letter-spacing="4.0">GBAUTOMATION</text>
+<text x="96" y="174" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="13" font-weight="400" fill="rgba(25,25,25,0.55)" text-anchor="start" letter-spacing="1.2">TAC build readiness · hypeframe</text>
+<g>
+<circle cx="930" cy="158" r="56" fill="rgba(255,255,255,0.55)" stroke="#191919" stroke-width="1.6"><animate attributeName="stroke-width" values="1.6;1.6;3.4;1.6;1.6" keyTimes="0;0.45;0.5;0.55;1" dur="6s" repeatCount="indefinite"/></circle>
+<text x="930" y="172" font-family="'Newsreader',Georgia,'Times New Roman',serif" font-size="38" font-weight="500" fill="#191919" text-anchor="middle">01</text>
+</g>
+<text x="96" y="420" font-family="'Newsreader',Georgia,'Times New Roman',serif" font-size="88" font-weight="500" fill="#191919" text-anchor="start">What This Build</text>
+<text x="96" y="520" font-family="'Newsreader',Georgia,'Times New Roman',serif" font-size="88" font-weight="500" fill="#191919" text-anchor="start">Offers</text>
+<text x="96" y="650" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif" font-size="26" font-weight="400" fill="rgba(25,25,25,0.55)" text-anchor="start">A repeatable path from TAC intent to</text>
+<text x="96" y="686" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif" font-size="26" font-weight="400" fill="rgba(25,25,25,0.55)" text-anchor="start">verified team handoff</text>
+<rect x="96" y="840" width="240" height="6" rx="3" fill="#D97757"/>
+<text x="96" y="900" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="18" font-weight="600" fill="#191919" text-anchor="start" letter-spacing="0.6">run · 1fafe5cb</text>
+<text x="96" y="932" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="14" font-weight="400" fill="rgba(25,25,25,0.55)" text-anchor="start" letter-spacing="0.6">started · 2026-05-12</text>
+<text x="96" y="960" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="14" font-weight="400" fill="rgba(25,25,25,0.55)" text-anchor="start" letter-spacing="0.6">status · OK</text>
+<text x="984" y="960" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="12" font-weight="400" fill="rgba(25,25,25,0.40)" text-anchor="end">gbautomation.xyz</text>
+</svg></div>
+        <div class="asset-meta">
+          <span>SVG</span>
+          <h3>Hypeframe 1</h3>
+          <p>Team-facing briefing visual for this report package.</p>
+          <code>second-brain/intelligence/reports/2026-05-12/tac-build-report-1fafe5cb/hypeframes/tac-build-report-1fafe5cb-01-build-offer.svg</code>
+        </div>
+      </article>
+<article class="asset-card">
+        <div class="asset-preview"><svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1080" viewBox="0 0 1080 1080" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif">
+<title>GBAutomation TAC build readiness hypeframe 02 — How The Team Uses It</title>
+<desc>Review the DAG, inspect the report, then decide PR and production route</desc>
+<defs>
+<linearGradient id="fbg" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0%" stop-color="#F3F1E7"/>
+<stop offset="100%" stop-color="#E6E4D9"/>
+</linearGradient>
+</defs>
+<rect width="1080" height="1080" fill="url(#fbg)"/>
+<rect x="48" y="48" width="984" height="984" rx="20" fill="none" stroke="verified team handoff" stroke-width="1.2"/>
+<text x="96" y="142" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="22" font-weight="700" fill="#D97757" text-anchor="start" letter-spacing="4.0">GBAUTOMATION</text>
+<text x="96" y="174" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="13" font-weight="400" fill="rgba(25,25,25,0.55)" text-anchor="start" letter-spacing="1.2">TAC build readiness · hypeframe</text>
+<g>
+<circle cx="930" cy="158" r="56" fill="rgba(255,255,255,0.55)" stroke="#191919" stroke-width="1.6"><animate attributeName="stroke-width" values="1.6;1.6;3.4;1.6;1.6" keyTimes="0;0.45;0.5;0.55;1" dur="6s" repeatCount="indefinite"/></circle>
+<text x="930" y="172" font-family="'Newsreader',Georgia,'Times New Roman',serif" font-size="38" font-weight="500" fill="#191919" text-anchor="middle">02</text>
+</g>
+<text x="96" y="420" font-family="'Newsreader',Georgia,'Times New Roman',serif" font-size="88" font-weight="500" fill="#191919" text-anchor="start">How The Team Uses</text>
+<text x="96" y="520" font-family="'Newsreader',Georgia,'Times New Roman',serif" font-size="88" font-weight="500" fill="#191919" text-anchor="start">It</text>
+<text x="96" y="650" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif" font-size="26" font-weight="400" fill="rgba(25,25,25,0.55)" text-anchor="start">Review the DAG, inspect the report,</text>
+<text x="96" y="686" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif" font-size="26" font-weight="400" fill="rgba(25,25,25,0.55)" text-anchor="start">then decide PR and production route</text>
+<rect x="96" y="840" width="240" height="6" rx="3" fill="#D97757"/>
+<text x="96" y="900" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="18" font-weight="600" fill="#191919" text-anchor="start" letter-spacing="0.6">run · 1fafe5cb</text>
+<text x="96" y="932" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="14" font-weight="400" fill="rgba(25,25,25,0.55)" text-anchor="start" letter-spacing="0.6">started · 2026-05-12</text>
+<text x="96" y="960" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="14" font-weight="400" fill="rgba(25,25,25,0.55)" text-anchor="start" letter-spacing="0.6">status · OK</text>
+<text x="984" y="960" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="12" font-weight="400" fill="rgba(25,25,25,0.40)" text-anchor="end">gbautomation.xyz</text>
+</svg></div>
+        <div class="asset-meta">
+          <span>SVG</span>
+          <h3>Hypeframe 2</h3>
+          <p>Team-facing briefing visual for this report package.</p>
+          <code>second-brain/intelligence/reports/2026-05-12/tac-build-report-1fafe5cb/hypeframes/tac-build-report-1fafe5cb-02-team-path.svg</code>
+        </div>
+      </article>
+<article class="asset-card">
+        <div class="asset-preview"><svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1080" viewBox="0 0 1080 1080" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif">
+<title>GBAutomation TAC build readiness hypeframe 03 — Proof Points</title>
+<desc>Verifier, Supabase, observability, report, and Gmail draft evidence</desc>
+<defs>
+<linearGradient id="fbg" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0%" stop-color="#F3F1E7"/>
+<stop offset="100%" stop-color="#E6E4D9"/>
+</linearGradient>
+</defs>
+<rect width="1080" height="1080" fill="url(#fbg)"/>
+<rect x="48" y="48" width="984" height="984" rx="20" fill="none" stroke="then decide PR and production route" stroke-width="1.2"/>
+<text x="96" y="142" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="22" font-weight="700" fill="#D97757" text-anchor="start" letter-spacing="4.0">GBAUTOMATION</text>
+<text x="96" y="174" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="13" font-weight="400" fill="rgba(25,25,25,0.55)" text-anchor="start" letter-spacing="1.2">TAC build readiness · hypeframe</text>
+<g>
+<circle cx="930" cy="158" r="56" fill="rgba(255,255,255,0.55)" stroke="#191919" stroke-width="1.6"><animate attributeName="stroke-width" values="1.6;1.6;3.4;1.6;1.6" keyTimes="0;0.45;0.5;0.55;1" dur="6s" repeatCount="indefinite"/></circle>
+<text x="930" y="172" font-family="'Newsreader',Georgia,'Times New Roman',serif" font-size="38" font-weight="500" fill="#191919" text-anchor="middle">03</text>
+</g>
+<text x="96" y="470" font-family="'Newsreader',Georgia,'Times New Roman',serif" font-size="88" font-weight="500" fill="#191919" text-anchor="start">Proof Points</text>
+<text x="96" y="600" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif" font-size="26" font-weight="400" fill="rgba(25,25,25,0.55)" text-anchor="start">Verifier, Supabase, observability,</text>
+<text x="96" y="636" font-family="'Inter','Segoe UI',Helvetica,Arial,sans-serif" font-size="26" font-weight="400" fill="rgba(25,25,25,0.55)" text-anchor="start">report, and Gmail draft evidence</text>
+<rect x="96" y="840" width="240" height="6" rx="3" fill="#D97757"/>
+<text x="96" y="900" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="18" font-weight="600" fill="#191919" text-anchor="start" letter-spacing="0.6">run · 1fafe5cb</text>
+<text x="96" y="932" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="14" font-weight="400" fill="rgba(25,25,25,0.55)" text-anchor="start" letter-spacing="0.6">started · 2026-05-12</text>
+<text x="96" y="960" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="14" font-weight="400" fill="rgba(25,25,25,0.55)" text-anchor="start" letter-spacing="0.6">status · OK</text>
+<text x="984" y="960" font-family="'JetBrains Mono','IBM Plex Mono','Fira Code',Menlo,Monaco,Consolas,monospace" font-size="12" font-weight="400" fill="rgba(25,25,25,0.40)" text-anchor="end">gbautomation.xyz</text>
+</svg></div>
+        <div class="asset-meta">
+          <span>SVG</span>
+          <h3>Hypeframe 3</h3>
+          <p>Team-facing briefing visual for this report package.</p>
+          <code>second-brain/intelligence/reports/2026-05-12/tac-build-report-1fafe5cb/hypeframes/tac-build-report-1fafe5cb-03-proof-points.svg</code>
+        </div>
+      </article>
+<article class="asset-card">
+        <div class="asset-preview"><video controls preload="metadata" src="tac-build-report-1fafe5cb.mp4"></video></div>
+        <div class="asset-meta">
+          <span>MP4</span>
+          <h3>Motion render 1</h3>
+          <p>Motion asset generated for stakeholder review or publishing.</p>
+          <code>second-brain/intelligence/reports/2026-05-12/tac-build-report-1fafe5cb/tac-build-report-1fafe5cb.mp4</code>
+        </div>
+      </article></div>
+    </section>
+  </main>
+</body>
+</html>

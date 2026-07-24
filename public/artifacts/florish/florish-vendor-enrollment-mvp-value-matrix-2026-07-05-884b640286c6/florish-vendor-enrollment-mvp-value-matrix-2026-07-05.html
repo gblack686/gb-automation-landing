@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Florish — Vendor Enrollment Engine MVP + Value Matrix</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --terracotta:#D97757; --terracotta-hover:#B75F43; --ink:#191919; --cream-bg:#F3F1E7;
+  --cream-2:#E6E4D9; --stone:#D6D4C8; --text-mute:#8C8A84; --text-muted-2:#5C5C5C;
+  --font-sans:'Inter', sans-serif; --font-serif:'Newsreader', serif;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin:0; background:var(--cream-bg); color:var(--ink); font-family:var(--font-sans); -webkit-font-smoothing:antialiased; }
+a { color: var(--ink); text-decoration-color: var(--terracotta); text-underline-offset: 4px; }
+.gb-ambient { position:fixed; inset:0; pointer-events:none; z-index:-1; background: radial-gradient(circle at 12% 10%, rgba(217,119,87,.23), transparent 28%), radial-gradient(circle at 90% 18%, rgba(217,119,87,.12), transparent 24%); }
+.topbar { position: sticky; top:0; z-index:5; backdrop-filter: blur(14px); background: rgba(243,241,231,.82); border-bottom:1px solid var(--stone); }
+.topbar-inner { max-width:1180px; margin:0 auto; padding:14px 24px; display:flex; align-items:center; justify-content:space-between; gap:18px; }
+.logo { display:flex; align-items:center; gap:10px; font-size:11px; letter-spacing:.24em; text-transform:uppercase; font-weight:600; }
+.logo img { width:34px; height:34px; object-fit:contain; }
+.nav { display:flex; flex-wrap:wrap; gap:12px; font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--text-muted-2); }
+.hero { max-width:1180px; margin:0 auto; padding:78px 24px 46px; display:grid; grid-template-columns:1.15fr .85fr; gap:30px; align-items:stretch; }
+.eyebrow, .gb-eyebrow { color:var(--text-mute); font-size:10px; letter-spacing:.25em; text-transform:uppercase; font-weight:600; }
+h1,h2,h3 { font-family:var(--font-serif); font-weight:500; letter-spacing:-.035em; margin:0; }
+h1 { font-size: clamp(46px, 7vw, 86px); line-height:.91; }
+h1 em { color:var(--terracotta); font-style:italic; }
+.lede { margin-top:24px; color:var(--text-muted-2); font-size:18px; line-height:1.65; max-width:760px; }
+.glass-panel { background:rgba(230,228,217,.68); border:1px solid var(--stone); border-radius:28px; box-shadow:0 20px 60px rgba(25,25,25,.06); backdrop-filter:blur(12px); }
+.hero-card { padding:28px; display:flex; flex-direction:column; justify-content:space-between; gap:20px; }
+.metric-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.metric { background:rgba(255,255,255,.38); border:1px solid var(--stone); border-radius:18px; padding:18px; }
+.metric strong { display:block; font-family:var(--font-serif); font-size:28px; margin-bottom:4px; color:var(--ink); }
+.metric span { color:var(--text-muted-2); font-size:12px; line-height:1.4; }
+main { max-width:1180px; margin:0 auto; padding:8px 24px 80px; display:grid; grid-template-columns:260px 1fr; gap:32px; }
+.toc { position:sticky; top:86px; align-self:start; padding:22px; }
+.toc a { display:block; padding:10px 0; font-size:11px; letter-spacing:.14em; text-transform:uppercase; text-decoration:none; border-bottom:1px solid rgba(214,212,200,.7); }
+.section { padding:34px; margin-bottom:24px; }
+.sec-head { display:flex; align-items:center; gap:16px; margin-bottom:22px; }
+.sec-head .num { color:var(--terracotta); font-size:12px; letter-spacing:.18em; font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+.sec-head h2 { font-size:34px; }
+.sec-head:after { content:''; height:1px; flex:1; background:var(--stone); }
+p,li { color:var(--text-muted-2); line-height:1.68; }
+ul { padding-left:20px; }
+.gb-pill, .gb-tag { display:inline-flex; align-items:center; border:1px solid var(--stone); background:rgba(255,255,255,.45); color:var(--ink); border-radius:999px; padding:8px 11px; font-size:10px; text-transform:uppercase; letter-spacing:.16em; margin:4px 6px 4px 0; }
+.gb-tag.key { background:rgba(217,119,87,.14); border-color:rgba(217,119,87,.35); }
+pre { white-space:pre-wrap; background:rgba(25,25,25,.035); border:1px solid var(--stone); border-radius:20px; padding:20px; color:var(--ink); line-height:1.45; overflow:auto; }
+.table { display:grid; gap:12px; }
+.row { display:grid; grid-template-columns:170px 1fr; gap:14px; padding:16px; background:rgba(255,255,255,.34); border:1px solid var(--stone); border-radius:18px; }
+.row strong { color:var(--ink); }
+.gb-collapse { border:1px solid var(--stone); border-radius:20px; background:rgba(255,255,255,.36); margin:14px 0; overflow:hidden; }
+.gb-collapse summary { cursor:pointer; list-style:none; padding:18px 20px; display:flex; flex-direction:column; gap:4px; }
+.gb-collapse summary::-webkit-details-marker { display:none; }
+.gb-collapse summary span { font-family:var(--font-serif); font-size:24px; color:var(--ink); }
+.gb-collapse summary em { color:var(--text-mute); font-style:normal; font-size:12px; letter-spacing:.1em; text-transform:uppercase; }
+.gb-collapse ul { margin:0; padding:0 24px 20px 40px; }
+.value-body { padding:0 20px 22px; }
+.what-why-so { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:12px; }
+.what-why-so article, .matrix-grid div { border:1px solid rgba(214,212,200,.85); background:rgba(243,241,231,.64); border-radius:16px; padding:14px; }
+.what-why-so b, .matrix-grid strong { color:var(--terracotta); text-transform:uppercase; letter-spacing:.14em; font-size:10px; }
+.what-why-so p, .matrix-grid p { margin:.45rem 0 0; font-size:13px; }
+.matrix-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
+.callout { border-left:4px solid var(--terracotta); padding:16px 18px; background:rgba(255,255,255,.36); border-radius:16px; }
+.email-box { white-space:pre-wrap; background:rgba(255,255,255,.46); border:1px solid var(--stone); border-radius:22px; padding:24px; color:var(--text-muted-2); line-height:1.6; }
+.footer { text-align:center; padding:40px 24px 80px; color:var(--text-mute); font-size:12px; }
+@media (max-width: 860px) { .hero, main { grid-template-columns:1fr; } .toc { position:relative; top:0; } .nav { display:none; } .row, .what-why-so, .matrix-grid { grid-template-columns:1fr; } }
+@media print { .topbar,.toc,.gb-ambient { display:none; } body { background:var(--cream-bg); } .hero, main { display:block; padding:18px; } .section,.glass-panel { break-inside:avoid; box-shadow:none; } details { break-inside:avoid; } }
+</style>
+</head>
+<body>
+<div class="gb-ambient"></div>
+<header class="topbar"><div class="topbar-inner"><div class="logo"><img src="assets/gb-logo.png" alt="GB Automation logo">GB Automation</div><nav class="nav"><a href="#mvp">MVP</a><a href="#value">Value matrix</a><a href="#architecture">Architecture</a><a href="#costs">Costs</a><a href="#roadmap">Roadmap</a><a href="#email">Email draft</a></nav></div></header>
+<section class="hero">
+  <div>
+    <p class="eyebrow">Client proposal · Florish Technologies · Updated value framing</p>
+    <h1>Vendor Enrollment <em>Engine</em> MVP.</h1>
+    <p class="lede">A small, measurable first build for agents taking over mundane growth ops: one market, one vendor segment, Supabase as the source of truth, and a human-approved enrollment loop with explicit value proof.</p>
+    <div><span class="gb-tag key">Value matrix</span><span class="gb-tag key">Supabase canonical</span><span class="gb-tag">One market</span><span class="gb-tag">Human-approved outreach</span><span class="gb-tag">Paid MVP first</span></div>
+  </div>
+  <aside class="hero-card glass-panel">
+    <p class="gb-eyebrow">MVP scorecard</p>
+    <div class="metric-grid">
+      <div class="metric"><strong>1</strong><span>market to prove the growth loop</span></div>
+      <div class="metric"><strong>4</strong><span>Eric priorities mapped by value</span></div>
+      <div class="metric"><strong>$25–$50/hr</strong><span>work targeted for automation</span></div>
+      <div class="metric"><strong>$100+/hr</strong><span>operator time Florish can trade up into</span></div>
+    </div>
+  </aside>
+</section>
+<main>
+  <aside class="toc glass-panel">
+    <p class="gb-eyebrow">Contents</p>
+    <a href="#mvp">Recommended MVP</a>
+    <a href="#framing">Value framing</a>
+    <a href="#value">Value matrix</a>
+    <a href="#architecture">Operating flow</a>
+    <a href="#costs">Subscription costs</a>
+    <a href="#roadmap">Roadmap</a>
+    <a href="#guardrails">Guardrails</a>
+    <a href="#questions">Call questions</a>
+    <a href="#research">Research note</a>
+    <a href="#email">Eric email draft</a>
+  </aside>
+  <div>
+    <section id="mvp" class="section glass-panel"><div class="sec-head"><span class="num">01</span><h2>Recommended MVP</h2></div><p><strong>Build the Vendor Enrollment Engine for one market first.</strong> This is the smallest paid build that can prove the value of agents taking over mundane growth operations without pretending the full Florish platform is ready to automate end-to-end.</p><div class="callout"><p>No fabricated Florish economics: the matrix uses editable assumptions and proof metrics. Discovery should fill in average vendor value, current manual hours, trade lead value, and conversion baselines.</p></div></section>
+    <section id="framing" class="section glass-panel"><div class="sec-head"><span class="num">02</span><h2>Isaac-informed value framing</h2></div><p>Internal positioning note from Isaac’s value framing: review Eric’s ask by priority, not as one undifferentiated automation request. For each priority, make the business value explicit through a What / Why / So What lens, tying it to revenue or pipeline value, labor displaced, and the opportunity-cost trade-up from $25-$50/hr work into $100+/hr or $250+/hr work. Use the numbers below as discovery placeholders, not claims about Florish’s current performance.</p><pre>Eric priority
+  → What operational loop are we automating?
+  → Why does that loop matter to revenue, supply, demand, or trust?
+  → So what proof justifies the next paid phase?
+  → Labor moves from $25-$50/hr execution into $100+/hr or $250+/hr decisions</pre></section>
+    <section id="value" class="section glass-panel"><div class="sec-head"><span class="num">03</span><h2>Value matrix by priority</h2></div><p>Each priority is framed through What / Why / So What, then tied to revenue or pipeline value, labor displaced, opportunity-cost trade-up, and a concrete proof metric.</p>
+<details class="gb-collapse value-card" open>
+  <summary><span>01. Vendor enrollment engine</span><em>Paid MVP — first wedge</em></summary>
+  <div class="value-body">
+    <div class="what-why-so">
+      <article><b>What</b><p>Source, dedupe, enrich, review, and nurture vendors in one market with Supabase as the enrollment spine.</p></article>
+      <article><b>Why</b><p>Marketplace supply is the prerequisite for every downstream Florish growth motion. Cleaner vendor density should make trade-customer demand easier to satisfy.</p></article>
+      <article><b>So what</b><p>Eric gets a measurable supply-growth loop instead of paying for a broad platform bet before the economics are visible.</p></article>
+    </div>
+    <div class="matrix-grid">
+      <div><strong>Revenue / pipeline</strong><p>Revenue unlocked / pipeline value: more qualified vendors can expand available supply, support more quote opportunities, and create the evidence needed to price later phases. Assumption to validate: value per enrolled vendor and expected conversion from vendor conversations to active supply.</p></div>
+      <div><strong>Labor displaced</strong><p>Labor hours displaced: list building, vendor research, dedupe, enrichment, first-pass qualification, approved outreach prep, and weekly reporting.</p></div>
+      <div><strong>Opportunity-cost trade-up</strong><p>Opportunity-cost trade-up: automate repetitive $25-$50/hr growth-ops work so Eric and senior operators can spend time on $100+/hr partnership, sales, market selection, and $250+/hr strategic deal decisions.</p></div>
+      <div><strong>MVP proof metric</strong><p>Concrete MVP proof metric: one market produces a weekly scorecard for vendor leads sourced, verified records, approved outreach, reply rate, discovery calls booked, vendors moved to enrollment, and opt-outs/bounces.</p></div>
+    </div>
+  </div>
+</details>
+
+<details class="gb-collapse value-card" open>
+  <summary><span>02. Trade-customer nurture</span><em>Future phase after supply proof</em></summary>
+  <div class="value-body">
+    <div class="what-why-so">
+      <article><b>What</b><p>Segment trade customers, capture requests, route quote intent, and trigger nurture sequences once vendor coverage is credible.</p></article>
+      <article><b>Why</b><p>Demand-side nurture becomes more valuable when Florish can reliably match trade requests to available vendor supply.</p></article>
+      <article><b>So what</b><p>Florish can move from ad hoc follow-up to a pipeline motion that compounds every time supply coverage improves.</p></article>
+    </div>
+    <div class="matrix-grid">
+      <div><strong>Revenue / pipeline</strong><p>Revenue unlocked / pipeline value: improved conversion from captured trade interest into quote opportunities and repeatable demand signals. Assumption to validate: current lead volume, average job/order value, and drop-off points.</p></div>
+      <div><strong>Labor displaced</strong><p>Labor hours displaced: manual follow-up reminders, status updates, request triage, lead tagging, and CRM hygiene.</p></div>
+      <div><strong>Opportunity-cost trade-up</strong><p>Opportunity-cost trade-up: shift Eric/team away from low-value chase work into high-value account development, partner conversations, and offer refinement.</p></div>
+      <div><strong>MVP proof metric</strong><p>Concrete proof metric: nurture cohort shows improved response rate, booked calls, quote requests, or reactivation rate versus a manually handled baseline.</p></div>
+    </div>
+  </div>
+</details>
+
+<details class="gb-collapse value-card" open>
+  <summary><span>03. Inventory housekeeping</span><em>Future phase after vendor records are live</em></summary>
+  <div class="value-body">
+    <div class="what-why-so">
+      <article><b>What</b><p>Detect stale listings, request vendor updates, normalize inventory fields, and route exceptions to humans.</p></article>
+      <article><b>Why</b><p>Fresh inventory data improves trust and reduces wasted sales cycles caused by unavailable or incorrect plant-material records.</p></article>
+      <article><b>So what</b><p>Florish protects marketplace credibility while reducing the operational drag of constantly checking vendor availability by hand.</p></article>
+    </div>
+    <div class="matrix-grid">
+      <div><strong>Revenue / pipeline</strong><p>Revenue unlocked / pipeline value: fresher supply data should reduce failed matches and make more opportunities actionable. Assumption to validate: frequency of stale inventory, lost opportunities, and manual update cadence.</p></div>
+      <div><strong>Labor displaced</strong><p>Labor hours displaced: spreadsheet cleanup, reminder emails, record updates, stale-list detection, and exception tracking.</p></div>
+      <div><strong>Opportunity-cost trade-up</strong><p>Opportunity-cost trade-up: move operator time from data janitorial work to supplier quality, margin, and customer-experience decisions.</p></div>
+      <div><strong>MVP proof metric</strong><p>Concrete proof metric: percentage of vendor inventory records refreshed on schedule, stale records reduced, exceptions resolved, and manual update hours avoided.</p></div>
+    </div>
+  </div>
+</details>
+
+<details class="gb-collapse value-card" open>
+  <summary><span>04. Marketplace / channel distribution</span><em>Future phase with platform-risk gate</em></summary>
+  <div class="value-body">
+    <div class="what-why-so">
+      <article><b>What</b><p>Normalize approved listings and distribute them to selected marketplace or channel experiments with audit trails and platform guardrails.</p></article>
+      <article><b>Why</b><p>Distribution can amplify supply and demand, but it carries compliance, brand, and platform-policy risk if automated too early.</p></article>
+      <article><b>So what</b><p>Florish can test channel leverage without betting the business on brittle scraping, posting, or marketplace automations.</p></article>
+    </div>
+    <div class="matrix-grid">
+      <div><strong>Revenue / pipeline</strong><p>Revenue unlocked / pipeline value: channel experiments may open incremental demand or supplier discovery. Assumption to validate: target channels, allowed workflows, policy constraints, and measurable attribution.</p></div>
+      <div><strong>Labor displaced</strong><p>Labor hours displaced: listing formatting, channel-specific prep, status reconciliation, and manual experiment reporting.</p></div>
+      <div><strong>Opportunity-cost trade-up</strong><p>Opportunity-cost trade-up: keep Eric/team focused on channel strategy and partner economics instead of copy-pasting listings across surfaces.</p></div>
+      <div><strong>MVP proof metric</strong><p>Concrete proof metric: approved channel test publishes normalized listings, records attribution, flags policy exceptions, and reports qualified opportunities per channel.</p></div>
+    </div>
+  </div>
+</details></section>
+    <section id="architecture" class="section glass-panel"><div class="sec-head"><span class="num">04</span><h2>Operating flow</h2></div><pre>Market definition
+  → Lead source pull: Google Places / SerpAPI / Apify / Apollo / Clay
+  → Normalize + dedupe into Supabase vendor records
+  → Enrich website, category, contacts, service area, notes
+  → Human review queue: approve / reject / needs research
+  → Email-first outreach; optional compliant SMS only when appropriate
+  → Conversation capture + calendar booking
+  → Enrollment status + next action in Supabase
+  → Weekly value proof: pipeline created + hours avoided + next-phase evidence</pre><p>Supabase should own the durable vendor spine: vendors, locations, contacts, lead sources, outreach events, enrollment status, compliance events, labor-savings estimates, and audit logs.</p></section>
+    <section id="costs" class="section glass-panel"><div class="sec-head"><span class="num">05</span><h2>Monthly software cost bands</h2></div><div class="table"><div class="row"><strong>Lean MVP<br>$100–$350/mo</strong><p>Supabase starter/pro, basic email provider, small sourcing budget, basic deliverability, simple calendar. Best for validating one market with low volume and human review.</p></div>
+<div class="row"><strong>Serious MVP<br>$500–$1,500/mo</strong><p>Supabase Pro, GHL or comparable CRM, Instantly/Smartlead, Apollo/Clay credits, SerpAPI/Apify usage, email deliverability, possible compliant Twilio usage. Best for real outreach volume and structured weekly reporting.</p></div>
+<div class="row"><strong>Scale Pilot<br>$2,000–$5,000+/mo</strong><p>Higher-volume enrichment, multiple domains/inboxes, CRM + sequencing + call tracking, expanded logging/analytics, stronger monitoring and QA. Best only after the first loop proves value.</p></div></div><p class="gb-eyebrow">Directional planning bands · excludes development labor</p></section>
+    <section id="roadmap" class="section glass-panel"><div class="sec-head"><span class="num">06</span><h2>Future roadmap</h2></div><p>Only expand after the first market proves value.</p><ul><li>Phase 1: Vendor Enrollment Engine.</li><li>Phase 2: Multi-market vendor expansion.</li><li>Phase 3: Trade-customer nurture.</li><li>Phase 4: Inventory housekeeping.</li><li>Phase 5: Marketplace distribution with platform-risk review.</li><li>Phase 6: Higher autonomy after auditability is proven.</li></ul></section>
+    <section id="guardrails" class="section glass-panel"><div class="sec-head"><span class="num">07</span><h2>Compliance guardrails</h2></div><ul><li>Cold SMS requires consent review, TCPA posture, and opt-outs.</li><li>CAN-SPAM basics must be enforced from day one.</li><li>Meta / Facebook Marketplace automation is platform-risky and should not be brittle or policy-violating.</li><li>All source, approval, send, reply, opt-out, and status events should be logged in Supabase.</li></ul></section>
+    <section id="questions" class="section glass-panel"><div class="sec-head"><span class="num">08</span><h2>Discovery questions</h2></div><ul><li>What exact market should the first MVP target?</li><li>What vendor category has the highest supply-side leverage?</li><li>What counts as an enrolled vendor operationally?</li><li>What systems are already in use?</li><li>What outreach channels are acceptable today?</li><li>What manual hours are currently spent on sourcing, cleanup, nurture, and reporting?</li><li>What weekly KPI would make this MVP obviously worth scaling?</li></ul></section>
+    <section id="research" class="section glass-panel"><div class="sec-head"><span class="num">09</span><h2>Public research note</h2></div><p>Public footprint is limited. Search results show Eric Ferguson associated with Florish Technologies, Inc. and Chandler, AZ signals; the email thread remains the strongest source. This proposal therefore assumes Florish is a plant-material marketplace / sourcing platform and keeps discovery questions explicit.</p></section>
+    <section id="email" class="section glass-panel"><div class="sec-head"><span class="num">10</span><h2>Email draft to Eric</h2></div><div class="email-box">Subject: Florish vendor enrollment MVP
+
+Hi Eric,
+
+Thanks again for the context. I think the best first move is to keep this small and measurable rather than trying to automate the whole Florish growth engine at once.
+
+The wedge I would recommend is a one-market Vendor Enrollment Engine. The idea is to use Supabase as the source of truth, pull together a clean vendor lead pipeline for one target market, enrich and dedupe those records, put the risky steps behind a human approval queue, and then run a measured email-first nurture/enrollment loop.
+
+The reason I like this wedge is that it gives us a practical value test: can agents remove the repetitive $25-$50/hr growth-ops work, create qualified vendor conversations, and free you up for higher-value partner, sales, and strategic decisions?
+
+If that works, the same spine can expand into trade-customer nurture, inventory housekeeping, marketplace distribution, and higher-autonomy workflows. But I would rather prove the first loop and then price later phases around real operating evidence instead of guessing.
+
+For our call, I’d like to pin down:
+
+- the first market,
+- the vendor segment with the most leverage,
+- what “enrolled vendor” means operationally,
+- what systems you already have in place,
+- and what weekly KPI would make this MVP obviously worth scaling.
+
+I put together a short proposal package around that shape so we can use it as the call agenda.
+
+Best,
+Greg
+</div></section>
+  </div>
+</main>
+<footer class="footer">Prepared by GB Automation / GB Auto · 2026-07-05 · Draft for Greg review before sending to Eric</footer>
+</body>
+</html>
