@@ -33,7 +33,7 @@ export default function Pricing() {
         </svg>
       ),
       title: 'System Blueprint',
-      price: '$500',
+      price: '$999',
       period: 'One-time',
       features: ['Vibe Discovery', 'Workflow Mapping', 'Validation Gates', 'Implementation Roadmap'],
       cta: 'Get Blueprint',
@@ -45,8 +45,8 @@ export default function Pricing() {
           <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
         </svg>
       ),
-      title: 'Multi-Agent Implementation',
-      price: '$4,999',
+      title: 'Agent Implementation',
+      price: '$3,500',
       period: 'Single Agent',
       features: ['Full Implementation Plan', 'Custom Agent Development', 'Validation & Testing', 'Deployment Guide', 'Knowledge Base Setup'],
       cta: 'Start Build',
@@ -120,7 +120,7 @@ export default function Pricing() {
         </div>
 
         <p className="text-xs text-[#8C8A84] italic">
-          *After 90 days, you own the complete AI infrastructure, deployment automation, and trained development team.
+          *$150/mo platform fee applies. Bring your own LLM/API key. After 90 days, you own the complete AI infrastructure, deployment automation, and trained development team.
         </p>
       </div>
     </section>

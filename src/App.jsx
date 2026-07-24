@@ -10,10 +10,13 @@ import Blockers from './pages/Blockers';
 import YouTubeIntel from './pages/YouTubeIntel';
 import MallScanner from './pages/MallScanner';
 import UiAgents from './pages/UiAgents';
+import UiAgent from './pages/UiAgent';
 import TacCatalog from './pages/TacCatalog';
 import Login from './pages/Login';
+import OnboardingDocs from './pages/OnboardingDocs';
 import PRDIndex from './pages/PRDIndex';
 import PRDView from './pages/PRDView';
+import SalesHowItWorks from './pages/SalesHowItWorks';
 import ObservabilityIndex from './pages/ObservabilityIndex';
 import DagView from './pages/DagView';
 import SankeyView from './pages/SankeyView';
@@ -21,6 +24,8 @@ import Overview from './pages/Overview';
 import Repos from './pages/Repos';
 import HermesCommandLayer from './components/HermesCommandLayer';
 import RequireAuth from './components/RequireAuth';
+import WelcomePage from './clients/gbautomation/pages/WelcomePage';
+import ClientHubPage from './clients/gbautomation/pages/ClientHubPage';
 import GbautomationPortal from './clients/gbautomation/routes';
 import SmokeClientPortal from './clients/smoke-client/routes';
 import SmokeClientChat from './clients/smoke-client/pages/ChatPage';
@@ -65,6 +70,11 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/chat" element={<ChatRedirect />} />
+          <Route path="/welcome" element={<WelcomePage />} />
+          <Route path="/hub" element={<ClientHubPage />} />
+          <Route path="/sales/how-it-works" element={<SalesHowItWorks />} />
+          <Route path="/docs/onboarding" element={<OnboardingDocs />} />
+          <Route path="/docs/onboarding/:sectionId" element={<OnboardingDocs />} />
           <Route path="/prds" element={<PRDIndex />} />
           <Route path="/prds/:slug" element={<PRDView />} />
           <Route path="/overview" element={<Overview />} />
@@ -119,6 +129,10 @@ function App() {
           <Route
             path="/apps/ui-agents"
             element={<RequireAuth><UiAgents /></RequireAuth>}
+          />
+          <Route
+            path="/ui-agent"
+            element={<RequireAuth><UiAgent /></RequireAuth>}
           />
           <Route
             path="/ops/*"
