@@ -338,5 +338,60 @@
     "description": "",
     "category": "pr-report",
     "public_url": "https://gbautomation.xyz/prds/pr-534-forest-test-repo-root"
+  },
+  {
+    "slug": "pr-589-cc-task-feat-hermes-transcript-orchestration",
+    "title": "PR #589 \u2014 feat(transcript): durable Hermes orchestration dispatch for Meet transcripts (t_075760de)",
+    "date": "",
+    "status": "proposed",
+    "client": "gbautomation",
+    "priority": "",
+    "description": "",
+    "category": "pr-report",
+    "public_url": "https://gbautomation.xyz/prds/pr-589-cc-task-feat-hermes-transcript-orchestration"
+  },
+  {
+    "slug": "pr-591-cc-task-feat-plan-email-live-link-widget",
+    "title": "PR #591 \u2014 feat(plans): live-link emails + feedback widget on all published plans + dispatch feedback digest",
+    "date": "",
+    "status": "proposed",
+    "client": "gbautomation",
+    "priority": "",
+    "description": "",
+    "category": "pr-report",
+    "public_url": "https://gbautomation.xyz/prds/pr-591-cc-task-feat-plan-email-live-link-widget"
+  },
+  {
+    "slug": "pr-599-cc-task-feat-jid5274-plan-publisher",
+    "title": "PR #599 \u2014 feat(jid5274): mediated live-page plan publisher + obs_plan_feedback view",
+    "date": "",
+    "status": "proposed",
+    "client": "gbautomation",
+    "priority": "",
+    "description": "",
+    "category": "pr-report",
+    "public_url": "https://gbautomation.xyz/prds/pr-599-cc-task-feat-jid5274-plan-publisher"
+  },
+  {
+    "slug": "pr-601-cc-task-feat-transcript-cutover",
+    "title": "PR #601 \u2014 feat(transcript): Phase-6 cutover \u2014 hermes dispatch is the default runtime path",
+    "date": "",
+    "status": "proposed",
+    "client": "gbautomation",
+    "priority": "",
+    "description": "",
+    "category": "pr-report",
+    "public_url": "https://gbautomation.xyz/prds/pr-601-cc-task-feat-transcript-cutover"
+  },
+  {
+    "slug": "pr-602-cc-task-feat-transcript-report-required",
+    "title": "PR #602 \u2014 feat(transcript): require gbauto.transcript_report.v1 for every processed transcript",
+    "date": "",
+    "status": "proposed",
+    "client": "gbautomation",
+    "priority": "",
+    "description": "",
+    "category": "pr-report",
+    "public_url": "https://gbautomation.xyz/prds/pr-602-cc-task-feat-transcript-report-required"
   }
 ]
