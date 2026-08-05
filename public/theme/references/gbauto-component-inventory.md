@@ -1,6 +1,6 @@
 # GBauto Component Inventory
 
-Last audited: 2026-06-22.
+Last audited: 2026-08-03.
 
 Sources:
 
@@ -11,6 +11,7 @@ Sources:
 - Theme examples: `examples/resume.html`, `examples/landing-page.html`,
   `examples/collapsible-report-template.html`,
   `examples/collapsible-report-mall.html`
+- Themed pattern library: `library/*.html` (21 standalone explorations)
 - Aura-derived dashboard skin:
   `references/gbauto-aura-dashboard-overrides.css`
 
@@ -96,6 +97,26 @@ Key patterns:
   terracotta pass, neutral RGB hover fill, and a thin silver depth line.
 - Apply as scoped theme CSS/customCSS where possible; do not iframe or embed
   scraped static Aura pages into production dashboards.
+
+## Pattern Exploration Library
+
+The style index includes 21 standalone HTML adaptations under `library/`,
+grouped into landing/campaign explorations, analytics/workspaces, reusable
+sections/motion, and modals/onboarding/galleries.
+
+Every adaptation loads:
+
+- `library/gbauto-library-theme.css` - the shared cream, ink, stone,
+  terracotta, Inter, and Newsreader theme layer.
+- `library/gbauto-library-theme.js` - the low-opacity signature watermark and
+  compact surface badge.
+
+The adapter intentionally preserves each source page's layout, media, and
+interaction model. It normalizes dark generated-page shells, neon accents,
+cards, borders, inputs, buttons, and fixed application chrome. Canvas/WebGL
+samples use local palette substitutions where CSS cannot affect rendered
+pixels. The source Nexus analytics page was supplied twice and is retained as
+separate landing and analytics catalog entries.
 
 ## React / Tailwind Components
 

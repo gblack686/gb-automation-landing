@@ -32,7 +32,7 @@ header.nav{position:fixed;top:0;width:100%;z-index:50;border-bottom:1px solid rg
 .brand-lockup{display:flex;align-items:center;gap:12px}
 .brand-lockup img{height:30px;width:auto;opacity:.92}
 .brand-lockup .wm{font-family:var(--serif);font-size:1.05rem;font-weight:500;letter-spacing:-.01em;color:var(--ink)}
-.nav-links{display:flex;gap:30px;align-items:center}
+.nav-links{display:flex;gap:22px;align-items:center}
 .nav-links a{font-size:11px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--text-mute);transition:color .3s}
 .nav-links a:hover{color:var(--accent)}
 .nav-cta{display:inline-flex;align-items:center;gap:8px;padding:8px 18px;background:#fff;border:1px solid var(--line);color:var(--ink)!important;font-size:11px;letter-spacing:.06em;border-radius:999px;box-shadow:0 1px 2px rgba(0,0,0,.04);transition:all .3s}
@@ -73,6 +73,13 @@ section{margin:34px 0;scroll-margin-top:84px}
 .t-market{color:var(--accent);background:rgba(217,119,87,.12);border-color:rgba(217,119,87,.28)}
 .t-ref{color:var(--status-amber);background:rgba(192,138,62,.12);border-color:rgba(192,138,62,.26)}
 .t-live{color:var(--status-green);background:rgba(79,157,105,.12);border-color:rgba(79,157,105,.26)}
+.t-interface{color:var(--status-blue);background:rgba(61,110,168,.12);border-color:rgba(61,110,168,.26)}
+.t-section{color:var(--status-green);background:rgba(79,157,105,.12);border-color:rgba(79,157,105,.26)}
+.t-modal{color:var(--status-amber);background:rgba(192,138,62,.12);border-color:rgba(192,138,62,.26)}
+
+.library-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(max-width:940px){.library-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){.library-grid{grid-template-columns:1fr}}
 
 .viz-grid{display:grid;gap:12px;grid-template-columns:repeat(5,minmax(0,1fr))}
 @media(max-width:900px){.viz-grid{grid-template-columns:repeat(3,1fr)}}
@@ -150,6 +157,9 @@ pre.raw{font-family:var(--mono);font-size:12px;background:#191919;color:#F3F1E7;
       <a href="#reports">Reports</a>
       <a href="#live">Live</a>
       <a href="#marketing">Marketing</a>
+      <a href="#landing">Explorations</a>
+      <a href="#workspaces">Workspaces</a>
+      <a href="#patterns">Patterns</a>
       <a href="#visual">Visuals</a>
       <a href="#refs">Brand packet</a>
     </nav>
@@ -159,11 +169,13 @@ pre.raw{font-family:var(--mono);font-size:12px;background:#191919;color:#F3F1E7;
 <header class="page" id="top">
   <div class="eyebrow">Theme · House Style Index</div>
   <h1>GBAutomation HTML Style Index</h1>
-  <p class="sub">Every approved HTML surface in one place. Two document classes share one brand: <strong>report surfaces</strong> (<code>gbauto-report.v1</code> — topbar, glass TOC, collapsible sections, taxonomy pills, metadata footer) and <strong>marketing surfaces</strong> (resume / landing — ambient glow, signature watermark, glass panels, scroll reveals). Tokens: terracotta <code>#D97757</code> · cream <code>#F3F1E7</code> · ink <code>#191919</code>, Inter + Newsreader. <strong>Click any card to open it in the in-page viewer</strong> — favorite it, or leave a comment that posts to Supabase.</p>
+  <p class="sub">Every approved HTML surface in one place. Reports, marketing pages, and 21 themed interaction explorations share one brand system: terracotta <code>#D97757</code>, cream <code>#F3F1E7</code>, ink <code>#191919</code>, Inter + Newsreader, compact stone borders, and restrained glass panels. <strong>Click any card to open it in the in-page viewer</strong> — favorite it, open it in a new tab, or leave feedback.</p>
   <div class="taxonomy-pills">
     <span class="taxonomy-pill">brand-tokens</span>
     <span class="taxonomy-pill">report-surface</span>
     <span class="taxonomy-pill">marketing-surface</span>
+    <span class="taxonomy-pill">interaction-patterns</span>
+    <span class="taxonomy-pill">workspace-ui</span>
     <span class="taxonomy-pill">visual-library</span>
   </div>
 </header>
@@ -227,8 +239,141 @@ pre.raw{font-family:var(--mono);font-size:12px;background:#191919;color:#F3F1E7;
   </div>
 </section>
 
+<section id="landing">
+  <div class="sec-head"><span class="n">04</span><h2>Landing &amp; campaign explorations</h2></div>
+  <p class="sec-sub">Full-page and carousel concepts adapted to the GBAuto cream/ink/terracotta marketing theme while retaining their original motion and composition.</p>
+  <div class="grid library-grid">
+    <a class="card" data-viewer href="library/social-productivity-carousel.html">
+      <div class="ct"><h3>Social Productivity Carousel</h3><span class="tagchip t-market">carousel</span></div>
+      <p>Editorial productivity slides with high-contrast type, platform controls, and an on-brand presentation canvas.</p>
+      <span class="path">library/social-productivity-carousel.html</span><span class="fav-badge">&#9733;</span>
+    </a>
+    <a class="card" data-viewer href="library/portfolio-carousel-draft-cards.html">
+      <div class="ct"><h3>Portfolio Draft Carousel</h3><span class="tagchip t-market">carousel</span></div>
+      <p>Horizontal portfolio cards, draft states, image-led work samples, and compact navigation controls.</p>
+      <span class="path">library/portfolio-carousel-draft-cards.html</span><span class="fav-badge">&#9733;</span>
+    </a>
+    <a class="card" data-viewer href="library/nexus-capital-landing.html">
+      <div class="ct"><h3>Nexus Capital Landing</h3><span class="tagchip t-market">landing</span></div>
+      <p>Editorial capital narrative with large serif display type, image treatment, metric blocks, and scroll motion.</p>
+      <span class="path">library/nexus-capital-landing.html</span><span class="fav-badge">&#9733;</span>
+    </a>
+    <a class="card" data-viewer href="library/nexus-analytics-landing.html">
+      <div class="ct"><h3>Nexus Analytics Landing</h3><span class="tagchip t-market">landing</span></div>
+      <p>Compact analytics hero variant with a GBAuto pixel-field canvas and restrained primary CTA treatment.</p>
+      <span class="path">library/nexus-analytics-landing.html</span><span class="fav-badge">&#9733;</span>
+    </a>
+    <a class="card" data-viewer href="library/axisform-studio-landing.html">
+      <div class="ct"><h3>Axisform Studio</h3><span class="tagchip t-market">landing</span></div>
+      <p>Long-form studio portfolio with project imagery, scrolling case studies, and GBAuto editorial typography.</p>
+      <span class="path">library/axisform-studio-landing.html</span><span class="fav-badge">&#9733;</span>
+    </a>
+    <a class="card" data-viewer href="library/neon-oiran-landing.html">
+      <div class="ct"><h3>Neon Oiran Campaign</h3><span class="tagchip t-market">landing</span></div>
+      <p>Image-rich campaign page translated from neon game launch styling into the house marketing palette.</p>
+      <span class="path">library/neon-oiran-landing.html</span><span class="fav-badge">&#9733;</span>
+    </a>
+    <a class="card" data-viewer href="library/aura-vr-landing.html">
+      <div class="ct"><h3>Aura VR Agency</h3><span class="tagchip t-market">landing</span></div>
+      <p>Immersive agency narrative with video, 3D motion, image sections, and canonical terracotta active states.</p>
+      <span class="path">library/aura-vr-landing.html</span><span class="fav-badge">&#9733;</span>
+    </a>
+  </div>
+</section>
+
+<section id="workspaces">
+  <div class="sec-head"><span class="n">05</span><h2>Analytics &amp; workspaces</h2></div>
+  <p class="sec-sub">Operational interfaces keep their native information architecture, with the GBAuto dashboard skin applied as a theme layer.</p>
+  <div class="grid library-grid">
+    <a class="card" data-viewer href="library/nexus-analytics-dashboard.html">
+      <div class="ct"><h3>Nexus Analytics</h3><span class="tagchip t-interface">analytics</span></div>
+      <p>Animated data-field hero and analytics call to action, cataloged separately from the landing-page variant.</p>
+      <span class="path">library/nexus-analytics-dashboard.html</span><span class="fav-badge">&#9733;</span>
+    </a>
+    <a class="card" data-viewer href="library/nexora-analytics.html">
+      <div class="ct"><h3>Nexora Analytics</h3><span class="tagchip t-interface">analytics</span></div>
+      <p>Deep analytics product surface with charts, metrics, media, and layered interaction states.</p>
+      <span class="path">library/nexora-analytics.html</span><span class="fav-badge">&#9733;</span>
+    </a>
+    <a class="card" data-viewer href="library/ai-workflow-interface.html">
+      <div class="ct"><h3>AI Workflow Interface</h3><span class="tagchip t-interface">workflow</span></div>
+      <p>Node-and-task workflow shell with asset previews, execution states, and GBAuto operational chrome.</p>
+      <span class="path">library/ai-workflow-interface.html</span><span class="fav-badge">&#9733;</span>
+    </a>
+    <a class="card" data-viewer href="library/nexus-forge-workspace.html">
+      <div class="ct"><h3>Nexus Forge Workspace</h3><span class="tagchip t-interface">graph</span></div>
+      <p>Interactive graph workspace with persistent navigation, canvas controls, inspector panels, and compact metadata.</p>
+      <span class="path">library/nexus-forge-workspace.html</span><span class="fav-badge">&#9733;</span>
+    </a>
+  </div>
+</section>
+
+<section id="patterns">
+  <div class="sec-head"><span class="n">06</span><h2>Sections, cards &amp; motion</h2></div>
+  <p class="sec-sub">Reusable page sections and interaction studies for testimonials, operating principles, product collections, reveal cards, and animated asset sync.</p>
+  <div class="grid library-grid">
+    <a class="card" data-viewer href="library/testimonials-wall-of-love.html">
+      <div class="ct"><h3>Wall of Love</h3><span class="tagchip t-section">testimonials</span></div>
+      <p>Layered testimonial cards, customer avatars, trust signals, and scroll-triggered reveal motion.</p>
+      <span class="path">library/testimonials-wall-of-love.html</span><span class="fav-badge">&#9733;</span>
+    </a>
+    <a class="card" data-viewer href="library/motion-asset-sync.html">
+      <div class="ct"><h3>Motion Asset Sync</h3><span class="tagchip t-section">animation</span></div>
+      <p>Full-screen asset handoff sequence with a terracotta WebGL glow, image stack, queue UI, and timeline motion.</p>
+      <span class="path">library/motion-asset-sync.html</span><span class="fav-badge">&#9733;</span>
+    </a>
+    <a class="card" data-viewer href="library/operation-principles-section.html">
+      <div class="ct"><h3>Logic of Operation</h3><span class="tagchip t-section">section</span></div>
+      <p>Operating-principles section with numbered doctrine cards, technical labels, and evidence-first hierarchy.</p>
+      <span class="path">library/operation-principles-section.html</span><span class="fav-badge">&#9733;</span>
+    </a>
+    <a class="card" data-viewer href="library/headphone-product-grid.html">
+      <div class="ct"><h3>Headphone Product Grid</h3><span class="tagchip t-section">product grid</span></div>
+      <p>Animated collection grid with image cards, product metadata, hover states, and editorial commerce typography.</p>
+      <span class="path">library/headphone-product-grid.html</span><span class="fav-badge">&#9733;</span>
+    </a>
+    <a class="card" data-viewer href="library/expanding-feature-cards.html">
+      <div class="ct"><h3>Expanding Feature Cards</h3><span class="tagchip t-section">card section</span></div>
+      <p>Hover-reveal feature cards with expanding imagery, progressive disclosure, and responsive stacking.</p>
+      <span class="path">library/expanding-feature-cards.html</span><span class="fav-badge">&#9733;</span>
+    </a>
+  </div>
+</section>
+
+<section id="modals">
+  <div class="sec-head"><span class="n">07</span><h2>Modals, onboarding &amp; galleries</h2></div>
+  <p class="sec-sub">Focused application moments: strategic diagrams, account initialization, technical geometry, image galleries, and roadmap review.</p>
+  <div class="grid library-grid">
+    <a class="card" data-viewer href="library/master-strategy-infographic.html">
+      <div class="ct"><h3>Master Strategy Infographic</h3><span class="tagchip t-modal">infographic</span></div>
+      <p>Full-screen animated strategy timeline with canonical status colors and a cream report-native canvas.</p>
+      <span class="path">library/master-strategy-infographic.html</span><span class="fav-badge">&#9733;</span>
+    </a>
+    <a class="card" data-viewer href="library/initialize-account.html">
+      <div class="ct"><h3>Initialize Account</h3><span class="tagchip t-modal">onboarding</span></div>
+      <p>Account setup page with plan selection, input states, validation affordances, and ambient technical geometry.</p>
+      <span class="path">library/initialize-account.html</span><span class="fav-badge">&#9733;</span>
+    </a>
+    <a class="card" data-viewer href="library/technical-brand-geometry.html">
+      <div class="ct"><h3>Technical Brand Geometry</h3><span class="tagchip t-modal">modal</span></div>
+      <p>Technical modal concept with geometry study, specification labels, and restrained dimensional motion.</p>
+      <span class="path">library/technical-brand-geometry.html</span><span class="fav-badge">&#9733;</span>
+    </a>
+    <a class="card" data-viewer href="library/imaginova-image-gallery.html">
+      <div class="ct"><h3>Imaginova Image Gallery</h3><span class="tagchip t-modal">gallery</span></div>
+      <p>Large image-card gallery with filters, profile details, media controls, and dense visual browsing patterns.</p>
+      <span class="path">library/imaginova-image-gallery.html</span><span class="fav-badge">&#9733;</span>
+    </a>
+    <a class="card" data-viewer href="library/strategic-roadmap.html">
+      <div class="ct"><h3>Strategic Roadmap</h3><span class="tagchip t-modal">roadmap</span></div>
+      <p>Split-layout roadmap modal with technical framing, gantt milestones, metadata rails, and warm ambient motion.</p>
+      <span class="path">library/strategic-roadmap.html</span><span class="fav-badge">&#9733;</span>
+    </a>
+  </div>
+</section>
+
 <section id="visual">
-  <div class="sec-head"><span class="n">04</span><h2>Visual library</h2></div>
+  <div class="sec-head"><span class="n">08</span><h2>Visual library</h2></div>
   <p class="sec-sub">Ten reusable data-visualization SVGs (image-2 fingerprints). Embed inside report sections. Click to open in the viewer.</p>
   <div class="viz-grid">
     <a class="viz" data-viewer href="examples/svg/01-agent-ribbon-flow.svg"><img src="examples/svg/01-agent-ribbon-flow.svg" alt="Agent ribbon flow"><span class="vl">01 · Agent ribbon flow</span></a>
@@ -245,7 +390,7 @@ pre.raw{font-family:var(--mono);font-size:12px;background:#191919;color:#F3F1E7;
 </section>
 
 <section id="refs">
-  <div class="sec-head"><span class="n">05</span><h2>Brand packet &amp; references</h2></div>
+  <div class="sec-head"><span class="n">09</span><h2>Brand packet &amp; references</h2></div>
   <p class="sec-sub">The source-of-truth tokens, component inventory, and prompt packet for reskinning.</p>
   <div class="grid">
     <a class="card" data-viewer href="references/gbauto-component-inventory.md">
@@ -290,7 +435,7 @@ pre.raw{font-family:var(--mono);font-size:12px;background:#191919;color:#F3F1E7;
 </main>
 
 <footer>
-  Canonical authoring contract: canopy snippets <code>artifact:html-report-generation</code> · <code>artifact:official-header</code> · <code>artifact:report-interactive-shell</code>. Blank shell <code>examples/collapsible-report-template.html</code> · rendered reference <code>weekly-summary.html</code> (<code>gbauto-report.v1</code>). Generated 2026-06-25.
+  Canonical authoring contract: canopy snippets <code>artifact:html-report-generation</code> · <code>artifact:official-header</code> · <code>artifact:report-interactive-shell</code>. Blank shell <code>examples/collapsible-report-template.html</code> · rendered reference <code>weekly-summary.html</code> (<code>gbauto-report.v1</code>) · themed interaction library <code>library/</code>. Updated 2026-08-03.
 </footer>
 
 <!-- ===== MODAL FILE VIEWER ===== -->
@@ -316,7 +461,7 @@ pre.raw{font-family:var(--mono);font-size:12px;background:#191919;color:#F3F1E7;
 </div>
 
 <!-- ===== BOTTOM MARKDOWN VIEWER DOCK ===== -->
-<aside class="md-dock" id="mdDock">
+<aside class="md-dock collapsed" id="mdDock">
   <div class="md-dock-bar" id="mdDockBar">
     <span class="dk-label">Markdown Viewer</span>
     <span class="dk-title" id="mdDockTitle">SKILL.md</span>
@@ -466,7 +611,6 @@ const mdDockBody = document.getElementById("mdDockBody");
 const mdDockTitle = document.getElementById("mdDockTitle");
 async function loadDock(url, title){
   mdDockTitle.textContent = title || url.split("/").pop();
-  mdDock.classList.remove("collapsed");
   try{
     const text = await loadText(url);
     mdDockBody.innerHTML = window.marked ? marked.parse(text) : ("<pre class='raw'>"+text.replace(/</g,"&lt;")+"</pre>");

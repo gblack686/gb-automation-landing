@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Capital Render</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@400&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="gbauto-library-theme.css">
+<script defer src="gbauto-library-theme.js"></script>
+</head>
+<body data-gbauto-surface="landing" class="gbauto-theme bg-[#000000] min-h-screen flex items-center justify-center p-4 md:p-12 font-sans antialiased text-[#FFFFFF] overflow-x-hidden selection:bg-[#F2EAD3] selection:text-black">
+
+    <!-- Gradient Border Shell Technique -->
+    <div class="w-full max-w-[1440px] shadow-[0px_100px_80px_rgba(0,0,0,0.12),_0px_41.8px_33.4px_rgba(0,0,0,0.086),_0px_22.3px_17.9px_rgba(0,0,0,0.07)]" style="display:inline-block; padding:1px; border-radius:24px; background:linear-gradient(to right bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0));">
+
+        <!-- Main Inner Surface -->
+        <div class="relative w-full flex flex-col md:flex-row overflow-hidden min-h-[600px] md:min-h-[650px]" style="background:#0A0A0A; border-radius:23px; box-shadow:rgba(255, 255, 255, 0.02) 0px 0px 40px 0px inset;">
+
+            <!-- Matte Noise Texture Overlay -->
+            <div class="absolute inset-0 opacity-[0.15] mix-blend-overlay pointer-events-none z-0" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E');"></div>
+
+            <!-- Left Column: Copy & Controls (Grid Layout spacing px-8 lg:px-16) -->
+            <div class="w-full md:w-[38%] px-8 lg:px-16 py-10 md:py-14 flex flex-col justify-between relative z-20 shrink-0 border-r border-white/5">
+
+                <!-- Lineart Detail: Corner Brackets -->
+                <div class="absolute top-6 left-6 w-3 h-3 border-t border-l border-white/20"></div>
+                <div class="absolute top-6 right-6 w-3 h-3 border-t border-r border-white/20"></div>
+                <div class="absolute bottom-6 left-6 w-3 h-3 border-b border-l border-white/20"></div>
+                <div class="absolute bottom-6 right-6 w-3 h-3 border-b border-r border-white/20"></div>
+
+                <!-- Top Badge -->
+                <div class="fade-in-el opacity-0 inline-flex items-center gap-2 px-3 py-1 text-xs font-normal tracking-[0.1em] uppercase mb-16 border border-white/10 text-[#F2EAD3] rounded-full w-max bg-white/5 backdrop-blur-sm">
+                    <iconify-icon icon="solar:chart-2-linear" stroke-width="1.5" class="text-sm"></iconify-icon>
+                    NEXUS WEALTH CORP.
+                </div>
+
+                <!-- Heading (Playfair Display) -->
+                <div>
+                    <h1 id="hero-heading" class="text-5xl md:text-7xl tracking-tight text-[#FFFFFF] mb-6 leading-none opacity-0" style="font-family: 'Playfair Display', serif;">
+                        Beyond traditional equity.<br>The multi-asset strategy.
+                    </h1>
+
+                    <!-- Body Text -->
+                    <p class="fade-in-el opacity-0 text-[#F2EAD3] text-lg leading-[29.25px] max-w-[320px] font-normal mb-8" style="font-family: 'Inter', sans-serif;">
+                        A dynamic portfolio framework where capital transitions seamlessly from baseline reserves to high-yield synthetic instruments. Drag the timeline to isolate risk layers.
+                    </p>
+
+                    <!-- Primary Action Button -->
+                    <button class="fade-in-el opacity-0 bg-[#F2EAD3] text-[#000000] px-8 py-3.5 rounded-full text-sm font-normal w-max hover:bg-white transition-colors flex items-center gap-2" style="font-family: 'Inter', sans-serif;">
+                        Send Funds
+                        <iconify-icon icon="solar:wireless-charge-linear" stroke-width="1.5" class="text-lg"></iconify-icon>
+                    </button>
+                </div>
+
+                <!-- Custom Slider Control -->
+                <div class="fade-in-el opacity-0 mt-16 pt-8 w-full relative">
+                    <!-- Track Line -->
+                    <div class="w-full h-[1px] bg-white/10 relative">
+                        <!-- Thumb / Active Indicator -->
+                        <div class="absolute top-1/2 left-[50%] -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-[#F2EAD3] rounded-full shadow-[0_0_12px_rgba(242,234,211,0.6)]"></div>
+                    </div>
+
+                    <!-- Labels -->
+                    <div class="flex justify-between mt-4 w-full" style="font-family: 'Inter', sans-serif;">
+                        <span class="text-xs font-normal tracking-[0.1em] uppercase text-white/30 transition-colors hover:text-[#F2EAD3] cursor-pointer">Baseline</span>
+                        <span class="text-xs font-normal tracking-[0.1em] uppercase text-white/30 transition-colors hover:text-[#F2EAD3] cursor-pointer">Yield</span>
+                        <span class="text-xs font-normal tracking-[0.1em] uppercase text-[#F2EAD3] cursor-default">Synthetic</span>
+                        <span class="text-xs font-normal tracking-[0.1em] uppercase text-white/30 transition-colors hover:text-[#F2EAD3] cursor-pointer">Leverage</span>
+                        <span class="text-xs font-normal tracking-[0.1em] uppercase text-white/30 transition-colors hover:text-[#F2EAD3] cursor-pointer">Quantum</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Column: Media -->
+            <div class="w-full md:w-[62%] relative bg-[#050505] overflow-hidden min-h-[400px] md:min-h-0 border-t md:border-t-0 border-white/5" style="transform-style: preserve-3d;">
+
+                <!-- Organic Background Wave Motion -->
+                <svg class="absolute inset-0 w-full h-full text-[#F2EAD3] opacity-5 z-0 pointer-events-none" id="organic-wave" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <path d="M-20 50 C 20 20, 80 80, 120 50 L 120 120 L -20 120 Z" fill="currentColor" />
+                    <path d="M-20 70 C 30 40, 70 100, 120 70 L 120 120 L -20 120 Z" fill="currentColor" opacity="0.4" />
+                </svg>
+
+                <!-- Base Image Layer -->
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/e9d9005f-564e-4dc7-9a1b-e567be6ddb10_3840w.jpg" alt="Asset Continuum" class="absolute inset-0 w-full h-full object-cover object-center scale-105 mix-blend-luminosity opacity-70 z-10" style="transform-origin: center 40%;">
+
+                <!-- Gold Dither Layer -->
+                <div id="dither-layer" class="absolute inset-0 z-20 mix-blend-screen pointer-events-none opacity-60" style="
+                        background-image: radial-gradient(circle, #F2EAD3 1.5px, transparent 2px);
+                        background-size: 16px 16px;
+                        -webkit-mask-image: radial-gradient(circle at 60% 50%, black 15%, rgba(0,0,0,0.5) 40%, transparent 80%);
+                        mask-image: radial-gradient(circle at 60% 50%, black 15%, rgba(0,0,0,0.5) 40%, transparent 80%);
+                    ">
+                </div>
+
+                <!-- Deep Integration Gradients -->
+                <div class="absolute inset-0 z-30 pointer-events-none bg-gradient-to-r from-[#0A0A0A] via-transparent to-transparent opacity-90"></div>
+                <div class="absolute inset-0 z-30 pointer-events-none bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/30 to-transparent opacity-80"></div>
+
+                <!-- Glassmorphism Floating Logic Card -->
+                <div id="floating-card" class="absolute top-[25%] right-[12%] z-40 bg-white/[0.03] backdrop-blur-xl border border-white/10 p-5 rounded-2xl shadow-[0_22px_40px_rgba(0,0,0,0.4)] w-[220px] text-[#F2EAD3]">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-8 h-8 rounded-full bg-[#F2EAD3]/10 border border-[#F2EAD3]/20 text-[#F2EAD3] flex items-center justify-center">
+                            <iconify-icon icon="solar:infinity-linear" stroke-width="1.5"></iconify-icon>
+                        </div>
+                        <span class="text-xs uppercase tracking-[0.1em] font-normal" style="font-family: 'Inter', sans-serif;">Target Yield</span>
+                    </div>
+                    <div class="text-[30px] leading-[36px] tracking-[-0.025em] mb-1" style="font-family: 'Inter', sans-serif;">14.2%</div>
+                    <div class="text-[12px] uppercase tracking-[0.1em] text-[#F2EAD3]/50" style="font-family: 'Inter', sans-serif;">Alpha Generation</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", (event) => {
+            gsap.registerPlugin(ScrollTrigger);
+
+            // Staggered vertical masked word reveal
+            const heading = document.getElementById('hero-heading');
+            const words = heading.innerHTML.trim().split(/(<br\s*\/?>|\s+)/).filter(w => w.trim().length > 0 || w.toLowerCase().includes('<br'));
+
+            let newHTML = '';
+            words.forEach(word => {
+                if(word.toLowerCase().includes('<br')) {
+                    newHTML += '<br/>';
+                } else if (word.trim() !== '') {
+                    newHTML += `<span class="inline-block overflow-hidden align-bottom pb-1 -mb-1"><span class="reveal-word inline-block translate-y-full opacity-0">${word}</span></span> `;
+                }
+            });
+
+            heading.innerHTML = newHTML;
+            heading.style.opacity = 1;
+
+            gsap.to('.reveal-word', {
+                y: 0,
+                opacity: 1,
+                duration: 1.2,
+                stagger: 0.04,
+                ease: "power4.out",
+                delay: 0.2
+            });
+
+            // Entrance: Sequential fade-ins with 0.8s delays
+            gsap.to('.fade-in-el', {
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                stagger: 0.15,
+                ease: "power3.out",
+                delay: 0.8
+            });
+
+            // Floating Logic: independent 3D shifts
+            gsap.to('#floating-card', {
+                y: "-=12",
+                rotationX: 4,
+                rotationY: -4,
+                duration: 4,
+                yoyo: true,
+                repeat: -1,
+                ease: "sine.inOut"
+            });
+
+            // Background Motion: Slow elastic infinite loop
+            gsap.to('#organic-wave', {
+                scale: 1.05,
+                duration: 10,
+                yoyo: true,
+                repeat: -1,
+                ease: "sine.inOut"
+            });
+
+            // Dither Animation
+            gsap.to('#dither-layer', {
+                backgroundPosition: "32px 32px",
+                duration: 4,
+                ease: "none",
+                repeat: -1
+            });
+
+            gsap.to('#dither-layer', {
+                opacity: 0.4,
+                duration: 3,
+                yoyo: true,
+                repeat: -1,
+                ease: "sine.inOut"
+            });
+        });
+    </script>
+</body>
+</html>

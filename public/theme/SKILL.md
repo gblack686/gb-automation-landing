@@ -44,6 +44,8 @@ point for a new artifact, or hand the whole kit to a client (see below).
 | `examples/collapsible-report-mall.html` | Real client report — the approved collapsible-section surface, filled |
 | `examples/collapsible-report-template.html` | Blank collapsible report shell (topbar · left TOC · `<details>` sections · pills · footer) to fill |
 | `examples/svg/*.svg` | 10 advanced data-viz SVG templates (ribbon flow, streamgraph, chord map, contour, violin lanes, beeswarm, topographic funnel, orbit map, uncertainty fan, isobars) |
+| `library/*.html` | 21 GBAuto-themed landing, analytics, workspace, section, motion, modal, onboarding, and gallery explorations |
+| `library/gbauto-library-theme.css` | Shared adapter for bringing standalone generated HTML into the canonical cream/ink/terracotta system |
 | `examples/gb-signature.png`, `gb-logo.png` | Placeholder logos the HTML references — swap for the target brand |
 | `references/gbauto-aura-dashboard-overrides.css` | Aura-derived full dashboard skin: cream canvas, terracotta glow, glass cards, compact operation tiles |
 

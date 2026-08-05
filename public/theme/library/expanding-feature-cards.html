@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Component Preview</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      height: 100%;
+      overflow: auto;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #000000;
+      color: #ffffff;
+    }
+    .component-wrapper {
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      box-sizing: border-box;
+      overflow: auto;
+    }
+  </style>
+
+<link rel="stylesheet" href="gbauto-library-theme.css">
+<script defer src="gbauto-library-theme.js"></script>
+</head>
+<body data-gbauto-surface="card section" class="gbauto-theme">
+  <div class="component-wrapper">
+    <html><head></head><body><section class="xl:pt-24 xl:pb-24 xl:gap-y-0 pt-24 pb-24 flex items-center justify-center min-h-screen">
+  <div class="max-w-6xl w-full mx-auto px-6">
+    <div class="text-center md:text-left mb-12">
+      <h2 class="sm:text-5xl md:text-6xl leading-[0.95] [animation:fadeSlideIn_0.8s_ease-out_0.1s_both] animate-on-scroll text-4xl font-light text-white tracking-tight font-geist max-w-none mb-2">
+        Discover the Power of Visual Inspiration
+      </h2>
+      <p class="sm:text-base [animation:fadeSlideIn_0.8s_ease-out_0.2s_both] animate-on-scroll text-sm text-neutral-300 font-geist max-w-none">
+        Explore millions of high-quality photos curated for creators,
+        designers, and teams who value speed, impact, and freedom
+      </p>
+    </div>
+
+    <!-- Expanding Cards -->
+    <div class="flex flex-col md:flex-row gap-4 gap-x-4 gap-y-4" id="expanding-cards">
+      <!-- Card 1 -->
+      <div class="feature-cards flex flex-col md:flex-row [animation:fadeSlideIn_0.8s_ease-out_0.3s_both] animate-on-scroll gap-4">
+        <!-- ===== Card 1 (Endless Inspiration) ===== -->
+        <article class="card group w-full md:flex-1 min-w-0 overflow-hidden transition-all duration-500 ease-out bg-neutral-900/60 ring-neutral-800 ring-1 rounded-2xl relative" style="flex: 1 1 0%;">
+          <!-- Image -->
+          <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/c3e3fffd-33c5-442f-924a-7bc1032b2c0f_1600w.jpg" alt="Endless Inspiration" class="md:h-[420px] transition duration-500 group-hover:scale-[1.02] w-full h-72 object-cover">
+
+          <!-- Subtle gradient so the title stays readable -->
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent pointer-events-none">
+          </div>
+
+          <!-- Title only (default visible) -->
+          <div class="absolute top-4 left-4 right-4">
+            <span class="inline-flex rounded-lg px-3 py-2 text-white text-lg sm:text-xl font-semibold font-geist">
+                    Endless Inspiration
+                  </span>
+          </div>
+
+          <!-- Reveal area (shown only on hover/expand) -->
+          <div class="sm:p-6 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-500 opacity-0 pt-4 pr-4 pb-4 pl-4 absolute right-0 bottom-0 left-0 translate-y-4">
+            <div class="rounded-xl bg-neutral-900/70 ring-1 ring-white/10 backdrop-blur p-4 sm:p-5">
+              <h3 class="text-white text-xl sm:text-2xl font-semibold mb-2 font-geist">
+                Discover millions of photos
+              </h3>
+              <p class="text-neutral-300 text-sm sm:text-base mb-4 font-geist">
+                Browse our vast collection of high-quality stock photos
+                from talented photographers around the world.
+              </p>
+              <a href="/explore" class="inline-flex items-center gap-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm font-medium ring-1 ring-inset ring-white/20 px-3 py-2 transition font-geist">
+                Explore now →
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <!-- ===== Card 2 (Professional Quality) ===== -->
+        <article class="card group w-full md:flex-1 min-w-0 overflow-hidden transition-all duration-500 ease-out bg-neutral-900/60 ring-neutral-800 ring-1 rounded-2xl relative" style="flex: 1 1 0%;">
+          <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/56ed5565-df57-4091-904a-06ea43760e76_1600w.jpg" alt="Professional Quality" class="md:h-[420px] transition duration-500 group-hover:scale-[1.02] w-full h-72 object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent pointer-events-none">
+          </div>
+          <div class="absolute top-4 left-4 right-4">
+            <span class="inline-flex rounded-lg px-3 py-2 text-white text-lg sm:text-xl font-semibold font-geist">
+                    Professional Quality
+                  </span>
+          </div>
+          <div class="sm:p-6 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-500 opacity-0 pt-4 pr-4 pb-4 pl-4 absolute right-0 bottom-0 left-0 translate-y-4">
+            <div class="rounded-xl bg-neutral-900/70 ring-1 ring-white/10 backdrop-blur p-4 sm:p-5">
+              <h3 class="text-white text-xl sm:text-2xl font-semibold mb-2 font-geist">
+                Curated for impact
+              </h3>
+              <p class="text-neutral-300 text-sm sm:text-base mb-4 font-geist">
+                Hand-picked shots that look polished across web, mobile,
+                and print.
+              </p>
+              <a href="/quality" class="inline-flex items-center gap-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm font-medium ring-1 ring-inset ring-white/20 px-3 py-2 transition font-geist">
+                View more →
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <!-- ===== Card 3 (Time-Saving Search) ===== -->
+        <article class="card group w-full md:flex-1 min-w-0 overflow-hidden transition-all duration-500 ease-out bg-neutral-900/60 ring-neutral-800 ring-1 rounded-2xl relative" style="flex: 1 1 0%;">
+          <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/6663740f-b15d-4a86-bcad-0623f9660f7c_1600w.jpg" alt="Time-Saving Search" class="md:h-[420px] transition duration-500 group-hover:scale-[1.02] w-full h-72 object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent pointer-events-none">
+          </div>
+          <div class="absolute top-4 left-4 right-4">
+            <span class="inline-flex rounded-lg px-3 py-2 text-white text-lg sm:text-xl font-semibold font-geist">
+                    Time-Saving Search
+                  </span>
+          </div>
+          <div class="absolute bottom-0 left-0 right-0 p-4 sm:p-6 opacity-0 translate-y-4 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-500">
+            <div class="rounded-xl bg-neutral-900/70 ring-1 ring-white/10 backdrop-blur p-4 sm:p-5">
+              <h3 class="text-white text-xl sm:text-2xl font-semibold mb-2 font-geist">
+                Find the right shot fast
+              </h3>
+              <p class="text-neutral-300 text-sm sm:text-base mb-4 font-geist">
+                Smart tags and categories designed for designers,
+                marketers, and creators.
+              </p>
+              <a href="/search" class="inline-flex items-center gap-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm font-medium ring-1 ring-inset ring-white/20 px-3 py-2 transition font-geist">
+                Try search →
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <!-- ===== Card 4 (Free for Everyone) ===== -->
+        <article class="card group w-full md:flex-1 min-w-0 overflow-hidden transition-all duration-500 ease-out bg-neutral-900/60 ring-neutral-800 ring-1 rounded-2xl relative" style="flex: 1 1 0%;">
+          <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/aa00117b-6282-48e6-8a58-cb95c40a5b90_1600w.webp" alt="Free for Everyone" class="md:h-[420px] transition duration-500 group-hover:scale-[1.02] w-full h-72 object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent pointer-events-none">
+          </div>
+          <div class="absolute top-4 left-4 right-4">
+            <span class="inline-flex rounded-lg px-3 py-2 text-white text-lg sm:text-xl font-semibold font-geist">
+                    Free for Everyone
+                  </span>
+          </div>
+          <div class="absolute bottom-0 left-0 right-0 p-4 sm:p-6 opacity-0 translate-y-4 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-500">
+            <div class="rounded-xl bg-neutral-900/70 ring-1 ring-white/10 backdrop-blur p-4 sm:p-5">
+              <h3 class="text-white text-xl sm:text-2xl font-semibold mb-2 font-geist">
+                Personal &amp; commercial use
+              </h3>
+              <p class="text-neutral-300 text-sm sm:text-base mb-4 font-geist">
+                Download and use without fees. Clear usage guidance
+                included.
+              </p>
+              <a href="/license" class="inline-flex items-center gap-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm font-medium ring-1 ring-inset ring-white/20 px-3 py-2 transition font-geist">
+                See license →
+              </a>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- Card 2 -->
+
+      <!-- Card 3 -->
+
+      <!-- Card 4 -->
+    </div>
+</div></section></body></html>
+  </div>
+
+    <script>
+      (function() {
+        function checkAndCenter() {
+          // Use double requestAnimationFrame to ensure DOM is fully painted and layout is stable
+          requestAnimationFrame(function() {
+            requestAnimationFrame(function() {
+              const wrapper = document.querySelector('.component-wrapper');
+              if (!wrapper) return;
+
+              // Get all child elements
+              const children = Array.from(wrapper.children);
+              if (children.length === 0) return;
+
+              // Temporarily override wrapper styles to shrink-wrap for measurement
+              // Set inline styles to shrink-wrap (inline styles override CSS)
+              wrapper.style.display = 'inline-block';
+              wrapper.style.width = 'auto';
+              wrapper.style.height = 'auto';
+              wrapper.style.overflow = 'visible';
+              wrapper.style.boxSizing = 'content-box';
+
+              // Force multiple reflows to ensure styles are fully applied
+              void wrapper.offsetHeight;
+              void wrapper.offsetWidth;
+              void wrapper.offsetHeight;
+
+              // Measure the wrapper's content size
+              const contentWidth = wrapper.offsetWidth;
+              const contentHeight = wrapper.offsetHeight;
+
+              // Restore original styles by removing inline styles we added
+              wrapper.style.removeProperty('display');
+              wrapper.style.removeProperty('width');
+              wrapper.style.removeProperty('height');
+              wrapper.style.removeProperty('overflow');
+              wrapper.style.removeProperty('box-sizing');
+
+              // If content is less than 500x500, center it
+              if (contentWidth > 0 && contentHeight > 0 && contentWidth < 500 && contentHeight < 500) {
+                wrapper.style.display = 'flex';
+                wrapper.style.alignItems = 'center';
+                wrapper.style.justifyContent = 'center';
+              }
+            });
+          });
+        }
+
+        // Check immediately and after delays to ensure content is rendered and styled
+        function runChecks() {
+          checkAndCenter();
+          setTimeout(checkAndCenter, 50);
+          setTimeout(checkAndCenter, 150);
+          setTimeout(checkAndCenter, 300);
+          setTimeout(checkAndCenter, 500);
+          setTimeout(checkAndCenter, 1000);
+        }
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', runChecks);
+        } else {
+          runChecks();
+        }
+
+        // Also check when images or other resources load
+        window.addEventListener('load', () => {
+          setTimeout(checkAndCenter, 100);
+          setTimeout(checkAndCenter, 300);
+        });
+
+        // Use ResizeObserver to detect size changes
+        if (window.ResizeObserver) {
+          setTimeout(() => {
+            const wrapper = document.querySelector('.component-wrapper');
+            if (wrapper) {
+              const observer = new ResizeObserver(() => {
+                setTimeout(checkAndCenter, 50);
+              });
+              observer.observe(wrapper);
+            }
+          }, 500);
+        }
+      })();
+    </script>
+
+</body>
+</html>

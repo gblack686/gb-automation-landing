@@ -31,6 +31,111 @@
       "title": "Zero-Touch Landing",
       "path": "examples/landing-page.html",
       "category": "marketing"
+    },
+    {
+      "title": "Social Productivity Carousel",
+      "path": "library/social-productivity-carousel.html",
+      "category": "carousel"
+    },
+    {
+      "title": "Portfolio Draft Carousel",
+      "path": "library/portfolio-carousel-draft-cards.html",
+      "category": "carousel"
+    },
+    {
+      "title": "Nexus Capital Landing",
+      "path": "library/nexus-capital-landing.html",
+      "category": "landing"
+    },
+    {
+      "title": "Nexus Analytics Landing",
+      "path": "library/nexus-analytics-landing.html",
+      "category": "landing"
+    },
+    {
+      "title": "Axisform Studio Landing",
+      "path": "library/axisform-studio-landing.html",
+      "category": "landing"
+    },
+    {
+      "title": "Neon Oiran Campaign",
+      "path": "library/neon-oiran-landing.html",
+      "category": "landing"
+    },
+    {
+      "title": "Aura VR Agency",
+      "path": "library/aura-vr-landing.html",
+      "category": "landing"
+    },
+    {
+      "title": "Nexus Analytics",
+      "path": "library/nexus-analytics-dashboard.html",
+      "category": "analytics"
+    },
+    {
+      "title": "Nexora Analytics",
+      "path": "library/nexora-analytics.html",
+      "category": "analytics"
+    },
+    {
+      "title": "AI Workflow Interface",
+      "path": "library/ai-workflow-interface.html",
+      "category": "workflow"
+    },
+    {
+      "title": "Nexus Forge Workspace",
+      "path": "library/nexus-forge-workspace.html",
+      "category": "workspace"
+    },
+    {
+      "title": "Wall of Love",
+      "path": "library/testimonials-wall-of-love.html",
+      "category": "testimonials"
+    },
+    {
+      "title": "Motion Asset Sync",
+      "path": "library/motion-asset-sync.html",
+      "category": "animation"
+    },
+    {
+      "title": "Logic of Operation",
+      "path": "library/operation-principles-section.html",
+      "category": "section"
+    },
+    {
+      "title": "Headphone Product Grid",
+      "path": "library/headphone-product-grid.html",
+      "category": "product-grid"
+    },
+    {
+      "title": "Expanding Feature Cards",
+      "path": "library/expanding-feature-cards.html",
+      "category": "card-section"
+    },
+    {
+      "title": "Master Strategy Infographic",
+      "path": "library/master-strategy-infographic.html",
+      "category": "infographic"
+    },
+    {
+      "title": "Initialize Account",
+      "path": "library/initialize-account.html",
+      "category": "onboarding"
+    },
+    {
+      "title": "Technical Brand Geometry",
+      "path": "library/technical-brand-geometry.html",
+      "category": "modal"
+    },
+    {
+      "title": "Imaginova Image Gallery",
+      "path": "library/imaginova-image-gallery.html",
+      "category": "gallery"
+    },
+    {
+      "title": "Strategic Roadmap",
+      "path": "library/strategic-roadmap.html",
+      "category": "roadmap"
     }
   ],
   "published_reports": [
