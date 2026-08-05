@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Forge Interactive Workspace</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+<link rel="stylesheet" href="gbauto-library-theme.css">
+<script defer src="gbauto-library-theme.js"></script>
+</head>
+<body data-gbauto-surface="workspace" class="gbauto-theme antialiased overflow-x-hidden selection:bg-indigo-500 selection:text-white text-neutral-300" style="font-family: 'Inter', sans-serif; background-color: #0d0d0d; background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.01) 10px, rgba(255,255,255,0.01) 11px);">
+
+    <!-- Directive: Container Lines with mini corner squares -->
+    <div class="fixed inset-0 z-0 pointer-events-none flex justify-between max-w-[1800px] mx-auto px-4 md:px-12">
+        <div class="w-px h-full bg-neutral-800/60 relative">
+            <div class="absolute top-12 -left-[2px] w-[5px] h-[5px] border border-neutral-600 bg-neutral-900 shadow-[0_0_4px_rgba(0,0,0,0.5)]"></div>
+            <div class="absolute bottom-12 -left-[2px] w-[5px] h-[5px] border border-neutral-600 bg-neutral-900 shadow-[0_0_4px_rgba(0,0,0,0.5)]"></div>
+        </div>
+        <div class="w-px h-full bg-neutral-800/40 relative hidden lg:block"></div>
+        <div class="w-px h-full bg-neutral-800/60 relative">
+            <div class="absolute top-12 -left-[2px] w-[5px] h-[5px] border border-neutral-600 bg-neutral-900 shadow-[0_0_4px_rgba(0,0,0,0.5)]"></div>
+            <div class="absolute bottom-12 -left-[2px] w-[5px] h-[5px] border border-neutral-600 bg-neutral-900 shadow-[0_0_4px_rgba(0,0,0,0.5)]"></div>
+        </div>
+    </div>
+
+    <!-- Interface Workspace Area -->
+    <section class="min-h-screen w-full p-4 md:p-8 relative z-10 flex flex-col md:block max-w-[1800px] mx-auto overflow-hidden">
+
+        <!-- Header Ribbon -->
+        <div class="w-full flex justify-between items-center mb-6 md:absolute md:top-6 md:left-12 md:right-12 md:w-auto md:mb-0 z-40">
+            <div class="flex items-center gap-3 px-3 py-1.5 bg-gradient-to-b from-neutral-800/90 to-neutral-900/90 backdrop-blur-md rounded-md border border-neutral-700/80 shadow-[inset_0_1px_0_rgba(255,255,255,0.1),_0_4px_12px_rgba(0,0,0,0.4)]">
+                <h1 class="text-xs font-medium tracking-tight text-indigo-400 uppercase drop-shadow-sm">Nexus Forge</h1>
+                <div class="w-px h-3.5 bg-neutral-700 shadow-[1px_0_0_rgba(255,255,255,0.05)]"></div>
+                <span class="text-xs text-neutral-400 font-normal" style="font-family: 'JetBrains Mono', monospace;">v9.2.4 Alpha</span>
+            </div>
+            <!-- Top right buttons removed as requested -->
+        </div>
+
+        <!-- Central WebGL Canvas (Centered & Expanded) -->
+        <div class="w-full relative md:absolute md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-[48%] h-[400px] md:h-[70%] z-10 mb-6 md:mb-0">
+            <!-- Skeuomorphic Border Gradient -->
+            <div class="relative w-full h-full rounded-2xl p-[1px] bg-gradient-to-b from-neutral-600/50 via-neutral-800/30 to-neutral-900/50 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.8),_inset_0_1px_0_rgba(255,255,255,0.05)]">
+                <div class="w-full h-full rounded-[15px] overflow-hidden bg-gradient-to-b from-[#111] to-[#080808] relative flex flex-col shadow-[inset_0_2px_10px_rgba(0,0,0,1)] border border-black/50">
+
+                    <!-- Hardware Reticles -->
+                    <div class="absolute top-2 left-2 w-3 h-3 border-t border-l border-neutral-500/30 z-20 shadow-[inset_1px_1px_0_rgba(255,255,255,0.05)]"></div>
+                    <div class="absolute top-2 right-2 w-3 h-3 border-t border-r border-neutral-500/30 z-20 shadow-[inset_-1px_1px_0_rgba(255,255,255,0.05)]"></div>
+                    <div class="absolute bottom-2 left-2 w-3 h-3 border-b border-l border-neutral-500/30 z-20 shadow-[inset_1px_-1px_0_rgba(255,255,255,0.05)]"></div>
+                    <div class="absolute bottom-2 right-2 w-3 h-3 border-b border-r border-neutral-500/30 z-20 shadow-[inset_-1px_-1px_0_rgba(255,255,255,0.05)]"></div>
+
+                    <!-- Stage Identifier -->
+                    <div class="absolute top-5 left-5 flex items-center gap-2.5 z-20">
+                        <div class="bg-gradient-to-b from-neutral-800 to-neutral-900 shadow-[inset_0_1px_0_rgba(255,255,255,0.1),_0_2px_4px_rgba(0,0,0,0.5)] rounded border border-neutral-950 flex items-center justify-center p-1.5">
+                            <iconify-icon icon="solar:3d-cube-sphere-linear" class="text-neutral-300 text-lg"></iconify-icon>
+                        </div>
+                        <span class="text-xs text-neutral-500 uppercase tracking-widest drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)]" style="font-family: 'JetBrains Mono', monospace;">Main Canvas</span>
+                    </div>
+
+                    <div id="webgl-container" class="absolute inset-0 w-full h-full mix-blend-screen"></div>
+
+                    <!-- Hardware-style Toolbar -->
+                    <div class="absolute bottom-5 left-1/2 -translate-x-1/2 bg-gradient-to-b from-[#2a2a2a] to-[#1e1e1e] rounded-lg shadow-[0_10px_25px_rgba(0,0,0,0.8),_inset_0_1px_0_rgba(255,255,255,0.1)] py-2 px-3 flex items-center gap-3 z-20 border border-neutral-950">
+                        <button class="text-neutral-400 hover:text-white transition-colors drop-shadow-sm"><iconify-icon icon="solar:mouse-circle-linear" width="20"></iconify-icon></button>
+                        <button class="text-neutral-400 hover:text-white transition-colors drop-shadow-sm"><iconify-icon icon="solar:pen-new-round-linear" width="20"></iconify-icon></button>
+                        <button class="text-neutral-400 hover:text-white transition-colors drop-shadow-sm"><iconify-icon icon="solar:ruler-cross-pen-linear" width="20"></iconify-icon></button>
+                        <div class="w-px h-5 bg-neutral-900 shadow-[1px_0_0_rgba(255,255,255,0.05)] mx-1"></div>
+                        <button class="text-neutral-400 hover:text-white transition-colors drop-shadow-sm"><iconify-icon icon="solar:layers-minimalistic-linear" width="20"></iconify-icon></button>
+                        <button class="text-indigo-400 hover:text-indigo-300 transition-colors drop-shadow-[0_0_8px_rgba(129,140,248,0.4)]"><iconify-icon icon="solar:play-circle-linear" width="20"></iconify-icon></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- REMIXED PANELS: IDE / DASHBOARD STRUCTURE -->
+
+        <!-- 1. Component Vault (Left Top) -->
+        <div class="w-full relative md:absolute md:top-[12%] md:left-[4%] md:w-[22%] z-20 mb-6 md:mb-0 draggable-panel">
+            <div class="relative rounded-xl p-[1px] bg-gradient-to-b from-neutral-600/40 via-neutral-700/10 to-neutral-800/30 shadow-[0_20px_40px_-10px_rgba(0,0,0,0.7)]">
+                <div class="bg-gradient-to-b from-[#252525] to-[#1a1a1a] rounded-[11px] h-full flex flex-col shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
+                    <div class="flex items-center justify-between p-4 border-b border-[#0f0f0f] shadow-[0_1px_0_rgba(255,255,255,0.02)] drag-handle cursor-grab active:cursor-grabbing">
+                        <span class="text-xs font-medium tracking-wider text-neutral-400 uppercase drop-shadow-sm pointer-events-none">Component Vault</span>
+                        <button class="text-neutral-500 hover:text-neutral-300 transition-colors"><iconify-icon icon="solar:minus-circle-linear" width="16"></iconify-icon></button>
+                    </div>
+
+                    <div class="p-3 bg-[#1e1e1e]/50 border-b border-[#0f0f0f]">
+                        <div class="bg-[#111] rounded shadow-[inset_0_2px_4px_rgba(0,0,0,0.6),_0_1px_0_rgba(255,255,255,0.05)] flex items-center px-3 py-2 border border-black/50 focus-within:border-neutral-700 transition-colors">
+                            <iconify-icon icon="solar:magnifer-linear" class="text-neutral-600 mr-2" width="16"></iconify-icon>
+                            <input type="text" placeholder="Find resources..." class="bg-transparent text-xs w-full text-neutral-300 placeholder-neutral-600 focus:outline-none focus:ring-0">
+                        </div>
+                    </div>
+
+                    <div class="p-4">
+                        <div class="grid grid-cols-4 gap-1 mb-4">
+                            <button class="text-[10px] text-indigo-400 font-medium uppercase py-1.5 px-1 bg-neutral-800 rounded shadow-[inset_0_1px_0_rgba(255,255,255,0.1),_0_2px_4px_rgba(0,0,0,0.3)] border border-neutral-900">Base</button>
+                            <button class="text-[10px] text-neutral-500 uppercase py-1.5 px-1 hover:text-neutral-300 transition-colors">Nodes</button>
+                            <button class="text-[10px] text-neutral-500 uppercase py-1.5 px-1 hover:text-neutral-300 transition-colors">Shaders</button>
+                            <button class="text-[10px] text-neutral-500 uppercase py-1.5 px-1 hover:text-neutral-300 transition-colors">Utils</button>
+                        </div>
+
+                        <div class="grid grid-cols-2 lg:grid-cols-3 gap-2.5">
+                            <div class="aspect-square rounded border border-indigo-500/30 bg-indigo-500/10 flex flex-col items-center justify-center p-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] cursor-pointer hover:bg-indigo-500/20 transition-all">
+                                <iconify-icon icon="solar:code-circle-linear" class="text-indigo-400 mb-1.5 drop-shadow-[0_0_4px_rgba(129,140,248,0.5)]" width="22"></iconify-icon>
+                                <span class="text-[10px] font-medium text-indigo-300 uppercase">Logic Node</span>
+                            </div>
+                            <div class="aspect-square rounded border border-black/60 bg-gradient-to-b from-[#222] to-[#181818] shadow-[inset_0_1px_0_rgba(255,255,255,0.05),_0_2px_4px_rgba(0,0,0,0.3)] flex flex-col items-center justify-center p-2 hover:border-neutral-600 cursor-pointer transition-colors">
+                                <iconify-icon icon="solar:graph-up-linear" class="text-neutral-500 mb-1.5" width="22"></iconify-icon>
+                                <span class="text-[10px] font-medium text-neutral-400 uppercase">Vector</span>
+                            </div>
+                            <div class="aspect-square rounded border border-black/60 bg-gradient-to-b from-[#222] to-[#181818] shadow-[inset_0_1px_0_rgba(255,255,255,0.05),_0_2px_4px_rgba(0,0,0,0.3)] flex flex-col items-center justify-center p-2 hover:border-neutral-600 cursor-pointer transition-colors">
+                                <iconify-icon icon="solar:radial-blur-linear" class="text-neutral-500 mb-1.5" width="22"></iconify-icon>
+                                <span class="text-[10px] font-medium text-neutral-400 uppercase">Distort</span>
+                            </div>
+                            <div class="aspect-square rounded border border-black/60 bg-gradient-to-b from-[#222] to-[#181818] shadow-[inset_0_1px_0_rgba(255,255,255,0.05),_0_2px_4px_rgba(0,0,0,0.3)] flex flex-col items-center justify-center p-2 hover:border-neutral-600 cursor-pointer transition-colors">
+                                <iconify-icon icon="solar:scanner-linear" class="text-neutral-500 mb-1.5" width="22"></iconify-icon>
+                                <span class="text-[10px] font-medium text-neutral-400 uppercase">Scanline</span>
+                            </div>
+                            <div class="aspect-square rounded border border-black/60 bg-gradient-to-b from-[#222] to-[#181818] shadow-[inset_0_1px_0_rgba(255,255,255,0.05),_0_2px_4px_rgba(0,0,0,0.3)] flex flex-col items-center justify-center p-2 hover:border-neutral-600 cursor-pointer transition-colors">
+                                <iconify-icon icon="solar:blur-linear" class="text-neutral-500 mb-1.5" width="22"></iconify-icon>
+                                <span class="text-[10px] font-medium text-neutral-400 uppercase">Grain</span>
+                            </div>
+                            <div class="aspect-square rounded border border-black/60 bg-gradient-to-b from-[#222] to-[#181818] shadow-[inset_0_1px_0_rgba(255,255,255,0.05),_0_2px_4px_rgba(0,0,0,0.3)] flex flex-col items-center justify-center p-2 hover:border-neutral-600 cursor-pointer transition-colors">
+                                <iconify-icon icon="solar:mask-haze-linear" class="text-neutral-500 mb-1.5" width="22"></iconify-icon>
+                                <span class="text-[10px] font-medium text-neutral-400 uppercase">Mask</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Stack Tree (Left Bottom) -->
+        <div class="hidden md:block absolute bottom-[8%] left-[4%] w-[22%] z-20 draggable-panel">
+            <div class="relative rounded-xl p-[1px] bg-gradient-to-b from-neutral-600/40 via-neutral-700/10 to-neutral-800/30 shadow-[0_20px_40px_-10px_rgba(0,0,0,0.7)]">
+                <div class="bg-gradient-to-b from-[#252525] to-[#1a1a1a] rounded-[11px] flex flex-col p-4 h-[220px] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
+                    <div class="flex items-center justify-between pb-3 border-b border-[#0f0f0f] shadow-[0_1px_0_rgba(255,255,255,0.02)] mb-2 drag-handle cursor-grab active:cursor-grabbing">
+                        <span class="text-xs font-medium tracking-wider text-neutral-400 uppercase pointer-events-none">Stack Tree</span>
+                        <div class="flex gap-2">
+                            <button class="bg-neutral-800 p-1 rounded shadow-[inset_0_1px_0_rgba(255,255,255,0.1),_0_1px_2px_rgba(0,0,0,0.5)] border border-neutral-900"><iconify-icon icon="solar:add-circle-linear" width="14" class="text-neutral-400"></iconify-icon></button>
+                        </div>
+                    </div>
+                    <div class="flex-grow bg-[#111] rounded shadow-[inset_0_2px_6px_rgba(0,0,0,0.8),_0_1px_0_rgba(255,255,255,0.05)] border border-black/50 flex flex-col items-center justify-center text-center p-4">
+                        <iconify-icon icon="solar:ghost-smile-linear" class="text-neutral-700 mb-2 drop-shadow-md" width="26"></iconify-icon>
+                        <span class="text-[11px] font-medium text-neutral-400 uppercase block mb-1">No Active Nodes</span>
+                        <span class="text-[10px] text-neutral-600 leading-tight">Drop items here to begin building.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Master Controls (Right Top) -->
+        <div class="w-full relative md:absolute md:top-[8%] md:right-[4%] md:w-[22%] z-30 mb-6 md:mb-0 draggable-panel">
+            <div class="relative rounded-xl p-[1px] bg-gradient-to-b from-neutral-600/40 via-neutral-700/10 to-neutral-800/30 shadow-[0_20px_40px_-10px_rgba(0,0,0,0.7)]">
+                <div class="bg-gradient-to-b from-[#252525] to-[#1a1a1a] rounded-[11px] h-full flex flex-col p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
+                    <div class="flex items-center justify-between pb-4 border-b border-[#0f0f0f] shadow-[0_1px_0_rgba(255,255,255,0.02)] mb-5 drag-handle cursor-grab active:cursor-grabbing">
+                        <span class="text-xs font-medium tracking-wider text-neutral-400 uppercase pointer-events-none">Master Controls</span>
+                        <div class="flex gap-2.5 text-neutral-500">
+                            <iconify-icon icon="solar:eye-linear" width="16" class="hover:text-neutral-300 cursor-pointer transition-colors"></iconify-icon>
+                            <iconify-icon icon="solar:tuning-square-linear" width="16" class="hover:text-neutral-300 cursor-pointer transition-colors"></iconify-icon>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6">
+                        <!-- Sliders with tactile track -->
+                        <div>
+                            <div class="flex justify-between text-[10px] text-neutral-300 mb-2 uppercase font-medium">
+                                <span>Turbulence</span>
+                                <span class="bg-[#111] border border-black/50 shadow-[inset_0_1px_2px_rgba(0,0,0,0.5),_0_1px_0_rgba(255,255,255,0.05)] px-2 py-0.5 rounded text-neutral-400" style="font-family: 'JetBrains Mono', monospace;">1.04</span>
+                            </div>
+                            <div class="relative h-2 bg-[#111] rounded-full shadow-[inset_0_2px_4px_rgba(0,0,0,0.6),_0_1px_0_rgba(255,255,255,0.05)] border border-black/50 overflow-hidden">
+                                <div class="absolute top-0 left-0 h-full bg-gradient-to-r from-indigo-600 to-indigo-400 w-[24%] rounded-full shadow-[0_0_8px_rgba(129,140,248,0.5)]"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-[10px] text-neutral-300 mb-2 uppercase font-medium">
+                                <span>Zoom Factor</span>
+                                <span class="bg-[#111] border border-black/50 shadow-[inset_0_1px_2px_rgba(0,0,0,0.5),_0_1px_0_rgba(255,255,255,0.05)] px-2 py-0.5 rounded text-neutral-400" style="font-family: 'JetBrains Mono', monospace;">x3.2</span>
+                            </div>
+                            <div class="relative h-2 bg-[#111] rounded-full shadow-[inset_0_2px_4px_rgba(0,0,0,0.6),_0_1px_0_rgba(255,255,255,0.05)] border border-black/50 overflow-hidden">
+                                <div class="absolute top-0 left-0 h-full bg-gradient-to-r from-neutral-600 to-neutral-400 w-[60%] rounded-full"></div>
+                            </div>
+                        </div>
+
+                        <div class="h-px bg-[#0f0f0f] shadow-[0_1px_0_rgba(255,255,255,0.02)] w-full my-2"></div>
+
+                        <!-- Skeuomorphic Toggle -->
+                        <div>
+                            <span class="text-[10px] text-neutral-400 uppercase font-medium block mb-2 drop-shadow-sm">Logic Engine</span>
+                            <div class="bg-[#111] p-1 rounded-md flex border border-black/50 shadow-[inset_0_2px_5px_rgba(0,0,0,0.8),_0_1px_0_rgba(255,255,255,0.05)]">
+                                <button class="flex-1 bg-gradient-to-b from-neutral-700 to-neutral-800 text-white text-[10px] py-1.5 rounded border border-neutral-900 shadow-[inset_0_1px_0_rgba(255,255,255,0.1),_0_1px_3px_rgba(0,0,0,0.5)] font-medium">Quantum</button>
+                                <button class="flex-1 text-[10px] py-1.5 text-neutral-500 hover:text-neutral-300 font-medium transition-colors">Classic</button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-[10px] text-neutral-300 mb-2 uppercase font-medium">
+                                <span>Mesh Density</span>
+                                <span class="bg-[#111] border border-black/50 shadow-[inset_0_1px_2px_rgba(0,0,0,0.5),_0_1px_0_rgba(255,255,255,0.05)] px-2 py-0.5 rounded text-neutral-400" style="font-family: 'JetBrains Mono', monospace;">High</span>
+                            </div>
+                            <div class="relative h-2 bg-[#111] rounded-full shadow-[inset_0_2px_4px_rgba(0,0,0,0.6),_0_1px_0_rgba(255,255,255,0.05)] border border-black/50 overflow-hidden">
+                                <div class="absolute top-0 left-0 h-full bg-gradient-to-r from-neutral-600 to-neutral-400 w-[85%] rounded-full"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Properties (Right Middle) -->
+        <div class="hidden md:block absolute top-[48%] right-[4%] w-[22%] z-20 draggable-panel">
+            <div class="relative rounded-xl p-[1px] bg-gradient-to-b from-neutral-600/40 via-neutral-700/10 to-neutral-800/30 shadow-[0_20px_40px_-10px_rgba(0,0,0,0.7)]">
+                <div class="bg-gradient-to-b from-[#252525] to-[#1a1a1a] rounded-[11px] h-full flex flex-col shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
+                    <div class="flex items-center justify-between p-4 border-b border-[#0f0f0f] shadow-[0_1px_0_rgba(255,255,255,0.02)] drag-handle cursor-grab active:cursor-grabbing">
+                        <span class="text-xs font-medium tracking-wider text-neutral-400 uppercase pointer-events-none">Properties</span>
+                        <button class="text-neutral-500 hover:text-neutral-300 transition-colors"><iconify-icon icon="solar:menu-dots-circle-linear" width="16"></iconify-icon></button>
+                    </div>
+
+                    <div class="p-4 space-y-5">
+                        <div>
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="text-[10px] font-medium text-neutral-300 uppercase">Theme Settings</span>
+                                <span class="text-[10px] text-indigo-400 uppercase font-medium bg-indigo-500/10 px-2 py-0.5 rounded border border-indigo-500/20">Obsidian</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div class="flex flex-col items-center justify-center py-2.5 px-2 rounded bg-[#111] border border-indigo-500/40 shadow-[inset_0_0_8px_rgba(99,102,241,0.1),_0_1px_0_rgba(255,255,255,0.05)] cursor-pointer">
+                                    <span class="text-[10px] font-medium text-indigo-300 mb-0.5">Obsidian</span>
+                                    <span class="text-[9px] text-indigo-400/70">Void Depth</span>
+                                </div>
+                                <div class="flex flex-col items-center justify-center py-2.5 px-2 rounded bg-gradient-to-b from-[#222] to-[#181818] border border-black/60 shadow-[inset_0_1px_0_rgba(255,255,255,0.05),_0_2px_4px_rgba(0,0,0,0.3)] hover:border-neutral-500 cursor-pointer transition-colors">
+                                    <span class="text-[10px] font-medium text-neutral-300 mb-0.5">Synth</span>
+                                    <span class="text-[9px] text-neutral-500">Matrix Core</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between items-center pt-3 border-t border-[#0f0f0f] shadow-[inset_0_1px_0_rgba(255,255,255,0.02)]">
+                            <span class="text-[10px] font-medium text-neutral-300 uppercase drop-shadow-sm">Accent Color</span>
+                            <div class="flex items-center gap-2 bg-[#111] border border-black/50 shadow-[inset_0_2px_4px_rgba(0,0,0,0.5),_0_1px_0_rgba(255,255,255,0.05)] px-2 py-1 rounded">
+                                <div class="w-2.5 h-2.5 rounded-full bg-indigo-500 shadow-[0_0_6px_rgba(99,102,241,0.6)]"></div>
+                                <span class="text-[10px] text-neutral-400" style="font-family: 'JetBrains Mono', monospace;">#D97757</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Render Export (Bottom Right) -->
+        <div class="hidden md:block absolute bottom-[5%] right-[28%] w-[20%] z-40 draggable-panel">
+            <div class="relative rounded-xl p-[1px] bg-gradient-to-b from-neutral-600/40 via-neutral-700/10 to-neutral-800/30 shadow-[0_20px_40px_-10px_rgba(0,0,0,0.7)]">
+                <div class="bg-gradient-to-b from-[#252525] to-[#1a1a1a] rounded-[11px] h-full flex flex-col p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
+                    <div class="flex items-center justify-between pb-3 border-b border-[#0f0f0f] shadow-[0_1px_0_rgba(255,255,255,0.02)] mb-4 drag-handle cursor-grab active:cursor-grabbing">
+                        <span class="text-xs font-medium tracking-wider text-neutral-400 uppercase pointer-events-none">Render Export</span>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-[10px] text-neutral-400 uppercase block mb-1.5 font-medium">Session ID</label>
+                            <input type="text" value="NX_CORE_v9" class="w-full bg-[#111] border border-black/50 shadow-[inset_0_2px_4px_rgba(0,0,0,0.6),_0_1px_0_rgba(255,255,255,0.05)] rounded p-2 text-[10px] text-white focus:outline-none focus:border-indigo-500/50 transition-colors" style="font-family: 'JetBrains Mono', monospace;">
+                        </div>
+
+                        <div class="flex gap-2">
+                            <div class="flex-1">
+                                <label class="text-[10px] text-neutral-400 uppercase block mb-1.5 font-medium">Res X</label>
+                                <input type="text" value="4096" class="w-full bg-[#111] border border-black/50 shadow-[inset_0_2px_4px_rgba(0,0,0,0.6),_0_1px_0_rgba(255,255,255,0.05)] rounded p-2 text-[10px] text-neutral-300 text-center focus:outline-none focus:border-indigo-500/50" style="font-family: 'JetBrains Mono', monospace;">
+                            </div>
+                            <div class="flex-1">
+                                <label class="text-[10px] text-neutral-400 uppercase block mb-1.5 font-medium">Res Y</label>
+                                <input type="text" value="2160" class="w-full bg-[#111] border border-black/50 shadow-[inset_0_2px_4px_rgba(0,0,0,0.6),_0_1px_0_rgba(255,255,255,0.05)] rounded p-2 text-[10px] text-neutral-300 text-center focus:outline-none focus:border-indigo-500/50" style="font-family: 'JetBrains Mono', monospace;">
+                            </div>
+                        </div>
+
+                        <button class="w-full bg-gradient-to-b from-indigo-500 to-indigo-600 border border-indigo-700 hover:from-indigo-400 hover:to-indigo-500 text-white text-[10px] font-medium py-2.5 rounded shadow-[inset_0_1px_0_rgba(255,255,255,0.2),_0_2px_8px_rgba(79,70,229,0.4)] uppercase tracking-wider transition-all mt-1 focus:outline-none active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)] active:translate-y-px">
+                            Compile Output
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. System Telemetry (Bottom Left Inner) -->
+        <div class="hidden md:block absolute bottom-[5%] left-[28%] w-[20%] z-10 draggable-panel">
+            <div class="relative rounded-xl p-[1px] bg-gradient-to-b from-neutral-600/40 via-neutral-700/10 to-neutral-800/30 shadow-[0_20px_40px_-10px_rgba(0,0,0,0.7)]">
+                <div class="bg-gradient-to-b from-[#252525] to-[#1a1a1a] rounded-[11px] flex flex-col p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
+                    <div class="flex items-center justify-between pb-2 border-b border-[#0f0f0f] shadow-[0_1px_0_rgba(255,255,255,0.02)] mb-3 drag-handle cursor-grab active:cursor-grabbing">
+                        <span class="text-xs font-medium tracking-wider text-neutral-400 uppercase pointer-events-none">System Telemetry</span>
+                        <iconify-icon icon="solar:pulse-linear" class="text-indigo-400 pointer-events-none"></iconify-icon>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="bg-[#111] p-2 rounded border border-black/50 shadow-[inset_0_2px_4px_rgba(0,0,0,0.5),_0_1px_0_rgba(255,255,255,0.05)] flex justify-between items-center">
+                            <span class="text-[10px] text-neutral-500 uppercase font-medium">Entity Count</span>
+                            <span class="text-[10px] text-indigo-300 drop-shadow-[0_0_2px_rgba(99,102,241,0.5)]" style="font-family: 'JetBrains Mono', monospace;">12,048</span>
+                        </div>
+                        <div class="flex justify-between items-center px-1">
+                            <span class="text-[10px] text-neutral-500 uppercase font-medium">Live Layers</span>
+                            <span class="text-[10px] text-neutral-300" style="font-family: 'JetBrains Mono', monospace;">0</span>
+                        </div>
+                        <div class="h-px w-full bg-[#0f0f0f] shadow-[0_1px_0_rgba(255,255,255,0.02)]"></div>
+                        <div>
+                            <div class="flex justify-between items-center px-1 mb-1.5">
+                                <span class="text-[10px] text-neutral-500 uppercase font-medium">GPU Memory</span>
+                                <span class="text-[10px] text-neutral-300" style="font-family: 'JetBrains Mono', monospace;">1.2 GB</span>
+                            </div>
+                            <div class="w-full h-1.5 bg-[#111] border border-black/50 rounded-full overflow-hidden shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]">
+                                <div class="h-full bg-gradient-to-r from-indigo-600 to-indigo-400 w-[42%] rounded-full shadow-[0_0_6px_rgba(99,102,241,0.5)]"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- Scroll Reveal Section -->
+    <section class="min-h-screen w-full flex items-center justify-center p-4 py-32 bg-[#080808] relative z-0 border-t border-neutral-900 shadow-[inset_0_20px_40px_-10px_rgba(0,0,0,0.8)]">
+        <!-- Background Detailing -->
+        <div class="absolute inset-0 pointer-events-none" style="background-image: radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1px); background-size: 32px 32px; opacity: 0.6;"></div>
+
+        <div class="max-w-5xl mx-auto text-center relative z-10 px-4">
+            <p class="text-xs font-medium tracking-widest text-indigo-400 uppercase mb-8 drop-shadow-[0_0_8px_rgba(99,102,241,0.3)]" id="reveal-subtitle">Next-Generation IDE</p>
+            <h2 class="text-5xl md:text-7xl lg:text-8xl font-light tracking-tight text-white leading-[1.05]" id="reveal-title">
+                Algorithmic generation<br>for modern creators.
+            </h2>
+            <p class="mt-10 text-lg text-neutral-400 max-w-2xl mx-auto font-light leading-relaxed" id="reveal-desc">
+                Harness the power of real-time node rendering. Built for precision, speed, and endless creative exploration within a premium tactile interface.
+            </p>
+        </div>
+    </section>
+
+    <script>
+        // Draggable Panels Logic
+        function initDraggablePanels() {
+            const panels = document.querySelectorAll('.draggable-panel');
+            let highestZ = 50;
+
+            panels.forEach(panel => {
+                const handle = panel.querySelector('.drag-handle');
+                if (!handle) return;
+
+                let isDragging = false;
+                let startMouseX, startMouseY, startPanelX, startPanelY;
+
+                handle.addEventListener('mousedown', (e) => {
+                    // Ignore clicks on buttons/inputs inside the handle
+                    if(e.target.closest('button') || e.target.tagName.toLowerCase() === 'input') return;
+
+                    isDragging = true;
+                    panel.style.zIndex = ++highestZ;
+
+                    // Force computed width so it doesn't collapse when right/bottom constraints are removed
+                    const rect = panel.getBoundingClientRect();
+                    panel.style.width = rect.width + 'px';
+
+                    // Use exact current offset from relative parent
+                    startPanelX = panel.offsetLeft;
+                    startPanelY = panel.offsetTop;
+
+                    // Switch to explicit px positioning, wipe out responsive constraints
+                    panel.style.left = startPanelX + 'px';
+                    panel.style.top = startPanelY + 'px';
+                    panel.style.right = 'auto';
+                    panel.style.bottom = 'auto';
+
+                    startMouseX = e.clientX;
+                    startMouseY = e.clientY;
+
+                    document.addEventListener('mousemove', onMouseMove);
+                    document.addEventListener('mouseup', onMouseUp);
+                });
+
+                function onMouseMove(e) {
+                    if (!isDragging) return;
+                    e.preventDefault();
+
+                    const dx = e.clientX - startMouseX;
+                    const dy = e.clientY - startMouseY;
+
+                    panel.style.left = (startPanelX + dx) + 'px';
+                    panel.style.top = (startPanelY + dy) + 'px';
+                }
+
+                function onMouseUp() {
+                    if (isDragging) {
+                        isDragging = false;
+                        document.removeEventListener('mousemove', onMouseMove);
+                        document.removeEventListener('mouseup', onMouseUp);
+                    }
+                }
+            });
+        }
+
+        // WebGL Animation (Centered Canvas)
+        function initWebGL() {
+            const container = document.getElementById('webgl-container');
+            if (!container) return;
+
+            const scene = new THREE.Scene();
+            // Transparent to let the skeuomorphic gradient show behind it
+            scene.background = null;
+
+            const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+
+            const geometry = new THREE.BufferGeometry();
+            const particlesCount = 3500;
+            const posArray = new Float32Array(particlesCount * 3);
+
+            for(let i = 0; i < particlesCount * 3; i+=3) {
+                const r = 2.0 + Math.random() * 0.8;
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.acos((Math.random() * 2) - 1);
+
+                const distortion = Math.sin(theta * 3) * Math.cos(phi * 5) * 0.5;
+
+                posArray[i] = (r + distortion) * Math.sin(phi) * Math.cos(theta);
+                posArray[i+1] = (r + distortion) * Math.sin(phi) * Math.sin(theta);
+                posArray[i+2] = (r + distortion) * Math.cos(phi);
+            }
+
+            geometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+            // Adjust dots for the new sleek aesthetic
+            const material = new THREE.PointsMaterial({
+                size: 0.022,
+                color: 0xa5b4fc, // Indigo-300 for slightly crisper contrast
+                transparent: true,
+                opacity: 0.9,
+                blending: THREE.AdditiveBlending
+            });
+
+            const particlesMesh = new THREE.Points(geometry, material);
+            scene.add(particlesMesh);
+
+            camera.position.z = 5.5;
+
+            let mouseX = 0;
+            let mouseY = 0;
+            let targetX = 0;
+            let targetY = 0;
+
+            const windowHalfX = container.clientWidth / 2;
+            const windowHalfY = container.clientHeight / 2;
+
+            container.addEventListener('mousemove', (event) => {
+                const rect = container.getBoundingClientRect();
+                mouseX = (event.clientX - rect.left) - windowHalfX;
+                mouseY = (event.clientY - rect.top) - windowHalfY;
+            });
+
+            const clock = new THREE.Clock();
+
+            function animate() {
+                requestAnimationFrame(animate);
+                const elapsedTime = clock.getElapsedTime();
+
+                targetX = mouseX * 0.0015;
+                targetY = mouseY * 0.0015;
+
+                particlesMesh.rotation.y += 0.001;
+                particlesMesh.rotation.x += 0.0012;
+
+                particlesMesh.rotation.y += 0.05 * (targetX - particlesMesh.rotation.y);
+                particlesMesh.rotation.x += 0.05 * (targetY - particlesMesh.rotation.x);
+
+                renderer.render(scene, camera);
+            }
+
+            animate();
+
+            window.addEventListener('resize', () => {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            });
+        }
+
+        // GSAP Masked Text Reveal on Scroll
+        function initScrollAnimations() {
+            gsap.registerPlugin(ScrollTrigger);
+
+            const title = document.getElementById('reveal-title');
+            if(!title) return;
+
+            const text = title.innerHTML;
+            const words = text.split(/(<br>|\s+)/).filter(word => word.trim().length > 0 || word === '<br>');
+
+            title.innerHTML = '';
+            words.forEach(word => {
+                if(word === '<br>') {
+                    title.appendChild(document.createElement('br'));
+                } else {
+                    const wordDiv = document.createElement('div');
+                    wordDiv.style.display = 'inline-block';
+                    wordDiv.style.overflow = 'hidden';
+                    wordDiv.style.verticalAlign = 'top';
+
+                    const wordSpan = document.createElement('span');
+                    wordSpan.innerHTML = word + '&nbsp;';
+                    wordSpan.style.display = 'inline-block';
+                    wordSpan.style.transform = 'translateY(100%)';
+                    wordSpan.style.opacity = '0';
+                    wordSpan.className = 'reveal-span';
+
+                    wordDiv.appendChild(wordSpan);
+                    title.appendChild(wordDiv);
+                }
+            });
+
+            const spans = title.querySelectorAll('.reveal-span');
+
+            gsap.to(spans, {
+                y: "0%",
+                opacity: 1,
+                duration: 1.2,
+                ease: "power4.out",
+                stagger: 0.06,
+                scrollTrigger: {
+                    trigger: title,
+                    start: "top 80%",
+                }
+            });
+
+            gsap.from("#reveal-subtitle", {
+                opacity: 0,
+                y: 15,
+                duration: 1,
+                ease: "power2.out",
+                scrollTrigger: {
+                    trigger: title,
+                    start: "top 85%",
+                }
+            });
+
+            gsap.from("#reveal-desc", {
+                opacity: 0,
+                y: 15,
+                duration: 1,
+                delay: 0.3,
+                ease: "power2.out",
+                scrollTrigger: {
+                    trigger: title,
+                    start: "top 80%",
+                }
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initDraggablePanels();
+            initWebGL();
+            initScrollAnimations();
+        });
+    </script>
+</body>
+</html>

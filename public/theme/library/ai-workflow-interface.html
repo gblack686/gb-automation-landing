@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en" class="antialiased text-gray-200 bg-[#09090b]">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Workflow Interface</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* Base font application */
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+
+<link rel="stylesheet" href="gbauto-library-theme.css">
+<script defer src="gbauto-library-theme.js"></script>
+</head>
+<body data-gbauto-page="ai-workflow" data-gbauto-surface="workflow" class="gbauto-theme h-screen w-screen overflow-hidden flex selection:bg-[#D97757]/30">
+
+    <!-- Sidebar -->
+    <aside class="w-[68px] shrink-0 border-r border-white/[0.04] bg-[#0c0d0f] flex flex-col items-center py-6 justify-between z-30 shadow-[4px_0_24px_rgba(0,0,0,0.5)] relative">
+        <div class="flex flex-col gap-6 items-center w-full">
+            <!-- Logo -->
+            <div class="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/[0.08] flex items-center justify-center mb-2 shadow-lg cursor-pointer transition-colors hover:bg-white/[0.08]">
+                <iconify-icon icon="solar:infinity-bold" class="text-white text-xl"></iconify-icon>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="flex flex-col gap-3 w-full px-3">
+                <button class="w-full aspect-square rounded-xl flex items-center justify-center text-gray-500 transition-colors hover:text-gray-200 hover:bg-white/[0.04]">
+                    <iconify-icon icon="solar:home-smile-linear" class="text-[22px]" stroke-width="1.5"></iconify-icon>
+                </button>
+                <button class="w-full aspect-square rounded-xl flex items-center justify-center bg-[#D97757] text-black shadow-[0_0_15px_rgba(0,229,89,0.4)] transition-all hover:scale-105">
+                    <iconify-icon icon="solar:nodes-linear" class="text-[22px]" stroke-width="1.5"></iconify-icon>
+                </button>
+                <button class="w-full aspect-square rounded-xl flex items-center justify-center text-gray-500 transition-colors hover:text-gray-200 hover:bg-white/[0.04]">
+                    <iconify-icon icon="solar:box-linear" class="text-[22px]" stroke-width="1.5"></iconify-icon>
+                </button>
+                <button class="w-full aspect-square rounded-xl flex items-center justify-center text-gray-500 transition-colors hover:text-gray-200 hover:bg-white/[0.04]">
+                    <iconify-icon icon="solar:settings-linear" class="text-[22px]" stroke-width="1.5"></iconify-icon>
+                </button>
+            </nav>
+        </div>
+
+        <!-- Bottom Actions -->
+        <button class="w-10 h-10 rounded-xl flex items-center justify-center text-gray-500 transition-colors hover:text-gray-200 hover:bg-white/[0.04]">
+            <iconify-icon icon="solar:logout-2-linear" class="text-[22px]" stroke-width="1.5"></iconify-icon>
+        </button>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col relative bg-[#09090b]">
+
+        <!-- Topbar -->
+        <header class="h-[72px] flex items-center justify-between px-8 border-b border-white/[0.02] z-30 pointer-events-none relative">
+            <div class="flex items-center gap-3 pointer-events-auto">
+                <h1 class="text-lg font-medium text-gray-100 tracking-tight">Visual Mood Experiment</h1>
+                <iconify-icon icon="solar:cloud-check-linear" class="text-[#D97757] text-xl"></iconify-icon>
+            </div>
+
+            <div class="flex items-center gap-4 pointer-events-auto">
+                <div class="flex items-center gap-2 mr-4">
+                    <button class="w-9 h-9 rounded-full border border-white/[0.08] flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/[0.04] transition-colors">
+                        <iconify-icon icon="solar:moon-linear" class="text-lg"></iconify-icon>
+                    </button>
+                    <button class="w-9 h-9 rounded-full border border-white/[0.08] flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/[0.04] transition-colors">
+                        <iconify-icon icon="solar:export-linear" class="text-lg"></iconify-icon>
+                    </button>
+                </div>
+
+                <div class="flex items-center -space-x-3">
+                    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/2f563338-39fa-47ea-9761-658d4f3f84db_1600w.jpg" class="w-8 h-8 rounded-full border-2 border-[#09090b] object-cover" alt="User">
+                    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/4f5668c5-fc4a-44e0-bc5e-a664189d3c31_1600w.jpg" class="w-8 h-8 rounded-full border-2 border-[#09090b] object-cover" alt="User">
+                    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/eca707cc-a5b7-439a-b4fd-247f6106c2e1_1600w.jpg" class="w-8 h-8 rounded-full border-2 border-[#09090b] object-cover" alt="User">
+                    <div class="w-8 h-8 rounded-full border-2 border-[#09090b] bg-[#1a1b1e] flex items-center justify-center text-[10px] font-medium text-white z-10">+2</div>
+                </div>
+
+                <div class="w-[1px] h-4 bg-white/10 mx-2"></div>
+
+                <button class="flex items-center gap-1.5 text-gray-400 hover:text-white transition-colors">
+                    <iconify-icon icon="solar:soundwave-linear" class="text-[#D97757]"></iconify-icon>
+                </button>
+            </div>
+        </header>
+
+        <!-- Canvas Area -->
+        <div class="flex-1 relative overflow-hidden flex items-center justify-center p-12">
+
+            <!-- Background Elements -->
+            <div class="absolute inset-0 z-0 opacity-40 pointer-events-none" style="background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.15) 1px, transparent 0); background-size: 32px 32px;"></div>
+            <div class="absolute inset-0 z-0 pointer-events-none" style="background: radial-gradient(circle at center, transparent 20%, rgba(217,119,87,0.08) 100%);"></div>
+            <!-- Soft central glow -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] rounded-full bg-[#D97757]/[0.03] blur-[120px] pointer-events-none z-0"></div>
+
+            <!-- Graph Container (Responsive scalable area) -->
+            <div class="w-full max-w-[1200px] aspect-[16/9] relative z-10">
+
+                <!-- SVG Connections Overlay -->
+                <svg viewBox="0 0 1200 675" class="absolute inset-0 w-full h-full z-0 pointer-events-none drop-shadow-[0_0_8px_rgba(0,229,89,0.4)]" preserveAspectRatio="none">
+                    <!-- Base glow lines -->
+                    <g fill="none" stroke="#D97757" stroke-width="2" class="opacity-30">
+                        <path d="M 288 337.5 C 340 337.5, 360 160, 420 160" />
+                        <path d="M 288 337.5 C 340 337.5, 360 515, 420 515" />
+                        <path d="M 680 250 L 680 300" />
+                        <path d="M 680 430 L 680 375" />
+                        <path d="M 720 337.5 L 860 337.5" />
+                    </g>
+                    <!-- Animated flow lines -->
+                    <g fill="none" stroke="#D97757" stroke-width="2" id="animated-paths">
+                        <path d="M 288 337.5 C 340 337.5, 360 160, 420 160" />
+                        <path d="M 288 337.5 C 340 337.5, 360 515, 420 515" />
+                        <path d="M 680 250 L 680 300" />
+                        <path d="M 680 430 L 680 375" />
+                        <path d="M 720 337.5 L 860 337.5" />
+                    </g>
+                </svg>
+
+                <!-- 1. Left Node: Engine Setup -->
+                <!-- Absolute positioned based on percentage of 1200x675 container -->
+                <div class="gsap-node absolute w-[280px] bg-[#121316]/90 backdrop-blur-xl border border-white/[0.08] rounded-[20px] p-5 shadow-2xl z-10"
+                     style="left: 0; top: 50%; transform: translateY(-50%);">
+
+                    <div class="flex items-center justify-between mb-5">
+                        <div class="flex items-center gap-2 text-sm font-medium text-gray-200 tracking-tight">
+                            <iconify-icon icon="solar:cpu-linear" class="text-gray-400"></iconify-icon>
+                            Engine Setup
+                        </div>
+                        <div class="w-2 h-2 rounded-full bg-[#D97757] shadow-[0_0_8px_#D97757]"></div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-[11px] text-gray-500 mb-1.5 block uppercase tracking-wider font-medium">Core Engine</label>
+                            <div class="bg-[#1a1b1e] border border-white/5 rounded-xl px-3 py-2.5 flex items-center justify-between cursor-pointer hover:border-white/10 transition-colors">
+                                <span class="text-xs text-gray-200">Neural-X</span>
+                                <iconify-icon icon="solar:alt-arrow-down-linear" class="text-gray-500"></iconify-icon>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-[11px] text-gray-500 mb-1.5 block uppercase tracking-wider font-medium">Mode</label>
+                            <div class="bg-[#1a1b1e] border border-white/5 rounded-xl px-3 py-2.5 flex items-center justify-between cursor-pointer hover:border-white/10 transition-colors">
+                                <span class="text-xs text-gray-200">Precision Render</span>
+                                <iconify-icon icon="solar:alt-arrow-down-linear" class="text-gray-500"></iconify-icon>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Connection Point Right -->
+                    <div class="absolute top-1/2 -right-[5px] -translate-y-1/2 w-2.5 h-2.5 bg-[#D97757] rounded-sm rotate-45 shadow-[0_0_10px_#D97757]"></div>
+                </div>
+
+                <!-- 2. Top Node: Instruction Core -->
+                <div class="gsap-node absolute w-[340px] bg-[#121316]/90 backdrop-blur-xl border border-white/[0.08] rounded-[20px] p-5 shadow-2xl z-10"
+                     style="left: 35%; top: 40px;">
+
+                    <!-- Connection Point Left -->
+                    <div class="absolute top-1/2 -left-[5px] -translate-y-1/2 w-2.5 h-2.5 bg-[#D97757] rounded-sm rotate-45 shadow-[0_0_10px_#D97757]"></div>
+                    <!-- Connection Point Bottom -->
+                    <div class="absolute -bottom-[5px] left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-[#D97757] rounded-sm rotate-45 shadow-[0_0_10px_#D97757]"></div>
+
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-2 text-sm font-medium text-gray-200 tracking-tight">
+                            <iconify-icon icon="solar:magic-stick-3-linear" class="text-gray-400"></iconify-icon>
+                            Instruction Core
+                        </div>
+                        <div class="w-2 h-2 rounded-full bg-[#D97757] shadow-[0_0_8px_#D97757]"></div>
+                    </div>
+
+                    <p id="prompt-reveal" class="text-xs text-gray-400 leading-relaxed min-h-[60px]">
+                        Generate a surreal visual composition blending organic textures, cinematic lighting, and abstract depth.
+                    </p>
+
+                    <div class="flex items-center gap-2 mt-5">
+                        <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-white/[0.06] bg-white/[0.02] text-[10px] text-gray-400">
+                            <iconify-icon icon="solar:cpu-bolt-linear"></iconify-icon> Model X4
+                        </div>
+                        <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-white/[0.06] bg-white/[0.02] text-[10px] text-gray-400">
+                            <iconify-icon icon="solar:document-text-linear"></iconify-icon> 32 Tokens
+                        </div>
+                        <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-white/[0.06] bg-white/[0.02] text-[10px] text-gray-400">
+                            <iconify-icon icon="solar:stopwatch-linear"></iconify-icon> 0.8s
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Bottom Node: Render Tuning -->
+                <div class="gsap-node absolute w-[340px] bg-[#121316]/90 backdrop-blur-xl border border-white/[0.08] rounded-[20px] p-5 shadow-2xl z-10"
+                     style="left: 35%; bottom: 40px;">
+
+                    <!-- Connection Point Left -->
+                    <div class="absolute top-1/2 -left-[5px] -translate-y-1/2 w-2.5 h-2.5 bg-[#D97757] rounded-sm rotate-45 shadow-[0_0_10px_#D97757]"></div>
+                    <!-- Connection Point Top -->
+                    <div class="absolute -top-[5px] left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-[#D97757] rounded-sm rotate-45 shadow-[0_0_10px_#D97757]"></div>
+
+                    <div class="flex items-center justify-between mb-5">
+                        <div class="flex items-center gap-2 text-sm font-medium text-gray-200 tracking-tight">
+                            <iconify-icon icon="solar:slider-minimalistic-horizontal-linear" class="text-gray-400"></iconify-icon>
+                            Render Tuning
+                        </div>
+                        <div class="w-2 h-2 rounded-full bg-[#D97757] shadow-[0_0_8px_#D97757]"></div>
+                    </div>
+
+                    <div class="space-y-5">
+                        <!-- Custom Slider 1 -->
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs text-gray-300">Creativity</span>
+                                <iconify-icon icon="solar:alt-arrow-up-linear" class="text-gray-500 text-xs"></iconify-icon>
+                            </div>
+                            <div class="h-8 bg-[#1a1b1e] border border-white/[0.04] rounded-full relative flex items-center px-1">
+                                <div class="absolute left-1 top-1 bottom-1 w-[40%] bg-white rounded-full"></div>
+                                <div class="absolute left-[40%] w-10 h-6 bg-[#09090b] border-2 border-white rounded-full flex items-center justify-center -ml-5 shadow-lg cursor-grab hover:scale-105 transition-transform z-10">
+                                    <iconify-icon icon="solar:pause-linear" class="text-white text-[10px] rotate-90"></iconify-icon>
+                                </div>
+                                <div class="flex justify-between w-full px-3 text-[10px] text-gray-500 z-0 pointer-events-none">
+                                    <span class="text-gray-800">Low</span>
+                                    <span>High</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Custom Slider 2 -->
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs text-gray-300">Detail Level</span>
+                                <iconify-icon icon="solar:alt-arrow-up-linear" class="text-gray-500 text-xs"></iconify-icon>
+                            </div>
+                            <div class="h-8 bg-[#1a1b1e] border border-white/[0.04] rounded-full relative flex items-center px-1">
+                                <div class="absolute left-1 top-1 bottom-1 w-[70%] bg-white rounded-full"></div>
+                                <div class="absolute left-[70%] w-10 h-6 bg-[#09090b] border-2 border-white rounded-full flex items-center justify-center -ml-5 shadow-lg cursor-grab hover:scale-105 transition-transform z-10">
+                                    <iconify-icon icon="solar:pause-linear" class="text-white text-[10px] rotate-90"></iconify-icon>
+                                </div>
+                                <div class="flex justify-between w-full px-3 text-[10px] text-gray-500 z-0 pointer-events-none">
+                                    <span class="text-gray-800">0</span>
+                                    <span>100</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Center Hub Node -->
+                <div class="gsap-node absolute w-16 h-16 bg-[#121316] border border-white/[0.08] rounded-2xl flex items-center justify-center shadow-[0_0_30px_rgba(0,229,89,0.1)] z-20"
+                     style="left: 56.66%; top: 50%; transform: translate(-50%, -50%);">
+
+                    <!-- Connection Point Top -->
+                    <div class="absolute -top-[3px] left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-[#D97757] rounded-sm rotate-45"></div>
+                    <!-- Connection Point Bottom -->
+                    <div class="absolute -bottom-[3px] left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-[#D97757] rounded-sm rotate-45"></div>
+                    <!-- Connection Point Right -->
+                    <div class="absolute top-1/2 -right-[4px] -translate-y-1/2 w-2 h-2 bg-[#D97757] rounded-sm rotate-45 shadow-[0_0_12px_#D97757]"></div>
+
+                    <div class="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/[0.05] flex items-center justify-center pointer-events-auto cursor-pointer hover:bg-white/[0.08] transition-colors relative group">
+                        <div class="absolute inset-0 rounded-xl bg-[#D97757]/20 blur-md opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <iconify-icon icon="solar:bolt-linear" class="text-white text-xl relative z-10"></iconify-icon>
+                    </div>
+                </div>
+
+                <!-- 5. Right Node: Output Frame -->
+                <div class="gsap-node absolute w-[340px] h-[460px] bg-[#121316]/90 backdrop-blur-xl border border-white/[0.08] rounded-[24px] p-5 shadow-2xl z-10 flex flex-col"
+                     style="right: 0; top: 50%; transform: translateY(-50%);">
+
+                    <!-- Connection Point Left -->
+                    <div class="absolute top-1/2 -left-[5px] -translate-y-1/2 w-2.5 h-2.5 bg-[#D97757] rounded-sm rotate-45 shadow-[0_0_10px_#D97757]"></div>
+
+                    <div class="flex items-center justify-between mb-4 shrink-0">
+                        <div class="flex items-center gap-2 text-sm font-medium text-gray-200 tracking-tight">
+                            <iconify-icon icon="solar:gallery-linear" class="text-gray-400"></iconify-icon>
+                            Output Frame
+                        </div>
+                        <div class="w-2 h-2 rounded-full bg-[#8b5cf6] shadow-[0_0_8px_#8b5cf6]"></div> <!-- Purple status dot as in ref -->
+                    </div>
+
+                    <!-- Stacked Cards Container -->
+                    <div class="flex-1 relative w-full mt-2 flex items-center justify-center perspective-1000">
+                        <!-- Card 3 (Back) -->
+                        <div class="absolute w-[85%] aspect-[4/5] bg-white/5 rounded-2xl border border-white/5 shadow-xl rotate-[6deg] translate-x-4 opacity-40"></div>
+                        <!-- Card 2 (Middle) -->
+                        <div class="absolute w-[90%] aspect-[4/5] bg-white/10 rounded-2xl border border-white/10 shadow-xl -rotate-[4deg] -translate-x-2 opacity-60"></div>
+                        <!-- Card 1 (Front - Image) -->
+                        <div class="absolute w-full aspect-[4/5] rounded-2xl overflow-hidden border border-white/20 shadow-[0_0_40px_rgba(255,255,255,0.1)] hover:scale-[1.02] hover:shadow-[0_0_50px_rgba(0,229,89,0.2)] transition-all duration-500 cursor-pointer z-10 bg-[#1a1b1e]">
+                             <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/0d868fef-f560-45ca-ab35-5dad4fc29059_3840w.webp" alt="AI Generated Portrait" class="w-full h-full object-cover">
+                             <!-- Subtle inner shadow/vignette on image -->
+                             <div class="absolute inset-0 shadow-[inset_0_0_40px_rgba(0,0,0,0.4)] pointer-events-none"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Floating Bottom Toolbar -->
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 p-1.5 bg-[#121316]/80 backdrop-blur-xl border border-white/[0.08] rounded-full shadow-2xl">
+            <button class="w-10 h-10 rounded-full bg-[#D97757]/20 text-[#D97757] flex items-center justify-center relative overflow-hidden group">
+                <div class="absolute inset-0 bg-[#D97757]/10 group-hover:bg-[#D97757]/30 transition-colors"></div>
+                <iconify-icon icon="solar:cursor-linear" class="text-lg relative z-10 rotate-12"></iconify-icon>
+            </button>
+            <button class="w-10 h-10 rounded-full flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/5 transition-colors">
+                <iconify-icon icon="solar:hand-stars-linear" class="text-lg"></iconify-icon>
+            </button>
+            <button class="w-10 h-10 rounded-full flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/5 transition-colors">
+                <iconify-icon icon="solar:bolt-linear" class="text-lg"></iconify-icon>
+            </button>
+            <button class="w-10 h-10 rounded-full flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/5 transition-colors">
+                <iconify-icon icon="solar:cpu-linear" class="text-lg"></iconify-icon>
+            </button>
+            <button class="w-10 h-10 rounded-full flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/5 transition-colors">
+                <iconify-icon icon="solar:magic-stick-3-linear" class="text-lg"></iconify-icon>
+            </button>
+            <div class="w-[1px] h-5 bg-white/10 mx-1"></div>
+            <button class="w-10 h-10 rounded-full flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/5 transition-colors">
+                <iconify-icon icon="solar:chat-line-linear" class="text-lg"></iconify-icon>
+            </button>
+            <button class="w-10 h-10 rounded-full flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/5 transition-colors">
+                <iconify-icon icon="solar:code-square-linear" class="text-lg"></iconify-icon>
+            </button>
+        </div>
+
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", (event) => {
+            gsap.registerPlugin();
+
+            // Skill Directive: Masked Word Reveal for the Prompt text
+            const promptText = document.getElementById('prompt-reveal');
+            if (promptText) {
+                const words = promptText.innerText.split(' ');
+                promptText.innerHTML = '';
+                words.forEach(word => {
+                    // Wrap each word in a span with overflow hidden for the mask effect
+                    const wordContainer = document.createElement('span');
+                    wordContainer.className = 'inline-block overflow-hidden align-top mr-[4px] py-0.5';
+
+                    const wordSpan = document.createElement('span');
+                    wordSpan.innerText = word;
+                    wordSpan.className = 'inline-block text-gray-300 font-light translate-y-[120%]'; // Initial state pushed down
+
+                    wordContainer.appendChild(wordSpan);
+                    promptText.appendChild(wordContainer);
+                });
+
+                // Animate words up
+                gsap.to('#prompt-reveal span > span', {
+                    y: '0%',
+                    duration: 0.8,
+                    stagger: 0.03,
+                    ease: 'power3.out',
+                    delay: 0.5
+                });
+            }
+
+            // Continuous Floating Animation for Nodes (replacing missing CSS keyframes)
+            gsap.to('.gsap-node', {
+                y: '-=8',
+                duration: 4,
+                ease: 'sine.inOut',
+                yoyo: true,
+                repeat: -1,
+                stagger: {
+                    amount: 2,
+                    from: "random"
+                }
+            });
+
+            // SVG Line Animation (Energy Flow)
+            const paths = document.querySelectorAll('#animated-paths path');
+            paths.forEach(path => {
+                const length = path.getTotalLength();
+                path.style.strokeDasharray = `15, ${length / 4}`; // Dashed pattern
+
+                // Animate dash offset to create flowing effect
+                gsap.to(path, {
+                    strokeDashoffset: -length,
+                    duration: 8,
+                    ease: "none",
+                    repeat: -1
+                });
+            });
+
+            // Initial Draw-in Animation for Lines
+            gsap.from('svg > g:first-child path', {
+                strokeDasharray: (i, target) => {
+                    const l = target.getTotalLength();
+                    return `${l}, ${l}`;
+                },
+                strokeDashoffset: (i, target) => target.getTotalLength(),
+                duration: 1.5,
+                ease: "power2.inOut",
+                stagger: 0.2
+            });
+
+            // Subdued pulse for connection points
+            gsap.to('.shadow-\\[0_0_10px_\\#D97757\\]', {
+                boxShadow: '0 0 16px #D97757',
+                duration: 1.5,
+                yoyo: true,
+                repeat: -1,
+                ease: "sine.inOut",
+                stagger: 0.1
+            });
+        });
+    </script>
+</body>
+</html>

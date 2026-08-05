@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Initialize Account</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="gbauto-library-theme.css">
+<script defer src="gbauto-library-theme.js"></script>
+</head>
+<body data-gbauto-surface="onboarding" class="gbauto-theme bg-[#FDFBF9] min-h-screen flex items-center justify-center p-4 md:p-8 font-['Inter',sans-serif] text-gray-900 antialiased" style="background-image: radial-gradient(circle at 50% -20%, #FFF7ED 0%, #FDFBF9 100%);">
+
+    <!-- Premium Container with Border Gradient, Remixed to flex-row (Left to Right) -->
+    <main class="w-full max-w-[1120px] bg-white rounded-3xl shadow-[0_40px_80px_-20px_rgba(234,88,12,0.08),0_20px_40px_-10px_rgba(0,0,0,0.04)] flex flex-col md:flex-row overflow-visible relative" style="border: 1px solid transparent; background: linear-gradient(white, white) padding-box, linear-gradient(145deg, rgba(234,88,12,0.2) 0%, rgba(200,200,200,0.1) 100%) border-box;">
+
+        <!-- Left Panel: Form (Remixed from Right to Left) -->
+        <div class="w-full md:w-[48%] p-8 md:p-14 lg:p-16 flex flex-col justify-center relative z-10 bg-white rounded-t-3xl md:rounded-tr-none md:rounded-l-3xl">
+
+            <!-- Logo -->
+            <div class="flex items-center gap-2 mb-10 md:mb-14">
+                <iconify-icon icon="solar:globus-linear" class="text-[#D97757] text-2xl" stroke-width="1.5"></iconify-icon>
+                <span class="font-normal text-lg tracking-tight text-gray-800">Horizon</span>
+            </div>
+
+            <div class="max-w-md w-full mx-auto md:mx-0">
+                <!-- User requested: put step 01 instead -->
+                <div class="text-xs font-normal text-[#D97757] mb-3 tracking-wide uppercase">Step 01</div>
+
+                <!-- User requested: fix heading -->
+                <h1 class="text-3xl font-normal tracking-tight leading-tight mb-8 masked-reveal text-gray-900">
+                    Establish your <br> Horizon workspace
+                </h1>
+
+                <form class="space-y-4">
+                    <!-- Custom Select -->
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-normal text-gray-600">Account classification</label>
+                        <div class="relative flex items-center w-full p-3.5 border border-gray-200 rounded-xl bg-[#FDFBF9] cursor-pointer hover:border-[#D97757]/40 hover:bg-orange-50/30 transition-colors">
+                            <iconify-icon icon="solar:user-rounded-linear" class="text-gray-500 mr-3 text-lg" stroke-width="1.5"></iconify-icon>
+                            <span class="flex-grow text-sm font-normal text-gray-800">Individual access</span>
+                            <iconify-icon icon="solar:alt-arrow-down-linear" class="text-gray-400" stroke-width="1.5"></iconify-icon>
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-normal text-gray-600">Corporate email</label>
+                        <input type="email" placeholder="jane.doe@company.com" class="w-full p-3.5 border border-gray-200 rounded-xl text-sm outline-none focus:border-[#D97757] focus:ring-1 focus:ring-[#D97757] transition-all bg-[#FDFBF9] placeholder-gray-400 font-normal">
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-normal text-gray-600">Mobile number</label>
+                        <input type="tel" placeholder="+1 (555) 000-0000" class="w-full p-3.5 border border-gray-200 rounded-xl text-sm outline-none focus:border-[#D97757] focus:ring-1 focus:ring-[#D97757] transition-all bg-[#FDFBF9] placeholder-gray-400 font-normal">
+                        <p class="text-xs text-gray-400 mt-1">Required for two-factor authentication</p>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-normal text-gray-600">Account password</label>
+                        <div class="relative">
+                            <input type="password" placeholder="At least 8 characters" class="w-full p-3.5 pr-10 border border-gray-200 rounded-xl text-sm outline-none focus:border-[#D97757] focus:ring-1 focus:ring-[#D97757] transition-all bg-[#FDFBF9] placeholder-gray-400 font-normal">
+                            <button type="button" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#D97757] transition-colors">
+                                <iconify-icon icon="solar:eye-linear" class="text-lg" stroke-width="1.5"></iconify-icon>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Submit -->
+                    <div class="pt-4">
+                        <button type="button" class="w-full bg-[#D97757] shadow-[0_10px_20px_-10px_rgba(234,88,12,0.5)] text-white text-sm font-normal rounded-xl py-4 hover:bg-[#c2410c] hover:shadow-[0_15px_25px_-10px_rgba(234,88,12,0.6)] transition-all relative overflow-hidden group">
+                            <span class="relative z-10">Initialize Workspace</span>
+                        </button>
+                    </div>
+
+                    <!-- Terms -->
+                    <p class="text-xs text-center text-gray-400 mt-4 leading-relaxed font-normal">
+                        By continuing, you accept our <br>
+                        <a href="#" class="text-[#D97757] hover:underline">Terms of Service</a> and <a href="#" class="text-[#D97757] hover:underline">Privacy Policy</a>
+                    </p>
+                </form>
+
+                <!-- Divider -->
+                <div class="relative my-6 flex items-center">
+                    <div class="flex-grow border-t border-gray-100"></div>
+                    <span class="flex-shrink-0 mx-4 text-xs text-gray-400 bg-white px-2 font-normal">Already have an account?</span>
+                    <div class="flex-grow border-t border-gray-100"></div>
+                </div>
+
+                <!-- Secondary Button -->
+                <button type="button" class="w-full border border-gray-200 text-[#D97757] text-sm font-normal rounded-xl py-3.5 hover:bg-orange-50/50 hover:border-orange-200 transition-colors">
+                    Sign In
+                </button>
+            </div>
+        </div>
+
+        <!-- Right Panel: Feature & WebGL (Remixed from Left to Right) -->
+        <div class="w-full md:w-[52%] p-3 md:p-6 flex overflow-visible">
+            <!-- Inner container with beautiful warm gradient -->
+            <div class="w-full h-full rounded-2xl flex flex-col p-8 md:p-12 relative overflow-visible shadow-[inset_0_0_100px_rgba(234,88,12,0.03)]" style="background: linear-gradient(180deg, #FAF8F5 0%, #F0EBE1 100%);">
+
+                <!-- Progress Indicators -->
+                <div class="flex gap-2 mb-10 z-10">
+                    <div class="h-0.5 w-6 bg-[#D97757] shadow-[0_0_8px_rgba(234,88,12,0.4)] rounded-full"></div>
+                    <div class="h-0.5 w-6 bg-gray-300 rounded-full"></div>
+                </div>
+
+                <!-- Text Content -->
+                <div class="mb-8 z-10 relative">
+                    <h2 class="text-3xl font-normal tracking-tight mb-3 masked-reveal text-gray-900">Distribute intelligent corporate cards</h2>
+                    <p class="text-sm text-gray-600 leading-relaxed max-w-sm masked-reveal font-normal">
+                        Equip your workforce with beautifully crafted physical and virtual cards. Set smart spending controls and monitor all transactions instantly.
+                    </p>
+                </div>
+
+                <!-- WebGL & UI Overlay Container -->
+                <div class="relative flex-grow w-full min-h-[350px] mt-4 z-0 rounded-xl overflow-visible flex items-center justify-center">
+
+                    <!-- Ambient Glow behind WebGL -->
+                    <div class="absolute inset-0 bg-gradient-to-tr from-[#D97757]/5 to-transparent rounded-full blur-3xl scale-150 pointer-events-none"></div>
+
+                    <!-- Three.js Canvas Container -->
+                    <div id="webgl-container" class="absolute inset-[-10%] w-[120%] h-[120%]"></div>
+
+                    <!-- Floating UI Elements with Beautiful Shadows & Gradients -->
+                    <div class="absolute inset-0 pointer-events-none flex flex-col justify-between overflow-visible">
+
+                        <!-- Top Left Icon -->
+                        <div class="ui-float-element bg-white/90 backdrop-blur-md rounded-2xl p-4 shadow-[0_20px_40px_-10px_rgba(234,88,12,0.15)] self-start -ml-2 md:-ml-6 -mt-2" style="border: 1px solid transparent; background-clip: padding-box; background-image: linear-gradient(white, white); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.8), 0 20px 40px -10px rgba(234,88,12,0.15);">
+                            <iconify-icon icon="solar:card-send-linear" class="text-2xl text-[#D97757]" stroke-width="1.5"></iconify-icon>
+                        </div>
+
+                        <!-- Bottom Right Balance -->
+                        <div class="ui-float-element bg-white/90 backdrop-blur-md rounded-2xl p-5 shadow-[0_25px_50px_-12px_rgba(234,88,12,0.2)] self-end -mr-2 md:-mr-6 -mb-4 w-48" style="border: 1px solid transparent; background-clip: padding-box; background-image: linear-gradient(white, white); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.8), 0 25px 50px -12px rgba(234,88,12,0.2);">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-xs font-normal text-gray-500">Available liquidity</span>
+                                <iconify-icon icon="solar:wallet-linear" class="text-[#D97757]/60 text-lg" stroke-width="1.5"></iconify-icon>
+                            </div>
+                            <div class="text-2xl font-normal tracking-tight text-gray-900">$142,850</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // --- GSAP Masked Reveal Animation ---
+        gsap.registerPlugin(ScrollTrigger);
+
+        document.querySelectorAll('.masked-reveal').forEach(el => {
+            const text = el.innerText;
+            const words = text.split(' ');
+            el.innerHTML = '';
+
+            words.forEach(word => {
+                const wordWrapper = document.createElement('span');
+                wordWrapper.style.cssText = 'display: inline-block; overflow: hidden; vertical-align: top; margin-right: 0.25rem; padding-bottom: 0.1rem;';
+
+                const innerWord = document.createElement('span');
+                innerWord.style.cssText = 'display: inline-block; transform: translateY(110%);';
+                innerWord.innerText = word;
+
+                wordWrapper.appendChild(innerWord);
+                el.appendChild(wordWrapper);
+            });
+
+            gsap.to(el.querySelectorAll('span > span'), {
+                y: '0%',
+                duration: 0.85,
+                stagger: 0.04,
+                ease: 'power3.out',
+                scrollTrigger: {
+                    trigger: el,
+                    start: 'top 95%'
+                }
+            });
+        });
+
+        // UI Elements Float Animation
+        const floatElements = document.querySelectorAll('.ui-float-element');
+        if(floatElements.length > 0) {
+            gsap.to(floatElements[0], { y: -15, duration: 2.8, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+        }
+        if(floatElements.length > 1) {
+            gsap.to(floatElements[1], { y: 12, duration: 3.2, yoyo: true, repeat: -1, ease: 'sine.inOut', delay: 0.6 });
+        }
+
+
+        // --- Three.js WebGL Setup (Highly Detailed & Rounded Cards) ---
+        const container = document.getElementById('webgl-container');
+        if (container && window.THREE) {
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(35, container.clientWidth / container.clientHeight, 0.1, 100);
+
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            container.appendChild(renderer.domElement);
+
+            // Lighting for Beautiful Dimensional Shadows
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+            scene.add(ambientLight);
+
+            const dirLight = new THREE.DirectionalLight(0xffeddb, 1.4);
+            dirLight.position.set(5, 10, 8);
+            scene.add(dirLight);
+
+            const backLight = new THREE.DirectionalLight(0xffffff, 0.5);
+            backLight.position.set(-5, -5, -5);
+            scene.add(backLight);
+
+            // --- User Requested: Cards should be rounded ---
+            // Create a custom rounded rectangle geometry instead of BoxGeometry
+            const cardWidth = 3.4;
+            const cardHeight = 2.1;
+            const cardRadius = 0.15;
+
+            const shape = new THREE.Shape();
+            const x = -cardWidth / 2;
+            const y = -cardHeight / 2;
+
+            shape.moveTo(x, y + cardRadius);
+            shape.lineTo(x, y + cardHeight - cardRadius);
+            shape.quadraticCurveTo(x, y + cardHeight, x + cardRadius, y + cardHeight);
+            shape.lineTo(x + cardWidth - cardRadius, y + cardHeight);
+            shape.quadraticCurveTo(x + cardWidth, y + cardHeight, x + cardWidth, y + cardHeight - cardRadius);
+            shape.lineTo(x + cardWidth, y + cardRadius);
+            shape.quadraticCurveTo(x + cardWidth, y, x + cardWidth - cardRadius, y);
+            shape.lineTo(x + cardRadius, y);
+            shape.quadraticCurveTo(x, y, x, y + cardRadius);
+
+            const extrudeSettings = {
+                depth: 0.02,
+                bevelEnabled: true,
+                bevelSegments: 3,
+                steps: 1,
+                bevelSize: 0.015,
+                bevelThickness: 0.015
+            };
+
+            const cardGeometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+
+            // Fix UV Mapping for ExtrudeGeometry so textures apply correctly to front/back faces
+            const posAttribute = cardGeometry.attributes.position;
+            const uvAttribute = cardGeometry.attributes.uv;
+            for (let i = 0; i < posAttribute.count; i++) {
+                const px = posAttribute.getX(i);
+                const py = posAttribute.getY(i);
+                // Planar mapping normalized to 0-1 range
+                const u = (px + cardWidth / 2) / cardWidth;
+                const v = (py + cardHeight / 2) / cardHeight;
+                uvAttribute.setXY(i, u, v);
+            }
+            cardGeometry.attributes.uv.needsUpdate = true;
+            cardGeometry.computeVertexNormals();
+
+            // Create highly detailed texture canvas
+            const createDetailedCardTexture = (bgColor, textColor, logoText) => {
+                const canvas = document.createElement('canvas');
+                canvas.width = 1024; canvas.height = 640;
+                const ctx = canvas.getContext('2d');
+
+                // Base background
+                ctx.fillStyle = bgColor;
+                ctx.fillRect(0, 0, 1024, 640);
+
+                // Subtle overlay gradient for depth
+                const grd = ctx.createLinearGradient(0, 0, 1024, 640);
+                grd.addColorStop(0, 'rgba(255,255,255,0.15)');
+                grd.addColorStop(1, 'rgba(0,0,0,0.15)');
+                ctx.fillStyle = grd;
+                ctx.fillRect(0, 0, 1024, 640);
+
+                // Smart Chip
+                ctx.fillStyle = '#E6C687'; // Metallic gold/beige
+                ctx.beginPath();
+                ctx.roundRect(100, 260, 110, 85, 12);
+                ctx.fill();
+                // Chip lines
+                ctx.strokeStyle = 'rgba(0,0,0,0.15)';
+                ctx.lineWidth = 2;
+                ctx.beginPath(); ctx.moveTo(100, 302); ctx.lineTo(135, 302); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(175, 302); ctx.lineTo(210, 302); ctx.stroke();
+
+                // Contactless Icon
+                ctx.strokeStyle = textColor;
+                ctx.globalAlpha = 0.7;
+                ctx.lineWidth = 5;
+                ctx.lineCap = 'round';
+                ctx.beginPath(); ctx.arc(260, 302, 12, -Math.PI/4, Math.PI/4); ctx.stroke();
+                ctx.beginPath(); ctx.arc(260, 302, 24, -Math.PI/4, Math.PI/4); ctx.stroke();
+                ctx.beginPath(); ctx.arc(260, 302, 36, -Math.PI/4, Math.PI/4); ctx.stroke();
+                ctx.globalAlpha = 1.0;
+
+                // Logo Text
+                ctx.fillStyle = textColor;
+                ctx.font = 'bold 54px Arial';
+                ctx.fillText(logoText, 780, 120);
+
+                // Card Number
+                ctx.font = '500 48px "Courier New", monospace';
+                ctx.fillText('****  ****  ****  4281', 100, 460);
+
+                // Validity & Name
+                ctx.font = '24px Arial';
+                ctx.globalAlpha = 0.6;
+                ctx.fillText('VALID THRU', 100, 510);
+                ctx.globalAlpha = 1.0;
+                ctx.font = '32px Arial';
+                ctx.fillText('12/28', 100, 550);
+                ctx.font = '36px Arial';
+                ctx.fillText('JANE DOE', 100, 600);
+
+                // Brand Circles
+                ctx.globalAlpha = 0.8;
+                ctx.fillStyle = textColor;
+                ctx.beginPath(); ctx.arc(860, 560, 45, 0, Math.PI*2); ctx.fill();
+                ctx.globalAlpha = 0.5;
+                ctx.beginPath(); ctx.arc(920, 560, 45, 0, Math.PI*2); ctx.fill();
+                ctx.globalAlpha = 1.0;
+
+                const tex = new THREE.CanvasTexture(canvas);
+                tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+                return tex;
+            };
+
+            // Deep Charoal/Beige and Vibrant Orange detailed textures
+            const charcoalTex = createDetailedCardTexture('#292524', '#F5F5F5', 'Horizon');
+            const orangeTex = createDetailedCardTexture('#D97757', '#FFFFFF', 'Horizon');
+
+            const matCharcoal = new THREE.MeshStandardMaterial({
+                color: 0xffffff, map: charcoalTex, roughness: 0.2, metalness: 0.3
+            });
+            const matOrange = new THREE.MeshStandardMaterial({
+                color: 0xffffff, map: orangeTex, roughness: 0.25, metalness: 0.1
+            });
+
+            // Card Meshes
+            const cardBack = new THREE.Mesh(cardGeometry, matCharcoal);
+            const cardFront = new THREE.Mesh(cardGeometry, matOrange);
+
+            // Adjusted Positioning to stay well within view (no cropping)
+            cardBack.position.set(0.7, 0.5, -1.5);
+            cardBack.rotation.set(-0.15, 0.2, 0.1);
+
+            cardFront.position.set(-0.3, -0.3, 0);
+            cardFront.rotation.set(-0.2, 0.25, 0.2);
+
+            scene.add(cardBack);
+            scene.add(cardFront);
+
+            camera.position.z = 9.5; // Pulled back for breathing room
+
+            // Animation Loop
+            const clock = new THREE.Clock();
+            function animate() {
+                requestAnimationFrame(animate);
+                const t = clock.getElapsedTime();
+
+                // Smoother, enhanced floating for detailed cards
+                cardFront.position.y = -0.3 + Math.sin(t * 1.1) * 0.1;
+                cardFront.rotation.z = 0.2 + Math.sin(t * 0.7) * 0.03;
+                cardFront.rotation.x = -0.2 + Math.cos(t * 0.5) * 0.02;
+
+                cardBack.position.y = 0.5 + Math.sin(t * 1.3 + 1) * 0.08;
+                cardBack.rotation.x = -0.15 + Math.sin(t * 0.6) * 0.04;
+                cardBack.rotation.y = 0.2 + Math.cos(t * 0.8) * 0.02;
+
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            // Resize Handler
+            window.addEventListener('resize', () => {
+                if(container.clientWidth > 0) {
+                    camera.aspect = container.clientWidth / container.clientHeight;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(container.clientWidth, container.clientHeight);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,402 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&display=swap");
+
+:root {
+  --gb-cream: #f3f1e7;
+  --gb-panel: #e6e4d9;
+  --gb-panel-glass: rgba(230, 228, 217, 0.68);
+  --gb-white-glass: rgba(255, 255, 255, 0.58);
+  --gb-stone: #d6d4c8;
+  --gb-ink: #191919;
+  --gb-muted: #5c5c5c;
+  --gb-metadata: #8c8a84;
+  --gb-accent: #d97757;
+  --gb-accent-hover: #b75f43;
+  --gb-green: #4f9d69;
+  --gb-amber: #c08a3e;
+  --gb-blue: #3d6ea8;
+  --gb-red: #b94a48;
+  --gb-serif: "Newsreader", Georgia, serif;
+  --gb-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --gb-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+html {
+  color-scheme: light;
+  background: var(--gb-cream);
+}
+
+body.gbauto-theme {
+  background-color: var(--gb-cream) !important;
+  background-image:
+    radial-gradient(circle at 6% 5%, rgba(217, 119, 87, 0.12), transparent 31rem),
+    radial-gradient(circle at 94% 88%, rgba(183, 95, 67, 0.08), transparent 34rem) !important;
+  color: var(--gb-ink) !important;
+  font-family: var(--gb-sans) !important;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body.gbauto-theme::selection,
+body.gbauto-theme *::selection {
+  background: rgba(217, 119, 87, 0.25);
+  color: var(--gb-ink);
+}
+
+body.gbauto-theme :where(h1, h2, h3, h4, h5, h6, [class*="font-serif" i], [class*="display" i]) {
+  color: var(--gb-ink) !important;
+  font-family: var(--gb-serif) !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.015em;
+}
+
+body.gbauto-theme :where(p, li, dd, blockquote, [class*="description" i], [class*="subtitle" i]) {
+  color: var(--gb-muted) !important;
+}
+
+body.gbauto-theme :where(code, pre, kbd, samp, [class*="font-mono" i]) {
+  font-family: var(--gb-mono) !important;
+}
+
+body.gbauto-theme :where(a, button, input, textarea, select) {
+  font-family: var(--gb-sans) !important;
+}
+
+/* Convert dark generated-page canvases and shells into the house cream surface. */
+body.gbauto-theme :where(
+  [class*="bg-[#0" i],
+  [class*="bg-[#1" i],
+  [class*="bg-[#2" i],
+  [class*="bg-black" i],
+  [class*="bg-zinc-8" i],
+  [class*="bg-zinc-9" i],
+  [class*="bg-slate-8" i],
+  [class*="bg-slate-9" i],
+  [class*="bg-neutral-8" i],
+  [class*="bg-neutral-9" i]
+):not(button):not(a):not(canvas):not(img):not(video) {
+  background-color: var(--gb-panel-glass) !important;
+  color: var(--gb-ink) !important;
+}
+
+body.gbauto-theme :where(
+  [class*="bg-[#e" i],
+  [class*="bg-[#f" i],
+  [class*="bg-white" i],
+  [class*="bg-neutral-50" i],
+  [class*="bg-neutral-100" i],
+  [class*="bg-stone-50" i],
+  [class*="bg-stone-100" i]
+):not(button):not(a):not(canvas):not(img):not(video) {
+  background-color: var(--gb-white-glass) !important;
+}
+
+body.gbauto-theme :where(
+  [style*="background-color: #0" i],
+  [style*="background-color:#0" i],
+  [style*="background: #0" i],
+  [style*="background:#0" i]
+):not(canvas):not(img):not(video) {
+  background-color: var(--gb-panel-glass) !important;
+  color: var(--gb-ink) !important;
+}
+
+/* Tailwind text utilities from dark source pages. */
+body.gbauto-theme :where(
+  [class*="text-white" i],
+  [class*="text-slate-50" i],
+  [class*="text-slate-100" i],
+  [class*="text-zinc-50" i],
+  [class*="text-neutral-50" i],
+  [class*="text-neutral-100" i],
+  [class*="text-neutral-200" i],
+  [class*="text-neutral-300" i],
+  [class*="text-black" i],
+  [class*="text-[#f" i],
+  [class*="text-[#0" i],
+  [class*="text-[#1" i],
+  [class*="text-[#2" i]
+) {
+  color: var(--gb-ink) !important;
+  -webkit-text-fill-color: currentColor !important;
+}
+
+body.gbauto-theme :where(
+  [class*="text-slate-3" i],
+  [class*="text-slate-4" i],
+  [class*="text-slate-5" i],
+  [class*="text-zinc-3" i],
+  [class*="text-zinc-4" i],
+  [class*="text-zinc-5" i],
+  [class*="text-neutral-4" i],
+  [class*="text-neutral-5" i],
+  [class*="text-neutral-6" i],
+  [class*="text-stone-4" i],
+  [class*="text-stone-5" i],
+  [class*="text-stone-6" i]
+) {
+  color: var(--gb-muted) !important;
+}
+
+body.gbauto-theme :where(
+  [class*="text-gray-50" i],
+  [class*="text-gray-100" i],
+  [class*="text-gray-200" i],
+  [class*="text-gray-900" i]
+) {
+  color: var(--gb-ink) !important;
+}
+
+body.gbauto-theme :where(
+  [class*="text-gray-300" i],
+  [class*="text-gray-400" i],
+  [class*="text-gray-500" i],
+  [class*="text-gray-600" i]
+) {
+  color: var(--gb-muted) !important;
+}
+
+/* Collapse source blue/purple/neon systems into the GBAuto accent. */
+body.gbauto-theme :where(
+  [class*="text-cyan" i],
+  [class*="text-sky" i],
+  [class*="text-blue" i],
+  [class*="text-indigo" i],
+  [class*="text-violet" i],
+  [class*="text-purple" i],
+  [class*="text-fuchsia" i],
+  [class*="text-pink" i],
+  [class*="text-orange" i],
+  [class*="text-[#00e559]" i],
+  [class*="text-[#ff5a00]" i],
+  [class*="text-[#008cff]" i]
+) {
+  color: var(--gb-accent) !important;
+  -webkit-text-fill-color: currentColor !important;
+}
+
+body.gbauto-theme :where(
+  [class*="bg-cyan" i],
+  [class*="bg-sky" i],
+  [class*="bg-blue" i],
+  [class*="bg-indigo" i],
+  [class*="bg-violet" i],
+  [class*="bg-purple" i],
+  [class*="bg-fuchsia" i],
+  [class*="bg-pink" i],
+  [class*="bg-orange" i],
+  [class*="bg-[#00e559]" i],
+  [class*="bg-[#ff5a00]" i],
+  [class*="bg-[#008cff]" i]
+):not(button):not(a) {
+  background-color: rgba(217, 119, 87, 0.14) !important;
+  color: var(--gb-accent) !important;
+}
+
+body.gbauto-theme :where(
+  button,
+  a[role="button"],
+  a[class*="button" i],
+  a[class*="btn" i]
+):where(
+  [class*="bg-[#0" i],
+  [class*="bg-[#1" i],
+  [class*="bg-[#2" i],
+  [class*="bg-black" i],
+  [class*="bg-cyan" i],
+  [class*="bg-blue" i],
+  [class*="bg-indigo" i],
+  [class*="bg-violet" i],
+  [class*="bg-purple" i],
+  [class*="bg-orange" i],
+  [class*="bg-[#00e559]" i],
+  [class*="bg-[#ff5a00]" i],
+  [class*="bg-[#008cff]" i]
+) {
+  background-color: var(--gb-ink) !important;
+  border-color: var(--gb-ink) !important;
+  color: var(--gb-cream) !important;
+  -webkit-text-fill-color: currentColor !important;
+}
+
+body.gbauto-theme :where(button, a[role="button"], a[class*="button" i], a[class*="btn" i]):hover {
+  border-color: var(--gb-accent) !important;
+  box-shadow: 0 12px 34px -18px rgba(217, 119, 87, 0.55) !important;
+  transform: translateY(-2px);
+}
+
+body.gbauto-theme :where([class*="border" i], [class*="ring-" i]) {
+  border-color: rgba(214, 212, 200, 0.86) !important;
+  --tw-ring-color: rgba(217, 119, 87, 0.24) !important;
+}
+
+body.gbauto-theme :where([class*="shadow-" i]) {
+  --tw-shadow-color: rgba(25, 25, 25, 0.16) !important;
+}
+
+body.gbauto-theme :where([class*="from-black" i], [class*="from-[#0" i], [class*="from-neutral-9" i]) {
+  --tw-gradient-from: rgba(243, 241, 231, 0.04) var(--tw-gradient-from-position) !important;
+  --tw-gradient-to: rgba(243, 241, 231, 0) var(--tw-gradient-to-position) !important;
+}
+
+body.gbauto-theme :where([class*="to-black" i], [class*="to-[#0" i], [class*="to-neutral-9" i]) {
+  --tw-gradient-to: rgba(230, 228, 217, 0.9) var(--tw-gradient-to-position) !important;
+}
+
+body.gbauto-theme :where([class*="from-cyan" i], [class*="from-blue" i], [class*="from-indigo" i], [class*="from-purple" i], [class*="from-orange" i]) {
+  --tw-gradient-from: rgba(217, 119, 87, 0.76) var(--tw-gradient-from-position) !important;
+  --tw-gradient-to: rgba(217, 119, 87, 0) var(--tw-gradient-to-position) !important;
+}
+
+body.gbauto-theme :where([class*="to-cyan" i], [class*="to-blue" i], [class*="to-indigo" i], [class*="to-purple" i], [class*="to-orange" i]) {
+  --tw-gradient-to: rgba(183, 95, 67, 0.72) var(--tw-gradient-to-position) !important;
+}
+
+/* Generated cards keep their layout and imagery, but gain the house surface. */
+body.gbauto-theme :where(
+  article,
+  [class~="card"],
+  [class*="-card" i],
+  [class*="card-" i],
+  [class*="panel" i],
+  [class*="tile" i]
+):not([class*="overlay" i]):not([class*="container" i]) {
+  border-color: rgba(214, 212, 200, 0.86) !important;
+  box-shadow: 0 22px 60px -42px rgba(25, 25, 25, 0.4) !important;
+}
+
+body.gbauto-theme :where(
+  article,
+  [class~="card"],
+  [class*="-card" i],
+  [class*="card-" i]
+):not([class*="overlay" i]):not([class*="container" i]):hover {
+  border-color: rgba(217, 119, 87, 0.62) !important;
+  box-shadow: 0 28px 70px -40px rgba(217, 119, 87, 0.34) !important;
+}
+
+body.gbauto-theme :where(input, textarea, select) {
+  background: rgba(255, 255, 255, 0.62) !important;
+  border-color: var(--gb-stone) !important;
+  color: var(--gb-ink) !important;
+}
+
+body.gbauto-theme :where(input, textarea, select):focus {
+  border-color: var(--gb-accent) !important;
+  box-shadow: 0 0 0 3px rgba(217, 119, 87, 0.16) !important;
+  outline: none !important;
+}
+
+body.gbauto-theme :where(header[class*="fixed" i], nav[class*="fixed" i], nav[class*="sticky" i], aside[class*="fixed" i]) {
+  background-color: rgba(243, 241, 231, 0.91) !important;
+  border-color: rgba(214, 212, 200, 0.8) !important;
+  color: var(--gb-ink) !important;
+  backdrop-filter: blur(16px) !important;
+}
+
+body.gbauto-theme :where(hr, [class*="divider" i]) {
+  border-color: var(--gb-stone) !important;
+}
+
+body.gbauto-theme :where(svg [fill="#00e559" i], svg [fill="#ff5a00" i], svg [fill="#008cff" i], svg [fill="#818cf8" i]) {
+  fill: var(--gb-accent) !important;
+}
+
+body.gbauto-theme :where(svg [stroke="#00e559" i], svg [stroke="#ff5a00" i], svg [stroke="#008cff" i], svg [stroke="#818cf8" i]) {
+  stroke: var(--gb-accent) !important;
+}
+
+/* Progressive-enhancement fallbacks for source pages whose content starts hidden. */
+body[data-gbauto-page="axisform-studio"] .ax-loader {
+  display: none !important;
+}
+
+body[data-gbauto-page="axisform-studio"] :where(
+  header,
+  .hero-copy > *,
+  .hero-card,
+  .hero-cta,
+  .hero-wordmark,
+  .hero-meta,
+  .reveal,
+  [data-reveal]
+) {
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+body[data-gbauto-page="operation-principles"] .logic-reveal {
+  opacity: 1 !important;
+  filter: none !important;
+  transform: none !important;
+  animation: none !important;
+}
+
+body[data-gbauto-page="ai-workflow"] :where([class*="bg-[#8b5cf6]" i], [class*="text-[#8b5cf6]" i]) {
+  background-color: var(--gb-blue) !important;
+  color: var(--gb-blue) !important;
+}
+
+.gbauto-theme-watermark {
+  position: fixed;
+  right: clamp(24px, 4vw, 72px);
+  bottom: clamp(56px, 8vh, 104px);
+  z-index: 0;
+  width: min(240px, 26vw);
+  height: auto;
+  opacity: 0.028;
+  filter: grayscale(1);
+  pointer-events: none;
+  user-select: none;
+}
+
+.gbauto-theme-badge {
+  position: fixed;
+  right: 16px;
+  bottom: 14px;
+  z-index: 2147483000;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  padding: 6px 11px 6px 8px;
+  border: 1px solid rgba(214, 212, 200, 0.9);
+  border-radius: 999px;
+  background: rgba(243, 241, 231, 0.9);
+  box-shadow: 0 12px 34px -20px rgba(25, 25, 25, 0.42);
+  color: var(--gb-muted) !important;
+  font: 600 9px/1 var(--gb-sans) !important;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  backdrop-filter: blur(14px);
+  pointer-events: none;
+}
+
+.gbauto-theme-badge img {
+  width: 19px;
+  height: 19px;
+  object-fit: contain;
+  opacity: 0.88;
+}
+
+@media (max-width: 640px) {
+  .gbauto-theme-badge {
+    right: 10px;
+    bottom: 10px;
+  }
+
+  .gbauto-theme-watermark {
+    right: 18px;
+    bottom: 54px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.gbauto-theme *,
+  body.gbauto-theme *::before,
+  body.gbauto-theme *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

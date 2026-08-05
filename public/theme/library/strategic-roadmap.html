@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strategic Roadmap</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,300;6..72,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="gbauto-library-theme.css">
+<script defer src="gbauto-library-theme.js"></script>
+</head>
+<body data-gbauto-surface="roadmap" class="gbauto-theme antialiased min-h-screen relative selection:bg-orange-200 selection:text-orange-900 overflow-x-hidden bg-[#E6E4D9] text-neutral-800 p-4 md:p-6 lg:p-10 flex items-center justify-center font-sans">
+
+    <!-- Ambient Background Canvas tuned for warm paper tones -->
+    <canvas id="ambient-canvas" class="fixed top-0 left-0 w-full h-full z-0 opacity-40 pointer-events-none"></canvas>
+
+    <!-- Master Container: Split Layout Technical + Light Mode Paper shell -->
+    <main class="w-full max-w-[1536px] bg-[#fdfbf8] rounded-[2rem] shadow-[0_2.8px_2.2px_rgba(0,_0,_0,_0.034),_0_6.7px_5.3px_rgba(0,_0,_0,_0.048),_0_12.5px_10px_rgba(0,_0,_0,_0.06),_0_22.3px_17.9px_rgba(0,_0,_0,_0.072),_0_41.8px_33.4px_rgba(0,_0,_0,_0.086),_0_100px_80px_rgba(0,_0,_0,_0.12)] border border-[#D6D4C8] relative z-10 flex flex-col lg:flex-row min-h-[85vh] overflow-hidden">
+
+        <!-- Technical Inner Framing Shell -->
+        <div class="absolute top-4 left-4 bottom-4 w-px bg-[#D6D4C8]/60 z-0 hidden lg:block"></div>
+        <div class="absolute top-4 right-4 bottom-4 w-px bg-[#D6D4C8]/60 z-0 hidden lg:block"></div>
+        <div class="absolute top-4 left-4 right-4 h-px bg-[#D6D4C8]/60 z-0 hidden lg:block"></div>
+        <div class="absolute bottom-4 left-4 right-4 h-px bg-[#D6D4C8]/60 z-0 hidden lg:block"></div>
+
+        <!-- Corner L-Brackets -->
+        <div class="absolute top-5 left-5 w-2 h-2 border-t border-l border-orange-400 z-10 hidden lg:block"></div>
+        <div class="absolute top-5 right-5 w-2 h-2 border-t border-r border-orange-400 z-10 hidden lg:block"></div>
+        <div class="absolute bottom-5 left-5 w-2 h-2 border-b border-l border-orange-400 z-10 hidden lg:block"></div>
+        <div class="absolute bottom-5 right-5 w-2 h-2 border-b border-r border-orange-400 z-10 hidden lg:block"></div>
+
+        <!-- LEFT PANEL: Header / Editorial Specification -->
+        <div class="w-full lg:w-[42%] p-10 lg:p-20 flex flex-col justify-center border-b lg:border-b-0 lg:border-r border-[#D6D4C8] relative bg-[#fdfbf8] z-10">
+            <!-- Top Rail Metadata -->
+            <div class="absolute top-10 left-10 lg:left-16 text-xs uppercase tracking-widest font-mono text-neutral-400 hidden md:block">
+                SYS.DOC // 001.4
+            </div>
+
+            <header class="flex flex-col gap-8 mt-12 lg:mt-0">
+                <h1 class="text-6xl md:text-7xl lg:text-8xl tracking-tight leading-[0.9] font-light text-neutral-900" style="font-family: 'Newsreader', serif;">
+                    Strategic<br>Roadmap
+                </h1>
+
+                <div class="max-w-md w-full pt-2 lg:pt-4" style="font-family: 'Inter', sans-serif;">
+                    <div class="flex flex-wrap items-center gap-3 font-normal text-base md:text-lg mb-4 tracking-tight">
+                        <iconify-icon icon="solar:arrow-right-up-linear" class="text-xl text-orange-500" stroke-width="1.5"></iconify-icon>
+                        <span class="text-neutral-900">6x Growth</span>
+                        <span class="text-neutral-400">$3.5M &rarr; $21M ARR</span>
+                    </div>
+                    <p class="text-sm md:text-base leading-relaxed text-neutral-500 font-light">
+                        Series B funding accelerates core technological leaps, international market expansion, and elite talent acquisition. Driving toward 12,000 active instances and profitable unit economics by Q4 2028.
+                    </p>
+                </div>
+            </header>
+
+            <!-- Footer Rail Status -->
+            <div class="absolute bottom-10 left-10 lg:left-16 text-xs uppercase tracking-widest font-mono text-neutral-400 flex items-center gap-2 hidden md:flex">
+                <span class="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse"></span>
+                LIVE TRAJECTORY
+            </div>
+        </div>
+
+        <!-- RIGHT PANEL: Immersive Technical Timeline -->
+        <div class="w-full lg:w-[58%] relative flex flex-col bg-[#f6f4f0] z-10 overflow-hidden">
+
+            <!-- Subtle Technical Grid Texture -->
+            <div class="absolute inset-0 z-0 bg-[linear-gradient(to_right,#e5e2db_1px,transparent_1px),linear-gradient(to_bottom,#e5e2db_1px,transparent_1px)] bg-[size:3rem_3rem] opacity-40"></div>
+
+            <!-- Panel Top Strip -->
+            <div class="h-14 border-b border-[#D6D4C8] flex items-center justify-between px-8 bg-[#fdfbf8]/80 backdrop-blur-sm font-mono text-xs text-neutral-400 uppercase tracking-widest z-20">
+                <span>Execution Chart</span>
+                <span>H1'27 &mdash; H2'28</span>
+            </div>
+
+            <!-- Scrollable Gantt Canvas -->
+            <div class="flex-1 w-full overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] relative z-10">
+                <div class="min-w-[1024px] h-full min-h-[600px] relative px-8 py-12" style="font-family: 'JetBrains Mono', monospace;">
+
+                    <!-- Vertical Time Grid -->
+                    <div class="absolute top-0 bottom-0 left-[10%] w-px bg-[#D6D4C8] z-0"></div>
+                    <div class="absolute top-6 left-[calc(10%+8px)] text-xs tracking-widest text-neutral-400">H1 '27</div>
+
+                    <div class="absolute top-0 bottom-0 left-[35%] w-px bg-[#D6D4C8] z-0"></div>
+                    <div class="absolute top-6 left-[calc(35%+8px)] text-xs tracking-widest text-neutral-400">H2 '27</div>
+
+                    <div class="absolute top-0 bottom-0 left-[60%] w-px bg-[#D6D4C8] z-0"></div>
+                    <div class="absolute top-6 left-[calc(60%+8px)] text-xs tracking-widest text-neutral-400">H1 '28</div>
+
+                    <div class="absolute top-0 bottom-0 left-[85%] w-px bg-[#D6D4C8] z-0"></div>
+                    <div class="absolute top-6 left-[calc(85%+8px)] text-xs tracking-widest text-neutral-400">H2 '28</div>
+
+                    <!-- Execution Blocks -->
+
+                    <!-- Block 1: Initiation -->
+                    <div class="absolute top-[80px] left-[5%] w-[26%] group z-10 transition-transform duration-500 hover:-translate-y-1 cursor-default">
+                        <div class="h-12 flex items-center px-4 bg-white border border-[#D6D4C8] rounded-lg shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] relative overflow-hidden">
+                            <div class="absolute left-0 top-0 bottom-0 w-1 bg-neutral-200 group-hover:bg-orange-400 transition-colors duration-300"></div>
+                            <span class="text-xs uppercase tracking-widest text-neutral-800 font-normal ml-2">Initiation</span>
+                        </div>
+                        <div class="mt-3 pr-4 text-xs text-neutral-500 leading-relaxed uppercase tracking-widest">
+                            Onboard 15 ML scientists,<br>provision scalable compute clusters,<br>initiate foundational fine-tuning
+                        </div>
+                    </div>
+
+                    <!-- Block 2: Engine V4.0 Alpha -->
+                    <div class="absolute top-[180px] left-[20%] w-[30%] group z-10 transition-transform duration-500 hover:-translate-y-1 cursor-default">
+                        <div class="h-12 flex items-center px-4 bg-white border border-[#D6D4C8] rounded-lg shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] relative overflow-hidden">
+                            <div class="absolute left-0 top-0 bottom-0 w-1 bg-neutral-200 group-hover:bg-orange-400 transition-colors duration-300"></div>
+                            <span class="text-xs uppercase tracking-widest text-neutral-800 font-normal ml-2">Engine V4.0 Alpha</span>
+                        </div>
+                        <div class="mt-3 pr-4 text-xs text-neutral-500 leading-relaxed uppercase tracking-widest">
+                            Internal generative engine alpha deployment,<br>100 closed-beta enterprise pilots launched
+                        </div>
+                    </div>
+
+                    <!-- Block 3: V4.0 Launch (Highlight) -->
+                    <div class="absolute top-[280px] left-[44%] w-[26%] group z-20 transition-transform duration-500 hover:-translate-y-1 cursor-default">
+                        <div class="h-12 flex items-center px-4 bg-white border border-orange-200 rounded-lg shadow-[0px_0px_0px_1px_rgba(0,0,0,0.06),0px_1px_1px_-0.5px_rgba(0,0,0,0.06),0px_3px_3px_-1.5px_rgba(0,0,0,0.06),_0px_6px_6px_-3px_rgba(0,0,0,0.06),0px_12px_12px_-6px_rgba(0,0,0,0.06),0px_24px_24px_-12px_rgba(0,0,0,0.06)] relative overflow-hidden">
+                            <div class="absolute inset-0 bg-orange-50/40"></div>
+                            <div class="absolute left-0 top-0 bottom-0 w-1 bg-orange-500"></div>
+                            <span class="text-xs uppercase tracking-widest text-neutral-900 font-normal ml-2 relative z-10">V4.0 Launch</span>
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-orange-500"></span>
+                        </div>
+                        <div class="mt-3 pr-4 text-xs text-neutral-600 leading-relaxed uppercase tracking-widest">
+                            General availability featuring advanced workflow orchestration,<br>SOC2 compliance attained
+                        </div>
+                    </div>
+
+                    <!-- Block 4: Expansion -->
+                    <div class="absolute top-[380px] left-[66%] w-[22%] group z-10 transition-transform duration-500 hover:-translate-y-1 cursor-default">
+                        <div class="h-12 flex items-center px-4 bg-white border border-[#D6D4C8] rounded-lg shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] relative overflow-hidden">
+                            <div class="absolute left-0 top-0 bottom-0 w-1 bg-neutral-200 group-hover:bg-orange-400 transition-colors duration-300"></div>
+                            <span class="text-xs uppercase tracking-widest text-neutral-800 font-normal ml-2">Expansion</span>
+                        </div>
+                        <div class="mt-3 pr-4 text-xs text-neutral-500 leading-relaxed uppercase tracking-widest">
+                            Go-to-market team expands to 30 executives,<br>regional campaigns launched in EMEA & APAC
+                        </div>
+                    </div>
+
+                    <!-- Block 5: Yield & Scale -->
+                    <div class="absolute top-[480px] left-[82%] w-[20%] group z-10 transition-transform duration-500 hover:-translate-y-1 cursor-default">
+                        <div class="h-12 flex items-center px-4 bg-white border border-[#D6D4C8] rounded-lg shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] relative overflow-hidden">
+                            <div class="absolute left-0 top-0 bottom-0 w-1 bg-neutral-200 group-hover:bg-orange-400 transition-colors duration-300"></div>
+                            <span class="text-xs uppercase tracking-widest text-neutral-800 font-normal ml-2">Yield & Scale</span>
+                        </div>
+                        <div class="mt-3 pr-4 text-xs text-neutral-500 leading-relaxed uppercase tracking-widest">
+                            Secure 12,000 live deployments,<br>cross $21M ARR threshold
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Warm Paper Ambient Animation JS -->
+    <script>
+        const canvas = document.getElementById('ambient-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // Subtle gradient orbs shifted to paper/orange palette
+        const orbs = [
+            { x: 0.2, y: 0.3, r: 0.45, vx: 0.0004, vy: 0.0003, color: 'rgba(217, 119, 87, 0.22)' },
+            { x: 0.8, y: 0.7, r: 0.55, vx: -0.0003, vy: -0.0005, color: 'rgba(230, 228, 217, 0.42)' },
+            { x: 0.5, y: 0.5, r: 0.4, vx: 0.0005, vy: -0.0004, color: 'rgba(183, 95, 67, 0.16)' }
+        ];
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            ctx.filter = 'blur(90px)';
+
+            orbs.forEach(orb => {
+                orb.x += orb.vx;
+                orb.y += orb.vy;
+
+                if (orb.x < -0.2 || orb.x > 1.2) orb.vx *= -1;
+                if (orb.y < -0.2 || orb.y > 1.2) orb.vy *= -1;
+
+                ctx.beginPath();
+                ctx.arc(orb.x * width, orb.y * height, orb.r * Math.min(width, height), 0, Math.PI * 2);
+                ctx.fillStyle = orb.color;
+                ctx.fill();
+            });
+
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>
