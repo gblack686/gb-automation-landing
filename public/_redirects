@@ -53,6 +53,15 @@
 # Mall Scanner API - Netlify function backed by Supabase when env is present.
 /api/mall-scanner/*       /.netlify/functions/mall-scanner/:splat       200!
 
+# Artifact registry static pages. Extensionless artifact directories must serve
+# their index.html rather than falling through to the React SPA shell.
+/artifacts/*.json         /artifacts/:splat.json                       200!
+/artifacts/*.html         /artifacts/:splat.html                       200!
+/artifacts/*/index.html   /artifacts/:splat/index.html                 200!
+/artifacts/*/*            /artifacts/:splat                            200!
+/artifacts/*/             /artifacts/:splat/index.html                 200!
+/artifacts/*              /artifacts/:splat/index.html                 200!
+
 # Standalone branded static pages (resume + zero-touch philosophy).
 # Real files in public/; .html requests serve directly, extensionless via forced rewrite.
 /zero-touch-engineering    /zero-touch-engineering.html   200!
