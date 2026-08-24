@@ -4,6 +4,46 @@
       "archive_reason": null,
       "archived": false,
       "archived_at": null,
+      "artifact_id": "parent-closeout-t-356a40f3-7d9e777366d4",
+      "artifact_kind": "parent_closeout_bundle",
+      "asset_url": "/artifacts/gbautomation/parent-closeout-t-356a40f3-7d9e777366d4/index.html",
+      "client": "gbautomation",
+      "created_at": "2026-08-24T05:04:17Z",
+      "drive": {
+        "enabled": false,
+        "reason": "netlify html active closeout bundle",
+        "status": "skipped"
+      },
+      "filename": "index.html",
+      "metadata": {
+        "artifact_family_id": "parent_closeout_t_356a40f3",
+        "bundle_family_id": "bundle_family_360ca945c516a5127506",
+        "bundle_id": "bundle_1860f7ff89df48104d7b2763",
+        "renderer_id": "parent-closeout-bundle-html.v1",
+        "report_shell_id": "gba-report-shell.v1",
+        "source_task_id": "t_c0712b65",
+        "task_id": "t_356a40f3"
+      },
+      "mime_type": "text/html; charset=utf-8",
+      "project": "parent-closeout-bundles",
+      "public_path": "/Users/greg/.hermes/kanban/boards/gbautomation/workspaces/t_c0712b65/landing-publish/public/artifacts/gbautomation/parent-closeout-t-356a40f3-7d9e777366d4/index.html",
+      "registry_path": "/Users/greg/.hermes/kanban/boards/gbautomation/workspaces/t_c0712b65/landing-publish/public/artifacts/gbautomation/parent-closeout-t-356a40f3-7d9e777366d4/index.html",
+      "sha256": "aae6ec4632a481a2ace980308fc5c9fe37d601e7b81d189cc48ba0c5fb7ecf03",
+      "size": 16675,
+      "source_path": "/Users/greg/.hermes/kanban/boards/gbautomation/workspaces/t_c0712b65/evidence_t356a40f3.json",
+      "tags": [
+        "parent-closeout",
+        "kanban",
+        "netlify",
+        "supabase-registry"
+      ],
+      "type": "html",
+      "web_route": "/artifacts/gbautomation/parent-closeout-t-356a40f3-7d9e777366d4"
+    },
+    {
+      "archive_reason": null,
+      "archived": false,
+      "archived_at": null,
       "artifact_id": "florish-vendor-enrollment-mvp-2026-07-05-6ba246d5ff05",
       "artifact_kind": null,
       "asset_url": "/artifacts/florish/florish-vendor-enrollment-mvp-2026-07-05-6ba246d5ff05/florish-vendor-enrollment-mvp-2026-07-05.md",
