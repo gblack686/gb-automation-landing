@@ -55,6 +55,8 @@
 
 # Artifact registry static pages. Extensionless artifact directories must serve
 # their index.html rather than falling through to the React SPA shell.
+/artifacts/gbautomation/parent-closeout-t-356a40f3-7d9e777366d4  /artifacts/gbautomation/parent-closeout-t-356a40f3-7d9e777366d4/index.html  200!
+/artifacts/gbautomation/parent-closeout-t-356a40f3-7d9e777366d4/ /artifacts/gbautomation/parent-closeout-t-356a40f3-7d9e777366d4/index.html  200!
 /artifacts/*.json         /artifacts/:splat.json                       200!
 /artifacts/*.html         /artifacts/:splat.html                       200!
 /artifacts/*/index.html   /artifacts/:splat/index.html                 200!
