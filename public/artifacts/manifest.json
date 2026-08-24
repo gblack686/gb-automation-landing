@@ -28,8 +28,8 @@
       "project": "parent-closeout-bundles",
       "public_path": "/Users/greg/.hermes/kanban/boards/gbautomation/workspaces/t_c0712b65/landing-publish/public/artifacts/gbautomation/parent-closeout-t-356a40f3-7d9e777366d4/index.html",
       "registry_path": "/Users/greg/.hermes/kanban/boards/gbautomation/workspaces/t_c0712b65/landing-publish/public/artifacts/gbautomation/parent-closeout-t-356a40f3-7d9e777366d4/index.html",
-      "sha256": "aae6ec4632a481a2ace980308fc5c9fe37d601e7b81d189cc48ba0c5fb7ecf03",
-      "size": 16675,
+      "sha256": "c1daed8e9c8894571783d5234e350dccb3f6f10f62bd7c9e54ac944edb2ea5f9",
+      "size": 16708,
       "source_path": "/Users/greg/.hermes/kanban/boards/gbautomation/workspaces/t_c0712b65/evidence_t356a40f3.json",
       "tags": [
         "parent-closeout",
@@ -38,7 +38,7 @@
         "supabase-registry"
       ],
       "type": "html",
-      "web_route": "/artifacts/gbautomation/parent-closeout-t-356a40f3-7d9e777366d4"
+      "web_route": "/artifacts/gbautomation/parent-closeout-t-356a40f3-7d9e777366d4/index.html"
     },
     {
       "archive_reason": null,
