@@ -33,15 +33,16 @@ import Jid5274Portal from './clients/jid5274/routes';
 import OpsRoutes from './ops/routes';
 
 // The ElevenLabs convai voice widget is mounted statically in index.html and floats
-// bottom-right on every route. Hide it on the authed dashboards (/ops, /clients/*) where
-// it overlaps controls like bottom-right pagination; keep it on the marketing pages.
+// bottom-right on every route. Hide it on dashboards and the studio homepage,
+// where booking and project-brief controls need unobstructed space. The widget's
+// configuration and behavior on other public routes remain intact.
 function ConvaiVisibility() {
   const { pathname } = useLocation();
   useEffect(() => {
     const widget = document.querySelector('elevenlabs-convai');
     if (!widget) return;
     const onDashboard = /^\/(ops|clients)(\/|$)/.test(pathname);
-    widget.style.display = onDashboard ? 'none' : '';
+    widget.style.display = onDashboard || pathname === '/' ? 'none' : '';
   }, [pathname]);
   return null;
 }

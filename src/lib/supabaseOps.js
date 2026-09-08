@@ -11,7 +11,7 @@ function supabaseHeaders(extra = {}) {
   };
 }
 
-async function supabaseFetch(path, options = {}) {
+async function supabaseFetch(path, options = {}, responseMode = 'json') {
   const response = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
     ...options,
     headers: supabaseHeaders(options.headers),
@@ -22,11 +22,13 @@ async function supabaseFetch(path, options = {}) {
     throw new Error(detail || `Supabase request failed with ${response.status}`);
   }
 
-  if (response.status === 204) return null;
+  if (response.status === 204 || responseMode === 'minimal') return null;
   return response.json();
 }
 
 export async function insertContactSubmission(payload) {
+  // PostgREST return=minimal may acknowledge an insert with an empty HTTP 201.
+  // Other operations retain their existing JSON response contract.
   return supabaseFetch('contact_submissions', {
     method: 'POST',
     headers: {
@@ -34,7 +36,7 @@ export async function insertContactSubmission(payload) {
       Prefer: 'return=minimal',
     },
     body: JSON.stringify(payload),
-  });
+  }, 'minimal');
 }
 
 export async function insertWebsiteFeedback(payload) {
