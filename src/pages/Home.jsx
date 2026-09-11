@@ -3,7 +3,6 @@ import Portfolio from '../components/Portfolio';
 import TechMarquee from '../components/TechMarquee';
 import Features from '../components/Features';
 import Process from '../components/Process';
-import Pricing from '../components/Pricing';
 import ContactForm from '../components/ContactForm';
 import Footer from '../components/Footer';
 
@@ -15,7 +14,6 @@ function Home() {
       <TechMarquee />
       <Features />
       <Process />
-      <Pricing />
       <ContactForm />
       <Footer />
     </div>
