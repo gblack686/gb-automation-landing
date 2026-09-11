@@ -91,9 +91,6 @@ export default function VideoHero() {
             <a href="#process" className="hover:text-[#D97757] transition-colors hover-mini">
               90-Day Process
             </a>
-            <a href="#pricing" className="hover:text-[#D97757] transition-colors hover-mini">
-              Investment
-            </a>
           </nav>
 
           <a href="#contact" className="hidden md:flex items-center gap-2 px-4 py-1.5 bg-white border border-[#D6D4C8] text-[#191919] text-[11px] font-medium tracking-wide rounded-full hover:bg-[#191919] hover:text-[#F3F1E7] transition-all shadow-sm hover-mini group">

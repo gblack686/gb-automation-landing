@@ -105,7 +105,7 @@ async function runTests() {
     results.push(await testEndpoint(`${baseUrl}/src/index.css`, 'CSS loads'));
 
     // Test 6: Check all components exist
-    const components = ['Hero', 'Features', 'Process', 'Pricing', 'ContactForm', 'Footer'];
+    const components = ['Hero', 'Features', 'Process', 'ContactForm', 'Footer'];
 
     for (const component of components) {
       results.push(await testEndpoint(
