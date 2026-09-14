@@ -33,6 +33,7 @@
     "react-hook-form": "^7.66.0",
     "react-markdown": "^10.1.0",
     "react-router-dom": "^7.9.5",
+    "three": "0.160.0",
     "ws": "^8.18.3"
   },
   "devDependencies": {

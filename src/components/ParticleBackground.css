@@ -1,0 +1,71 @@
+/* Approved homepage-only palette treatment. Other routes keep the cream theme. */
+.particle-home { position:relative; isolation:isolate; min-height:100vh; background:#030405; color:#F3F1E7; }
+.particle-home-content { position:relative; z-index:2; overflow-x:clip; }
+.particle-home-content > section { scroll-margin-top:80px; }
+.particle-background { position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none; background:#030405; }
+.particle-poster, .particle-canvas { position:absolute; inset:0; width:100%; height:100%; }
+.particle-poster { object-fit:cover; }
+.particle-canvas canvas { display:block; }
+.particle-background[data-ready="true"] .particle-poster { visibility:hidden; }
+.particle-background[data-ready="false"] .particle-canvas { visibility:hidden; }
+.particle-home-content > section,
+.particle-home-content > footer { background:transparent; border-color:#ffffff20; }
+.particle-home [class~="text-[#191919]"] { color:#F3F1E7; }
+.particle-home [class~="text-[#5C5C5C]"] { color:#cccfcf; }
+.particle-home [class~="text-[#8C8A84]"] { color:#aeb4b8; }
+.particle-home [class*="border-[#D6D4C8]"] { border-color:#ffffff25; }
+.particle-home [class~="bg-white"],
+.particle-home [class~="bg-white/50"],
+.particle-home [class~="bg-white/60"],
+.particle-home [class~="bg-white/80"],
+.particle-home [class~="bg-[#F3F1E7]/50"],
+.particle-home [class~="bg-[#F3F1E7]"]:not(section):not(footer) { background:rgba(23,27,34,.82); }
+.particle-home #portfolio > .absolute { background:transparent; }
+.particle-home .glass-panel { background:rgba(14,18,24,.74); border-color:#ffffff26; box-shadow:0 12px 40px #0003; }
+.particle-home .hover-shiny { --shiny-bg:#11151c; }
+.particle-home [class~="from-[#E6E4D9]"] { --tw-gradient-from:#0e1218 var(--tw-gradient-from-position); --tw-gradient-to:#0e121800 var(--tw-gradient-to-position); }
+.particle-home [class~="from-[#E6E4D9]/50"] { opacity:0; }
+.particle-home .animate-marquee svg { opacity:.65; }
+.particle-home #process [class~="ring-[#F3F1E7]"] { --tw-ring-color:#11151c; }
+.particle-home #process [class~="hover:bg-white/50"] { background:rgba(12,16,22,.55); border-color:#ffffff13; backdrop-filter:blur(10px); }
+.particle-home #process [class~="hover:bg-white/50"]:hover { background:rgba(24,29,36,.82); }
+.particle-home .input-field { background:#060a1099; border-color:#ffffff30; color:#F3F1E7; }
+.particle-home .input-field:focus { border-color:#77DCEA; box-shadow:0 0 0 1px #77DCEA; background:#0b1018; }
+.particle-home .input-field::placeholder { color:#a4abb0; }
+.particle-home #home-header > div > a { background:#F3F1E7; color:#191919; }
+.particle-home-content > section h2 { text-shadow:0 2px 22px #000; }
+.particle-home #contact button[type="submit"] { background:#F3F1E7; color:#191919; }
+.particle-home #contact button[type="submit"] span { color:inherit; }
+.particle-scene-surface { position:absolute; inset:0; width:100%; height:100%; border:0; z-index:0; pointer-events:none; }
+.particle-scrim { position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:radial-gradient(ellipse at 50% 53%,rgba(3,4,5,.80) 0%,rgba(3,4,5,.62) 28%,rgba(3,4,5,.10) 64%),linear-gradient(180deg,rgba(3,4,5,.25),transparent 25%,transparent 75%,rgba(3,4,5,.8)); }
+.particle-home #home-hero-copy h1 { color:#F3F1E7; text-shadow:0 2px 28px #000; }
+.particle-home #home-hero-copy p { color:#deddd8; text-shadow:0 1px 9px #000; }
+.particle-home #home-status { background:rgba(16,19,23,.72); border-color:rgba(243,241,231,.22); }
+.particle-home #home-status > span:last-child { color:#e0dfd8; }
+.particle-home #home-discovery { background:#F3F1E7; box-shadow:0 4px 24px #0005; }
+.particle-home #home-discovery span { color:#191919; }
+.particle-home #home-discovery:hover { background:white; }
+.particle-home #home-header { background:rgba(5,7,10,.74); border-color:#ffffff1f; }
+.particle-home #home-header .font-serif { color:#F3F1E7; }
+.particle-home #home-header img { filter:invert(1); mix-blend-mode:screen; }
+.particle-home #home-header nav { color:#cfcec8; }
+
+.particle-home [class~="bg-white/90"], .particle-home [class~="bg-[#E6E4D9]"] { background:rgba(23,27,34,.94); }
+.particle-home #portfolio button, .particle-home [role="dialog"] button { color:#F3F1E7; }
+.particle-home [role="dialog"] { z-index:80; }
+.particle-home [role="dialog"] > div { background:#11151c!important; }
+.particle-home .text-red-600 { color:#ffb4b2; }
+.particle-home .bg-red-50 { background:#291517; }
+.particle-home .bg-red-100 { background:#4a2125; }
+.particle-home .text-red-800 { color:#ffd7d5; }
+@media(max-width:640px) {
+ .particle-scene-surface { width:185%; left:-42.5%; }
+ .particle-home #home-hero-copy { min-height:100svh; padding-top:128px; padding-bottom:110px; }
+ .particle-scrim { background:radial-gradient(ellipse at 50% 48%,rgba(3,4,5,.86),rgba(3,4,5,.65) 37%,rgba(3,4,5,.15) 80%),linear-gradient(transparent 70%,#030405); }
+}
+@media(prefers-reduced-motion:reduce) {
+ html { scroll-behavior:auto; }
+ .particle-home *, .particle-home *::before, .particle-home *::after { animation:none!important; transition:none!important; }
+ .particle-home [role="dialog"] .animate-slideUp { opacity:1; transform:none; }
+}
