@@ -27,3 +27,6 @@ dist-ssr
 .amplify/
 amplify_outputs.json
 .amplify-hosting/
+
+# Local screenshots and browser evidence for the particle homepage
+artifacts/particle-background/

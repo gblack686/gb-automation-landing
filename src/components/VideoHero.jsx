@@ -1,77 +1,21 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 
 export default function VideoHero() {
-  const videoRef = useRef(null)
-  const [isMobile, setIsMobile] = useState(false)
-  const [videoLoaded, setVideoLoaded] = useState(false)
   const [isRevealed, setIsRevealed] = useState(false)
 
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768)
-    }
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    
-    // Trigger reveal animation
-    setTimeout(() => setIsRevealed(true), 100)
-    
-    return () => window.removeEventListener('resize', checkMobile)
+    const timer = setTimeout(() => setIsRevealed(true), 100)
+    return () => clearTimeout(timer)
   }, [])
 
-  useEffect(() => {
-    if (videoRef.current && isMobile) {
-      videoRef.current.play().catch(err => {
-        console.log('Video autoplay prevented:', err)
-      })
-    }
-  }, [isMobile, videoLoaded])
-
   const scrollToContact = () => {
-    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })
+    document.getElementById('contact')?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' })
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden selection:bg-[#D97757] selection:text-white">
-      {/* Ambient Background Glow */}
-      <div className="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[#D97757]/5 rounded-full blur-[120px]"></div>
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-[#C26D52]/10 rounded-full blur-[120px]"></div>
-      </div>
-
-      {/* Background Video */}
-      <video
-        ref={videoRef}
-        className="absolute inset-0 w-full h-full object-cover z-0 opacity-30"
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
-        onLoadedData={() => setVideoLoaded(true)}
-        poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 1080'%3E%3Crect fill='%23F3F1E7' width='1920' height='1080'/%3E%3C/svg%3E"
-      >
-        <source
-          src="https://res.cloudinary.com/doevp9obh/video/upload/v1751630378/social_u7865913127_httpss.mj.runfy9I6hP3bjY_A_serene_cinematic_anima_3732f431-944f-4ee3-9b66-c82c1462de47_1_vjttzg.mp4"
-          type="video/mp4"
-        />
-      </video>
-
-      {/* Video Overlay - cream tint */}
-      <div className="absolute inset-0 bg-[#F3F1E7]/70 z-0" />
-
-      {/* Background Logo Watermark */}
-      <div className="absolute inset-0 flex items-center justify-center z-[1] pointer-events-none overflow-hidden">
-        <img
-          src="/gb-signature.png"
-          alt=""
-          className="w-[60%] md:w-[45%] lg:w-[40%] max-w-[600px] opacity-[0.04] select-none"
-          style={{ filter: 'grayscale(100%)' }}
-        />
-      </div>
-
+    <div className="home-hero relative min-h-screen selection:bg-[#D97757] selection:text-white">
       {/* Navigation Bar */}
-      <header className="fixed top-0 w-full z-50 border-b border-[#D6D4C8]/60 bg-[#F3F1E7]/80 backdrop-blur-xl">
+      <header id="home-header" className="fixed top-0 w-full z-50 border-b border-[#D6D4C8]/60 bg-[#F3F1E7]/80 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3 hover-mini cursor-default">
             <img
@@ -104,9 +48,9 @@ export default function VideoHero() {
       </header>
 
       {/* Hero Content */}
-      <section className="relative pt-40 pb-20 px-6 overflow-hidden flex flex-col items-center text-center z-10 min-h-screen justify-center">
+      <section id="home-hero-copy" className="relative pt-40 pb-20 px-6 overflow-hidden flex flex-col items-center text-center z-10 min-h-screen justify-center">
         {/* Status Indicator */}
-        <div className={`mb-8 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#D6D4C8] bg-white/60 backdrop-blur-sm hover-mini cursor-default shadow-sm transition-all duration-700 ${isRevealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}>
+        <div id="home-status" className={`mb-8 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#D6D4C8] bg-white/60 backdrop-blur-sm hover-mini cursor-default shadow-sm transition-all duration-700 ${isRevealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}>
           <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#D97757] opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-[#D97757]"></span>
@@ -130,6 +74,7 @@ export default function VideoHero() {
 
         <div className={`flex flex-col sm:flex-row gap-4 w-full sm:w-auto items-center justify-center transition-all duration-700 delay-300 ${isRevealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}>
           <button
+            id="home-discovery"
             onClick={scrollToContact}
             className="relative group overflow-hidden rounded-full bg-[#191919] hover:bg-[#333] transition-all hover-mini shadow-lg shadow-[#191919]/10 w-full sm:w-auto"
           >
