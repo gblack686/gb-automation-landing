@@ -25,6 +25,7 @@ export default function ParticleBackground() {
       const playing = !reducedMotion.matches && !document.hidden;
       if (scene) {
         scene.setPlaying(playing);
+        setReady(!reducedMotion.matches);
         return;
       }
       // Reduced-motion visitors see the still image without downloading Three.js.
@@ -39,7 +40,7 @@ export default function ParticleBackground() {
           return;
         }
         scene = created;
-        setReady(true);
+        setReady(!reducedMotion.matches);
         scene.setPlaying(!reducedMotion.matches && !document.hidden);
       } catch {
         fallback();

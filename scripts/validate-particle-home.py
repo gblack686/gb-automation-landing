@@ -87,7 +87,7 @@ with sync_playwright() as p:
 
     scroll_to(page, '#home-hero-copy')
     page.locator('#home-discovery').click()
-    page.wait_for_timeout(1000)
+    page.wait_for_function("Math.abs(document.querySelector('#contact').getBoundingClientRect().top) < 120", timeout=10000)
     assert abs(page.locator('#contact').bounding_box()['y']) < 120
     page.get_by_placeholder('Your full name').fill('Particle preview test')
     page.get_by_placeholder('you@company.com').fill('preview@example.com')
@@ -142,10 +142,28 @@ with sync_playwright() as p:
     still.wait_for_selector('[role=dialog]')
     assert still.locator('[role=dialog] .animate-slideUp').first.evaluate('el=>getComputedStyle(el).opacity') == '1'
 
+    # Preference changes during the lazy import must keep the still image visible.
+    race = context.new_page()
+    delayed = []
+    race.route('**/assets/gbParticleScene-*.js', lambda route: delayed.append(route))
+    race.goto(BASE, wait_until='domcontentloaded')
+    race.wait_for_selector('.particle-background')
+    race.wait_for_timeout(500)
+    assert len(delayed) == 1
+    race.emulate_media(reduced_motion='reduce')
+    delayed[0].continue_()
+    race.wait_for_selector('.particle-canvas canvas', state='attached')
+    race.wait_for_timeout(500)
+    assert race.locator('.particle-background').get_attribute('data-ready') == 'false'
+    assert race.locator('.particle-poster').is_visible()
+    race.emulate_media(reduced_motion='no-preference')
+    race.wait_for_selector('.particle-background[data-ready="true"]')
+
     result = {'base': BASE, 'errors': errors, 'same_origin_http_failures': failures,
               'fixed_background': True, 'continuous_after_scroll': True,
               'viewer_controls': False, 'mobile_widths': [390, 320],
               'reduced_motion_no_webgl_download': True, 'context_loss_fallback': True,
+              'reduced_motion_during_lazy_import': True,
               'portfolio_dialog': True, 'mocked_contact_success': True, 'other_routes_isolated': True}
     (OUT / 'validation.json').write_text(json.dumps(result, indent=2), encoding='utf-8')
     print(json.dumps(result, indent=2))
