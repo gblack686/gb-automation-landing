@@ -9,11 +9,11 @@
     },
     {
       "path": "forge/app.js",
-      "sha256": "df8b76fe1fdcec332a27693d6f4b3a81fff662233d15c9b8815d0950b3b0458d"
+      "sha256": "d35d4ab6cc0bb32ab85f8064cc02d907a2b64e118d68e03d0e5ea5101df20e89"
     },
     {
       "path": "forge/style.css",
-      "sha256": "d538f48b871b284508ee4adfd0888f5cfab2750434d3d0384c1c3fe97fde57eb"
+      "sha256": "948c5b7a4ced36615fb261f5f95329cd1913a89a38ecc1afea87d1e8b9ac40b4"
     },
     {
       "path": "forge/theme.js",
