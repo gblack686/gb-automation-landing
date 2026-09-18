@@ -1,4 +1,7 @@
 import VideoHero from '../components/VideoHero';
+import AgentForgePreview from '../components/AgentForgePreview';
+import ZeroTouchEngineering from '../components/ZeroTouchEngineering';
+import '../components/HomeShowcase.css';
 import Portfolio from '../components/Portfolio';
 import TechMarquee from '../components/TechMarquee';
 import Features from '../components/Features';
@@ -13,9 +16,11 @@ function Home() {
       <ParticleBackground />
       <div className="particle-home-content">
         <VideoHero />
+        <AgentForgePreview />
         <Portfolio />
         <TechMarquee />
         <Features />
+        <ZeroTouchEngineering />
         <Process />
         <ContactForm />
         <Footer />

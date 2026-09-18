@@ -1,0 +1,39 @@
+{
+  "type": "forge-intake.static-build.v1",
+  "api": "/api/forge-intake",
+  "files": [
+    {
+      "path": "forge/index.html",
+      "sha256": "cff90376e1cc8c4aa3243ae64eaba540b7805918cd9fc9a3e3bc119744e2725a"
+    },
+    {
+      "path": "forge/app.js",
+      "sha256": "5b9107d80878f079900c04b34828e69978076c194ae50cde95ae34e5c81ee54d"
+    },
+    {
+      "path": "forge/style.css",
+      "sha256": "92b606b23193d04c5b4b56d293277667bfa26464a194b7075c1b43432aba3d60"
+    },
+    {
+      "path": "forge/theme.js",
+      "sha256": "b8ee925dd016e03819214ebad21c57e2c4e76563f096f60937cb8525760478fa"
+    },
+    {
+      "path": "forge/particle-scene.js",
+      "sha256": "31bc026e86bfd94768e316407841b7343637793a269fc584c309d1a67857f5e9"
+    },
+    {
+      "path": "forge/gb-signature.png",
+      "sha256": "ccc593ef48d9c40041acbcd45e877ad084d02c323335192added215f32770af0"
+    },
+    {
+      "path": "forge/gb-particle-poster.jpg",
+      "sha256": "ae1f04a692512738a91a94c1143d7bc3e6ada05e79c84ce804f8232f393f2081"
+    },
+    {
+      "path": "forge/config.js",
+      "sha256": "68a489cdcc4536f648ce2cc87a0bad086e0f79cb7c921fe7591e1fa4a3a0bebd"
+    }
+  ],
+  "production_deployment": false
+}

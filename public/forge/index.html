@@ -1,0 +1,37 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#030405">
+  <meta name="gbauto-theme-id" content="gbauto-theme.v1"><meta name="gbauto-theme-version" content="2026-06-11">
+  <base href="/forge/"><title>Your AI team | GBAutomation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+  <style>
+    /* Canonical base; the requested homepage particle treatment is scoped in style.css. */
+    :root { --terracotta:#D97757; --terracotta-hover:#B75F43; --ink:#191919; --cream-bg:#F3F1E7;
+      --cream-2:#E6E4D9; --stone:#D6D4C8; --text-mute:#8C8A84; --text-muted-2:#5C5C5C;
+      --font-sans:'Inter',sans-serif; --font-serif:'Newsreader',serif; }
+    body { background:var(--cream-bg); font-family:var(--font-sans); }
+    @media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none!important; transition:none!important; scroll-behavior:auto!important; } }
+  </style>
+  <link rel="stylesheet" href="style.css">
+  <script src="theme.js" defer></script><script src="config.js" defer></script><script src="app.js" defer></script>
+</head>
+<body class="particle-home" data-gbauto-theme="gbauto-theme.v1" data-gbauto-surface="forge-intake">
+  <div class="particle-background" data-ready="false" aria-hidden="true">
+    <div class="particle-scene-surface"><img class="particle-poster" src="gb-particle-poster.jpg" alt="" fetchpriority="high"><div class="particle-canvas"></div></div>
+    <div class="particle-scrim"></div>
+  </div>
+  <div class="site-content">
+    <header class="site-header"><div class="header-inner">
+      <a href="/" class="brand" aria-label="GB Automation home"><img class="brand-logo" src="gb-signature.png" alt="GB"><span>GB AUTOMATION</span></a>
+      <div class="header-actions"><button class="quiet motion-toggle" id="motion-toggle" aria-pressed="false" hidden>Pause background</button><button class="quiet" id="resume">Resume your design</button></div>
+    </div></header>
+    <div id="preview-banner" hidden>Local preview. Model responses and email delivery are simulated.</div>
+    <main id="app" tabindex="-1"><p>Loading your workshop...</p></main>
+    <div id="message" role="status" aria-live="polite"></div>
+    <footer><span>Designed around the work you do.</span><span>Private by default · Saved for 30 days</span><a href="/operator" id="operator-link" hidden>Operator preview</a></footer>
+  </div>
+</body>
+</html>

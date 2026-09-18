@@ -1,0 +1,21 @@
+{
+  "src/pages/Home.jsx": "1cb54852758aed63f2d4da3ae8652c4e63cea898c477cf42553cbe7c72843d2c",
+  "src/App.jsx": "b8eb4d297002dab5361473b97cbb2571744260e239876eb0e50a80baf30dd4b3",
+  "src/components/VideoHero.jsx": "e5a55e416835df2ece9254ef6bbcc830a5636c46f692c25c7c28041f74d60da6",
+  "src/components/HeroIntroVideo.jsx": "6ee0ec043dbe5cbe88132e297ad2c9418d05f93460aa1aa19c7f067ddded7b69",
+  "src/components/AgentForgePreview.jsx": "dc6b4d4de002380e99ac4cb7d9095ea629b406410cda748dd9d8cb5e9bd6d297",
+  "src/components/ZeroTouchEngineering.jsx": "dcfb9146cbc9a8d029fcbadebf19b241e658d3c479c56ad93faadffe2c4321b2",
+  "src/components/HomeShowcase.css": "fbad0dd5616fea8d745cab15d8c12f56c80535543990fa281f703b7440a33b32",
+  "src/components/Features.jsx": "275cc105e89f540b5bcfba8ecbede2b7874e3b73cad52c2ec5ade57fdb1122b3",
+  "src/components/Process.jsx": "b1ac5763dc7eaf7c34933b23feb90aed2eee49bded453d2bb9a7e90bca6f14b5",
+  "src/components/ContactForm.jsx": "42aca36448838f8da9fbbd99002fba47a38dcba706444a4db7336ae64ee5bec5",
+  "src/components/Footer.jsx": "82ea39750ed9dd4c1f796f3954b23910fb77c36719fe98fbf325be8047ef71b3",
+  "src/components/ParticleBackground.css": "76988a36dcf2b30b5608cbac19db1d026036d3189270ccf3a7afecdafd155107",
+  "src/data/zeroTouchTiles.json": "7672c4c55e4b9b2a21c740b9a8ac690398a6c0aa119a940ecd50f2f0b4ddffb6",
+  "index.html": "97ac5078db4a649221a05121a0b44775e921df3aa8275efd7f257e6f60066a5a",
+  "public/_redirects": "8e537cd28e1f51ceb53e6f3d6cbb7481df85d1235b04d78f6c4126f4fa18ffb7",
+  "public/images/forge-workspace-preview.png": "b0baadb42b477ede8114d51cbbcb4b9e98c6f26806c588ac96bcdf1cdef22aa3",
+  "scripts/sync-forge.mjs": "e348d5d4454472aa6a6ed1ce85ce27a351aceafcda66805fa0f7982e220828a1",
+  "ops/forge-preview.config.mjs": "231f0b00e48f462a652961d0ed49f85a4924e90f044a0779e531421ed7143289",
+  "ops/forge-amplify-rules.json": "9814d20912258bfaa39c379a3b1bd67ac79e6cdf571daf4161b06021018c4f7e"
+}

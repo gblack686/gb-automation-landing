@@ -24,27 +24,27 @@ export default function Process() {
   const phases = [
     {
       number: '01',
-      title: 'Vibe Discovery',
+      title: 'Workflow Discovery',
       duration: '2 Weeks',
-      description: 'Map workflows, define validation gates, and understand your business context deeply to calibrate the agents.'
+      description: 'Understand your goals, map the workflow and agree on scope, priorities and what success looks like.'
     },
     {
       number: '02',
       title: 'Development Sprint',
       duration: '6 Weeks',
-      description: 'Build internal + external apps, integrate agents, and establish core functionality using iterative vibe coding sessions.'
+      description: 'Design and build your website, application, automation or data system through focused iterations and regular review.'
     },
     {
       number: '03',
-      title: 'Agent Orchestration & Training',
+      title: 'Integration and Validation',
       duration: '2 Weeks',
-      description: 'RAG setup, specialized agent training, and system optimization for autonomy.'
+      description: 'Connect your tools and data, test real workflows and prepare the system for production use.'
     },
     {
       number: '04',
-      title: 'Handoff & Enablement',
+      title: 'Handoff and Enablement',
       duration: 'Final Week',
-      description: 'CloudFormation kit, team training, documentation, and full system transfer. After 90 days, you own the infrastructure.'
+      description: 'Deploy the work, document how it runs and help your team use and maintain it with confidence.'
     }
   ];
 
@@ -61,7 +61,7 @@ export default function Process() {
             The 90-Day Process
           </h2>
           <p className="text-[#5C5C5C] text-sm mt-2">
-            A structured approach to building production-ready AI systems.
+            A structured path for larger engagements. Smaller websites, automations and focused builds are scoped separately.
           </p>
         </div>
 

@@ -1,0 +1,5 @@
+[
+  {"source":"/forge","target":"/forge/index.html","status":"200"},
+  {"source":"/forge/","target":"/forge/index.html","status":"200"},
+  {"source":"/forge/designs/<*>","target":"/forge/index.html","status":"200"}
+]

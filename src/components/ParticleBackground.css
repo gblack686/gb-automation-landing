@@ -50,6 +50,10 @@
 .particle-home #home-header .font-serif { color:#F3F1E7; }
 .particle-home #home-header img { filter:invert(1); mix-blend-mode:screen; }
 .particle-home #home-header nav { color:#cfcec8; }
+.particle-home #home-header a:focus-visible { outline:2px solid #D97757; outline-offset:4px; }
+@media(max-width:1279px) {
+ .particle-home-content > section { scroll-margin-top:160px; }
+}
 
 .particle-home [class~="bg-white/90"], .particle-home [class~="bg-[#E6E4D9]"] { background:rgba(23,27,34,.94); }
 .particle-home #portfolio button, .particle-home [role="dialog"] button { color:#F3F1E7; }
@@ -61,7 +65,7 @@
 .particle-home .text-red-800 { color:#ffd7d5; }
 @media(max-width:640px) {
  .particle-scene-surface { width:185%; left:-42.5%; }
- .particle-home #home-hero-copy { min-height:100svh; padding-top:128px; padding-bottom:110px; }
+ .particle-home #home-hero-copy { min-height:100svh; padding-top:176px; padding-bottom:110px; }
  .particle-scrim { background:radial-gradient(ellipse at 50% 48%,rgba(3,4,5,.86),rgba(3,4,5,.65) 37%,rgba(3,4,5,.15) 80%),linear-gradient(transparent 70%,#030405); }
 }
 @media(prefers-reduced-motion:reduce) {
