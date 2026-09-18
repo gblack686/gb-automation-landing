@@ -36,9 +36,8 @@ h2{font-size:34px;line-height:1.15;letter-spacing:-.02em}h3{font-size:25px;line-
 .hero h1{text-shadow:0 2px 28px #000}.hero h1 em{color:var(--terracotta);font-weight:400}
 .hero #start{padding:15px 27px;gap:14px;font-size:12px;text-transform:uppercase;letter-spacing:.07em;box-shadow:0 4px 24px #0005}
 .sample,.card,.wizard,.login,.working{background:rgba(14,18,24,.74);border:1px solid #ffffff26;border-radius:24px;padding:32px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 12px 40px #0003}
-.sample article{padding:20px 0;border-top:1px solid #ffffff25}.sample strong{display:block;font-size:14px;font-weight:500}
-.sample small{color:#aeb4b8;font-size:12px;line-height:1.8;display:block;max-width:85%;margin-top:5px}
-.number{font:400 36px/1.2 var(--font-serif);color:var(--terracotta);float:right}
+.template-tree{margin:24px 0;padding:18px;background:#060a10a6;border:1px solid #ffffff14;border-radius:14px;font:12px/1.9 ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;color:#d5d9df;white-space:pre;overflow:auto;overflow-wrap:normal}
+.template-tree code{font:inherit}.tree-root{color:#fff;font-weight:600}.tree-branch{color:#6e7785}
 .meta{display:flex;gap:10px 20px;flex-wrap:wrap;margin-top:25px;font-size:11px;color:#aeb4b8}
 .wizard{max-width:760px;margin:auto;padding:36px 42px}.wizard h1{font-size:clamp(32px,4vw,46px)}
 .progress{height:3px;background:#ffffff25;border-radius:20px;overflow:hidden;margin:14px 0 32px}
