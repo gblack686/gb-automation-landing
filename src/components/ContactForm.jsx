@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
+import AnimatedCta from './AnimatedCta';
 import { insertContactSubmission } from '../lib/supabaseOps';
 
 export default function ContactForm() {
@@ -146,13 +147,13 @@ export default function ContactForm() {
             )}
           </div>
 
-          <button
+          <AnimatedCta
             type="submit"
             disabled={submitStatus === 'submitting'}
-            className="w-full py-4 mt-8 bg-[#191919] text-[#F3F1E7] font-semibold text-sm uppercase tracking-wider rounded-lg hover:bg-[#333] transition-all shadow-lg hover-mini disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full mt-8"
           >
             {submitStatus === 'submitting' ? 'Sending...' : 'Send an inquiry'}
-          </button>
+          </AnimatedCta>
 
           {submitStatus === 'success' && (
             <div className="bg-[#E6E4D9] border-2 border-[#D97757] rounded-2xl p-6 text-center">

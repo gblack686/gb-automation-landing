@@ -77,3 +77,13 @@ footer a{color:var(--terracotta)}.login{max-width:580px;margin:auto}.login h1{fo
  .actions button{flex:1}.result-actions button{flex:1 1 135px}.step-label{gap:12px}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+.workspace-overview{margin-top:88px;padding:48px 0 12px;border-top:1px solid #ffffff26}
+.workspace-overview h2{max-width:650px;margin:12px 0 20px}
+.workspace-intro{max-width:720px;font-size:14px;line-height:1.8;margin-bottom:30px}
+.workspace-window-list{display:grid;grid-template-columns:1fr 1fr;gap:18px 64px;padding-left:22px;margin:0;list-style:disc}
+.workspace-window-list li{padding-left:4px;break-inside:avoid}
+.workspace-window-list li::marker{color:#b9b9b9}
+.workspace-window-list strong{display:block;font-size:14px;font-weight:600;color:var(--cream-bg)}
+.workspace-window-list span{display:block;font-size:13px;line-height:1.7;color:#aeb4b8;margin-top:3px}
+@media(max-width:640px){.workspace-overview{margin-top:48px;padding-top:32px}.workspace-window-list{grid-template-columns:1fr;gap:16px}.workspace-overview h2{font-size:29px}}

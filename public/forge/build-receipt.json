@@ -1,18 +1,19 @@
 {
   "type": "forge-intake.static-build.v1",
   "api": "/api/forge-intake",
+  "preview_only": true,
   "files": [
     {
       "path": "forge/index.html",
-      "sha256": "cff90376e1cc8c4aa3243ae64eaba540b7805918cd9fc9a3e3bc119744e2725a"
+      "sha256": "98ea29b37385ab5894e5ed4acf12fbe3fdd110a114cafdf0f17d85430fd20918"
     },
     {
       "path": "forge/app.js",
-      "sha256": "5b9107d80878f079900c04b34828e69978076c194ae50cde95ae34e5c81ee54d"
+      "sha256": "df8b76fe1fdcec332a27693d6f4b3a81fff662233d15c9b8815d0950b3b0458d"
     },
     {
       "path": "forge/style.css",
-      "sha256": "92b606b23193d04c5b4b56d293277667bfa26464a194b7075c1b43432aba3d60"
+      "sha256": "d538f48b871b284508ee4adfd0888f5cfab2750434d3d0384c1c3fe97fde57eb"
     },
     {
       "path": "forge/theme.js",
@@ -31,8 +32,12 @@
       "sha256": "ae1f04a692512738a91a94c1143d7bc3e6ada05e79c84ce804f8232f393f2081"
     },
     {
+      "path": "forge/animated-cta.css",
+      "sha256": "e24955a33fb3a2c1adc29b75d69c08fca90ced56d7f7aa5de764aeb65ab7ad52"
+    },
+    {
       "path": "forge/config.js",
-      "sha256": "68a489cdcc4536f648ce2cc87a0bad086e0f79cb7c921fe7591e1fa4a3a0bebd"
+      "sha256": "5c6cdb6e52213452e7bc0aa1ad3a0afa9b82c1e879efa2715dd608f8b1600882"
     }
   ],
   "production_deployment": false

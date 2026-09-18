@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import HeroIntroVideo from "./HeroIntroVideo"
+import AnimatedCta from "./AnimatedCta"
 
 export default function VideoHero() {
   const [isRevealed, setIsRevealed] = useState(false)
@@ -58,13 +59,9 @@ export default function VideoHero() {
             </a>
           </nav>
 
-          <a href="/forge/" className="flex shrink-0 items-center gap-2 px-4 py-1.5 bg-white border border-[#D6D4C8] text-[#191919] text-[11px] font-medium tracking-wide rounded-full hover:bg-[#191919] hover:text-[#F3F1E7] transition-all shadow-sm hover-mini group">
+          <AnimatedCta href="/forge/" className="animated-cta--compact shrink-0">
             Explore Agent Forge
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="group-hover:translate-x-0.5 transition-transform">
-              <path d="M5 12h14"></path>
-              <path d="m12 5 7 7-7 7"></path>
-            </svg>
-          </a>
+          </AnimatedCta>
         </div>
       </header>
 
@@ -96,18 +93,9 @@ export default function VideoHero() {
         <HeroIntroVideo />
 
         <div className={`flex flex-col sm:flex-row gap-4 w-full sm:w-auto items-center justify-center transition-all duration-700 delay-300 ${isRevealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}>
-          <button
-            id="home-discovery"
-            onClick={scrollToContact}
-            className="relative group overflow-hidden rounded-full bg-[#191919] hover:bg-[#333] transition-all hover-mini shadow-lg shadow-[#191919]/10 w-full sm:w-auto"
-          >
-            <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full px-8 py-3.5 text-xs font-semibold uppercase tracking-wider text-[#F3F1E7]">
-              Let's build together
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="ml-2">
-                <path d="m9 18 6-6-6-6"></path>
-              </svg>
-            </span>
-          </button>
+          <AnimatedCta id="home-discovery" onClick={scrollToContact} className="w-full sm:w-auto">
+            Let's build together
+          </AnimatedCta>
         </div>
         <p className="text-sm max-w-2xl mt-6 leading-relaxed">
           Work directly with me to turn your ideas into useful, well-designed software, with the speed of AI and an experienced developer guiding the work.

@@ -16,6 +16,7 @@
     @media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none!important; transition:none!important; scroll-behavior:auto!important; } }
   </style>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="animated-cta.css">
   <script src="theme.js" defer></script><script src="config.js" defer></script><script src="app.js" defer></script>
 </head>
 <body class="particle-home" data-gbauto-theme="gbauto-theme.v1" data-gbauto-surface="forge-intake">
@@ -31,7 +32,7 @@
     <div id="preview-banner" hidden>Local preview. Model responses and email delivery are simulated.</div>
     <main id="app" tabindex="-1"><p>Loading your workshop...</p></main>
     <div id="message" role="status" aria-live="polite"></div>
-    <footer><span>Designed around the work you do.</span><span>Private by default · Saved for 30 days</span><a href="/operator" id="operator-link" hidden>Operator preview</a></footer>
+    <footer><span>Designed around the work you do.</span><span id="retention-note">Private by default · Saved for 30 days</span><a href="/operator" id="operator-link" hidden>Operator preview</a></footer>
   </div>
 </body>
 </html>

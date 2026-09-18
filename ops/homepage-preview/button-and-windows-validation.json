@@ -1,0 +1,30 @@
+{
+  "button": "black to white hover and exact return",
+  "light_appearance": "white to black hover and exact return",
+  "light_to_dark_switch": "pass",
+  "reduced_motion": "no animation",
+  "window_count": 13,
+  "window_names": [
+    "Skills Library",
+    "Justfile Commands",
+    "Agent Presence",
+    "Conversation",
+    "Working Canvas",
+    "Proposals",
+    "Setup & Quality Checks",
+    "Expert Configuration",
+    "Second Brain",
+    "Tasks & Workstream",
+    "Artifacts",
+    "Run Console",
+    "Changes & Approvals"
+  ],
+  "mobile_widths": [
+    390,
+    320
+  ],
+  "intake_navigation": "pass",
+  "real_model_calls": 0,
+  "emails_sent": 0,
+  "deployed": false
+}

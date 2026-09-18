@@ -1,6 +1,7 @@
 {
-  "checked_at": "2026-09-18T21:31:39.609729+00:00",
+  "checked_at": "2026-09-18T21:59:04.767418+00:00",
   "url": "http://127.0.0.1:4321/",
+  "static_preview": true,
   "checks": [
     {
       "check": "All nine source tiles and normalized copy retained",
@@ -159,11 +160,39 @@
       "pass": true
     },
     {
-      "check": "Forge CTA loads intake",
+      "check": "Forge CTA loads page",
       "pass": true
     },
     {
-      "check": "Forge API is simulated",
+      "check": "Public preview disclosed",
+      "pass": true
+    },
+    {
+      "check": "No unavailable intake controls",
+      "pass": true
+    },
+    {
+      "check": "All 13 window bullets",
+      "pass": true
+    },
+    {
+      "check": "No hosted API calls",
+      "pass": true
+    },
+    {
+      "check": "Preview inquiry link reaches contact",
+      "pass": true
+    },
+    {
+      "check": "1440px Forge no overflow",
+      "pass": true
+    },
+    {
+      "check": "390px Forge no overflow",
+      "pass": true
+    },
+    {
+      "check": "320px Forge no overflow",
       "pass": true
     },
     {
@@ -172,6 +201,38 @@
     },
     {
       "check": "Single homepage particle renderer",
+      "pass": true
+    },
+    {
+      "check": "dark button default",
+      "pass": true
+    },
+    {
+      "check": "dark button hover",
+      "pass": true
+    },
+    {
+      "check": "dark button returns",
+      "pass": true
+    },
+    {
+      "check": "light button default",
+      "pass": true
+    },
+    {
+      "check": "light button hover",
+      "pass": true
+    },
+    {
+      "check": "light button returns",
+      "pass": true
+    },
+    {
+      "check": "Light to dark appearance resets",
+      "pass": true
+    },
+    {
+      "check": "Button honors reduced motion",
       "pass": true
     },
     {
@@ -187,6 +248,5 @@
   "browser_errors": [],
   "real_inquiries_sent": 0,
   "model_calls": 0,
-  "email_sends": 0,
-  "deployed": false
+  "email_sends": 0
 }
