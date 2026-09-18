@@ -15,9 +15,6 @@ export default function Footer() {
       <p className="text-[10px] text-[#8C8A84] uppercase tracking-wider">
         &copy; {currentYear} GB Automation. All rights reserved.
       </p>
-      <p className="text-[10px] text-[#8C8A84] mt-2">
-        Powered by ElevenLabs Agents
-      </p>
     </footer>
   );
 }

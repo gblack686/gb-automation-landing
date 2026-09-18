@@ -1,0 +1,50 @@
+{
+  "request": "Approved homepage phase 1 preview, before deployment",
+  "source": "operator_chat",
+  "base_commit": "fed68fa59a76c8644ef3437f4c179babde0b1abf",
+  "branch": "codex-session-20260918-homepage-forge",
+  "approval": "gbautomation b6bcb846e: artifacts/agent-forge/homepage-launch-plan/2026-09-18/implementation-approval.json",
+  "file_ownership": [
+    "src/pages/Home.jsx",
+    "src/App.jsx",
+    "src/components/VideoHero.jsx",
+    "src/components/HeroIntroVideo.jsx",
+    "src/components/AgentForgePreview.jsx",
+    "src/components/ZeroTouchEngineering.jsx",
+    "src/components/HomeShowcase.css",
+    "src/components/Features.jsx",
+    "src/components/Process.jsx",
+    "src/components/ContactForm.jsx",
+    "src/components/Footer.jsx",
+    "src/components/ParticleBackground.css",
+    "src/data/zeroTouchTiles.json",
+    "index.html",
+    "public/_redirects",
+    "public/images/forge-workspace-preview.png",
+    "scripts/sync-forge.mjs",
+    "ops/forge-preview.config.mjs",
+    "ops/forge-amplify-rules.json"
+  ],
+  "acceptance": [
+    "Existing particle shell and AI developer hero",
+    "Video placeholder directly after hero subtitle",
+    "Forge showcase before portfolio",
+    "Portfolio and technology strip retained",
+    "Broad services, all nine original analogy tiles, then 90-day timeline",
+    "Primary CTA to contact and product CTA to Forge",
+    "No ElevenLabs floating widget or request",
+    "Desktop/mobile browser checks and mocked contact submission",
+    "Production Vite build"
+  ],
+  "exclusions": [
+    "Deployment, merge, public activation",
+    "Changes to parallel draft or Nexus source",
+    "Real email, model calls or contact submissions"
+  ],
+  "reuse": {
+    "parallel_header_css_footer": "Compatible navigation responsiveness, focus and mobile spacing copied from website-copy-20260916; conflicting copy superseded",
+    "tiles": "Standalone page section 3; text matches with em dash changed to spaced hyphen, exact SVG attributes retained",
+    "preview": "User-selected reviewed PNG; no second renderer or iframe",
+    "forge": "Existing eight-file static intake build and sync script"
+  }
+}

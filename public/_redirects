@@ -69,6 +69,11 @@
 /zero-touch-engineering    /zero-touch-engineering.html   200!
 /ai-resume                 /ai-resume.html                200!
 
+# Forge intake and authenticated saved-design routes.
+/forge                      /forge/index.html             200!
+/forge/                     /forge/index.html             200!
+/forge/designs/*            /forge/index.html             200!
+
 # SPA fallback for React Router deep links (no extension).
 # Order matters: this rule only applies after the asset rules above miss.
 /*                         /index.html                    200

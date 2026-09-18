@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
+import AnimatedCta from './AnimatedCta';
 import { insertContactSubmission } from '../lib/supabaseOps';
 
 export default function ContactForm() {
@@ -54,18 +55,19 @@ export default function ContactForm() {
           Let's Build Together
         </h2>
         <p className="text-[#5C5C5C] text-sm text-center mb-12">
-          Ready to transform your business with agentic systems? Tell us about your project.
+          Have a website, automation, data or AI project in mind? Tell me what you want to build.
         </p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <label className="text-[10px] uppercase tracking-wider text-[#8C8A84] font-bold">
+              <label htmlFor="contact-name" className="text-[10px] uppercase tracking-wider text-[#8C8A84] font-bold">
                 Name *
               </label>
               <input
                 type="text"
                 autoComplete="name"
+                id="contact-name"
                 {...register('name', { required: 'Name is required' })}
                 placeholder="Your full name"
                 className="w-full px-4 py-3 rounded-lg text-sm input-field"
@@ -75,13 +77,14 @@ export default function ContactForm() {
               )}
             </div>
             <div className="space-y-2">
-              <label className="text-[10px] uppercase tracking-wider text-[#8C8A84] font-bold">
+              <label htmlFor="contact-email" className="text-[10px] uppercase tracking-wider text-[#8C8A84] font-bold">
                 Email *
               </label>
               <input
                 type="email"
                 autoComplete="email"
                 inputMode="email"
+                id="contact-email"
                 {...register('email', {
                   required: 'Email is required',
                   pattern: {
@@ -100,25 +103,27 @@ export default function ContactForm() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <label className="text-[10px] uppercase tracking-wider text-[#8C8A84] font-bold">
+              <label htmlFor="contact-company" className="text-[10px] uppercase tracking-wider text-[#8C8A84] font-bold">
                 Company
               </label>
               <input
                 type="text"
                 autoComplete="organization"
+                id="contact-company"
                 {...register('company')}
                 placeholder="Your company name"
                 className="w-full px-4 py-3 rounded-lg text-sm input-field"
               />
             </div>
             <div className="space-y-2">
-              <label className="text-[10px] uppercase tracking-wider text-[#8C8A84] font-bold">
+              <label htmlFor="contact-phone" className="text-[10px] uppercase tracking-wider text-[#8C8A84] font-bold">
                 Phone
               </label>
               <input
                 type="tel"
                 autoComplete="tel"
                 inputMode="tel"
+                id="contact-phone"
                 {...register('phone')}
                 placeholder="(555) 123-4567"
                 className="w-full px-4 py-3 rounded-lg text-sm input-field"
@@ -127,13 +132,14 @@ export default function ContactForm() {
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] uppercase tracking-wider text-[#8C8A84] font-bold">
+            <label htmlFor="contact-projectDescription" className="text-[10px] uppercase tracking-wider text-[#8C8A84] font-bold">
               What are you looking to build? *
             </label>
             <textarea
               rows="4"
-              {...register('projectDescription', { required: 'Project description is required' })}
-              placeholder="Tell us about your project, goals, and challenges..."
+              id="contact-projectDescription"
+                {...register('projectDescription', { required: 'Project description is required' })}
+              placeholder="Tell me about your project, goals, and challenges..."
               className="w-full px-4 py-3 rounded-lg text-sm input-field resize-none"
             />
             {errors.projectDescription && (
@@ -141,13 +147,13 @@ export default function ContactForm() {
             )}
           </div>
 
-          <button
+          <AnimatedCta
             type="submit"
             disabled={submitStatus === 'submitting'}
-            className="w-full py-4 mt-8 bg-[#191919] text-[#F3F1E7] font-semibold text-sm uppercase tracking-wider rounded-lg hover:bg-[#333] transition-all shadow-lg hover-mini disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full mt-8"
           >
-            {submitStatus === 'submitting' ? 'Sending...' : 'Schedule Discovery Call'}
-          </button>
+            {submitStatus === 'submitting' ? 'Sending...' : 'Send an inquiry'}
+          </AnimatedCta>
 
           {submitStatus === 'success' && (
             <div className="bg-[#E6E4D9] border-2 border-[#D97757] rounded-2xl p-6 text-center">

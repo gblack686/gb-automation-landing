@@ -1,0 +1,271 @@
+[
+  {
+    "title": "Air Traffic Control",
+    "description": "Most teams fly every plane by hand. I build the control tower - humans make the calls, agents handle routing, monitoring, checklists, and handoffs.",
+    "icon": {
+      "attrs": {
+        "fill": "none",
+        "stroke": "currentColor",
+        "strokeWidth": "1.5",
+        "viewBox": "0 0 24 24"
+      },
+      "children": [
+        {
+          "tag": "path",
+          "attrs": {
+            "d": "M2 22h20M12 2v6M9 8h6l3 14H6L9 8z"
+          }
+        },
+        {
+          "tag": "circle",
+          "attrs": {
+            "cx": "12",
+            "cy": "5",
+            "r": "1.4",
+            "fill": "currentColor"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "title": "The Review Desk",
+    "description": "Less chasing updates across five tools. The system brings you the next best version of the work, context attached. You approve, redirect, or refine.",
+    "icon": {
+      "attrs": {
+        "fill": "none",
+        "stroke": "currentColor",
+        "strokeWidth": "1.5",
+        "viewBox": "0 0 24 24"
+      },
+      "children": [
+        {
+          "tag": "path",
+          "attrs": {
+            "d": "M4 5h16v11H4zM4 16l4 3M20 16l-4 3M9 9h6M9 12h4"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "title": "The Factory Floor",
+    "description": "Not a magic text box off to the side. Specialized stations, clear inputs, quality checks, human supervisors - a visible path from raw idea to finished output.",
+    "icon": {
+      "attrs": {
+        "fill": "none",
+        "stroke": "currentColor",
+        "strokeWidth": "1.5",
+        "viewBox": "0 0 24 24"
+      },
+      "children": [
+        {
+          "tag": "path",
+          "attrs": {
+            "d": "M3 21V9l6 4V9l6 4V6l6 3v12H3z"
+          }
+        },
+        {
+          "tag": "path",
+          "attrs": {
+            "d": "M3 21h18"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "title": "The Senior Associate",
+    "description": "It knows the context, drafts the work, surfaces risks, and asks when judgment is needed. It doesn't make the human disappear - it makes the human more effective.",
+    "icon": {
+      "attrs": {
+        "fill": "none",
+        "stroke": "currentColor",
+        "strokeWidth": "1.5",
+        "viewBox": "0 0 24 24"
+      },
+      "children": [
+        {
+          "tag": "circle",
+          "attrs": {
+            "cx": "12",
+            "cy": "8",
+            "r": "4"
+          }
+        },
+        {
+          "tag": "path",
+          "attrs": {
+            "d": "M4 21c0-4 4-6 8-6s8 2 8 6"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "title": "Blank Page → Approval Queue",
+    "description": "Most AI still leaves you staring at a blank page. I move teams to approval-queue workflows, where the thinking, drafting, and packaging is done enough for humans to decide.",
+    "icon": {
+      "attrs": {
+        "fill": "none",
+        "stroke": "currentColor",
+        "strokeWidth": "1.5",
+        "viewBox": "0 0 24 24"
+      },
+      "children": [
+        {
+          "tag": "path",
+          "attrs": {
+            "d": "M5 4h9l5 5v11H5zM14 4v5h5M9 14l2 2 4-4"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "title": "The Operating Room",
+    "description": "The human is still the surgeon. But the room is prepared, the instruments ready, the vitals monitored. That's the difference between a chatbot and an operating system for work.",
+    "icon": {
+      "attrs": {
+        "fill": "none",
+        "stroke": "currentColor",
+        "strokeWidth": "1.5",
+        "viewBox": "0 0 24 24"
+      },
+      "children": [
+        {
+          "tag": "path",
+          "attrs": {
+            "d": "M12 3v18M3 8h18M7 12l-2 2 2 2M17 12l2 2-2 2"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "title": "The AI Factory",
+    "description": "Set the line running and walk away. Agents take a clear intent and work AFK - researching, building, packaging - so prompt-to-production output is waiting on the belt when you come back to inspect it.",
+    "icon": {
+      "attrs": {
+        "fill": "none",
+        "stroke": "currentColor",
+        "strokeWidth": "1.5",
+        "viewBox": "0 0 24 24"
+      },
+      "children": [
+        {
+          "tag": "rect",
+          "attrs": {
+            "x": "8",
+            "y": "5",
+            "width": "8",
+            "height": "6",
+            "rx": "1"
+          }
+        },
+        {
+          "tag": "path",
+          "attrs": {
+            "d": "M3 15h18"
+          }
+        },
+        {
+          "tag": "circle",
+          "attrs": {
+            "cx": "5.5",
+            "cy": "18",
+            "r": "1.8"
+          }
+        },
+        {
+          "tag": "circle",
+          "attrs": {
+            "cx": "12",
+            "cy": "18",
+            "r": "1.8"
+          }
+        },
+        {
+          "tag": "circle",
+          "attrs": {
+            "cx": "18.5",
+            "cy": "18",
+            "r": "1.8"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "title": "The Pit Crew",
+    "description": "You're the driver making the race calls. The crew is rehearsed, synchronized, and fast - handling the work in the background so every second you spend is on the decisions that win.",
+    "icon": {
+      "attrs": {
+        "fill": "none",
+        "stroke": "currentColor",
+        "strokeWidth": "1.5",
+        "viewBox": "0 0 24 24"
+      },
+      "children": [
+        {
+          "tag": "circle",
+          "attrs": {
+            "cx": "12",
+            "cy": "12",
+            "r": "8.5"
+          }
+        },
+        {
+          "tag": "circle",
+          "attrs": {
+            "cx": "12",
+            "cy": "12",
+            "r": "3"
+          }
+        },
+        {
+          "tag": "path",
+          "attrs": {
+            "d": "M12 3.5v5M12 15.5v5M3.5 12h5M15.5 12h5"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "title": "Self-Driving, With a Wheel",
+    "description": "The system can take the whole route on its own. But the wheel never leaves your hands - you can steer, slow down, or take over the instant judgment is required.",
+    "icon": {
+      "attrs": {
+        "fill": "none",
+        "stroke": "currentColor",
+        "strokeWidth": "1.5",
+        "viewBox": "0 0 24 24"
+      },
+      "children": [
+        {
+          "tag": "circle",
+          "attrs": {
+            "cx": "12",
+            "cy": "12",
+            "r": "9"
+          }
+        },
+        {
+          "tag": "circle",
+          "attrs": {
+            "cx": "12",
+            "cy": "12",
+            "r": "2.4"
+          }
+        },
+        {
+          "tag": "path",
+          "attrs": {
+            "d": "M12 9.6V4M10 13.6l-4.6 3.4M14 13.6l4.6 3.4"
+          }
+        }
+      ]
+    }
+  }
+]

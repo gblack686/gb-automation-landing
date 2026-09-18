@@ -1,0 +1,5 @@
+# Preserve the verified static build hashes on Windows and Linux.
+public/forge/*.html text eol=lf
+public/forge/*.js text eol=lf
+public/forge/*.css text eol=lf
+public/forge/*.json text eol=lf
