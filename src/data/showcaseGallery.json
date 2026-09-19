@@ -1,0 +1,74 @@
+[
+    {
+        "id":  "axisform-studio-landing",
+        "title":  "Axisform Studio",
+        "category":  "Websites",
+        "description":  "An editorial website for a branding and digital design studio."
+    },
+    {
+        "id":  "nexora-analytics",
+        "title":  "Nexora Insights",
+        "category":  "Dashboards",
+        "description":  "A different approach to presenting analytics and business performance."
+    },
+    {
+        "id":  "ai-workflow-interface",
+        "title":  "AI Workflow Studio",
+        "category":  "Workspaces",
+        "description":  "A visual workspace for shaping an automated workflow."
+    },
+    {
+        "id":  "headphone-product-grid",
+        "title":  "Product Collection",
+        "category":  "Product UI",
+        "description":  "A product catalog with rich imagery and clear comparisons."
+    },
+    {
+        "id":  "master-strategy-infographic",
+        "title":  "Strategy at a Glance",
+        "category":  "Visual stories",
+        "description":  "A visual explainer that makes a complex strategy easier to follow."
+    },
+    {
+        "id":  "imaginova-image-gallery",
+        "title":  "Imaginova Gallery",
+        "category":  "Creative tools",
+        "description":  "An image-led interface for browsing and exploring creative work."
+    },
+    {
+        "id":  "nexus-capital-landing",
+        "title":  "Nexus Capital",
+        "category":  "Websites",
+        "description":  "A finance website built around a clear story and strong typography."
+    },
+    {
+        "id":  "nexus-analytics-dashboard",
+        "title":  "Nexus Analytics",
+        "category":  "Websites",
+        "description":  "An analytics product website with an animated data-inspired backdrop."
+    },
+    {
+        "id":  "nexus-forge-workspace",
+        "title":  "Nexus Forge",
+        "category":  "Workspaces",
+        "description":  "A node-based workspace concept for visual effects and creative tools."
+    },
+    {
+        "id":  "initialize-account",
+        "title":  "Guided Account Setup",
+        "category":  "Product UI",
+        "description":  "A focused onboarding experience for starting with a new product."
+    },
+    {
+        "id":  "strategic-roadmap",
+        "title":  "Strategic Roadmap",
+        "category":  "Visual stories",
+        "description":  "A visual timeline that turns a plan into an understandable sequence."
+    },
+    {
+        "id":  "motion-asset-sync",
+        "title":  "Motion Asset Sync",
+        "category":  "Creative tools",
+        "description":  "A creative workspace for organizing media and motion assets."
+    }
+]

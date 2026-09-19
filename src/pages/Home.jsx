@@ -1,6 +1,7 @@
 import VideoHero from '../components/VideoHero';
 import AgentForgePreview from '../components/AgentForgePreview';
 import ZeroTouchEngineering from '../components/ZeroTouchEngineering';
+import ArtifactGallery from '../components/ArtifactGallery';
 import '../components/HomeShowcase.css';
 import Portfolio from '../components/Portfolio';
 import TechMarquee from '../components/TechMarquee';
@@ -21,6 +22,7 @@ function Home() {
         <TechMarquee />
         <Features />
         <ZeroTouchEngineering />
+        <ArtifactGallery />
         <Process />
         <ContactForm />
         <Footer />

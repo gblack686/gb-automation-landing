@@ -1,5 +1,5 @@
 {
-    "src/pages/Home.jsx":  "1cb54852758aed63f2d4da3ae8652c4e63cea898c477cf42553cbe7c72843d2c",
+    "src/pages/Home.jsx":  "b2568c4ec1d441d6eafbcf755fbbfefba8251ee4dd9b34fa93d974b11b83e357",
     "src/App.jsx":  "b8eb4d297002dab5361473b97cbb2571744260e239876eb0e50a80baf30dd4b3",
     "src/components/VideoHero.jsx":  "20826513f2ddd1faa0ee1081709495d8d7822e76ae19abd8e7e0e491a1f8b6d4",
     "src/components/HeroIntroVideo.jsx":  "6ee0ec043dbe5cbe88132e297ad2c9418d05f93460aa1aa19c7f067ddded7b69",
@@ -19,5 +19,12 @@
     "ops/forge-preview.config.mjs":  "231f0b00e48f462a652961d0ed49f85a4924e90f044a0779e531421ed7143289",
     "ops/forge-amplify-rules.json":  "9814d20912258bfaa39c379a3b1bd67ac79e6cdf571daf4161b06021018c4f7e",
     "src/components/AnimatedCta.jsx":  "59c71c18485e54db7206622a18ae405aa1a988bd6854d67975acafb55475789e",
-    "public/forge/animated-cta.css":  "e24955a33fb3a2c1adc29b75d69c08fca90ced56d7f7aa5de764aeb65ab7ad52"
+    "public/forge/animated-cta.css":  "e24955a33fb3a2c1adc29b75d69c08fca90ced56d7f7aa5de764aeb65ab7ad52",
+    "src/components/ArtifactGallery.jsx":  "27353e264c25e0371d8691a2e9f50bdf7500b17c3b487e660733ce8c2f604523",
+    "src/components/ArtifactGallery.css":  "267ed887b6a2e2372a465192b02b2b6df2d13fb059a4a310a73d52c2fb42a385",
+    "src/components/GalleryGlobe.jsx":  "673f0da85b82fd132c73c25e506d69fd3cc59a8c14e37cbfc5980259f2897285",
+    "src/lib/artifactGlobe.js":  "002d2ad29b50592837bd6b69af61eb52cb8ba2e8110e95b4e883601e5a02d7ee",
+    "src/data/showcaseGallery.json":  "de789b9ea4337e56d0f1a40d67db41514ffb4c969624d649f845684b6345c2cd",
+    "public/forge/app.js":  "d99d8e5c076c31b80474e39367dad3da1eac465382d0238e7f4447c6b5753444",
+    "public/forge/style.css":  "aed5a53c2fef09673d0676f4ed46e567daae1a09de400c3d0f4cb7578f07379b"
 }

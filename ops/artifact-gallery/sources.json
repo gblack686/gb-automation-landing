@@ -1,0 +1,118 @@
+{
+  "captured_at": "2026-09-19T03:55:30.045341+00:00",
+  "source_gallery": "https://expert-atlas--gbautoxyz.netlify.app/#view=gallery",
+  "method": "Browser screenshots of public design examples; navigation badge hidden; dashboard and image gallery scrolled to content; dashboard entrance set to final visible state",
+  "width": 1200,
+  "height": 800,
+  "real_submissions": 0,
+  "items": [
+    {
+      "id": "ai-workflow-interface",
+      "source": "https://expert-atlas--gbautoxyz.netlify.app/style-guide/library/ai-workflow-interface.html",
+      "page_title": "AI Workflow Interface",
+      "status": 200,
+      "thumbnail": "public/images/gallery/ai-workflow-interface.jpg",
+      "sha256": "4c9cc1d074d7d6fc7d60388315c18bc7ab4ebeff4af7ab16170d53fde7836c4d",
+      "bytes": 56518
+    },
+    {
+      "id": "axisform-studio-landing",
+      "source": "https://expert-atlas--gbautoxyz.netlify.app/style-guide/library/axisform-studio-landing.html",
+      "page_title": "Axisform\u00ae \u2014 Independent Design Studio",
+      "status": 200,
+      "thumbnail": "public/images/gallery/axisform-studio-landing.jpg",
+      "sha256": "933d64fdc6ff3d56552518506ba0ef4d5a93d92aa3c060748bd68d948c57a95d",
+      "bytes": 63397
+    },
+    {
+      "id": "headphone-product-grid",
+      "source": "https://expert-atlas--gbautoxyz.netlify.app/style-guide/library/headphone-product-grid.html",
+      "page_title": "Component Preview",
+      "status": 200,
+      "thumbnail": "public/images/gallery/headphone-product-grid.jpg",
+      "sha256": "e0a2724e55c7821645235288fe64548acc9c88410eddfd39ac5c58e37a6da673",
+      "bytes": 61273
+    },
+    {
+      "id": "imaginova-image-gallery",
+      "source": "https://expert-atlas--gbautoxyz.netlify.app/style-guide/library/imaginova-image-gallery.html",
+      "page_title": "Imaginova",
+      "status": 200,
+      "thumbnail": "public/images/gallery/imaginova-image-gallery.jpg",
+      "sha256": "8096315f6d848a2fee3876a8ddaf75af67a7b3ee5b490f1b95118169ec669515",
+      "bytes": 98337
+    },
+    {
+      "id": "initialize-account",
+      "source": "https://expert-atlas--gbautoxyz.netlify.app/style-guide/library/initialize-account.html",
+      "page_title": "Initialize Account",
+      "status": 200,
+      "thumbnail": "public/images/gallery/initialize-account.jpg",
+      "sha256": "ccac1e264111e1a579b41e3132589b87a004b9336079a70f4ad3a10844874c36",
+      "bytes": 57275
+    },
+    {
+      "id": "master-strategy-infographic",
+      "source": "https://expert-atlas--gbautoxyz.netlify.app/style-guide/library/master-strategy-infographic.html",
+      "page_title": "Master Strategy",
+      "status": 200,
+      "thumbnail": "public/images/gallery/master-strategy-infographic.jpg",
+      "sha256": "8ca3494d1248295f651c761e70eef109ed61e71f7c633a6d176ed6b48ff606c4",
+      "bytes": 64625
+    },
+    {
+      "id": "motion-asset-sync",
+      "source": "https://expert-atlas--gbautoxyz.netlify.app/style-guide/library/motion-asset-sync.html",
+      "page_title": "Motion Sequence - Asset Sync",
+      "status": 200,
+      "thumbnail": "public/images/gallery/motion-asset-sync.jpg",
+      "sha256": "50d2ebe8aa367a7054441a12022e2dfa7f96f19547eec16cacb3d4852c2e704e",
+      "bytes": 69164
+    },
+    {
+      "id": "nexora-analytics",
+      "source": "https://expert-atlas--gbautoxyz.netlify.app/style-guide/library/nexora-analytics.html",
+      "page_title": "Nexora",
+      "status": 200,
+      "thumbnail": "public/images/gallery/nexora-analytics.jpg",
+      "sha256": "22b8b3eeb4921d5167ad84e90964ee0c8d68b4615ca9474a2357fe4e7aac96ff",
+      "bytes": 59503
+    },
+    {
+      "id": "nexus-analytics-dashboard",
+      "source": "https://expert-atlas--gbautoxyz.netlify.app/style-guide/library/nexus-analytics-dashboard.html",
+      "page_title": "Nexus - Advanced Data Analytics",
+      "status": 200,
+      "thumbnail": "public/images/gallery/nexus-analytics-dashboard.jpg",
+      "sha256": "52378d5039730ccbf16f885289545f4ad21f3b7e920a42283988ab1f285066e1",
+      "bytes": 71253
+    },
+    {
+      "id": "nexus-capital-landing",
+      "source": "https://expert-atlas--gbautoxyz.netlify.app/style-guide/library/nexus-capital-landing.html",
+      "page_title": "Nexus Capital Render",
+      "status": 200,
+      "thumbnail": "public/images/gallery/nexus-capital-landing.jpg",
+      "sha256": "83376a9f68b2ed42fd4fe7f8f6c7b9d9b68dbd29109344d31b4d09b737f9f312",
+      "bytes": 84310
+    },
+    {
+      "id": "nexus-forge-workspace",
+      "source": "https://expert-atlas--gbautoxyz.netlify.app/style-guide/library/nexus-forge-workspace.html",
+      "page_title": "Nexus Forge Interactive Workspace",
+      "status": 200,
+      "thumbnail": "public/images/gallery/nexus-forge-workspace.jpg",
+      "sha256": "b340944c30ac64e8b28c28b60e69a2742bc8b67d15e5426d910347461bcff29d",
+      "bytes": 89628
+    },
+    {
+      "id": "strategic-roadmap",
+      "source": "https://expert-atlas--gbautoxyz.netlify.app/style-guide/library/strategic-roadmap.html",
+      "page_title": "Strategic Roadmap",
+      "status": 200,
+      "thumbnail": "public/images/gallery/strategic-roadmap.jpg",
+      "sha256": "af92668f18d82886284edf2c0b7a1351b4e7010a32fa575722fea612c23796b1",
+      "bytes": 77274
+    }
+  ]
+}
