@@ -1,0 +1,21 @@
+{
+    "source":  "Avatar_Video_v2.mp4",
+    "source_sha256":  "732817e3e6703e5b8d05cc403bd11d2585999a0b1f5773a436a69b07efa2db8e",
+    "source_bytes":  92243750,
+    "duration_seconds":  107.12,
+    "original_dimensions":  [
+                                1080,
+                                1920
+                            ],
+    "published_dimensions":  [
+                                 720,
+                                 1280
+                             ],
+    "published_bytes":  13891415,
+    "video_sha256":  "d74d8a26ff1a1af2d27d97cf18685828752e97474c7df3f1110d35caa6be82d8",
+    "poster_sha256":  "aea2e8065d360d7882f90ca9b1fd6c7ff7ffb4fa22d82ef93614c7cf1ad45271",
+    "encoding":  "H.264 CRF 23, AAC 128 kb/s, faststart, 25 fps; full duration, framing and sound preserved",
+    "poster":  "Frame at 2 seconds, 540 x 960 JPEG",
+    "placement":  "Hero, directly below subtitle",
+    "playback":  "Click to play, inline native controls, no autoplay, preload none"
+}

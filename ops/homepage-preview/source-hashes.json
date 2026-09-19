@@ -2,10 +2,10 @@
     "src/pages/Home.jsx":  "b2568c4ec1d441d6eafbcf755fbbfefba8251ee4dd9b34fa93d974b11b83e357",
     "src/App.jsx":  "b8eb4d297002dab5361473b97cbb2571744260e239876eb0e50a80baf30dd4b3",
     "src/components/VideoHero.jsx":  "20826513f2ddd1faa0ee1081709495d8d7822e76ae19abd8e7e0e491a1f8b6d4",
-    "src/components/HeroIntroVideo.jsx":  "6ee0ec043dbe5cbe88132e297ad2c9418d05f93460aa1aa19c7f067ddded7b69",
+    "src/components/HeroIntroVideo.jsx":  "c8d4c1ff6d2ae56843e96d75bcebb823ef2499afe8595da4b06693a28c5d599f",
     "src/components/AgentForgePreview.jsx":  "f9185bfd5ab513a18d4bc1b0dbad722b082f5eef49c29cfa49ddbf3d7bad916a",
     "src/components/ZeroTouchEngineering.jsx":  "dcfb9146cbc9a8d029fcbadebf19b241e658d3c479c56ad93faadffe2c4321b2",
-    "src/components/HomeShowcase.css":  "fee5c2cfbc5a4cf658fd13d98124df95b0c2eaeaed6983c77171cd814be97316",
+    "src/components/HomeShowcase.css":  "d164c3aa52ded6cbb6fa16fa57aa104d6b8fedd5e7176294d6a4b368ef881e7c",
     "src/components/Features.jsx":  "275cc105e89f540b5bcfba8ecbede2b7874e3b73cad52c2ec5ade57fdb1122b3",
     "src/components/Process.jsx":  "b1ac5763dc7eaf7c34933b23feb90aed2eee49bded453d2bb9a7e90bca6f14b5",
     "src/components/ContactForm.jsx":  "ba54a2fba9a22dceef2bdabd4cc9a9a3b84f1ccaa2eeeddc2e8c4816e73a3b2f",
@@ -26,5 +26,7 @@
     "src/lib/artifactGlobe.js":  "002d2ad29b50592837bd6b69af61eb52cb8ba2e8110e95b4e883601e5a02d7ee",
     "src/data/showcaseGallery.json":  "de789b9ea4337e56d0f1a40d67db41514ffb4c969624d649f845684b6345c2cd",
     "public/forge/app.js":  "d99d8e5c076c31b80474e39367dad3da1eac465382d0238e7f4447c6b5753444",
-    "public/forge/style.css":  "aed5a53c2fef09673d0676f4ed46e567daae1a09de400c3d0f4cb7578f07379b"
+    "public/forge/style.css":  "aed5a53c2fef09673d0676f4ed46e567daae1a09de400c3d0f4cb7578f07379b",
+    "public/media/greg-intro-v2.mp4":  "d74d8a26ff1a1af2d27d97cf18685828752e97474c7df3f1110d35caa6be82d8",
+    "public/media/greg-intro-v2-poster.jpg":  "aea2e8065d360d7882f90ca9b1fd6c7ff7ffb4fa22d82ef93614c7cf1ad45271"
 }
