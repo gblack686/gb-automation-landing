@@ -248,7 +248,7 @@ document.addEventListener('click',ev=>{
  const win=button.closest('.window'),id=win?.dataset.window;
  if(button.dataset.open){openWindow(button.dataset.open);if(button.closest('#window-launcher')){closeLauncher();$('window-'+button.dataset.open).querySelector('.window-titlebar').focus({preventScroll:true});}}
  if(button.dataset.skill){activeSkill=button.dataset.skill;$('skill-list').innerHTML=skillList($('skill-search').value);$('skill-detail').innerHTML=skillDetail(skills.find(s=>s.id===activeSkill));}
- if(button.dataset.recipe){activeRecipe=button.dataset.recipe;$('recipe-list').innerHTML=recipeList();$('command-detail').innerHTML=commandDetail();}
+ if(button.dataset.recipe){activeRecipe=button.dataset.recipe;$('recipe-list').innerHTML=recipeList();$('command-detail').innerHTML=commandDetail();document.dispatchEvent(new CustomEvent('forge-workshop.recipe-selected'));}
  if(button.dataset.canvas)selectCanvas(button.dataset.canvas);
  if(button.dataset.artifact){selectCanvas(button.dataset.artifact);openWindow('canvas');}
  if(button.dataset.proposal){proposalState[button.dataset.proposal]=button.dataset.decision;$('proposal-list').innerHTML=proposalList();log('Demo proposal decision: '+button.dataset.decision+'. No work dispatched.');}

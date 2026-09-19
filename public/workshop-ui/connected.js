@@ -38,6 +38,7 @@
   const allowed=view.recipe()==='health';run.disabled=!connected||busy||!allowed;
   run.textContent=allowed?(runId?'Refresh health status':'Run health check'):'Recipe not connected';
  }
+ document.addEventListener('forge-workshop.recipe-selected',controls);
  function note(text){document.querySelector('.config-note').textContent=text;}
  function checks(text){document.getElementById('connected-checks').textContent=text;}
  function showDraft(draft){
@@ -103,7 +104,6 @@
  }
  document.addEventListener('click',async event=>{
   const button=event.target.closest('button');if(!button)return;
-  if(button.dataset.recipe){setTimeout(controls,0);return;}
   if(button.dataset.action==='clear-console'){event.stopImmediatePropagation();view.clearLog();view.log('Console cleared. Use Refresh health status to retrieve the latest receipt.');return;}
   if(button.dataset.action==='reset-config'){
    event.stopImmediatePropagation();event.preventDefault();if(lastSaved)view.setDraft(lastSaved);note('Restored the last loaded draft in this form.');return;
