@@ -24,6 +24,7 @@ import Overview from './pages/Overview';
 import Repos from './pages/Repos';
 import HermesCommandLayer from './components/HermesCommandLayer';
 import RequireAuth from './components/RequireAuth';
+import AgentWorkshop from './pages/AgentWorkshop';
 import WelcomePage from './clients/gbautomation/pages/WelcomePage';
 import ClientHubPage from './clients/gbautomation/pages/ClientHubPage';
 import GbautomationPortal from './clients/gbautomation/routes';
@@ -34,7 +35,7 @@ import OpsRoutes from './ops/routes';
 
 function CommandLayerVisibility() {
   const { pathname } = useLocation();
-  if (pathname === '/') return null;
+  if (pathname === '/' || pathname === '/workshop') return null;
   return <HermesCommandLayer />;
 }
 
@@ -79,6 +80,7 @@ function App() {
           />
 
           {/* Gated — everything behind sign-in */}
+          <Route path="/workshop" element={<RequireAuth allowedGroups={['tenant-gbautomation']}><AgentWorkshop /></RequireAuth>} />
           <Route
             path="/plan"
             element={<RequireAuth><Plan /></RequireAuth>}

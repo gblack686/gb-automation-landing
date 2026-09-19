@@ -2,8 +2,18 @@ import { type ClientSchema, a, defineData } from '@aws-amplify/backend';
 import { langfuseTraces } from '../functions/langfuse-traces/resource';
 import { macMiniOps } from '../functions/mac-mini-ops/resource';
 import { capabilityEdit } from '../functions/capability-edit/resource';
+import { forgeWorkshop } from '../functions/forge-workshop/resource';
 
 const schema = a.schema({
+  ForgeWorkshopResult: a.customType({payload:a.json()}),
+  forgeWorkshopRead: a.query().arguments({input:a.json().required()}).returns(a.ref('ForgeWorkshopResult'))
+    .authorization(allow=>[allow.authenticated()]).handler(a.handler.function(forgeWorkshop)),
+  forgeWorkshopSave: a.mutation().arguments({input:a.json().required()}).returns(a.ref('ForgeWorkshopResult'))
+    .authorization(allow=>[allow.authenticated()]).handler(a.handler.function(forgeWorkshop)),
+  forgeWorkshopRun: a.mutation().arguments({input:a.json().required()}).returns(a.ref('ForgeWorkshopResult'))
+    .authorization(allow=>[allow.authenticated()]).handler(a.handler.function(forgeWorkshop)),
+  forgeWorkshopStatus: a.query().arguments({input:a.json().required()}).returns(a.ref('ForgeWorkshopResult'))
+    .authorization(allow=>[allow.authenticated()]).handler(a.handler.function(forgeWorkshop)),
   LangfuseTracePayload: a.customType({
     payload: a.json(),
   }),
