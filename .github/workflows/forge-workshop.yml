@@ -23,7 +23,7 @@ jobs:
           node-version: '22'
           cache: npm
       - run: npm ci --ignore-scripts --no-audit
-      - run: node --test amplify/functions/forge-workshop/contract.test.mjs
+      - run: node --test amplify/functions/forge-workshop/contract.test.mjs amplify/functions/forge-workshop/infrastructure.test.mjs
       - run: npx tsc --project amplify/tsconfig.json --noEmit --incremental false
       - run: npx eslint src/pages/AgentWorkshop.jsx src/lib/forgeWorkshopClient.js public/workshop-ui/connected.js
       - name: Write local-only build fixture

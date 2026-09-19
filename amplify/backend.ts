@@ -15,6 +15,7 @@ import {Queue} from 'aws-cdk-lib/aws-sqs';
 import {SqsEventSource} from 'aws-cdk-lib/aws-lambda-event-sources';
 import {forgeBuilder,forgeBuilderWorker} from './functions/forge-builder/resource';
 import {builderInfrastructure} from './functions/forge-builder/infrastructure.mjs';
+import { workshopIssuer, workshopSecretArn } from './functions/forge-workshop/infrastructure.mjs';
 
 /**
  * @see https://docs.amplify.aws/react/build-a-backend/ to add storage, functions, and more
@@ -67,11 +68,11 @@ backend.forgeVisualWorker.resources.lambda.addToRolePolicy(new PolicyStatement({
 ]}));
 
 const workshopStack = Stack.of(backend.forgeWorkshop.resources.lambda);
-backend.forgeWorkshop.addEnvironment('COGNITO_ISSUER', atlasIssuer(workshopStack,backend.auth.resources.userPool.userPoolId));
+backend.forgeWorkshop.addEnvironment('COGNITO_ISSUER', workshopIssuer(workshopStack, backend.auth.resources.userPool.userPoolId));
 backend.forgeWorkshop.resources.lambda.addToRolePolicy(new PolicyStatement({
   effect: Effect.ALLOW,
   actions: ['secretsmanager:GetSecretValue'],
-  resources: [atlasSecretArn(workshopStack)],
+  resources: [workshopSecretArn(workshopStack)],
 }));
 
 backend.langfuseTraces.resources.lambda.addToRolePolicy(
