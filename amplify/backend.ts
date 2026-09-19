@@ -7,6 +7,7 @@ import { langfuseTraces } from './functions/langfuse-traces/resource';
 import { macMiniOps } from './functions/mac-mini-ops/resource';
 import { capabilityEdit } from './functions/capability-edit/resource';
 import { forgeWorkshop } from './functions/forge-workshop/resource';
+import { workshopIssuer, workshopSecretArn } from './functions/forge-workshop/infrastructure.mjs';
 
 /**
  * @see https://docs.amplify.aws/react/build-a-backend/ to add storage, functions, and more
@@ -21,11 +22,11 @@ const backend = defineBackend({
 });
 
 const workshopStack = Stack.of(backend.forgeWorkshop.resources.lambda);
-backend.forgeWorkshop.addEnvironment('COGNITO_ISSUER', `https://cognito-idp.${workshopStack.region}.${workshopStack.urlSuffix}/${backend.auth.resources.userPool.userPoolId}`);
+backend.forgeWorkshop.addEnvironment('COGNITO_ISSUER', workshopIssuer(workshopStack, backend.auth.resources.userPool.userPoolId));
 backend.forgeWorkshop.resources.lambda.addToRolePolicy(new PolicyStatement({
   effect: Effect.ALLOW,
   actions: ['secretsmanager:GetSecretValue'],
-  resources: [workshopStack.formatArn({service:'secretsmanager',resource:'secret',resourceName:'gbautomation/infrastructure/supabase/gbauto-*',region:'us-east-1'})],
+  resources: [workshopSecretArn(workshopStack)],
 }));
 
 backend.langfuseTraces.resources.lambda.addToRolePolicy(

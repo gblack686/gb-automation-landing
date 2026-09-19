@@ -35,6 +35,7 @@ production credentials.
 
 ```text
 node --test amplify/functions/forge-workshop/contract.test.mjs
+node --test amplify/functions/forge-workshop/infrastructure.test.mjs
 npx tsc --project amplify/tsconfig.json --noEmit --incremental false
 npx eslint src/pages/AgentWorkshop.jsx src/lib/forgeWorkshopClient.js public/workshop-ui/connected.js
 npm run build
