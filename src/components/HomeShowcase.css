@@ -1,10 +1,16 @@
 .particle-home .home-eyebrow { display:block; color:#DFA083; font-size:10px; font-weight:600; line-height:1.5; letter-spacing:.14em; text-transform:uppercase; }
 .particle-home .home-hero #home-hero-copy { padding-top:calc(var(--home-header-height,64px) + 96px); }
 .particle-home .particle-home-content > section { scroll-margin-top:calc(var(--home-header-height,64px) + 24px); }
-.particle-home .hero-intro-video { width:min(100%,420px); aspect-ratio:16/9; margin:0 0 28px; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px; border:1px solid #ffffff29; border-radius:20px; background:linear-gradient(140deg,#191c22e6,#0b1016e6); box-shadow:0 12px 40px #0003; }
-.particle-home .hero-intro-icon { color:#DFA083; margin-bottom:12px; }
-.particle-home .hero-intro-title { display:block; margin:8px 0; font-family:Georgia,serif; font-size:22px; color:#F3F1E7; }
-.particle-home .hero-intro-note { display:block; font-size:12px; line-height:1.5; color:#bdc1c5; }
+.particle-home .hero-intro-video { width:min(100%,260px); margin:0 0 28px; border:1px solid #ffffff29; border-radius:20px; background:#080b10; box-shadow:0 12px 40px #0003; }
+.hero-intro-player { position:relative; aspect-ratio:9/16; border-radius:19px 19px 0 0; overflow:hidden; }
+.hero-intro-player video { display:block; width:100%; height:100%; object-fit:contain; background:#080b10; }
+.particle-home .hero-intro-play { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:12px; padding:32px 16px; color:#fff; background:linear-gradient(transparent 45%,#000b); font:500 13px/1.5 Inter,sans-serif; cursor:pointer; }
+.hero-intro-play-icon { display:grid; place-items:center; width:64px; height:64px; border:1px solid #ffffff85; border-radius:50%; color:#111; background:#fffffff2; transition:background .2s,color .2s; }
+.hero-intro-play-icon svg { margin-left:4px; }
+.hero-intro-play:hover .hero-intro-play-icon { color:#fff; background:#111; }
+.particle-home .hero-intro-play:focus-visible { outline:3px solid #fff; outline-offset:-6px; }
+.particle-home .hero-intro-video figcaption { padding:12px 14px; font:11px/1.6 Inter,sans-serif; color:#bdc1c5; }
+.hero-intro-video figcaption a { color:#fff; text-decoration:underline; }
 .particle-home .forge-showcase { display:grid; grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr); gap:48px; align-items:center; }
 .particle-home .forge-preview-frame { margin:0; min-width:0; border-radius:18px; overflow:hidden; }
 .particle-home .forge-preview-chrome { display:flex; align-items:center; gap:18px; padding:12px 16px; border-bottom:1px solid #ffffff20; font-size:10px; color:#b5bbc0; }
@@ -23,11 +29,6 @@
 @media(max-width:900px) {
  .particle-home .forge-showcase { grid-template-columns:minmax(0,1fr); gap:32px; }
  .particle-home .zero-touch-heading { align-items:flex-start; flex-direction:column; gap:16px; }
-}
-@media(max-width:390px) {
- .particle-home .hero-intro-video { padding:18px 12px; }
- .particle-home .hero-intro-title { font-size:19px; }
- .particle-home .hero-intro-note { font-size:11px; }
 }
 @media(max-width:640px) {
  .particle-home .home-hero #home-hero-copy { padding-top:calc(var(--home-header-height,209px) + 32px); }
