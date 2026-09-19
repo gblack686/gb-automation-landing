@@ -1,0 +1,372 @@
+{
+  "checked_at": "2026-09-19T03:56:27.572025+00:00",
+  "url": "http://127.0.0.1:4321/",
+  "static_preview": true,
+  "checks": [
+    {
+      "check": "All nine source tiles and normalized copy retained",
+      "pass": true
+    },
+    {
+      "check": "Original icon: Air Traffic Control",
+      "pass": true
+    },
+    {
+      "check": "Original icon: The Review Desk",
+      "pass": true
+    },
+    {
+      "check": "Original icon: The Factory Floor",
+      "pass": true
+    },
+    {
+      "check": "Original icon: The Senior Associate",
+      "pass": true
+    },
+    {
+      "check": "Original icon: Blank Page \u2192 Approval Queue",
+      "pass": true
+    },
+    {
+      "check": "Original icon: The Operating Room",
+      "pass": true
+    },
+    {
+      "check": "Original icon: The AI Factory",
+      "pass": true
+    },
+    {
+      "check": "Original icon: The Pit Crew",
+      "pass": true
+    },
+    {
+      "check": "Original icon: Self-Driving, With a Wheel",
+      "pass": true
+    },
+    {
+      "check": "Requested AI developer headline",
+      "pass": true
+    },
+    {
+      "check": "Video slot directly after subtitle, before CTA",
+      "pass": true
+    },
+    {
+      "check": "Honest placeholder without player or iframe",
+      "pass": true
+    },
+    {
+      "check": "Ten sections with gallery beneath Zero Touch",
+      "pass": true
+    },
+    {
+      "check": "Nine analogy cards rendered",
+      "pass": true
+    },
+    {
+      "check": "No stale vibe or ElevenLabs copy",
+      "pass": true
+    },
+    {
+      "check": "Reduced motion uses poster without canvas",
+      "pass": true
+    },
+    {
+      "check": "Reduced motion disables smooth scrolling",
+      "pass": true
+    },
+    {
+      "check": "Selected preview decoded at full source size",
+      "pass": true
+    },
+    {
+      "check": "Grid starts with six varied examples and no WebGL",
+      "pass": true
+    },
+    {
+      "check": "Globe code is loaded only on request",
+      "pass": true
+    },
+    {
+      "check": "All 12 local previews load",
+      "pass": true
+    },
+    {
+      "check": "Gallery filter: Websites",
+      "pass": true
+    },
+    {
+      "check": "Gallery filter: Dashboards",
+      "pass": true
+    },
+    {
+      "check": "Gallery filter: Workspaces",
+      "pass": true
+    },
+    {
+      "check": "Gallery filter: Product UI",
+      "pass": true
+    },
+    {
+      "check": "Gallery filter: Visual stories",
+      "pass": true
+    },
+    {
+      "check": "Gallery filter: Creative tools",
+      "pass": true
+    },
+    {
+      "check": "All resets to six examples",
+      "pass": true
+    },
+    {
+      "check": "Gallery cards have visible keyboard focus",
+      "pass": true
+    },
+    {
+      "check": "Example opens public source in a separate tab",
+      "pass": true
+    },
+    {
+      "check": "Globe renders one canvas on demand",
+      "pass": true
+    },
+    {
+      "check": "Next example updates selection and source link",
+      "pass": true
+    },
+    {
+      "check": "Accessible selector updates preview",
+      "pass": true
+    },
+    {
+      "check": "Previous example updates preview",
+      "pass": true
+    },
+    {
+      "check": "Rotate and reset change the globe view",
+      "pass": true
+    },
+    {
+      "check": "Globe stays still without interaction",
+      "pass": true
+    },
+    {
+      "check": "390px globe no overflow",
+      "pass": true
+    },
+    {
+      "check": "320px globe no overflow",
+      "pass": true
+    },
+    {
+      "check": "Globe filters reset to matching examples",
+      "pass": true
+    },
+    {
+      "check": "Grid switch removes the WebGL canvas",
+      "pass": true
+    },
+    {
+      "check": "Main CTA reaches contact",
+      "pass": true
+    },
+    {
+      "check": "Empty form validates without request",
+      "pass": true
+    },
+    {
+      "check": "Contact handler preserves payload with mocked success",
+      "pass": true
+    },
+    {
+      "check": "Portfolio modal opens and closes",
+      "pass": true
+    },
+    {
+      "check": "Visible keyboard focus",
+      "pass": true
+    },
+    {
+      "check": "Homepage has no provider, widget or Loom requests",
+      "pass": true
+    },
+    {
+      "check": "390px no overflow at #home-hero-copy",
+      "pass": true
+    },
+    {
+      "check": "390px no overflow at #agent-forge",
+      "pass": true
+    },
+    {
+      "check": "390px no overflow at #features",
+      "pass": true
+    },
+    {
+      "check": "390px no overflow at #zero-touch",
+      "pass": true
+    },
+    {
+      "check": "390px no overflow at #gallery",
+      "pass": true
+    },
+    {
+      "check": "390px no overflow at #process",
+      "pass": true
+    },
+    {
+      "check": "390px no overflow at #contact",
+      "pass": true
+    },
+    {
+      "check": "390px header does not cover hero",
+      "pass": true
+    },
+    {
+      "check": "320px no overflow at #home-hero-copy",
+      "pass": true
+    },
+    {
+      "check": "320px no overflow at #agent-forge",
+      "pass": true
+    },
+    {
+      "check": "320px no overflow at #features",
+      "pass": true
+    },
+    {
+      "check": "320px no overflow at #zero-touch",
+      "pass": true
+    },
+    {
+      "check": "320px no overflow at #gallery",
+      "pass": true
+    },
+    {
+      "check": "320px no overflow at #process",
+      "pass": true
+    },
+    {
+      "check": "320px no overflow at #contact",
+      "pass": true
+    },
+    {
+      "check": "320px header does not cover hero",
+      "pass": true
+    },
+    {
+      "check": "Forge CTA loads page",
+      "pass": true
+    },
+    {
+      "check": "Public preview disclosed",
+      "pass": true
+    },
+    {
+      "check": "No unavailable intake controls",
+      "pass": true
+    },
+    {
+      "check": "All 13 window bullets",
+      "pass": true
+    },
+    {
+      "check": "Six Forge steps beneath introduction and CTA",
+      "pass": true
+    },
+    {
+      "check": "Step five schedules a review meeting",
+      "pass": true
+    },
+    {
+      "check": "Step six describes launch after setup and approval",
+      "pass": true
+    },
+    {
+      "check": "Future workflow remains clearly labeled",
+      "pass": true
+    },
+    {
+      "check": "Expert template folder tree retained",
+      "pass": true
+    },
+    {
+      "check": "No hosted API calls",
+      "pass": true
+    },
+    {
+      "check": "Preview inquiry link reaches contact",
+      "pass": true
+    },
+    {
+      "check": "1440px Forge no overflow",
+      "pass": true
+    },
+    {
+      "check": "390px Forge no overflow",
+      "pass": true
+    },
+    {
+      "check": "320px Forge no overflow",
+      "pass": true
+    },
+    {
+      "check": "Deep design route renders Forge shell",
+      "pass": true
+    },
+    {
+      "check": "Single homepage particle renderer",
+      "pass": true
+    },
+    {
+      "check": "dark button default",
+      "pass": true
+    },
+    {
+      "check": "dark button hover",
+      "pass": true
+    },
+    {
+      "check": "dark button returns",
+      "pass": true
+    },
+    {
+      "check": "light button default",
+      "pass": true
+    },
+    {
+      "check": "light button hover",
+      "pass": true
+    },
+    {
+      "check": "light button returns",
+      "pass": true
+    },
+    {
+      "check": "Light to dark appearance resets",
+      "pass": true
+    },
+    {
+      "check": "Button honors reduced motion",
+      "pass": true
+    },
+    {
+      "check": "Unavailable WebGL returns to working grid",
+      "pass": true
+    },
+    {
+      "check": "No browser runtime errors",
+      "pass": true
+    },
+    {
+      "check": "Source unchanged by validation",
+      "pass": true
+    }
+  ],
+  "pass": true,
+  "browser_errors": [],
+  "real_inquiries_sent": 0,
+  "model_calls": 0,
+  "email_sends": 0
+}
