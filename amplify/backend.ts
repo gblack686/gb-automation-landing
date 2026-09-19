@@ -6,6 +6,7 @@ import { langfuseTraces } from './functions/langfuse-traces/resource';
 import { macMiniOps } from './functions/mac-mini-ops/resource';
 import { capabilityEdit } from './functions/capability-edit/resource';
 import { forgeAtlas } from './functions/forge-atlas/resource';
+import { forgeWorkshop } from './functions/forge-workshop/resource';
 import { Stack } from 'aws-cdk-lib';
 import { atlasIssuer, atlasSecretArn, atlasStorage } from './functions/forge-atlas/infrastructure.mjs';
 import {forgeVisual,forgeVisualWorker} from './functions/forge-visual/resource';
@@ -25,6 +26,7 @@ const backend = defineBackend({
   macMiniOps,
   capabilityEdit,
   forgeAtlas,
+  forgeWorkshop,
   forgeVisual,
   forgeVisualWorker,
   forgeBuilder,
@@ -63,6 +65,14 @@ backend.forgeVisualWorker.resources.lambda.addToRolePolicy(new PolicyStatement({
  atlasSecretArn(atlasStack).replace('infrastructure/supabase/gbauto-*','core/openai-api-key-*'),
  atlasSecretArn(atlasStack).replace('infrastructure/supabase/gbauto-*','providers/meshy-*'),
 ]}));
+
+const workshopStack = Stack.of(backend.forgeWorkshop.resources.lambda);
+backend.forgeWorkshop.addEnvironment('COGNITO_ISSUER', atlasIssuer(workshopStack,backend.auth.resources.userPool.userPoolId));
+backend.forgeWorkshop.resources.lambda.addToRolePolicy(new PolicyStatement({
+  effect: Effect.ALLOW,
+  actions: ['secretsmanager:GetSecretValue'],
+  resources: [atlasSecretArn(workshopStack)],
+}));
 
 backend.langfuseTraces.resources.lambda.addToRolePolicy(
   new PolicyStatement({
