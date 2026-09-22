@@ -3,6 +3,21 @@ import assert from 'node:assert/strict';
 import { makeHandler, project, traceURL } from './contract.mjs';
 const issuer = 'https://cognito-idp.us-east-1.amazonaws.com/us-east-1_test';
 const event = input => ({identity:{claims:{iss:issuer,sub:'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa','cognito:groups':['tenant-gbautomation']}},info:{fieldName:'forgeAtlasRead'},arguments:{input}});
+
+test('Cognito hex subjects do not require RFC UUID version or variant bits',async () => {
+ let reads=0;const handler=makeHandler({issuer,document:async()=>{reads++;return {};}});
+ const actualShape=event({view:'document'});
+ actualShape.identity.claims.sub='aaaaaaaa-aaaa-7aaa-caaa-aaaaaaaaaaaa';
+ actualShape.identity.claims['cognito:groups']=[];
+ assert.equal((await handler(actualShape)).payload.error,'tenant_access_required');
+ actualShape.identity.claims['cognito:groups']=['tenant-gbautomation'];
+ assert.equal((await handler(actualShape)).payload.ok,true);
+ for(const sub of ['',null,'not-a-cognito-subject','a'.repeat(100)]) {
+  actualShape.identity.claims.sub=sub;
+  assert.equal((await handler(actualShape)).payload.error,'authentication_required');
+ }
+ assert.equal(reads,1);
+});
 test('anonymous, foreign issuer, foreign tenant and argument ownership are denied',async () => {
  let reads=0;
  const handler=makeHandler({issuer,rpc:async()=>{reads++;return [];},document:async()=>{reads++;return {};}});

@@ -61,6 +61,8 @@ def run(args):
                 page = login(foreign)
                 expect(page.get_by_text('Tenant access required', exact=True)).to_be_visible()
                 denied = read(page, {'view': 'document'})
+                if isinstance(denied, dict) and denied.get('error') in ('authentication_required', 'tenant_access_required', 'invalid_request', 'atlas_unavailable'):
+                    receipt['nonmember_error'] = denied['error']
                 assert denied == {'ok': False, 'error': 'tenant_access_required'}
                 receipt['checks'].append('Real Cognito sign-in without tenant membership is denied by UI and API')
                 foreign.close()
