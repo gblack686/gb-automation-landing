@@ -1,0 +1,74 @@
+name: Forge Atlas private workspace
+on:
+  pull_request:
+    paths:
+      - 'amplify/**'
+      - 'src/pages/ForgeAtlas.jsx'
+      - 'src/lib/forgeAtlasClient.js'
+      - 'src/App.jsx'
+      - 'src/components/RequireAuth.jsx'
+      - 'src/clients/gbautomation/pages/DashboardPage.jsx'
+      - 'scripts/validate-forge-atlas.mjs'
+      - 'scripts/validate-forge-atlas-anonymous.mjs'
+      - 'scripts/validate-forge-atlas-live.py'
+      - 'package*.json'
+      - '.github/workflows/forge-atlas.yml'
+  push:
+    branches: [master]
+    paths:
+      - 'amplify/**'
+      - 'src/pages/ForgeAtlas.jsx'
+      - 'src/lib/forgeAtlasClient.js'
+      - 'src/App.jsx'
+      - 'src/components/RequireAuth.jsx'
+      - 'src/clients/gbautomation/pages/DashboardPage.jsx'
+      - 'scripts/validate-forge-atlas*.mjs'
+      - 'scripts/validate-forge-atlas-live.py'
+      - 'package*.json'
+      - '.github/workflows/forge-atlas.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  forge-atlas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --ignore-scripts --no-audit
+      - run: node --test amplify/functions/forge-atlas/*.test.mjs
+      - run: npx tsc --project amplify/tsconfig.json --noEmit --incremental false
+      - run: npx eslint src/pages/ForgeAtlas.jsx src/lib/forgeAtlasClient.js
+      - run: python -m py_compile scripts/validate-forge-atlas-live.py
+      - name: Local build configuration
+        run: |
+          node --input-type=module - <<'JS'
+          import {writeFileSync} from 'node:fs';
+          writeFileSync('amplify_outputs.json',JSON.stringify({version:'1.4',auth:{aws_region:'us-east-1',user_pool_id:'us-east-1_localfixture',user_pool_client_id:'localfixtureclient',identity_pool_id:'us-east-1:00000000-0000-4000-8000-000000000000',standard_required_attributes:['email'],username_attributes:['email'],user_verification_types:['email'],unauthenticated_identities_enabled:false}}));
+          JS
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - name: Test private document host
+        env:
+          PLAYWRIGHT_CHANNEL: chromium
+        run: |
+          node node_modules/vite/bin/vite.js --host 127.0.0.1 --port 5197 --strictPort > /tmp/forge-atlas-vite.log 2>&1 &
+          for attempt in $(seq 1 30); do curl --silent --fail http://127.0.0.1:5197/ > /dev/null && break; sleep 1; done
+          node scripts/validate-forge-atlas.mjs
+      - name: Test production authentication gate
+        env:
+          PLAYWRIGHT_CHANNEL: chromium
+        run: |
+          node node_modules/vite/bin/vite.js preview --host 127.0.0.1 --port 5198 --strictPort > /tmp/forge-atlas-preview.log 2>&1 &
+          for attempt in $(seq 1 30); do curl --silent --fail http://127.0.0.1:5198/ > /dev/null && break; sleep 1; done
+          node scripts/validate-forge-atlas-anonymous.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: forge-atlas-browser
+          path: artifacts/forge-atlas-validation/
+          if-no-files-found: ignore

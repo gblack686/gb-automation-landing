@@ -31,10 +31,11 @@ import SmokeClientPortal from './clients/smoke-client/routes';
 import SmokeClientChat from './clients/smoke-client/pages/ChatPage';
 import Jid5274Portal from './clients/jid5274/routes';
 import OpsRoutes from './ops/routes';
+import ForgeAtlas from './pages/ForgeAtlas';
 
 function CommandLayerVisibility() {
   const { pathname } = useLocation();
-  if (pathname === '/') return null;
+  if (pathname === '/' || pathname.startsWith('/atlas/')) return null;
   return <HermesCommandLayer />;
 }
 
@@ -54,6 +55,7 @@ function App() {
           {/* Public — homepage + PRDs */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/atlas/artist-packet-expert" element={<RequireAuth allowedGroups={['tenant-gbautomation']}><ForgeAtlas /></RequireAuth>} />
           <Route path="/chat" element={<ChatRedirect />} />
           <Route path="/welcome" element={<WelcomePage />} />
           <Route path="/hub" element={<ClientHubPage />} />

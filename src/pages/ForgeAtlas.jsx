@@ -1,0 +1,61 @@
+import { useEffect, useRef, useState } from 'react';
+import { Hub } from 'aws-amplify/utils';
+import { readAtlas } from '../lib/forgeAtlasClient';
+
+const CSP = "default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval'; style-src 'unsafe-inline'; img-src data: blob:; font-src data:; frame-src 'self' about: blob:; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'";
+export default function ForgeAtlas() {
+ const frame = useRef(null);
+ const [channel] = useState(() => crypto.randomUUID());
+ const [html,setHtml] = useState('');
+ const [error,setError] = useState('');
+ const [attempt,setAttempt] = useState(0);
+ useEffect(() => {
+  let active = true;
+  const abort = new AbortController();
+  const pending = new Set();
+  const receive = async event => {
+   const message = event.data;
+   if (event.source !== frame.current?.contentWindow || event.origin !== 'null'
+       || message?.type !== 'forge-atlas.request.v1' || message.channel !== channel
+       || typeof message.id !== 'string' || !/^\d{1,9}$/.test(message.id)
+       || !['atlas','planning','history'].includes(message.view) || JSON.stringify(message).length > 8192) return;
+   if (pending.has(message.view)) return;
+   pending.add(message.view);
+   let payload,ok = false;
+   try { payload = await readAtlas(message.view,message.input); ok = true; } catch { payload = null; }
+   finally { pending.delete(message.view); }
+   if (active) frame.current?.contentWindow?.postMessage({type:'forge-atlas.response.v1',channel,id:message.id,ok,payload},'*');
+  };
+  window.addEventListener('message',receive);
+  const stopAuth = Hub.listen('auth',({payload}) => {
+   if (payload.event === 'signedOut') { active = false; abort.abort(); setHtml(''); window.location.assign('/login?next=%2Fatlas%2Fartist-packet-expert'); }
+  });
+  (async () => {
+   setError(''); setHtml('');
+   try {
+    const doc = await readAtlas('document');
+    const url = new URL(doc.url);
+    if (url.protocol !== 'https:' || !/^[a-z0-9.-]+\.s3\.[a-z0-9-]+\.amazonaws\.com$/.test(url.hostname)
+        || doc.agent_id !== 'artist-packet-expert' || doc.tenant_id !== 'gbautomation' || doc.bytes > 16000000) throw Error('Invalid document');
+    const response = await fetch(url,{cache:'no-store',credentials:'omit',signal:abort.signal});
+    if (!response.ok) throw Error('Document unavailable');
+    const bytes = await response.arrayBuffer();
+    if (bytes.byteLength !== doc.bytes) throw Error('Incomplete document');
+    const hash = [...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))].map(v => v.toString(16).padStart(2,'0')).join('');
+    if (hash !== doc.sha256) throw Error('Document changed');
+    const content = new TextDecoder().decode(bytes);
+    if (!content.includes('<head>') || !content.includes('forge-atlas.request.v1')) throw Error('Document needs an update');
+    if (active) setHtml(content.replace('<head>',`<head><meta http-equiv="Content-Security-Policy" content="${CSP}"><meta name="forge-host-channel" content="${channel}">`));
+   } catch { if (active) setError('Your workspace could not load. Please retry or sign in again.'); }
+  })();
+  return () => { active = false; abort.abort(); stopAuth(); window.removeEventListener('message',receive); };
+ },[attempt,channel]);
+ if (!html) return <main className="min-h-screen grid place-content-center bg-[#F3F1E7] text-[#191919] p-8 text-center">
+  <h1 className="text-3xl font-serif">Artist Packet Expert</h1>
+  <p role="status" className="mt-4">{error || 'Opening your private workspace…'}</p>
+  {error && <button onClick={() => setAttempt(v => v+1)} className="mt-5 border border-current rounded-md p-3">Retry</button>}
+ </main>;
+ return <iframe ref={frame} name={`forge-atlas:${channel}`} title="Artist Packet Expert Atlas" srcDoc={html}
+  sandbox="allow-scripts allow-downloads allow-popups allow-popups-to-escape-sandbox"
+  referrerPolicy="no-referrer" style={{position:'fixed',inset:0,width:'100%',height:'100dvh',border:0,zIndex:100}} />;
+}
