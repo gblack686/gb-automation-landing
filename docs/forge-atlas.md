@@ -45,7 +45,10 @@ grant only when disabling all consumers. No data deletion is needed.
 ## Tests
 
 `node --test amplify/functions/forge-atlas/*.test.mjs` checks authentication,
-ownership, paging, safe errors, metric bounds, trace URLs and private storage.
+ownership, paging, safe errors, metric bounds, trace URLs, private storage,
+offline S3 signing and the production Lambda bundle. The bundle check resolves
+the actual handler's transitive dependencies, which frontend compilation and
+TypeScript alone do not exercise.
 `scripts/validate-forge-atlas.mjs` tests the React host with synthetic transport;
 `FORGE_ATLAS_HTML` optionally supplies the actual generated document. The monorepo
 also runs the real SQL in PGlite and the full Forge document inside an opaque
