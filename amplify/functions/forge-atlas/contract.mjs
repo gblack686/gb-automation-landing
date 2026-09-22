@@ -13,7 +13,8 @@ export function requestFor(event, issuer) {
  const claims = event?.identity?.claims;
  if (!issuer || claims?.iss !== issuer || typeof claims?.sub !== 'string' || !cognitoSubject.test(claims.sub)) deny('authentication_required');
  if (!Array.isArray(claims['cognito:groups']) || !claims['cognito:groups'].includes('tenant-gbautomation')) deny('tenant_access_required');
- if (event.info?.fieldName !== 'forgeAtlasRead' || Object.keys(event.arguments || {}).join() !== 'input') deny('invalid_request');
+ // Amplify's FunctionDirectiveStack forwards typeName/fieldName at the top level.
+ if (event.typeName !== 'Query' || event.fieldName !== 'forgeAtlasRead' || Object.keys(event.arguments || {}).join() !== 'input') deny('invalid_request');
  let input = event.arguments.input;
  if (typeof input === 'string') { try { input = JSON.parse(input); } catch { deny('invalid_request'); } }
  if (!object(input) || JSON.stringify(input).length > 4096 || Object.keys(input).some(k => !['view','query'].includes(k))
