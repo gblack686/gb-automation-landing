@@ -6,6 +6,7 @@ export default function DashboardPage() {
     <div className="space-y-10">
       <section className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
         <div>
+          <a href="/atlas/artist-packet-expert" className="inline-block mb-5 rounded-md border border-[#191919] px-5 py-3 text-sm font-semibold">Open Agent Atlas</a>
           <span className="text-xs font-bold uppercase tracking-widest text-[#D97757]">
             {portalData.tenant.status}
           </span>
