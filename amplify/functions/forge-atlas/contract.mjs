@@ -1,7 +1,9 @@
 export const EXPERT = 'artist-packet-expert';
 export const TENANT = 'gbautomation';
 export const CONFIG_SHA = 'bf142e4e937a53701b4a27b02d90068ee0c8f73636f123dd97a56a661e3040e5';
-const uuid = /^[a-f0-9]{8}-[a-f0-9]{4}-[1-8][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i;
+// Cognito subjects use the UUID-shaped hex layout but do not promise RFC variant bits.
+// The verified deployment issuer and tenant group provide authorization.
+const cognitoSubject = /^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i;
 class ReadError extends Error {}
 const deny = code => { throw new ReadError(code); };
 const object = value => value && typeof value === 'object' && !Array.isArray(value);
@@ -9,7 +11,7 @@ const identity = value => typeof value === 'string' && value.length > 0 && value
 
 export function requestFor(event, issuer) {
  const claims = event?.identity?.claims;
- if (!issuer || claims?.iss !== issuer || !uuid.test(claims?.sub || '')) deny('authentication_required');
+ if (!issuer || claims?.iss !== issuer || typeof claims?.sub !== 'string' || !cognitoSubject.test(claims.sub)) deny('authentication_required');
  if (!Array.isArray(claims['cognito:groups']) || !claims['cognito:groups'].includes('tenant-gbautomation')) deny('tenant_access_required');
  if (event.info?.fieldName !== 'forgeAtlasRead' || Object.keys(event.arguments || {}).join() !== 'input') deny('invalid_request');
  let input = event.arguments.input;
