@@ -2,7 +2,18 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { makeHandler, project, traceURL } from './contract.mjs';
 const issuer = 'https://cognito-idp.us-east-1.amazonaws.com/us-east-1_test';
-const event = input => ({identity:{claims:{iss:issuer,sub:'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa','cognito:groups':['tenant-gbautomation']}},info:{fieldName:'forgeAtlasRead'},arguments:{input}});
+// Envelope verified against the deployed InvokeFnForgeAtlasReadLambdaDataSource mapping.
+const event = input => ({identity:{claims:{iss:issuer,sub:'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa','cognito:groups':['tenant-gbautomation']}},typeName:'Query',fieldName:'forgeAtlasRead',arguments:{input}});
+
+test('Amplify Gen 2 top-level routing is required before storage access',async () => {
+ let reads=0;const handler=makeHandler({issuer,document:async()=>{reads++;return {};}});
+ assert.equal((await handler(event({view:'document'}))).payload.ok,true);
+ const nested=event({view:'document'});delete nested.typeName;delete nested.fieldName;nested.info={fieldName:'forgeAtlasRead'};
+ const mutation=event({view:'document'});mutation.typeName='Mutation';
+ const foreign=event({view:'document'});foreign.fieldName='anotherRead';
+ for(const request of [nested,mutation,foreign])assert.equal((await handler(request)).payload.error,'invalid_request');
+ assert.equal(reads,1);
+});
 
 test('Cognito hex subjects do not require RFC UUID version or variant bits',async () => {
  let reads=0;const handler=makeHandler({issuer,document:async()=>{reads++;return {};}});
