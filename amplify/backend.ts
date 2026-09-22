@@ -1,10 +1,13 @@
 import { defineBackend } from '@aws-amplify/backend';
 import { Effect, PolicyStatement } from 'aws-cdk-lib/aws-iam';
+import { Stack } from 'aws-cdk-lib';
 import { auth } from './auth/resource';
 import { data } from './data/resource';
 import { langfuseTraces } from './functions/langfuse-traces/resource';
 import { macMiniOps } from './functions/mac-mini-ops/resource';
 import { capabilityEdit } from './functions/capability-edit/resource';
+import { forgeWorkshop } from './functions/forge-workshop/resource';
+import { workshopIssuer, workshopSecretArn } from './functions/forge-workshop/infrastructure.mjs';
 
 /**
  * @see https://docs.amplify.aws/react/build-a-backend/ to add storage, functions, and more
@@ -15,7 +18,16 @@ const backend = defineBackend({
   langfuseTraces,
   macMiniOps,
   capabilityEdit,
+  forgeWorkshop,
 });
+
+const workshopStack = Stack.of(backend.forgeWorkshop.resources.lambda);
+backend.forgeWorkshop.addEnvironment('COGNITO_ISSUER', workshopIssuer(workshopStack, backend.auth.resources.userPool.userPoolId));
+backend.forgeWorkshop.resources.lambda.addToRolePolicy(new PolicyStatement({
+  effect: Effect.ALLOW,
+  actions: ['secretsmanager:GetSecretValue'],
+  resources: [workshopSecretArn(workshopStack)],
+}));
 
 backend.langfuseTraces.resources.lambda.addToRolePolicy(
   new PolicyStatement({

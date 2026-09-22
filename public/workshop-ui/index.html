@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#F3F1E7">
+  <meta name="gbauto-theme-id" content="gbauto-theme.v1">
+  <meta name="gbauto-theme-version" content="2026-06-11">
+  <title>Agent Workshop / Studio</title>
+  <!-- Inter and Newsreader from fonts.googleapis.com are bundled locally for offline review. -->
+  <style>
+    :root{--terracotta:#D97757;--terracotta-hover:#B75F43;--ink:#191919;--cream-bg:#F3F1E7;--cream-2:#E6E4D9;--stone:#D6D4C8;--text-mute:#8C8A84;--text-muted-2:#5C5C5C;--font-sans:Inter,sans-serif;--font-serif:Newsreader,serif}
+    body{background:var(--cream-bg);font-family:Inter,sans-serif}
+    h1,h2,h3{font-family:Newsreader,serif}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+  </style>
+  <link rel="stylesheet" href="assets/website.css">
+  <link rel="stylesheet" href="assets/fonts.css">
+  <link rel="stylesheet" href="workshop.css">
+  <link rel="stylesheet" href="designs.css">
+  <link rel="stylesheet" href="mode.css">
+</head>
+<body class="forge" data-design="studio" data-mode="light" data-gbauto-theme="gbauto-theme.v1" data-gbauto-surface="nexus-forge-preview">
+  <a class="skip-link" href="#workspace">Skip to workspace</a>
+  <header class="app-header">
+    <a class="brand" href="/" target="_top" aria-label="GB Automation home"><img class="brand-logo" src="assets/gb-signature.png" width="30" height="28" alt="GB Automation"><span>GB AUTOMATION</span></a>
+    <span class="header-divider"></span>
+    <div class="product-name">Agent Workshop <span class="edition">NEXUS</span></div>
+    <nav class="design-switcher" aria-label="Compare five design variations">
+      <button data-design-choice="studio" aria-pressed="true"><span>01</span> Studio</button>
+      <button data-design-choice="editorial" aria-pressed="false"><span>02</span> Editorial</button>
+      <button data-design-choice="precision" aria-pressed="false"><span>03</span> Precision</button>
+      <button data-design-choice="glass" aria-pressed="false"><span>04</span> Glass</button>
+      <button data-design-choice="contrast" aria-pressed="false"><span>05</span> Contrast</button>
+    </nav>
+    <div class="header-end"><button id="mode-toggle" class="light-button" aria-label="Dark mode" aria-pressed="false" title="Turn on dark mode"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 13.4A8.5 8.5 0 0 1 10.6 3.5a8.5 8.5 0 1 0 9.9 9.9Z"/></svg><span class="mode-label">Dark mode</span></button><button id="compare-designs" class="light-button">Design guide</button><button id="help-button" class="icon-button" aria-label="Workspace help">?</button></div>
+  </header>
+  <div class="workspace-bar">
+    <div class="expert-heading"><span class="expert-mark" aria-hidden="true">Y</span><div><strong>YouTube Intelligence</strong><span>Expert workspace <b>/</b> Built with Hermes</span></div></div>
+    <div class="workspace-actions">
+      <div class="segmented" role="group" aria-label="Workspace view"><button id="workspace-view" aria-pressed="true">Workspace</button><button id="gallery-view" aria-pressed="false">All elements <span>13</span></button></div>
+      <label class="layout-label"><span class="sr-only">Workspace layout</span><select id="layout-select"><option value="balanced">Balanced</option><option value="focus">Focus</option><option value="review">Review</option></select></label>
+      <button id="reset-layout" class="light-button" title="Restore the balanced window arrangement">Reset layout</button>
+      <button id="windows-button" class="light-button" aria-expanded="false" aria-controls="window-launcher">+ Windows</button>
+    </div>
+  </div>
+  <section id="gallery-intro" class="gallery-intro" hidden>
+    <div><span class="eyebrow">THE WINDOW COLLECTION</span><h1>A place for every part of the work.</h1><p>Explore all 13 elements. Mark what works and leave notes for the next iteration.</p></div>
+    <div class="review-summary"><strong id="review-count">0 / 13</strong><span>elements reviewed</span><button id="export-review" class="light-button">Export review <span aria-hidden="true">↗</span></button></div>
+  </section>
+  <main id="workspace" tabindex="-1" aria-label="Expert window workspace"><img class="workspace-watermark" src="assets/gb-signature.png" alt="" aria-hidden="true" draggable="false"><div class="canvas-grid" aria-hidden="true"></div><div id="snap-hint" hidden></div></main>
+  <nav id="dock" class="window-dock" aria-label="Open a workspace window"></nav>
+  <footer class="app-status"><span><i></i> Local preview <b>·</b> Commands and decisions are demonstrations</span><span id="save-status">Layout & review saved in this browser</span></footer>
+  <aside id="window-launcher" class="launcher" aria-label="Window library" hidden><div class="launcher-heading"><div><span class="eyebrow">YOUR WORKSPACE</span><h2>Open a window</h2></div><button id="close-launcher" class="icon-button" aria-label="Close window library">×</button></div><input id="window-search" type="search" placeholder="Find a window…" aria-label="Find a window"><div id="window-list"></div></aside>
+  <dialog id="help-dialog"><form method="dialog"><button class="dialog-close" aria-label="Close help">×</button></form><span class="eyebrow">MAKE YOURSELF AT HOME</span><h2>One workspace. Your arrangement.</h2><p>Drag a window by its title bar. Resize from the bottom-right corner. Drop near a workspace edge to snap, or use the window menu to position it.</p><p>Minimize windows to the dock. Double-click a title bar to maximize. Use <strong>All elements</strong> to review every component.</p><p>Keyboard: focus a title bar and use arrow keys to move; Shift + arrows to resize. Escape closes a menu or restores a maximized window.</p><div class="help-note">This is a design preview. Review marks, sample proposal decisions, and edited settings stay in this browser. Commands do not execute, messages do not reach an agent, and nothing is activated.</div><a href="https://expert-atlas--gbautoxyz.netlify.app/style-guide/library/nexus-forge-workspace.html" target="_blank" rel="noopener">View the design reference ↗</a></dialog>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <dialog id="design-dialog" aria-labelledby="design-dialog-title">
+    <button class="dialog-close" id="close-design-dialog" aria-label="Close design guide">×</button>
+    <span class="eyebrow">FIVE WAYS TO WORK</span>
+    <h2 id="design-dialog-title">Same workshop. A different feel.</h2>
+    <p class="design-intro">Studio is the selected design. Compare five approaches to titles, spacing, surfaces, and depth. Dark mode uses the live website palette and works with every design.</p>
+    <div id="design-cards" class="design-cards"></div>
+    <section class="design-guidance" aria-labelledby="aura-guidance-title"><span class="eyebrow">SPACING & READABILITY</span><h3 id="aura-guidance-title">Design guidance</h3><div id="aura-recommendations"></div></section>
+  </dialog>
+  <script src="source-data.js"></script>
+  <script src="designs.js"></script>
+  <script src="mode.js"></script>
+  <script src="workshop.js"></script>
+  <script src="connected.js"></script>
+</body>
+</html>

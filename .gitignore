@@ -30,3 +30,4 @@ amplify_outputs.json
 
 # Local screenshots and browser evidence for the particle homepage
 artifacts/particle-background/
+artifacts/forge-workshop-validation/

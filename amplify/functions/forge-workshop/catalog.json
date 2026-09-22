@@ -1,0 +1,22 @@
+{
+  "expert_id": "gbautomation/youtube-intel",
+  "profile": "expert-gbautomation-youtube-intel",
+  "source_revision": "bf72dc539d1a54d53c555edeff1dd55a268ae72d",
+  "provider": "openai-codex",
+  "scan_days": 7,
+  "channel_count": 11,
+  "configuration": {
+    "name": "YouTube Intelligence",
+    "purpose": "Turn trusted YouTube sources into cited knowledge, reusable patterns, and useful reports.",
+    "model": "gpt-5.6-sol",
+    "scan_cap": 5,
+    "approvals": "manual"
+  },
+  "recipes": [
+    {
+      "id": "health",
+      "title": "Check expert health",
+      "read_only": true
+    }
+  ]
+}
