@@ -5,15 +5,15 @@
   "files": [
     {
       "path": "forge/index.html",
-      "sha256": "98ea29b37385ab5894e5ed4acf12fbe3fdd110a114cafdf0f17d85430fd20918"
+      "sha256": "32ab5fe119e6ba05449fb2afbb219e49a15c7f1a8add475881a7b2db10c228de"
     },
     {
       "path": "forge/app.js",
-      "sha256": "d99d8e5c076c31b80474e39367dad3da1eac465382d0238e7f4447c6b5753444"
+      "sha256": "3af4ac671f1ce3d65319cbced2bdcf7a5cad72cdb450b3624fc17ff03b561267"
     },
     {
       "path": "forge/style.css",
-      "sha256": "aed5a53c2fef09673d0676f4ed46e567daae1a09de400c3d0f4cb7578f07379b"
+      "sha256": "193b9cbf28412334d7ac156403e6f78c9ed5cfbd1826f028e92bb5e0c290da55"
     },
     {
       "path": "forge/theme.js",
@@ -22,6 +22,10 @@
     {
       "path": "forge/particle-scene.js",
       "sha256": "31bc026e86bfd94768e316407841b7343637793a269fc584c309d1a67857f5e9"
+    },
+    {
+      "path": "forge/template-tree.generated.js",
+      "sha256": "fd64c989b25697ca2fe7e942bcc14697f4188155fb01b9602746a11d401a58aa"
     },
     {
       "path": "forge/gb-signature.png",

@@ -38,6 +38,13 @@ h2{font-size:34px;line-height:1.15;letter-spacing:-.02em}h3{font-size:25px;line-
 .sample,.card,.wizard,.login,.working{background:rgba(14,18,24,.74);border:1px solid #ffffff26;border-radius:24px;padding:32px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 12px 40px #0003}
 .template-tree{margin:24px 0;padding:18px;background:#060a10a6;border:1px solid #ffffff14;border-radius:14px;font:12px/1.9 ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;color:#d5d9df;white-space:pre;overflow:auto;overflow-wrap:normal}
 .template-tree code{font:inherit}.tree-root{color:#fff;font-weight:600}.tree-branch{color:#6e7785}
+.template-tree-full{margin-top:14px}.template-tree-full summary{cursor:pointer;color:#d5d9df;font-size:13px;font-weight:600;padding:6px 2px;list-style:revert;width:fit-content}.template-tree-full summary:focus-visible{outline:2px solid var(--terracotta);outline-offset:3px}
+.tree-full-list{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:8px;max-width:100%}
+.tree-full-list li{background:#060a10a6;border:1px solid #ffffff14;border-radius:10px;padding:9px 12px;font-size:12px;color:#d5d9df;overflow-wrap:break-word}
+.tree-full-list li.is-nested{margin-left:18px}
+.tree-full-list code{font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;color:#fff}
+.tree-full-list .tree-desc{display:block;margin-top:3px;color:#aeb4b8;font-size:11px;line-height:1.5}
+.tree-generated-badge{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:999px;background:rgba(217,119,87,.18);color:var(--terracotta,#D97757);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;vertical-align:middle}
 .meta{display:flex;gap:10px 20px;flex-wrap:wrap;margin-top:25px;font-size:11px;color:#aeb4b8}
 .wizard{max-width:760px;margin:auto;padding:36px 42px}.wizard h1{font-size:clamp(32px,4vw,46px)}
 .progress{height:3px;background:#ffffff25;border-radius:20px;overflow:hidden;margin:14px 0 32px}

@@ -197,19 +197,19 @@ export const portfolioItems = [
     name: 'Meet Transcript Processor',
     Icon: FileText,
     role: 'Post-Session Automation',
-    tagline: 'Transcript In, Linear Issues Out',
+    tagline: 'Transcript In, Reviewable Workstreams Out',
     features: [
       'Gmail transcript pickup',
-      'Linear issue extraction',
+      'Grounded action items extracted',
       'Draft replies generated'
     ],
     capabilities: [
       'Google Meet',
-      'Linear API',
+      'Hermes Kanban',
       'Agent Review'
     ],
-    description: 'Drag-drop a Google Meet transcript, or let Gmail polling pick it up automatically, and get structured Linear issues, action items, and a draft reply without reading the transcript yourself.',
-    technologies: ['FastAPI', 'Vue 3', 'Google Meet API', 'Linear API', 'Claude Code'],
+    description: 'Drag-drop a Google Meet transcript, or let Gmail polling pick it up automatically, and get grounded action items and ranked, PRD-ready workstreams for review, plus a draft reply, without reading the transcript yourself. Nothing dispatches until an operator approves the plan; approved workstreams then go to Hermes Kanban.',
+    technologies: ['FastAPI', 'Vue 3', 'Google Meet API', 'Hermes Kanban', 'Claude Code'],
     useCases: [
       'Post-client-session triage',
       'Sales call follow-up automation',
@@ -217,12 +217,12 @@ export const portfolioItems = [
     ],
     image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=1000&auto=format&fit=crop',
     detailedInfo: {
-      architecture: 'FastAPI backend + Vue 3 frontend. Claude agent team: orchestrator -> meet-fetch -> turn-extract -> dedup -> linear-draft -> validator.',
-      integrations: ['Google Workspace', 'Linear', 'Gmail', 'Claude Code'],
+      architecture: 'FastAPI backend + Vue 3 frontend. Claude agent team: orchestrator -> meet-fetch -> turn-extract -> dedup -> workstream-rank -> validator. Delivery and dispatch run through the reused PRD render/email skill and the operator-approval-gated Hermes Kanban dispatcher.',
+      integrations: ['Google Workspace', 'Hermes Kanban', 'Gmail', 'Claude Code'],
       benefits: [
-        'Zero manual triage',
-        'Every action item captured',
-        'Linear issues in under 2 minutes per session'
+        'Less manual triage',
+        'Action items grounded in transcript evidence',
+        'Ranked, PRD-ready workstreams instead of raw notes, reviewed before anything dispatches'
       ],
       deployment: 'Hosted behind authenticated access with Gmail polling and review queues.'
     }
@@ -233,31 +233,31 @@ export const portfolioItems = [
     name: 'Autonomous Coding Agent',
     Icon: GitPullRequest,
     role: 'Self-Directed Development',
-    tagline: 'Linear Issue to Merged PR, Unattended',
+    tagline: 'Approved Kanban Work to Merged PR, Gate-Checked',
     features: [
-      '15-minute coding loop',
+      'Kanban-dispatched build loop',
       'Isolated git worktrees',
       'Automatic PR summaries'
     ],
     capabilities: [
-      'Linear Queue',
+      'Hermes Kanban',
       'GitHub PRs',
       'Verifier Agent'
     ],
-    description: 'A cron-driven agent loop that scores your Linear backlog, picks the highest-priority issues, writes the code in isolated git worktrees, and opens pull requests around the clock.',
-    technologies: ['Claude Code', 'Linear API', 'GitHub API', 'Python', 'Git worktrees'],
+    description: 'An unattended TAC agent team that picks up operator-approved work from your Hermes Kanban board, writes the code in isolated git worktrees, and merges pull requests once a validator gate and receipt clear the change.',
+    technologies: ['Claude Code', 'Hermes Kanban', 'GitHub API', 'Python', 'Git worktrees'],
     useCases: [
       'Backlog burn-down without sprint planning',
-      'Bug fix SLAs met overnight',
+      'Overnight bug-fix workstreams',
       'Continuous feature development on a fixed budget'
     ],
     image: 'https://images.unsplash.com/photo-1551434678-e076c223a692?q=80&w=1000&auto=format&fit=crop',
     detailedInfo: {
-      architecture: 'Python orchestrator with scoring, parallel worktree execution, authenticated CLI lanes, and verifier reports before PR handoff.',
-      integrations: ['Linear', 'GitHub', 'AWS Secrets Manager', 'Langfuse'],
+      architecture: 'Python orchestrator (tacdispatch) reading operator-approved Hermes Kanban work, parallel isolated-worktree execution, authenticated CLI lanes, and a validator gate plus receipt before PR handoff.',
+      integrations: ['Hermes Kanban', 'GitHub', 'AWS Secrets Manager', 'Langfuse'],
       benefits: [
         'Engineering output without engineering headcount',
-        'PRs open while you sleep',
+        'PRs merge once the validator gate and receipt clear',
         'Full observability via Langfuse'
       ],
       deployment: 'Mac Mini launchd or GitHub Actions with configurable parallelism and per-issue timeouts.'
