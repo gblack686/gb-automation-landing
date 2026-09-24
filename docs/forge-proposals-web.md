@@ -14,8 +14,11 @@ full-screen views continue to use the canonical Forge renderer.
 
 The server reads the existing `agent_os_proposals` table through the existing
 server-only Supabase secret. Every list and detail query pins the tenant to
-`gbautomation`; proposal inventory is tenant-wide because this table has no
-expert FK. Search, state and offset are bounded. Lists return 50 records at
+`gbautomation` and the hosted expert `artist-packet-expert`. Ownership follows
+the `producer_run_id` foreign key to `producer_runs.owner_expert` through an
+inner join with tenant checks on both tables. This scopes counts, search, state,
+pagination and detail reads equally; unassigned and other-expert records are
+excluded. The adapter verifies returned tenant/expert scope too. Search, state and offset are bounded. Lists return 50 records at
 most; details project the saved summary and action items, plus source-event,
 producer and task identifiers. Provider payloads are not returned wholesale.
 
@@ -40,5 +43,6 @@ its source release gate passes. Keep the prior S3 version for rollback. Do not p
 loopback pilot server, operator cookie or bootstrap on the public web.
 
 Release proof must cover actual signed-in proposal list/search/detail reads,
+other-expert and unassigned detail exclusion (including an empty expert inventory),
 foreign-tenant API denial, unsigned S3 denial, matching document SHA-256 and
 disabled writes. Fixture browser tests do not establish live readback.
