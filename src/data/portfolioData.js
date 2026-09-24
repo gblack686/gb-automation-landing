@@ -257,7 +257,7 @@ export const portfolioItems = [
       integrations: ['Hermes Kanban', 'GitHub', 'AWS Secrets Manager', 'Langfuse'],
       benefits: [
         'Engineering output without engineering headcount',
-        'PRs merge once the validator gate and receipt clear, while you sleep',
+        'PRs merge once the validator gate and receipt clear',
         'Full observability via Langfuse'
       ],
       deployment: 'Mac Mini launchd or GitHub Actions with configurable parallelism and per-issue timeouts.'
