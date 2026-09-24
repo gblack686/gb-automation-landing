@@ -22,12 +22,15 @@ await page.route('**/__atlas_fixture',async route=>{
  const request=route.request().postDataJSON();requests.push(request);
  if(fail && request.view!=='document')return route.fulfill({status:503,body:'unavailable'});
  if(request.view==='document')return route.fulfill({json:{url,sha256:mismatch?'0'.repeat(64):sha256,bytes:Buffer.byteLength(html),agent_id:'artist-packet-expert',tenant_id:'gbautomation'}});
+ if(request.view==='approvalSnapshot')return route.fulfill({json:{mode:'live_read_only',workflows:[],connection:{tenant:'gbautomation',writes_enabled:false,review_host:'web'}}});
+ if(request.view==='proposals')return route.fulfill({json:{rows:[{proposal_id:'prop_web',card_title:'Web proposal',source_type:'youtube_transcript',card_type:'expert-portfolio-proposal',state:'gated'}],offset:request.query.offset||0,total:1,limit:50}});
+ if(request.view==='proposal')return route.fulfill({json:{proposal_id:'prop_web',card_title:'Web proposal',source_type:'youtube_transcript',card_type:'expert-portfolio-proposal',state:'gated',summary:'A <script> is text',action_items:['Inspect the brief'],updated_at:'2026-09-24T00:00:00Z'}});
  return route.fulfill({json:{private_fixture:'private runtime value',view:request.view}});
 });
 await page.route(url,route=>route.fulfill({contentType:'text/html',body:html,headers:{'Access-Control-Allow-Origin':base}}));
 const checks=[];
 try {
- await page.goto(base+'/atlas/artist-packet-expert');
+ await page.goto(base+'/atlas/artist-packet-expert',{waitUntil:'domcontentloaded',timeout:60000});
  const iframe=page.locator('iframe[title="Artist Packet Expert Atlas"]');await iframe.waitFor();
  console.log('Private document loaded through the fixture transport');
  assert.equal(await iframe.getAttribute('sandbox'),'allow-scripts allow-downloads allow-popups allow-popups-to-escape-sandbox');
@@ -35,6 +38,20 @@ try {
  await frame.locator('body').waitFor();
  const result=await frame.locator('body').evaluate(async()=>window.ForgeHost.read('history',{view:'sessions'}));
  assert.equal(result.private_fixture,'private runtime value');checks.push('Authenticated host transport returns a bounded private read to the sandbox');
+ const proposals=await frame.locator('body').evaluate(async()=>window.ForgeHost.read('proposals',{search:'brief',offset:0,state:'gated'}));
+ assert.equal(proposals.rows[0].proposal_id,'prop_web');
+ assert(requests.some(r=>r.view==='proposals'&&r.query.search==='brief'&&r.query.state==='gated'));
+ checks.push('Proposal filters pass through the authenticated host');
+ if(process.env.FORGE_ATLAS_HTML) {
+  await page.getByRole('link',{name:'Proposals',exact:true}).click();
+  await frame.locator('[data-native-open="prop_web"]').waitFor();
+  await frame.locator('[data-native-open="prop_web"]').click();
+  assert((await frame.locator('#forge-approval-dialog').innerText()).includes('A <script> is text'));
+  assert.equal(await frame.locator('[data-native-accept]').isDisabled(),true);
+  assert.equal(await frame.locator('#forge-approval-dialog script').count(),0);
+  await frame.getByRole('button',{name:'Close approval review',exact:true}).click();
+  checks.push('Proposals navigation opens the real window; detail escapes stored text and disables writes');
+ }
  assert.equal(await frame.locator('body').evaluate(()=>{try{return !!parent.document;}catch{return false;}}),false);
  assert.equal(await frame.locator('body').evaluate(()=>{try{localStorage.setItem('private','x');return true;}catch{return false;}}),false);checks.push('Document cannot access parent credentials or browser storage');
  const count=requests.length;

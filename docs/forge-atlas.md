@@ -71,3 +71,6 @@ Its count-only receipt is local browser evidence, not proof of runtime capture.
 The S3 SDK and presigner are pinned to the existing AWS SDK version; scoped
 Smithy overrides keep the presigner's types compatible without upgrading the
 rest of Amplify's dependency graph.
+
+The proposal review extension and its release dependency are documented in
+[forge-proposals-web.md](forge-proposals-web.md).

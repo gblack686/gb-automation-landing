@@ -18,10 +18,18 @@ export function requestFor(event, issuer) {
  let input = event.arguments.input;
  if (typeof input === 'string') { try { input = JSON.parse(input); } catch { deny('invalid_request'); } }
  if (!object(input) || JSON.stringify(input).length > 4096 || Object.keys(input).some(k => !['view','query'].includes(k))
-     || !['document','atlas','planning','history'].includes(input.view)) deny('invalid_request');
+     || !['document','atlas','planning','history','approvalSnapshot','proposals','proposal'].includes(input.view)) deny('invalid_request');
  const query = input.query || {};
  if (!object(query)) deny('invalid_request');
- if (input.view !== 'history' && Object.keys(query).length) deny('invalid_request');
+ if (!['history','proposals','proposal'].includes(input.view) && Object.keys(query).length) deny('invalid_request');
+ if (input.view === 'proposals') {
+  if (Object.keys(query).some(k => !['offset','search','state'].includes(k))
+      || (query.offset !== undefined && (!Number.isSafeInteger(query.offset) || query.offset < 0 || query.offset > 100000))
+      || (query.search !== undefined && (typeof query.search !== 'string' || query.search.length > 120 || /[\x00-\x1f\x7f]/.test(query.search)))
+      || (query.state !== undefined && !['','gated','blocked','queued','approved','denied'].includes(query.state))) deny('invalid_request');
+ }
+ if (input.view === 'proposal' && (Object.keys(query).join() !== 'proposal_id'
+     || typeof query.proposal_id !== 'string' || !/^prop_[a-z0-9_]{1,190}$/.test(query.proposal_id))) deny('invalid_request');
  if (input.view === 'history') {
   if (!['sessions','messages','traces'].includes(query.view) || Object.keys(query).some(k => !['view','session_key','message_key','after'].includes(k))) deny('invalid_request');
   for (const key of ['session_key','message_key','after']) if (Object.hasOwn(query,key) && !identity(query[key])) deny('invalid_request');
@@ -71,11 +79,14 @@ export function project(request, raw, now = new Date().toISOString()) {
   captured_at:now,source:'supabase',prds,cards,artifacts:[]};
 }
 
-export function makeHandler({issuer,rpc,document}) {
+export function makeHandler({issuer,rpc,document,proposals}) {
  return async event => {
   try {
    const request = requestFor(event,issuer);
    if (request.view === 'document') return {payload:{ok:true,data:await document()}};
+   if (request.view === 'approvalSnapshot') return {payload:{ok:true,data:{mode:'live_read_only',workflows:[],engineering:null,recipient_options:[],
+    connection:{source:'supabase',tenant:TENANT,agent:EXPERT,writes_enabled:false,email_enabled:false,execution_enabled:false,review_host:'web'}}}};
+   if (['proposals','proposal'].includes(request.view)) return {payload:{ok:true,data:await proposals(request)}};
    const q = request.query;
    const raw = await rpc({p_tenant:TENANT,p_expert:EXPERT,p_view:request.view === 'history' ? q.view : request.view,
     p_session_key:q.session_key || null,p_message_key:q.message_key || null,p_after:q.after || null});
