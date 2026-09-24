@@ -27,14 +27,16 @@ read operation before querying. Returned ownership is checked a second time.
 ## Activation status
 
 This PR enables read-only proposal review. Acceptance, email, scope/plan
-decisions and execution remain disabled. Their implementation is tracked in
-`gbauto/gbautomation#1311`, whose required CI jobs currently cannot start due
-to GitHub's account billing/spending-limit restriction. This read path needs
-no new database migration.
+decisions and execution remain disabled. Their pilot implementation landed in
+`gbauto/gbautomation#1311` after all required checks passed. The billing blocker
+was resolved. This read path needs no new database migration.
 
-The updated renderer/bridge is in that companion PR. Publish its reviewed
-private HTML to the existing versioned bucket only after its source release
-gate passes. Keep the prior S3 version for rollback. Do not publish the
+The selected interface is the newer 13-window Studio, packaged by the monorepo's
+`render_forge_studio_private.py`. It retains the existing authenticated host and
+read APIs. It excludes the public Studio's fixtures, simulation and localStorage.
+Sessions/messages/traces, planning, activity and proposal review remain available.
+Publish its reviewed private HTML to the existing versioned bucket only after
+its source release gate passes. Keep the prior S3 version for rollback. Do not publish the
 loopback pilot server, operator cookie or bootstrap on the public web.
 
 Release proof must cover actual signed-in proposal list/search/detail reads,

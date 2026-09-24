@@ -44,12 +44,20 @@ try {
  checks.push('Proposal filters pass through the authenticated host');
  if(process.env.FORGE_ATLAS_HTML) {
   await page.getByRole('link',{name:'Proposals',exact:true}).click();
+  if(html.includes('private-studio-data')) {
+   await frame.locator('.window.full[data-window="proposals"]').waitFor();
+   await frame.locator('[data-action="proposal-open"]').first().click();
+   await frame.getByText('A <script> is text',{exact:true}).waitFor();
+   assert.equal(await frame.getByRole('button',{name:'Accept proposal',exact:true}).isDisabled(),true);
+   assert.equal(await frame.locator('#proposal-detail script').count(),0);
+  } else {
   await frame.locator('[data-native-open="prop_web"]').waitFor();
   await frame.locator('[data-native-open="prop_web"]').click();
   assert((await frame.locator('#forge-approval-dialog').innerText()).includes('A <script> is text'));
   assert.equal(await frame.locator('[data-native-accept]').isDisabled(),true);
   assert.equal(await frame.locator('#forge-approval-dialog script').count(),0);
   await frame.getByRole('button',{name:'Close approval review',exact:true}).click();
+  }
   checks.push('Proposals navigation opens the real window; detail escapes stored text and disables writes');
  }
  assert.equal(await frame.locator('body').evaluate(()=>{try{return !!parent.document;}catch{return false;}}),false);

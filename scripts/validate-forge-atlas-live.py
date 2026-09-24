@@ -2,6 +2,7 @@
 import argparse
 import hashlib
 import json
+import os
 from pathlib import Path
 import secrets
 import uuid
@@ -30,7 +31,8 @@ def run(args):
         receipt['temporary_user'] = username
         cognito.admin_set_user_password(UserPoolId=pool, Username=username, Password=password, Permanent=True)
         with sync_playwright() as p:
-            browser = p.chromium.launch(channel=args.channel)
+            executable = os.environ.get('PLAYWRIGHT_EXECUTABLE')
+            browser = p.chromium.launch(**({'executable_path': executable} if executable else {'channel': args.channel}))
             try:
                 def login(context):
                     page = context.new_page()
@@ -74,7 +76,7 @@ def run(args):
                 errors = []
                 page.on('pageerror', lambda error: errors.append(type(error).__name__))
                 frame = page.frame_locator('iframe[title="Artist Packet Expert Atlas"]')
-                expect(frame.locator('#history-refresh')).to_be_enabled(timeout=60000)
+                expect(frame.locator('.nav-window[data-nav="proposals"]')).to_be_visible(timeout=60000)
                 doc = read(page, {'view': 'document'})
                 assert doc['ok'] and doc['data']['tenant_id'] == 'gbautomation'
                 response = owned.request.get(doc['data']['url'])
@@ -92,20 +94,48 @@ def run(args):
                     assert value['data']['source'] == 'supabase'
                     snapshots[view] = value['data']
                 assert read(page, {'view': 'document', 'tenant': 'other'})['ok'] is False
-                frame.locator('.dock-button[data-open="history"]').click()
-                frame.locator('#window-history .maximize').click()
-                frame.locator('#history-refresh').click()
-                expect(frame.locator('#history-status')).to_contain_text('Supabase')
+                frame.locator('.nav-window[data-nav="chat"]').click()
+                expect(frame.locator('[data-status="history"]')).to_contain_text('Supabase')
+                proposal_page = read(page, {'view': 'proposals', 'query': {}})
+                assert proposal_page['ok'] and proposal_page['data']['total'] > 0
+                first = proposal_page['data']['rows'][0]
+                detail = read(page, {'view': 'proposal', 'query': {'proposal_id': first['proposal_id']}})
+                assert detail['ok'] and detail['data']['proposal_id'] == first['proposal_id']
+                filtered = read(page, {'view': 'proposals', 'query': {'search': first['card_title'][:120]}})
+                assert filtered['ok'] and filtered['data']['total'] > 0
+                frame.locator('.nav-window[data-nav="proposals"]').click()
+                frame.locator('[data-action="proposal-open"]').first.click()
+                expect(frame.locator('[data-status="proposal"]')).to_contain_text('Supabase')
+                expect(frame.get_by_role('button', name='Accept proposal', exact=True)).to_be_disabled()
+                frame.locator('input[name="search"]').fill(first['card_title'][:120])
+                frame.locator('#proposal-search button').click()
+                expect(frame.locator('[data-status="proposals"]')).to_contain_text('Supabase')
+                snapshot = read(page, {'view': 'approvalSnapshot'})
+                assert snapshot['ok']
+                assert all(snapshot['data']['connection'][flag] is False for flag in ['writes_enabled','email_enabled','execution_enabled'])
+                receipt['checks'].append('Real proposal list, title search and detail load in Studio; decisions, email and execution remain disabled')
                 assert not errors
                 receipt['counts'] = {'sessions': len(snapshots['history']['rows']),
+                    'tenant_proposals': proposal_page['data']['total'],
                     'prds': len(snapshots['planning']['prds']), 'cards': len(snapshots['planning']['cards']),
                     **{name: len(rows) for name, rows in snapshots['atlas']['datasets'].items() if name != 'sessions'}}
                 receipt['checks'].append('Live scoped Supabase projections load and the Sessions window renders them')
                 receipt['capture_verified'] = False
                 receipt['ok'] = True
                 receipt['stage'] = 'complete'
+                args.output.write_text(json.dumps(receipt, indent=2) + '\n', encoding='utf-8')
                 owned.close()
             finally:
+                # Remove the canary before browser teardown, which can hang on Windows.
+                if username:
+                    cognito.admin_delete_user(UserPoolId=pool, Username=username)
+                    try:
+                        cognito.admin_get_user(UserPoolId=pool, Username=username)
+                        raise RuntimeError('Canary account still exists')
+                    except cognito.exceptions.UserNotFoundException:
+                        receipt['temporary_user_deleted'] = True
+                        username = None
+                    args.output.write_text(json.dumps(receipt, indent=2) + '\n', encoding='utf-8')
                 browser.close()
     finally:
         try:
