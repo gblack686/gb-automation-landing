@@ -23,8 +23,8 @@ await page.route('**/__atlas_fixture',async route=>{
  if(fail && request.view!=='document')return route.fulfill({status:503,body:'unavailable'});
  if(request.view==='document')return route.fulfill({json:{url,sha256:mismatch?'0'.repeat(64):sha256,bytes:Buffer.byteLength(html),agent_id:'artist-packet-expert',tenant_id:'gbautomation'}});
  if(request.view==='approvalSnapshot')return route.fulfill({json:{mode:'live_read_only',workflows:[],connection:{tenant:'gbautomation',writes_enabled:false,review_host:'web'}}});
- if(request.view==='proposals')return route.fulfill({json:{rows:[{proposal_id:'prop_web',card_title:'Web proposal',source_type:'youtube_transcript',card_type:'expert-portfolio-proposal',state:'gated'}],offset:request.query.offset||0,total:1,limit:50}});
- if(request.view==='proposal')return route.fulfill({json:{proposal_id:'prop_web',card_title:'Web proposal',source_type:'youtube_transcript',card_type:'expert-portfolio-proposal',state:'gated',summary:'A <script> is text',action_items:['Inspect the brief'],updated_at:'2026-09-24T00:00:00Z'}});
+ if(request.view==='proposals')return route.fulfill({json:{tenant_id:'gbautomation',agent_id:'artist-packet-expert',rows:[{tenant_id:'gbautomation',agent_id:'artist-packet-expert',proposal_id:'prop_web',card_title:'Web proposal',source_type:'youtube_transcript',card_type:'expert-portfolio-proposal',state:'gated'}],offset:request.query.offset||0,total:1,limit:50}});
+ if(request.view==='proposal')return route.fulfill({json:{tenant_id:'gbautomation',agent_id:'artist-packet-expert',proposal_id:'prop_web',card_title:'Web proposal',source_type:'youtube_transcript',card_type:'expert-portfolio-proposal',state:'gated',summary:'A <script> is text',action_items:['Inspect the brief'],updated_at:'2026-09-24T00:00:00Z'}});
  return route.fulfill({json:{private_fixture:'private runtime value',view:request.view}});
 });
 await page.route(url,route=>route.fulfill({contentType:'text/html',body:html,headers:{'Access-Control-Allow-Origin':base}}));

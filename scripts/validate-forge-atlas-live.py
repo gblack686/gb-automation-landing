@@ -97,26 +97,44 @@ def run(args):
                 frame.locator('.nav-window[data-nav="chat"]').click()
                 expect(frame.locator('[data-status="history"]')).to_contain_text('Supabase')
                 proposal_page = read(page, {'view': 'proposals', 'query': {}})
-                assert proposal_page['ok'] and proposal_page['data']['total'] > 0
-                first = proposal_page['data']['rows'][0]
-                detail = read(page, {'view': 'proposal', 'query': {'proposal_id': first['proposal_id']}})
-                assert detail['ok'] and detail['data']['proposal_id'] == first['proposal_id']
-                filtered = read(page, {'view': 'proposals', 'query': {'search': first['card_title'][:120]}})
-                assert filtered['ok'] and filtered['data']['total'] > 0
+                def expert_scope(value):
+                    return value.get('tenant_id') == 'gbautomation' and value.get('agent_id') == 'artist-packet-expert'
+                assert proposal_page['ok'] and expert_scope(proposal_page['data'])
+                assert all(expert_scope(row) for row in proposal_page['data']['rows'])
                 frame.locator('.nav-window[data-nav="proposals"]').click()
-                frame.locator('[data-action="proposal-open"]').first.click()
-                expect(frame.locator('[data-status="proposal"]')).to_contain_text('Supabase')
-                expect(frame.get_by_role('button', name='Accept proposal', exact=True)).to_be_disabled()
-                frame.locator('input[name="search"]').fill(first['card_title'][:120])
+                expect(frame.locator('[data-status="proposals"]')).to_contain_text('Supabase')
+                if proposal_page['data']['rows']:
+                    first = proposal_page['data']['rows'][0]
+                    detail = read(page, {'view': 'proposal', 'query': {'proposal_id': first['proposal_id']}})
+                    assert detail['ok'] and expert_scope(detail['data']) and detail['data']['proposal_id'] == first['proposal_id']
+                    frame.locator('[data-action="proposal-open"]').first.click()
+                    expect(frame.locator('[data-status="proposal"]')).to_contain_text('Supabase')
+                    expect(frame.get_by_role('button', name='Accept proposal', exact=True)).to_be_disabled()
+                    search = first['card_title'][:120]
+                else:
+                    assert proposal_page['data']['total'] == 0
+                    expect(frame.locator('.cards')).to_contain_text('No proposals for this expert')
+                    expect(frame.locator('[data-action="proposal-next"]')).to_be_disabled()
+                    search = 'scope'
+                filtered = read(page, {'view': 'proposals', 'query': {'search': search, 'state': 'gated'}})
+                assert filtered['ok'] and expert_scope(filtered['data'])
+                assert filtered['data']['total'] <= proposal_page['data']['total']
+                assert all(expert_scope(row) for row in filtered['data']['rows'])
+                for proposal_id in args.excluded_proposal:
+                    excluded = read(page, {'view': 'proposal', 'query': {'proposal_id': proposal_id}})
+                    assert excluded['ok'] and excluded['data'] is None
+                receipt['excluded_proposals_checked'] = len(args.excluded_proposal)
+                assert read(page, {'view': 'proposals', 'query': {'agent_id': 'other-expert'}})['ok'] is False
+                frame.locator('input[name="search"]').fill(search)
                 frame.locator('#proposal-search button').click()
                 expect(frame.locator('[data-status="proposals"]')).to_contain_text('Supabase')
                 snapshot = read(page, {'view': 'approvalSnapshot'})
                 assert snapshot['ok']
                 assert all(snapshot['data']['connection'][flag] is False for flag in ['writes_enabled','email_enabled','execution_enabled'])
-                receipt['checks'].append('Real proposal list, title search and detail load in Studio; decisions, email and execution remain disabled')
+                receipt['checks'].append('Real expert-scoped proposal list and search load; excluded detail IDs return null; decisions, email and execution remain disabled')
                 assert not errors
                 receipt['counts'] = {'sessions': len(snapshots['history']['rows']),
-                    'tenant_proposals': proposal_page['data']['total'],
+                    'expert_proposals': proposal_page['data']['total'],
                     'prds': len(snapshots['planning']['prds']), 'cards': len(snapshots['planning']['cards']),
                     **{name: len(rows) for name, rows in snapshots['atlas']['datasets'].items() if name != 'sessions'}}
                 receipt['checks'].append('Live scoped Supabase projections load and the Sessions window renders them')
@@ -161,6 +179,7 @@ if __name__ == '__main__':
     parser.add_argument('--output', type=Path, default=Path('artifacts/forge-atlas-validation/live.json'))
     parser.add_argument('--channel', default='chrome')
     parser.add_argument('--create-test-user', required=True, action='store_true')
+    parser.add_argument('--excluded-proposal', required=True, action='append', help='Verified existing proposal ID outside the selected expert; repeat for unassigned records')
     args = parser.parse_args()
     try:
         print(json.dumps(run(args)))
