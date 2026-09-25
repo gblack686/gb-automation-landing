@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {newJob,transition,QUOTES,digest,assetKey,VisualError,inputHash,defaultCardText,stagesFor} from './domain.mjs';
 import {makeVisualHandler} from './api.mjs';
 import {makeWorker} from './worker.mjs';
-import {promptFor,imageEditInputs} from './providers.mjs';
+import {promptFor,imageEditInputs,providers as realProviders} from './providers.mjs';
 import {packetFor} from './packet.mjs';
 import {optimize} from './optimize.mjs';
 import {CONFIG_SHA} from '../forge-atlas/contract.mjs';
@@ -128,4 +128,13 @@ test('card text limits, missing outputs and legacy packets are explicit',()=>{
 test('uncertain full-card submission cannot repeat its charge',async()=>{
  const d=await fixture(false),w=worker(d);await start(d,'portrait');await w(id);await approve(d,'portrait');await saveCardText(d);
  d.providers.image=async()=>{d.counts.image++;throw Error('uncertain');};await start(d,'agent_card');await w(id);await w(id);assert.equal(d.counts.image,2);assert.equal((await d.store.get(id)).value.status,'outcome_unknown');
+});
+test('both Scryfall image downloads identify the client and preserve distinct source pixels',async()=>{
+ const original=globalThis.fetch,downloads=[];
+ globalThis.fetch=async(url,options)=>{
+  if(String(url).startsWith('https://api.scryfall.com/'))return new Response(JSON.stringify({id,name:'Reference',image_uris:{art_crop:'https://cards.scryfall.io/art_crop/a.jpg',normal:'https://cards.scryfall.io/normal/a.jpg'},mana_cost:'{U}',type_line:'Creature',power:'0',toughness:'2'}));
+  assert.equal(options.headers['User-Agent'],'GBAutoForge/1.0');assert.equal(options.headers.Accept,'image/jpeg');assert.equal(options.redirect,'error');
+  downloads.push(String(url));return new Response(String(url).includes('art_crop')?'art-only pixels':'full-frame pixels');
+ };
+ try{const result=await realProviders.card({card:{scryfall_id:id,face_index:0}});assert.equal(result.bytes.toString(),'art-only pixels');assert.equal(result.full.toString(),'full-frame pixels');assert.equal(result.metadata.power,'0');assert.equal(downloads.length,2);}finally{globalThis.fetch=original;}
 });
