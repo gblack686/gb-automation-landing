@@ -89,7 +89,8 @@ test('prompts use the chosen identity without a global samurai palette',()=>{
 });
 test('web optimization measures the actual binary and blocks external glTF resources',async()=>{
  const doc=new Document(),buffer=doc.createBuffer();const positions=doc.createAccessor().setBuffer(buffer).setType('VEC3').setArray(new Float32Array([0,0,0,1,0,0,0,1,0]));
- const texture=doc.createTexture().setImage(await sharp({create:{width:3000,height:2000,channels:4,background:'#be5e40'}}).png().toBuffer()).setMimeType('image/png');
+ const pixels=Buffer.alloc(3000*2000*3);for(let n=0;n<pixels.length;n+=3){pixels[n]=Math.floor(n/3)%256;pixels[n+1]=Math.floor(n/9000)%256;pixels[n+2]=128;}
+ const texture=doc.createTexture().setImage(await sharp(pixels,{raw:{width:3000,height:2000,channels:3}}).png().toBuffer()).setMimeType('image/png');
  const material=doc.createMaterial().setBaseColorTexture(texture),uv=doc.createAccessor().setBuffer(buffer).setType('VEC2').setArray(new Float32Array([0,0,1,0,0,1]));
  const mesh=doc.createMesh().addPrimitive(doc.createPrimitive().setAttribute('POSITION',positions).setAttribute('TEXCOORD_0',uv).setMaterial(material));doc.createScene().addChild(doc.createNode().setMesh(mesh));
  const bytes=Buffer.from(await new NodeIO().writeBinary(doc)),result=await optimize(bytes);assert.equal(result.metrics.triangles,1);assert.equal(result.metrics.max_texture_edge_px,2048);assert.equal(result.metrics.passed,true);assert.equal(result.bytes.readUInt32LE(0),0x46546c67);
