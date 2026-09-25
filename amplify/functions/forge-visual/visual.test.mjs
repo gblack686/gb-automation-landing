@@ -67,7 +67,7 @@ test('complete pipeline preserves references, task IDs, budgets and reviewed act
   assert.equal((await d.store.get(id)).value.status,'review');await approve(d,stage);
  }
  const j=(await d.store.get(id)).value;assert.equal(j.status,'ready');assert.equal(d.counts.image,2);assert.equal(d.counts.submit,2);assert.equal(j.stages.web.actual_credits,5);
- const h=makeVisualHandler({issuer,...d});assert.equal((await h(event({action:'adopt',id,revision:j.revision,sha256:j.assets.web.sha256}))).payload.ok,true);assert.equal((await d.store.active()).id,id);
+ const h=makeVisualHandler({issuer,...d});assert.equal((await h(event({action:'adopt',id,revision:j.revision,sha256:j.assets.web.sha256}))).payload.ok,true);assert.equal((await d.store.active()).id,id);assert.equal((await d.store.active()).card.name,'Selected printing');
 });
 test('asset URLs are selected by role and cannot escape the expert run',async()=>{
  const d=await fixture(),h=makeVisualHandler({issuer,...d});assert.equal((await h(event({action:'asset',id,stage:'../../index'},false))).payload.ok,false);

@@ -18,7 +18,7 @@ export function makeVisualHandler({issuer,store,queue,now=()=>new Date().toISOSt
      result=await store.sign(asset);
     } else if(input.action==='adopt') {
      if(input.revision!==job.revision||job.status!=='ready'||input.sha256!==job.assets.web?.sha256||!job.stages.web?.metrics?.passed||Object.values(job.stages).some(s=>s.review?.decision!=='approve'))fail('release_not_ready');
-     const active={schema:'forge-visual-active.v1',id:job.id,tenant_id:job.tenant_id,expert_id:job.expert_id,config_sha256:job.config_sha256,portrait:job.assets.portrait,web:job.assets.web,approved_by:actor,approved_at:now()};
+     const active={schema:'forge-visual-active.v1',id:job.id,tenant_id:job.tenant_id,expert_id:job.expert_id,config_sha256:job.config_sha256,portrait:job.assets.portrait,web:job.assets.web,card:job.assets.card?.printing||null,approved_by:actor,approved_at:now()};
      await store.activate(active);result=active;
     } else if(input.action==='resume') {
      if(input.revision!==job.revision||!['queued','working','running','poll_error','outcome_unknown','needs_optimization','preflight_failed'].includes(job.status))fail('resume_not_available');
