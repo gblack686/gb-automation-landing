@@ -35,7 +35,9 @@ export default function ForgeAtlas() {
      const current=await visualRequest({action:'active'});payload=null;
      if(current){
       const encode=bytes=>{let binary='';for(let p=0;p<bytes.length;p+=8192)binary+=String.fromCharCode(...bytes.subarray(p,p+8192));return 'data:image/png;base64,'+btoa(binary);};
-      const r=await visualAsset(current.id,'portrait',abort.signal);payload={id:current.id,portrait:encode(r.bytes),sha256:r.asset.sha256,credit:current.card||null};
+      if(current.tenant_id!=='gbautomation'||current.expert_id!=='artist-packet-expert')throw Error('Wrong visual identity');
+      const r=await visualAsset(current.id,'portrait',abort.signal);payload={id:current.id,tenant_id:current.tenant_id,expert_id:current.expert_id,portrait:encode(r.bytes),sha256:r.asset.sha256,credit:current.card||null};
+      if(current.avatars?.avatar64){const icon=await visualAsset(current.id,'avatar64',abort.signal);if(icon.asset.sha256!==current.avatars.avatar64.sha256||icon.asset.input_sha256!==r.asset.sha256)throw Error('Wrong avatar lineage');payload.avatar_icon=encode(icon.bytes);payload.avatar_icon_sha256=icon.asset.sha256;}
       if(current.agent_card){const card=await visualAsset(current.id,'agent_card',abort.signal);payload.agent_card=encode(card.bytes);payload.agent_card_sha256=card.asset.sha256;}
      }
     }else payload = await readAtlas(message.view,message.input);

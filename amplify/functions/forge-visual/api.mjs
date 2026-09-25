@@ -15,13 +15,14 @@ export function makeVisualHandler({issuer,store,queue,now=()=>new Date().toISOSt
     if(input.action==='get')result=publicJob(job);
     else if(input.action==='packet')result={manifest:packetFor(job),receipt:publicJob(job)};
     else if(input.action==='asset') {
-     if(!['card','source_card','agent_card','portrait','character','web','master'].includes(input.stage))fail('invalid_request');
+     if(!['card','source_card','agent_card','portrait','character','web','master','avatar32','avatar64','avatar128'].includes(input.stage))fail('invalid_request');
      const asset=job.assets[input.stage];if(!asset||asset.key!==assetKey(job,input.stage))fail('asset_not_ready');
      result=await store.sign(asset);
     } else if(input.action==='adopt') {
      if(input.revision!==job.revision||job.status!=='ready'||input.sha256!==job.assets.web?.sha256||!job.stages.web?.metrics?.passed||Object.values(job.stages).some(s=>s.review?.decision!=='approve'))fail('release_not_ready');
      packetFor(job);
      const active={schema:'forge-visual-active.v1',id:job.id,tenant_id:job.tenant_id,expert_id:job.expert_id,config_sha256:job.config_sha256,portrait:job.assets.portrait,agent_card:job.assets.agent_card||null,web:job.assets.web,card:job.assets.card?.printing||null,approved_by:actor,approved_at:now()};
+     active.avatars=Object.fromEntries(['avatar32','avatar64','avatar128'].filter(role=>job.assets[role]).map(role=>[role,job.assets[role]]));
      await store.activate(active);result=active;
     } else if(input.action==='resume') {
      if(input.revision!==job.revision||!['queued','working','running','poll_error','outcome_unknown','needs_optimization','preflight_failed'].includes(job.status))fail('resume_not_available');

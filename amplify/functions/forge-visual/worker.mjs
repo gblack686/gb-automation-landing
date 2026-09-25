@@ -1,14 +1,24 @@
 import {assertJob,stagesFor,defaultCardText,VisualError} from './domain.mjs';
+import {deriveAvatarIcons} from './avatar-icons.mjs';
 
 // Durable state is written BEFORE each billable submission. SQS delivery is at
 // least once; a delivery retry may poll/recover, but never repeats a paid POST.
-export function makeWorker({store,queue,providers,optimize,now=()=>new Date().toISOString()}) {
+export function makeWorker({store,queue,providers,optimize,deriveIcons=deriveAvatarIcons,now=()=>new Date().toISOString()}) {
  return async id=>{
   let record=await store.get(id);if(!record)return;
   let job=assertJob(record.value,id),stage=job.stage;
   if(!stagesFor(job).includes(stage)||['draft','review','ready','rejected','failed'].includes(job.status))return;
   const save=async()=>{job.revision++;job.updated_at=now();await store.put(job,record.etag);record=await store.get(id);job=record.value;};
   const finish=async(asset,receipt={})=>{
+   job.assets[stage]=asset;
+   // Recovery also enters here: derivation can resume without another paid POST.
+   if(stage==='portrait'&&job.output_version===2){
+    for(const icon of await deriveIcons(await store.bytes(job,'portrait'))){
+     const found=await store.recover(job,icon.role,asset.sha256);
+     job.assets[icon.role]={...(found||await store.output(job,icon.role,icon.bytes,asset.sha256)),width:icon.size,height:icon.size,derivation:'centre-square-lanczos3-v1'};
+    }
+    receipt={...receipt,derived_avatars:['avatar32','avatar64','avatar128'].map(role=>({role,...job.assets[role]}))};
+   }
    job.assets[stage]=asset;job.stages[stage].status='review';job.status='review';job.stages[stage].completed_at=now();
    job.stages[stage].receipt=receipt;delete job.stages[stage].error;
    await store.receipt(job,stage,{schema:'forge-visual-generation-receipt.v1',tenant_id:job.tenant_id,expert_id:job.expert_id,config_sha256:job.config_sha256,run_id:id,stage,input_sha256:job.stages[stage].input_sha256,artifact:asset,...receipt});

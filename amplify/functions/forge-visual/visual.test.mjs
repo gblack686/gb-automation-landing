@@ -5,6 +5,8 @@ import {makeVisualHandler} from './api.mjs';
 import {makeWorker} from './worker.mjs';
 import {promptFor,imageEditInputs,providers as realProviders} from './providers.mjs';
 import {packetFor} from './packet.mjs';
+import {cardTextVariants} from './card-variants.mjs';
+import {deriveAvatarIcons} from './avatar-icons.mjs';
 import {optimize} from './optimize.mjs';
 import {CONFIG_SHA} from '../forge-atlas/contract.mjs';
 import {Document,NodeIO} from '@gltf-transform/core';
@@ -22,11 +24,11 @@ function memory(){
  const providers={preflight:async()=>{},card:async()=>({bytes:Buffer.from('card pixels'),full:Buffer.from('full card pixels'),metadata:{name:'Selected printing',mana_cost:'{1}{W}{B}{R}',type_line:'Legendary Creature ? Human Samurai',power:'3',toughness:'4'}}),image:async(job,stage,bytes)=>{counts.image++;if(stage==='agent_card'){assert.equal(bytes.source_card.toString(),'full card pixels');assert.equal(bytes.portrait.toString(),'portrait pixels');}else assert(bytes.length);return {bytes:Buffer.from(stage+' pixels'),receipt:{usage:{total_tokens:20}}};},meshSubmit:async()=>{counts.submit++;return id;},meshPoll:async()=>{counts.poll++;return {status:'SUCCEEDED',credits:30,url:'private output'};},meshDownload:async()=>Buffer.from('model bytes')};
  return {store,queue,providers,counts,states,assets};
 }
-async function fixture(legacy=true){const deps=memory(),job=newJob(id,brief(),actor,time);if(legacy)delete job.pipeline_version;await deps.store.put(job,null);return deps;}
+async function fixture(legacy=true){const deps=memory(),job=newJob(id,brief(),actor,time);if(legacy){delete job.pipeline_version;delete job.output_version;}await deps.store.put(job,null);return deps;}
 async function start(deps,stage){const r=await deps.store.get(id),j=r.value;const sha=inputHash(j,stage);
  await deps.store.put(transition(j,{action:'start',id,stage,revision:j.revision,sha256:sha,quote:QUOTES[stage]},actor,time),r.etag);}
 async function approve(deps,stage){const r=await deps.store.get(id),j=r.value;await deps.store.put(transition(j,{action:'review',id,stage,revision:j.revision,sha256:j.assets[stage].sha256,decision:'approve'},actor,time),r.etag);}
-const worker=deps=>makeWorker({...deps,now:()=>time,optimize:async()=>({bytes:Buffer.from('web model'),metrics:{passed:true,triangles:20,max_texture_edge_px:1024,bytes:9}})});
+const worker=deps=>makeWorker({...deps,deriveIcons:async()=>[32,64,128].map(size=>({role:`avatar${size}`,size,bytes:Buffer.from(`icon ${size}`)})),now:()=>time,optimize:async()=>({bytes:Buffer.from('web model'),metrics:{passed:true,triangles:20,max_texture_edge_px:1024,bytes:9}})});
 test('auth, operator role and expert binding deny before writes',async()=>{
  const d=memory(),handler=makeVisualHandler({issuer,...d});
  const request=event({action:'create',id,brief:brief()});delete request.identity;assert.equal((await handler(request)).payload.ok,false);
@@ -115,9 +117,11 @@ test('full-card workflow binds both pixel inputs and exact editable text; 3D kee
  await start(d,'agent_card');await w(id);await assert.rejects(()=>saveCardText(d,{title:'Late edit'}),/stage_not_ready/);await approve(d,'agent_card');
  j=(await d.store.get(id)).value;assert.equal(inputHash(j,'character'),j.assets.portrait.sha256);assert.notEqual(inputHash(j,'character'),j.assets.agent_card.sha256);
  for(const stage of ['character','master','web']){await start(d,stage);await w(id);if(stage!=='character'){d.providers.meshPoll=async()=>({status:'SUCCEEDED',credits:stage==='master'?30:5,url:'private output'});await w(id);}await approve(d,stage);}
- j=(await d.store.get(id)).value;const packet=packetFor(j);assert.equal(packet.files.length,7);assert.equal(d.counts.image,3);assert.equal(d.counts.submit,2);assert.deepEqual(packet.lineage.master,['character']);assert.equal(packet.card_text.title,'Packet Sage');
- const handler=makeVisualHandler({issuer,...d});assert.equal((await handler(event({action:'packet',id},false))).payload.data.manifest.files.length,7);
+ j=(await d.store.get(id)).value;const packet=packetFor(j);assert.equal(packet.files.length,10);assert.equal(d.counts.image,3);assert.equal(d.counts.submit,2);assert.deepEqual(packet.lineage.master,['character']);assert.equal(packet.card_text.title,'Packet Sage');
+ const handler=makeVisualHandler({issuer,...d});assert.equal((await handler(event({action:'packet',id},false))).payload.data.manifest.files.length,10);
  assert.equal((await handler(event({action:'adopt',id,revision:j.revision,sha256:j.assets.web.sha256}))).payload.ok,true);assert.equal((await d.store.active()).agent_card.sha256,j.assets.agent_card.sha256);
+ const legacy=structuredClone(j);delete legacy.output_version;for(const role of ['avatar32','avatar64','avatar128'])delete legacy.assets[role];assert.equal(packetFor(legacy).files.length,7);
+ const wrongIcon=structuredClone(j);wrongIcon.assets.avatar64.input_sha256='0'.repeat(64);assert.throws(()=>packetFor(wrongIcon),/packet_not_ready/);
  j.stages.agent_card.review.sha256='0'.repeat(64);assert.throws(()=>packetFor(j),/packet_not_ready/);
 });
 test('card text limits, missing outputs and legacy packets are explicit',()=>{
@@ -137,4 +141,24 @@ test('both Scryfall image downloads identify the client and preserve distinct so
   downloads.push(String(url));return new Response(String(url).includes('art_crop')?'art-only pixels':'full-frame pixels');
  };
  try{const result=await realProviders.card({card:{scryfall_id:id,face_index:0}});assert.equal(result.bytes.toString(),'art-only pixels');assert.equal(result.full.toString(),'full-frame pixels');assert.equal(result.metadata.power,'0');assert.equal(downloads.length,2);}finally{globalThis.fetch=original;}
+});
+
+test('avatar PNG derivation preserves palette, dimensions and deterministic bytes',async()=>{
+ const source=await sharp({create:{width:512,height:512,channels:4,background:'#334477'}}).png().toBuffer();
+ const icons=await deriveAvatarIcons(source),again=await deriveAvatarIcons(source);
+ for(const [index,icon] of icons.entries()){const meta=await sharp(icon.bytes).metadata();assert.equal(meta.width,icon.size);assert.equal(meta.height,icon.size);assert.equal(meta.format,'png');assert.equal(digest(icon.bytes),digest(again[index].bytes));const {data}=await sharp(icon.bytes).raw().toBuffer({resolveWithObject:true});assert.deepEqual([...data.subarray(0,3)],[51,68,119]);}
+ await assert.rejects(()=>deriveAvatarIcons(Buffer.from('invalid')));
+});
+test('partial icon derivation resumes with the saved portrait and never buys another image',async()=>{
+ const d=await fixture(false);let crashed=false;const output=d.store.output;
+ d.store.output=async(j,role,...args)=>{if(role==='avatar64'&&!crashed){crashed=true;throw Error('interrupted');}return output(j,role,...args);};
+ await start(d,'portrait');await worker(d)(id);assert.equal((await d.store.get(id)).value.status,'outcome_unknown');
+ await worker(d)(id);const j=(await d.store.get(id)).value;assert.equal(j.status,'review');assert.equal(d.counts.image,1);
+ for(const size of [32,64,128])assert.equal(j.assets[`avatar${size}`].input_sha256,j.assets.portrait.sha256);
+});
+test('local text treatments can be mixed and are bound to the saved card text',()=>{
+ const j=newJob(id,brief(),actor,time);j.stage='agent_card';j.card_text=defaultCardText(j);
+ const variants=cardTextVariants(j);assert.equal(variants.variants.length,3);assert.equal(variants.method,'local-role-templates');
+ const chosen={...j.card_text,title:variants.variants[1].text.title,abilities:variants.variants[2].text.abilities,quote:variants.variants[0].text.quote};
+ const saved=transition(j,{action:'card_text',id,revision:0,card_text:chosen},actor,time);assert.deepEqual(saved.card_text,chosen);assert.notEqual(inputHash(j,'agent_card'),inputHash(saved,'agent_card'));
 });
