@@ -65,6 +65,7 @@ try{
   assert.equal(actions.filter(a=>a.action==='start').length,['portrait','agent_card','character','master','web'].indexOf(stage));
   await page.getByRole('button',{name:'Approve charge & generate',exact:true}).click();
   if(stage==='master')await page.getByRole('button',{name:/Load master/}).click();
+  if(stage==='portrait'){await page.getByRole('button',{name:'Approve & continue',exact:true}).waitFor();await page.getByRole('button',{name:'View full output package',exact:true}).click();assert.equal(await page.locator('.visual-preview').count(),0);assert(await page.getByRole('button',{name:'Approve & continue',exact:true}).isDisabled());await page.getByRole('button',{name:'Inspect Agent portrait',exact:true}).click();}
   const approve=page.getByRole('button',{name:'Approve & continue',exact:true});await approve.waitFor();
   await page.waitForFunction(()=>[...document.querySelectorAll('button')].some(b=>b.textContent==='Approve & continue'&&!b.disabled));
   if(['master','web'].includes(stage)){for(const name of ['Front','Side','Back'])await page.getByRole('button',{name,exact:true}).click();assert.equal(await page.locator('canvas').count(),1);}
@@ -77,6 +78,6 @@ try{
  const manifest=JSON.parse(strFromU8(zip['manifest.json']));for(const f of manifest.files)assert.equal(digest(zip[f.filename]),f.sha256);
  await page.getByRole('button',{name:'View full output package',exact:true}).click();await page.screenshot({path:out+'/output-package-desktop.png'});await page.setViewportSize({width:390,height:844});assert(await page.locator('.forge-visual-dialog').evaluate(e=>e.scrollWidth<=e.clientWidth+1));await page.screenshot({path:out+'/visual-review-mobile.png'});
  assert.deepEqual(errors,[]);assert.equal(actions.filter(a=>a.action==='start').length,5);
- const receipt={ok:true,checks:['Saving does not generate','Whole-card and per-field variants preview before saving and charge','ZIP contains ten verified assets and five metadata records','Each paid stage requires separate bound confirmation','Rendered output required before review','Actual GLTFLoader front/side/back controls','Web gate before adoption','Mobile fit','No JavaScript errors'],providers:'synthetic; no charges'};
+ const receipt={ok:true,checks:['Saving does not generate','Whole-card and per-field variants preview before saving and charge','ZIP contains ten verified assets and five metadata records','Each paid stage requires separate bound confirmation','Hidden package assets cannot satisfy visible stage inspection','Actual GLTFLoader front/side/back controls','Web gate before adoption','Mobile fit','No JavaScript errors'],providers:'synthetic; no charges'};
  await writeFile(out+'/visual-browser.json',JSON.stringify(receipt,null,2));console.log(JSON.stringify(receipt));
 }catch(error){await page.screenshot({path:out+'/visual-failure.png',fullPage:true});console.error(JSON.stringify({error:String(error),errors,actions:actions.map(a=>a.action)}));throw error;}finally{await browser.close();}
