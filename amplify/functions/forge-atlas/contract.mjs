@@ -9,10 +9,14 @@ const deny = code => { throw new ReadError(code); };
 const object = value => value && typeof value === 'object' && !Array.isArray(value);
 const identity = value => typeof value === 'string' && value.length > 0 && value.length <= 512 && !/[\x00-\x1f\x7f]/.test(value);
 
-export function requestFor(event, issuer) {
+export function authenticate(event, issuer) {
  const claims = event?.identity?.claims;
  if (!issuer || claims?.iss !== issuer || typeof claims?.sub !== 'string' || !cognitoSubject.test(claims.sub)) deny('authentication_required');
  if (!Array.isArray(claims['cognito:groups']) || !claims['cognito:groups'].includes('tenant-gbautomation')) deny('tenant_access_required');
+ return claims;
+}
+export function requestFor(event, issuer) {
+ authenticate(event, issuer);
  // Amplify's FunctionDirectiveStack forwards typeName/fieldName at the top level.
  if (event.typeName !== 'Query' || event.fieldName !== 'forgeAtlasRead' || Object.keys(event.arguments || {}).join() !== 'input') deny('invalid_request');
  let input = event.arguments.input;

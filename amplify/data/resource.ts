@@ -3,9 +3,14 @@ import { langfuseTraces } from '../functions/langfuse-traces/resource';
 import { macMiniOps } from '../functions/mac-mini-ops/resource';
 import { capabilityEdit } from '../functions/capability-edit/resource';
 import { forgeAtlas } from '../functions/forge-atlas/resource';
+import {forgeVisual} from '../functions/forge-visual/resource';
 
 const schema = a.schema({
   ForgeAtlasResult: a.customType({payload:a.json()}),
+  forgeVisualRead:a.query().arguments({input:a.json().required()}).returns(a.ref('ForgeAtlasResult'))
+    .authorization(allow=>[allow.authenticated()]).handler(a.handler.function(forgeVisual)),
+  forgeVisualCommand:a.mutation().arguments({input:a.json().required()}).returns(a.ref('ForgeAtlasResult'))
+    .authorization(allow=>[allow.authenticated()]).handler(a.handler.function(forgeVisual)),
   forgeAtlasRead: a.query().arguments({input:a.json().required()}).returns(a.ref('ForgeAtlasResult'))
     .authorization(allow => [allow.authenticated()]).handler(a.handler.function(forgeAtlas)),
   LangfuseTracePayload: a.customType({
