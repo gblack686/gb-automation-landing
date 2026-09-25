@@ -71,8 +71,8 @@ export default function ForgeAtlas() {
   <p role="status" className="mt-4">{error || 'Opening your private workspace…'}</p>
   {error && <button onClick={() => setAttempt(v => v+1)} className="mt-5 border border-current rounded-md p-3">Retry</button>}
  </main>;
- return <><header style={{position:'fixed',inset:'0 0 auto',height:40,zIndex:110,display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0 16px',background:'#191919',color:'#F3F1E7',fontSize:12}}>
-  <span>Agent Forge · Private workspace</span>
+ return <><header className="forge-host-header" style={{position:'fixed',inset:'0 0 auto',height:40,zIndex:110,display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0 16px',background:'#191919',color:'#F3F1E7',fontSize:12}}>
+  <span className="forge-host-name">Agent Forge · Private workspace</span>
   <nav style={{display:'flex',gap:20}}><a href="/atlas/artist-packet-expert?window=presence">Avatar</a><button onClick={()=>setVisual({brief:null})}>Avatar jobs</button><a href="/atlas/artist-packet-expert?window=proposals">Proposals</a><button onClick={() => signOut()}>Sign out</button></nav>
  </header><iframe ref={frame} name={`forge-atlas:${channel}`} title="Artist Packet Expert Atlas" srcDoc={html}
   sandbox="allow-scripts allow-downloads allow-popups allow-popups-to-escape-sandbox"
