@@ -1,5 +1,6 @@
 import {createHash} from 'node:crypto';
 import {authenticate, TENANT, EXPERT, CONFIG_SHA} from '../forge-atlas/contract.mjs';
+import {cardTextVariants} from './card-variants.mjs';
 
 export const ROOT = `${TENANT}/${EXPERT}/visuals`;
 export const STAGES = ['portrait','agent_card','character','master','web'];
@@ -41,12 +42,12 @@ export function normalizeBrief(brief) {
 }
 export function newJob(id,brief,actor,now) {
  const normalized=normalizeBrief(brief);
- return {schema:'forge-visual-job.v1',pipeline_version:2,id,tenant_id:TENANT,expert_id:EXPERT,config_sha256:CONFIG_SHA,revision:0,created_at:now,updated_at:now,created_by:actor,
+ return {schema:'forge-visual-job.v1',pipeline_version:2,output_version:2,id,tenant_id:TENANT,expert_id:EXPERT,config_sha256:CONFIG_SHA,revision:0,created_at:now,updated_at:now,created_by:actor,
   brief:normalized,brief_sha256:digest(JSON.stringify(normalized)),status:'draft',stage:'portrait',assets:{},stages:{},events:[{action:'created',actor,at:now}],release:'not_requested'};
 }
 export function assertJob(job,id=job?.id){
  if(!job||job.schema!=='forge-visual-job.v1'||job.id!==id||!runID(id)||job.tenant_id!==TENANT||job.expert_id!==EXPERT||job.config_sha256!==CONFIG_SHA)fail('wrong_expert_or_revision');
- for(const [role,a] of Object.entries(job.assets||{}))if(!['card','source_card','agent_card','portrait','character','master','remesh','web'].includes(role)||a.key!==assetKey(job,role)||!/^[a-f0-9]{64}$/.test(a.sha256))fail('artifact_routing_failed');
+ for(const [role,a] of Object.entries(job.assets||{}))if(!['card','source_card','agent_card','portrait','character','master','remesh','web','avatar32','avatar64','avatar128'].includes(role)||a.key!==assetKey(job,role)||!/^[a-f0-9]{64}$/.test(a.sha256))fail('artifact_routing_failed');
  return job;
 }
 export const inputHash = (job,stage) => stage==='agent_card'?digest(JSON.stringify({source_card:job.assets.source_card?.sha256,portrait:job.assets.portrait?.sha256,text:job.card_text})):stage==='portrait'?job.brief_sha256:job.assets[{character:'portrait',master:'character',web:'master'}[stage]]?.sha256;
@@ -93,5 +94,5 @@ export function transition(job,input,actor,now) {
 }
 export function publicJob(job){
  assertJob(job);
- return {...structuredClone(job),next_input_sha256:inputHash(job,job.stage)};
+ return {...structuredClone(job),card_text_variants:job.card_text?cardTextVariants(job):null,next_input_sha256:inputHash(job,job.stage)};
 }

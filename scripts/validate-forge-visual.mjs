@@ -9,6 +9,7 @@ import assert from 'node:assert/strict';
 import sharp from 'sharp';
 import {Document,NodeIO} from '@gltf-transform/core';
 import {newJob,transition,QUOTES,digest,assetKey,publicJob,defaultCardText} from '../amplify/functions/forge-visual/domain.mjs';
+import {deriveAvatarIcons} from '../amplify/functions/forge-visual/avatar-icons.mjs';
 import {packetFor} from '../amplify/functions/forge-visual/packet.mjs';
 import {unzipSync,strFromU8} from 'fflate';
 import {CONFIG_SHA} from '../amplify/functions/forge-atlas/contract.mjs';
@@ -38,6 +39,7 @@ try{
    if(stage==='portrait'){
     for(const role of ['card','source_card']){next.assets[role]={key:assetKey(next,role),sha256:digest(png),bytes:png.length,mime:'image/png'};assets.set(role,png);}
     next.assets.card.printing={name:'Selected source',mana_cost:'{1}{W}',type_line:'Creature ? Advisor',power:'2',toughness:'3'};next.card_text=defaultCardText(next);
+    for(const icon of await deriveAvatarIcons(png)){next.assets[icon.role]={key:assetKey(next,icon.role),sha256:digest(icon.bytes),bytes:icon.bytes.length,mime:'image/png',input_sha256:next.assets.portrait.sha256,width:icon.size,height:icon.size};assets.set(icon.role,icon.bytes);}
    }
    assets.set(stage,bytes);next.status='review';next.stages[stage].status='review';
    if(stage==='web')next.stages.web.metrics={passed:true,triangles:1,max_texture_edge_px:0,bytes:glb.length};
@@ -52,10 +54,10 @@ try{
  for(const [stage,label] of [['portrait','portrait'],['agent_card','agent card'],['character','full character'],['master','3d master'],['web','web model']]){
   if(stage==='agent_card'){
    const generate=page.getByRole('button',{name:'Generate agent card →',exact:true});await generate.waitFor();assert(await generate.isDisabled());
-   await page.getByLabel('Card title',{exact:true}).fill('The Packet Sage');await page.getByLabel('Flavor quote',{exact:true}).fill('Every story deserves a frame.');
+   await page.getByRole('button',{name:'Preview text variants',exact:true}).click();await page.getByRole('button',{name:'Use The storyteller',exact:true}).click();await page.getByLabel('Choose abilities variant',{exact:true}).selectOption('practical');assert.match(await page.getByLabel('Abilities',{exact:true}).inputValue(),/Assemble/);await page.getByLabel('Card title',{exact:true}).fill('The Packet Sage');await page.getByLabel('Flavor quote',{exact:true}).fill('Every story deserves a frame.');
    await page.getByRole('button',{name:'Save card text',exact:true}).click();
    await page.waitForFunction(()=>[...document.querySelectorAll('button')].some(b=>b.textContent==='Generate agent card →'&&!b.disabled));
-   await page.screenshot({path:out+'/agent-card-editor-desktop.png'});
+   await page.locator('.card-draft-workspace').scrollIntoViewIfNeeded();await page.screenshot({path:out+'/agent-card-editor-desktop.png'});
    await page.setViewportSize({width:390,height:844});assert(await page.locator('.forge-visual-dialog').evaluate(e=>e.scrollWidth<=e.clientWidth+1));await page.screenshot({path:out+'/agent-card-editor-mobile.png'});await page.setViewportSize({width:1440,height:1000});
   }
   await page.getByRole('button',{name:`Generate ${label} →`,exact:true}).click();
@@ -63,6 +65,7 @@ try{
   assert.equal(actions.filter(a=>a.action==='start').length,['portrait','agent_card','character','master','web'].indexOf(stage));
   await page.getByRole('button',{name:'Approve charge & generate',exact:true}).click();
   if(stage==='master')await page.getByRole('button',{name:/Load master/}).click();
+  if(stage==='portrait'){await page.getByRole('button',{name:'Approve & continue',exact:true}).waitFor();await page.getByRole('button',{name:'View full output package',exact:true}).click();assert.equal(await page.locator('.visual-preview').count(),0);assert(await page.getByRole('button',{name:'Approve & continue',exact:true}).isDisabled());await page.getByRole('button',{name:'Inspect Agent portrait',exact:true}).click();}
   const approve=page.getByRole('button',{name:'Approve & continue',exact:true});await approve.waitFor();
   await page.waitForFunction(()=>[...document.querySelectorAll('button')].some(b=>b.textContent==='Approve & continue'&&!b.disabled));
   if(['master','web'].includes(stage)){for(const name of ['Front','Side','Back'])await page.getByRole('button',{name,exact:true}).click();assert.equal(await page.locator('canvas').count(),1);}
@@ -71,10 +74,10 @@ try{
  }
  await page.getByRole('button',{name:'Use approved character in Forge',exact:true}).click();await page.getByText('Approved visuals are now used in Forge.').waitFor();assert(activated);
  const downloadPromise=page.waitForEvent('download');await page.getByRole('button',{name:'Download approved packet · ZIP',exact:true}).click();const download=await downloadPromise;const zip=unzipSync(await readFile(await download.path()));
- assert.equal(Object.keys(zip).length,12);assert.equal(JSON.parse(strFromU8(zip['card-text.json'])).title,'The Packet Sage');
+ assert.equal(Object.keys(zip).length,15);assert.equal(JSON.parse(strFromU8(zip['card-text.json'])).title,'The Packet Sage');
  const manifest=JSON.parse(strFromU8(zip['manifest.json']));for(const f of manifest.files)assert.equal(digest(zip[f.filename]),f.sha256);
- await page.setViewportSize({width:390,height:844});assert(await page.locator('.forge-visual-dialog').evaluate(e=>e.scrollWidth<=e.clientWidth+1));await page.screenshot({path:out+'/visual-review-mobile.png'});
+ await page.getByRole('button',{name:'View full output package',exact:true}).click();await page.screenshot({path:out+'/output-package-desktop.png'});await page.setViewportSize({width:390,height:844});assert(await page.locator('.forge-visual-dialog').evaluate(e=>e.scrollWidth<=e.clientWidth+1));await page.screenshot({path:out+'/visual-review-mobile.png'});
  assert.deepEqual(errors,[]);assert.equal(actions.filter(a=>a.action==='start').length,5);
- const receipt={ok:true,checks:['Saving does not generate','Editable card text saved before charge','ZIP contains seven verified assets and five metadata records','Each paid stage requires separate bound confirmation','Rendered output required before review','Actual GLTFLoader front/side/back controls','Web gate before adoption','Mobile fit','No JavaScript errors'],providers:'synthetic; no charges'};
+ const receipt={ok:true,checks:['Saving does not generate','Whole-card and per-field variants preview before saving and charge','ZIP contains ten verified assets and five metadata records','Each paid stage requires separate bound confirmation','Hidden package assets cannot satisfy visible stage inspection','Actual GLTFLoader front/side/back controls','Web gate before adoption','Mobile fit','No JavaScript errors'],providers:'synthetic; no charges'};
  await writeFile(out+'/visual-browser.json',JSON.stringify(receipt,null,2));console.log(JSON.stringify(receipt));
 }catch(error){await page.screenshot({path:out+'/visual-failure.png',fullPage:true});console.error(JSON.stringify({error:String(error),errors,actions:actions.map(a=>a.action)}));throw error;}finally{await browser.close();}

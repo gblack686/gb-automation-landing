@@ -105,3 +105,20 @@ Provider contracts checked 2026-09-25:
 [Meshy image-to-3D](https://docs.meshy.ai/en/api/image-to-3d),
 [remesh](https://docs.meshy.ai/en/api/remesh),
 [pricing](https://docs.meshy.ai/en/api/pricing).
+# Card previews and reusable avatars
+
+New jobs have `output_version: 2` as well as the existing five-stage pipeline.
+The card editor offers three local Artist Packet writing treatments and per-field
+choices, an immediate layout mockup, and editable final text. Saving binds the
+exact final fields to the charge approval; this preview makes no provider call.
+
+The portrait worker derives 32/64/128 px PNGs with Sharp. Each immutable output
+keeps its portrait input hash, measured dimensions and run route. Partial failure
+resumes derivation from saved pixels without another billable submission. Portrait
+review includes these small outputs. Older jobs keep their original packet rules.
+
+The package gallery shows ten assets plus five JSON records, with pending and
+review states. An approved ZIP requires the original stage reviews, derivative
+lineage/dimensions and measured web gate. Adoption carries all three sizes; the
+host verifies the 64 px version before sending it to the matching private expert.
+Proposal ownership does not imply assignment: missing assignees stay unassigned.
