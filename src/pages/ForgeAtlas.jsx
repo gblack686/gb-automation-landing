@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { Hub } from 'aws-amplify/utils';
 import { signOut } from 'aws-amplify/auth';
 import { readAtlas } from '../lib/forgeAtlasClient';
+import ForgeVisualStudio from '../components/ForgeVisualStudio';
+import {visualRequest,visualAsset} from '../lib/forgeVisualClient';
 
 const CSP = "default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval'; style-src 'unsafe-inline'; img-src data: blob:; font-src data:; frame-src 'self' about: blob:; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'";
 export default function ForgeAtlas() {
@@ -10,6 +12,7 @@ export default function ForgeAtlas() {
  const [html,setHtml] = useState('');
  const [error,setError] = useState('');
  const [attempt,setAttempt] = useState(0);
+ const [visual,setVisual]=useState(null);
  useEffect(() => {
   let active = true;
   const abort = new AbortController();
@@ -19,17 +22,27 @@ export default function ForgeAtlas() {
    if (event.source !== frame.current?.contentWindow || event.origin !== 'null'
        || message?.type !== 'forge-atlas.request.v1' || message.channel !== channel
        || typeof message.id !== 'string' || !/^\d{1,9}$/.test(message.id)
-       || !['atlas','planning','history','approvalSnapshot','proposals','proposal'].includes(message.view) || JSON.stringify(message).length > 8192) return;
+       || !['atlas','planning','history','approvalSnapshot','proposals','proposal','visualOpen','visualActive'].includes(message.view) || JSON.stringify(message).length > 18000) return;
    if (pending.has(message.view)) return;
    pending.add(message.view);
    let payload,ok = false;
-   try { payload = await readAtlas(message.view,message.input); ok = true; } catch { payload = null; }
+   try {
+    if(message.view==='visualOpen'){
+     const brief=message.input?.brief;
+     if(brief&&(brief.expert?.tenant_id!=='gbautomation'||brief.expert?.expert_id!=='artist-packet-expert'))throw Error('Wrong expert');
+     setVisual({brief:brief||null});payload={opened:true};
+    }else if(message.view==='visualActive'){
+     const current=await visualRequest({action:'active'});payload=null;
+     if(current){const r=await visualAsset(current.id,'portrait',abort.signal);let binary='';for(let p=0;p<r.bytes.length;p+=8192)binary+=String.fromCharCode(...r.bytes.subarray(p,p+8192));payload={id:current.id,portrait:'data:image/png;base64,'+btoa(binary),sha256:r.asset.sha256};}
+    }else payload = await readAtlas(message.view,message.input);
+    ok = true;
+   } catch { payload = null; }
    finally { pending.delete(message.view); }
    if (active) frame.current?.contentWindow?.postMessage({type:'forge-atlas.response.v1',channel,id:message.id,ok,payload},'*');
   };
   window.addEventListener('message',receive);
   const stopAuth = Hub.listen('auth',({payload}) => {
-   if (payload.event === 'signedOut') { active = false; abort.abort(); setHtml(''); window.location.assign('/login?next=%2Fatlas%2Fartist-packet-expert'); }
+   if (payload.event === 'signedOut') { active = false; abort.abort(); setHtml(''); setVisual(null); window.location.assign('/login?next=%2Fatlas%2Fartist-packet-expert'); }
   });
   (async () => {
    setError(''); setHtml('');
@@ -46,7 +59,8 @@ export default function ForgeAtlas() {
     if (hash !== doc.sha256) throw Error('Document changed');
     const content = new TextDecoder().decode(bytes);
     if (!content.includes('<head>') || !content.includes('forge-atlas.request.v1')) throw Error('Document needs an update');
-    const startWindow = new URLSearchParams(window.location.search).get('window') === 'proposals' ? '<meta name="forge-start-window" content="proposals">' : '';
+    const requestedWindow=new URLSearchParams(window.location.search).get('window');
+    const startWindow = ['proposals','presence'].includes(requestedWindow) ? `<meta name="forge-start-window" content="${requestedWindow}">` : '';
     if (active) setHtml(content.replace('<head>',`<head><meta http-equiv="Content-Security-Policy" content="${CSP}"><meta name="forge-host-channel" content="${channel}">${startWindow}`));
    } catch { if (active) setError('Your workspace could not load. Please retry or sign in again.'); }
   })();
@@ -59,8 +73,9 @@ export default function ForgeAtlas() {
  </main>;
  return <><header style={{position:'fixed',inset:'0 0 auto',height:40,zIndex:110,display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0 16px',background:'#191919',color:'#F3F1E7',fontSize:12}}>
   <span>Agent Forge · Private workspace</span>
-  <nav style={{display:'flex',gap:20}}><a href="/atlas/artist-packet-expert?window=proposals">Proposals</a><button onClick={() => signOut()}>Sign out</button></nav>
+  <nav style={{display:'flex',gap:20}}><a href="/atlas/artist-packet-expert?window=presence">Avatar</a><button onClick={()=>setVisual({brief:null})}>Avatar jobs</button><a href="/atlas/artist-packet-expert?window=proposals">Proposals</a><button onClick={() => signOut()}>Sign out</button></nav>
  </header><iframe ref={frame} name={`forge-atlas:${channel}`} title="Artist Packet Expert Atlas" srcDoc={html}
   sandbox="allow-scripts allow-downloads allow-popups allow-popups-to-escape-sandbox"
-  referrerPolicy="no-referrer" style={{position:'fixed',inset:'40px 0 0',width:'100%',height:'calc(100dvh - 40px)',border:0,zIndex:100}} /></>;
+  referrerPolicy="no-referrer" style={{position:'fixed',inset:'40px 0 0',width:'100%',height:'calc(100dvh - 40px)',border:0,zIndex:100}} />
+  {visual&&<ForgeVisualStudio brief={visual.brief} onClose={()=>setVisual(null)} onAdopt={()=>frame.current?.contentWindow?.postMessage({type:'forge-visual.updated.v1',channel},'*')}/>}</>;
 }

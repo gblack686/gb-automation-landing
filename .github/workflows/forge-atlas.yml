@@ -5,6 +5,9 @@ on:
       - 'amplify/**'
       - 'src/pages/ForgeAtlas.jsx'
       - 'src/lib/forgeAtlasClient.js'
+      - 'src/lib/forgeVisualClient.js'
+      - 'src/components/Forge*'
+      - 'scripts/validate-forge-visual.mjs'
       - 'src/App.jsx'
       - 'src/components/RequireAuth.jsx'
       - 'src/clients/gbautomation/pages/DashboardPage.jsx'
@@ -19,6 +22,9 @@ on:
       - 'amplify/**'
       - 'src/pages/ForgeAtlas.jsx'
       - 'src/lib/forgeAtlasClient.js'
+      - 'src/lib/forgeVisualClient.js'
+      - 'src/components/Forge*'
+      - 'scripts/validate-forge-visual.mjs'
       - 'src/App.jsx'
       - 'src/components/RequireAuth.jsx'
       - 'src/clients/gbautomation/pages/DashboardPage.jsx'
@@ -41,8 +47,9 @@ jobs:
           cache: npm
       - run: npm ci --ignore-scripts --no-audit
       - run: node --test amplify/functions/forge-atlas/*.test.mjs
+      - run: node --test amplify/functions/forge-visual/*.test.mjs
       - run: npx tsc --project amplify/tsconfig.json --noEmit --incremental false
-      - run: npx eslint src/pages/ForgeAtlas.jsx src/lib/forgeAtlasClient.js
+      - run: npx eslint src/pages/ForgeAtlas.jsx src/lib/forgeAtlasClient.js src/lib/forgeVisualClient.js src/components/ForgeVisualStudio.jsx src/components/ForgeModelViewer.jsx
       - run: python -m py_compile scripts/validate-forge-atlas-live.py
       - name: Local build configuration
         run: |
@@ -52,6 +59,9 @@ jobs:
           JS
       - run: npm run build
       - run: npx playwright install --with-deps chromium
+      - run: node scripts/validate-forge-visual.mjs
+        env:
+          PLAYWRIGHT_CHANNEL: chromium
       - name: Test private document host
         env:
           PLAYWRIGHT_CHANNEL: chromium
