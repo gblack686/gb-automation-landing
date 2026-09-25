@@ -6,6 +6,7 @@ on:
       - 'src/pages/ForgeAtlas.jsx'
       - 'src/lib/forgeAtlasClient.js'
       - 'src/lib/forgeVisualClient.js'
+      - 'src/lib/forgeVisualPacket.js'
       - 'src/components/Forge*'
       - 'scripts/validate-forge-visual.mjs'
       - 'src/App.jsx'
@@ -23,6 +24,7 @@ on:
       - 'src/pages/ForgeAtlas.jsx'
       - 'src/lib/forgeAtlasClient.js'
       - 'src/lib/forgeVisualClient.js'
+      - 'src/lib/forgeVisualPacket.js'
       - 'src/components/Forge*'
       - 'scripts/validate-forge-visual.mjs'
       - 'src/App.jsx'
@@ -49,7 +51,7 @@ jobs:
       - run: node --test amplify/functions/forge-atlas/*.test.mjs
       - run: node --test amplify/functions/forge-visual/*.test.mjs
       - run: npx tsc --project amplify/tsconfig.json --noEmit --incremental false
-      - run: npx eslint src/pages/ForgeAtlas.jsx src/lib/forgeAtlasClient.js src/lib/forgeVisualClient.js src/components/ForgeVisualStudio.jsx src/components/ForgeModelViewer.jsx
+      - run: npx eslint src/pages/ForgeAtlas.jsx src/lib/forgeAtlasClient.js src/lib/forgeVisualClient.js src/lib/forgeVisualPacket.js src/components/ForgeVisualStudio.jsx src/components/ForgeModelViewer.jsx
       - run: python -m py_compile scripts/validate-forge-atlas-live.py
       - name: Local build configuration
         run: |

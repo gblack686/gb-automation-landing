@@ -1,9 +1,10 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {newJob,transition,QUOTES,digest,assetKey,VisualError} from './domain.mjs';
+import {newJob,transition,QUOTES,digest,assetKey,VisualError,inputHash,defaultCardText,stagesFor} from './domain.mjs';
 import {makeVisualHandler} from './api.mjs';
 import {makeWorker} from './worker.mjs';
-import {promptFor} from './providers.mjs';
+import {promptFor,imageEditInputs} from './providers.mjs';
+import {packetFor} from './packet.mjs';
 import {optimize} from './optimize.mjs';
 import {CONFIG_SHA} from '../forge-atlas/contract.mjs';
 import {Document,NodeIO} from '@gltf-transform/core';
@@ -18,11 +19,11 @@ function memory(){
   recover:async(job,role)=>assets.get(assetKey(job,role))?.asset||null,bytes:async(job,role)=>assets.get(assetKey(job,role)).bytes,
   output:async(job,role,bytes,input,extra={})=>{const asset={key:assetKey(job,role),sha256:digest(bytes),bytes:bytes.length,mime:'image/png',input_sha256:input,...extra};assets.set(asset.key,{asset,bytes});return asset;},receipt:async()=>{}};
  const queue=async()=>{counts.queue++;};
- const providers={preflight:async()=>{},card:async()=>({bytes:Buffer.from('card pixels'),metadata:{name:'Selected printing'}}),image:async(job,stage,bytes)=>{counts.image++;assert(bytes.length);return {bytes:Buffer.from(stage+' pixels'),receipt:{usage:{total_tokens:20}}};},meshSubmit:async()=>{counts.submit++;return id;},meshPoll:async()=>{counts.poll++;return {status:'SUCCEEDED',credits:30,url:'private output'};},meshDownload:async()=>Buffer.from('model bytes')};
+ const providers={preflight:async()=>{},card:async()=>({bytes:Buffer.from('card pixels'),full:Buffer.from('full card pixels'),metadata:{name:'Selected printing',mana_cost:'{1}{W}{B}{R}',type_line:'Legendary Creature ? Human Samurai',power:'3',toughness:'4'}}),image:async(job,stage,bytes)=>{counts.image++;if(stage==='agent_card'){assert.equal(bytes.source_card.toString(),'full card pixels');assert.equal(bytes.portrait.toString(),'portrait pixels');}else assert(bytes.length);return {bytes:Buffer.from(stage+' pixels'),receipt:{usage:{total_tokens:20}}};},meshSubmit:async()=>{counts.submit++;return id;},meshPoll:async()=>{counts.poll++;return {status:'SUCCEEDED',credits:30,url:'private output'};},meshDownload:async()=>Buffer.from('model bytes')};
  return {store,queue,providers,counts,states,assets};
 }
-async function fixture(){const deps=memory();await deps.store.put(newJob(id,brief(),actor,time),null);return deps;}
-async function start(deps,stage){const r=await deps.store.get(id),j=r.value;const sha=stage==='portrait'?j.brief_sha256:j.assets[{character:'portrait',master:'character',web:'master'}[stage]].sha256;
+async function fixture(legacy=true){const deps=memory(),job=newJob(id,brief(),actor,time);if(legacy)delete job.pipeline_version;await deps.store.put(job,null);return deps;}
+async function start(deps,stage){const r=await deps.store.get(id),j=r.value;const sha=inputHash(j,stage);
  await deps.store.put(transition(j,{action:'start',id,stage,revision:j.revision,sha256:sha,quote:QUOTES[stage]},actor,time),r.etag);}
 async function approve(deps,stage){const r=await deps.store.get(id),j=r.value;await deps.store.put(transition(j,{action:'review',id,stage,revision:j.revision,sha256:j.assets[stage].sha256,decision:'approve'},actor,time),r.etag);}
 const worker=deps=>makeWorker({...deps,now:()=>time,optimize:async()=>({bytes:Buffer.from('web model'),metrics:{passed:true,triangles:20,max_texture_edge_px:1024,bytes:9}})});
@@ -98,4 +99,33 @@ test('web optimization measures the actual binary and blocks external glTF resou
 });
 test('both Lambda entrypoints bundle with explicit native dependency handling',async()=>{
  for(const entry of ['handler','worker-handler']){const r=await build({entryPoints:[`amplify/functions/forge-visual/${entry}.ts`],bundle:true,platform:'node',target:'node22',format:'cjs',external:['sharp'],write:false,logLevel:'silent'});assert(r.outputFiles[0].contents.length>0);}
+});
+
+async function saveCardText(d,changes={}){const r=await d.store.get(id),j=r.value;await d.store.put(transition(j,{action:'card_text',id,revision:j.revision,card_text:{...j.card_text,...changes}},actor,time),r.etag);}
+test('full-card workflow binds both pixel inputs and exact editable text; 3D keeps art-only lineage',async()=>{
+ const d=await fixture(false),w=worker(d);await start(d,'portrait');await w(id);await approve(d,'portrait');
+ let j=(await d.store.get(id)).value;assert.equal(j.stage,'agent_card');assert.equal(j.card_text.power,'3');assert.equal(j.card_text.toughness,'4');assert.equal(j.card_text.mana_cost,'{1}{W}{B}{R}');
+ await assert.rejects(()=>start(d,'agent_card'),/card_text_review_required/);
+ await saveCardText(d,{title:'Packet Sage',quote:'Make the story travel.'});j=(await d.store.get(id)).value;
+ const oldHash=inputHash(j,'agent_card');await saveCardText(d,{power:'5'});j=(await d.store.get(id)).value;assert.notEqual(oldHash,inputHash(j,'agent_card'));
+ assert.throws(()=>transition(j,{action:'start',id,revision:j.revision,stage:'agent_card',sha256:oldHash,quote:QUOTES.agent_card},actor,time),/approval_binding_changed/);
+ const edit=imageEditInputs(j,'agent_card',{source_card:Buffer.from('full source pixels'),portrait:Buffer.from('approved portrait pixels')});
+ const inputs=edit.form.getAll('image[]');assert.equal(inputs.length,2);assert.equal(await inputs[0].text(),'full source pixels');assert.equal(await inputs[1].text(),'approved portrait pixels');assert.match(edit.prompt,/Packet Sage/);assert.match(edit.prompt,/bottom.right/);
+ assert.doesNotMatch(promptFor(j,'character'),/Packet Sage|Make the story travel/);
+ await start(d,'agent_card');await w(id);await assert.rejects(()=>saveCardText(d,{title:'Late edit'}),/stage_not_ready/);await approve(d,'agent_card');
+ j=(await d.store.get(id)).value;assert.equal(inputHash(j,'character'),j.assets.portrait.sha256);assert.notEqual(inputHash(j,'character'),j.assets.agent_card.sha256);
+ for(const stage of ['character','master','web']){await start(d,stage);await w(id);if(stage!=='character'){d.providers.meshPoll=async()=>({status:'SUCCEEDED',credits:stage==='master'?30:5,url:'private output'});await w(id);}await approve(d,stage);}
+ j=(await d.store.get(id)).value;const packet=packetFor(j);assert.equal(packet.files.length,7);assert.equal(d.counts.image,3);assert.equal(d.counts.submit,2);assert.deepEqual(packet.lineage.master,['character']);assert.equal(packet.card_text.title,'Packet Sage');
+ const handler=makeVisualHandler({issuer,...d});assert.equal((await handler(event({action:'packet',id},false))).payload.data.manifest.files.length,7);
+ assert.equal((await handler(event({action:'adopt',id,revision:j.revision,sha256:j.assets.web.sha256}))).payload.ok,true);assert.equal((await d.store.active()).agent_card.sha256,j.assets.agent_card.sha256);
+ j.stages.agent_card.review.sha256='0'.repeat(64);assert.throws(()=>packetFor(j),/packet_not_ready/);
+});
+test('card text limits, missing outputs and legacy packets are explicit',()=>{
+ const j=newJob(id,brief(),actor,time);j.stage='agent_card';j.card_text=defaultCardText(j);
+ for(const invalid of [{title:''},{abilities:'x'.repeat(1201)},{power:'2',toughness:''},{extra:'injected'}])assert.throws(()=>transition(j,{action:'card_text',id,revision:0,card_text:{...j.card_text,...invalid}},actor,time),/invalid_card_text/);
+ assert.throws(()=>packetFor(j),/packet_not_ready/);delete j.pipeline_version;assert.deepEqual(stagesFor(j),['portrait','character','master','web']);
+});
+test('uncertain full-card submission cannot repeat its charge',async()=>{
+ const d=await fixture(false),w=worker(d);await start(d,'portrait');await w(id);await approve(d,'portrait');await saveCardText(d);
+ d.providers.image=async()=>{d.counts.image++;throw Error('uncertain');};await start(d,'agent_card');await w(id);await w(id);assert.equal(d.counts.image,2);assert.equal((await d.store.get(id)).value.status,'outcome_unknown');
 });

@@ -37,7 +37,7 @@ export const store={
   if(digest(bytes)!==asset.sha256)fail('artifact_hash_failed');return bytes;
  },
  async output(job,role,bytes,inputHash,extra={}){
-  const key=assetKey(job,role),sha256=digest(bytes),mime=role==='card'?'image/jpeg':['master','remesh','web'].includes(role)?'model/gltf-binary':'image/png';
+  const key=assetKey(job,role),sha256=digest(bytes),mime=['card','source_card'].includes(role)?'image/jpeg':['master','remesh','web'].includes(role)?'model/gltf-binary':'image/png';
   const metadata={sha256,tenant:job.tenant_id,expert:job.expert_id,run:job.id,role,input:inputHash};
   const r=await s3.send(new PutObjectCommand({...location(key),Body:bytes,ContentType:mime,CacheControl:'private, no-store',Metadata:metadata,IfNoneMatch:'*'}));
   // Exact version + checksum readback is the routing gate; keys are never caller supplied.

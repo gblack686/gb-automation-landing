@@ -11,7 +11,7 @@ export async function visualRequest(input,write=false){
 export async function visualAsset(id,stage,signal){
  const asset=await visualRequest({action:'asset',id,stage}),url=new URL(asset.url);
  if(url.protocol!=='https:'||!/^[a-z0-9.-]+\.s3\.[a-z0-9-]+\.amazonaws\.com$/.test(url.hostname)
-  ||decodeURIComponent(url.pathname)!==`/gbautomation/artist-packet-expert/visuals/runs/${id}/${stage}.${['web','master'].includes(stage)?'glb':stage==='card'?'jpg':'png'}`
+  ||decodeURIComponent(url.pathname)!==`/gbautomation/artist-packet-expert/visuals/runs/${id}/${stage}.${['web','master'].includes(stage)?'glb':['card','source_card'].includes(stage)?'jpg':'png'}`
   ||asset.bytes>(stage==='master'?200000000:15000000)||!/^[a-f0-9]{64}$/.test(asset.sha256))throw Error('Invalid asset');
  const response=await fetch(url,{credentials:'omit',cache:'no-store',signal});if(!response.ok)throw Error('Asset unavailable');
  const reader=response.body.getReader(),chunks=[];let length=0;

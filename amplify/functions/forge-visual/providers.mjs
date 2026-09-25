@@ -19,26 +19,33 @@ const download=async(url,max,hosts)=>{
  return boundedBytes(await fetch(u,{redirect:'error',signal:AbortSignal.timeout(90000)}),max);
 };
 export function promptFor(job,stage){
+ if(stage==='agent_card')return `Create the FULL FRONT VIEW of this agent's trading card. Image 1 is the exact selected MTG printing and card face: use its entire card layout, frame colors, borders, mana symbols, title bar, art window, type line, rules box, quote styling, set-symbol placement and bottom-right power/toughness box as the visual template. Image 2 is the approved agent portrait: replace the artwork with that exact character, preserving its face, costume and palette. Keep the rest of the supplied card visually unchanged except the following operator-approved text replacements. Render every provided character legibly, with no invented extra abilities or words. Keep mana symbols at the top right, creature type below the artwork, ability text in the body, italic quote underneath, and power/toughness at bottom right (omit only when both are empty). Exact replacement fields: ${JSON.stringify(job.card_text)}. Show the entire card, all four edges, straight-on, no hands, table, perspective or mockup. Keep the card's original proportions inside the output with a small neutral margin. This is a card illustration, not the textless 3D reference. The operator will review spelling and layout before approval.`;
  const b=job.brief, shared=`${b.direction.finish}. Preserve the supplied reference's palette, costume materials, facial character and visual style. Expert: ${b.expert.display_name}. Purpose: ${b.expert.purpose}. Operator direction: ${b.direction.operator_notes}. Original artwork, no lettering, words, card frames, logos or watermarks.`;
  return stage==='portrait'?`Create an original square fantasy expert portrait using the attached card artwork as visual reference. One character, head and shoulders, strong silhouette readable at small sizes. Reinterpret its role through objects and composition. ${shared}`:
   `Use the attached APPROVED PORTRAIT as the identity reference. Extend that exact character into a COMPLETE FULL CHARACTER, not a bust. Show head, torso, arms, hands, legs and feet (or the subject's own appendages), all inside the frame with clear margin. ${b.direction.pose} pose, anatomically coherent balance, separated limbs and clear negative space. Plain neutral studio background, no motion blur, fine miniature sculpt detail, strong silhouette, fully visible props. Preserve face and all costume colors. ${shared}`;
 }
+export function imageEditInputs(job,stage,bytes){
+  const prompt=promptFor(job,stage),form=new FormData();form.append('model','gpt-image-2.5-flare');form.append('quality','low');form.append('size',stage==='portrait'?'1024x1024':'1024x1536');form.append('n','1');form.append('prompt',prompt);
+  const inputs=stage==='agent_card'?[{role:'source_card',bytes:bytes.source_card,mime:'image/jpeg',file:'full-source-card.jpg'},{role:'portrait',bytes:bytes.portrait,mime:'image/png',file:'approved-agent-portrait.png'}]:[{role:stage==='portrait'?'card':'portrait',bytes,mime:stage==='portrait'?'image/jpeg':'image/png',file:stage==='portrait'?'reference.jpg':'reference.png'}];
+  for(const input of inputs)form.append(inputs.length>1?'image[]':'image',new Blob([input.bytes],{type:input.mime}),input.file);
+ return {prompt,form,inputs};
+}
 export const providers={
- async preflight(stage){await key(stage==='portrait'||stage==='character'?process.env.OPENAI_SECRET_ID:process.env.MESHY_SECRET_ID);},
+ async preflight(stage){await key(['portrait','agent_card','character'].includes(stage)?process.env.OPENAI_SECRET_ID:process.env.MESHY_SECRET_ID);},
  async card(brief){
   const response=await fetch(`https://api.scryfall.com/cards/${brief.card.scryfall_id}`,{headers:{Accept:'application/json','User-Agent':'GBAutoForge/1.0'},redirect:'error',signal:AbortSignal.timeout(20000)});
   const raw=JSON.parse((await boundedBytes(response,100000)).toString());if(raw.id!==brief.card.scryfall_id)throw Error('Printing mismatch');
   const faces=raw.image_uris?[raw]:raw.card_faces||[],face=faces[brief.card.face_index];if(!face?.image_uris?.art_crop)throw Error('Card face unavailable');
-  return {bytes:await download(face.image_uris.art_crop,10000000,['cards.scryfall.io']),metadata:{name:raw.name,face_name:face.name,artist:face.artist||raw.artist,set_code:raw.set,collector_number:raw.collector_number,scryfall_uri:raw.scryfall_uri}};
+  if(!face.image_uris.normal)throw Error('Full card unavailable');
+  return {bytes:await download(face.image_uris.art_crop,10000000,['cards.scryfall.io']),full:await download(face.image_uris.normal,10000000,['cards.scryfall.io']),metadata:{scryfall_id:raw.id,face_index:brief.card.face_index,name:raw.name,face_name:face.name,artist:face.artist||raw.artist,set_code:raw.set,collector_number:raw.collector_number,scryfall_uri:raw.scryfall_uri,mana_cost:face.mana_cost||'',type_line:face.type_line||'',oracle_text:face.oracle_text||'',flavor_text:face.flavor_text||'',power:face.power||'',toughness:face.toughness||'',colors:face.colors||raw.colors||[],color_identity:raw.color_identity||[],frame:raw.frame,border_color:raw.border_color,layout:raw.layout}};
  },
  async image(job,stage,bytes){
-  const prompt=promptFor(job,stage),form=new FormData();form.append('model','gpt-image-2.5-flare');form.append('quality','low');form.append('size',stage==='portrait'?'1024x1024':'1024x1536');form.append('n','1');form.append('prompt',prompt);
-  form.append('image',new Blob([bytes],{type:stage==='portrait'?'image/jpeg':'image/png'}),'reference.'+(stage==='portrait'?'jpg':'png'));
+  const {prompt,form,inputs}=imageEditInputs(job,stage,bytes);
   // One attempt. Never retry a billable POST, including after a network timeout.
   const response=await fetch('https://api.openai.com/v1/images/edits',{method:'POST',headers:{Authorization:`Bearer ${await key(process.env.OPENAI_SECRET_ID)}`},body:form,signal:AbortSignal.timeout(190000)});
   const raw=JSON.parse((await boundedBytes(response,30000000)).toString());if(!raw.data?.[0]?.b64_json)throw Error('Missing image output');
   const output=Buffer.from(raw.data[0].b64_json,'base64');if(output.length>15000000||output.subarray(1,4).toString()!=='PNG')throw Error('Invalid image output');
-  return {bytes:output,receipt:{provider:'openai',model:'gpt-image-2.5-flare',quality:'low',prompt_sha256:digest(prompt),input_sha256:digest(bytes),usage:raw.usage||null,automatic_retries:0}};
+  return {bytes:output,receipt:{provider:'openai',model:'gpt-image-2.5-flare',quality:'low',prompt_sha256:digest(prompt),input_sha256:job.stages[stage].input_sha256,inputs:inputs.map(i=>({role:i.role,sha256:digest(i.bytes)})),card_text:stage==='agent_card'?job.card_text:undefined,usage:raw.usage||null,automatic_retries:0}};
  },
  async meshSubmit(job,stage,bytes){
   const body=stage==='master'?{image_url:`data:image/png;base64,${bytes.toString('base64')}`,ai_model:'meshy-6',model_type:'standard',should_texture:true,enable_pbr:true,texture_resolution:'4k',should_remesh:false,pose_mode:'',image_enhancement:false,remove_lighting:false}:

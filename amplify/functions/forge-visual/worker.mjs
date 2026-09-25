@@ -1,4 +1,4 @@
-import {assertJob,STAGES,VisualError} from './domain.mjs';
+import {assertJob,stagesFor,defaultCardText,VisualError} from './domain.mjs';
 
 // Durable state is written BEFORE each billable submission. SQS delivery is at
 // least once; a delivery retry may poll/recover, but never repeats a paid POST.
@@ -6,7 +6,7 @@ export function makeWorker({store,queue,providers,optimize,now=()=>new Date().to
  return async id=>{
   let record=await store.get(id);if(!record)return;
   let job=assertJob(record.value,id),stage=job.stage;
-  if(!STAGES.includes(stage)||['draft','review','ready','rejected','failed'].includes(job.status))return;
+  if(!stagesFor(job).includes(stage)||['draft','review','ready','rejected','failed'].includes(job.status))return;
   const save=async()=>{job.revision++;job.updated_at=now();await store.put(job,record.etag);record=await store.get(id);job=record.value;};
   const finish=async(asset,receipt={})=>{
    job.assets[stage]=asset;job.stages[stage].status='review';job.status='review';job.stages[stage].completed_at=now();
@@ -22,12 +22,22 @@ export function makeWorker({store,queue,providers,optimize,now=()=>new Date().to
     let input;
     if(stage==='portrait'){
      let card=await store.recover(job,'card',job.brief_sha256);
-     if(!card){const source=await providers.card(job.brief);card=await store.output(job,'card',source.bytes,job.brief_sha256,{printing:source.metadata});}
-     job.assets.card=card;await save();input=await store.bytes(job,'card');
+     let full=job.pipeline_version===2?await store.recover(job,'source_card',job.brief_sha256):null;
+     if(!card||!card.printing||job.pipeline_version===2&&!full){
+      const source=await providers.card(job.brief);
+      if(!card)card=await store.output(job,'card',source.bytes,job.brief_sha256);
+      card.printing=source.metadata;
+      if(job.pipeline_version===2&&!full)full=await store.output(job,'source_card',source.full,job.brief_sha256);
+     }
+     job.assets.card=card;if(full)job.assets.source_card=full;
+     if(job.pipeline_version===2&&!job.card_text)job.card_text=defaultCardText(job);
+     await save();input=await store.bytes(job,'card');
+    } else if(stage==='agent_card'){
+     input={source_card:await store.bytes(job,'source_card'),portrait:await store.bytes(job,'portrait')};
     } else if(stage==='character'||stage==='master')input=await store.bytes(job,stage==='character'?'portrait':'character');
     else if(!job.stages.master.task_id)throw Error('Missing parent task');
     job.stages[stage].status='submitting';job.stages[stage].submitted_at=now();job.stages[stage].lease_at=now();await save();
-    if(stage==='portrait'||stage==='character'){
+    if(['portrait','agent_card','character'].includes(stage)){
      const result=await providers.image(job,stage,input),asset=await store.output(job,stage,result.bytes,job.stages[stage].input_sha256);
      await finish(asset,result.receipt);return;
     }
