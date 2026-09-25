@@ -1,4 +1,5 @@
 import {assertJob,stagesFor,defaultCardText,VisualError} from './domain.mjs';
+import {composeCard,verifyCardFrame} from './card-compositor.mjs';
 import {deriveAvatarIcons} from './avatar-icons.mjs';
 
 // Durable state is written BEFORE each billable submission. SQS delivery is at
@@ -9,8 +10,11 @@ export function makeWorker({store,queue,providers,optimize,deriveIcons=deriveAva
   let job=assertJob(record.value,id),stage=job.stage;
   if(!stagesFor(job).includes(stage)||['draft','review','ready','rejected','failed'].includes(job.status))return;
   const save=async()=>{job.revision++;job.updated_at=now();await store.put(job,record.etag);record=await store.get(id);job=record.value;};
-  const finish=async(asset,receipt={})=>{
-   job.assets[stage]=asset;
+   const finish=async(asset,receipt={})=>{
+    job.assets[stage]=asset;
+    if(stage==='agent_card'&&job.card_frame_version===1){
+     receipt={...receipt,provider:'local-compositor',provider_charge:0,frame_preservation:await verifyCardFrame(job,await store.bytes(job,'source_card'),await store.bytes(job,stage))};
+    }
    // Recovery also enters here: derivation can resume without another paid POST.
    if(stage==='portrait'&&job.output_version===2){
     for(const icon of await deriveIcons(await store.bytes(job,'portrait'))){
@@ -28,7 +32,7 @@ export function makeWorker({store,queue,providers,optimize,deriveIcons=deriveAva
    if(job.status==='working'&&Date.parse(now())-Date.parse(job.stages[stage].lease_at)<300000){await queue(id,60);return;}
    if(['queued','preflight_failed'].includes(job.status)){
     job.status='working';job.stages[stage].status='preparing';job.stages[stage].lease_at=now();await save();
-    await providers.preflight(stage);
+    if(!(stage==='agent_card'&&job.card_frame_version===1))await providers.preflight(stage);
     let input;
     if(stage==='portrait'){
      let card=await store.recover(job,'card',job.brief_sha256);
@@ -48,7 +52,7 @@ export function makeWorker({store,queue,providers,optimize,deriveIcons=deriveAva
     else if(!job.stages.master.task_id)throw Error('Missing parent task');
     job.stages[stage].status='submitting';job.stages[stage].submitted_at=now();job.stages[stage].lease_at=now();await save();
     if(['portrait','agent_card','character'].includes(stage)){
-     const result=await providers.image(job,stage,input),asset=await store.output(job,stage,result.bytes,job.stages[stage].input_sha256);
+     const result=stage==='agent_card'&&job.card_frame_version===1?await composeCard(job,input):await providers.image(job,stage,input),asset=await store.output(job,stage,result.bytes,job.stages[stage].input_sha256);
      await finish(asset,result.receipt);return;
     }
     const task=await providers.meshSubmit(job,stage,input);
@@ -57,7 +61,12 @@ export function makeWorker({store,queue,providers,optimize,deriveIcons=deriveAva
    if(!job.stages[stage].task_id){
     if(!job.stages[stage].submitted_at){job.status='preflight_failed';job.stages[stage].status='preflight_failed';await save();return;}
     // Includes process death after S3 upload but before the final state write.
-    const asset=await store.recover(job,stage,job.stages[stage].input_sha256);
+    let asset=await store.recover(job,stage,job.stages[stage].input_sha256);
+    if(!asset&&stage==='agent_card'&&job.card_frame_version===1){
+     const result=await composeCard(job,{source_card:await store.bytes(job,'source_card'),portrait:await store.bytes(job,'portrait')});
+     asset=await store.output(job,stage,result.bytes,job.stages[stage].input_sha256);
+     await finish(asset,result.receipt);return;
+    }
     if(asset){await finish(asset,{recovered:true,usage:null});return;}
     job.status='outcome_unknown';job.stages[stage].status='outcome_unknown';job.stages[stage].error='Submission outcome unknown. Reconcile the provider task before any new generation.';await save();return;
    }
