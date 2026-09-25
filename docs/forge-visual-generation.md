@@ -6,7 +6,7 @@ mutations. Other tenant members can review saved outputs. No anonymous access.
 
 The opaque Studio frame opens the host's Character Studio with a selected visual
 brief. It never receives a provider key or Cognito token. Saving creates a job
-without a provider call. Five explicit, version-bound charge decisions run one
+without a provider call. Five explicit, version-bound decisions run one
 portrait, one full agent card, one full character, one 30-credit Meshy master,
 and one 5-credit remesh. Older jobs retain their original four-stage pipeline.
 OpenAI image charges are separate token-based charges, each limited to one low
@@ -19,14 +19,29 @@ edit, and approved full-character pixels to Meshy. Operator notes cannot supply
 URLs or output paths. Full card pixels never enter the 3D branch.
 
 After portrait approval, the card editor defaults title/abilities/quote to the
-agent and mana cost/type/power/toughness to the exact Scryfall face. All seven
-text fields are editable until the card's charge approval. Saving text is free;
-it records the actor and text hash. A card edit sends two actual multipart
-`image[]` inputs: the full source card and the approved agent portrait. Its
-input hash binds both images and the saved text. Changed text invalidates a
-stale approval. The prompt preserves the source frame colors and layout, mana,
-type line, rules box, flavor text and bottom-right power/toughness. Generated
-lettering and layout require human inspection; no automated fidelity claim.
+agent, type to **Expert Agent — Artist Deliverables**, and mana/stats to the source.
+New jobs (`card_frame_version: 1`) assemble the card locally for **zero provider
+charge**. The original full card is the preview canvas; no CSS substitute frame.
+The exact Isshin NEO 224 printing/face has a measured art/text interior map.
+Other printings are blocked before paid generation until their maps are verified.
+Mana symbols, ornamentation, bevels, set emblem, hologram, borders and collector
+footer remain source pixels. Stats remain source pixels unless explicitly edited.
+
+Only approved interiors are replaced. Source paper texture fills text interiors;
+OFL-licensed Crimson Text outlines make lettering independent of browser/Lambda
+fonts. Unsupported characters and overflowing text fail before approval. The
+font outline data has source URLs/hashes; `scripts/build-forge-card-fonts.py`
+rebuilds it with fonttools. The bundled license applies to these glyphs.
+
+The card approval binds the source image, portrait, text, frame profile/version
+and a no-charge quote. `frame_preservation` records zero changed protected pixels,
+source/output protected hashes, source/portrait/text/output hashes and editable
+regions. The worker re-verifies uploaded bytes, including recovery after a crash.
+Missing/stale/failing proof blocks card approval, ZIP export and adoption. Art
+crop, lettering, spelling and composition still need visible human review.
+Already submitted older jobs retain their original paid image-edit contract and
+saved text; no existing approval is rewritten. Portrait/full-character edits and
+the textless 3D lineage retain their separate approvals.
 
 State and immutable artifacts live in the existing private versioned bucket:
 `gbautomation/artist-packet-expert/visuals/runs/<UUID>/`. S3 conditional writes
@@ -75,7 +90,7 @@ against its immutable S3 version, size and SHA-256 before ZIP creation.
 
 Legacy packets explicitly report pipeline version 1 and omit the two full-card
 images. New packets report version 2. No paid retry is added; Meshy remains 35
-credits, while the new card image is a separately approved OpenAI token charge.
+credits. New card assembly is free; portrait/full-character token usage remains separate.
 
 The server currently supports this one deployed expert. Listing is bounded to
 30 latest jobs and 1000 objects in the run prefix; a larger inventory fails
@@ -110,7 +125,7 @@ Provider contracts checked 2026-09-25:
 New jobs have `output_version: 2` as well as the existing five-stage pipeline.
 The card editor offers three local Artist Packet writing treatments and per-field
 choices, an immediate layout mockup, and editable final text. Saving binds the
-exact final fields to the charge approval; this preview makes no provider call.
+exact final fields to the assembly approval; this preview makes no provider call.
 
 The portrait worker derives 32/64/128 px PNGs with Sharp. Each immutable output
 keeps its portrait input hash, measured dimensions and run route. Partial failure

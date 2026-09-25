@@ -1,11 +1,13 @@
 import {createHash} from 'node:crypto';
 import {authenticate, TENANT, EXPERT, CONFIG_SHA} from '../forge-atlas/contract.mjs';
+import {frameFor,cardLayout,FRAME_VERSION} from './card-frame.mjs';
 import {cardTextVariants} from './card-variants.mjs';
 
 export const ROOT = `${TENANT}/${EXPERT}/visuals`;
 export const STAGES = ['portrait','agent_card','character','master','web'];
 export const stagesFor = job => job.pipeline_version===2?STAGES:STAGES.filter(s=>s!=='agent_card');
 export const QUOTES = Object.freeze({portrait:'flare-low-portrait-v1',agent_card:'flare-low-full-card-v1',character:'flare-low-character-v1',master:'meshy6-4k-30-v1',web:'meshy-remesh-5-v1'});
+export const quoteFor=(job,stage)=>stage==='agent_card'&&job.card_frame_version===1?'source-frame-local-no-charge-v1':QUOTES[stage];
 export const digest = value => createHash('sha256').update(value).digest('hex');
 export class VisualError extends Error {}
 export const fail = code => {throw new VisualError(code);};
@@ -37,12 +39,12 @@ export function normalizeBrief(brief) {
   ||brief.direction.operator_notes!=null&&(!text(brief.direction.operator_notes,1200)))fail('invalid_brief');
  if(!Number.isInteger(brief.generation?.proposed_credit_cap)||brief.generation.proposed_credit_cap<35||brief.generation.proposed_credit_cap>1000)fail('credit_cap_too_small');
  // Identity is pinned by the deployed workspace; URLs, paths, approvals and actor claims from the browser are never trusted.
- return {kind:brief.kind,version:1,expert:{tenant_id:TENANT,expert_id:EXPERT,config_sha256:CONFIG_SHA,display_name:'Artist Packet Expert',purpose:'Turn artist briefs and approved media into branded HTML packets.'},
+ return {kind:brief.kind,version:1,expert:{tenant_id:TENANT,expert_id:EXPERT,config_sha256:CONFIG_SHA,display_name:'Artist Packet Expert',domain:'Artist Deliverables',purpose:'Turn artist briefs and approved media into branded HTML packets.'},
   card:{scryfall_id:brief.card.scryfall_id,face_index:brief.card.face_index},direction:{pose:brief.direction.pose,finish:brief.direction.finish,operator_notes:brief.direction.operator_notes||''},credit_cap:35};
 }
 export function newJob(id,brief,actor,now) {
  const normalized=normalizeBrief(brief);
- return {schema:'forge-visual-job.v1',pipeline_version:2,output_version:2,id,tenant_id:TENANT,expert_id:EXPERT,config_sha256:CONFIG_SHA,revision:0,created_at:now,updated_at:now,created_by:actor,
+ return {schema:'forge-visual-job.v1',pipeline_version:2,output_version:2,card_frame_version:1,id,tenant_id:TENANT,expert_id:EXPERT,config_sha256:CONFIG_SHA,revision:0,created_at:now,updated_at:now,created_by:actor,
   brief:normalized,brief_sha256:digest(JSON.stringify(normalized)),status:'draft',stage:'portrait',assets:{},stages:{},events:[{action:'created',actor,at:now}],release:'not_requested'};
 }
 export function assertJob(job,id=job?.id){
@@ -50,7 +52,7 @@ export function assertJob(job,id=job?.id){
  for(const [role,a] of Object.entries(job.assets||{}))if(!['card','source_card','agent_card','portrait','character','master','remesh','web','avatar32','avatar64','avatar128'].includes(role)||a.key!==assetKey(job,role)||!/^[a-f0-9]{64}$/.test(a.sha256))fail('artifact_routing_failed');
  return job;
 }
-export const inputHash = (job,stage) => stage==='agent_card'?digest(JSON.stringify({source_card:job.assets.source_card?.sha256,portrait:job.assets.portrait?.sha256,text:job.card_text})):stage==='portrait'?job.brief_sha256:job.assets[{character:'portrait',master:'character',web:'master'}[stage]]?.sha256;
+export const inputHash = (job,stage) => stage==='agent_card'?digest(JSON.stringify({source_card:job.assets.source_card?.sha256,portrait:job.assets.portrait?.sha256,text:job.card_text,...(job.card_frame_version===1?{frame_profile:frameFor(job.brief.card)?.id,frame_version:1}:{})})):stage==='portrait'?job.brief_sha256:job.assets[{character:'portrait',master:'character',web:'master'}[stage]]?.sha256;
 export function normalizeCardText(value){
  const limits={title:100,mana_cost:80,creature_type:180,abilities:1200,quote:300,power:16,toughness:16};
  if(!object(value)||Object.keys(value).some(k=>!(k in limits)))fail('invalid_card_text');
@@ -60,7 +62,7 @@ export function normalizeCardText(value){
  if(!result.title||!result.creature_type||!result.abilities||Boolean(result.power)!==Boolean(result.toughness))fail('invalid_card_text');
  return result;
 }
-export const defaultCardText = job => ({title:job.brief.expert.display_name,mana_cost:job.assets.card?.printing?.mana_cost||'',creature_type:job.assets.card?.printing?.type_line||'Creature — Advisor',abilities:'Curate — Gather an artist’s approved media into a branded packet.\nPresent — Turn a brief into a clear, shareable story.',quote:'Every artist has a story. Give it a worthy frame.',power:job.assets.card?.printing?.power||'',toughness:job.assets.card?.printing?.toughness||''});
+export const defaultCardText = job => ({title:job.brief.expert.display_name,mana_cost:job.assets.card?.printing?.mana_cost||'',creature_type:`Expert Agent — ${job.brief.expert.domain||'Artist Deliverables'}`,abilities:'Curate — Gather an artist’s approved media into a branded packet.\nPresent — Turn a brief into a clear, shareable story.',quote:'Every artist has a story. Give it a worthy frame.',power:job.assets.card?.printing?.power||'',toughness:job.assets.card?.printing?.toughness||''});
 export function transition(job,input,actor,now) {
  assertJob(job,input.id);
  if(input.revision!==job.revision)fail('stale_revision');
@@ -68,13 +70,16 @@ export function transition(job,input,actor,now) {
  const pipeline=stagesFor(job);
  if(input.action==='card_text'){
   if(job.pipeline_version!==2||job.stage!=='agent_card'||job.status!=='draft'||job.stages.agent_card)fail('stage_not_ready');
-  next.card_text=normalizeCardText(input.card_text);next.card_text_confirmed={actor,at:now,sha256:digest(JSON.stringify(next.card_text))};
+  next.card_text=normalizeCardText(input.card_text);
+   if(job.card_frame_version===1){try{cardLayout(job.brief.card,next.card_text,job.assets.card?.printing);}catch(e){fail(e.message);}}
+   next.card_text_confirmed={actor,at:now,sha256:digest(JSON.stringify(next.card_text))};
  } else if(input.action==='start') {
   if(!pipeline.includes(stage)||stage!==job.stage||job.status!=='draft'||current)fail('stage_not_ready');
-  const previous=pipeline[pipeline.indexOf(stage)-1];
+  if(job.card_frame_version===1&&!frameFor(job.brief.card))fail('This printing needs a verified frame map before generation.');
+   const previous=pipeline[pipeline.indexOf(stage)-1];
   if(previous&&job.stages[previous]?.review?.decision!=='approve')fail('review_required');
   if(stage==='agent_card'&&(!job.assets.source_card||!job.assets.portrait||job.card_text_confirmed?.sha256!==digest(JSON.stringify(job.card_text))))fail('card_text_review_required');
-  if(input.quote!==QUOTES[stage]||input.sha256!==inputHash(job,stage))fail('approval_binding_changed');
+  if(input.quote!==quoteFor(job,stage)||input.sha256!==inputHash(job,stage))fail('approval_binding_changed');
   const credits=stage==='master'?30:stage==='web'?5:0;
   const reserved=Object.values(job.stages).reduce((sum,s)=>sum+Math.max(s.reserved_credits||0,s.actual_credits||0),0);
   if(reserved+credits>job.brief.credit_cap)fail('credit_cap_exceeded');
@@ -82,7 +87,8 @@ export function transition(job,input,actor,now) {
   next.status='queued';
  } else if(input.action==='review') {
   if(stage!==job.stage||job.status!=='review'||!['approve','reject'].includes(input.decision)||input.sha256!==job.assets[stage]?.sha256)fail('review_binding_changed');
-  current.review={decision:input.decision,sha256:input.sha256,actor,at:now};
+  if(input.decision==='approve'&&stage==='agent_card'&&job.card_frame_version===1&&!validFrameProof(job))fail('card_frame_check_required');
+   current.review={decision:input.decision,sha256:input.sha256,actor,at:now};
   if(input.decision==='reject'){next.status='rejected';current.status='rejected';}
   else {current.status='approved'; const following=pipeline[pipeline.indexOf(stage)+1];next.stage=following||stage;next.status=following?'draft':'ready';}
  } else if(input.action==='resume') {
@@ -94,5 +100,10 @@ export function transition(job,input,actor,now) {
 }
 export function publicJob(job){
  assertJob(job);
- return {...structuredClone(job),card_text_variants:job.card_text?cardTextVariants(job):null,next_input_sha256:inputHash(job,job.stage)};
+ return {...structuredClone(job),next_quote:quoteFor(job,job.stage),card_text_variants:job.card_text?cardTextVariants(job):null,next_input_sha256:inputHash(job,job.stage)};
+}
+
+export function validFrameProof(job){
+ const p=job.stages.agent_card?.receipt?.frame_preservation;
+ return p?.passed===true&&p.profile===FRAME_VERSION&&p.changed_protected_pixels===0&&p.protected_pixels>0&&p.source_sha256===job.assets.source_card?.sha256&&p.portrait_sha256===job.assets.portrait?.sha256&&p.card_text_sha256===digest(JSON.stringify(job.card_text))&&p.output_sha256===job.assets.agent_card?.sha256&&/^[a-f0-9]{64}$/.test(p.source_protected_sha256)&&p.source_protected_sha256===p.output_protected_sha256;
 }

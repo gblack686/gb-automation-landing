@@ -1,9 +1,11 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {newJob,transition,QUOTES,digest,assetKey,VisualError,inputHash,defaultCardText,stagesFor} from './domain.mjs';
+import {newJob,transition,QUOTES,digest,assetKey,VisualError,inputHash,defaultCardText,stagesFor,quoteFor,validFrameProof} from './domain.mjs';
 import {makeVisualHandler} from './api.mjs';
 import {makeWorker} from './worker.mjs';
 import {promptFor,imageEditInputs,providers as realProviders} from './providers.mjs';
+import {ISSHIN_PRINTING,cardLayout,cardSvg} from './card-frame.mjs';
+import {composeCard,verifyCardFrame} from './card-compositor.mjs';
 import {packetFor} from './packet.mjs';
 import {cardTextVariants} from './card-variants.mjs';
 import {deriveAvatarIcons} from './avatar-icons.mjs';
@@ -13,7 +15,7 @@ import {Document,NodeIO} from '@gltf-transform/core';
 import {build} from 'esbuild';
 import sharp from 'sharp';
 const id='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',actor='bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',time='2026-09-25T12:00:00Z',issuer='https://cognito-idp.us-east-1.amazonaws.com/test';
-const brief=()=>({kind:'agent-card-forge.visual-brief',version:1,expert:{tenant_id:'gbautomation',expert_id:'artist-packet-expert',display_name:'Artist Packet Expert',purpose:'Create packets'},intake:{config_sha256:CONFIG_SHA},card:{scryfall_id:id,face_index:0,selection:{status:'selected'}},direction:{pose:'action',finish:'detailed painted tabletop miniature',operator_notes:'indigo and ember'},generation:{proposed_credit_cap:35}});
+const brief=()=>({kind:'agent-card-forge.visual-brief',version:1,expert:{tenant_id:'gbautomation',expert_id:'artist-packet-expert',display_name:'Artist Packet Expert',purpose:'Create packets'},intake:{config_sha256:CONFIG_SHA},card:{scryfall_id:ISSHIN_PRINTING,face_index:0,selection:{status:'selected'}},direction:{pose:'action',finish:'detailed painted tabletop miniature',operator_notes:'indigo and ember'},generation:{proposed_credit_cap:35}});
 const event=(input,write=true)=>({identity:{claims:{iss:issuer,sub:actor,'cognito:groups':['tenant-gbautomation','forge-visual-operator']}},typeName:write?'Mutation':'Query',fieldName:write?'forgeVisualCommand':'forgeVisualRead',arguments:{input}});
 function memory(){
  const states=new Map(),assets=new Map(),counts={image:0,submit:0,poll:0,queue:0};let active=null;
@@ -24,9 +26,9 @@ function memory(){
  const providers={preflight:async()=>{},card:async()=>({bytes:Buffer.from('card pixels'),full:Buffer.from('full card pixels'),metadata:{name:'Selected printing',mana_cost:'{1}{W}{B}{R}',type_line:'Legendary Creature ? Human Samurai',power:'3',toughness:'4'}}),image:async(job,stage,bytes)=>{counts.image++;if(stage==='agent_card'){assert.equal(bytes.source_card.toString(),'full card pixels');assert.equal(bytes.portrait.toString(),'portrait pixels');}else assert(bytes.length);return {bytes:Buffer.from(stage+' pixels'),receipt:{usage:{total_tokens:20}}};},meshSubmit:async()=>{counts.submit++;return id;},meshPoll:async()=>{counts.poll++;return {status:'SUCCEEDED',credits:30,url:'private output'};},meshDownload:async()=>Buffer.from('model bytes')};
  return {store,queue,providers,counts,states,assets};
 }
-async function fixture(legacy=true){const deps=memory(),job=newJob(id,brief(),actor,time);if(legacy){delete job.pipeline_version;delete job.output_version;}await deps.store.put(job,null);return deps;}
+async function fixture(legacy=true){const deps=memory(),job=newJob(id,brief(),actor,time);delete job.card_frame_version;if(legacy){delete job.pipeline_version;delete job.output_version;}await deps.store.put(job,null);return deps;}
 async function start(deps,stage){const r=await deps.store.get(id),j=r.value;const sha=inputHash(j,stage);
- await deps.store.put(transition(j,{action:'start',id,stage,revision:j.revision,sha256:sha,quote:QUOTES[stage]},actor,time),r.etag);}
+ await deps.store.put(transition(j,{action:'start',id,stage,revision:j.revision,sha256:sha,quote:quoteFor(j,stage)},actor,time),r.etag);}
 async function approve(deps,stage){const r=await deps.store.get(id),j=r.value;await deps.store.put(transition(j,{action:'review',id,stage,revision:j.revision,sha256:j.assets[stage].sha256,decision:'approve'},actor,time),r.etag);}
 const worker=deps=>makeWorker({...deps,deriveIcons:async()=>[32,64,128].map(size=>({role:`avatar${size}`,size,bytes:Buffer.from(`icon ${size}`)})),now:()=>time,optimize:async()=>({bytes:Buffer.from('web model'),metrics:{passed:true,triangles:20,max_texture_edge_px:1024,bytes:9}})});
 test('auth, operator role and expert binding deny before writes',async()=>{
@@ -161,4 +163,67 @@ test('local text treatments can be mixed and are bound to the saved card text',(
  const variants=cardTextVariants(j);assert.equal(variants.variants.length,3);assert.equal(variants.method,'local-role-templates');
  const chosen={...j.card_text,title:variants.variants[1].text.title,abilities:variants.variants[2].text.abilities,quote:variants.variants[0].text.quote};
  const saved=transition(j,{action:'card_text',id,revision:0,card_text:chosen},actor,time);assert.deepEqual(saved.card_text,chosen);assert.notEqual(inputHash(j,'agent_card'),inputHash(saved,'agent_card'));
+});
+
+async function frameFixture(){
+ const d=memory(),j=newJob(id,brief(),actor,time);
+ const raw=Buffer.alloc(488*680*3);for(let i=0;i<raw.length;i++)raw[i]=(i*13+Math.floor(i/79))%256;
+ const source=await sharp(raw,{raw:{width:488,height:680,channels:3}}).jpeg().toBuffer();
+ const portrait=await sharp({create:{width:256,height:256,channels:3,background:'#982345'}}).png().toBuffer();
+ j.assets.source_card=await d.store.output(j,'source_card',source,j.brief_sha256);
+ j.assets.portrait=await d.store.output(j,'portrait',portrait,j.brief_sha256);
+ j.assets.card={...await d.store.output(j,'card',source,j.brief_sha256),printing:{mana_cost:'{R}{W}{B}',type_line:'Legendary Creature — Human Samurai',power:'3',toughness:'4'}};
+ j.stage='agent_card';j.stages.portrait={status:'approved',review:{decision:'approve',sha256:j.assets.portrait.sha256}};j.card_text=defaultCardText(j);
+ await d.store.put(j,null);return {d,j,source,portrait};
+}
+test('source-pixel compositor preserves fine detail and detects even one changed border pixel',async()=>{
+ const {j,source,portrait}=await frameFixture();
+ assert.equal(j.card_text.creature_type,'Expert Agent — Artist Deliverables');
+ for(const variant of cardTextVariants(j).variants){
+  j.card_text=variant.text;
+  const result=await composeCard(j,{source_card:source,portrait});
+  assert.equal(result.receipt.provider_charge,0);assert.equal(result.receipt.frame_preservation.changed_protected_pixels,0);
+  assert(result.receipt.frame_preservation.protected_pixels>118000);
+  const {data,info}=await sharp(result.bytes).raw().toBuffer({resolveWithObject:true});data[0]^=255;
+  const corrupt=await sharp(data,{raw:info}).png().toBuffer();
+  await assert.rejects(()=>verifyCardFrame(j,source,corrupt),/Protected card pixels changed/);
+ }
+ const changed={...j.card_text,power:'5',toughness:'6'};j.card_text=changed;
+ assert.equal((await composeCard(j,{source_card:source,portrait})).receipt.frame_preservation.passed,true);
+ assert.throws(()=>cardLayout(j.brief.card,{...changed,abilities:'Long ability. '.repeat(100)},j.assets.card.printing),/Shorten/);
+ assert.throws(()=>cardLayout(j.brief.card,{...changed,mana_cost:'{U}'},j.assets.card.printing),/source mana/);
+ assert.throws(()=>cardLayout({...j.brief.card,face_index:1},changed,j.assets.card.printing),/verified frame map/);
+ const svg=cardSvg({card:j.brief.card,text:{...changed,title:'<script> & "quoted"'},printing:j.assets.card.printing,source:'data:image/jpeg;base64,AA',portrait:'data:image/png;base64,AA'});
+ assert.doesNotMatch(svg,/<script>|<text[ >]/);assert.match(svg,/<path /);
+});
+test('local card worker makes no provider call, recovers its proof, and gates approval and packet release',async()=>{
+ const {d}=await frameFixture();await saveCardText(d);
+ d.providers.preflight=async()=>{throw Error('No provider should be contacted');};d.providers.image=async()=>{throw Error('No paid image edit allowed');};
+ const output=d.store.output;let once=true;
+ d.store.output=async(...args)=>{const asset=await output(...args);if(args[1]==='agent_card'&&once){once=false;throw Error('Crash after upload');}return asset;};
+ await start(d,'agent_card');await worker(d)(id);assert.equal((await d.store.get(id)).value.status,'outcome_unknown');
+ await worker(d)(id);const j=(await d.store.get(id)).value;assert.equal(j.status,'review');assert(validFrameProof(j));assert.equal(d.counts.image,0);
+ for(const change of [p=>p.source_sha256='0'.repeat(64),p=>p.output_sha256='0'.repeat(64),p=>p.changed_protected_pixels=1,p=>p.passed=false]){
+  const bad=structuredClone(j);change(bad.stages.agent_card.receipt.frame_preservation);
+  assert.throws(()=>transition(bad,{action:'review',id,revision:bad.revision,stage:'agent_card',sha256:bad.assets.agent_card.sha256,decision:'approve'},actor,time),/card_frame_check_required/);
+  assert.equal(transition(bad,{action:'review',id,revision:bad.revision,stage:'agent_card',sha256:bad.assets.agent_card.sha256,decision:'reject'},actor,time).status,'rejected');
+ }
+ await approve(d,'agent_card');assert.equal((await d.store.get(id)).value.stage,'character');
+ const complete=structuredClone(j);complete.status='ready';
+ for(const stage of ['portrait','agent_card','character','master','web']){
+  complete.assets[stage]??={...complete.assets.portrait,key:assetKey(complete,stage)};
+  complete.stages[stage]??={};complete.stages[stage].review={decision:'approve',sha256:complete.assets[stage].sha256};
+ }
+ for(const size of [32,64,128])complete.assets[`avatar${size}`]={...complete.assets.portrait,key:assetKey(complete,`avatar${size}`),input_sha256:complete.assets.portrait.sha256,width:size,height:size};
+ complete.stages.web.metrics={passed:true};assert.equal(packetFor(complete).frame_preservation.passed,true);
+ delete complete.stages.agent_card.receipt.frame_preservation;assert.throws(()=>packetFor(complete),/card_frame_check_required/);
+ const second=await frameFixture(),out=second.d.store.output;let failed=false;
+ second.d.store.output=async(...args)=>{if(args[1]==='agent_card'&&!failed){failed=true;throw Error('Crash before upload');}return out(...args);};
+ await saveCardText(second.d);await start(second.d,'agent_card');await worker(second.d)(id);
+ assert.equal((await second.d.store.get(id)).value.status,'outcome_unknown');await worker(second.d)(id);
+ assert.equal((await second.d.store.get(id)).value.status,'review');assert.equal(second.d.counts.image,0);
+});
+test('unmapped printings are stopped before paid portrait generation',()=>{
+ const b=brief();b.card.scryfall_id=id;const j=newJob(id,b,actor,time);
+ assert.throws(()=>transition(j,{action:'start',id,revision:0,stage:'portrait',sha256:j.brief_sha256,quote:QUOTES.portrait},actor,time),/verified frame map/);
 });
