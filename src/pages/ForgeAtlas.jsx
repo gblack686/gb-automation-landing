@@ -33,7 +33,11 @@ export default function ForgeAtlas() {
      setVisual({brief:brief||null});payload={opened:true};
     }else if(message.view==='visualActive'){
      const current=await visualRequest({action:'active'});payload=null;
-     if(current){const r=await visualAsset(current.id,'portrait',abort.signal);let binary='';for(let p=0;p<r.bytes.length;p+=8192)binary+=String.fromCharCode(...r.bytes.subarray(p,p+8192));payload={id:current.id,portrait:'data:image/png;base64,'+btoa(binary),sha256:r.asset.sha256,credit:current.card||null};}
+     if(current){
+      const encode=bytes=>{let binary='';for(let p=0;p<bytes.length;p+=8192)binary+=String.fromCharCode(...bytes.subarray(p,p+8192));return 'data:image/png;base64,'+btoa(binary);};
+      const r=await visualAsset(current.id,'portrait',abort.signal);payload={id:current.id,portrait:encode(r.bytes),sha256:r.asset.sha256,credit:current.card||null};
+      if(current.agent_card){const card=await visualAsset(current.id,'agent_card',abort.signal);payload.agent_card=encode(card.bytes);payload.agent_card_sha256=card.asset.sha256;}
+     }
     }else payload = await readAtlas(message.view,message.input);
     ok = true;
    } catch { payload = null; }
