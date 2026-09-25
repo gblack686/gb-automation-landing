@@ -8,6 +8,7 @@ import {optimize} from './optimize.mjs';
 import {CONFIG_SHA} from '../forge-atlas/contract.mjs';
 import {Document,NodeIO} from '@gltf-transform/core';
 import {build} from 'esbuild';
+import sharp from 'sharp';
 const id='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',actor='bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',time='2026-09-25T12:00:00Z',issuer='https://cognito-idp.us-east-1.amazonaws.com/test';
 const brief=()=>({kind:'agent-card-forge.visual-brief',version:1,expert:{tenant_id:'gbautomation',expert_id:'artist-packet-expert',display_name:'Artist Packet Expert',purpose:'Create packets'},intake:{config_sha256:CONFIG_SHA},card:{scryfall_id:id,face_index:0,selection:{status:'selected'}},direction:{pose:'action',finish:'detailed painted tabletop miniature',operator_notes:'indigo and ember'},generation:{proposed_credit_cap:35}});
 const event=(input,write=true)=>({identity:{claims:{iss:issuer,sub:actor,'cognito:groups':['tenant-gbautomation','forge-visual-operator']}},typeName:write?'Mutation':'Query',fieldName:write?'forgeVisualCommand':'forgeVisualRead',arguments:{input}});
@@ -88,8 +89,11 @@ test('prompts use the chosen identity without a global samurai palette',()=>{
 });
 test('web optimization measures the actual binary and blocks external glTF resources',async()=>{
  const doc=new Document(),buffer=doc.createBuffer();const positions=doc.createAccessor().setBuffer(buffer).setType('VEC3').setArray(new Float32Array([0,0,0,1,0,0,0,1,0]));
- const mesh=doc.createMesh().addPrimitive(doc.createPrimitive().setAttribute('POSITION',positions));doc.createScene().addChild(doc.createNode().setMesh(mesh));
- const bytes=Buffer.from(await new NodeIO().writeBinary(doc)),result=await optimize(bytes);assert.equal(result.metrics.triangles,1);assert.equal(result.metrics.passed,true);assert.equal(result.bytes.readUInt32LE(0),0x46546c67);
+ const pixels=Buffer.alloc(3000*2000*3);for(let n=0;n<pixels.length;n+=3){pixels[n]=Math.floor(n/3)%256;pixels[n+1]=Math.floor(n/9000)%256;pixels[n+2]=128;}
+ const texture=doc.createTexture().setImage(await sharp(pixels,{raw:{width:3000,height:2000,channels:3}}).png().toBuffer()).setMimeType('image/png');
+ const material=doc.createMaterial().setBaseColorTexture(texture),uv=doc.createAccessor().setBuffer(buffer).setType('VEC2').setArray(new Float32Array([0,0,1,0,0,1]));
+ const mesh=doc.createMesh().addPrimitive(doc.createPrimitive().setAttribute('POSITION',positions).setAttribute('TEXCOORD_0',uv).setMaterial(material));doc.createScene().addChild(doc.createNode().setMesh(mesh));
+ const bytes=Buffer.from(await new NodeIO().writeBinary(doc)),result=await optimize(bytes);assert.equal(result.metrics.triangles,1);assert.equal(result.metrics.max_texture_edge_px,2048);assert.equal(result.metrics.passed,true);assert.equal(result.bytes.readUInt32LE(0),0x46546c67);
  await assert.rejects(()=>optimize(Buffer.from('not glb')));
 });
 test('both Lambda entrypoints bundle with explicit native dependency handling',async()=>{
