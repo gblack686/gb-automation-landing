@@ -6,6 +6,7 @@ import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import {resolve,join} from 'node:path';
 import {pathToFileURL} from 'node:url';
 import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
 const proof=process.env.FORGE_BUILDER_PROOF;if(!proof)throw Error('FORGE_BUILDER_PROOF must name a completed container proof directory');
 const fixture=JSON.parse(await readFile(join(proof,'ui-states.json'),'utf8'));
 const output='artifacts/forge-atlas-validation/builder';await mkdir(output,{recursive:true});
@@ -52,6 +53,8 @@ try{
  await page.getByRole('button',{name:'Accept proposal',exact:true}).click();
  for(let n=0;n<2;n++){await page.locator('[data-builder-gate-confirm]').check();await page.getByRole('button',{name:'Approve current gate',exact:true}).click();}
  await page.getByRole('button',{name:'Generate package',exact:true}).click();await page.getByRole('button',{name:'Preview package',exact:true}).waitFor();
+ const downloading=page.waitForEvent('download');await page.getByRole('button',{name:'Download package ZIP',exact:true}).click();
+ const downloaded=await downloading;assert.equal(createHash('sha256').update(await readFile(await downloaded.path())).digest('hex'),fixture.packet.archive_sha256);
  console.log('Completed three gates and generation');await page.screenshot({path:output+'/desktop.png',fullPage:true});
  await page.getByRole('button',{name:'Preview package',exact:true}).click();await page.getByAltText('Selected agent card').waitFor();await page.locator('canvas').waitFor();
  await page.screenshot({path:output+'/packet.png',fullPage:true});await page.getByRole('button',{name:'Back to brief',exact:true}).click();
@@ -66,6 +69,6 @@ try{
  await page.getByRole('button',{name:'Close',exact:true}).click();await page.waitForFunction(()=>window.voiceEnded===true);
  operator=false;await mount();assert.equal(await page.getByRole('button',{name:'Save answer',exact:true}).isDisabled(),true);
  assert.deepEqual(errors,[]);
- const receipt={pass:true,checks:['hosted storage wording','shared five-field brief','proposal/scope/plan gates','generated card and 3D preview','mobile layout','saved reload','microphone consent before reservation','verbatim voice capture','voice cleanup on close','member read-only'],commands:commands.length,voice_claims:voiceClaims,provider_calls:0};
+ const receipt={pass:true,checks:['hosted storage wording','shared five-field brief','proposal/scope/plan gates','exact ZIP download bytes','generated card and 3D preview','mobile layout','saved reload','microphone consent before reservation','verbatim voice capture','voice cleanup on close','member read-only'],commands:commands.length,voice_claims:voiceClaims,provider_calls:0};
  await writeFile(output+'/receipt.json',JSON.stringify(receipt,null,2));console.log(JSON.stringify(receipt));
 }finally{await browser.close();}
