@@ -1,0 +1,134 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gbautomation.xyz/schemas/forge-approval-scope-grant.v1.schema.json",
+  "title": "forge-approval-scope-grant.v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "grant_id",
+    "version",
+    "tenant",
+    "workflow_id",
+    "proposal_id",
+    "scope_version",
+    "scope_sha256",
+    "decision_event",
+    "operator",
+    "repositories",
+    "environments",
+    "operations",
+    "phases",
+    "excluded_actions",
+    "max_cost",
+    "expires_at",
+    "base_commit",
+    "profile_sha256",
+    "map_sha256"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "forge-approval-scope-grant.v1"
+    },
+    "grant_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "const": 1
+    },
+    "tenant": {
+      "type": "string",
+      "minLength": 1
+    },
+    "workflow_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "proposal_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scope_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "scope_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "decision_event": {
+      "type": "string",
+      "minLength": 1
+    },
+    "operator": {
+      "type": "string",
+      "minLength": 1
+    },
+    "repositories": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true,
+      "minItems": 1
+    },
+    "environments": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true,
+      "minItems": 1
+    },
+    "operations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true,
+      "minItems": 1
+    },
+    "phases": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 99
+      }
+    },
+    "excluded_actions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "max_cost": {
+      "type": "number",
+      "minimum": 0
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "base_commit": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{40}$"
+    },
+    "profile_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "map_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    }
+  },
+  "additionalProperties": false
+}

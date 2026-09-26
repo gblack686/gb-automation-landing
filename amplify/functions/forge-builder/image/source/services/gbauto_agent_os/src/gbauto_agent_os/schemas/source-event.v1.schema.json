@@ -1,0 +1,333 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gbautomation.xyz/schemas/source-event.v1.schema.json",
+  "title": "GBAuto Agent OS normalized source event envelope v1",
+  "description": "The single typed envelope every registered intake origin normalizes into (ADR-09). Family and per-family variant are enum-bound: unknown values fail validation, never pass through.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "source_event_id",
+    "source",
+    "tenant",
+    "consent_state",
+    "idempotency_key",
+    "trace_id",
+    "synthetic",
+    "occurred_at",
+    "payload"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "source-event.v1"
+    },
+    "source_event_id": {
+      "type": "string",
+      "pattern": "^src_[a-z0-9_]+$",
+      "maxLength": 120
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "family",
+        "variant",
+        "originating_content_ref"
+      ],
+      "properties": {
+        "family": {
+          "enum": [
+            "telegram",
+            "google_meet",
+            "youtube_intel",
+            "website_report_feedback",
+            "second_brain_backlog",
+            "client_agent_inbox",
+            "error_health",
+            "sprint_manager",
+            "web_research_scrape",
+            "agent_forge_planning"
+          ]
+        },
+        "variant": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]{1,63}$"
+        },
+        "message_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "event_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "originating_content_ref": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 500
+        }
+      },
+      "anyOf": [
+        {
+          "required": [
+            "message_ref"
+          ]
+        },
+        {
+          "required": [
+            "event_ref"
+          ]
+        }
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "family": {
+                "const": "telegram"
+              }
+            },
+            "required": [
+              "family"
+            ]
+          },
+          "then": {
+            "properties": {
+              "variant": {
+                "enum": [
+                  "text",
+                  "voice"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "family": {
+                "const": "google_meet"
+              }
+            },
+            "required": [
+              "family"
+            ]
+          },
+          "then": {
+            "properties": {
+              "variant": {
+                "enum": [
+                  "transcript_doc"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "family": {
+                "const": "youtube_intel"
+              }
+            },
+            "required": [
+              "family"
+            ]
+          },
+          "then": {
+            "properties": {
+              "variant": {
+                "enum": [
+                  "liked_video",
+                  "transcript"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "family": {
+                "const": "website_report_feedback"
+              }
+            },
+            "required": [
+              "family"
+            ]
+          },
+          "then": {
+            "properties": {
+              "variant": {
+                "enum": [
+                  "report_feedback",
+                  "plan_feedback"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "family": {
+                "const": "second_brain_backlog"
+              }
+            },
+            "required": [
+              "family"
+            ]
+          },
+          "then": {
+            "properties": {
+              "variant": {
+                "enum": [
+                  "backlog_item"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "family": {
+                "const": "client_agent_inbox"
+              }
+            },
+            "required": [
+              "family"
+            ]
+          },
+          "then": {
+            "properties": {
+              "variant": {
+                "enum": [
+                  "client_message"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "family": {
+                "const": "error_health"
+              }
+            },
+            "required": [
+              "family"
+            ]
+          },
+          "then": {
+            "properties": {
+              "variant": {
+                "enum": [
+                  "error_event",
+                  "health_alert"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "family": {
+                "const": "sprint_manager"
+              }
+            },
+            "required": [
+              "family"
+            ]
+          },
+          "then": {
+            "properties": {
+              "variant": {
+                "enum": [
+                  "sprint_signal"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "family": {
+                "const": "web_research_scrape"
+              }
+            },
+            "required": [
+              "family"
+            ]
+          },
+          "then": {
+            "properties": {
+              "variant": {
+                "enum": [
+                  "scrape_result"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "family": {
+                "const": "agent_forge_planning"
+              }
+            },
+            "required": [
+              "family"
+            ]
+          },
+          "then": {
+            "properties": {
+              "variant": {
+                "enum": [
+                  "research_request"
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "tenant": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{1,63}$"
+    },
+    "consent_state": {
+      "enum": [
+        "operator_internal",
+        "client_consented",
+        "public_content"
+      ]
+    },
+    "idempotency_key": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "trace_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.:-]{4,128}$"
+    },
+    "synthetic": {
+      "type": "boolean"
+    },
+    "occurred_at": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "payload": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gbautomation.xyz/schemas/prospect-brand-packet.v1.json",
+  "title": "Prospect Brand Packet",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "company_name",
+    "requested_url",
+    "resolved_url",
+    "retrieved_at_utc",
+    "source_scope",
+    "typography",
+    "palette",
+    "assets",
+    "evidence",
+    "validation"
+  ],
+  "properties": {
+    "schema_version": {"const": "prospect-brand-packet.v1"},
+    "company_name": {"type": "string", "minLength": 1},
+    "requested_url": {"type": "string", "format": "uri"},
+    "resolved_url": {"type": "string", "format": "uri"},
+    "retrieved_at_utc": {"type": "string"},
+    "source_scope": {"const": "public_official_site_only"},
+    "typography": {
+      "type": "object",
+      "required": ["families", "stacks", "font_asset_urls"],
+      "properties": {
+        "families": {"type": "array", "items": {"type": "string"}},
+        "stacks": {"type": "array", "items": {"type": "string"}},
+        "font_asset_urls": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "palette": {
+      "type": "object",
+      "required": ["observations"],
+      "properties": {
+        "observations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["hex", "score", "occurrences", "sources"],
+            "properties": {
+              "hex": {"type": "string", "pattern": "^#[0-9A-F]{6}$"},
+              "score": {"type": "integer", "minimum": 1},
+              "occurrences": {"type": "integer", "minimum": 1},
+              "sources": {"type": "array", "items": {"type": "string"}}
+            }
+          }
+        }
+      }
+    },
+    "assets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "asset_id",
+          "kind",
+          "source_url",
+          "local_path",
+          "content_type",
+          "bytes",
+          "sha256",
+          "rights_posture"
+        ],
+        "properties": {
+          "asset_id": {"type": "string"},
+          "kind": {"enum": ["logo", "hero", "screenshot", "icon", "other"]},
+          "source_url": {"type": "string", "format": "uri"},
+          "local_path": {"type": "string"},
+          "content_type": {"type": "string"},
+          "bytes": {"type": "integer", "minimum": 1},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "rights_posture": {"const": "official_site_identification_reference_only"}
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "required": ["document_sha256", "stylesheet_urls", "script_urls", "asset_candidates"],
+      "properties": {
+        "document_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "stylesheet_urls": {"type": "array", "items": {"type": "string"}},
+        "script_urls": {"type": "array", "items": {"type": "string"}},
+        "asset_candidates": {"type": "integer", "minimum": 0}
+      }
+    },
+    "validation": {
+      "type": "object",
+      "required": ["status", "failures"],
+      "properties": {
+        "status": {"enum": ["ok", "partial", "failed"]},
+        "failures": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  }
+}

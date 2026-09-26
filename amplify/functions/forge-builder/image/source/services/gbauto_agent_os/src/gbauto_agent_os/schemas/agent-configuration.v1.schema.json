@@ -1,0 +1,417 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gbautomation.xyz/schemas/agent-configuration.v1.schema.json",
+  "title": "GBAuto Agent OS agent configuration package v1",
+  "description": "A versioned, runnable-agent configuration package produced by Agent Forge (ADR-06: custom code first). It binds one owner expert (expert-ownership.v1), one fleet runtime profile (fleet-profile.v1 — ADR-04: experts own doctrine, profiles own runtime identity/tools/permissions/skills), pinned skills, and context-only Canopy snippet references. Canopy can never grant capability: capability_grants is a const empty array, so a conforming configuration is structurally incapable of granting a tool or permission through a snippet. Full fleet-profile.v1 validation of an inline profile is delegated to scripts/agent_forge.py, which validates it against schemas/fleet-profile.v1.schema.json rather than duplicating that contract here.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "config_id",
+    "version",
+    "tenant",
+    "owner_expert",
+    "fleet_profile",
+    "skills",
+    "canopy_refs",
+    "capability_grants",
+    "permissions",
+    "composition",
+    "provenance"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "agent-configuration.v1"
+    },
+    "config_id": {
+      "type": "string",
+      "pattern": "^forgecfg_[a-z0-9_]+$",
+      "maxLength": 200
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100000
+    },
+    "tenant": {
+      "$ref": "#/definitions/kebab"
+    },
+    "owner_expert": {
+      "$ref": "#/definitions/kebab",
+      "description": "Must resolve to an owner_expert entry in config/agent-os/expert-ownership.yaml; enforced by the ownership_valid check."
+    },
+    "fleet_profile": {
+      "description": "Either an inline fleet-profile.v1 document or a repository-relative reference to one.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/fleetProfileRef"
+        },
+        {
+          "$ref": "#/definitions/fleetProfileInline"
+        }
+      ]
+    },
+    "skills": {
+      "type": "array",
+      "maxItems": 30,
+      "items": {
+        "$ref": "#/definitions/skillPin"
+      }
+    },
+    "canopy_refs": {
+      "type": "array",
+      "maxItems": 20,
+      "uniqueItems": true,
+      "description": "Repository-relative Canopy snippet paths. Context only: snippets contribute prompt text and nothing else.",
+      "items": {
+        "$ref": "#/definitions/repoPath"
+      }
+    },
+    "capability_grants": {
+      "const": [],
+      "description": "Structural invariant: a configuration grants no capability of its own. Every tool/permission a runtime agent may use comes from the fleet profile allowlists, never from a Canopy snippet."
+    },
+    "permissions": {
+      "type": "object",
+      "required": [
+        "inherits_from",
+        "tool_allowlist",
+        "permission_allowlist"
+      ],
+      "properties": {
+        "inherits_from": {
+          "const": "fleet_profile"
+        },
+        "tool_allowlist": {
+          "type": "array",
+          "maxItems": 100,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/boundedString"
+          }
+        },
+        "permission_allowlist": {
+          "type": "array",
+          "maxItems": 100,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/boundedString"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "composition": {
+      "type": "object",
+      "description": "How this package was composed, including anything the composer could not resolve. Unresolvable skills and snippets are excluded from the package and named here rather than pinned as phantoms.",
+      "required": [
+        "profile_template",
+        "excluded"
+      ],
+      "properties": {
+        "profile_template": {
+          "$ref": "#/definitions/repoPath"
+        },
+        "profile_spec": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/repoPath"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "excluded": {
+          "type": "array",
+          "maxItems": 100,
+          "items": {
+            "type": "object",
+            "required": [
+              "kind",
+              "name",
+              "reason"
+            ],
+            "properties": {
+              "kind": {
+                "enum": [
+                  "skill",
+                  "canopy_ref"
+                ]
+              },
+              "name": {
+                "$ref": "#/definitions/boundedString"
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 500
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "notes": {
+          "type": "array",
+          "maxItems": 50,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "created_by",
+        "created_at",
+        "base_commit",
+        "source_registries"
+      ],
+      "properties": {
+        "created_by": {
+          "$ref": "#/definitions/boundedString"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "base_commit": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{7,40}|unknown)$"
+        },
+        "source_registries": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 20,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/repoPath"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "compact_canopy": {
+      "type": "object",
+      "description": "Opt-in compact Canopy section configuration. Snippets remain context-only; parameter declarations live here and never grant tools or permissions.",
+      "required": [
+        "snippets",
+        "parameters",
+        "selected_max_bytes",
+        "contract"
+      ],
+      "properties": {
+        "snippets": {
+          "type": "array",
+          "maxItems": 20,
+          "items": {
+            "$ref": "#/definitions/compactCanopySnippet"
+          }
+        },
+        "parameters": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/compactCanopyParameter"
+          }
+        },
+        "selected_max_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 24000
+        },
+        "contract": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "definitions": {
+    "kebab": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80,
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "boundedString": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "repoPath": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 300,
+      "pattern": "^[A-Za-z0-9._/-]+$"
+    },
+    "skillPin": {
+      "type": "object",
+      "required": [
+        "name",
+        "version",
+        "source"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "#/definitions/kebab"
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "description": "Pin, not a floating ref. The skill_versions_pinned check rejects latest/HEAD/main/* and any unpinned value."
+        },
+        "declared_version": {
+          "$ref": "#/definitions/boundedString"
+        },
+        "source": {
+          "$ref": "#/definitions/repoPath"
+        }
+      },
+      "additionalProperties": false
+    },
+    "fleetProfileRef": {
+      "type": "object",
+      "required": [
+        "ref"
+      ],
+      "properties": {
+        "ref": {
+          "$ref": "#/definitions/repoPath"
+        }
+      },
+      "additionalProperties": false
+    },
+    "fleetProfileInline": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "profile_id",
+        "display_name",
+        "owner_expert",
+        "role_behavior",
+        "tool_allowlist",
+        "permission_allowlist",
+        "suggested_skills",
+        "startup_context",
+        "tenant",
+        "runtime",
+        "receipts_policy"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "fleet-profile.v1"
+        }
+      }
+    },
+    "compactCanopyParameter": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "string",
+            "integer",
+            "number",
+            "boolean"
+          ]
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "default": {
+          "type": [
+            "string",
+            "integer",
+            "number",
+            "boolean"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "compactCanopySnippet": {
+      "type": "object",
+      "required": [
+        "ref",
+        "version"
+      ],
+      "properties": {
+        "ref": {
+          "$ref": "#/definitions/boundedString"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "mandatory": {
+          "type": "boolean"
+        },
+        "parameters": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/compactCanopyParameter"
+          }
+        },
+        "task_bindings": {
+          "type": "array",
+          "maxItems": 20,
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/boundedString"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "task_ids": {
+                    "type": "array",
+                    "items": { "$ref": "#/definitions/boundedString" }
+                  },
+                  "task_kinds": {
+                    "type": "array",
+                    "items": { "$ref": "#/definitions/boundedString" }
+                  }
+                },
+                "additionalProperties": false
+              }
+            ]
+          }
+        },
+        "profiles": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/kebab" }
+        },
+        "tenants": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/kebab" }
+        },
+        "max_source_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 24000
+        },
+        "review_receipt": {
+          "$ref": "#/definitions/repoPath"
+        },
+        "reviewed_quality_revision_receipt": {
+          "$ref": "#/definitions/repoPath"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

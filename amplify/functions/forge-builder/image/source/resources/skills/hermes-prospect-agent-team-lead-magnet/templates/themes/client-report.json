@@ -1,0 +1,15 @@
+{
+  "$comment": "client-report theme manifest (neon fusion, operator-directed 2026-07-12) — the client-branded lead-magnet report on the Neon Oiran skin: void ground, cyan/terracotta glow, Bebas display, Hermes caduceus backdrop, client logo (dark-inverted) + client accent. Client brand colors recorded in logo-verification.json (brand_colors) are unioned in by the brand gate at validation time.",
+  "theme": "client-report",
+  "required_hexes": ["#0A0608", "#67E8F9", "#D97757", "#F3F1E7"],
+  "allowed_hexes": [
+    "#0A0608", "#0A0A0C", "#09090B", "#111112", "#18181B", "#1F1F22",
+    "#67E8F9", "#FF3333", "#EF4444",
+    "#D97757", "#B75F43", "#F3F1E7", "#E6E4D9", "#D6D4C8",
+    "#8C8A84", "#5C5C5C", "#191919", "#FFFFFF", "#000000"
+  ],
+  "forbidden_styles": ["#3b82f6", "#667eea"],
+  "fonts": ["Bebas Neue", "Inter"],
+  "backdrop": "assets/hermes-caduceus.png — Hermes WebUI app icon glyph, operator-directed backdrop; attribution stays text-only in copy",
+  "brand_colors_source": "logo-verification.json:brand_colors (unioned at validation)"
+}

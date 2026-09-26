@@ -12,6 +12,8 @@ import {forgeVisual,forgeVisualWorker} from './functions/forge-visual/resource';
 import {Duration} from 'aws-cdk-lib';
 import {Queue} from 'aws-cdk-lib/aws-sqs';
 import {SqsEventSource} from 'aws-cdk-lib/aws-lambda-event-sources';
+import {forgeBuilder,forgeBuilderWorker} from './functions/forge-builder/resource';
+import {builderInfrastructure} from './functions/forge-builder/infrastructure.mjs';
 
 /**
  * @see https://docs.amplify.aws/react/build-a-backend/ to add storage, functions, and more
@@ -25,6 +27,8 @@ const backend = defineBackend({
   forgeAtlas,
   forgeVisual,
   forgeVisualWorker,
+  forgeBuilder,
+  forgeBuilderWorker,
 });
 
 const atlasStack = Stack.of(backend.forgeAtlas.resources.lambda);
@@ -37,6 +41,8 @@ backend.forgeAtlas.resources.lambda.addToRolePolicy(new PolicyStatement({
   resources: [atlasSecretArn(atlasStack)],
 }));
 backend.addOutput({custom: {forge_atlas_bucket_name: atlasDocuments.bucketName}});
+builderInfrastructure(atlasStack,{bucket:atlasDocuments,api:backend.forgeBuilder,
+ worker:backend.forgeBuilderWorker,issuer:atlasIssuer(atlasStack,backend.auth.resources.userPool.userPoolId)});
 
 const visualRoot='gbautomation/artist-packet-expert/visuals';
 const visualDLQ=new Queue(atlasStack,'ForgeVisualDeadLetters',{retentionPeriod:Duration.days(14)});

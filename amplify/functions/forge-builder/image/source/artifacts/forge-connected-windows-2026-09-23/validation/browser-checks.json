@@ -1,0 +1,1162 @@
+{
+  "schema_version": "forge-window-validation.v1",
+  "at": "2026-09-24T05:36:30.248549+00:00",
+  "passed": true,
+  "checks": [
+    {
+      "name": "All 13 previews render in the collection",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "Studio and canonical cream default",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "Local fonts are loaded",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "Initial normalized fixtures",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "skills expanded view and data inspector",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "commands expanded view and data inspector",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "presence expanded view and data inspector",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "chat expanded view and data inspector",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "canvas expanded view and data inspector",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "proposals expanded view and data inspector",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "checks expanded view and data inspector",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "config expanded view and data inspector",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "knowledge expanded view and data inspector",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "tasks expanded view and data inspector",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "artifacts expanded view and data inspector",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "console expanded view and data inspector",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "changes expanded view and data inspector",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "studio dark palette",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "editorial dark palette",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "precision dark palette",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "glass dark palette",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "contrast dark palette",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "skills empty search result",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "commands empty search result",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "presence empty search result",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "chat empty search result",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "canvas empty search result",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "proposals empty search result",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "checks empty search result",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "knowledge empty search result",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "tasks empty search result",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "artifacts empty search result",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "console empty search result",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "changes empty search result",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "Skill category filter limits visible records",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "Linked skill opens exact run",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "Run opens producing artifact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "Back restores exact run selection",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "Linked navigation adjusts incompatible workstream",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "Second Brain attaches exact source to conversation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "Demo chat safely escapes input and creates linked response",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "Canvas compares actual versions from the same family",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "Saving config creates an exact two-field review",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "Demo approval updates proposal while source config stays unchanged",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "No fake authorization event is minted",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "Artifact review updates exact version and unlocks task",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "Demo task completes after dependencies and review",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "Job survives window changes and creates linked artifact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "Integrity after demo run and config review",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "Error run has stderr and exit 1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "stderr filter isolates error output",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "Stop preserves partial log without success",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "Check evidence updates without claiming live activation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "Inspector shows source names and join types",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "Data map is rendered and has contract evidence",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "Export is versioned and explicitly local",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "skills full fits 1280px",
+      "passed": true,
+      "detail": {
+        "width": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "skills preview fits 1280px",
+      "passed": true,
+      "detail": {
+        "width": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "commands full fits 1280px",
+      "passed": true,
+      "detail": {
+        "width": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "commands preview fits 1280px",
+      "passed": true,
+      "detail": {
+        "width": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "presence full fits 1280px",
+      "passed": true,
+      "detail": {
+        "width": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "presence preview fits 1280px",
+      "passed": true,
+      "detail": {
+        "width": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "chat full fits 1280px",
+      "passed": true,
+      "detail": {
+        "width": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "chat preview fits 1280px",
+      "passed": true,
+      "detail": {
+        "width": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "canvas full fits 1280px",
+      "passed": true,
+      "detail": {
+        "width": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "canvas preview fits 1280px",
+      "passed": true,
+      "detail": {
+        "width": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "proposals full fits 1280px",
+      "passed": true,
+      "detail": {
+        "width": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "proposals preview fits 1280px",
+      "passed": true,
+      "detail": {
+        "width": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "checks full fits 1280px",
+      "passed": true,
+      "detail": {
+        "width": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "checks preview fits 1280px",
+      "passed": true,
+      "detail": {
+        "width": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "config full fits 1280px",
+      "passed": true,
+      "detail": {
+        "width": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "config preview fits 1280px",
+      "passed": true,
+      "detail": {
+        "width": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "knowledge full fits 1280px",
+      "passed": true,
+      "detail": {
+        "width": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "knowledge preview fits 1280px",
+      "passed": true,
+      "detail": {
+        "width": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "tasks full fits 1280px",
+      "passed": true,
+      "detail": {
+        "width": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "tasks preview fits 1280px",
+      "passed": true,
+      "detail": {
+        "width": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "artifacts full fits 1280px",
+      "passed": true,
+      "detail": {
+        "width": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "artifacts preview fits 1280px",
+      "passed": true,
+      "detail": {
+        "width": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "console full fits 1280px",
+      "passed": true,
+      "detail": {
+        "width": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "console preview fits 1280px",
+      "passed": true,
+      "detail": {
+        "width": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "changes full fits 1280px",
+      "passed": true,
+      "detail": {
+        "width": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "changes preview fits 1280px",
+      "passed": true,
+      "detail": {
+        "width": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "name": "Collection fits 1280px",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "skills full fits 768px",
+      "passed": true,
+      "detail": {
+        "width": 768,
+        "scroll": 768
+      }
+    },
+    {
+      "name": "skills preview fits 768px",
+      "passed": true,
+      "detail": {
+        "width": 768,
+        "scroll": 768
+      }
+    },
+    {
+      "name": "commands full fits 768px",
+      "passed": true,
+      "detail": {
+        "width": 768,
+        "scroll": 768
+      }
+    },
+    {
+      "name": "commands preview fits 768px",
+      "passed": true,
+      "detail": {
+        "width": 768,
+        "scroll": 768
+      }
+    },
+    {
+      "name": "presence full fits 768px",
+      "passed": true,
+      "detail": {
+        "width": 768,
+        "scroll": 768
+      }
+    },
+    {
+      "name": "presence preview fits 768px",
+      "passed": true,
+      "detail": {
+        "width": 768,
+        "scroll": 768
+      }
+    },
+    {
+      "name": "chat full fits 768px",
+      "passed": true,
+      "detail": {
+        "width": 768,
+        "scroll": 768
+      }
+    },
+    {
+      "name": "chat preview fits 768px",
+      "passed": true,
+      "detail": {
+        "width": 768,
+        "scroll": 768
+      }
+    },
+    {
+      "name": "canvas full fits 768px",
+      "passed": true,
+      "detail": {
+        "width": 768,
+        "scroll": 768
+      }
+    },
+    {
+      "name": "canvas preview fits 768px",
+      "passed": true,
+      "detail": {
+        "width": 768,
+        "scroll": 768
+      }
+    },
+    {
+      "name": "proposals full fits 768px",
+      "passed": true,
+      "detail": {
+        "width": 768,
+        "scroll": 768
+      }
+    },
+    {
+      "name": "proposals preview fits 768px",
+      "passed": true,
+      "detail": {
+        "width": 768,
+        "scroll": 768
+      }
+    },
+    {
+      "name": "checks full fits 768px",
+      "passed": true,
+      "detail": {
+        "width": 768,
+        "scroll": 768
+      }
+    },
+    {
+      "name": "checks preview fits 768px",
+      "passed": true,
+      "detail": {
+        "width": 768,
+        "scroll": 768
+      }
+    },
+    {
+      "name": "config full fits 768px",
+      "passed": true,
+      "detail": {
+        "width": 768,
+        "scroll": 768
+      }
+    },
+    {
+      "name": "config preview fits 768px",
+      "passed": true,
+      "detail": {
+        "width": 768,
+        "scroll": 768
+      }
+    },
+    {
+      "name": "knowledge full fits 768px",
+      "passed": true,
+      "detail": {
+        "width": 768,
+        "scroll": 768
+      }
+    },
+    {
+      "name": "knowledge preview fits 768px",
+      "passed": true,
+      "detail": {
+        "width": 768,
+        "scroll": 768
+      }
+    },
+    {
+      "name": "tasks full fits 768px",
+      "passed": true,
+      "detail": {
+        "width": 768,
+        "scroll": 768
+      }
+    },
+    {
+      "name": "tasks preview fits 768px",
+      "passed": true,
+      "detail": {
+        "width": 768,
+        "scroll": 768
+      }
+    },
+    {
+      "name": "artifacts full fits 768px",
+      "passed": true,
+      "detail": {
+        "width": 768,
+        "scroll": 768
+      }
+    },
+    {
+      "name": "artifacts preview fits 768px",
+      "passed": true,
+      "detail": {
+        "width": 768,
+        "scroll": 768
+      }
+    },
+    {
+      "name": "console full fits 768px",
+      "passed": true,
+      "detail": {
+        "width": 768,
+        "scroll": 768
+      }
+    },
+    {
+      "name": "console preview fits 768px",
+      "passed": true,
+      "detail": {
+        "width": 768,
+        "scroll": 768
+      }
+    },
+    {
+      "name": "changes full fits 768px",
+      "passed": true,
+      "detail": {
+        "width": 768,
+        "scroll": 768
+      }
+    },
+    {
+      "name": "changes preview fits 768px",
+      "passed": true,
+      "detail": {
+        "width": 768,
+        "scroll": 768
+      }
+    },
+    {
+      "name": "Collection fits 768px",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "skills full fits 390px",
+      "passed": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "skills preview fits 390px",
+      "passed": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "commands full fits 390px",
+      "passed": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "commands preview fits 390px",
+      "passed": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "presence full fits 390px",
+      "passed": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "presence preview fits 390px",
+      "passed": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "chat full fits 390px",
+      "passed": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "chat preview fits 390px",
+      "passed": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "canvas full fits 390px",
+      "passed": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "canvas preview fits 390px",
+      "passed": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "proposals full fits 390px",
+      "passed": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "proposals preview fits 390px",
+      "passed": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "checks full fits 390px",
+      "passed": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "checks preview fits 390px",
+      "passed": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "config full fits 390px",
+      "passed": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "config preview fits 390px",
+      "passed": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "knowledge full fits 390px",
+      "passed": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "knowledge preview fits 390px",
+      "passed": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "tasks full fits 390px",
+      "passed": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "tasks preview fits 390px",
+      "passed": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "artifacts full fits 390px",
+      "passed": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "artifacts preview fits 390px",
+      "passed": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "console full fits 390px",
+      "passed": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "console preview fits 390px",
+      "passed": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "changes full fits 390px",
+      "passed": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "changes preview fits 390px",
+      "passed": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "Collection fits 390px",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "skills full fits 320px",
+      "passed": true,
+      "detail": {
+        "width": 320,
+        "scroll": 320
+      }
+    },
+    {
+      "name": "skills preview fits 320px",
+      "passed": true,
+      "detail": {
+        "width": 320,
+        "scroll": 320
+      }
+    },
+    {
+      "name": "commands full fits 320px",
+      "passed": true,
+      "detail": {
+        "width": 320,
+        "scroll": 320
+      }
+    },
+    {
+      "name": "commands preview fits 320px",
+      "passed": true,
+      "detail": {
+        "width": 320,
+        "scroll": 320
+      }
+    },
+    {
+      "name": "presence full fits 320px",
+      "passed": true,
+      "detail": {
+        "width": 320,
+        "scroll": 320
+      }
+    },
+    {
+      "name": "presence preview fits 320px",
+      "passed": true,
+      "detail": {
+        "width": 320,
+        "scroll": 320
+      }
+    },
+    {
+      "name": "chat full fits 320px",
+      "passed": true,
+      "detail": {
+        "width": 320,
+        "scroll": 320
+      }
+    },
+    {
+      "name": "chat preview fits 320px",
+      "passed": true,
+      "detail": {
+        "width": 320,
+        "scroll": 320
+      }
+    },
+    {
+      "name": "canvas full fits 320px",
+      "passed": true,
+      "detail": {
+        "width": 320,
+        "scroll": 320
+      }
+    },
+    {
+      "name": "canvas preview fits 320px",
+      "passed": true,
+      "detail": {
+        "width": 320,
+        "scroll": 320
+      }
+    },
+    {
+      "name": "proposals full fits 320px",
+      "passed": true,
+      "detail": {
+        "width": 320,
+        "scroll": 320
+      }
+    },
+    {
+      "name": "proposals preview fits 320px",
+      "passed": true,
+      "detail": {
+        "width": 320,
+        "scroll": 320
+      }
+    },
+    {
+      "name": "checks full fits 320px",
+      "passed": true,
+      "detail": {
+        "width": 320,
+        "scroll": 320
+      }
+    },
+    {
+      "name": "checks preview fits 320px",
+      "passed": true,
+      "detail": {
+        "width": 320,
+        "scroll": 320
+      }
+    },
+    {
+      "name": "config full fits 320px",
+      "passed": true,
+      "detail": {
+        "width": 320,
+        "scroll": 320
+      }
+    },
+    {
+      "name": "config preview fits 320px",
+      "passed": true,
+      "detail": {
+        "width": 320,
+        "scroll": 320
+      }
+    },
+    {
+      "name": "knowledge full fits 320px",
+      "passed": true,
+      "detail": {
+        "width": 320,
+        "scroll": 320
+      }
+    },
+    {
+      "name": "knowledge preview fits 320px",
+      "passed": true,
+      "detail": {
+        "width": 320,
+        "scroll": 320
+      }
+    },
+    {
+      "name": "tasks full fits 320px",
+      "passed": true,
+      "detail": {
+        "width": 320,
+        "scroll": 320
+      }
+    },
+    {
+      "name": "tasks preview fits 320px",
+      "passed": true,
+      "detail": {
+        "width": 320,
+        "scroll": 320
+      }
+    },
+    {
+      "name": "artifacts full fits 320px",
+      "passed": true,
+      "detail": {
+        "width": 320,
+        "scroll": 320
+      }
+    },
+    {
+      "name": "artifacts preview fits 320px",
+      "passed": true,
+      "detail": {
+        "width": 320,
+        "scroll": 320
+      }
+    },
+    {
+      "name": "console full fits 320px",
+      "passed": true,
+      "detail": {
+        "width": 320,
+        "scroll": 320
+      }
+    },
+    {
+      "name": "console preview fits 320px",
+      "passed": true,
+      "detail": {
+        "width": 320,
+        "scroll": 320
+      }
+    },
+    {
+      "name": "changes full fits 320px",
+      "passed": true,
+      "detail": {
+        "width": 320,
+        "scroll": 320
+      }
+    },
+    {
+      "name": "changes preview fits 320px",
+      "passed": true,
+      "detail": {
+        "width": 320,
+        "scroll": 320
+      }
+    },
+    {
+      "name": "Collection fits 320px",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "Integrity after reload",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "Draft retained after reload",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "No browser or asset errors",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "No remote page requests",
+      "passed": true,
+      "detail": []
+    }
+  ],
+  "failure": null,
+  "errors": [],
+  "remote_requests": []
+}

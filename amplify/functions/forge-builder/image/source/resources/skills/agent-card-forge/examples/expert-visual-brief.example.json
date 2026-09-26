@@ -1,0 +1,63 @@
+{
+  "kind": "agent-card-forge.visual-brief",
+  "version": 1,
+  "status": "needs_card_selection",
+  "expert": {
+    "tenant_id": "gbautomation",
+    "tree": "gbautomation",
+    "expert_id": "artist-packet-expert",
+    "display_name": "Artist Packet Expert",
+    "purpose": "Turn artist briefs and approved media into branded packets.",
+    "profile_id": null,
+    "artifact_root": null
+  },
+  "card": {
+    "name": null,
+    "scryfall_id": null,
+    "scryfall_uri": null,
+    "set_code": null,
+    "collector_number": null,
+    "face_name": null,
+    "artist": null,
+    "art_crop_path": null,
+    "art_crop_sha256": null,
+    "selection": {"status": "pending", "selected_by": null, "selected_at": null}
+  },
+  "direction": {
+    "subject": "Derived from the selected card and expert purpose",
+    "coverage": "full_character",
+    "pose": "action",
+    "finish": "detailed painted tabletop miniature",
+    "preserve": ["approved portrait identity", "palette", "costume"],
+    "props": ["artist packet with visual artwork, without generated lettering"],
+    "rigging": false
+  },
+  "generation": {
+    "provider": "meshy",
+    "generation_attempt_limit": 1,
+    "remesh_attempt_limit": 1,
+    "forecast_generation_credits": 30,
+    "forecast_remesh_credits": 5,
+    "proposed_credit_cap": 35,
+    "approved_credit_cap": null,
+    "budget_approval": {"status": "not_requested", "approved_by": null, "approved_at": null},
+    "image_generation_budget": null,
+    "actual_consumed_credits": null,
+    "task_ids": []
+  },
+  "reviews": {
+    "portrait": {"status": "pending", "sha256": null},
+    "full_body": {"status": "pending", "sha256": null},
+    "web_model": {"status": "pending", "sha256": null}
+  },
+  "delivery": {
+    "preview": "portrait",
+    "full_screen": "rotatable_web_glb",
+    "fallback": "portrait",
+    "targets": {"max_triangles": 100000, "max_texture_edge_px": 2048, "max_glb_bytes": 5000000},
+    "master_path": null,
+    "web_model_path": null,
+    "routing_receipt": null,
+    "release_status": "not_requested"
+  }
+}

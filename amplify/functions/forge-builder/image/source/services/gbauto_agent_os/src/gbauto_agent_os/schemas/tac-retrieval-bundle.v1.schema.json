@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gbautomation.dev/schemas/tac-retrieval-bundle.v1.schema.json",
+  "title": "TAC Retrieval Bundle v1",
+  "type": "object",
+  "required": ["schema_version", "created_at", "request", "artifacts", "source_freshness", "methodology", "components", "verdict", "reuse_matrix", "no_match_evidence", "external_gap_research"],
+  "properties": {
+    "schema_version": {"const": "tac-retrieval-bundle.v1"},
+    "created_at": {"type": "string"},
+    "build_run_id": {"type": ["string", "null"]},
+    "prd_identifier": {"type": ["string", "null"]},
+    "request": {
+      "type": "object",
+      "required": ["text", "queries"],
+      "properties": {
+        "text": {"type": "string"},
+        "queries": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": true
+    },
+    "artifacts": {"type": "object"},
+    "source_freshness": {"type": "object"},
+    "methodology": {"type": "object", "required": ["schema_version"]},
+    "components": {"type": "object", "required": ["schema_version", "matched_components"]},
+    "codebase_context": {"type": ["object", "null"]},
+    "verdict": {"enum": ["strong_match", "partial_match", "no_match"]},
+    "reuse_matrix": {"type": "array"},
+    "no_match_evidence": {"type": "array", "items": {"type": "string"}},
+    "external_gap_research": {
+      "type": "object",
+      "required": ["triggered", "reason", "queries"],
+      "properties": {
+        "triggered": {"type": "boolean"},
+        "reason": {"type": "string"},
+        "queries": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

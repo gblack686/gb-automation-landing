@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gbautomation.xyz/schemas/skill-capability.v1.schema.json",
+  "title": "GBAutomation source-owned skill capability descriptor v1",
+  "description": "A minimal relationship manifest beside SKILL.md. Native metadata remains in linked sources.",
+  "type": "object",
+  "required": ["schema_version", "capability_id", "links"],
+  "properties": {
+    "schema_version": {"const": "gbauto.skill-capability.v1"},
+    "capability_id": {"type": "string", "pattern": "^skill:[a-z0-9][a-z0-9-]{1,79}$"},
+    "links": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 200,
+      "items": {"$ref": "#/$defs/link"}
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "repositoryPath": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "allOf": [
+        {"not": {"pattern": "^(?:[A-Za-z]:[\\\\/]|/)"}},
+        {"not": {"pattern": "(?:^|[\\\\/])\\.\\.(?:[\\\\/]|$)"}}
+      ]
+    },
+    "entityId": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 240,
+      "pattern": "^[a-z][a-z0-9_-]*:[A-Za-z0-9][A-Za-z0-9._/:+-]*$"
+    },
+    "link": {
+      "type": "object",
+      "required": ["rel", "kind"],
+      "properties": {
+        "rel": {
+          "enum": ["owned_by", "defines", "owns", "uses", "supports", "installs_via", "validated_by", "tested_by", "emits", "observed_by", "projects_to", "supersedes"]
+        },
+        "kind": {
+          "enum": ["skill", "managed_cron", "hook", "adapter", "expert", "profile", "profile_team", "validator", "test", "receipt_contract", "template", "process_template", "mcp_server", "harness_config", "registry", "script", "generated_projection", "runtime_read_model"]
+        },
+        "id": {"$ref": "#/$defs/entityId"},
+        "path": {"$ref": "#/$defs/repositoryPath"}
+      },
+      "anyOf": [{"required": ["id"]}, {"required": ["path"]}],
+      "additionalProperties": false
+    }
+  }
+}

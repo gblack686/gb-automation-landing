@@ -1,0 +1,134 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gbautomation.xyz/schemas/gbauto-plan-writer.v1.schema.json",
+  "title": "GBAutomation plan writer attribution v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "writer_harness",
+    "writer_profile",
+    "writer_agent",
+    "writer_session_id",
+    "writer_run_id",
+    "writer_channel",
+    "writer_source",
+    "attribution_confidence",
+    "prompt_contract_id",
+    "prompt_contract_version",
+    "canopy_snippets"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "gbauto-plan-writer.v1"
+    },
+    "writer_harness": {
+      "enum": [
+        "codex",
+        "claude-code",
+        "hermes",
+        "script"
+      ]
+    },
+    "writer_profile": {
+      "enum": [
+        "codex:default",
+        "codex:tac-prompt",
+        "claude-code:default",
+        "claude-code:plan-mode",
+        "claude-code:tiered-plan",
+        "hermes:tac-lead",
+        "hermes:tac-director",
+        "hermes:tac-architect",
+        "script:chat-dispatch-prd-receipt-gate"
+      ]
+    },
+    "writer_agent": {
+      "type": "string",
+      "minLength": 1
+    },
+    "writer_session_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "writer_run_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "writer_channel": {
+      "type": "string",
+      "minLength": 1
+    },
+    "writer_source": {
+      "type": "string",
+      "minLength": 1,
+      "allOf": [
+        {
+          "not": {
+            "pattern": "^(?:[A-Za-z]:[\\\\/]|/)"
+          }
+        },
+        {
+          "not": {
+            "pattern": "(?:^|[\\\\/])\\.\\.(?:[\\\\/]|$)"
+          }
+        }
+      ]
+    },
+    "attribution_confidence": {
+      "enum": [
+        "verified",
+        "declared"
+      ]
+    },
+    "prompt_contract_id": {
+      "const": "planning:plan-authoring-provenance"
+    },
+    "prompt_contract_version": {
+      "const": "gbauto-plan-writer.v1"
+    },
+    "canopy_snippets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "snippet_id",
+          "sha256",
+          "source_path"
+        ],
+        "properties": {
+          "snippet_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "source_path": {
+            "type": "string",
+            "minLength": 1,
+            "allOf": [
+              {
+                "not": {
+                  "pattern": "^(?:[A-Za-z]:[\\\\/]|/)"
+                }
+              },
+              {
+                  "not": {
+                    "pattern": "(?:^|[\\\\/])\\.\\.(?:[\\\\/]|$)"
+                }
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,126 @@
+{
+  "$defs": {
+    "Scope": {
+      "additionalProperties": false,
+      "properties": {
+        "repo": {
+          "const": "gbautomation",
+          "default": "gbautomation",
+          "title": "Repo",
+          "type": "string"
+        },
+        "client": {
+          "const": "gbautomation",
+          "default": "gbautomation",
+          "title": "Client",
+          "type": "string"
+        }
+      },
+      "title": "Scope",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "gbauto.atlas-reference.v1",
+      "default": "gbauto.atlas-reference.v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "kind": {
+      "enum": [
+        "experts",
+        "capabilities",
+        "sessions",
+        "artifacts",
+        "delivery",
+        "analytics",
+        "pull_requests"
+      ],
+      "title": "Kind",
+      "type": "string"
+    },
+    "id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,199}$",
+      "title": "Id",
+      "type": "string"
+    },
+    "version_id": {
+      "anyOf": [
+        {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,199}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Version Id"
+    },
+    "sha256": {
+      "anyOf": [
+        {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Sha256"
+    },
+    "scope": {
+      "$ref": "#/$defs/Scope"
+    },
+    "bundle_id": {
+      "anyOf": [
+        {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,199}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Bundle Id"
+    },
+    "session_key": {
+      "anyOf": [
+        {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,199}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Session Key"
+    },
+    "commit_sha": {
+      "anyOf": [
+        {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Commit Sha"
+    }
+  },
+  "required": [
+    "kind",
+    "id"
+  ],
+  "title": "AtlasReference",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gbautomation.xyz/schemas/gbauto.atlas-reference.v1.schema.json"
+}

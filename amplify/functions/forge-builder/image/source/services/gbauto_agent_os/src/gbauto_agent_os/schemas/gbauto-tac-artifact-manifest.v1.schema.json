@@ -1,0 +1,75 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gbautomation.xyz/schemas/gbauto-tac-artifact-manifest.v1.json",
+  "title": "GBAuto TAC Artifact Manifest v1",
+  "description": "Run-level manifest for a TAC/research run bundle. Aggregates the per-artifact generated_artifacts model; the canonical machine-readable pointer committed (as a stub) to the repo while heavy files live in object storage. See ADR 2026-06-24-tac-artifact-retention-and-execution-isolation-policy.",
+  "type": "object",
+  "required": ["schema", "run_id", "title", "status", "created_at", "retention", "artifacts"],
+  "properties": {
+    "schema": {"type": "string", "const": "gbauto.tac_artifact_manifest.v1"},
+    "run_id": {
+      "type": "string",
+      "description": "tac-<YYYY-MM-DD>-<slug> for human/research runs; managed-cron runs carry tick_id/hj- ids in tasks/metadata.",
+      "pattern": "^[a-z0-9][a-z0-9._-]*$"
+    },
+    "title": {"type": "string", "minLength": 1},
+    "status": {
+      "type": "string",
+      "enum": ["pass", "pass_with_advisories", "fail"]
+    },
+    "created_at": {"type": "string", "format": "date-time"},
+    "kanban_board": {"type": "string"},
+    "tasks": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Kanban task ids (t_<hash>) and/or cron tick_id/hj- ids."
+    },
+    "retention": {
+      "type": "object",
+      "required": ["class"],
+      "properties": {
+        "class": {
+          "type": "string",
+          "enum": ["ephemeral", "research", "build", "client-deliverable", "compliance"]
+        },
+        "keep_summary": {
+          "type": "string",
+          "description": "'forever' or a duration like '180d'."
+        },
+        "keep_evidence_days": {"type": ["integer", "null"], "minimum": 0},
+        "keep_logs_days": {"type": ["integer", "null"], "minimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "summary": {
+      "type": "object",
+      "required": ["uri"],
+      "properties": {
+        "uri": {"type": "string", "description": "gs:// (canonical bundle) or drive/registry URI."},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "kind", "uri"],
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "kind": {
+            "type": "string",
+            "enum": ["markdown", "pdf", "html", "json", "csv", "image", "archive", "directory", "other"]
+          },
+          "uri": {"type": "string"},
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "Required for files; omit for kind=directory."
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,35 @@
+# EXAMPLE ONLY. Not approved. Not dispatchable.
+schema_version: forge-architecture-example.v1
+example: true
+status: example_not_approved
+dispatchable: false
+runtime_authorized: false
+components:
+- approved-brief
+- packet-expert
+- html-packet
+- validation
+- human-review
+connections:
+- from: approved-brief
+  to: packet-expert
+- from: packet-expert
+  to: html-packet
+- from: html-packet
+  to: validation
+- from: validation
+  to: human-review
+config_mapping:
+  packet-expert:
+  - purpose
+  - skills
+  - profile_config
+  - prime_commands
+  - preset_commands
+  approved-brief:
+  - client_context_refs
+  - secrets_required
+  validation:
+  - validation_workflows
+  human-review:
+  - activation_gate

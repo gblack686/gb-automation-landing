@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gbautomation.xyz/schemas/agent-forge-research-validation.v1.schema.json",
+  "title": "Agent Forge independent research validation v1",
+  "type": "object",
+  "required": ["schema_version", "validation_id", "planning_run_id", "dossier_sha256", "proposal_sha256", "validator_profile", "permission_mode", "findings", "correction_round", "verdict", "validation_sha256", "created_at"],
+  "properties": {
+    "schema_version": {"const": "agent-forge.research-validation.v1"},
+    "validation_id": {"type": "string", "pattern": "^forge_validation_[a-z0-9_]+$", "maxLength": 128},
+    "planning_run_id": {"type": "string", "pattern": "^forge_plan_run_[a-z0-9_]+$", "maxLength": 128},
+    "dossier_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "proposal_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "validator_profile": {"const": "tac-validator"},
+    "permission_mode": {"const": "read_only"},
+    "findings": {
+      "type": "array", "maxItems": 100,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["finding_id", "severity", "code", "message", "claim_ids", "next_safe_action"],
+        "properties": {
+          "finding_id": {"type": "string", "pattern": "^finding_[a-z0-9_]+$"},
+          "severity": {"enum": ["info", "warning", "critical"]},
+          "code": {"type": "string", "pattern": "^[a-z][a-z0-9_]{2,100}$"},
+          "message": {"type": "string", "minLength": 1, "maxLength": 2000},
+          "claim_ids": {"type": "array", "maxItems": 50, "uniqueItems": true, "items": {"type": "string", "pattern": "^claim_[a-z0-9_]+$"}},
+          "next_safe_action": {"type": "string", "minLength": 1, "maxLength": 1000}
+        }
+      }
+    },
+    "correction_round": {"type": "integer", "minimum": 0, "maximum": 3},
+    "verdict": {"enum": ["pass", "revise", "failed_with_receipt"]},
+    "validation_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "created_at": {"type": "string", "format": "date-time"}
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,266 @@
+# justfile-section-registry.yaml — the vocabulary of justfile SECTION TYPES used
+# across this repo, derived from the 49 justfiles present on 2026-09-17
+# (1 root · 46 expert families · 1 template · 1 legacy client workspace).
+#
+# PURPOSE. gbauto-config-spec §1F makes "a working justfile" an acceptance
+# criterion. This file is the machine-readable half of that rule: it names every
+# section type a justfile may contain, which recipes belong to it, which harness
+# consumes it, and which sections each FILE PROFILE must carry.
+# `scripts/justfile_registry_check.py` grades every registered justfile against it.
+# The human half (walkthrough + Hermes/Codex/Claude Code integration) is
+# resources/templates/justfile-reference/README.md.
+#
+# RULE OF THUMB. A recipe is a thin wrapper over a script or a route. Logic
+# lives in scripts/ (so Hermes crons and CI call the same code without `just`);
+# the justfile only names the entry point and documents the gate.
+schema: justfile-section-registry.v1
+meta:
+  spec: second-brain/systems/gbauto-config-spec.md   # §1F
+  reference: resources/templates/justfile-reference/justfile
+  docs: resources/templates/justfile-reference/README.md
+  surveyed: 2026-09-17
+  just_version_min: "1.40"          # `set windows-shell` + `[private]` attributes
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Section types. `recipes:` are canonical recipe names that identify the
+# section; `match:` is a regex fallback for section-shaped names.
+# `harness:` = who types/consumes the recipe — operator (a human at a shell),
+# claude-code (recipe delegates INTO a Claude route), codex (Codex runs the
+# recipe from exec_command), hermes (recipe reaches the Mac Mini runtime).
+# ─────────────────────────────────────────────────────────────────────────────
+sections:
+  - id: header
+    purpose: >-
+      Leading comment banner — title, `just --list` hint, the
+      deterministic-vs-agentic doctrine, and the `{{ }}` warning.
+    detect: leading-comment
+    harness: [operator]
+    observed_in: 26 of 49 (gen-A families, root, template, legacy)
+
+  - id: settings
+    purpose: >-
+      just(1) settings. `set dotenv-load` for local env; `set shell` /
+      `set windows-shell` pin a POSIX shell so recipes behave the same from
+      PowerShell (Codex on Windows) and bash.
+    detect: set-directive
+    recommended:
+      - "set dotenv-load := true"
+      - 'set windows-shell := ["sh", "-cu"]'
+    harness: [operator, codex]
+    observed_in: 47 of 49
+
+  - id: variables
+    purpose: >-
+      Top-level assignments. `expert` (family slug), `root` (ALWAYS
+      `git rev-parse --show-toplevel`, never a hardcoded path), `mm` (the mm.sh
+      wrapper).
+    detect: assignment
+    rules:
+      - every `{{name}}` interpolated in a recipe body must be a declared variable, a recipe parameter, or a just builtin function
+      - variables referenced inside a managed block are declared OUTSIDE it (the generator does not own them)
+    harness: [operator]
+    observed_in: 47 of 49
+
+  - id: default
+    purpose: >-
+      First recipe — `default` runs `@just --list` so a bare `just` browses
+      instead of running something.
+    recipes: [default]
+    harness: [operator, codex, claude-code]
+    observed_in: 46 of 49
+
+  - id: deterministic
+    purpose: >-
+      Run code, print facts, apply nothing without the recipe that says apply.
+      `install` is gated on a prior `check`; `verify` re-checks after apply;
+      `audit` chains the read-only ones with `-@just` so one finding never
+      aborts the rest.
+    recipes: [check, install, verify, drift, routes, test, audit]
+    write_capable: [install]
+    rules:
+      - "`install` is preceded by `check` in the docs and never chained automatically after it"
+      - "`audit` uses the `-@just <recipe>` error-tolerant prefix"
+      - "`test` is a bare `python scripts/expert_ci_gate.py --expert {{expert}} --replay` — lint, registry-owned pytest, and (if `tests/` exists) structural replay; a real failure fails the recipe, it is never echoed away"
+    harness: [operator, codex, claude-code]
+    observed_in: 46 of 49
+
+  - id: dry-run
+    purpose: >-
+      Plan-only twins of every write-capable recipe (`meet-dry`, `dry-run`,
+      `install-dry`). A recipe that writes has a sibling that only lists what
+      it would write.
+    match: '^(dry-run|.*-dry|.*-plan|plan-.*)$'
+    harness: [operator, codex]
+    observed_in: 2 of 49 (root `meet-dry`, legacy `dry-run`)
+
+  - id: agentic
+    purpose: >-
+      Hand the same work to Claude Code through this family's routes —
+      `claude "/experts:<slug>:<route> …"`. Never embeds domain logic; the
+      route file owns it.
+    recipes: [question, plan, improve, graph, maintain, pbi]
+    delegates_to: 'claude "/experts:{{expert}}:<route>"'
+    rules:
+      - "the recipe body is exactly one `claude \"/experts:…\"` invocation"
+      - "write-capable routes (`pbi`, `install`) halt for approval inside the route, not in the justfile"
+    harness: [claude-code]
+    observed_in: 46 of 49
+
+  - id: managed-block
+    purpose: >-
+      Generator-owned region between `# BEGIN MANAGED <name>` and
+      `# END MANAGED <name>`. Hand edits inside are overwritten on the next
+      `build_expert_profile_sprint_estate.py` run.
+    detect: managed-markers
+    generator: scripts/build_expert_profile_sprint_estate.py
+    known_blocks:
+      - name: EXPERT PRIME RECIPE
+        recipes: [prime]
+    rules:
+      - "the block may reference `{{expert}}` only if the file declares `expert :=` outside the block (2026-09-17 bokeh/canopy regression)"
+      - "the template carries the markers so the generator matches instead of appending a duplicate `prime`"
+    harness: [claude-code]
+    observed_in: 46 of 49
+
+  - id: domain-verbs
+    purpose: >-
+      Additive family-specific recipes (github `actions`, n8n/youtube
+      `validate-playbook` / `health` / `proposals`, bokeh `install-check`).
+      Never replaces a required recipe; a write-capable verb carries an
+      `-apply` suffix and has a read-only sibling.
+    detect: unclassified-recipe
+    rules:
+      - "a `<verb>-apply` recipe requires a `<verb>` (read-only) recipe in the same file"
+    harness: [operator, codex, claude-code]
+    observed_in: 5 of 49
+
+  - id: remote
+    purpose: >-
+      Recipes that execute on the Mac Mini through
+      `resources/skills/mac-mini-ssh/scripts/mm.sh` (never raw ssh — it owns
+      the Tailscale→LAN fallback). The remote command exports PATH inline.
+    match: '^(meet-.*|remote-.*|mini-.*)$'
+    wrapper: resources/skills/mac-mini-ssh/scripts/mm.sh
+    rules:
+      - "`{{mm}} '<remote command>'` — the remote command is a single-quoted string"
+      - "the remote command exports `PATH=$HOME/.local/bin:/opt/homebrew/bin:…` first (§1D cron-path rule)"
+    harness: [hermes, operator]
+    observed_in: 1 of 49 (root)
+
+  - id: fleet
+    purpose: >-
+      Root-only cross-family recipes that fan out over experts/*/* —
+      `experts`, `experts-check`, `experts-install`, `expert-drift`,
+      `expert-audit`, `experts-forest`, `experts-map`.
+    match: '^(experts?|experts?-.*)$'
+    harness: [operator, claude-code]
+    observed_in: 1 of 49 (root)
+
+  - id: conformance
+    purpose: >-
+      Root-only entry points into the conformance linters — `justfiles-check`
+      (this registry) and `config-validate` (gbauto.config.yaml).
+    recipes: [justfiles-check, config-validate]
+    harness: [operator, codex, claude-code]
+    observed_in: 1 of 49 (root, added 2026-09-17)
+
+  - id: infra
+    purpose: >-
+      AWS CDK synth + template assertions — `cdk-synth`, `cdk-test`. Synth-only
+      by design; there is deliberately NO deploy recipe (deploys are a
+      human-gated, receipted action, §1D).
+    recipes: [cdk-synth, cdk-test]
+    app: infra/cdk
+    rules:
+      - "no recipe in any registered justfile invokes `cdk deploy`, `cdk destroy`, or `cdk bootstrap`"
+    harness: [operator, codex, claude-code]
+    observed_in: 1 of 49 (root, added 2026-09-17)
+
+  - id: shebang-recipe
+    purpose: >-
+      Multi-line `#!/usr/bin/env bash` + `set -euo pipefail` bodies. Allowed
+      for control flow (resolve a path, branch on a flag); more than ~15 lines
+      means the logic belongs in scripts/.
+    detect: shebang-body
+    max_lines: 15
+    harness: [operator]
+    observed_in: 2 of 49 (root `expert-audit`; legacy — over the limit)
+
+  - id: lifecycle-pipeline
+    purpose: >-
+      LEGACY. Dependency-chained `setup` recipes (deploy → skills → cron →
+      restart → verify) with inline bash logic and hardcoded counts in echo
+      lines (OpenClaw client workspaces). Kept as the negative example — logic
+      in recipes, no dry-run gate on writes, no receipt.
+    status: retired
+    example: resources/skills/consulting-intake/client-sessions/20260221-greg-trading/justfile
+    harness: [operator]
+    observed_in: 1 of 49
+
+# ─────────────────────────────────────────────────────────────────────────────
+# THE STANDARD (2026-09-18). Every expert family's justfile is RENDERED from
+# scripts/render_expert_justfiles.py; hand edits outside `domain-verbs` are
+# overwritten on the next --write and reported by --check (CI). Production set =
+# the roster's `class: expert` distributions on mac-mini-1 (45 on 2026-09-18),
+# installed as ~/.hermes/profiles/expert-<tree>-<slug>/.
+# ─────────────────────────────────────────────────────────────────────────────
+standard:
+  renderer: scripts/render_expert_justfiles.py
+  check: python scripts/render_expert_justfiles.py --check
+  write: python scripts/render_expert_justfiles.py --write
+  production_source: config/hermes_profile_roster.yaml   # class: expert, target_connection: mac-mini-1
+  profile_name: expert-<tree>-<slug>
+  sections_in_order: [header, settings, variables, default, deterministic, dry-run, agentic, domain-verbs, remote, managed-block]
+  preserved_on_rerender: [domain-verbs, managed-block]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Generations. `standard` is the only one families may carry now; the earlier
+# scaffolds are recorded for the survey history.
+# ─────────────────────────────────────────────────────────────────────────────
+generations:
+  - id: standard
+    label: rendered from the §1F standard (2026-09-18)
+    fingerprint: header + settings + variables(expert/tree/profile/root/mm) + all sections incl. install-dry and remote-status
+    count: 47   # 46 families + template
+  - id: gen-A
+    label: HISTORICAL commented scaffold (86 lines), 24 families until 2026-09-18
+    fingerprint: header banner + deterministic/agentic separators + guarded `test`
+    count: 0
+  - id: gen-B
+    label: HISTORICAL compact scaffold (41 lines), 18 families until 2026-09-18
+    fingerprint: no header banner, no separators, `audit` also chains `test`
+    count: 0
+  - id: gen-B+
+    label: HISTORICAL compact + setup-prime-self-improve verbs, 2 families until 2026-09-18
+    fingerprint: gen-B plus validate-playbook / health / proposals / proposals-apply (now domain-verbs)
+    count: 0
+  - id: custom
+    label: HISTORICAL hand-written source-check files (bokeh, canopy) until 2026-09-18
+    fingerprint: their checks survive as domain verbs `source-check` / `lint`
+    count: 0
+
+# ─────────────────────────────────────────────────────────────────────────────
+# File profiles — which sections a given justfile MUST carry. `paths:` are
+# repo-relative globs; the first matching profile wins.
+# ─────────────────────────────────────────────────────────────────────────────
+profiles:
+  - id: reference
+    paths: ["resources/templates/justfile-reference/justfile"]
+    required_sections: [header, settings, variables, default, deterministic, dry-run, agentic, managed-block, domain-verbs, remote, infra, conformance]
+    required_recipes: [default, check, install, verify, drift, routes, test, audit, question, plan, improve, graph, maintain, pbi, prime]
+  - id: root
+    paths: ["justfile"]
+    required_sections: [header, variables, remote, fleet, conformance, infra]
+    required_recipes: [experts, experts-check, experts-install, expert-audit, justfiles-check, cdk-synth, cdk-test]
+    forbidden_patterns: ['cdk (deploy|destroy|bootstrap)']
+  - id: expert-family
+    paths: ["experts/*/*/justfile"]
+    rendered_by: scripts/render_expert_justfiles.py
+    required_sections: [header, settings, variables, default, deterministic, dry-run, agentic, remote, managed-block]
+    required_recipes: [default, check, install, install-dry, verify, drift, routes, test, audit, question, plan, improve, graph, maintain, pbi, remote-status, prime]
+    exemptions: []   # none — the renderer makes every family identical outside domain-verbs
+  - id: legacy
+    paths: ["resources/skills/consulting-intake/client-sessions/*/justfile"]
+    required_sections: []
+    required_recipes: []
+    parse_only: true

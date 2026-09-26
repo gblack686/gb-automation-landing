@@ -1,0 +1,105 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gbautomation.xyz/schemas/forge-approval-release.v1.schema.json",
+  "title": "forge-approval-release.v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "workflow_id",
+    "decision_event",
+    "plan_version",
+    "binding",
+    "authorization_source",
+    "execution_performed"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "forge-approval-release.v1"
+    },
+    "workflow_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "decision_event": {
+      "type": "string",
+      "minLength": 1
+    },
+    "plan_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "binding": {
+      "type": "object",
+      "required": [
+        "plan_sha256",
+        "architecture_sha256",
+        "base_commit",
+        "profile_sha256",
+        "map_sha256",
+        "phases",
+        "excluded_actions",
+        "targets"
+      ],
+      "properties": {
+        "plan_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "architecture_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "profile_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "map_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "base_commit": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{40}$"
+        },
+        "phases": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 99
+          }
+        },
+        "excluded_actions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "targets": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true,
+          "minItems": 1
+        }
+      },
+      "additionalProperties": true
+    },
+    "authorization_source": {
+      "enum": [
+        "operator",
+        "coordinator"
+      ]
+    },
+    "execution_performed": {
+      "const": false
+    }
+  },
+  "additionalProperties": false
+}

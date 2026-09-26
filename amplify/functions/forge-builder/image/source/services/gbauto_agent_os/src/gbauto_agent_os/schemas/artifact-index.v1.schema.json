@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gbautomation.local/schemas/artifact-index.v1.schema.json",
+  "title": "GBAutomation canonical artifact index",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "generated_at",
+    "status",
+    "contract",
+    "totals",
+    "source_coverage",
+    "artifacts"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "schema_version": {"const": "artifact.index.v1"},
+    "generated_at": {"type": "string", "minLength": 1},
+    "status": {"enum": ["complete", "degraded"]},
+    "status_reason": {"type": ["string", "null"]},
+    "contract": {
+      "type": "object",
+      "required": ["front_door", "scope", "completeness_rule", "availability_rule", "dedupe_rule", "storage_rule", "state_rule", "excluded_from_gallery"]
+    },
+    "totals": {
+      "type": "object",
+      "required": [
+        "artifacts",
+        "report_packages",
+        "report_files",
+        "plans_and_specs",
+        "registry_artifacts",
+        "source_count",
+        "required_source_failures"
+      ]
+    },
+    "source_coverage": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "source",
+          "purpose",
+          "required",
+          "status",
+          "stale",
+          "rows_seen",
+          "rows_indexed",
+          "coverage_complete"
+        ]
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "artifact_id",
+          "artifact_family_id",
+          "version_label",
+          "is_latest",
+          "lifecycle",
+          "presentation",
+          "approval",
+          "preview_strategy",
+          "title",
+          "purpose",
+          "artifact_kind",
+          "source_type",
+          "sources",
+          "client",
+          "status",
+          "path",
+          "url",
+          "availability",
+          "availability_reason",
+          "public_url",
+          "operator_url",
+          "format",
+          "bytes",
+          "file_count",
+          "tags"
+        ],
+        "properties": {
+          "artifact_family_id": {"type": "string", "minLength": 1},
+          "version_label": {"type": "string", "minLength": 1},
+          "is_latest": {"type": "boolean"},
+          "lifecycle": {"enum": ["active", "archived"]},
+          "presentation": {"enum": ["library", "showcase"]},
+          "approval": {"enum": ["unreviewed", "gb_approved", "rejected"]},
+          "preview_strategy": {
+            "enum": ["html", "gbauto_doc", "swipe_cards", "chart_pack", "pdf", "image", "video", "audio", "json", "text", "download"]
+          },
+          "availability": {
+            "enum": ["public", "authenticated", "source_missing"]
+          },
+          "availability_reason": {"type": "string"},
+          "public_url": {"type": "string"},
+          "operator_url": {"type": "string"},
+          "url": {"type": "string"}
+        }
+      }
+    }
+  }
+}

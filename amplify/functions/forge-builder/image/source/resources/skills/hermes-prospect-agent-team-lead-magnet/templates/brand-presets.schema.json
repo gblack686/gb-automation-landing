@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gbautomation.xyz/schemas/prospect-brand-presets.v1.json",
+  "title": "Prospect Brand Presets",
+  "type": "object",
+  "required": ["schema_version", "company_name", "default_preset", "source_packet", "presets"],
+  "properties": {
+    "schema_version": {"const": "prospect-brand-presets.v1"},
+    "company_name": {"type": "string", "minLength": 1},
+    "default_preset": {"type": "string"},
+    "source_packet": {"type": "string"},
+    "presets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "description", "tokens"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+          "label": {"type": "string"},
+          "description": {"type": "string"},
+          "tokens": {
+            "type": "object",
+            "required": [
+              "canvas", "panel", "panel_alt", "line", "accent", "accent_bright",
+              "text", "muted", "heading_font", "body_font"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

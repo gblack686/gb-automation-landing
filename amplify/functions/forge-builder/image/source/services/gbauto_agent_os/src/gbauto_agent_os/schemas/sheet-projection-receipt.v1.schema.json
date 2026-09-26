@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gbautomation.xyz/schemas/sheet-projection-receipt.v1.json",
+  "title": "Sheet Projection Receipt",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "projection_id",
+    "registry_id",
+    "tenant_id",
+    "workbook_id_hash",
+    "projection_status",
+    "cursor_before",
+    "cursor_after",
+    "batch_number",
+    "batch_size",
+    "counts",
+    "source_sha256",
+    "projection_sha256",
+    "conflicts",
+    "warnings",
+    "projected_at"
+  ],
+  "properties": {
+    "schema_version": {"const": "sheet-projection-receipt.v1"},
+    "projection_id": {"type": "string", "pattern": "^spr_[0-9a-f]{20,64}$"},
+    "registry_id": {"type": "string", "pattern": "^msr_[a-z0-9_]{4,80}$"},
+    "tenant_id": {"type": "string", "pattern": "^[a-z][a-z0-9-]{1,63}$"},
+    "workbook_id_hash": {"$ref": "#/$defs/sha256"},
+    "projection_status": {"enum": ["complete", "partial", "stale", "failed"]},
+    "cursor_before": {"type": ["string", "null"], "maxLength": 500},
+    "cursor_after": {"type": ["string", "null"], "maxLength": 500},
+    "batch_number": {"type": "integer", "minimum": 1},
+    "batch_size": {"type": "integer", "minimum": 0, "maximum": 500},
+    "counts": {
+      "type": "object",
+      "required": ["selected", "written", "unchanged", "conflicts", "excluded"],
+      "properties": {
+        "selected": {"type": "integer", "minimum": 0},
+        "written": {"type": "integer", "minimum": 0},
+        "unchanged": {"type": "integer", "minimum": 0},
+        "conflicts": {"type": "integer", "minimum": 0},
+        "excluded": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "source_sha256": {"$ref": "#/$defs/sha256"},
+    "projection_sha256": {"$ref": "#/$defs/sha256"},
+    "conflicts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["row_id", "reason"],
+        "properties": {
+          "row_id": {"type": "string", "pattern": "^msr_[0-9a-f]{16,64}$"},
+          "reason": {"enum": ["row_version_changed", "gate_version_changed", "protected_field_changed", "tenant_mismatch"]}
+        },
+        "additionalProperties": false
+      }
+    },
+    "warnings": {"type": "array", "items": {"type": "string", "maxLength": 500}},
+    "projected_at": {"type": "string", "format": "date-time"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "additionalProperties": false
+}

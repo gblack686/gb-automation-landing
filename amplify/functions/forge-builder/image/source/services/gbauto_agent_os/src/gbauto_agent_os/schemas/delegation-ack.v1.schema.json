@@ -1,0 +1,191 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gbautomation.xyz/schemas/delegation-ack.v1.schema.json",
+  "title": "GBAuto Agent OS delegation acknowledgement v1",
+  "description": "The fast, non-blocking receipt the delegation seam emits the moment a source event arrives. The ack is conversation-free by contract: it states that the request was received and where it went, and it NEVER embeds work results (no result, output, answer, or artifact body properties exist, additionalProperties is false, and ack_text is capped at 300 characters). Structure alone is not enough, so scripts/delegation_router.py also lints ack_text against a completion-claim vocabulary and resolves delegation.dispatch_request_ref against the durable queue: an ack can neither assert finished work nor cite a request that was never composed. The ack is computable without resolving a specialist — specialist resolution happens after the ack and only fills delegation.specialist_expert / delegation.dispatch_request_ref on amendment. ADR-14 state semantics are TOTAL: delegation.status=blocked REQUIRES a blocker (failed dependency/validation with owner and next safe action) and EVERY other status (queued, direct_answer, gated) FORBIDS one — the if/then/else conditional below leaves no status unconstrained, so gated (ready, awaiting a valid approval capability) can never be conflated with blocked (failed).",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "ack_id",
+    "source_event_id",
+    "tenant",
+    "synthetic",
+    "received_at",
+    "acked_at",
+    "ack_latency_ms",
+    "ack_text",
+    "conversation_free",
+    "delegation"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "delegation-ack.v1"
+    },
+    "ack_id": {
+      "type": "string",
+      "pattern": "^ack_[a-z0-9_]+$",
+      "maxLength": 120
+    },
+    "source_event_id": {
+      "description": "The source-event.v1 identifier being acknowledged. A malformed envelope that carries no usable identifier is acknowledged under a derived src_unresolved_<digest> sentinel rather than being silently dropped.",
+      "type": "string",
+      "pattern": "^src_[a-z0-9_]+$",
+      "maxLength": 200
+    },
+    "tenant": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{1,63}$"
+    },
+    "trace_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.:-]{4,128}$"
+    },
+    "synthetic": {
+      "type": "boolean"
+    },
+    "received_at": {
+      "$ref": "#/definitions/timestamp"
+    },
+    "acked_at": {
+      "$ref": "#/definitions/timestamp"
+    },
+    "ack_latency_ms": {
+      "description": "Real measured elapsed milliseconds between receipt and acknowledgement. The seam is non-blocking: this must stay inside the ack latency budget even when downstream specialist resolution is slow or fails.",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 600000
+    },
+    "ack_text": {
+      "description": "Bounded operator-facing acknowledgement sentence. Routing status only; never work output. Result-claiming prose (done/completed/merged/applied/deployed/ran/results/live/migration) is refused by delegation_router.ack_text_violations — the length cap bounds the damage, the vocabulary gate removes it.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 300
+    },
+    "conversation_free": {
+      "description": "Const true: the ack is a routing receipt, not a conversational answer, and carries no work results.",
+      "const": true
+    },
+    "delegation": {
+      "type": "object",
+      "required": [
+        "status",
+        "specialist_expert",
+        "dispatch_request_ref"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "queued",
+            "direct_answer",
+            "gated",
+            "blocked"
+          ]
+        },
+        "specialist_expert": {
+          "description": "Null until specialist resolution completes; resolution never happens on the ack path.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+          "maxLength": 80
+        },
+        "dispatch_request_ref": {
+          "description": "Null until a tac-dispatch-request.v1 has been composed and queued. Not merely pattern-shaped: delegation_router.validate_ack(ack, queue_root=...) resolves it against the durable queue, so a citation must name a request that really exists.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^tacreq_[a-z0-9_]+$",
+          "maxLength": 120
+        },
+        "blocker": {
+          "$ref": "#/definitions/blocker"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "blocked"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "required": [
+              "blocker"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "blocker"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "direct_answer"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "specialist_expert": {
+                "type": "null"
+              },
+              "dispatch_request_ref": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ],
+      "additionalProperties": false
+    }
+  },
+  "definitions": {
+    "timestamp": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "blocker": {
+      "description": "ADR-14 blocked semantics: a failed dependency or validation, named with its owner and the next safe action.",
+      "type": "object",
+      "required": [
+        "blocker_type",
+        "owner",
+        "next_safe_action"
+      ],
+      "properties": {
+        "blocker_type": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "owner": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "next_safe_action": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

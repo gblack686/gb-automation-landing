@@ -1,0 +1,30 @@
+# Kanban card template for dispatching one prospect lead-magnet generation run
+# through the TAC profile team (after Gate 1; preview publish stays Gate 3).
+title: "Generate prospect lead magnet: {{company_name}}"
+assignee: tac-builder
+workspace_kind: worktree
+body: |
+  Run the hermes-prospect-agent-team-lead-magnet pipeline for {{company_name}}.
+
+  Intake: {{intake_path}}
+  Sources: {{sources_path}}
+  Workdir: prospects/{{prospect_slug}}/
+
+  Steps (all in resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/):
+    1. run_intake.py --workdir <W> --intake {{intake_path}}
+    2. research_company.py --workdir <W> --sources {{sources_path}}
+    3. verify_logo_asset.py --workdir <W> [--logo-url ... --rights-basis ...]
+    4. generate_team_manifest.py --workdir <W>
+    5. substantiate_claims.py --workdir <W>
+    6. generate_image_prompts.py --workdir <W>
+    7. assemble_index.py --workdir <W>
+    8. render_team_brief.py --workdir <W>
+    9. validate_lead_magnet.py --workdir <W>   # must exit 0
+   10. smoke_preview.py --workdir <W>          # must exit 0
+
+  Copy receipts to second-brain/intelligence/prospect-lead-magnets/{{prospect_slug}}/.
+
+  HARD GATES: do NOT run publish_preview.py (Gate 3), do NOT contact the
+  prospect (Gate 4), do NOT activate anything (Gate 5). Model routing:
+  Codex only — no OpenRouter.
+idempotency_key: "lead-magnet-{{prospect_slug}}"

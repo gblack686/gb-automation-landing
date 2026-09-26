@@ -1,0 +1,30 @@
+{
+  "$comment": "image2-provenance.v1 — output of generate_image_prompts.py (list wrapper)",
+  "type": "object",
+  "required": ["schema_version", "assets"],
+  "properties": {
+    "schema_version": {"type": "string", "enum": ["image2-provenance.v1"]},
+    "assets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["asset_id", "provider", "prompt_fingerprint", "source_fact_ids", "approval_status", "output_path"],
+        "properties": {
+          "asset_id": {"type": "string", "enum": ["hero_world", "team_collaboration", "industry_workflow"]},
+          "provider": {"type": "string", "enum": ["image_2_0", "deterministic_svg_fallback"]},
+          "model": {"type": ["string", "null"]},
+          "seed": {"type": ["string", "null"]},
+          "prompt_fingerprint": {"type": "string"},
+          "source_fact_ids": {"type": "array", "items": {"type": "string"}},
+          "company_logo_colors_used": {"type": "array"},
+          "gbauto_constraints_source": {"type": "string"},
+          "prompt": {"type": "string"},
+          "negative_prompt": {"type": "string"},
+          "output_path": {"type": ["string", "null"]},
+          "approval_status": {"type": "string", "enum": ["draft", "approved", "rejected", "fallback_used"]},
+          "review_notes": {"type": "string"}
+        }
+      }
+    }
+  }
+}

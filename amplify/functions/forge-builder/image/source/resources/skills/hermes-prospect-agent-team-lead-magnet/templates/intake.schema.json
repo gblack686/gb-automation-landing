@@ -1,0 +1,22 @@
+{
+  "$comment": "hermes-prospect-intake.v1 — input contract for run_intake.py",
+  "type": "object",
+  "required": ["schema_version", "company_url", "desired_business_outcome", "risk_level", "approval_mode"],
+  "properties": {
+    "schema_version": {"type": "string", "enum": ["hermes-prospect-intake.v1"]},
+    "company_url": {"type": "string"},
+    "company_name": {"type": "string"},
+    "prospect": {
+      "type": "object",
+      "properties": {
+        "name": {"type": ["string", "null"]},
+        "title": {"type": ["string", "null"]},
+        "public_profile_url": {"type": ["string", "null"]}
+      }
+    },
+    "optional_context": {"type": "array", "items": {"type": "string"}},
+    "desired_business_outcome": {"type": "string"},
+    "risk_level": {"type": "string", "enum": ["external_prospect_preview"]},
+    "approval_mode": {"type": "string", "enum": ["human_required_before_publish"]}
+  }
+}

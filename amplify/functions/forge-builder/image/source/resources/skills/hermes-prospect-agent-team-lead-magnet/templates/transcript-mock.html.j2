@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>{{company_name}} — Meeting → Sprint (Mock Example) | GBAutomation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Mock transcript→sprint report — modeled on the live GBAutomation transcript
+   report (jason-diaz b2-sprint structure), client-branded, MOCK data only. */
+:root{
+  --void:#0A0608; --void2:#0A0A0C; --panel:#111112; --panel2:#18181B; --edge:#1F1F22;
+  --cyan:#67E8F9; --terracotta:#D97757; --cream:#F3F1E7; --cream2:#E6E4D9;
+  --stone:#D6D4C8; --mute:#8C8A84; --mute2:#5C5C5C; --accent:{{accent_hex}};
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--cream);font-family:'Inter',sans-serif;font-weight:300;line-height:1.6;overflow-x:hidden}
+h1,h2{font-family:'Bebas Neue',sans-serif;font-weight:400;letter-spacing:.04em}
+.wrap{max-width:900px;margin:0 auto;padding:0 20px}
+header{padding:34px 0 22px;border-bottom:1px solid var(--edge)}
+.brandrow{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.brandrow img{height:26px;width:auto}
+.brandrow .x{font-size:9px;text-transform:uppercase;letter-spacing:.24em;color:var(--mute)}
+h1{font-size:clamp(26px,4.6vw,40px);text-transform:uppercase}
+.mock-banner{display:inline-block;margin-top:10px;border:1px solid rgba(217,119,87,.5);color:var(--terracotta);border-radius:2px;padding:4px 12px;font-size:9px;text-transform:uppercase;letter-spacing:.24em}
+h2{font-size:22px;text-transform:uppercase;margin:30px 0 12px;color:var(--cream)}
+/* transcript */
+.utter{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid rgba(243,241,231,.05);font-size:13px}
+.utter .who{flex:0 0 92px;font-size:10px;text-transform:uppercase;letter-spacing:.14em;color:var(--cyan);padding-top:2px}
+.utter.gb .who{color:var(--terracotta)}
+.utter p{color:var(--stone)}
+/* actions */
+.action{border-left:2px solid var(--accent);background:rgba(10,10,12,.5);border-radius:0 10px 10px 0;padding:12px 14px;margin-bottom:8px;display:flex;justify-content:space-between;gap:12px;align-items:center}
+.action p{font-size:13px;color:var(--cream2)}
+.action .st{flex:0 0 auto;font-size:9px;text-transform:uppercase;letter-spacing:.16em;padding:4px 10px;border-radius:999px}
+.st.approved{border:1px solid rgba(103,232,249,.5);color:var(--cyan)}
+.st.pending{border:1px solid var(--edge);color:var(--mute)}
+/* board */
+.board{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
+@media(max-width:760px){.board{grid-template-columns:repeat(2,1fr)}}
+.col{background:var(--panel);border:1px solid var(--edge);border-radius:10px;padding:10px;min-height:150px}
+.col h3{font-family:'Inter',sans-serif;font-size:9px;text-transform:uppercase;letter-spacing:.2em;color:var(--mute);padding:2px 4px 10px;display:flex;justify-content:space-between}
+.col h3 span{color:var(--cyan)}
+.card{background:var(--panel2);border:1px solid var(--edge);border-radius:8px;padding:10px;margin-bottom:8px}
+.card p{font-size:11.5px;color:var(--cream2);line-height:1.4}
+.card .tag{display:inline-block;margin-top:8px;font-size:8px;text-transform:uppercase;letter-spacing:.14em;color:var(--terracotta)}
+.board-head{display:flex;align-items:center;gap:10px;margin-top:6px}
+.board-head img{height:18px;width:auto}
+.board-head span{font-size:9px;text-transform:uppercase;letter-spacing:.2em;color:var(--mute)}
+footer{padding:26px 0 36px;font-size:9px;color:var(--mute2);letter-spacing:.14em;text-align:center;text-transform:uppercase;border-top:1px solid var(--edge);margin-top:34px}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <div class="brandrow">{{brandrow}}</div>
+  <h1>Meeting → Sprint, end to end</h1>
+  <span class="mock-banner">Mock example — illustrative data, no real meeting</span>
+</div></header>
+
+<main class="wrap">
+  <h2>1 · The meeting (transcript lands automatically)</h2>
+  {{transcript_rows}}
+
+  <h2>2 · Extracted action items (you approve the triage)</h2>
+  {{action_rows}}
+
+  <h2>3 · The sprint board (run by the Sprint Cadence)</h2>
+  <div class="board-head">{{board_brand}}<span>{{company_name}} — sprint board · Hermes dashboard view</span></div>
+  <div class="board">{{board_columns}}</div>
+</main>
+
+<footer><div class="wrap">Mock example rendered by GBAutomation · the real pipeline runs on your meetings · {{generated_on}}</div></footer>
+</body>
+</html>

@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gbautomation.local/schemas/gbautomation-client-hub-artifact-feed.v1.schema.json",
+  "title": "GBAutomation Client Hub Artifact Feed",
+  "type": "object",
+  "required": ["schema", "generated_at", "source", "source_paths", "publisher_boundary", "official_renderer", "counts", "gaps", "write_paths", "artifacts"],
+  "additionalProperties": true,
+  "properties": {
+    "schema": {"const": "gbautomation.client_hub_artifact_feed.v1"},
+    "generated_at": {"type": "string", "minLength": 1},
+    "source": {"type": "string", "minLength": 1},
+    "publisher_boundary": {"type": "string", "minLength": 1},
+    "official_renderer": {"const": "resources/skills/report-package/scripts/render_collapsible_report.py"},
+    "source_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "source_paths": {
+      "type": "object",
+      "required": ["local_manifest", "public_manifest", "output"],
+      "additionalProperties": {"type": "string"}
+    },
+    "counts": {
+      "type": "object",
+      "required": ["local", "public", "public_missing_local", "public_orphaned"],
+      "additionalProperties": false,
+      "properties": {
+        "local": {"type": "integer", "minimum": 0},
+        "public": {"type": "integer", "minimum": 0},
+        "public_missing_local": {"type": "integer", "minimum": 0},
+        "public_orphaned": {"type": "integer", "minimum": 0}
+      }
+    },
+    "stale_labels": {"type": "array", "items": {"type": "string"}},
+    "gaps": {"type": "object"},
+    "write_paths": {"type": "array", "items": {"type": "string"}},
+    "artifacts": {"type": "array", "items": {"$ref": "#/$defs/artifact"}}
+  },
+  "$defs": {
+    "artifact": {
+      "type": "object",
+      "required": ["artifact_id", "availability_label", "public", "generated_at", "source", "source_manifest_path", "freshness_label", "stale", "stale_reason", "publish_eligible", "required_renderer"],
+      "additionalProperties": true,
+      "properties": {
+        "artifact_id": {"type": ["string", "null"]},
+        "client": {"type": ["string", "null"]},
+        "project": {"type": ["string", "null"]},
+        "type": {"type": "string"},
+        "filename": {"type": ["string", "null"]},
+        "web_route": {"type": ["string", "null"]},
+        "availability_label": {"enum": ["public_current", "local_only"]},
+        "public": {"type": "boolean"},
+        "source": {"type": "string"},
+        "source_manifest_path": {"type": "string"},
+        "generated_at": {"type": "string"},
+        "source_generated_at": {"type": ["string", "null"]},
+        "freshness_label": {"type": "string"},
+        "stale": {"type": "boolean"},
+        "stale_reason": {"type": ["string", "null"]},
+        "publish_eligible": {"type": "boolean"},
+        "publish_method": {"type": ["string", "null"]},
+        "publish_blocker": {"type": ["string", "null"]},
+        "required_renderer": {"const": "resources/skills/report-package/scripts/render_collapsible_report.py"},
+        "redacted": {"type": "boolean"}
+      }
+    }
+  }
+}

@@ -1,0 +1,138 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gbautomation.xyz/schemas/expert-ownership.v1.schema.json",
+  "title": "GBAuto Agent OS expert ownership registry v1",
+  "description": "ADR-03 contract: exactly one owner expert per first-class domain, one primary domain per expert. Registry-level registered_domains enumerates every first-class domain; entries bind each domain to its single owner expert. New domain without new expert fails closed in CI. Each entry may also attribute the contracts (schemas/*.schema.json) it owns; a contract has exactly one owner, mirroring the domain rule. Cross-entry contract uniqueness and on-disk contract coverage are not expressible in JSON Schema and are enforced by scripts/validate_expert_ownership.py. Each entry may also attribute the repo paths it owns via 'owned_paths'; a path has exactly one owner, mirroring the contract rule. Coverage of declared path_ownership_roots is opt-in and enforced by the validator.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "registered_domains",
+    "entries"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "expert-ownership.v1"
+    },
+    "registered_domains": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 200,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/definitions/kebab"
+      }
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 200,
+      "items": {
+        "$ref": "#/definitions/entry"
+      }
+    },
+    "path_ownership_roots": {
+      "description": "Roots under which EVERY direct child must be owned by exactly one expert. Opt-in: an empty or absent list enforces nothing, so coverage can be raised one root at a time instead of failing the whole tree at once.",
+      "type": "array",
+      "maxItems": 50,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/definitions/owned_path"
+      }
+    }
+  },
+  "definitions": {
+    "kebab": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80,
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "contract_path": {
+      "description": "Repo-relative path to a versioned JSON Schema contract under schemas/, e.g. 'schemas/source-event.v1.schema.json'.",
+      "type": "string",
+      "minLength": 20,
+      "maxLength": 200,
+      "pattern": "^schemas/[a-z0-9]+([-.][a-z0-9]+)*\\.schema\\.json$"
+    },
+    "entry": {
+      "type": "object",
+      "required": [
+        "owner_expert",
+        "primary_domain",
+        "tree",
+        "aliases",
+        "runtime_profiles",
+        "boundary",
+        "status"
+      ],
+      "properties": {
+        "owner_expert": {
+          "$ref": "#/definitions/kebab"
+        },
+        "primary_domain": {
+          "$ref": "#/definitions/kebab"
+        },
+        "tree": {
+          "enum": [
+            "consulting",
+            "gbautomation"
+          ]
+        },
+        "aliases": {
+          "type": "array",
+          "maxItems": 20,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/kebab"
+          }
+        },
+        "runtime_profiles": {
+          "type": "array",
+          "maxItems": 20,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/kebab"
+          }
+        },
+        "boundary": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "contracts": {
+          "description": "Contracts this expert owns. Optional: an entry may own no contract. Unique WITHIN the entry by schema; uniqueness ACROSS the registry, and the requirement that every schemas/*.v1.schema.json on disk is attributed exactly once, are enforced by scripts/validate_expert_ownership.py.",
+          "type": "array",
+          "maxItems": 200,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/contract_path"
+          }
+        },
+        "status": {
+          "enum": [
+            "active",
+            "proposed"
+          ]
+        },
+        "owned_paths": {
+          "description": "Repo paths this expert owns. Optional: an entry may own no path. Unique WITHIN the entry; uniqueness ACROSS the registry, existence on disk, and full coverage of any declared path_ownership_roots are enforced by validate_expert_ownership.py, mirroring the contract rules.",
+          "type": "array",
+          "maxItems": 200,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/owned_path"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "owned_path": {
+      "description": "Repo-relative path (file or directory) this expert owns. Unlike 'contracts' it is not restricted to schemas/, because ownable things live all over the tree: registries, runners, catalogs, and skill directories.",
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 200,
+      "pattern": "^(?!/)(?!.*\\.\\.)[A-Za-z0-9_.][A-Za-z0-9_./-]*[A-Za-z0-9_/-]$"
+    }
+  },
+  "additionalProperties": false
+}

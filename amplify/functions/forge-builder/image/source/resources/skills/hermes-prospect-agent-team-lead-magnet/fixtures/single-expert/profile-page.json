@@ -1,0 +1,114 @@
+{
+  "schema_version": "expert-profile-page.v1",
+  "config": {
+    "schema_version": "agent_expert_config.v1",
+    "agent_id": "artist-packet-expert",
+    "display_name": "Artist Packet Expert",
+    "purpose": "Turn an artist brief and approved media into a branded HTML packet, guide creative revisions, and prepare a reviewed publishing handoff.",
+    "client_context_refs": [
+      "fixture:artist-packet-brief"
+    ],
+    "profile_config": {},
+    "prime_commands": [],
+    "preset_commands": [],
+    "skills": [],
+    "validation_workflows": [],
+    "secrets_required": [],
+    "activation_gate": "human_approval_required"
+  },
+  "tagline": "A creative partner for gathering your story, shaping the page and preparing it to share. One expert, from the first brief to the final review.",
+  "audience": "Artists and creative managers",
+  "source_note": "Fictional fixture for the single-expert document template. No artist facts or connected accounts are asserted.",
+  "sections": {
+    "purpose": {
+      "summary": "Move from a collection of tracks, images and ideas to one coherent artist packet.",
+      "points": [
+        "Draft a responsive HTML page with a media gallery and consistent branding.",
+        "Let the artist guide the look, language and arrangement through revisions.",
+        "Prepare a reviewed page for an explicitly approved publishing action."
+      ]
+    },
+    "context": {
+      "summary": "Start with the brief and approved artist material. Keep references connected to the work.",
+      "points": [
+        "Use an artist-approved bio, music links, images and credits.",
+        "Record missing material rather than inventing facts.",
+        "Choose a primary Drive folder or S3 location during setup."
+      ]
+    },
+    "skills": {
+      "summary": "One expert can draw on several reusable skills without becoming a separate agent team.",
+      "points": [
+        "Candidate: artist-distribution-packet for the brief and asset inventory.",
+        "Candidate: netlify-cli for an approved publishing step.",
+        "Resolve skill versions and permissions before binding either capability."
+      ]
+    },
+    "commands": {
+      "summary": "Give the expert a small, understandable set of starting actions.",
+      "points": [
+        "Suggested startup: load the brief, brand rules and current asset manifest.",
+        "Suggested actions: create packet, remix draft, validate and prepare publication.",
+        "These action names describe intended behavior; executable recipes are not bound yet."
+      ]
+    },
+    "runtime": {
+      "summary": "Choose the model and operating limits to match the expert's actual workload.",
+      "points": [
+        "Hermes is the proposed runtime within the existing Agent OS.",
+        "Provider, model, budgets and schedules remain setup decisions.",
+        "The model used to generate an intake design does not automatically become this expert's model."
+      ]
+    },
+    "connections": {
+      "summary": "Connect the approved asset store and publishing target when their scopes are known.",
+      "points": [
+        "Choose the storage owner, folder or bucket and access scope.",
+        "Choose the Netlify site and who can approve publication.",
+        "Only credential reference names belong in the export; no credentials have been configured."
+      ]
+    },
+    "validation": {
+      "summary": "Combine technical checks with the artist's judgment.",
+      "points": [
+        "Check required HTML sections, working media, responsive layout and preserved brand settings.",
+        "Record missing credits, uncertain facts and broken links.",
+        "Agree qualitative acceptance criteria before executing a real validation workflow."
+      ]
+    },
+    "approval": {
+      "summary": "The expert prepares the work. You decide when it is ready for the outside world.",
+      "points": [
+        "Review the creative direction and finished packet.",
+        "Explicitly approve publication and any recipient-specific sharing.",
+        "This profile stays a draft until setup and activation are approved."
+      ]
+    }
+  },
+  "workflow": [
+    {
+      "title": "Gather",
+      "description": "Collect the brief and approved artist assets."
+    },
+    {
+      "title": "Create",
+      "description": "Build a branded HTML packet and media gallery."
+    },
+    {
+      "title": "Refine",
+      "description": "Use artist feedback to remix the page."
+    },
+    {
+      "title": "Review",
+      "description": "Validate the work and prepare the publishing handoff."
+    }
+  ],
+  "avatar": {
+    "image_path": "avatar.fixture.png",
+    "alt": "GBAutomation badge used only as a test fixture avatar",
+    "origin": "fixture"
+  },
+  "planning": {
+    "tenant_id": "example-studio"
+  }
+}

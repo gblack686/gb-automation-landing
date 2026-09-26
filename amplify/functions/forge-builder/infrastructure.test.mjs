@@ -1,0 +1,21 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {App,Stack} from 'aws-cdk-lib';
+import {Template,Match} from 'aws-cdk-lib/assertions';
+import {Bucket} from 'aws-cdk-lib/aws-s3';
+import {Function,Runtime,Code} from 'aws-cdk-lib/aws-lambda';
+import {builderInfrastructure} from './infrastructure.mjs';
+test('FIFO serialization and separate API/worker privileges synthesize without cloud access',()=>{
+ const app=new App(),stack=new Stack(app,'Test',{env:{account:'123456789012',region:'us-east-1'}}),bucket=new Bucket(stack,'Private');
+ const fn=name=>{const lambda=new Function(stack,name,{runtime:Runtime.NODEJS_22_X,handler:'index.handler',code:Code.fromInline('exports.handler=async()=>{}')});return {resources:{lambda},addEnvironment:(k,v)=>lambda.addEnvironment(k,v)};};
+ builderInfrastructure(stack,{bucket,api:fn('API'),worker:fn('Worker'),issuer:'https://issuer'});
+ const template=Template.fromStack(stack);template.resourceCountIs('AWS::SQS::Queue',2);
+ template.hasResourceProperties('AWS::SQS::Queue',{FifoQueue:true,VisibilityTimeout:1800,RedrivePolicy:Match.objectLike({maxReceiveCount:5})});
+ template.hasResourceProperties('AWS::Lambda::EventSourceMapping',{BatchSize:1,FunctionResponseTypes:['ReportBatchItemFailures']});
+ const policies=template.findResources('AWS::IAM::Policy');
+ const api=JSON.stringify(Object.entries(policies).find(([id])=>id.startsWith('API'))[1]);
+ assert.equal(api.includes('snapshots/'),false);assert.equal(api.includes('bootstrap/*'),false);assert.equal(api.includes('voice-claim.json'),true);assert.equal(api.includes('elevenlabs-'),true);
+ const worker=JSON.stringify(Object.entries(policies).find(([id])=>id.startsWith('Worker'))[1]);
+ assert.equal(worker.includes('snapshots/'),true);assert.equal(worker.includes('secretsmanager'),false);
+ assert.equal(worker.includes('ses:'),false);assert.equal(api.includes('ses:'),false);
+});

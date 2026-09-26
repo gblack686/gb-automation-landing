@@ -1,0 +1,197 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gbautomation.xyz/schemas/session-intelligence.v1.schema.json",
+  "title": "GBAuto Agent OS session-intelligence claim v1",
+  "description": "One typed session-intelligence claim (intent, preference, contradiction, dreaming output, or tag assignment) with mandatory evidence and provenance. Supersession and contradiction are explicit reviewable states — never silent: any claim that supersedes or conflicts with an earlier claim, and every contradiction claim, must carry an active review_state.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "kind",
+    "statement",
+    "scope",
+    "strength",
+    "confidence",
+    "evidence_refs",
+    "supersedes",
+    "conflicts_with",
+    "review_state",
+    "provenance"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "session-intelligence.v1"
+    },
+    "claim_id": {
+      "type": "string",
+      "pattern": "^claim_[a-z0-9_]+$",
+      "maxLength": 200
+    },
+    "kind": {
+      "enum": [
+        "intent",
+        "preference",
+        "contradiction",
+        "dreaming_output",
+        "tag_assignment"
+      ]
+    },
+    "statement": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4000
+    },
+    "scope": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "strength": {
+      "enum": [
+        "weak",
+        "moderate",
+        "strong"
+      ]
+    },
+    "confidence": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 1
+    },
+    "evidence_refs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 500,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 200
+      }
+    },
+    "supersedes": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "conflicts_with": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "review_state": {
+      "enum": [
+        "not_required",
+        "pending_review",
+        "approved",
+        "rejected"
+      ]
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "session_ref",
+        "message_ref",
+        "extracted_at"
+      ],
+      "properties": {
+        "session_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "message_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "extracted_at": {
+          "type": "string",
+          "minLength": 20,
+          "maxLength": 40
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "supersedes": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "supersedes"
+        ]
+      },
+      "then": {
+        "properties": {
+          "review_state": {
+            "enum": [
+              "pending_review",
+              "approved",
+              "rejected"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "conflicts_with": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "conflicts_with"
+        ]
+      },
+      "then": {
+        "properties": {
+          "review_state": {
+            "enum": [
+              "pending_review",
+              "approved",
+              "rejected"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "contradiction"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "review_state": {
+            "enum": [
+              "pending_review",
+              "approved",
+              "rejected"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "additionalProperties": false
+}

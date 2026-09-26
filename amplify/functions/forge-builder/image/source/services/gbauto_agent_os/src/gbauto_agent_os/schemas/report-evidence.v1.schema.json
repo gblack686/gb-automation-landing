@@ -1,0 +1,220 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gbautomation.xyz/schemas/report-evidence.v1.schema.json",
+  "title": "Branded report conformance evidence v1",
+  "description": "ADR-12 evidence emitted by scripts/report_conformance.py for a rendered GBAuto report artifact: which house renderer produced it, which brand-conformance checks passed, the registered artifact identity, its plan/task/trace/PR back-references, and whether the output is approved for user-facing publication.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "report_id",
+    "title",
+    "renderer",
+    "brand_conformance",
+    "house_provenance",
+    "artifact",
+    "links",
+    "feedback",
+    "approved_output"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "report-evidence.v1"
+    },
+    "report_id": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 500
+    },
+    "renderer": {
+      "type": "object",
+      "required": [
+        "renderer_id",
+        "renderer_version",
+        "shell_id",
+        "shell_version",
+        "theme_id",
+        "theme_version"
+      ],
+      "properties": {
+        "renderer_id": {
+          "$ref": "#/definitions/contractToken"
+        },
+        "renderer_version": {
+          "$ref": "#/definitions/contractToken"
+        },
+        "shell_id": {
+          "$ref": "#/definitions/contractToken"
+        },
+        "shell_version": {
+          "$ref": "#/definitions/contractToken"
+        },
+        "theme_id": {
+          "$ref": "#/definitions/contractToken"
+        },
+        "theme_version": {
+          "$ref": "#/definitions/contractToken"
+        }
+      },
+      "additionalProperties": false
+    },
+    "brand_conformance": {
+      "type": "object",
+      "description": "One boolean per named ADR-12 check. Every value must be true before an artifact may be published.",
+      "required": [
+        "logo",
+        "shell",
+        "theme",
+        "metadata",
+        "trace",
+        "feedback",
+        "provenance"
+      ],
+      "properties": {
+        "logo": {
+          "type": "boolean"
+        },
+        "shell": {
+          "type": "boolean"
+        },
+        "theme": {
+          "type": "boolean"
+        },
+        "metadata": {
+          "type": "boolean"
+        },
+        "trace": {
+          "type": "boolean"
+        },
+        "feedback": {
+          "type": "boolean"
+        },
+        "provenance": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "house_provenance": {
+      "type": "object",
+      "description": "Proof that the artifact carries the canonical house renderer's own output bytes (brand lockup with the canonical logo, token block, shell/hyperframes/contract stylesheets, font links, section-nav script) rather than merely copying its marker strings. renderer_output_proved is false whenever any fragment is missing.",
+      "required": [
+        "shell_digest",
+        "fragments_verified",
+        "renderer_output_proved"
+      ],
+      "properties": {
+        "shell_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "fragments_verified": {
+          "type": "array",
+          "maxItems": 32,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          }
+        },
+        "renderer_output_proved": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "artifact": {
+      "type": "object",
+      "required": [
+        "path",
+        "sha256",
+        "registry_ref"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "registry_ref": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^gbauto-artifact-registry\\.v1:[0-9a-f]{64}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "links": {
+      "type": "object",
+      "required": [
+        "plan_ref",
+        "task_ref",
+        "trace_id",
+        "pr_ref"
+      ],
+      "properties": {
+        "plan_ref": {
+          "$ref": "#/definitions/backRef"
+        },
+        "task_ref": {
+          "$ref": "#/definitions/backRef"
+        },
+        "trace_id": {
+          "$ref": "#/definitions/backRef"
+        },
+        "pr_ref": {
+          "$ref": "#/definitions/backRef"
+        }
+      },
+      "additionalProperties": false
+    },
+    "feedback": {
+      "type": "object",
+      "required": [
+        "enabled",
+        "endpoint_kind"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "endpoint_kind": {
+          "enum": [
+            "edge_function",
+            "webhook",
+            "none",
+            "unknown"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "approved_output": {
+      "type": "boolean",
+      "description": "True only when every brand_conformance check passed; ADR-12 rejects unbranded output before publication."
+    }
+  },
+  "definitions": {
+    "contractToken": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "backRef": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1,
+      "maxLength": 500
+    }
+  },
+  "additionalProperties": false
+}

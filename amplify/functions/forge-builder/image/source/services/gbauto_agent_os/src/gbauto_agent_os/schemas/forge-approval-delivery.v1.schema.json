@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gbautomation.xyz/schemas/forge-approval-delivery.v1.schema.json",
+  "title": "forge-approval-delivery.v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "message_id",
+    "channel",
+    "inbox_verified",
+    "recipient_role",
+    "sent_at",
+    "correlation_id",
+    "template_sha256"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "forge-approval-delivery.v1"
+    },
+    "message_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "channel": {
+      "enum": [
+        "fixture",
+        "gmail"
+      ]
+    },
+    "inbox_verified": {
+      "type": "boolean"
+    },
+    "recipient_role": {
+      "enum": [
+        "operator",
+        "client"
+      ]
+    },
+    "sent_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "correlation_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "template_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    }
+  },
+  "additionalProperties": false
+}

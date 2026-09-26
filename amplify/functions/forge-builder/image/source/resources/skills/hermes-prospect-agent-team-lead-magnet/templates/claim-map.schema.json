@@ -1,0 +1,40 @@
+{
+  "$comment": "prospect-claim-map.v1 — output of substantiate_claims.py",
+  "type": "object",
+  "required": ["schema_version", "claims"],
+  "properties": {
+    "schema_version": {"type": "string", "enum": ["prospect-claim-map.v1"]},
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["claim_id", "text", "location", "claim_type", "confidence", "allowed_in_preview", "reviewer_verdict"],
+        "properties": {
+          "claim_id": {"type": "string"},
+          "text": {"type": "string"},
+          "location": {"type": "string"},
+          "claim_type": {
+            "type": "string",
+            "enum": ["company_fact", "inferred_opportunity", "gbauto_capability", "trial_process", "limitation"]
+          },
+          "support": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["source_url", "source_title"],
+              "properties": {
+                "source_url": {"type": "string"},
+                "source_title": {"type": "string"},
+                "quote_or_fact": {"type": "string"},
+                "accessed_at": {"type": "string"}
+              }
+            }
+          },
+          "confidence": {"type": "string", "enum": ["verified", "inferred", "needs_call"]},
+          "allowed_in_preview": {"type": "boolean"},
+          "reviewer_verdict": {"type": "string", "enum": ["pass", "revise", "block"]}
+        }
+      }
+    }
+  }
+}

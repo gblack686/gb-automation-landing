@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gbautomation.xyz/schemas/agent-expert-route-run.v1.schema.json",
+  "title": "Agent Expert Route Run",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "expert_key",
+    "tree",
+    "expert",
+    "route",
+    "skill_name",
+    "status",
+    "started_at",
+    "ended_at",
+    "invoked_by",
+    "source_path",
+    "source_sha256",
+    "output_path",
+    "output_sha256",
+    "output_preview",
+    "supabase"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "agent-expert-route-run.v1"
+    },
+    "run_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "expert_alias": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"
+    },
+    "route_alias": {
+      "type": "string",
+      "pattern": "^expert:[a-z0-9][a-z0-9-]{0,63}:[A-Za-z0-9][A-Za-z0-9_-]{0,95}$"
+    },
+    "internal_expert_key": {
+      "type": "string",
+      "minLength": 3
+    },
+    "internal_route_key": {
+      "type": "string",
+      "minLength": 5
+    },
+    "source_group": {
+      "type": "string",
+      "minLength": 1
+    },
+    "expert_key": {
+      "type": "string",
+      "minLength": 3
+    },
+    "tree": {
+      "type": "string",
+      "minLength": 1
+    },
+    "expert": {
+      "type": "string",
+      "minLength": 1
+    },
+    "route": {
+      "type": "string",
+      "minLength": 1
+    },
+    "skill_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "enum": ["running", "ok", "error", "cancelled", "timeout"]
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "ended_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "invoked_by": {
+      "type": "string",
+      "minLength": 1
+    },
+    "session_id": {
+      "type": ["string", "null"]
+    },
+    "trace_id": {
+      "type": ["string", "null"]
+    },
+    "input_hash": {
+      "type": ["string", "null"]
+    },
+    "source_path": {
+      "type": "string",
+      "pattern": "^experts/(gbautomation|consulting)/"
+    },
+    "source_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "source_commit": {
+      "type": ["string", "null"]
+    },
+    "output_path": {
+      "type": "string"
+    },
+    "output_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "output_preview": {
+      "type": "string"
+    },
+    "error_message": {
+      "type": ["string", "null"]
+    },
+    "supabase": {
+      "type": "object",
+      "required": ["requested", "status", "tables"],
+      "properties": {
+        "requested": {
+          "type": "boolean"
+        },
+        "status": {
+          "enum": ["not-requested", "pending", "ok", "degraded"]
+        },
+        "tables": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

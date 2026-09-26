@@ -1,0 +1,181 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "gbauto.atlas-query.v1",
+      "default": "gbauto.atlas-query.v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "kind": {
+      "default": "experts",
+      "enum": [
+        "experts",
+        "capabilities",
+        "sessions",
+        "artifacts",
+        "delivery",
+        "analytics",
+        "pull_requests"
+      ],
+      "title": "Kind",
+      "type": "string"
+    },
+    "repo": {
+      "const": "gbautomation",
+      "default": "gbautomation",
+      "title": "Repo",
+      "type": "string"
+    },
+    "client": {
+      "const": "gbautomation",
+      "default": "gbautomation",
+      "title": "Client",
+      "type": "string"
+    },
+    "expert": {
+      "anyOf": [
+        {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,199}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Expert"
+    },
+    "harness": {
+      "anyOf": [
+        {
+          "enum": [
+            "hermes",
+            "codex",
+            "claude-code"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Harness"
+    },
+    "profile": {
+      "anyOf": [
+        {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,199}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Profile"
+    },
+    "stable_host_id": {
+      "anyOf": [
+        {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,199}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Stable Host Id"
+    },
+    "session_key": {
+      "anyOf": [
+        {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,199}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Session Key"
+    },
+    "native_session_id": {
+      "anyOf": [
+        {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,199}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Native Session Id"
+    },
+    "id": {
+      "anyOf": [
+        {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,199}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Id"
+    },
+    "version_id": {
+      "anyOf": [
+        {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,199}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Version Id"
+    },
+    "hours": {
+      "default": 0,
+      "enum": [
+        0,
+        24,
+        168,
+        720
+      ],
+      "title": "Hours",
+      "type": "integer"
+    },
+    "limit": {
+      "default": 50,
+      "maximum": 100,
+      "minimum": 1,
+      "title": "Limit",
+      "type": "integer"
+    },
+    "cursor": {
+      "anyOf": [
+        {
+          "maxLength": 2048,
+          "pattern": "^[A-Za-z0-9_-]+$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Cursor"
+    }
+  },
+  "title": "AtlasQuery",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gbautomation.xyz/schemas/gbauto.atlas-query.v1.schema.json"
+}

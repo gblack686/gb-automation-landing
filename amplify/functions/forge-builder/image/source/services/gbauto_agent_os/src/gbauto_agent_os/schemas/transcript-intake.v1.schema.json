@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "gbautomation.transcript-intake.v1",
+  "title": "Meet transcript intake envelope",
+  "description": "Typed envelope the meet-transcript-heartbeat worker attaches to the durable parent Hermes work request. The (drive_file_id, transcript_hash) pair is the idempotency identity: replaying a Drive doc must never create a second parent card.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "source",
+    "drive_file_id",
+    "transcript_path",
+    "transcript_hash",
+    "meeting_date",
+    "client",
+    "client_candidates",
+    "source_quality",
+    "session_id",
+    "requested_outputs",
+    "idempotency_key",
+    "created_at"
+  ],
+  "properties": {
+    "schema_version": { "const": "transcript-intake.v1" },
+    "source": { "const": "google-meet" },
+    "drive_file_id": { "type": "string", "minLength": 8 },
+    "drive_doc_name": { "type": "string" },
+    "transcript_path": {
+      "type": "string",
+      "description": "Repo-relative path to the canonical transcript markdown under second-brain/intelligence/transcripts/sessions/"
+    },
+    "transcript_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "sha256 of the exported transcript text (pre-frontmatter)"
+    },
+    "meeting_date": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "client": {
+      "type": "string",
+      "description": "Resolved client slug (CLIENT_MAP heuristics; DEFAULT_CLIENT when no match)"
+    },
+    "client_candidates": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "All candidate client slugs; empty or ['gbautomation'] means internal. Unknown/ambiguous resolution is the ORCHESTRATOR's job — quarantine, never guess."
+    },
+    "participants": { "type": "array", "items": { "type": "string" } },
+    "source_quality": {
+      "type": "object",
+      "description": "Deterministic pre-model source-quality receipt. Only status=pass envelopes may create a parent Kanban request.",
+      "required": [
+        "schema_version",
+        "status",
+        "attendees",
+        "attendee_count",
+        "speakers",
+        "speaker_count",
+        "speaker_turn_counts",
+        "speaker_coverage_ratio",
+        "audio_failure_indicators",
+        "reason_codes"
+      ],
+      "properties": {
+        "schema_version": { "const": "transcript-source-quality.v1" },
+        "status": { "enum": ["pass", "quarantine"] },
+        "attendees": { "type": "array", "items": { "type": "string" } },
+        "attendee_count": { "type": "integer", "minimum": 0 },
+        "speakers": { "type": "array", "items": { "type": "string" } },
+        "speaker_count": { "type": "integer", "minimum": 0 },
+        "speaker_turn_counts": {
+          "type": "object",
+          "additionalProperties": { "type": "integer", "minimum": 1 }
+        },
+        "speaker_coverage_ratio": { "type": "number", "minimum": 0, "maximum": 1 },
+        "audio_failure_indicators": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "hearing_failure",
+              "sound_failure",
+              "muted_participant",
+              "unresponsive_participant"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "reason_codes": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "no_speaker_turns",
+              "multi_attendee_single_speaker_with_audio_failure"
+            ]
+          },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "session_id": { "type": "string" },
+    "requested_outputs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "enum": ["executive_report", "decisions", "action_items", "client_triage"]
+      }
+    },
+    "idempotency_key": {
+      "type": "string",
+      "pattern": "^meet-transcript:[^:]+:[0-9a-f]{16}$",
+      "description": "meet-transcript:<drive_file_id>:<transcript_hash[:16]> — stored in tasks.idempotency_key"
+    },
+    "created_at": { "type": "string", "format": "date-time" },
+    "origin": { "type": "string" }
+  },
+  "additionalProperties": false
+}

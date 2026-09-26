@@ -1,0 +1,2996 @@
+{
+  "schema_version": "approved-mtg-cards.v1",
+  "source": "operator avatar-set-gallery vote exports (tac-lead-avatar-votes*.json, 2026-06-23/24), latest-vote-wins",
+  "cards": [
+    {
+      "name": "Accursed Marauder",
+      "gallery_title": "Accursed Marauder",
+      "color_identity": [
+        "B"
+      ],
+      "type_line": "Creature — Zombie Warrior",
+      "artist": "Paolo Parente",
+      "scryfall_id": "5da14d86-0780-4821-a799-96f64b377df4",
+      "set": "Zombie Avatar Candidates"
+    },
+    {
+      "name": "Adeline, Resplendent Cathar",
+      "gallery_title": "Adeline, Resplendent Cathar",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Legendary Creature — Human Knight",
+      "artist": "Bryan Sola",
+      "scryfall_id": "1de30c12-2011-495a-be25-f7a46b23e142",
+      "set": "Knight Avatar Candidates"
+    },
+    {
+      "name": "Adrix and Nev, Twincasters",
+      "gallery_title": "Adrix and Nev, Twincasters",
+      "color_identity": [
+        "G",
+        "U"
+      ],
+      "type_line": "Legendary Creature — Merfolk Wizard",
+      "artist": "Andrew Mar",
+      "scryfall_id": "b9c11061-bb34-4904-b9f1-ea106b517bbe",
+      "set": "Merfolk Avatar Candidates"
+    },
+    {
+      "name": "Ajani's Comrade",
+      "gallery_title": "Ajani's Comrade",
+      "color_identity": [
+        "G"
+      ],
+      "type_line": "Creature — Elf Soldier",
+      "artist": "James Ryman",
+      "scryfall_id": "5bebef1c-2f03-4e0a-b3ba-861546ebf8a6",
+      "set": "Elf Avatar Candidates"
+    },
+    {
+      "name": "Akroma, Angel of Wrath",
+      "gallery_title": "Akroma, Angel of Wrath",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Legendary Creature — Angel",
+      "artist": "Terese Nielsen",
+      "scryfall_id": "bf1ef8ec-d915-41f2-b087-3d6d82e3db85",
+      "set": "Angel Avatar Candidates"
+    },
+    {
+      "name": "Alisaie Leveilleur",
+      "gallery_title": "Alisaie Leveilleur",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Legendary Creature — Elf Wizard",
+      "artist": "Justyna Dura",
+      "scryfall_id": "ba96f831-02cb-4a74-a2e4-7f76444e3cd7",
+      "set": "Elf Avatar Candidates"
+    },
+    {
+      "name": "Alpha Myr",
+      "gallery_title": "Alpha Myr",
+      "color_identity": [],
+      "type_line": "Artifact Creature — Myr",
+      "artist": "Dany Orizio",
+      "scryfall_id": "f3f792d7-75be-429e-8f62-0b563b103642",
+      "set": "Myr Avatar Candidates"
+    },
+    {
+      "name": "Alphinaud Leveilleur",
+      "gallery_title": "Alphinaud Leveilleur",
+      "color_identity": [
+        "U"
+      ],
+      "type_line": "Legendary Creature — Elf Wizard",
+      "artist": "Justyna Dura",
+      "scryfall_id": "65331e86-1ff3-45e4-b789-7afec4ca9bd5",
+      "set": "Elf Avatar Candidates"
+    },
+    {
+      "name": "Ambush Commander",
+      "gallery_title": "Ambush Commander",
+      "color_identity": [
+        "G"
+      ],
+      "type_line": "Creature — Elf",
+      "artist": "Lucio Parrillo",
+      "scryfall_id": "5ecbf790-619b-4b55-ae4c-29f1459b0031",
+      "set": "Elf Avatar Candidates"
+    },
+    {
+      "name": "Ancestor's Chosen",
+      "gallery_title": "Ancestor's Chosen",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Human Cleric",
+      "artist": "Pete Venters",
+      "scryfall_id": "b93f39f9-fbdf-4096-9bd7-a7b2481e2dbd",
+      "set": "Cleric Avatar Candidates"
+    },
+    {
+      "name": "Angel of Mercy",
+      "gallery_title": "Angel of Mercy",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Angel",
+      "artist": "Volkan Baǵa",
+      "scryfall_id": "2d22fdde-5590-4a4c-af2e-09711f4b5ffd",
+      "set": "Angel Avatar Candidates"
+    },
+    {
+      "name": "Angelic Page",
+      "gallery_title": "Angelic Page",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Angel Spirit",
+      "artist": "Chris Rahn",
+      "scryfall_id": "ddf5db14-f2aa-4088-9894-7bd3a56dfe1e",
+      "set": "Angel Avatar Candidates"
+    },
+    {
+      "name": "Ankle Shanker",
+      "gallery_title": "Ankle Shanker",
+      "color_identity": [
+        "B",
+        "R",
+        "W"
+      ],
+      "type_line": "Creature — Goblin Berserker",
+      "artist": "Zoltan Boros",
+      "scryfall_id": "544a06f8-75fe-41b6-81dc-c9a0358f03c5",
+      "set": "Goblin Avatar Candidates"
+    },
+    {
+      "name": "Aragorn and Arwen, Wed",
+      "gallery_title": "Aragorn and Arwen, Wed",
+      "color_identity": [
+        "G",
+        "W"
+      ],
+      "type_line": "Legendary Creature — Human Elf Noble",
+      "artist": "Magali Villeneuve",
+      "scryfall_id": "d7d4c97a-9319-4534-9a49-da000f41a02d",
+      "set": "Elf Avatar Candidates"
+    },
+    {
+      "name": "Arbor Elf",
+      "gallery_title": "Arbor Elf",
+      "color_identity": [
+        "G"
+      ],
+      "type_line": "Creature — Elf Druid",
+      "artist": "rk post",
+      "scryfall_id": "4b81165e-f091-4211-8b47-5ea6868b0d4c",
+      "set": "Elf Avatar Candidates"
+    },
+    {
+      "name": "Arcbound Stinger",
+      "gallery_title": "Arcbound Stinger",
+      "color_identity": [],
+      "type_line": "Artifact Creature — Insect",
+      "artist": "Darrell Riche",
+      "scryfall_id": "db438720-5bfb-4cd9-b565-434839045f60",
+      "set": "MTG Worker Art Candidates"
+    },
+    {
+      "name": "Arcbound Worker",
+      "gallery_title": "Arcbound Worker",
+      "color_identity": [],
+      "type_line": "Artifact Creature — Construct",
+      "artist": "Darrell Riche",
+      "scryfall_id": "fdfc2453-5a2b-4104-bf82-84f935de7b99",
+      "set": "MTG Worker Art Candidates"
+    },
+    {
+      "name": "Architect of the Untamed",
+      "gallery_title": "Architect of the Untamed",
+      "color_identity": [
+        "G"
+      ],
+      "type_line": "Creature — Elf Artificer Druid",
+      "artist": "Sara Winters",
+      "scryfall_id": "7bc540f5-96a1-44d8-910d-914b9e61b2a5",
+      "set": "Elf Avatar Candidates"
+    },
+    {
+      "name": "Artful Looter",
+      "gallery_title": "Artful Looter",
+      "color_identity": [
+        "U"
+      ],
+      "type_line": "Creature — Human Wizard",
+      "artist": "Heather “Erica Gassalasca-Jape” Hudson",
+      "scryfall_id": "0f3ba2a4-3784-4bb5-8a60-7bae80e97eba",
+      "set": "Wizard Avatar Candidates"
+    },
+    {
+      "name": "Arwen Undómiel",
+      "gallery_title": "Arwen Undómiel",
+      "color_identity": [
+        "G",
+        "U"
+      ],
+      "type_line": "Legendary Creature — Elf Noble",
+      "artist": "Yongjae Choi",
+      "scryfall_id": "c544e301-13b4-4dec-b65c-d54809bb7736",
+      "set": "Elf Avatar Candidates"
+    },
+    {
+      "name": "Arwen, Mortal Queen",
+      "gallery_title": "Arwen, Mortal Queen",
+      "color_identity": [
+        "G",
+        "W"
+      ],
+      "type_line": "Legendary Creature — Elf Noble",
+      "artist": "Miranda Meeks",
+      "scryfall_id": "547f92d4-cd1d-4ca7-a6e2-6473b4d3c832",
+      "set": "Elf Avatar Candidates"
+    },
+    {
+      "name": "Arwen, Weaver of Hope",
+      "gallery_title": "Arwen, Weaver of Hope",
+      "color_identity": [
+        "G"
+      ],
+      "type_line": "Legendary Creature — Elf Noble",
+      "artist": "Axel Sauerwald",
+      "scryfall_id": "4d4f4d41-232d-4377-be69-de590b880edb",
+      "set": "Elf Avatar Candidates"
+    },
+    {
+      "name": "Auriok Champion",
+      "gallery_title": "Auriok Champion",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Human Cleric",
+      "artist": "Eric Deschamps",
+      "scryfall_id": "74b769c1-48a0-448b-98d9-0d86526ef51e",
+      "set": "Fifth Dawn Creature Candidates"
+    },
+    {
+      "name": "Auriok Glaivemaster",
+      "gallery_title": "Auriok Glaivemaster",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Human Soldier",
+      "artist": "John Matson",
+      "scryfall_id": "97cce4d4-bff2-4dbb-bc12-1a726ad82dd4",
+      "set": "Soldier Avatar Candidates"
+    },
+    {
+      "name": "Avacyn, Angel of Hope",
+      "gallery_title": "Avacyn, Angel of Hope",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Legendary Creature — Angel",
+      "artist": "Jason Chan",
+      "scryfall_id": "74e5dcec-ef1d-4461-bb23-61d98ff082dd",
+      "set": "Angel Avatar Candidates"
+    },
+    {
+      "name": "Ayumi, the Last Visitor",
+      "gallery_title": "Ayumi, the Last Visitor",
+      "color_identity": [
+        "G"
+      ],
+      "type_line": "Legendary Creature — Spirit",
+      "artist": "rk post",
+      "scryfall_id": "f037520e-2a44-4650-b7cb-c81d93d1418d",
+      "set": "Kamigawa Legendary Creature Candidates"
+    },
+    {
+      "name": "Azami, Lady of Scrolls",
+      "gallery_title": "Azami, Lady of Scrolls",
+      "color_identity": [
+        "U"
+      ],
+      "type_line": "Legendary Creature — Human Wizard",
+      "artist": "Ittoku",
+      "scryfall_id": "fa727656-fb33-485b-9378-18b80cad42b9",
+      "set": "Kamigawa Legendary Creature Candidates"
+    },
+    {
+      "name": "Azusa, Lost but Seeking",
+      "gallery_title": "Azusa, Lost but Seeking",
+      "color_identity": [
+        "G"
+      ],
+      "type_line": "Legendary Creature — Human Monk",
+      "artist": "Winona Nelson",
+      "scryfall_id": "2fe97fbe-a6d6-4e96-8c26-f81bcdf579a1",
+      "set": "Kamigawa Legendary Creature Candidates"
+    },
+    {
+      "name": "Beast of Burden",
+      "gallery_title": "Beast of Burden",
+      "color_identity": [],
+      "type_line": "Artifact Creature — Golem",
+      "artist": "Chippy",
+      "scryfall_id": "e1a19f6d-4fab-4be6-af9e-c66acc16e4f8",
+      "set": "Golem Avatar Candidates"
+    },
+    {
+      "name": "Ben-Ben, Akki Hermit",
+      "gallery_title": "Ben-Ben, Akki Hermit",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Legendary Creature — Goblin Shaman",
+      "artist": "Greg Staples",
+      "scryfall_id": "d7c015a6-4d7d-421b-84fa-30bf070cff83",
+      "set": "Kamigawa Legendary Creature Candidates"
+    },
+    {
+      "name": "Benalish Knight",
+      "gallery_title": "Benalish Knight",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Human Knight",
+      "artist": "Zoltan Boros & Gabor Szikszai",
+      "scryfall_id": "d0ae60d0-20d3-452c-9953-e229567c06f5",
+      "set": "Knight Avatar Candidates"
+    },
+    {
+      "name": "Bitterbloom Bearer",
+      "gallery_title": "Bitterbloom Bearer",
+      "color_identity": [
+        "B"
+      ],
+      "type_line": "Creature — Faerie Rogue",
+      "artist": "Chris Rahn",
+      "scryfall_id": "7127164d-f2a3-4d79-b6db-93507ff5ab47",
+      "set": "Faerie Avatar Candidates"
+    },
+    {
+      "name": "Bladewing the Risen",
+      "gallery_title": "Bladewing the Risen",
+      "color_identity": [
+        "B",
+        "R"
+      ],
+      "type_line": "Legendary Creature — Zombie Dragon",
+      "artist": "Seb McKinnon",
+      "scryfall_id": "27ce43cb-44f4-4d94-8700-d9f3cc043989",
+      "set": "Dragon Avatar Candidates"
+    },
+    {
+      "name": "Blind Creeper",
+      "gallery_title": "Blind Creeper",
+      "color_identity": [
+        "B"
+      ],
+      "type_line": "Creature — Zombie Beast",
+      "artist": "Carl Critchlow",
+      "scryfall_id": "86d5440a-7460-4b4f-a167-a6c4fb2d855e",
+      "set": "Fifth Dawn Creature Candidates"
+    },
+    {
+      "name": "Blinding Angel",
+      "gallery_title": "Blinding Angel",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Angel",
+      "artist": "Todd Lockwood",
+      "scryfall_id": "e04256f8-c275-4a24-8a95-371d424f7a01",
+      "set": "Angel Avatar Candidates"
+    },
+    {
+      "name": "Blood Artist",
+      "gallery_title": "Blood Artist",
+      "color_identity": [
+        "B"
+      ],
+      "type_line": "Creature — Vampire",
+      "artist": "L.A. Draws",
+      "scryfall_id": "b5275d76-2947-4219-be21-614c7421614a",
+      "set": "Vampire Avatar Candidates"
+    },
+    {
+      "name": "Boartusk Liege",
+      "gallery_title": "Boartusk Liege",
+      "color_identity": [
+        "G",
+        "R"
+      ],
+      "type_line": "Creature — Goblin Knight",
+      "artist": "Jesper Ejsing",
+      "scryfall_id": "0f28e081-7994-468d-8505-9981b90c001c",
+      "set": "Goblin Avatar Candidates"
+    },
+    {
+      "name": "Body of Jukai",
+      "gallery_title": "Body of Jukai",
+      "color_identity": [
+        "G"
+      ],
+      "type_line": "Creature — Spirit",
+      "artist": "Luca Zontini",
+      "scryfall_id": "f43fe8e0-23ab-4fe7-8a48-1902be142c6a",
+      "set": "Spirit Avatar Candidates"
+    },
+    {
+      "name": "Boggart Ram-Gang",
+      "gallery_title": "Boggart Ram-Gang",
+      "color_identity": [
+        "G",
+        "R"
+      ],
+      "type_line": "Creature — Goblin Warrior",
+      "artist": "Dave Allsop",
+      "scryfall_id": "63e25b70-fa21-4663-aabd-34b7e0b75c34",
+      "set": "Goblin Avatar Candidates"
+    },
+    {
+      "name": "Boom Scholar",
+      "gallery_title": "Boom Scholar",
+      "color_identity": [
+        "G",
+        "R"
+      ],
+      "type_line": "Creature — Goblin Advisor",
+      "artist": "Brian Valeza",
+      "scryfall_id": "f2b84684-10c9-4635-a922-620f04809bb1",
+      "set": "Goblin Avatar Candidates"
+    },
+    {
+      "name": "Boromir, Warden of the Tower",
+      "gallery_title": "Boromir, Warden of the Tower",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Legendary Creature — Human Soldier",
+      "artist": "Yigit Koroglu",
+      "scryfall_id": "f6bc3720-2892-4dda-8f30-079a1ac8e1e2",
+      "set": "Soldier Avatar Candidates"
+    },
+    {
+      "name": "Boros Recruit",
+      "gallery_title": "Boros Recruit",
+      "color_identity": [
+        "R",
+        "W"
+      ],
+      "type_line": "Creature — Goblin Soldier",
+      "artist": "Keith Garletts",
+      "scryfall_id": "5af01330-05c2-4c5b-9830-2886711b2b5d",
+      "set": "Goblin Avatar Candidates"
+    },
+    {
+      "name": "Bosh, Iron Golem",
+      "gallery_title": "Bosh Iron Golem",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Legendary Artifact Creature — Golem",
+      "artist": "Brom",
+      "scryfall_id": "09fb3b1f-c3a0-4da4-9b29-eff81fc1d562",
+      "set": "MTG Worker Art Candidates"
+    },
+    {
+      "name": "Bosh, Iron Golem",
+      "gallery_title": "Bosh, Iron Golem",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Legendary Artifact Creature — Golem",
+      "artist": "Brom",
+      "scryfall_id": "09fb3b1f-c3a0-4da4-9b29-eff81fc1d562",
+      "set": "Golem Avatar Candidates"
+    },
+    {
+      "name": "Briarknit Kami",
+      "gallery_title": "Briarknit Kami",
+      "color_identity": [
+        "G"
+      ],
+      "type_line": "Creature — Spirit",
+      "artist": "Brian Despain",
+      "scryfall_id": "8c042f8b-df20-48c1-a291-4d7e1bc5b384",
+      "set": "Spirit Avatar Candidates"
+    },
+    {
+      "name": "Bringer of the Black Dawn",
+      "gallery_title": "Bringer of the Black Dawn",
+      "color_identity": [
+        "B",
+        "G",
+        "R",
+        "U",
+        "W"
+      ],
+      "type_line": "Creature — Bringer",
+      "artist": "Carl Critchlow",
+      "scryfall_id": "54e5e882-02d4-4d69-aabf-ae9bf31f2923",
+      "set": "Fifth Dawn Bringer Candidates"
+    },
+    {
+      "name": "Bringer of the Blue Dawn",
+      "gallery_title": "Bringer of the Blue Dawn",
+      "color_identity": [
+        "B",
+        "G",
+        "R",
+        "U",
+        "W"
+      ],
+      "type_line": "Creature — Bringer",
+      "artist": "Greg Staples",
+      "scryfall_id": "45dc82a0-f054-4614-a7b9-4c5a7c9d2a77",
+      "set": "Fifth Dawn Bringer Candidates"
+    },
+    {
+      "name": "Bringer of the Green Dawn",
+      "gallery_title": "Bringer of the Green Dawn",
+      "color_identity": [
+        "B",
+        "G",
+        "R",
+        "U",
+        "W"
+      ],
+      "type_line": "Creature — Bringer",
+      "artist": "Jim Murray",
+      "scryfall_id": "bc208f3e-5a6a-4fae-8a7c-2bed28ad0c41",
+      "set": "Fifth Dawn Bringer Candidates"
+    },
+    {
+      "name": "Bringer of the Red Dawn",
+      "gallery_title": "Bringer of the Red Dawn",
+      "color_identity": [
+        "B",
+        "G",
+        "R",
+        "U",
+        "W"
+      ],
+      "type_line": "Creature — Bringer",
+      "artist": "Christopher Moeller",
+      "scryfall_id": "16a58bb1-4c4d-41f2-9c69-d3c3a8a8ab09",
+      "set": "Fifth Dawn Bringer Candidates"
+    },
+    {
+      "name": "Bringer of the White Dawn",
+      "gallery_title": "Bringer of the White Dawn",
+      "color_identity": [
+        "B",
+        "G",
+        "R",
+        "U",
+        "W"
+      ],
+      "type_line": "Creature — Bringer",
+      "artist": "Kev Walker",
+      "scryfall_id": "9e5a7117-b1e2-46bd-873e-baf9d9fac009",
+      "set": "Fifth Dawn Bringer Candidates"
+    },
+    {
+      "name": "Bronze Bombshell",
+      "gallery_title": "Bronze Bombshell",
+      "color_identity": [],
+      "type_line": "Artifact Creature — Construct",
+      "artist": "Martina Pilcerova",
+      "scryfall_id": "0f2ec20d-b862-4f13-989c-aa88efa51cdf",
+      "set": "MTG Worker Art Candidates"
+    },
+    {
+      "name": "Caller of the Claw",
+      "gallery_title": "Caller of the Claw",
+      "color_identity": [
+        "G"
+      ],
+      "type_line": "Creature — Elf",
+      "artist": "Matt Cavotta",
+      "scryfall_id": "917c5e37-c15e-4260-b380-f1c73df2bf41",
+      "set": "Elf Avatar Candidates"
+    },
+    {
+      "name": "Caller of the Untamed",
+      "gallery_title": "Caller of the Untamed",
+      "color_identity": [
+        "G"
+      ],
+      "type_line": "Creature — Elf Shaman",
+      "artist": "Iain McCaig",
+      "scryfall_id": "c62f25d9-7eb2-491e-ba7b-b71e49ee87b4",
+      "set": "Elf Avatar Candidates"
+    },
+    {
+      "name": "Champion of Lambholt",
+      "gallery_title": "Champion of Lambholt",
+      "color_identity": [
+        "G"
+      ],
+      "type_line": "Creature — Human Warrior",
+      "artist": "Christopher Moeller",
+      "scryfall_id": "46eff31d-f460-48f2-aab7-8b9b89cd87fe",
+      "set": "Warrior Avatar Candidates"
+    },
+    {
+      "name": "Clockwork Dragon",
+      "gallery_title": "Clockwork Dragon",
+      "color_identity": [],
+      "type_line": "Artifact Creature — Dragon",
+      "artist": "Arnie Swekel",
+      "scryfall_id": "ca6448da-b513-4bea-95f4-47bdfa0df078",
+      "set": "Dragon Avatar Candidates"
+    },
+    {
+      "name": "Cloud of Faeries",
+      "gallery_title": "Cloud of Faeries",
+      "color_identity": [
+        "U"
+      ],
+      "type_line": "Creature — Faerie",
+      "artist": "Iris Compiet",
+      "scryfall_id": "03aff125-8962-4a0a-a2b4-e5d693b75400",
+      "set": "Faerie Avatar Candidates"
+    },
+    {
+      "name": "Cloudhoof Kirin",
+      "gallery_title": "Cloudhoof Kirin",
+      "color_identity": [
+        "U"
+      ],
+      "type_line": "Legendary Creature — Kirin Spirit",
+      "artist": "Randy Gallegos",
+      "scryfall_id": "42aa0d70-8d66-47aa-9228-25dcdb4e7dad",
+      "set": "Kamigawa Legendary Creature Candidates"
+    },
+    {
+      "name": "Colossus of Sardia",
+      "gallery_title": "Colossus of Sardia",
+      "color_identity": [],
+      "type_line": "Artifact Creature — Golem",
+      "artist": "Jesper Myrfors",
+      "scryfall_id": "d0926087-73cf-4aa4-80f9-6f2c54e230ec",
+      "set": "Golem Avatar Candidates"
+    },
+    {
+      "name": "Composite Golem",
+      "gallery_title": "Composite Golem",
+      "color_identity": [
+        "B",
+        "G",
+        "R",
+        "U",
+        "W"
+      ],
+      "type_line": "Artifact Creature — Golem",
+      "artist": "Mark Tedin",
+      "scryfall_id": "aafd4637-737d-4913-80e3-ab4bf3428680",
+      "set": "Fifth Dawn Artifact Candidates"
+    },
+    {
+      "name": "Conjurer's Bauble",
+      "gallery_title": "Conjurer's Bauble",
+      "color_identity": [],
+      "type_line": "Artifact",
+      "artist": "Darrell Riche",
+      "scryfall_id": "2d32960e-d182-455f-8e74-eb11b10050da",
+      "set": "Fifth Dawn Artifact Candidates"
+    },
+    {
+      "name": "Copper Myr",
+      "gallery_title": "Copper Myr",
+      "color_identity": [
+        "G"
+      ],
+      "type_line": "Artifact Creature — Myr",
+      "artist": "Alan Pollack",
+      "scryfall_id": "323efe27-da58-4207-9c0c-dba5031bfa04",
+      "set": "MTG Worker Art Candidates"
+    },
+    {
+      "name": "Coretapper",
+      "gallery_title": "Coretapper",
+      "color_identity": [],
+      "type_line": "Artifact Creature — Myr",
+      "artist": "Dany Orizio",
+      "scryfall_id": "00d9dd37-aad3-46bd-ac9b-140974c8dcaa",
+      "set": "Myr Avatar Candidates"
+    },
+    {
+      "name": "Cosmic Larva",
+      "gallery_title": "Cosmic Larva",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Creature — Beast",
+      "artist": "Jeff Easley",
+      "scryfall_id": "deaa0b9b-258e-4daf-8fec-ce64864d6bbf",
+      "set": "Fifth Dawn Creature Candidates"
+    },
+    {
+      "name": "Cranial Plating",
+      "gallery_title": "Cranial Plating",
+      "color_identity": [
+        "B"
+      ],
+      "type_line": "Artifact — Equipment",
+      "artist": "Adam Rex",
+      "scryfall_id": "e1375f17-bc25-4a65-98b7-4785bbdbe974",
+      "set": "Fifth Dawn Artifact Candidates"
+    },
+    {
+      "name": "Crazed Goblin",
+      "gallery_title": "Crazed Goblin",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Creature — Goblin Warrior",
+      "artist": "Darrell Riche",
+      "scryfall_id": "15fdb57b-7547-4588-9780-15e3bea0bc4c",
+      "set": "Goblin Avatar Candidates"
+    },
+    {
+      "name": "Crimson Hellkite",
+      "gallery_title": "Crimson Hellkite",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Creature — Dragon",
+      "artist": "Carl Critchlow",
+      "scryfall_id": "5451e44f-8dd2-48c6-ba67-5c62a04819ef",
+      "set": "Dragon Avatar Candidates"
+    },
+    {
+      "name": "Crossbow Infantry",
+      "gallery_title": "Crossbow Infantry",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Human Soldier Archer",
+      "artist": "James Bernardin",
+      "scryfall_id": "d962926a-e415-4075-b5dd-3db68526bdb9",
+      "set": "Soldier Avatar Candidates"
+    },
+    {
+      "name": "Crucible of Worlds",
+      "gallery_title": "Crucible of Worlds",
+      "color_identity": [],
+      "type_line": "Artifact",
+      "artist": "Ron Spencer",
+      "scryfall_id": "7f4893ef-f983-418b-b7a4-5f073c844545",
+      "set": "Fifth Dawn Artifact Candidates"
+    },
+    {
+      "name": "Crypt Ghast",
+      "gallery_title": "Crypt Ghast",
+      "color_identity": [
+        "B"
+      ],
+      "type_line": "Creature — Spirit",
+      "artist": "Chris Rahn",
+      "scryfall_id": "60bebd79-f88c-44ef-8920-e19031bad1d6",
+      "set": "Spirit Avatar Candidates"
+    },
+    {
+      "name": "Dakmor Lancer",
+      "gallery_title": "Dakmor Lancer",
+      "color_identity": [
+        "B"
+      ],
+      "type_line": "Creature — Human Knight",
+      "artist": "Luca Zontini",
+      "scryfall_id": "660cc594-63f5-4819-a556-7a9484145f72",
+      "set": "Knight Avatar Candidates"
+    },
+    {
+      "name": "Darksteel Colossus",
+      "gallery_title": "Darksteel Colossus",
+      "color_identity": [],
+      "type_line": "Artifact Creature — Golem",
+      "artist": "Carl Critchlow",
+      "scryfall_id": "70197723-c61b-4600-b61d-41380c8f3067",
+      "set": "MTG Worker Art Candidates"
+    },
+    {
+      "name": "Daru Stinger",
+      "gallery_title": "Daru Stinger",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Soldier",
+      "artist": "Greg Staples",
+      "scryfall_id": "ff5866a4-f4c0-45bc-9b33-b77387441d34",
+      "set": "Soldier Avatar Candidates"
+    },
+    {
+      "name": "Defender of the Order",
+      "gallery_title": "Defender of the Order",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Human Cleric",
+      "artist": "Darrell Riche",
+      "scryfall_id": "236b1c88-20a0-479e-91fb-16bb77f699fe",
+      "set": "Cleric Avatar Candidates"
+    },
+    {
+      "name": "Descendant of Kiyomaro",
+      "gallery_title": "Descendant of Kiyomaro",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Human Soldier",
+      "artist": "Christopher Rush",
+      "scryfall_id": "354af7fc-fd15-4209-b3e8-8729a401b6a6",
+      "set": "Soldier Avatar Candidates"
+    },
+    {
+      "name": "Descendant of Masumaro",
+      "gallery_title": "Descendant of Masumaro",
+      "color_identity": [
+        "G"
+      ],
+      "type_line": "Creature — Human Monk",
+      "artist": "Rob Alexander",
+      "scryfall_id": "b7512d74-4330-4de7-9c0c-4bb7f37f6066",
+      "set": "Kamigawa Monk Avatar Candidates"
+    },
+    {
+      "name": "Dosan the Falling Leaf",
+      "gallery_title": "Dosan the Falling Leaf",
+      "color_identity": [
+        "G"
+      ],
+      "type_line": "Legendary Creature — Human Monk",
+      "artist": "Mark Zug",
+      "scryfall_id": "ffb190db-48fc-4c39-ae9f-5e304eabb4f4",
+      "set": "Kamigawa Legendary Creature Candidates"
+    },
+    {
+      "name": "Dragon Mage",
+      "gallery_title": "Dragon Mage",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Creature — Dragon Wizard",
+      "artist": "Matthew D. Wilson",
+      "scryfall_id": "5525cfde-a92b-4fb5-8f15-a05efebecd3d",
+      "set": "Dragon Avatar Candidates"
+    },
+    {
+      "name": "Dragon Tyrant",
+      "gallery_title": "Dragon Tyrant",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Creature — Dragon",
+      "artist": "Kev Walker",
+      "scryfall_id": "04d1a29b-af80-4f9a-881b-ef7374ecbce1",
+      "set": "Dragon Avatar Candidates"
+    },
+    {
+      "name": "Dragonstalker",
+      "gallery_title": "Dragonstalker",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Bird Soldier",
+      "artist": "Ron Spencer",
+      "scryfall_id": "58017ff1-74d2-4be2-976a-8dff53e16150",
+      "set": "Soldier Avatar Candidates"
+    },
+    {
+      "name": "Drakuseth, Maw of Flames",
+      "gallery_title": "Drakuseth, Maw of Flames",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Legendary Creature — Dragon",
+      "artist": "Grzegorz Rutkowski",
+      "scryfall_id": "9e9b40f5-3dd0-4607-a78d-b004d57fa4ea",
+      "set": "Dragon Avatar Candidates"
+    },
+    {
+      "name": "Drannith Magistrate",
+      "gallery_title": "Drannith Magistrate",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Human Wizard",
+      "artist": "Kieran Yanner",
+      "scryfall_id": "98b0a4a8-9319-451b-9b79-b0bca7a41e91",
+      "set": "Wizard Avatar Candidates"
+    },
+    {
+      "name": "Dripping-Tongue Zubera",
+      "gallery_title": "Dripping-Tongue Zubera",
+      "color_identity": [
+        "G"
+      ],
+      "type_line": "Creature — Zubera Spirit",
+      "artist": "Tsutomu Kawade",
+      "scryfall_id": "e752b762-38b7-463c-aa09-37fecfe71a53",
+      "set": "Spirit Avatar Candidates"
+    },
+    {
+      "name": "Duplicant",
+      "gallery_title": "Duplicant",
+      "color_identity": [],
+      "type_line": "Artifact Creature — Shapeshifter",
+      "artist": "Thomas M. Baxa",
+      "scryfall_id": "9ecb184f-c282-42f3-9576-09781a116352",
+      "set": "MTG Worker Art Candidates"
+    },
+    {
+      "name": "Eight-and-a-Half-Tails",
+      "gallery_title": "Eight-and-a-Half-Tails",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Legendary Creature — Fox Cleric",
+      "artist": "Daren Bader",
+      "scryfall_id": "ef722374-0305-4c30-ab45-cb772b252faf",
+      "set": "Kamigawa Fox Avatar Candidates"
+    },
+    {
+      "name": "Elas il-Kor, Sadistic Pilgrim",
+      "gallery_title": "Elas il-Kor, Sadistic Pilgrim",
+      "color_identity": [
+        "B",
+        "W"
+      ],
+      "type_line": "Legendary Creature — Phyrexian Kor Cleric",
+      "artist": "G-host Lee",
+      "scryfall_id": "1c3f0ffe-cf51-4c30-8cd5-9e3c7e92c019",
+      "set": "Cleric Avatar Candidates"
+    },
+    {
+      "name": "Elder Pine of Jukai",
+      "gallery_title": "Elder Pine of Jukai",
+      "color_identity": [
+        "G"
+      ],
+      "type_line": "Creature — Spirit",
+      "artist": "Alan Pollack",
+      "scryfall_id": "51c3e47b-a788-46b7-bf15-1216692e637a",
+      "set": "Spirit Avatar Candidates"
+    },
+    {
+      "name": "Elvish Champion",
+      "gallery_title": "Elvish Champion",
+      "color_identity": [
+        "G"
+      ],
+      "type_line": "Creature — Elf",
+      "artist": "D. Alexander Gregory",
+      "scryfall_id": "ad42a3fd-21ae-49cf-b11d-3700835f2f96",
+      "set": "Elf Avatar Candidates"
+    },
+    {
+      "name": "Elvish Spirit Guide",
+      "gallery_title": "Elvish Spirit Guide",
+      "color_identity": [
+        "G"
+      ],
+      "type_line": "Creature — Elf Spirit",
+      "artist": "Anna Steinbauer",
+      "scryfall_id": "50aded92-f934-441f-8e48-d68d471e70d8",
+      "set": "Spirit Avatar Candidates"
+    },
+    {
+      "name": "Emry, Lurker of the Loch",
+      "gallery_title": "Emry, Lurker of the Loch",
+      "color_identity": [
+        "U"
+      ],
+      "type_line": "Legendary Creature — Merfolk Wizard",
+      "artist": "Livia Prima",
+      "scryfall_id": "c977d89a-bfd1-4e98-9d95-3e41c53dd188",
+      "set": "Wizard Avatar Candidates"
+    },
+    {
+      "name": "Etched Oracle",
+      "gallery_title": "Etched Oracle",
+      "color_identity": [],
+      "type_line": "Artifact Creature — Wizard",
+      "artist": "Matt Cavotta",
+      "scryfall_id": "1b4e70c6-8f74-4b0b-9ad7-33fce05c401b",
+      "set": "Fifth Dawn Artifact Candidates"
+    },
+    {
+      "name": "Eternal Witness",
+      "gallery_title": "Eternal Witness",
+      "color_identity": [
+        "G"
+      ],
+      "type_line": "Creature — Human Shaman",
+      "artist": "Chris Rahn",
+      "scryfall_id": "39704000-65d3-4d39-849e-a3b617376bbc",
+      "set": "Fifth Dawn Creature Candidates"
+    },
+    {
+      "name": "Exalted Angel",
+      "gallery_title": "Exalted Angel",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Angel",
+      "artist": "Michael Sutfin",
+      "scryfall_id": "7a6b087b-a3ac-4c4d-a519-ec5584b4b42d",
+      "set": "Angel Avatar Candidates"
+    },
+    {
+      "name": "Exemplar of Light",
+      "gallery_title": "Exemplar of Light",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Angel",
+      "artist": "Ekaterina Burmak",
+      "scryfall_id": "b7393efb-da40-4b55-a6ff-ce774f0815f9",
+      "set": "Angel Avatar Candidates"
+    },
+    {
+      "name": "Exiled Doomsayer",
+      "gallery_title": "Exiled Doomsayer",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Human Cleric",
+      "artist": "Brian Snõddy",
+      "scryfall_id": "74aaf095-143a-43fc-a858-b1e82a4b906e",
+      "set": "Cleric Avatar Candidates"
+    },
+    {
+      "name": "Faerie Mastermind",
+      "gallery_title": "Faerie Mastermind",
+      "color_identity": [
+        "U"
+      ],
+      "type_line": "Creature — Faerie Rogue",
+      "artist": "Kai Carpenter",
+      "scryfall_id": "bc9a7599-3c7d-4b83-bff3-e3d1f20f1b0f",
+      "set": "Faerie Avatar Candidates"
+    },
+    {
+      "name": "Fallen Angel",
+      "gallery_title": "Fallen Angel",
+      "color_identity": [
+        "B"
+      ],
+      "type_line": "Creature — Angel",
+      "artist": "Matthew D. Wilson",
+      "scryfall_id": "d3baa621-1b50-4a7f-9ed4-4ae0e0e9e4e7",
+      "set": "Angel Avatar Candidates"
+    },
+    {
+      "name": "Fist of Suns",
+      "gallery_title": "Fist of Suns",
+      "color_identity": [
+        "B",
+        "G",
+        "R",
+        "U",
+        "W"
+      ],
+      "type_line": "Artifact",
+      "artist": "Arnie Swekel",
+      "scryfall_id": "2a499b65-8a7e-4fbc-a09b-826b8454d857",
+      "set": "Fifth Dawn Artifact Candidates"
+    },
+    {
+      "name": "Floodbringer",
+      "gallery_title": "Floodbringer",
+      "color_identity": [
+        "U"
+      ],
+      "type_line": "Creature — Moonfolk Wizard",
+      "artist": "Ittoku",
+      "scryfall_id": "0058be07-a8a1-448e-8c3d-61718cb384ec",
+      "set": "Kamigawa Moonfolk Avatar Candidates"
+    },
+    {
+      "name": "Frost Ogre",
+      "gallery_title": "Frost Ogre",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Creature — Ogre Warrior",
+      "artist": "Dan Murayama Scott",
+      "scryfall_id": "1a91e5f1-9179-4763-b7c9-b7ad5451f6d0",
+      "set": "Kamigawa Ogre Avatar Candidates"
+    },
+    {
+      "name": "Furnace Dragon",
+      "gallery_title": "Furnace Dragon",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Creature — Dragon",
+      "artist": "Matthew D. Wilson",
+      "scryfall_id": "62f5c675-b629-45ec-907c-36594f5fe54a",
+      "set": "Dragon Avatar Candidates"
+    },
+    {
+      "name": "Gemstone Array",
+      "gallery_title": "Gemstone Array",
+      "color_identity": [],
+      "type_line": "Artifact",
+      "artist": "Ittoku",
+      "scryfall_id": "19ef37a3-4538-47b2-8f88-3fa0a4e32329",
+      "set": "Fifth Dawn Artifact Candidates"
+    },
+    {
+      "name": "Ghost-Lit Redeemer",
+      "gallery_title": "Ghost-Lit Redeemer",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Spirit",
+      "artist": "Shishizaru",
+      "scryfall_id": "aa90c02d-3090-402e-b74b-fc0358953263",
+      "set": "Spirit Avatar Candidates"
+    },
+    {
+      "name": "Gisela, Blade of Goldnight",
+      "gallery_title": "Gisela, Blade of Goldnight",
+      "color_identity": [
+        "R",
+        "W"
+      ],
+      "type_line": "Legendary Creature — Angel",
+      "artist": "Jason Chan",
+      "scryfall_id": "900b8908-ba51-472e-ab7a-43bd07f90577",
+      "set": "Angel Avatar Candidates"
+    },
+    {
+      "name": "Glasspool Mimic // Glasspool Shore",
+      "gallery_title": "Glasspool Mimic // Glasspool Shore",
+      "color_identity": [
+        "U"
+      ],
+      "type_line": "Creature — Shapeshifter Rogue // Land",
+      "artist": "Johan Grenier",
+      "scryfall_id": "5adcb500-8c77-4925-8e2c-1243502827d1",
+      "set": "Rogue Avatar Candidates"
+    },
+    {
+      "name": "Glen Elendra Archmage",
+      "gallery_title": "Glen Elendra Archmage",
+      "color_identity": [
+        "U"
+      ],
+      "type_line": "Creature — Faerie Wizard",
+      "artist": "Karl Kopinski",
+      "scryfall_id": "bd9af767-42da-46c7-a2b8-3957b2e3063f",
+      "set": "Faerie Avatar Candidates"
+    },
+    {
+      "name": "Glissa Sunseeker",
+      "gallery_title": "Glissa Sunseeker",
+      "color_identity": [
+        "G"
+      ],
+      "type_line": "Legendary Creature — Elf Warrior",
+      "artist": "Brom",
+      "scryfall_id": "670c3106-71fc-464e-8c94-81bf7fafc3e6",
+      "set": "Elf Avatar Candidates"
+    },
+    {
+      "name": "Goblin Bowling Team",
+      "gallery_title": "Goblin Bowling Team",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Creature — Goblin",
+      "artist": "Pete Venters",
+      "scryfall_id": "00325992-ec1c-469a-8df0-ffb9a197d221",
+      "set": "Legacy MTG / Goblin Candidates"
+    },
+    {
+      "name": "Goblin Brigand",
+      "gallery_title": "Goblin Brigand",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Creature — Goblin Warrior",
+      "artist": "Arnie Swekel",
+      "scryfall_id": "862a481a-f236-4e99-b4b9-086e6cb8f4de",
+      "set": "Warrior Avatar Candidates"
+    },
+    {
+      "name": "Goblin Cannon",
+      "gallery_title": "Goblin Cannon",
+      "color_identity": [],
+      "type_line": "Artifact",
+      "artist": "Doug Chaffee",
+      "scryfall_id": "b023c0cd-7046-418b-ad31-5c91c6930d45",
+      "set": "Fifth Dawn Artifact Candidates"
+    },
+    {
+      "name": "Goblin Chariot",
+      "gallery_title": "Goblin Chariot",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Creature — Goblin Warrior",
+      "artist": "John Howe",
+      "scryfall_id": "136a15cb-9591-4521-a142-af766dd7eeef",
+      "set": "Goblin Avatar Candidates"
+    },
+    {
+      "name": "Goblin Fireslinger",
+      "gallery_title": "Goblin Fireslinger",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Creature — Goblin Warrior",
+      "artist": "Pete Venters",
+      "scryfall_id": "e6c043b7-1eec-4d11-986c-8fb3823fc3b1",
+      "set": "Legacy MTG / Goblin Candidates"
+    },
+    {
+      "name": "Goblin Grappler",
+      "gallery_title": "Goblin Grappler",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Creature — Goblin",
+      "artist": "Christopher Moeller",
+      "scryfall_id": "5c948872-295c-41b9-8094-db7db7578b0d",
+      "set": "Goblin Avatar Candidates"
+    },
+    {
+      "name": "Godo's Irregulars",
+      "gallery_title": "Godo's Irregulars",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Creature — Human Warrior",
+      "artist": "Greg Hildebrandt",
+      "scryfall_id": "f7a7afc5-be73-459d-8bd1-116a0bf1210f",
+      "set": "Warrior Avatar Candidates"
+    },
+    {
+      "name": "Godo, Bandit Warlord",
+      "gallery_title": "Godo, Bandit Warlord",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Legendary Creature — Human Barbarian",
+      "artist": "Paolo Parente",
+      "scryfall_id": "01d566cf-cb32-461d-8afe-b0f3f4c24160",
+      "set": "Kamigawa Legendary Creature Candidates"
+    },
+    {
+      "name": "Gold Myr",
+      "gallery_title": "Gold Myr",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Artifact Creature — Myr",
+      "artist": "Kev Walker",
+      "scryfall_id": "12331b1d-a561-4a8c-8e85-ed3a607ce508",
+      "set": "MTG Worker Art Candidates"
+    },
+    {
+      "name": "Grafted Wargear",
+      "gallery_title": "Grafted Wargear",
+      "color_identity": [],
+      "type_line": "Artifact — Equipment",
+      "artist": "Alex Horley-Orlandelli",
+      "scryfall_id": "1d023d44-482e-4f60-b9b1-eede9bfb732f",
+      "set": "Fifth Dawn Artifact Candidates"
+    },
+    {
+      "name": "Grand Abolisher",
+      "gallery_title": "Grand Abolisher",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Human Cleric",
+      "artist": "Aurore Folny",
+      "scryfall_id": "ee793ed2-7d59-4640-8868-ad486600df2c",
+      "set": "Cleric Avatar Candidates"
+    },
+    {
+      "name": "Graveborn Muse",
+      "gallery_title": "Graveborn Muse",
+      "color_identity": [
+        "B"
+      ],
+      "type_line": "Creature — Zombie Spirit",
+      "artist": "Kev Walker",
+      "scryfall_id": "3d460b79-f1a5-41c4-a5b3-61f703fd97df",
+      "set": "Spirit Avatar Candidates"
+    },
+    {
+      "name": "Grid Monitor",
+      "gallery_title": "Grid Monitor",
+      "color_identity": [],
+      "type_line": "Artifact Creature — Construct",
+      "artist": "Arnie Swekel",
+      "scryfall_id": "c4ab6c59-cd0f-4c29-8e26-6882dca61fb7",
+      "set": "MTG Worker Art Candidates"
+    },
+    {
+      "name": "Harmonic Prodigy",
+      "gallery_title": "Harmonic Prodigy",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Creature — Human Wizard",
+      "artist": "Nathaniel Himawan",
+      "scryfall_id": "63a565e3-d7a8-469d-898f-49fef634c107",
+      "set": "Wizard Avatar Candidates"
+    },
+    {
+      "name": "Heartless Hidetsugu",
+      "gallery_title": "Heartless Hidetsugu",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Legendary Creature — Ogre Shaman",
+      "artist": "Carl Critchlow",
+      "scryfall_id": "7b3ff07c-9653-4197-ad3d-638e712e8465",
+      "set": "Kamigawa Legendary Creature Candidates"
+    },
+    {
+      "name": "Helm of Kaldra",
+      "gallery_title": "Helm of Kaldra",
+      "color_identity": [],
+      "type_line": "Legendary Artifact — Equipment",
+      "artist": "Donato Giancola",
+      "scryfall_id": "f76514aa-3cc1-4d5f-ba33-d933a36920a4",
+      "set": "Fifth Dawn Artifact Candidates"
+    },
+    {
+      "name": "Higure, the Still Wind",
+      "gallery_title": "Higure, the Still Wind",
+      "color_identity": [
+        "U"
+      ],
+      "type_line": "Legendary Creature — Human Ninja",
+      "artist": "Christopher Moeller",
+      "scryfall_id": "f7b96d12-6309-48d1-bbdc-7bc88f4e2518",
+      "set": "Kamigawa Legendary Creature Candidates"
+    },
+    {
+      "name": "Hisoka, Minamo Sensei",
+      "gallery_title": "Hisoka, Minamo Sensei",
+      "color_identity": [
+        "U"
+      ],
+      "type_line": "Legendary Creature — Human Wizard",
+      "artist": "Donato Giancola",
+      "scryfall_id": "a87aea05-5970-455e-a728-668cf23940a6",
+      "set": "Kamigawa Legendary Creature Candidates"
+    },
+    {
+      "name": "Homura, Human Ascendant // Homura's Essence",
+      "gallery_title": "Homura, Human Ascendant // Homura's Essence",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Legendary Creature — Human Monk // Legendary Enchantment",
+      "artist": "Kev Walker",
+      "scryfall_id": "84920a21-ee2a-41ac-a369-347633d10371",
+      "set": "Kamigawa Legendary Creature Candidates"
+    },
+    {
+      "name": "Horobi, Death's Wail",
+      "gallery_title": "Horobi, Death's Wail",
+      "color_identity": [
+        "B"
+      ],
+      "type_line": "Legendary Creature — Spirit",
+      "artist": "John Bolton",
+      "scryfall_id": "b41983cb-c4e4-4384-bd69-df3fc6e74cd0",
+      "set": "Kamigawa Legendary Creature Candidates"
+    },
+    {
+      "name": "Humble Budoka",
+      "gallery_title": "Humble Budoka",
+      "color_identity": [
+        "G"
+      ],
+      "type_line": "Creature — Human Monk",
+      "artist": "Christopher Moeller",
+      "scryfall_id": "f31bbc89-d5ee-4813-9ebe-ac5b998b076b",
+      "set": "Kamigawa Monk Avatar Candidates"
+    },
+    {
+      "name": "Iizuka the Ruthless",
+      "gallery_title": "Iizuka the Ruthless",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Legendary Creature — Human Samurai",
+      "artist": "Darrell Riche",
+      "scryfall_id": "9ce461f7-385d-4379-83de-49571247c30d",
+      "set": "Kamigawa Legendary Creature Candidates"
+    },
+    {
+      "name": "Imperial Hellkite",
+      "gallery_title": "Imperial Hellkite",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Creature — Dragon",
+      "artist": "Matt Cavotta",
+      "scryfall_id": "cffb1feb-9368-4d91-bd4b-36a24fe849e6",
+      "set": "Dragon Avatar Candidates"
+    },
+    {
+      "name": "Iname as One",
+      "gallery_title": "Iname as One",
+      "color_identity": [
+        "B",
+        "G"
+      ],
+      "type_line": "Legendary Creature — Spirit",
+      "artist": "Stephen Tappin",
+      "scryfall_id": "4e13f122-0dfe-42f3-9815-9ae1a29fca99",
+      "set": "Kamigawa Legendary Creature Candidates"
+    },
+    {
+      "name": "Iridescent Angel",
+      "gallery_title": "Iridescent Angel",
+      "color_identity": [
+        "U",
+        "W"
+      ],
+      "type_line": "Creature — Angel",
+      "artist": "Matt Cavotta",
+      "scryfall_id": "f3bce4f8-3a3f-4ec2-9b37-10bb12713afc",
+      "set": "Angel Avatar Candidates"
+    },
+    {
+      "name": "Iron Myr",
+      "gallery_title": "Iron Myr",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Artifact Creature — Myr",
+      "artist": "Alan Pollack",
+      "scryfall_id": "5bd0a588-b695-4060-b5d5-c6a74710ff0f",
+      "set": "MTG Worker Art Candidates"
+    },
+    {
+      "name": "Iwamori of the Open Fist",
+      "gallery_title": "Iwamori of the Open Fist",
+      "color_identity": [
+        "G"
+      ],
+      "type_line": "Legendary Creature — Human Monk",
+      "artist": "Paolo Parente",
+      "scryfall_id": "9c05f3bf-5785-4a53-9c34-cffd7783d107",
+      "set": "Kamigawa Monk Avatar Candidates"
+    },
+    {
+      "name": "Joiner Adept",
+      "gallery_title": "Joiner Adept",
+      "color_identity": [
+        "G"
+      ],
+      "type_line": "Creature — Elf Druid",
+      "artist": "Heather Hudson",
+      "scryfall_id": "61751365-3acf-4eb8-b1f9-358ebccccf94",
+      "set": "Fifth Dawn Creature Candidates"
+    },
+    {
+      "name": "Jugan, the Rising Star",
+      "gallery_title": "Jugan, the Rising Star",
+      "color_identity": [
+        "G"
+      ],
+      "type_line": "Legendary Creature — Dragon Spirit",
+      "artist": "Filip Burburan",
+      "scryfall_id": "d897caab-3720-4f1a-bf38-4ba266352567",
+      "set": "Dragon Avatar Candidates"
+    },
+    {
+      "name": "Jukai Messenger",
+      "gallery_title": "Jukai Messenger",
+      "color_identity": [
+        "G"
+      ],
+      "type_line": "Creature — Human Monk",
+      "artist": "Terese Nielsen",
+      "scryfall_id": "56e1967e-5bc5-47e7-9998-7fcfdffc3bb1",
+      "set": "Kamigawa Monk Avatar Candidates"
+    },
+    {
+      "name": "Junk Golem",
+      "gallery_title": "Junk Golem",
+      "color_identity": [],
+      "type_line": "Artifact Creature — Golem",
+      "artist": "Brian Snõddy",
+      "scryfall_id": "c9410da0-5693-456f-afa8-cb92ac176847",
+      "set": "Golem Avatar Candidates"
+    },
+    {
+      "name": "Kardur, Doomscourge",
+      "gallery_title": "Kardur, Doomscourge",
+      "color_identity": [
+        "B",
+        "R"
+      ],
+      "type_line": "Legendary Creature — Demon Berserker",
+      "artist": "Chris Rahn",
+      "scryfall_id": "7c0f7712-7bbf-471b-8107-3a49cf922ad9",
+      "set": "Demon Avatar Candidates"
+    },
+    {
+      "name": "Keiga, the Tide Star",
+      "gallery_title": "Keiga, the Tide Star",
+      "color_identity": [
+        "U"
+      ],
+      "type_line": "Legendary Creature — Dragon Spirit",
+      "artist": "Ittoku",
+      "scryfall_id": "84d9c584-322f-49c9-9826-4838c6d2f36a",
+      "set": "Dragon Avatar Candidates"
+    },
+    {
+      "name": "Kilnmouth Dragon",
+      "gallery_title": "Kilnmouth Dragon",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Creature — Dragon",
+      "artist": "Carl Critchlow",
+      "scryfall_id": "67bbc1c3-8806-49d4-9111-a2334c66e5ec",
+      "set": "Dragon Avatar Candidates"
+    },
+    {
+      "name": "Kiora's Follower",
+      "gallery_title": "Kiora's Follower",
+      "color_identity": [
+        "G",
+        "U"
+      ],
+      "type_line": "Creature — Merfolk",
+      "artist": "Eric Deschamps",
+      "scryfall_id": "3666d3eb-fc62-4966-9149-aa3435650c29",
+      "set": "Merfolk Avatar Candidates"
+    },
+    {
+      "name": "Kitsune Blademaster",
+      "gallery_title": "Kitsune Blademaster",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Fox Samurai",
+      "artist": "Keith Garletts",
+      "scryfall_id": "fb9d108d-ee19-4b1d-9d4b-b4c4d9b8ad0d",
+      "set": "Kamigawa Fox Avatar Candidates"
+    },
+    {
+      "name": "Kitsune Dawnblade",
+      "gallery_title": "Kitsune Dawnblade",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Fox Samurai",
+      "artist": "Carl Critchlow",
+      "scryfall_id": "b09ab22e-aa22-4d6b-87c6-970563486f21",
+      "set": "Kamigawa Fox Avatar Candidates"
+    },
+    {
+      "name": "Kitsune Diviner",
+      "gallery_title": "Kitsune Diviner",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Fox Cleric",
+      "artist": "Pete Venters",
+      "scryfall_id": "c50fb007-d1fd-4b61-91c3-4863e40472ed",
+      "set": "Kamigawa Fox Avatar Candidates"
+    },
+    {
+      "name": "Kitsune Healer",
+      "gallery_title": "Kitsune Healer",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Fox Cleric",
+      "artist": "Michael Sutfin",
+      "scryfall_id": "11bb6894-b56a-4a63-859a-65a0c2d160fc",
+      "set": "Kamigawa Fox Avatar Candidates"
+    },
+    {
+      "name": "Kitsune Loreweaver",
+      "gallery_title": "Kitsune Loreweaver",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Fox Cleric",
+      "artist": "Eric Polak",
+      "scryfall_id": "c11d4490-fe4f-4526-befd-f4c9c22c76a6",
+      "set": "Kamigawa Fox Avatar Candidates"
+    },
+    {
+      "name": "Knight of the White Orchid",
+      "gallery_title": "Knight of the White Orchid",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Human Knight",
+      "artist": "Mark Zug",
+      "scryfall_id": "f332cd21-46ed-4fff-9fd9-d5975bf0004d",
+      "set": "Knight Avatar Candidates"
+    },
+    {
+      "name": "Kokusho, the Evening Star",
+      "gallery_title": "Kokusho, the Evening Star",
+      "color_identity": [
+        "B"
+      ],
+      "type_line": "Legendary Creature — Dragon Spirit",
+      "artist": "Slawomir Maniak",
+      "scryfall_id": "ab56cedb-1bcd-48a5-8503-a8e324e236ad",
+      "set": "Dragon Avatar Candidates"
+    },
+    {
+      "name": "Krark-Clan Ironworks",
+      "gallery_title": "Krark-Clan Ironworks",
+      "color_identity": [],
+      "type_line": "Artifact",
+      "artist": "Greg Hildebrandt",
+      "scryfall_id": "c60174d6-1f9d-4870-b3db-34d6fcb3f6ab",
+      "set": "Fifth Dawn Artifact Candidates"
+    },
+    {
+      "name": "Krosan Warchief",
+      "gallery_title": "Krosan Warchief",
+      "color_identity": [
+        "G"
+      ],
+      "type_line": "Creature — Beast",
+      "artist": "Greg Hildebrandt",
+      "scryfall_id": "0bfc9b24-6dbe-42df-a2c7-cb4845afb50f",
+      "set": "Beast Avatar Candidates"
+    },
+    {
+      "name": "Kutzil, Malamet Exemplar",
+      "gallery_title": "Kutzil, Malamet Exemplar",
+      "color_identity": [
+        "G",
+        "W"
+      ],
+      "type_line": "Legendary Creature — Cat Warrior",
+      "artist": "Marie Magny",
+      "scryfall_id": "c9f88a40-a6ed-4c1f-a309-011aca1acddd",
+      "set": "Warrior Avatar Candidates"
+    },
+    {
+      "name": "Lavaborn Muse",
+      "gallery_title": "Lavaborn Muse",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Creature — Spirit",
+      "artist": "Brian Snõddy",
+      "scryfall_id": "f9ac12fe-f895-4450-8516-1feb6a48f1bc",
+      "set": "Spirit Avatar Candidates"
+    },
+    {
+      "name": "Leaden Myr",
+      "gallery_title": "Leaden Myr",
+      "color_identity": [
+        "B"
+      ],
+      "type_line": "Artifact Creature — Myr",
+      "artist": "Alan Pollack",
+      "scryfall_id": "3a709559-fec3-44f4-a2bf-3396989b9189",
+      "set": "MTG Worker Art Candidates"
+    },
+    {
+      "name": "Leonin Elder",
+      "gallery_title": "Leonin Elder",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Cat Cleric",
+      "artist": "Todd Lockwood",
+      "scryfall_id": "e9b766e7-fe4a-47fb-949b-e046b5a38d91",
+      "set": "Cleric Avatar Candidates"
+    },
+    {
+      "name": "Leonin Skyhunter",
+      "gallery_title": "Leonin Skyhunter",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Cat Knight",
+      "artist": "Kev Walker",
+      "scryfall_id": "15d6476c-1944-48e8-9af6-6db78edd58e5",
+      "set": "Knight Avatar Candidates"
+    },
+    {
+      "name": "Lesser Gargadon",
+      "gallery_title": "Lesser Gargadon",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Creature — Beast",
+      "artist": "Rob Alexander",
+      "scryfall_id": "b27a1067-8dff-485a-8781-39d61585c521",
+      "set": "Beast Avatar Candidates"
+    },
+    {
+      "name": "Lodestone Myr",
+      "gallery_title": "Lodestone Myr",
+      "color_identity": [],
+      "type_line": "Artifact Creature — Myr",
+      "artist": "Greg Staples",
+      "scryfall_id": "617ddf01-3678-470d-b009-003d6a561dbf",
+      "set": "MTG Worker Art Candidates"
+    },
+    {
+      "name": "Loxodon Stalwart",
+      "gallery_title": "Loxodon Stalwart",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Elephant Soldier",
+      "artist": "Paolo Parente",
+      "scryfall_id": "0e58f4fb-5b4e-45bc-99b3-d09cd79132df",
+      "set": "Soldier Avatar Candidates"
+    },
+    {
+      "name": "Luminous Angel",
+      "gallery_title": "Luminous Angel",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Angel",
+      "artist": "Jason Chan",
+      "scryfall_id": "c3ac419f-7630-48c7-9039-88ce28898b6d",
+      "set": "Angel Avatar Candidates"
+    },
+    {
+      "name": "Macetail Hystrodon",
+      "gallery_title": "Macetail Hystrodon",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Creature — Beast",
+      "artist": "Daren Bader",
+      "scryfall_id": "c750f7d7-25b8-433f-b3a8-0d842b99276f",
+      "set": "Beast Avatar Candidates"
+    },
+    {
+      "name": "Master Healer",
+      "gallery_title": "Master Healer",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Human Cleric",
+      "artist": "Adam Rex",
+      "scryfall_id": "c6a4a15d-9f16-4aa1-adc0-5d4c85991062",
+      "set": "Cleric Avatar Candidates"
+    },
+    {
+      "name": "Meloku the Clouded Mirror",
+      "gallery_title": "Meloku the Clouded Mirror",
+      "color_identity": [
+        "U"
+      ],
+      "type_line": "Legendary Creature — Moonfolk Wizard",
+      "artist": "Scott M. Fischer",
+      "scryfall_id": "60b9db96-a6ab-454b-99a7-910ef77560d7",
+      "set": "Kamigawa Moonfolk Avatar Candidates"
+    },
+    {
+      "name": "Memnarch",
+      "gallery_title": "Memnarch",
+      "color_identity": [
+        "U"
+      ],
+      "type_line": "Legendary Artifact Creature — Wizard",
+      "artist": "Carl Critchlow",
+      "scryfall_id": "9203fde4-dbc1-449f-9618-4656f0e25e3c",
+      "set": "MTG Worker Art Candidates"
+    },
+    {
+      "name": "Mentor of the Meek",
+      "gallery_title": "Mentor of the Meek",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Human Soldier",
+      "artist": "Jana Schirmer & Johannes Voss",
+      "scryfall_id": "280ca0f4-be07-452a-bbc0-c25570f14008",
+      "set": "Soldier Avatar Candidates"
+    },
+    {
+      "name": "Midnight Reaper",
+      "gallery_title": "Midnight Reaper",
+      "color_identity": [
+        "B"
+      ],
+      "type_line": "Creature — Zombie Knight",
+      "artist": "Sidharth Chaturvedi",
+      "scryfall_id": "f229b0e6-1ffd-410e-b04b-a0afc179c58c",
+      "set": "Zombie Avatar Candidates"
+    },
+    {
+      "name": "Moonbow Illusionist",
+      "gallery_title": "Moonbow Illusionist",
+      "color_identity": [
+        "U"
+      ],
+      "type_line": "Creature — Moonfolk Wizard",
+      "artist": "Dan Frazier",
+      "scryfall_id": "f4960789-1a45-4273-b2f2-34713f19d697",
+      "set": "Kamigawa Moonfolk Avatar Candidates"
+    },
+    {
+      "name": "Mossborn Hydra",
+      "gallery_title": "Mossborn Hydra",
+      "color_identity": [
+        "G"
+      ],
+      "type_line": "Creature — Elemental Hydra",
+      "artist": "Monztre",
+      "scryfall_id": "7054a0d7-396f-40b4-ab24-db591c3b08f0",
+      "set": "Elemental Avatar Candidates"
+    },
+    {
+      "name": "Muldrotha, the Gravetide",
+      "gallery_title": "Muldrotha, the Gravetide",
+      "color_identity": [
+        "B",
+        "G",
+        "U"
+      ],
+      "type_line": "Legendary Creature — Elemental Avatar",
+      "artist": "Jason Rainville",
+      "scryfall_id": "705b4d97-2f50-47f7-9053-d748f4337553",
+      "set": "Elemental Avatar Candidates"
+    },
+    {
+      "name": "Myr Enforcer",
+      "gallery_title": "Myr Enforcer",
+      "color_identity": [],
+      "type_line": "Artifact Creature — Myr",
+      "artist": "Jim Murray",
+      "scryfall_id": "dff51ae7-4b68-4770-915b-fb6bcf9ca1ed",
+      "set": "MTG Worker Art Candidates"
+    },
+    {
+      "name": "Myr Landshaper",
+      "gallery_title": "Myr Landshaper",
+      "color_identity": [],
+      "type_line": "Artifact Creature — Myr",
+      "artist": "Greg Staples",
+      "scryfall_id": "0fb654ac-9bb0-465e-8878-5456c154274f",
+      "set": "Myr Avatar Candidates"
+    },
+    {
+      "name": "Myr Moonvessel",
+      "gallery_title": "Myr Moonvessel",
+      "color_identity": [],
+      "type_line": "Artifact Creature — Myr",
+      "artist": "Dany Orizio",
+      "scryfall_id": "af0515cc-bf2d-4674-b339-4f4eefbc943d",
+      "set": "Myr Avatar Candidates"
+    },
+    {
+      "name": "Myr Quadropod",
+      "gallery_title": "Myr Quadropod",
+      "color_identity": [],
+      "type_line": "Artifact Creature — Myr",
+      "artist": "Christopher Rush",
+      "scryfall_id": "5576fe4d-cf12-460b-af15-996baeca5065",
+      "set": "Myr Avatar Candidates"
+    },
+    {
+      "name": "Myr Retriever",
+      "gallery_title": "Myr Retriever",
+      "color_identity": [],
+      "type_line": "Artifact Creature — Myr",
+      "artist": "Trevor Hairsine",
+      "scryfall_id": "7f0149d4-0731-474a-a1c3-28c25e486c14",
+      "set": "MTG Worker Art Candidates"
+    },
+    {
+      "name": "Myr Servitor",
+      "gallery_title": "Myr Servitor",
+      "color_identity": [],
+      "type_line": "Artifact Creature — Myr",
+      "artist": "John Matson",
+      "scryfall_id": "d53712a0-e11d-4b83-aebc-8e97244f085b",
+      "set": "Myr Avatar Candidates"
+    },
+    {
+      "name": "Nadier's Nightblade",
+      "gallery_title": "Nadier's Nightblade",
+      "color_identity": [
+        "B"
+      ],
+      "type_line": "Creature — Elf Warrior",
+      "artist": "Randy Vargas",
+      "scryfall_id": "bc9926d7-91b7-4067-b590-a0430bf68d16",
+      "set": "Warrior Avatar Candidates"
+    },
+    {
+      "name": "Neheb, the Eternal",
+      "gallery_title": "Neheb, the Eternal",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Legendary Creature — Zombie Minotaur Warrior",
+      "artist": "Chris Rahn",
+      "scryfall_id": "767c5831-2195-4efa-802d-2ea2e6dabb5b",
+      "set": "Zombie Avatar Candidates"
+    },
+    {
+      "name": "Neurok Stealthsuit",
+      "gallery_title": "Neurok Stealthsuit",
+      "color_identity": [
+        "U"
+      ],
+      "type_line": "Artifact — Equipment",
+      "artist": "Francis Tsai",
+      "scryfall_id": "d5e58c74-0ba6-452a-94a6-8256c4f6aba8",
+      "set": "Fifth Dawn Artifact Candidates"
+    },
+    {
+      "name": "Oboro Breezecaller",
+      "gallery_title": "Oboro Breezecaller",
+      "color_identity": [
+        "U"
+      ],
+      "type_line": "Creature — Moonfolk Wizard",
+      "artist": "Rebecca Guay",
+      "scryfall_id": "a382a9b8-0b19-46c2-a547-a22d6e23d0ac",
+      "set": "Kamigawa Moonfolk Avatar Candidates"
+    },
+    {
+      "name": "Oboro Envoy",
+      "gallery_title": "Oboro Envoy",
+      "color_identity": [
+        "U"
+      ],
+      "type_line": "Creature — Moonfolk Wizard",
+      "artist": "Rob Alexander",
+      "scryfall_id": "a0309dcb-6c13-4ffe-b44d-3b735c8277d2",
+      "set": "Kamigawa Moonfolk Avatar Candidates"
+    },
+    {
+      "name": "Okina Nightwatch",
+      "gallery_title": "Okina Nightwatch",
+      "color_identity": [
+        "G"
+      ],
+      "type_line": "Creature — Human Monk",
+      "artist": "Heather Hudson",
+      "scryfall_id": "2eea50b1-ba6e-4c57-9b49-488b883be638",
+      "set": "Kamigawa Monk Avatar Candidates"
+    },
+    {
+      "name": "Opal-Eye, Konda's Yojimbo",
+      "gallery_title": "Opal-Eye, Konda's Yojimbo",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Legendary Creature — Fox Samurai",
+      "artist": "Greg Staples",
+      "scryfall_id": "e08d5618-4fe0-4ae5-af16-696467aae02d",
+      "set": "Kamigawa Fox Avatar Candidates"
+    },
+    {
+      "name": "Opaline Bracers",
+      "gallery_title": "Opaline Bracers",
+      "color_identity": [],
+      "type_line": "Artifact — Equipment",
+      "artist": "Anthony S. Waters & Cara Mitten",
+      "scryfall_id": "3ae84edd-1294-4722-89d1-84d9f336871c",
+      "set": "Fifth Dawn Artifact Candidates"
+    },
+    {
+      "name": "Order of the Sacred Bell",
+      "gallery_title": "Order of the Sacred Bell",
+      "color_identity": [
+        "G"
+      ],
+      "type_line": "Creature — Human Monk",
+      "artist": "Carl Critchlow",
+      "scryfall_id": "310500b2-8539-441e-af89-81ddfa8ef080",
+      "set": "Kamigawa Monk Avatar Candidates"
+    },
+    {
+      "name": "Ornithopter",
+      "gallery_title": "Ornithopter",
+      "color_identity": [],
+      "type_line": "Artifact Creature — Thopter",
+      "artist": "Franz Vohwinkel",
+      "scryfall_id": "305078a5-ac18-4721-bba2-3434eba5b1cf",
+      "set": "MTG Worker Art Candidates"
+    },
+    {
+      "name": "Paradise Mantle",
+      "gallery_title": "Paradise Mantle",
+      "color_identity": [],
+      "type_line": "Artifact — Equipment",
+      "artist": "Greg Hildebrandt",
+      "scryfall_id": "19cd6bcc-ca47-47cc-9fe4-c29e9c176485",
+      "set": "Fifth Dawn Artifact Candidates"
+    },
+    {
+      "name": "Pentad Prism",
+      "gallery_title": "Pentad Prism",
+      "color_identity": [],
+      "type_line": "Artifact",
+      "artist": "Lindsey Look",
+      "scryfall_id": "e4beb84e-9eb9-48a2-932a-91fbbf218b5b",
+      "set": "Fifth Dawn Artifact Candidates"
+    },
+    {
+      "name": "Pious Kitsune",
+      "gallery_title": "Pious Kitsune",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Fox Cleric",
+      "artist": "Anthony S. Waters",
+      "scryfall_id": "bb4124b9-5169-471e-b805-ceeffeec9184",
+      "set": "Kamigawa Fox Avatar Candidates"
+    },
+    {
+      "name": "Plasma Elemental",
+      "gallery_title": "Plasma Elemental",
+      "color_identity": [
+        "U"
+      ],
+      "type_line": "Creature — Elemental",
+      "artist": "Kev Walker",
+      "scryfall_id": "035a8a69-1e48-4c44-b407-cc8acc8ba94c",
+      "set": "Elemental Avatar Candidates"
+    },
+    {
+      "name": "Platinum Angel",
+      "gallery_title": "Platinum Angel",
+      "color_identity": [],
+      "type_line": "Artifact Creature — Angel",
+      "artist": "Brom",
+      "scryfall_id": "ca7f4fd6-e268-4d15-bfbf-d9f0f95864fc",
+      "set": "MTG Worker Art Candidates"
+    },
+    {
+      "name": "Pristine Angel",
+      "gallery_title": "Pristine Angel",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Angel",
+      "artist": "Scott M. Fischer",
+      "scryfall_id": "2fbd3a6b-831d-4876-9f84-861cab788747",
+      "set": "Angel Avatar Candidates"
+    },
+    {
+      "name": "Professional Face-Breaker",
+      "gallery_title": "Professional Face-Breaker",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Creature — Human Warrior",
+      "artist": "Dan Murayama Scott",
+      "scryfall_id": "42acbf52-b137-44f0-a815-2817fe8d2da2",
+      "set": "Warrior Avatar Candidates"
+    },
+    {
+      "name": "Pteron Ghost",
+      "gallery_title": "Pteron Ghost",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Dinosaur Spirit",
+      "artist": "Edward P. Beard, Jr.",
+      "scryfall_id": "1aff26fc-e6d3-4135-96b9-0da7cb8b6dae",
+      "set": "Spirit Avatar Candidates"
+    },
+    {
+      "name": "Puresteel Paladin",
+      "gallery_title": "Puresteel Paladin",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Human Knight",
+      "artist": "Jason Chan",
+      "scryfall_id": "d8f8a324-006d-4cb8-9816-620a603b4229",
+      "set": "Knight Avatar Candidates"
+    },
+    {
+      "name": "Quicksilver Dragon",
+      "gallery_title": "Quicksilver Dragon",
+      "color_identity": [
+        "U"
+      ],
+      "type_line": "Creature — Dragon",
+      "artist": "Ron Spencer",
+      "scryfall_id": "a8943e2c-8a85-4ca4-a7b1-87b89e697877",
+      "set": "Dragon Avatar Candidates"
+    },
+    {
+      "name": "Qumulox",
+      "gallery_title": "Qumulox",
+      "color_identity": [
+        "U"
+      ],
+      "type_line": "Creature — Beast",
+      "artist": "Carl Critchlow",
+      "scryfall_id": "357aa2a1-4f72-4890-aa46-d212292ab837",
+      "set": "Fifth Dawn Creature Candidates"
+    },
+    {
+      "name": "Raksha Golden Cub",
+      "gallery_title": "Raksha Golden Cub",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Legendary Creature — Cat Soldier",
+      "artist": "Pete Venters",
+      "scryfall_id": "8736fd50-312e-47e2-8337-997c2acf48d9",
+      "set": "Fifth Dawn Creature Candidates"
+    },
+    {
+      "name": "Ranger-Captain of Eos",
+      "gallery_title": "Ranger-Captain of Eos",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Human Soldier Ranger",
+      "artist": "Ryan Pancoast",
+      "scryfall_id": "af3928b4-813a-4120-8799-de34235d60ac",
+      "set": "Soldier Avatar Candidates"
+    },
+    {
+      "name": "Rathi Dragon",
+      "gallery_title": "Rathi Dragon",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Creature — Dragon",
+      "artist": "Christopher Rush",
+      "scryfall_id": "9ec3d43c-2b3e-4b79-a61d-03efd6a689d4",
+      "set": "Dragon Avatar Candidates"
+    },
+    {
+      "name": "Razormane Masticore",
+      "gallery_title": "Razormane Masticore",
+      "color_identity": [],
+      "type_line": "Artifact Creature — Masticore",
+      "artist": "Jim Murray",
+      "scryfall_id": "5e40c79e-3177-416f-b10e-036553d611d7",
+      "set": "Fifth Dawn Creature Candidates"
+    },
+    {
+      "name": "Relentless Rats",
+      "gallery_title": "Relentless Rats",
+      "color_identity": [
+        "B"
+      ],
+      "type_line": "Creature — Rat",
+      "artist": "Johann Bodin",
+      "scryfall_id": "75f47b6e-9557-4853-b8d6-7602a91c59a7",
+      "set": "Fifth Dawn Creature Candidates"
+    },
+    {
+      "name": "Restoration Angel",
+      "gallery_title": "Restoration Angel",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Angel",
+      "artist": "Johannes Voss",
+      "scryfall_id": "f17f85d3-58e5-4128-90c5-98b524256af8",
+      "set": "Angel Avatar Candidates"
+    },
+    {
+      "name": "Reya Dawnbringer",
+      "gallery_title": "Reya Dawnbringer",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Legendary Creature — Angel",
+      "artist": "Matthew D. Wilson",
+      "scryfall_id": "44b45bdd-829a-4fc1-ad37-17c2bd57fac8",
+      "set": "Angel Avatar Candidates"
+    },
+    {
+      "name": "Rock Jockey",
+      "gallery_title": "Rock Jockey",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Creature — Goblin",
+      "artist": "Glen Angus",
+      "scryfall_id": "8f836e90-3255-48bd-a174-6a127528551e",
+      "set": "Goblin Avatar Candidates"
+    },
+    {
+      "name": "Ronin Cliffrider",
+      "gallery_title": "Ronin Cliffrider",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Creature — Human Samurai",
+      "artist": "Dan Murayama Scott",
+      "scryfall_id": "f9f12b75-af29-49ea-a23d-915052db9fef",
+      "set": "Kamigawa Samurai Avatar Candidates"
+    },
+    {
+      "name": "Ronin Houndmaster",
+      "gallery_title": "Ronin Houndmaster",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Creature — Human Samurai",
+      "artist": "Edward P. Beard, Jr.",
+      "scryfall_id": "614ead7b-1975-4a99-bdc2-f8afc6cf92d7",
+      "set": "Kamigawa Samurai Avatar Candidates"
+    },
+    {
+      "name": "Rorix Bladewing",
+      "gallery_title": "Rorix Bladewing",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Legendary Creature — Dragon",
+      "artist": "Clint Cearley",
+      "scryfall_id": "32668329-2f62-48ed-8da3-3cb0c3692ed9",
+      "set": "Dragon Avatar Candidates"
+    },
+    {
+      "name": "Rune-Tail, Kitsune Ascendant // Rune-Tail's Essence",
+      "gallery_title": "Rune-Tail, Kitsune Ascendant // Rune-Tail's Essence",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Legendary Creature — Fox Monk // Legendary Enchantment",
+      "artist": "Randy Gallegos",
+      "scryfall_id": "42ba0e13-d20f-47f9-9c86-2b0b13c39ada",
+      "set": "Kamigawa Fox Avatar Candidates"
+    },
+    {
+      "name": "Rust Elemental",
+      "gallery_title": "Rust Elemental",
+      "color_identity": [],
+      "type_line": "Artifact Creature — Elemental",
+      "artist": "Arnie Swekel",
+      "scryfall_id": "967a08cd-72b3-4b3f-9f23-15697704acb3",
+      "set": "MTG Worker Art Candidates"
+    },
+    {
+      "name": "Ryusei, the Falling Star",
+      "gallery_title": "Ryusei, the Falling Star",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Legendary Creature — Dragon Spirit",
+      "artist": "Grzegorz Rutkowski",
+      "scryfall_id": "68d57ab8-fbe0-4f01-b7f7-2a5cccd2d13a",
+      "set": "Dragon Avatar Candidates"
+    },
+    {
+      "name": "Samite Healer",
+      "gallery_title": "Samite Healer",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Human Cleric",
+      "artist": "Anson Maddocks",
+      "scryfall_id": "621f9a58-0bc8-40dd-aef1-43618274d6fe",
+      "set": "Cleric Avatar Candidates"
+    },
+    {
+      "name": "Samurai Enforcers",
+      "gallery_title": "Samurai Enforcers",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Human Samurai",
+      "artist": "Mitch Cotie",
+      "scryfall_id": "8b2be3fe-87a2-47b2-8af1-b99a48622c7b",
+      "set": "Kamigawa Samurai Avatar Candidates"
+    },
+    {
+      "name": "Samurai of the Pale Curtain",
+      "gallery_title": "Samurai of the Pale Curtain",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Fox Samurai",
+      "artist": "Christopher Moeller",
+      "scryfall_id": "ead15cf8-f692-4cb9-ac86-0dff00236145",
+      "set": "Kamigawa Fox Avatar Candidates"
+    },
+    {
+      "name": "Sawtooth Thresher",
+      "gallery_title": "Sawtooth Thresher",
+      "color_identity": [],
+      "type_line": "Artifact Creature — Construct",
+      "artist": "Alan Pollack",
+      "scryfall_id": "3c36de4a-807d-471d-ba59-0462d7bb028a",
+      "set": "Fifth Dawn Artifact Creature Candidates"
+    },
+    {
+      "name": "Scrivener",
+      "gallery_title": "Scrivener",
+      "color_identity": [
+        "U"
+      ],
+      "type_line": "Creature — Human Wizard",
+      "artist": "Heather Hudson",
+      "scryfall_id": "ac6ccaeb-353a-4e40-8fe3-a88f7b20650f",
+      "set": "Wizard Avatar Candidates"
+    },
+    {
+      "name": "Seedborn Muse",
+      "gallery_title": "Seedborn Muse",
+      "color_identity": [
+        "G"
+      ],
+      "type_line": "Creature — Spirit",
+      "artist": "Adam Rex",
+      "scryfall_id": "76f58441-5674-4f1e-af9b-94e14ab7e619",
+      "set": "Spirit Avatar Candidates"
+    },
+    {
+      "name": "Selfless Spirit",
+      "gallery_title": "Selfless Spirit",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Spirit Cleric",
+      "artist": "Seb McKinnon",
+      "scryfall_id": "9cd16dac-3bf9-4a71-a906-0cfbf98cdca5",
+      "set": "Cleric Avatar Candidates"
+    },
+    {
+      "name": "Sensei Golden-Tail",
+      "gallery_title": "Sensei Golden-Tail",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Legendary Creature — Fox Samurai",
+      "artist": "Stephen Tappin",
+      "scryfall_id": "b93dd897-3fb5-48b1-bdff-9383ce1feb21",
+      "set": "Kamigawa Fox Avatar Candidates"
+    },
+    {
+      "name": "Sephara, Sky's Blade",
+      "gallery_title": "Sephara, Sky's Blade",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Legendary Creature — Angel",
+      "artist": "Livia Prima",
+      "scryfall_id": "729ee848-6c27-4202-b2bc-605f45209468",
+      "set": "Angel Avatar Candidates"
+    },
+    {
+      "name": "Serra Advocate",
+      "gallery_title": "Serra Advocate",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Angel",
+      "artist": "Matthew D. Wilson",
+      "scryfall_id": "d7d48d56-c79e-4c7c-a9a0-92b7fb980e5c",
+      "set": "Angel Avatar Candidates"
+    },
+    {
+      "name": "Serra Angel",
+      "gallery_title": "Serra Angel",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Angel",
+      "artist": "Greg Staples",
+      "scryfall_id": "b8c5e74c-96e7-4a1f-93b7-14d776fe4b2d",
+      "set": "Angel Avatar Candidates"
+    },
+    {
+      "name": "Seshiro the Anointed",
+      "gallery_title": "Seshiro the Anointed",
+      "color_identity": [
+        "G"
+      ],
+      "type_line": "Legendary Creature — Snake Monk",
+      "artist": "Daren Bader",
+      "scryfall_id": "3823e561-5a0a-4020-9322-a2b481499807",
+      "set": "Kamigawa Monk Avatar Candidates"
+    },
+    {
+      "name": "Setessan Champion",
+      "gallery_title": "Setessan Champion",
+      "color_identity": [
+        "G"
+      ],
+      "type_line": "Creature — Human Warrior",
+      "artist": "Emrah Elmasli",
+      "scryfall_id": "7680a8e1-cd59-43c5-8f06-426b918692c8",
+      "set": "Warrior Avatar Candidates"
+    },
+    {
+      "name": "Shalai, Voice of Plenty",
+      "gallery_title": "Shalai, Voice of Plenty",
+      "color_identity": [
+        "G",
+        "W"
+      ],
+      "type_line": "Legendary Creature — Angel",
+      "artist": "Victor Adame Minguez",
+      "scryfall_id": "53876046-cdb8-4157-96cd-7832d3ad2549",
+      "set": "Angel Avatar Candidates"
+    },
+    {
+      "name": "Shinka Gatekeeper",
+      "gallery_title": "Shinka Gatekeeper",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Creature — Ogre Warrior",
+      "artist": "Pete Venters",
+      "scryfall_id": "8fdaf49b-9524-4824-807e-c40fcb381742",
+      "set": "Kamigawa Ogre Avatar Candidates"
+    },
+    {
+      "name": "Silver Knight",
+      "gallery_title": "Silver Knight",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Human Knight",
+      "artist": "Steve Prescott",
+      "scryfall_id": "297316bd-e91b-4b18-9d13-31dd51c92cce",
+      "set": "Knight Avatar Candidates"
+    },
+    {
+      "name": "Silver Myr",
+      "gallery_title": "Silver Myr",
+      "color_identity": [
+        "U"
+      ],
+      "type_line": "Artifact Creature — Myr",
+      "artist": "Kev Walker",
+      "scryfall_id": "3ebcc053-21c6-4708-b9fc-532e3749962f",
+      "set": "MTG Worker Art Candidates"
+    },
+    {
+      "name": "Silverstorm Samurai",
+      "gallery_title": "Silverstorm Samurai",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Fox Samurai",
+      "artist": "Michael Sutfin",
+      "scryfall_id": "10d2a6d9-5848-4481-a0f9-42320ff2c230",
+      "set": "Kamigawa Fox Avatar Candidates"
+    },
+    {
+      "name": "Simian Spirit Guide",
+      "gallery_title": "Simian Spirit Guide",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Creature — Ape Spirit",
+      "artist": "Lucas Graciano",
+      "scryfall_id": "0e57335d-4066-4d73-83cd-67a215e01a4e",
+      "set": "Spirit Avatar Candidates"
+    },
+    {
+      "name": "Skull Collector",
+      "gallery_title": "Skull Collector",
+      "color_identity": [
+        "B"
+      ],
+      "type_line": "Creature — Ogre Warrior",
+      "artist": "Thomas M. Baxa",
+      "scryfall_id": "0da4b1bf-eef5-4a86-a861-be448845a743",
+      "set": "Kamigawa Ogre Avatar Candidates"
+    },
+    {
+      "name": "Skyhunter Cub",
+      "gallery_title": "Skyhunter Cub",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Cat Knight",
+      "artist": "Pete Venters",
+      "scryfall_id": "cd46bfba-0685-4dcb-9b63-f90da8fb0ce7",
+      "set": "Knight Avatar Candidates"
+    },
+    {
+      "name": "Skyhunter Prowler",
+      "gallery_title": "Skyhunter Prowler",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Cat Knight",
+      "artist": "Vance Kovacs",
+      "scryfall_id": "52aa4af5-f0cb-4512-bef5-2e46a43aa27b",
+      "set": "Fifth Dawn Creature Candidates"
+    },
+    {
+      "name": "Skyhunter Skirmisher",
+      "gallery_title": "Skyhunter Skirmisher",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Cat Knight",
+      "artist": "Greg Staples",
+      "scryfall_id": "adbf772f-ebdf-4c04-996f-0dbf1826049b",
+      "set": "Fifth Dawn Creature Candidates"
+    },
+    {
+      "name": "Skyreach Manta",
+      "gallery_title": "Skyreach Manta",
+      "color_identity": [],
+      "type_line": "Artifact Creature — Fish",
+      "artist": "Christopher Moeller",
+      "scryfall_id": "3df1e8a0-6a54-4be9-bd0c-ac70f0ae9aa6",
+      "set": "Fifth Dawn Artifact Candidates"
+    },
+    {
+      "name": "Sokenzan Bruiser",
+      "gallery_title": "Sokenzan Bruiser",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Creature — Ogre Warrior",
+      "artist": "Paolo Parente",
+      "scryfall_id": "2d147088-2191-49e8-9c0b-419d4048604a",
+      "set": "Kamigawa Ogre Avatar Candidates"
+    },
+    {
+      "name": "Sokenzan Renegade",
+      "gallery_title": "Sokenzan Renegade",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Creature — Ogre Samurai Mercenary",
+      "artist": "Alan Pollack",
+      "scryfall_id": "1e9b3164-3de2-4b25-88d0-2dffee32148a",
+      "set": "Kamigawa Ogre Avatar Candidates"
+    },
+    {
+      "name": "Sokenzan Spellblade",
+      "gallery_title": "Sokenzan Spellblade",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Creature — Ogre Samurai Shaman",
+      "artist": "Carl Critchlow",
+      "scryfall_id": "500eeccb-aee2-48d4-8a43-bb9668f1c1ab",
+      "set": "Kamigawa Ogre Avatar Candidates"
+    },
+    {
+      "name": "Solarion",
+      "gallery_title": "Solarion",
+      "color_identity": [],
+      "type_line": "Artifact Creature — Construct",
+      "artist": "Jim Murray",
+      "scryfall_id": "9070dd3e-7600-493e-84b9-931ac92f44bc",
+      "set": "Fifth Dawn Artifact Candidates"
+    },
+    {
+      "name": "Solemn Simulacrum",
+      "gallery_title": "Solemn Simulacrum",
+      "color_identity": [],
+      "type_line": "Artifact Creature — Golem",
+      "artist": "Flavio Greco Paglia",
+      "scryfall_id": "daafd816-f7c1-4630-9e5c-a1e5db570a35",
+      "set": "MTG Worker Art Candidates"
+    },
+    {
+      "name": "Soratami Cloudskater",
+      "gallery_title": "Soratami Cloudskater",
+      "color_identity": [
+        "U"
+      ],
+      "type_line": "Creature — Moonfolk Rogue",
+      "artist": "Michael Sutfin",
+      "scryfall_id": "5e3d3024-bef2-4b50-ab84-8ae2a23cdf27",
+      "set": "Kamigawa Moonfolk Avatar Candidates"
+    },
+    {
+      "name": "Soratami Mindsweeper",
+      "gallery_title": "Soratami Mindsweeper",
+      "color_identity": [
+        "U"
+      ],
+      "type_line": "Creature — Moonfolk Wizard",
+      "artist": "Alex Horley-Orlandelli",
+      "scryfall_id": "4c71d1c3-7a8f-404f-a448-cd5cf97ec7de",
+      "set": "Kamigawa Moonfolk Avatar Candidates"
+    },
+    {
+      "name": "Soratami Rainshaper",
+      "gallery_title": "Soratami Rainshaper",
+      "color_identity": [
+        "U"
+      ],
+      "type_line": "Creature — Moonfolk Wizard",
+      "artist": "Ittoku",
+      "scryfall_id": "b942ee46-c78b-414a-9de7-4376370532fa",
+      "set": "Kamigawa Moonfolk Avatar Candidates"
+    },
+    {
+      "name": "Soratami Savant",
+      "gallery_title": "Soratami Savant",
+      "color_identity": [
+        "U"
+      ],
+      "type_line": "Creature — Moonfolk Wizard",
+      "artist": "Jim Nelson",
+      "scryfall_id": "43ea2db8-67c6-4bcd-8ba1-f620b8e8a8c4",
+      "set": "Kamigawa Moonfolk Avatar Candidates"
+    },
+    {
+      "name": "Soratami Seer",
+      "gallery_title": "Soratami Seer",
+      "color_identity": [
+        "U"
+      ],
+      "type_line": "Creature — Moonfolk Wizard",
+      "artist": "Glen Angus",
+      "scryfall_id": "462a861d-e5c5-48b1-95c0-3ef04b690eac",
+      "set": "Kamigawa Moonfolk Avatar Candidates"
+    },
+    {
+      "name": "Spikeshot Goblin",
+      "gallery_title": "Spikeshot Goblin",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Creature — Goblin Shaman",
+      "artist": "Alan Pollack",
+      "scryfall_id": "ae922301-181d-4824-802d-e3ba1714cade",
+      "set": "Goblin Avatar Candidates"
+    },
+    {
+      "name": "Spinal Parasite",
+      "gallery_title": "Spinal Parasite",
+      "color_identity": [],
+      "type_line": "Artifact Creature — Insect",
+      "artist": "Cyril Van Der Haegen",
+      "scryfall_id": "1aefaec4-741b-4a90-bf2c-e18215aac57c",
+      "set": "Fifth Dawn Artifact Candidates"
+    },
+    {
+      "name": "Split-Tail Miko",
+      "gallery_title": "Split-Tail Miko",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Fox Cleric",
+      "artist": "Kev Walker",
+      "scryfall_id": "0528fe29-f3c1-4d10-9030-053c3de57b7b",
+      "set": "Kamigawa Fox Avatar Candidates"
+    },
+    {
+      "name": "Steel Hellkite",
+      "gallery_title": "Steel Hellkite",
+      "color_identity": [],
+      "type_line": "Artifact Creature — Dragon",
+      "artist": "James Paick",
+      "scryfall_id": "548cbc66-d915-4b94-86da-4c909a1ce645",
+      "set": "Dragon Avatar Candidates"
+    },
+    {
+      "name": "Steel Wall",
+      "gallery_title": "Steel Wall",
+      "color_identity": [],
+      "type_line": "Artifact Creature — Wall",
+      "artist": "David Day",
+      "scryfall_id": "43dc4ff6-c26c-4dba-ac7f-6dee7c9e5345",
+      "set": "MTG Worker Art Candidates"
+    },
+    {
+      "name": "Suncrusher",
+      "gallery_title": "Suncrusher",
+      "color_identity": [],
+      "type_line": "Artifact Creature — Construct",
+      "artist": "Dave Dorman",
+      "scryfall_id": "66c22071-959e-4986-aa25-ed883a20796b",
+      "set": "Fifth Dawn Artifact Candidates"
+    },
+    {
+      "name": "Suntouched Myr",
+      "gallery_title": "Suntouched Myr",
+      "color_identity": [],
+      "type_line": "Artifact Creature — Myr",
+      "artist": "Greg Hildebrandt",
+      "scryfall_id": "4c5d4ae3-bc7e-4e60-a5e6-c3ae349fe6fc",
+      "set": "Myr Avatar Candidates"
+    },
+    {
+      "name": "Sustainer of the Realm",
+      "gallery_title": "Sustainer of the Realm",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Angel",
+      "artist": "Mark Zug",
+      "scryfall_id": "e9f7e21e-d4d8-4d6c-9530-b17d5204e9e7",
+      "set": "Angel Avatar Candidates"
+    },
+    {
+      "name": "Synod Centurion",
+      "gallery_title": "Synod Centurion",
+      "color_identity": [],
+      "type_line": "Artifact Creature — Construct",
+      "artist": "Kev Walker",
+      "scryfall_id": "6e2c0a63-5128-408a-bf95-2489b92817a9",
+      "set": "Fifth Dawn Artifact Candidates"
+    },
+    {
+      "name": "Takenuma Bleeder",
+      "gallery_title": "Takenuma Bleeder",
+      "color_identity": [
+        "B"
+      ],
+      "type_line": "Creature — Ogre Shaman",
+      "artist": "Kev Walker",
+      "scryfall_id": "bfa3d318-83ff-41db-b33a-e4f5b7cd7a77",
+      "set": "Kamigawa Ogre Avatar Candidates"
+    },
+    {
+      "name": "Tangle Asp",
+      "gallery_title": "Tangle Asp",
+      "color_identity": [
+        "G"
+      ],
+      "type_line": "Creature — Snake",
+      "artist": "Daren Bader",
+      "scryfall_id": "5e13ac56-72a9-4605-b389-24d1cb712b3c",
+      "set": "Fifth Dawn Creature Candidates"
+    },
+    {
+      "name": "Tel-Jilad Outrider",
+      "gallery_title": "Tel-Jilad Outrider",
+      "color_identity": [
+        "G"
+      ],
+      "type_line": "Creature — Elf Warrior",
+      "artist": "Paolo Parente",
+      "scryfall_id": "1d811d8f-437b-4c9f-8ea2-c85590a07935",
+      "set": "Elf Avatar Candidates"
+    },
+    {
+      "name": "Temporal Adept",
+      "gallery_title": "Temporal Adept",
+      "color_identity": [
+        "U"
+      ],
+      "type_line": "Creature — Human Wizard",
+      "artist": "Mark Tedin",
+      "scryfall_id": "0ff2dfe6-dbc0-46c3-9d5c-9f0ba6f511ec",
+      "set": "Wizard Avatar Candidates"
+    },
+    {
+      "name": "Thermal Navigator",
+      "gallery_title": "Thermal Navigator",
+      "color_identity": [],
+      "type_line": "Artifact Creature — Construct",
+      "artist": "Jim Murray",
+      "scryfall_id": "eb86854f-c933-4b6c-bd0a-67c3615e908f",
+      "set": "Fifth Dawn Artifact Candidates"
+    },
+    {
+      "name": "Thought Courier",
+      "gallery_title": "Thought Courier",
+      "color_identity": [
+        "U"
+      ],
+      "type_line": "Creature — Human Wizard",
+      "artist": "Stephen Tappin",
+      "scryfall_id": "1c9d2542-501d-4dfe-8642-962d0299ca45",
+      "set": "Fifth Dawn Creature Candidates"
+    },
+    {
+      "name": "Trinket Mage",
+      "gallery_title": "Trinket Mage",
+      "color_identity": [
+        "U"
+      ],
+      "type_line": "Creature — Human Wizard",
+      "artist": "Scott Chou",
+      "scryfall_id": "9a7800f7-95cd-4f5c-b054-4afad8924367",
+      "set": "Fifth Dawn Creature Candidates"
+    },
+    {
+      "name": "Triskelion",
+      "gallery_title": "Triskelion",
+      "color_identity": [],
+      "type_line": "Artifact Creature — Construct",
+      "artist": "Christopher Moeller",
+      "scryfall_id": "63349fa3-4462-413c-bd96-bbc1049165a0",
+      "set": "MTG Worker Art Candidates"
+    },
+    {
+      "name": "Twinflame Tyrant",
+      "gallery_title": "Twinflame Tyrant",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Creature — Dragon",
+      "artist": "Xabi Gaztelua",
+      "scryfall_id": "1eb34f51-0bd2-43c3-af95-2ce8dabcc7bb",
+      "set": "Dragon Avatar Candidates"
+    },
+    {
+      "name": "Two-Headed Dragon",
+      "gallery_title": "Two-Headed Dragon",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Creature — Dragon",
+      "artist": "Sam Wood",
+      "scryfall_id": "69e8136d-beab-4783-839c-2d60c26cf5b1",
+      "set": "Dragon Avatar Candidates"
+    },
+    {
+      "name": "Uyo, Silent Prophet",
+      "gallery_title": "Uyo, Silent Prophet",
+      "color_identity": [
+        "U"
+      ],
+      "type_line": "Legendary Creature — Moonfolk Wizard",
+      "artist": "John Bolton",
+      "scryfall_id": "50840915-545b-4de2-94bb-22a0b1e0dc7a",
+      "set": "Kamigawa Moonfolk Avatar Candidates"
+    },
+    {
+      "name": "Valgavoth, Terror Eater",
+      "gallery_title": "Valgavoth, Terror Eater",
+      "color_identity": [
+        "B"
+      ],
+      "type_line": "Legendary Creature — Elder Demon",
+      "artist": "Antonio José Manzanedo",
+      "scryfall_id": "7740ff55-67bb-409e-90f7-2c2c8b8c770a",
+      "set": "Demon Avatar Candidates"
+    },
+    {
+      "name": "Vedalken Mastermind",
+      "gallery_title": "Vedalken Mastermind",
+      "color_identity": [
+        "U"
+      ],
+      "type_line": "Creature — Vedalken Wizard",
+      "artist": "Darrell Riche",
+      "scryfall_id": "ea34a540-486b-42dc-993c-93698988d024",
+      "set": "Fifth Dawn Creature Candidates"
+    },
+    {
+      "name": "Vedalken Shackles",
+      "gallery_title": "Vedalken Shackles",
+      "color_identity": [],
+      "type_line": "Artifact",
+      "artist": "Svetlin Velinov",
+      "scryfall_id": "e3257833-b237-49ef-856a-3c1d1c752cf8",
+      "set": "Fifth Dawn Artifact Candidates"
+    },
+    {
+      "name": "Villainous Ogre",
+      "gallery_title": "Villainous Ogre",
+      "color_identity": [
+        "B"
+      ],
+      "type_line": "Creature — Ogre Warrior",
+      "artist": "Tony Szczudlo",
+      "scryfall_id": "0277c1ba-eae4-442b-8b80-20869ba20568",
+      "set": "Kamigawa Ogre Avatar Candidates"
+    },
+    {
+      "name": "Vulshok Sorcerer",
+      "gallery_title": "Vulshok Sorcerer",
+      "color_identity": [
+        "R"
+      ],
+      "type_line": "Creature — Human Shaman Sorcerer",
+      "artist": "rk post",
+      "scryfall_id": "b7153854-c548-48de-b9e2-72b7d9397563",
+      "set": "Fifth Dawn Creature Candidates"
+    },
+    {
+      "name": "Wayfarer's Bauble",
+      "gallery_title": "Wayfarer's Bauble",
+      "color_identity": [],
+      "type_line": "Artifact",
+      "artist": "Tomas Duchek",
+      "scryfall_id": "ac1960a1-9141-468c-b96c-6c8e6905084d",
+      "set": "Fifth Dawn Artifact Candidates"
+    },
+    {
+      "name": "Wayward Angel",
+      "gallery_title": "Wayward Angel",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Angel Horror",
+      "artist": "Mark Tedin",
+      "scryfall_id": "1fb726e8-162d-4143-9778-32476c0e1ab1",
+      "set": "Angel Avatar Candidates"
+    },
+    {
+      "name": "Welcoming Vampire",
+      "gallery_title": "Welcoming Vampire",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Vampire",
+      "artist": "Lorenzo Mastroianni",
+      "scryfall_id": "35a69bb5-b8e6-4558-9563-10c7a3662f93",
+      "set": "Vampire Avatar Candidates"
+    },
+    {
+      "name": "White Knight",
+      "gallery_title": "White Knight",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Human Knight",
+      "artist": "Christopher Moeller",
+      "scryfall_id": "660f69ef-c04f-4f53-80e6-8190549ab12a",
+      "set": "Knight Avatar Candidates"
+    },
+    {
+      "name": "Will-o'-the-Wisp",
+      "gallery_title": "Will-o'-the-Wisp",
+      "color_identity": [
+        "B"
+      ],
+      "type_line": "Creature — Spirit",
+      "artist": "Rob Alexander",
+      "scryfall_id": "066a1cd2-6778-45bb-84b8-4a9958cf10d7",
+      "set": "Spirit Avatar Candidates"
+    },
+    {
+      "name": "Wingbeat Warrior",
+      "gallery_title": "Wingbeat Warrior",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Creature — Bird Soldier Warrior",
+      "artist": "Kev Walker",
+      "scryfall_id": "cd58d164-861d-4c80-ad2f-6283ed82faa1",
+      "set": "Warrior Avatar Candidates"
+    },
+    {
+      "name": "Wizard Replica",
+      "gallery_title": "Wizard Replica",
+      "color_identity": [
+        "U"
+      ],
+      "type_line": "Artifact Creature — Wizard",
+      "artist": "Carl Critchlow",
+      "scryfall_id": "ed9b6a66-2ec4-44e6-b29b-f08768dca9cc",
+      "set": "Wizard Avatar Candidates"
+    },
+    {
+      "name": "Yosei, the Morning Star",
+      "gallery_title": "Yosei, the Morning Star",
+      "color_identity": [
+        "W"
+      ],
+      "type_line": "Legendary Creature — Dragon Spirit",
+      "artist": "Chris Rahn",
+      "scryfall_id": "47af956c-e2ba-47c5-bc5d-ec0ab345ce57",
+      "set": "Dragon Avatar Candidates"
+    }
+  ],
+  "unresolved": []
+}

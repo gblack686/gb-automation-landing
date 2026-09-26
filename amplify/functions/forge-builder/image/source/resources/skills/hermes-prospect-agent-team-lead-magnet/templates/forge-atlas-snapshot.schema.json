@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "source", "agent_id", "captured_at", "days", "limit_per_dataset", "datasets"],
+  "properties": {
+    "schema_version": {"const": "forge-atlas-snapshot.v1"},
+    "source": {"const": "supabase"},
+    "agent_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]{0,119}$"},
+    "captured_at": {"type": "string", "format": "date-time"},
+    "days": {"const": 90}, "limit_per_dataset": {"const": 200},
+    "datasets": {
+      "type": "object", "additionalProperties": false, "required": ["traces", "runs", "sessions"],
+      "properties": {"traces": {"$ref": "#/$defs/rows"}, "runs": {"$ref": "#/$defs/rows"}, "sessions": {"$ref": "#/$defs/rows"}}
+    }
+  },
+  "$defs": {
+    "metric": {"type": ["number", "null"], "minimum": 0},
+    "rows": {"type": "array", "maxItems": 200, "items": {
+      "type": "object", "additionalProperties": false,
+      "required": ["row_key", "observed_at", "tokens", "cost", "duration", "events"],
+      "properties": {
+        "row_key": {"type": "string", "pattern": "^(traces|runs|sessions)-[0-9]{1,3}$"},
+        "observed_at": {"type": "string", "format": "date-time"},
+        "tokens": {"$ref": "#/$defs/metric"}, "cost": {"$ref": "#/$defs/metric"},
+        "duration": {"$ref": "#/$defs/metric"}, "events": {"$ref": "#/$defs/metric"}
+      }
+    }}
+  }
+}

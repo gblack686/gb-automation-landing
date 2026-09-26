@@ -1,0 +1,382 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gbautomation.xyz/schemas/ecom-orchestrator-contract.v1.json",
+  "title": "ECOM Shop Intelligence Orchestrator Contract v1",
+  "description": "Defines OrchestratorInput, OrchestratorOutput, SpecialistHandoff, and all six specialist agent I/O schemas for the shop-intelligence pipeline (GBA-490).",
+
+  "$defs": {
+
+    "Uuid": {
+      "type": "string",
+      "description": "UUID string (any variant)"
+    },
+
+    "IsoTimestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 UTC timestamp"
+    },
+
+    "PhaseResult": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["ok", "error", "skipped", "dry_run"]
+        },
+        "key_metrics": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "ProductCandidate": {
+      "type": "object",
+      "required": ["url", "kind"],
+      "properties": {
+        "url": { "type": "string", "format": "uri" },
+        "kind": { "type": "string", "enum": ["category", "plp", "pdp"] },
+        "confidence": { "type": "number", "minimum": 0.0, "maximum": 1.0 }
+      },
+      "additionalProperties": false
+    },
+
+    "ScrapedProduct": {
+      "type": "object",
+      "required": ["sku", "title", "price", "currency", "in_stock", "url"],
+      "properties": {
+        "sku": { "type": "string" },
+        "title": { "type": "string" },
+        "price": { "type": ["number", "null"] },
+        "currency": { "type": "string" },
+        "in_stock": { "type": ["boolean", "null"] },
+        "url": { "type": "string", "format": "uri" },
+        "dry_run_stub": { "type": "boolean", "default": false },
+        "error_message": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+
+    "ChangeRecord": {
+      "type": "object",
+      "required": ["product_sku", "change_type"],
+      "properties": {
+        "product_sku": { "type": "string" },
+        "change_type": {
+          "type": "string",
+          "enum": ["price_change", "stock_change", "new_product", "removed_product"]
+        },
+        "old_value": { "type": ["object", "null"] },
+        "new_value": { "type": ["object", "null"] },
+        "change_pct": { "type": ["number", "null"] }
+      },
+      "additionalProperties": false
+    },
+
+    "OrchestratorInput": {
+      "type": "object",
+      "required": ["shop_url"],
+      "properties": {
+        "shop_url": {
+          "type": "string",
+          "pattern": "^https?://",
+          "description": "URL of the shop to monitor. Must begin with http or https."
+        },
+        "dry_run": {
+          "type": "boolean",
+          "default": true,
+          "description": "When true no Supabase writes or real Telegram/Slack messages are sent."
+        },
+        "output_dir": {
+          "type": "string",
+          "description": "Local directory for run artifacts. Defaults to outputs/ecom_map_{run_id}/."
+        },
+        "mode": {
+          "type": "string",
+          "enum": ["full", "test"],
+          "default": "full",
+          "description": "full runs all six phases; test runs only map and profile phases."
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "OrchestratorOutput": {
+      "type": "object",
+      "required": ["run_id", "shop_url", "dry_run", "run_at", "mode", "status", "phases", "changes_detected", "alerts_sent"],
+      "properties": {
+        "run_id": { "$ref": "#/$defs/Uuid" },
+        "shop_url": { "type": "string", "format": "uri" },
+        "shop_id": { "$ref": "#/$defs/Uuid" },
+        "dry_run": { "type": "boolean" },
+        "run_at": { "$ref": "#/$defs/IsoTimestamp" },
+        "mode": { "type": "string", "enum": ["full", "test"] },
+        "status": {
+          "type": "string",
+          "enum": ["ok", "partial", "error", "dry_run"]
+        },
+        "phases": {
+          "type": "object",
+          "required": ["map", "profile", "scrape", "watch", "detect", "alert"],
+          "properties": {
+            "map":     { "$ref": "#/$defs/PhaseResult" },
+            "profile": { "$ref": "#/$defs/PhaseResult" },
+            "scrape":  { "$ref": "#/$defs/PhaseResult" },
+            "watch":   { "$ref": "#/$defs/PhaseResult" },
+            "detect":  { "$ref": "#/$defs/PhaseResult" },
+            "alert":   { "$ref": "#/$defs/PhaseResult" }
+          },
+          "additionalProperties": false
+        },
+        "changes_detected": { "type": "integer", "minimum": 0 },
+        "alerts_sent": { "type": "integer", "minimum": 0 },
+        "approval_report_path": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+
+    "SpecialistHandoff": {
+      "type": "object",
+      "required": ["agent_name", "invoked_at", "dry_run", "input", "output", "status"],
+      "description": "Common envelope wrapping every specialist agent invocation for audit and tracing.",
+      "properties": {
+        "agent_name": { "type": "string" },
+        "invoked_at": { "$ref": "#/$defs/IsoTimestamp" },
+        "dry_run": { "type": "boolean" },
+        "input": { "type": "object" },
+        "output": { "type": "object" },
+        "status": {
+          "type": "string",
+          "enum": ["ok", "error", "dry_run_suppressed", "skipped"]
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "ShopMapperInput": {
+      "type": "object",
+      "required": ["shop_url"],
+      "properties": {
+        "shop_url": { "type": "string", "pattern": "^https?://" },
+        "dry_run": { "type": "boolean", "default": true },
+        "out_dir": { "type": "string" },
+        "max_category_pages": { "type": "integer", "minimum": 1, "default": 2 }
+      },
+      "additionalProperties": false
+    },
+
+    "ShopMapperOutput": {
+      "type": "object",
+      "required": ["shop_url", "run_id", "dry_run", "mapped_at", "platform", "candidates", "summary", "status"],
+      "properties": {
+        "shop_url": { "type": "string", "format": "uri" },
+        "run_id": { "$ref": "#/$defs/Uuid" },
+        "dry_run": { "type": "boolean" },
+        "mapped_at": { "$ref": "#/$defs/IsoTimestamp" },
+        "platform": { "type": "string", "enum": ["shopify", "woocommerce", "bigcommerce", "custom"] },
+        "candidates": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/ProductCandidate" }
+        },
+        "summary": {
+          "type": "object",
+          "required": ["total", "by_kind"],
+          "properties": {
+            "total": { "type": "integer", "minimum": 0 },
+            "by_kind": {
+              "type": "object",
+              "properties": {
+                "category": { "type": "integer" },
+                "plp": { "type": "integer" },
+                "pdp": { "type": "integer" }
+              }
+            }
+          }
+        },
+        "screenshots": { "type": "array", "items": { "type": "string" } },
+        "steps": { "type": "array", "items": { "type": "string" } },
+        "status": { "type": "string", "enum": ["ok", "error"] }
+      },
+      "additionalProperties": false
+    },
+
+    "ScraperProfileInput": {
+      "type": "object",
+      "required": ["shop_id", "map_report"],
+      "properties": {
+        "shop_id": { "$ref": "#/$defs/Uuid" },
+        "map_report": { "$ref": "#/$defs/ShopMapperOutput" },
+        "dry_run": { "type": "boolean", "default": true },
+        "out_dir": { "type": "string" },
+        "price_change_threshold_pct": { "type": "number", "minimum": 0.0, "default": 5.0 },
+        "check_interval_minutes": { "type": "integer", "minimum": 1, "default": 60 },
+        "alert_channel": { "type": "string", "enum": ["telegram", "slack", "email"], "default": "telegram" }
+      },
+      "additionalProperties": false
+    },
+
+    "ScraperProfileOutput": {
+      "type": "object",
+      "required": ["profile_id", "status", "dry_run", "created", "profile"],
+      "properties": {
+        "profile_id": { "$ref": "#/$defs/Uuid" },
+        "status": { "type": "string", "enum": ["draft", "active"] },
+        "dry_run": { "type": "boolean" },
+        "created": { "type": "boolean" },
+        "profile": {
+          "type": "object",
+          "required": ["shop_id", "check_interval_minutes", "price_change_threshold_pct", "alert_channel"],
+          "properties": {
+            "shop_id": { "$ref": "#/$defs/Uuid" },
+            "check_interval_minutes": { "type": "integer" },
+            "price_change_threshold_pct": { "type": "number" },
+            "alert_channel": { "type": "string" },
+            "config": { "type": "object" }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "BrowserHarnessInput": {
+      "type": "object",
+      "required": ["shop_id", "profile_id", "product_urls", "job_id"],
+      "properties": {
+        "shop_id": { "$ref": "#/$defs/Uuid" },
+        "profile_id": { "$ref": "#/$defs/Uuid" },
+        "product_urls": {
+          "type": "array",
+          "items": { "type": "string", "format": "uri" },
+          "minItems": 1
+        },
+        "dry_run": { "type": "boolean", "default": true },
+        "job_id": { "$ref": "#/$defs/Uuid" }
+      },
+      "additionalProperties": false
+    },
+
+    "BrowserHarnessOutput": {
+      "type": "object",
+      "required": ["job_id", "shop_id", "scraped_at", "products", "status"],
+      "properties": {
+        "job_id": { "$ref": "#/$defs/Uuid" },
+        "shop_id": { "$ref": "#/$defs/Uuid" },
+        "scraped_at": { "$ref": "#/$defs/IsoTimestamp" },
+        "products": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/ScrapedProduct" }
+        },
+        "status": { "type": "string", "enum": ["ok", "error"] },
+        "error_message": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+
+    "ScrapeJobWatcherInput": {
+      "type": "object",
+      "required": ["job_id"],
+      "properties": {
+        "job_id": { "$ref": "#/$defs/Uuid" },
+        "dry_run": { "type": "boolean", "default": true },
+        "poll_interval_seconds": { "type": "integer", "minimum": 1, "default": 5 },
+        "timeout_seconds": { "type": "integer", "minimum": 10, "default": 300 },
+        "stuck_recovery_threshold_seconds": { "type": "integer", "minimum": 30, "default": 300 }
+      },
+      "additionalProperties": false
+    },
+
+    "ScrapeJobWatcherOutput": {
+      "type": "object",
+      "required": ["job_id", "final_status", "attempts", "elapsed_seconds"],
+      "properties": {
+        "job_id": { "$ref": "#/$defs/Uuid" },
+        "final_status": { "type": "string", "enum": ["done", "failed", "cancelled", "timeout"] },
+        "attempts": { "type": "integer", "minimum": 0 },
+        "elapsed_seconds": { "type": "number", "minimum": 0.0 },
+        "observation_id": { "type": ["string", "null"] },
+        "error_message": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+
+    "PriceChangeDetectorInput": {
+      "type": "object",
+      "required": ["shop_id", "observation_ids"],
+      "properties": {
+        "shop_id": { "$ref": "#/$defs/Uuid" },
+        "observation_ids": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/Uuid" },
+          "minItems": 2,
+          "maxItems": 2,
+          "description": "Exactly two observation UUIDs: [older_id, newer_id]"
+        },
+        "dry_run": { "type": "boolean", "default": true },
+        "price_change_threshold_pct": { "type": "number", "minimum": 0.0, "default": 5.0 }
+      },
+      "additionalProperties": false
+    },
+
+    "PriceChangeDetectorOutput": {
+      "type": "object",
+      "required": ["shop_id", "changes_detected", "changes", "above_threshold", "status"],
+      "properties": {
+        "shop_id": { "$ref": "#/$defs/Uuid" },
+        "changes_detected": { "type": "integer", "minimum": 0 },
+        "changes": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/ChangeRecord" }
+        },
+        "above_threshold": { "type": "integer", "minimum": 0 },
+        "status": { "type": "string", "enum": ["ok", "error"] },
+        "error_message": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+
+    "SalesAlertInput": {
+      "type": "object",
+      "required": ["shop_name", "shop_url", "changes"],
+      "properties": {
+        "shop_name": { "type": "string" },
+        "shop_url": { "type": "string", "format": "uri" },
+        "changes": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/ChangeRecord" }
+        },
+        "dry_run": { "type": "boolean", "default": true },
+        "alert_channel": { "type": "string", "enum": ["telegram", "slack"], "default": "telegram" },
+        "severity": { "type": "string", "enum": ["low", "medium", "high"], "default": "medium" }
+      },
+      "additionalProperties": false
+    },
+
+    "SalesAlertOutput": {
+      "type": "object",
+      "required": ["alerts_sent", "dry_run", "alert_text", "channel", "status"],
+      "properties": {
+        "alerts_sent": { "type": "integer", "minimum": 0 },
+        "dry_run": { "type": "boolean" },
+        "alert_text": { "type": "string" },
+        "channel": { "type": "string", "enum": ["telegram", "slack"] },
+        "status": {
+          "type": "string",
+          "enum": ["ok", "dry_run_suppressed", "error"],
+          "description": "ok = real message sent; dry_run_suppressed = dry_run=true gate triggered (never ok when dry_run=true); error = send failed."
+        },
+        "error_message": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    }
+
+  },
+
+  "oneOf": [
+    { "$ref": "#/$defs/OrchestratorInput" },
+    { "$ref": "#/$defs/OrchestratorOutput" },
+    { "$ref": "#/$defs/SpecialistHandoff" }
+  ]
+}

@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gbautomation.xyz/schemas/master-sheet-row.v1.json",
+  "title": "Master Sheet Projection Row",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "row_id",
+    "prd_id",
+    "tenant_id",
+    "estate_id",
+    "work_class",
+    "owner_expert",
+    "title",
+    "lifecycle_class",
+    "status_facets",
+    "derived_status",
+    "derived_status_reason",
+    "row_version",
+    "gate_version",
+    "source_hashes",
+    "links",
+    "relationships",
+    "protected_fields",
+    "projection_updated_at"
+  ],
+  "properties": {
+    "schema_version": {"const": "master-sheet-row.v1"},
+    "row_id": {"type": "string", "pattern": "^msr_[0-9a-f]{16,64}$"},
+    "prd_id": {"type": "string", "minLength": 12, "maxLength": 180},
+    "tenant_id": {"type": "string", "pattern": "^[a-z][a-z0-9-]{1,63}$"},
+    "estate_id": {"type": "string", "pattern": "^[a-z][a-z0-9-]{1,63}$"},
+    "work_class": {"enum": ["system", "platform", "client_business"]},
+    "owner_expert": {"type": "string", "minLength": 1, "maxLength": 180},
+    "title": {"type": "string", "minLength": 1, "maxLength": 500},
+    "lifecycle_class": {"enum": ["active", "archive", "schema_gap"]},
+    "status_facets": {
+      "type": "object",
+      "required": ["content", "approval", "execution", "freshness"],
+      "properties": {
+        "content": {"type": "string", "minLength": 1, "maxLength": 80},
+        "approval": {"enum": ["not_required", "pending", "approved", "changes_requested", "rejected", "snoozed"]},
+        "execution": {"enum": ["not_started", "queued", "in_flight", "blocked", "done", "failed"]},
+        "freshness": {"enum": ["fresh", "stale", "conflict"]}
+      },
+      "additionalProperties": false
+    },
+    "derived_status": {"enum": ["conflict", "blocked", "stale", "needs_review", "approved", "in_flight", "queued", "done", "draft", "archived"]},
+    "derived_status_reason": {"type": "string", "minLength": 1, "maxLength": 500},
+    "row_version": {"type": "integer", "minimum": 1},
+    "gate_version": {"type": ["integer", "null"], "minimum": 1},
+    "gate_id": {"type": ["string", "null"], "pattern": "^[A-Za-z0-9._:-]{1,180}$"},
+    "run_id": {"type": ["string", "null"], "pattern": "^[A-Za-z0-9._:-]{1,180}$"},
+    "parent_task_id": {"type": ["string", "null"], "pattern": "^[A-Za-z0-9._:-]{1,180}$"},
+    "source_commit": {"type": ["string", "null"], "pattern": "^[0-9a-f]{7,64}$"},
+    "allowed_resume_targets": {
+      "type": "array",
+      "maxItems": 100,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^[A-Za-z0-9._:-]{1,180}$"}
+    },
+    "source_hashes": {
+      "type": "object",
+      "required": ["body_sha256"],
+      "properties": {
+        "body_sha256": {"$ref": "#/$defs/sha256"},
+        "architecture_sha256": {"oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+        "context_packet_sha256": {"oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+        "resume_targets_sha256": {"oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]}
+      },
+      "additionalProperties": false
+    },
+    "links": {
+      "type": "object",
+      "properties": {
+        "source": {"type": "string", "minLength": 1, "maxLength": 1000},
+        "plan": {"type": ["string", "null"], "maxLength": 1000},
+        "architecture": {"type": ["string", "null"], "maxLength": 1000},
+        "artifact": {"type": ["string", "null"], "maxLength": 1000},
+        "execution": {"type": ["string", "null"], "maxLength": 1000},
+        "atlas": {"type": ["string", "null"], "maxLength": 1000}
+      },
+      "required": ["source"],
+      "additionalProperties": false
+    },
+    "relationships": {
+      "type": "object",
+      "properties": {
+        "related_client_prd_id": {"type": ["string", "null"], "maxLength": 180},
+        "related_platform_prd_id": {"type": ["string", "null"], "maxLength": 180},
+        "relationship": {"enum": ["none", "requires_platform_change", "implements_platform_change"]}
+      },
+      "required": ["relationship"],
+      "additionalProperties": false
+    },
+    "allowed_decisions": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"enum": ["approve", "request_changes", "snooze", "reject"]}
+    },
+    "protected_fields": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1, "maxLength": 80}
+    },
+    "projection_updated_at": {"type": "string", "format": "date-time"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "additionalProperties": false
+}

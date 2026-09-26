@@ -1,0 +1,13 @@
+{
+  "schema_version": "forge-validation-example.v1",
+  "example": true,
+  "status": "example_not_approved",
+  "dispatchable": false,
+  "runtime_authorized": false,
+  "checks": [
+    {
+      "name": "HTML, credits and responsive layout",
+      "result": "not_run"
+    }
+  ]
+}

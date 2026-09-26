@@ -1,0 +1,78 @@
+{
+  "kind": "implementation-approval-receipt",
+  "created_at": "2026-09-24T17:34:35.303475+00:00",
+  "decision": "approved",
+  "implementation_authorized": true,
+  "runtime_activation_authorized": false,
+  "plan_path": "second-brain/plans/2026-09-24-forge-proposal-scope-plan-approvals.html",
+  "plan_sha256": "2fcbf526f4bc11c9817ab80ea2d678257f08d9f9ff9ab0d776e6be35b062f34d",
+  "architecture_path": "second-brain/plans/2026-09-24-forge-proposal-scope-plan-approvals.architecture.yaml",
+  "architecture_current_status": "approved",
+  "architecture_current_sha256": "7df7773fc9a393f3b1a9ddd81fec89ab8ba7373d59a7b1e664ed74dc91b1dcfb",
+  "architecture_approved_status_candidate_sha256": "7df7773fc9a393f3b1a9ddd81fec89ab8ba7373d59a7b1e664ed74dc91b1dcfb",
+  "approved_status_note": "Digest of the exact same architecture with only status changed to approved; not an approval. Material changes require a new review.",
+  "base_commit": "bb81d1c9fec8a5d503ae1ced585528643cf13fd6",
+  "requested_phases": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "phase_limitations": {
+    "5": "Local fixture and pilot-harness preparation only. Named environment/allowlist and separate activation decision required before real pilot runtime writes."
+  },
+  "excluded_actions": [
+    "Phase 6 rollout",
+    "Real client email",
+    "Production migrations",
+    "Live implementation task execution",
+    "Runtime activation",
+    "Unattended Hermes dispatch",
+    "Destructive cleanup"
+  ],
+  "engineering_profile": {
+    "gates": [
+      "agents.config",
+      "agents.permissions",
+      "stack.build",
+      "stack.docs",
+      "stack.integration",
+      "stack.security",
+      "stack.unit",
+      "verifier.contract",
+      "verifier.readonly"
+    ],
+    "hash": "29c52eb3c7c5e5f9ae51ecd8b786f220385b9998c06298fc7de8b48d2880fbeb",
+    "patterns": [
+      "agents.config-team-ownership",
+      "agents.persistent-mental-models",
+      "factory.deterministic-phases-gates-traces",
+      "factory.permission-boundaries",
+      "factory.request-contract",
+      "planning.versioned-workflows-artifacts",
+      "verifier.bounded-correction-loop",
+      "verifier.readonly-findings",
+      "verifier.typed-jsonl-protocol"
+    ],
+    "profile_id": "profile.agentic-full-stack"
+  },
+  "repository_map": {
+    "commit": "bb81d1c9fec8a5d503ae1ced585528643cf13fd6",
+    "hash": "5519789928726ec377f3ae29b5110d208bc6613827ca95b81f068cd3238a2e99",
+    "path": "artifacts/forge-approval-intake-2026-09-24/repository-map.json",
+    "repo": "gbautomation"
+  },
+  "required_pattern_or_gate_or_deviation_change_invalidates_approval": true,
+  "deviations": [],
+  "intake_path": "second-brain/intelligence/planning-intakes/plan-intake-forge-approvals-20260924.json",
+  "publication_status": "blocked_by_conformance",
+  "public_url": null,
+  "supabase_index_status": "not_written_publication_gate_blocked",
+  "notification_status": "not_sent_publication_gate_blocked",
+  "decided_at": "2026-09-24T17:52:58.889208+00:00",
+  "decision_source": "user_chat",
+  "architecture_file_sha256": "7513fe2da4b9599a79a79c9dcd06296581814fcc387b5ae99332e5d9f050dbe9",
+  "planning_commit": "89bc17dbaa3b66ae0d2d1128b55d8c23076a22d6"
+}

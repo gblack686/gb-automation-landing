@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gbautomation.xyz/schemas/master-sheet-registry.v1.json",
+  "title": "Master Sheet Registry",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "registry_id",
+    "estate_id",
+    "estate_kind",
+    "tenant_id",
+    "workbook_id",
+    "adapter_key_id",
+    "approver_policy",
+    "sheet_schema_version",
+    "lifecycle_state",
+    "max_batch_rows"
+  ],
+  "properties": {
+    "schema_version": {"const": "master-sheet-registry.v1"},
+    "registry_id": {"type": "string", "pattern": "^msr_[a-z0-9_]{4,80}$"},
+    "estate_id": {"type": "string", "pattern": "^[a-z][a-z0-9-]{1,63}$"},
+    "estate_kind": {"enum": ["gbautomation", "client"]},
+    "tenant_id": {"type": "string", "pattern": "^[a-z][a-z0-9-]{1,63}$"},
+    "workbook_id": {"type": "string", "minLength": 20, "maxLength": 240},
+    "adapter_key_id": {"type": "string", "pattern": "^msa_[a-z0-9_]{4,80}$"},
+    "approver_policy": {
+      "type": "object",
+      "required": ["allowed_emails", "allowed_domains", "require_event_user"],
+      "properties": {
+        "allowed_emails": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "format": "email", "maxLength": 320}
+        },
+        "allowed_domains": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^[a-z0-9.-]+$"}
+        },
+        "require_event_user": {"const": true},
+        "allowed_decisions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"enum": ["approve", "request_changes", "snooze", "reject"]},
+          "default": ["approve", "request_changes", "snooze", "reject"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "sheet_schema_version": {"const": "master-sheet-row.v1"},
+    "lifecycle_state": {"enum": ["draft", "active", "suspended", "retired"]},
+    "max_batch_rows": {"type": "integer", "minimum": 1, "maximum": 500, "default": 200},
+    "refresh_cursor": {"type": ["string", "null"], "maxLength": 500},
+    "created_at": {"type": "string", "format": "date-time"},
+    "updated_at": {"type": "string", "format": "date-time"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"estate_kind": {"const": "gbautomation"}}, "required": ["estate_kind"]},
+      "then": {
+        "properties": {
+          "tenant_id": {"const": "gbautomation"},
+          "estate_id": {"const": "gbautomation"}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"estate_kind": {"const": "client"}}, "required": ["estate_kind"]},
+      "then": {"not": {"properties": {"tenant_id": {"const": "gbautomation"}}}}
+    }
+  ],
+  "additionalProperties": false
+}

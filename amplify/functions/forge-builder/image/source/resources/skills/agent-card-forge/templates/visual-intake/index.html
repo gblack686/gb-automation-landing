@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Forge · Choose your expert's character</title><style>@@CSS@@</style></head>
+<body>
+<header class="topbar"><a class="brand" href="#"><img src="@@LOGO@@" alt="GBAuto"><span>FORGE <b>/</b> CHARACTER STUDIO</span></a><span id="save-state" class="save-state" role="status">Local draft</span></header>
+<main>
+  <div class="intro"><div><p class="eyebrow">A NEW EXPERT STARTS HERE</p><h1>Give your expert a character.</h1><p>Choose a Magic card. Carry its visual identity into an original portrait and 3D figure.</p></div><div class="steps" aria-label="Workflow"><span><b>1</b> Brief</span><i>→</i><span><b>2</b> Card</span><i>→</i><span><b>3</b> Direction</span></div></div>
+  <div class="workspace">
+    <form id="expert-form" class="brief-panel">
+      <div class="section-heading"><span class="step-number">01</span><h2>Your expert</h2></div>
+      <label for="expert-name">Name</label><input id="expert-name" required maxlength="100" placeholder="Artist Packet Expert" autocomplete="off">
+      <label for="expert-purpose">What does it do?</label><textarea id="expert-purpose" required maxlength="1200" rows="3" placeholder="Turns artist briefs and approved media into branded packets."></textarea>
+      <div class="selection" id="selection"><div class="empty-selection">◇<span>Choose a card from the gallery</span></div></div>
+      <div class="section-heading"><span class="step-number">03</span><h2>Visual direction</h2></div>
+      <div class="field-pair"><div><label for="pose">Pose</label><select id="pose"><option value="action">Action pose</option><option value="standing">Standing</option><option value="casting">Casting</option></select></div><div><label for="finish">Finish</label><select id="finish"><option value="detailed painted tabletop miniature">Miniature</option><option value="stylized painterly character">Painterly</option><option value="realistic sculpted collectible">Sculpted</option></select></div></div>
+      <label for="direction">Details to carry through <span class="optional">optional</span></label><textarea id="direction" maxlength="1200" rows="2" placeholder="Colors, props, costume, mood…"></textarea>
+      <div class="output-note"><span>▧ Portrait</span><span>→</span><span>◈ Full-body 3D</span></div>
+      <details class="budget-settings"><summary><span>Generation budget</span><b><span id="budget-summary">35</span> credits</b></summary><label for="budget">Proposed Meshy credit cap</label><input id="budget" type="number" min="0" max="1000" step="1" value="35" required><p>Forecast: 30 generation + 5 remesh. Image-generation charges are separate.</p><p id="budget-hint" role="status"></p></details>
+      <button class="primary" id="export" type="submit">Save visual brief <span>↓</span></button><p class="submit-note">Downloads your card choice and inputs. Generation starts after a separate review.</p><p id="form-status" class="form-status" role="status"></p>
+      <button class="text-button" id="reset" type="button">Start a fresh draft</button>
+    </form>
+    <section class="gallery-panel" aria-labelledby="gallery-title">
+      <div class="gallery-heading"><div class="section-heading"><span class="step-number">02</span><div><h2 id="gallery-title">Choose your inspiration</h2><p id="gallery-subtitle">A shortlist from your saved MTG favorites.</p></div></div><button class="secondary" id="match" type="button">✧ Match my brief</button></div>
+      <form id="search-form" class="search-row"><label class="sr-only" for="search">Search cards</label><input id="search" maxlength="160" type="search" placeholder="Search card names or types…"><label class="sr-only" for="search-scope">Search source</label><select id="search-scope"><option value="favorites">Your favorites</option><option value="scryfall">All of Scryfall</option></select><button class="secondary" id="search-button" type="submit">Search</button></form>
+      <div class="filter-row"><label>Role <select id="role"><option value="all">All roles</option><option value="creative">Creative</option><option value="research">Research</option><option value="build">Build</option><option value="lead">Lead</option><option value="protect">Protect</option><option value="automate">Automate</option></select></label><label>Palette <select id="color"><option value="all">All colors</option><option value="W">White</option><option value="U">Blue</option><option value="B">Black</option><option value="R">Red</option><option value="G">Green</option><option value="C">Colorless</option></select></label><span id="count"></span><button class="text-button" id="clear-filters" type="button">Reset gallery</button></div>
+      <p id="search-status" class="search-status" role="status"></p>
+      <div id="cards" class="card-grid" aria-label="MTG card choices"></div>
+      <button id="show-more" class="secondary show-more" type="button">Show more favorites</button>
+      <footer class="gallery-footer">Card previews via Scryfall · Art © Wizards of the Coast, credited per printing. Your choice becomes the reference for original expert artwork.</footer>
+    </section>
+  </div>
+</main>
+<dialog id="card-dialog" aria-labelledby="dialog-title"><button type="button" class="dialog-close" aria-label="Close card preview">×</button><div class="dialog-layout"><img id="dialog-image" alt=""><div><p class="eyebrow">EXACT PRINTING</p><h2 id="dialog-title"></h2><p id="dialog-set"></p><p id="dialog-artist"></p><p id="dialog-type"></p><a id="dialog-source" target="_blank" rel="noopener noreferrer">View on Scryfall ↗</a><button id="dialog-select" type="button" class="primary">Use this card</button></div></div></dialog>
+<script id="catalog" type="application/json">@@CATALOG@@</script><script id="brief-template" type="application/json">@@BRIEF@@</script><script>@@JS@@</script>
+</body></html>

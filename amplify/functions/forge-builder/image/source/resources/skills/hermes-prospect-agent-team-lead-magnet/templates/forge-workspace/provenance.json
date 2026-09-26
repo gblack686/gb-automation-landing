@@ -1,0 +1,20 @@
+{
+  "source_commit": "788f6d51adaab0e00886d51ec4508e946dd8d572",
+  "source_path": "artifacts/nexus-forge-window-preview-2026-09-18",
+  "selected_design": "studio",
+  "adaptation": "Preserve the selected Forge window manager and CSS. Replace snapshot content with one validated expert draft. Bundle fonts and logo for offline HTML. No avatar art, backend, model or execution adapter.",
+  "copied_files": {
+    "workshop.css": "c60586daa15e21b5741a0d68bb8f9edd7d59148a8dfb1e1895a79f668966b3d1",
+    "designs.css": "1df3c61a9e32a16e5a41f50f8d1ac8e3abe43a579e8fb7d08f3ce2105fd09c2b",
+    "mode.css": "01acdfa158cce241f87ae79b7ea2c0c0a600c2336d40aca2944c16c2e915ae77",
+    "assets/fonts.css": "49e878f574ddfdd2a335186876014574d0dbb5876d04c3b940c424726c27db8c",
+    "assets/gb-signature.png": "ccc593ef48d9c40041acbcd45e877ad084d02c323335192added215f32770af0",
+    "assets/font-0.ttf": "1b08e7fc267a5c7e1d614100f604b83e7e8a0be241f0f288faa2b3ac93a683ba",
+    "assets/font-1.ttf": "8c883f63b2c4157d997319f2c8bc6995ed4357ef371940d31ca159004a4aae63",
+    "assets/font-2.ttf": "e7a1aaf7eda9f2fad4131725fa556265ec75ca7b2d756260173a040363e8d4f7",
+    "assets/font-3.ttf": "b37284b5701b6b168dfc770aa1a4ac492106422fd3ba76bc7641e37434e8019c",
+    "assets/font-4.ttf": "a7a0a9114e29fbf6e83a339ed930d5d8ae69fe4217c34fdd95386d995929d6e8",
+    "assets/font-5.ttf": "b8f5e0a8bdd6a12c722ca5635d9da87e77ccbb2d0172112e34e00c4e55f2cd5a",
+    "assets/font-6.ttf": "68c4493c7c6c9aaff48defeeb6408e7ce705efc4c33363de4d9d6f5e07775064"
+  }
+}

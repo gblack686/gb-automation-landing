@@ -3,6 +3,7 @@ import { Hub } from 'aws-amplify/utils';
 import { signOut } from 'aws-amplify/auth';
 import { readAtlas } from '../lib/forgeAtlasClient';
 import ForgeVisualStudio from '../components/ForgeVisualStudio';
+import ForgeExpertBuilder from '../components/ForgeExpertBuilder';
 import {visualRequest,visualAsset} from '../lib/forgeVisualClient';
 
 const CSP = "default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval'; style-src 'unsafe-inline'; img-src data: blob:; font-src data:; frame-src 'self' about: blob:; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'";
@@ -13,6 +14,7 @@ export default function ForgeAtlas() {
  const [error,setError] = useState('');
  const [attempt,setAttempt] = useState(0);
  const [visual,setVisual]=useState(null);
+ const [builder,setBuilder]=useState(()=>new URLSearchParams(window.location.search).get('window')==='tasks');
  useEffect(() => {
   let active = true;
   const abort = new AbortController();
@@ -22,12 +24,15 @@ export default function ForgeAtlas() {
    if (event.source !== frame.current?.contentWindow || event.origin !== 'null'
        || message?.type !== 'forge-atlas.request.v1' || message.channel !== channel
        || typeof message.id !== 'string' || !/^\d{1,9}$/.test(message.id)
-       || !['atlas','planning','history','approvalSnapshot','proposals','proposal','visualOpen','visualActive'].includes(message.view) || JSON.stringify(message).length > 18000) return;
+       || !['atlas','planning','history','approvalSnapshot','proposals','proposal','visualOpen','visualActive','builderOpen'].includes(message.view) || JSON.stringify(message).length > 18000) return;
    if (pending.has(message.view)) return;
    pending.add(message.view);
    let payload,ok = false;
    try {
-    if(message.view==='visualOpen'){
+    if(message.view==='builderOpen'){
+     if(message.input&&Object.keys(message.input).length)throw Error('Builder identity is host-owned');
+     setBuilder(true);payload={opened:true};
+    }else if(message.view==='visualOpen'){
      const brief=message.input?.brief;
      if(brief&&(brief.expert?.tenant_id!=='gbautomation'||brief.expert?.expert_id!=='artist-packet-expert'))throw Error('Wrong expert');
      setVisual({brief:brief||null});payload={opened:true};
@@ -48,7 +53,7 @@ export default function ForgeAtlas() {
   };
   window.addEventListener('message',receive);
   const stopAuth = Hub.listen('auth',({payload}) => {
-   if (payload.event === 'signedOut') { active = false; abort.abort(); setHtml(''); setVisual(null); window.location.assign('/login?next=%2Fatlas%2Fartist-packet-expert'); }
+   if (payload.event === 'signedOut') { active = false; abort.abort(); setHtml(''); setVisual(null);setBuilder(false); window.location.assign('/login?next=%2Fatlas%2Fartist-packet-expert'); }
   });
   (async () => {
    setError(''); setHtml('');
@@ -79,9 +84,10 @@ export default function ForgeAtlas() {
  </main>;
  return <><header className="forge-host-header" style={{position:'fixed',inset:'0 0 auto',height:40,zIndex:110,display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0 16px',background:'#191919',color:'#F3F1E7',fontSize:12}}>
   <span className="forge-host-name">Agent Forge · Private workspace</span>
-  <nav style={{display:'flex',gap:20}}><a href="/atlas/artist-packet-expert?window=presence">Avatar</a><button onClick={()=>setVisual({brief:null})}>Avatar jobs</button><a href="/atlas/artist-packet-expert?window=proposals">Proposals</a><button onClick={() => signOut()}>Sign out</button></nav>
+  <nav style={{display:'flex',gap:20}}><a href="/atlas/artist-packet-expert?window=presence">Avatar</a><button onClick={()=>setVisual({brief:null})}>Avatar jobs</button><button onClick={()=>setBuilder(true)}>Expert Config Builder</button><a href="/atlas/artist-packet-expert?window=proposals">Proposals</a><button onClick={() => signOut()}>Sign out</button></nav>
  </header><iframe ref={frame} name={`forge-atlas:${channel}`} title="Artist Packet Expert Atlas" srcDoc={html}
   sandbox="allow-scripts allow-downloads allow-popups allow-popups-to-escape-sandbox"
   referrerPolicy="no-referrer" style={{position:'fixed',inset:'40px 0 0',width:'100%',height:'calc(100dvh - 40px)',border:0,zIndex:100}} />
-  {visual&&<ForgeVisualStudio brief={visual.brief} onClose={()=>setVisual(null)} onAdopt={()=>frame.current?.contentWindow?.postMessage({type:'forge-visual.updated.v1',channel},'*')}/>}</>;
+  {visual&&<ForgeVisualStudio brief={visual.brief} onClose={()=>setVisual(null)} onAdopt={()=>frame.current?.contentWindow?.postMessage({type:'forge-visual.updated.v1',channel},'*')}/>}
+  {builder&&<ForgeExpertBuilder onClose={()=>setBuilder(false)}/>}</>;
 }

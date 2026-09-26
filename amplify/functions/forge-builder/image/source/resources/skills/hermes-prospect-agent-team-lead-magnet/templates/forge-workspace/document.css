@@ -1,0 +1,122 @@
+/* Customer design-document adaptations; the selected Studio window CSS stays intact. */
+body {color:var(--panel-text);font-family:Inter,sans-serif}
+button,input,textarea,select {font:inherit}
+button {cursor:pointer}
+.forge h1,.forge h2,.forge h3,.forge h4 {margin:0;line-height:1.2}
+.forge p {line-height:1.65}
+.forge pre {white-space:pre-wrap;overflow-wrap:anywhere}
+.forge code {overflow-wrap:anywhere}
+.forge .header-end {margin-left:auto}
+.forge .config-links {display:flex;flex-wrap:wrap;gap:6px;margin:14px 0}
+.forge .field-link {border:1px solid var(--panel-line);background:var(--input-surface);color:var(--quiet-accent);padding:5px 8px;border-radius:5px;font:11px/1.5 ui-monospace,monospace;overflow-wrap:anywhere;text-align:left;max-width:100%}
+.forge .design-points {padding-left:20px;margin:12px 0;font-size:14px;line-height:1.7}
+.forge .design-points li {padding:5px 0}
+.forge .expert-presence {padding:22px;color:var(--panel-text)}
+.forge .presence-body {overflow-y:auto!important}
+.forge .expert-portrait {display:block;width:100%;height:100%;max-height:320px;min-height:160px;object-fit:contain;background:var(--code-surface);flex:none}
+.forge .avatar-credit {display:block;font-size:11px;color:var(--panel-muted);line-height:1.5;margin-top:12px}
+.forge .portrait-credit {position:relative;flex:none;background:var(--code-surface);outline-offset:-3px}
+.forge .portrait-credit:focus-visible {outline:2px solid var(--terracotta)}
+.forge .portrait-info {position:absolute;right:10px;bottom:10px;background:var(--panel-surface,#191919);color:var(--panel-text);border:1px solid var(--panel-line);border-radius:50%;width:24px;height:24px;display:grid;place-items:center;font-size:13px}
+.forge #avatar-tooltip {position:absolute;bottom:10px;left:10px;right:42px;padding:10px 12px;border:1px solid var(--panel-line);background:var(--code-surface);color:var(--panel-text);font-size:12px;line-height:1.5;border-radius:7px;visibility:hidden;z-index:2;box-shadow:0 4px 18px #0003}
+.forge .portrait-credit:not(.credit-dismissed):is(:hover,:focus-within) #avatar-tooltip {visibility:visible}
+.forge #window-atlas .window-body,.forge #window-table .window-body {padding:16px}
+.forge .layout-label {display:block}
+.forge #layout-select {min-width:128px}
+.forge .workspace-actions {flex-wrap:wrap}
+.forge .atlas-table-shell {height:100%;min-height:0;min-width:0;display:flex;flex-direction:column}
+.forge .atlas-table-shell > :not(.atlas-table-scroll) {flex:none}
+.forge .atlas-table-shell .atlas-table-scroll {flex:1;min-height:0;max-height:none}
+.forge .atlas-table-shell .atlas-table {min-width:410px}
+.forge .atlas-table-shell th {position:sticky;top:0;background:var(--code-surface);z-index:1}
+.forge .atlas-table-toolbar {display:flex;align-items:center;justify-content:space-between;gap:12px}
+.forge .atlas-table-toolbar .panel-button {font-size:12px;flex:none}
+.forge #table-summary {margin:10px 0}
+.forge #table-empty:empty {display:none}
+.forge .atlas-shell {width:100%;height:100%;min-width:0;display:flex;flex-direction:column}
+.forge .atlas-shell > :not(#atlas-plot) {flex:none}
+.forge .atlas-heading {display:flex;align-items:center;justify-content:space-between;gap:10px}
+.forge #window-atlas .atlas-heading h3,.forge #window-table .atlas-heading h3 {font-size:19px}
+.forge #atlas-status,.forge #table-status {font-size:11px;line-height:1.5;margin:6px 0 10px;color:var(--panel-muted)}
+.forge .atlas-fold {border-block:1px solid var(--panel-line);font-size:12px}
+.forge .atlas-fold summary {cursor:pointer;padding:10px 0;line-height:1.5}
+.forge .atlas-fold summary strong {font-weight:500}
+.forge .atlas-fold summary span {margin-left:10px;color:var(--panel-muted);font-size:11px}
+.forge .atlas-fold summary:focus-visible {outline:2px solid var(--terracotta);outline-offset:2px}
+.forge .atlas-controls {display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:10px;margin:2px 0 10px}
+.forge .atlas-controls label {font-size:12px;min-width:0}
+.forge .atlas-controls select {display:block;width:100%;min-width:0;margin-top:5px;padding:8px;border:1px solid var(--panel-line);border-radius:6px;background:var(--input-surface);color:var(--panel-text)}
+.forge .atlas-actions {display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.forge .atlas-actions .panel-button {padding:6px 10px;font-size:12px}
+.forge #atlas-plot {min-width:0;width:100%;min-height:240px;flex:1;display:flex;align-items:center;justify-content:center}
+.forge #atlas-empty:empty {display:none}
+.forge #atlas-empty {margin:8px 0;font-size:12px}
+.forge .atlas-scope {margin:8px 0 12px;font-size:11px}
+.forge .atlas-table-scroll {overflow:auto;max-height:240px}
+.forge .atlas-table {width:100%;border-collapse:collapse;font-size:12px}
+.forge .atlas-table caption {text-align:left;color:var(--panel-muted);font-size:11px;line-height:1.5;padding-bottom:10px}
+.forge .atlas-table th,.forge .atlas-table td {text-align:left;border-bottom:1px solid var(--panel-line);padding:7px}
+.forge .atlas-table button {background:transparent;border:0;color:var(--quiet-accent);padding:4px}
+.forge .atlas-table .is-selected {background:var(--selection-fill)}
+.forge .atlas-actions button:disabled {opacity:.6;cursor:default}
+.forge.gallery .window[data-window=atlas] {height:640px!important}
+@media(max-width:899px){.forge:not(.gallery) .window:is([data-window=atlas],[data-window=table]){height:560px!important}}
+.forge .expert-monogram {width:52px;height:52px;display:grid;place-items:center;font-size:30px;border-radius:12px;background:var(--terracotta);color:var(--ink);margin-bottom:16px}
+.forge .expert-presence h3 {margin-top:10px;font-size:25px}
+.forge .expert-presence p {font-size:14px;margin:10px 0}
+.forge .expert-presence .config-links {margin-bottom:0}
+.forge .expert-workflow {padding:0;list-style:none;margin:18px 0}
+.forge .expert-workflow li {display:flex;gap:16px;border-top:1px solid var(--panel-line);padding:15px 0}
+.forge .expert-workflow li>span {color:var(--quiet-accent);font-size:13px;padding-top:2px}
+.forge .expert-workflow p {font-size:14px;margin:6px 0 0}
+.forge .config-field {margin:14px 0;border-top:1px solid var(--panel-line);padding-top:14px;font-size:13px}
+.forge .config-field summary {cursor:pointer;overflow-wrap:anywhere}
+.forge .config-field pre {background:var(--code-surface);padding:12px;border-radius:7px;line-height:1.6}
+.forge .reference-list {padding-left:17px;font-size:12px;line-height:1.8;overflow-wrap:anywhere}
+.forge .reference-list li {margin:8px 0}
+.forge .source-note {margin-top:22px}
+.forge .source-note p {font-size:12px;margin:5px 0 0}
+.forge #yaml-preview {font-size:13px;line-height:1.7;margin-top:20px}
+.forge .yaml-line.highlight {background:var(--selection-fill);outline:2px solid var(--terracotta)}
+.forge .check-row {gap:8px;justify-content:space-between}
+.forge .check-row span:last-child {font-size:11px}
+.forge .window-body h3 {font-size:23px}
+.forge .canvas-content h3 {font-size:32px}
+.forge .window-body .panel-notice {font-size:12px;line-height:1.6}
+.forge .doc-stats span {display:block;font-size:12px;color:var(--panel-muted)}
+.forge .app-header .brand {color:inherit;text-decoration:none}
+.forge .canvas-tabs span {font-size:10px}
+.forge .canvas-content .config-links {margin-bottom:20px}
+.forge .meeting-note {padding:12px;border:1px solid var(--panel-line);margin:10px 0;border-radius:7px;overflow-wrap:anywhere}
+.forge .meeting-note button {display:block;font-size:11px;margin-top:5px}
+@media(max-width:899px){.forge .app-header{height:auto;min-height:64px;flex-wrap:wrap;padding:12px 14px}.forge .product-name{font-size:15px}.forge .header-end{gap:4px}.forge .brand-logo{width:24px}.forge .header-divider{display:none}.forge .download-config{font-size:12px}.forge .window[data-window=canvas]{order:-2;height:640px!important}.forge .window[data-window=presence]{order:-3}.forge .window[data-window=checks]{order:-1}.forge.gallery .window{height:600px!important}.forge.gallery .window[data-window=canvas]{height:700px!important}.forge .app-status{flex-wrap:wrap}.forge .gallery-intro h1{font-size:30px}}
+@media(max-width:420px){.forge .brand{display:none}.forge .product-name{font-size:16px}.forge #mode-toggle{font-size:12px}.forge .window-body h3{font-size:22px}.forge .canvas-content h3{font-size:29px}}
+@media print{body.forge{height:auto;overflow:visible;background:white;color:black}.forge .app-header,.forge .workspace-actions,.forge .window-dock,.forge .window-controls,.forge .app-status,.forge .review-strip,.forge .chat-input{display:none!important}.forge #workspace{display:block!important;height:auto;margin:0}.forge .window,.forge .window[hidden]{display:block!important;position:static!important;width:auto!important;height:auto!important;break-inside:avoid;margin-bottom:20px}.forge .window-body{overflow:visible!important}.forge .canvas-grid,.forge .workspace-watermark{display:none}}
+
+/* Planning views reuse the workspace theme in both modes. */
+.forge .planning-actions{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.forge .planning-card{padding:16px 0;border-top:1px solid var(--panel-line);overflow-wrap:anywhere}
+.forge .planning-card h4{font-size:17px;margin:10px 0}
+.forge .planning-card .tiny{line-height:1.6}
+.forge .planning-card details>summary{cursor:pointer;font-size:13px;padding:10px 0}
+.forge .requirement{border-top:1px solid var(--panel-line);padding:8px 0;font-size:13px;line-height:1.65}
+.forge .example-card{border-left:2px solid var(--quiet-accent);padding-left:14px;margin-top:14px}
+.forge .kanban-board{display:flex;gap:12px;overflow:auto;max-width:100%;padding:12px 0 16px;min-height:220px}
+.forge .kanban-column{flex:1 0 195px;min-width:0;background:var(--code-surface);padding:12px;border:1px solid var(--panel-line);border-radius:8px}
+.forge .kanban-column>h4{font:600 12px/1.5 Inter,sans-serif;display:flex;justify-content:space-between;gap:16px}
+.forge .kanban-column>h4 span{color:var(--panel-muted)}
+.forge .kanban-card{padding:12px;margin-top:12px;border:1px solid var(--panel-line);border-radius:6px;background:var(--input-surface);overflow-wrap:anywhere}
+.forge .kanban-card h5{font-size:14px;margin:8px 0;line-height:1.5}
+.forge .kanban-card button{font-size:12px;text-align:left;max-width:100%;overflow-wrap:anywhere}
+.forge #planning-dialog{width:min(1100px,calc(100vw - 32px));max-width:calc(100vw - 32px);max-height:90vh;padding:28px;background:var(--code-surface);color:var(--panel-text);border:1px solid var(--panel-line)}
+.forge #planning-dialog iframe{width:100%;height:65vh;border:1px solid var(--panel-line);background:#F3F1E7;margin-top:12px}
+.forge #planning-dialog pre{padding:16px;background:var(--input-surface);font-size:12px;line-height:1.6}
+.forge #planning-dialog h2{padding-right:28px;font-size:26px}
+.forge #planning-dialog::backdrop{background:#0008}
+.forge #planning-refresh:disabled{opacity:.55;cursor:default}
+@media(max-width:420px){.forge #planning-dialog{padding:18px}.forge .kanban-column{flex-basis:175px}}
+/* Private session explorer, adapted from Atlas's pinned inspector navigation. */
+.history-card{border:1px solid var(--line, #7775);border-radius:10px;padding:14px;margin:12px 0;overflow-wrap:anywhere}
+.history-card h4{margin:0 0 8px}.history-card .panel-button{margin:6px 8px 0 0}
+.history-message{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;font-size:13px;line-height:1.6;max-height:320px;overflow:auto;margin:10px 0;padding:12px;background:#8881;border-radius:8px}
+#history-breadcrumb{overflow-wrap:anywhere}#history-breadcrumb .panel-button{margin:6px 8px 0 0}.history-empty{padding:24px 0}

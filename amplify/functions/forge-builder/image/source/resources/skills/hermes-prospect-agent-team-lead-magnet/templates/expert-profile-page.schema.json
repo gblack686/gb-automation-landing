@@ -1,0 +1,226 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Single expert lead-magnet page input",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "config",
+    "avatar",
+    "tagline",
+    "audience",
+    "source_note",
+    "sections",
+    "workflow"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "expert-profile-page.v1"
+    },
+    "atlas_snapshot_path": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 240,
+      "description": "Optional bounded Supabase snapshot inside the profile directory, verified against this exact agent ID."
+    },
+    "config": {
+      "type": "object",
+      "description": "Validated separately against the canonical agent_expert_config.v1 schema."
+    },
+    "avatar": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "image_path",
+        "alt",
+        "origin"
+      ],
+      "properties": {
+        "image_path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240,
+          "description": "PNG, JPEG or WebP inside the input profile directory. Embedded into HTML; the private file path is not published."
+        },
+        "alt": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "origin": {
+          "enum": [
+            "generated",
+            "provided",
+            "fixture"
+          ]
+        },
+        "generator_model": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "seed_card": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "name",
+            "artist",
+            "scryfall_uri"
+          ],
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "artist": {
+              "type": "string",
+              "minLength": 1
+            },
+            "scryfall_uri": {
+              "type": "string",
+              "pattern": "^https://scryfall\\.com/card/"
+            }
+          }
+        }
+      }
+    },
+    "tagline": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 300
+    },
+    "audience": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 300
+    },
+    "source_note": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1000
+    },
+    "sections": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "purpose",
+        "context",
+        "skills",
+        "commands",
+        "runtime",
+        "connections",
+        "validation",
+        "approval"
+      ],
+      "properties": {
+        "purpose": {
+          "$ref": "#/$defs/section"
+        },
+        "context": {
+          "$ref": "#/$defs/section"
+        },
+        "skills": {
+          "$ref": "#/$defs/section"
+        },
+        "commands": {
+          "$ref": "#/$defs/section"
+        },
+        "runtime": {
+          "$ref": "#/$defs/section"
+        },
+        "connections": {
+          "$ref": "#/$defs/section"
+        },
+        "validation": {
+          "$ref": "#/$defs/section"
+        },
+        "approval": {
+          "$ref": "#/$defs/section"
+        }
+      }
+    },
+    "workflow": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "title",
+          "description"
+        ],
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          }
+        }
+      }
+    },
+    "planning": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tenant_id"
+      ],
+      "properties": {
+        "tenant_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "pattern": "^[a-z0-9][a-z0-9_-]{0,119}$"
+        },
+        "board_slug": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "pattern": "^[a-z0-9][a-z0-9_-]{0,119}$"
+        },
+        "snapshot_path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        },
+        "artifacts_manifest_path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        }
+      }
+    }
+  },
+  "$defs": {
+    "section": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "summary",
+        "points"
+      ],
+      "properties": {
+        "summary": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1500
+        },
+        "points": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 800
+          }
+        }
+      }
+    }
+  }
+}

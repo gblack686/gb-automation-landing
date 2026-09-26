@@ -1,0 +1,9 @@
+{
+  "schema_version": "expert-data-surfaces.v1",
+  "expert_id": "{{TREE}}/{{EXPERT}}",
+  "title": "{{EXPERT}} data catalog",
+  "maintenance": {"cadence": "nightly_and_after_migrations", "max_age_hours": 30},
+  "connections": [],
+  "external_surfaces": [],
+  "limitations": ["Declare the expert's actual data footprint before registering this catalog."]
+}
