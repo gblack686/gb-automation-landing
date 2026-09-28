@@ -66,8 +66,9 @@ jobs:
       - name: Prove restart, quota and deterministic packet generation
         run: |
           mkdir -p artifacts/forge-atlas-validation/builder-proof
-          docker run --rm --network none --read-only --tmpfs /tmp --mount type=bind,source="$PWD/artifacts/forge-atlas-validation/builder-proof",target=/proof --entrypoint forge-python gbauto-forge-builder:ci apps/forge-builder-host/test/make_fixture.py /proof/bootstrap
-          docker run --rm --network none --read-only --tmpfs /tmp --mount type=bind,source="$PWD/artifacts/forge-atlas-validation/builder-proof/bootstrap",target=/bootstrap,readonly --mount type=bind,source="$PWD/artifacts/forge-atlas-validation/builder-proof",target=/proof --entrypoint node gbauto-forge-builder:ci apps/forge-builder-host/test/integration.mjs /bootstrap /proof
+          docker run --rm --user "$(id -u):$(id -g)" --network none --read-only --tmpfs /tmp --mount type=bind,source="$PWD/artifacts/forge-atlas-validation/builder-proof",target=/proof --entrypoint forge-python gbauto-forge-builder:ci apps/forge-builder-host/test/make_fixture.py /proof/bootstrap
+          docker run --rm --user "$(id -u):$(id -g)" --network none --read-only --tmpfs /tmp --mount type=bind,source="$PWD/artifacts/forge-atlas-validation/builder-proof/bootstrap",target=/bootstrap,readonly --mount type=bind,source="$PWD/artifacts/forge-atlas-validation/builder-proof",target=/proof --entrypoint node gbauto-forge-builder:ci apps/forge-builder-host/test/integration.mjs /bootstrap /proof
+          test -r artifacts/forge-atlas-validation/builder-proof/package/package.zip
       - run: python -m py_compile scripts/validate-forge-atlas-live.py
       - name: Local build configuration
         run: |
