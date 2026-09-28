@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 from email.message import EmailMessage
@@ -12,12 +13,14 @@ WINDOWS = frozenset({"skills", "commands", "presence", "chat", "canvas", "propos
                      "config", "knowledge", "tasks", "artifacts", "console", "changes"})
 
 
-def validate_acceptance(receipt: dict, acceptance: dict) -> None:
+def validate_acceptance(receipt: dict, acceptance: dict, recipient: str) -> None:
     if acceptance.get("schema_version") != "forge-hosted-acceptance.v1":
         raise ValueError("hosted_acceptance_receipt_required")
     for field in ("tenant_id", "agent_id", "packet_id", "repository", "commit"):
         if acceptance.get(field) != receipt.get(field):
             raise ValueError("hosted_acceptance_binding_mismatch")
+    if acceptance.get("recipient_email", "").lower() != recipient.lower() or acceptance.get("github_user") != receipt.get("github_user"):
+        raise ValueError("customer_handoff_binding_mismatch")
     if acceptance.get("portal_url") != f"https://gbautomation.xyz/atlas/{receipt['agent_id']}":
         raise ValueError("hosted_portal_readback_required")
     if acceptance.get("status") != "verified" or acceptance.get("login") != "verified" or acceptance.get("repo_access") != "verified" or acceptance.get("packet_download") != "verified":
@@ -45,12 +48,14 @@ def compose(receipt: dict, recipient: str, acceptance: dict) -> EmailMessage:
         raise ValueError("repository_readback_required")
     if not re.fullmatch(r"[A-Za-z0-9-]{1,39}", receipt.get("github_user") or "") or receipt.get("customer_access") not in {"invited", "active"}:
         raise ValueError("customer_github_access_required")
-    validate_acceptance(receipt, acceptance)
+    validate_acceptance(receipt, acceptance, recipient)
     portal = f"https://gbautomation.xyz/atlas/{agent}"
     message = EmailMessage()
     message["From"] = "greg@gbautomation.xyz"
     message["To"] = recipient
     message["Subject"] = f"Your Agent Forge workspace and source - {agent}"
+    identity = f"{receipt['packet_id']}:{receipt['commit']}:{recipient.lower()}".encode()
+    message["Message-ID"] = f"<{hashlib.sha256(identity).hexdigest()}@forge.gbautomation.xyz>"
     message.set_content(f"""Your agent source and private Forge workspace are ready for review.\n\nAgent Forge: {portal}\nPrivate GitHub repository: {expected}\n\nTo download the source:\n1. Accept the GitHub invitation for the account you gave us and sign in.\n2. Open the private repository link above.\n3. Select Code, then Download ZIP. Extract it on your computer.\n\nTo download the generated agent packet and view live status:\n1. Sign in to Agent Forge with your registered email using the workspace link above.\n2. Select {agent} in the Registered agents dropdown.\n3. Open the Artifacts window and download the package.\n\nReply to this email if either link or your login does not work.\n\nRepository commit: {receipt['commit']}\n""")
     return message
 

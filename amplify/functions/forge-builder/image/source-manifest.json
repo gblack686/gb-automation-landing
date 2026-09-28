@@ -1,7 +1,7 @@
 {
   "schema_version": "forge-builder-source.v1",
   "source_repository": "gbauto/gbautomation",
-  "source_base_commit": "a46dc04ec5244293a98575db228db2aa83ebf6d4",
+  "source_base_commit": "643ffb55778a2d287aa67f1af9faa0a170c16d8d",
   "files": [
     {
       "path": "apps/forge-approval-pilot/.local-assets/turntable.js",
@@ -120,8 +120,8 @@
     },
     {
       "path": "apps/forge-builder-host/compose_handoff.py",
-      "sha256": "549cc9e574682aa35fac2596d494a0f0ca07277b22d1dd8c21bbe8a04183a148",
-      "bytes": 4568
+      "sha256": "8a8f9f198af37a075a0a5faae6e0093c58f7d983965570a95dcb1f465d26d40e",
+      "bytes": 4995
     },
     {
       "path": "apps/forge-builder-host/export_voice_ledger.mjs",
@@ -179,6 +179,11 @@
       "bytes": 8479
     },
     {
+      "path": "apps/forge-builder-host/send_handoff.py",
+      "sha256": "0cf6349fb934c20a6610f3dd26578411d8ad1426b00a1b76942ca383b59cc350",
+      "bytes": 4893
+    },
+    {
       "path": "apps/forge-builder-host/snapshot.py",
       "sha256": "b8054f62246ae0608bea806802a447ce9e688b2cd25cad58db0b878fb66ab249",
       "bytes": 2335
@@ -195,8 +200,8 @@
     },
     {
       "path": "apps/forge-builder-host/test/test_compose_handoff.py",
-      "sha256": "1da7a689e17b2d779b84a3d381d6f5a569f98761c92cb44883e4c1370ad7f662",
-      "bytes": 2624
+      "sha256": "84bfe00b650d7bd193e89b5559b3b48227a2c9566c9692ca89c40103ead42f08",
+      "bytes": 2728
     },
     {
       "path": "apps/forge-builder-host/test/test_provision_repository.py",
@@ -212,6 +217,11 @@
       "path": "apps/forge-builder-host/test/test_release.py",
       "sha256": "883443c2a6f09ebc39f807a4614e79db364fe1464c5fe91e08ce8dc17f024e29",
       "bytes": 1705
+    },
+    {
+      "path": "apps/forge-builder-host/test/test_send_handoff.py",
+      "sha256": "d2b11049a259845811a8dc27840a62cf3df51478c70096c6f95fcd154c4298aa",
+      "bytes": 3348
     },
     {
       "path": "apps/forge-builder-host/test/test_snapshot.py",
@@ -1750,5 +1760,5 @@
     }
   ],
   "dockerfile_sha256": "1634b68b1308d9df398f0b62d9e01dcc313e593dd7c05210684d1eabe3e68a28",
-  "sha256": "e634b08908839c1864c584afcd860acfb54078734544101911a2230164b1d78e"
+  "sha256": "d5d19c3dbce64d9e20265c68b5773192a8577702a593285860824f43c8657346"
 }

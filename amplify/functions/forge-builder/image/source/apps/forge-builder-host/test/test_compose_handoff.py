@@ -17,6 +17,7 @@ class HandoffEmailTest(unittest.TestCase):
         acceptance = {'schema_version':'forge-hosted-acceptance.v1', 'status':'verified',
                       'tenant_id':receipt['tenant_id'], 'agent_id':receipt['agent_id'],
                       'packet_id':receipt['packet_id'], 'repository':receipt['repository'],
+                      'recipient_email':'greg+forge-test@gbautomation.xyz', 'github_user':'forge-test',
                       'commit':receipt['commit'], 'portal_url':'https://gbautomation.xyz/atlas/artist-packet-expert',
                       'login':'verified', 'repo_access':'verified', 'packet_download':'verified',
                       'registry_source':'s3', 'registered_agents':['artist-packet-expert'],
