@@ -43,6 +43,8 @@ def compose(receipt: dict, recipient: str, acceptance: dict) -> EmailMessage:
     expected = f"https://github.com/{repo}"
     if receipt.get("url") != expected or not re.fullmatch(r"[a-f0-9]{40}", receipt.get("commit") or ""):
         raise ValueError("repository_readback_required")
+    if not re.fullmatch(r"[A-Za-z0-9-]{1,39}", receipt.get("github_user") or "") or receipt.get("customer_access") not in {"invited", "active"}:
+        raise ValueError("customer_github_access_required")
     validate_acceptance(receipt, acceptance)
     portal = f"https://gbautomation.xyz/atlas/{agent}"
     message = EmailMessage()

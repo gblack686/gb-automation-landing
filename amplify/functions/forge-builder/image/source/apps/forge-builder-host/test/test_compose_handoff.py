@@ -13,7 +13,7 @@ class HandoffEmailTest(unittest.TestCase):
                    'repository': 'gbauto/gbautomation-artist-packet-expert',
                    'tenant_id': 'gbautomation', 'packet_id': 'b' * 64,
                    'agent_id': 'artist-packet-expert', 'url': 'https://github.com/gbauto/gbautomation-artist-packet-expert',
-                   'commit': 'a' * 40}
+                   'commit': 'a' * 40, 'github_user':'forge-test', 'customer_access':'invited'}
         acceptance = {'schema_version':'forge-hosted-acceptance.v1', 'status':'verified',
                       'tenant_id':receipt['tenant_id'], 'agent_id':receipt['agent_id'],
                       'packet_id':receipt['packet_id'], 'repository':receipt['repository'],

@@ -18,6 +18,7 @@ ALLOWED_TOP = {"agent-expert-config.json", "expert-config.yaml"}
 SLUG = re.compile(r"^[a-z][a-z0-9-]{2,62}$")
 SHA = re.compile(r"^[a-f0-9]{64}$")
 OWNER = "gbauto"
+GITHUB_USER = re.compile(r"^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?$")
 
 
 def sha(data: bytes) -> str:
@@ -110,8 +111,10 @@ def require_hosted_approval(record: dict, packet_id: str | None, intake_version:
         raise ValueError("hosted_approval_evidence_required")
 
 
-def apply(destination: Path, record: dict) -> dict:
+def apply(destination: Path, record: dict, github_user: str) -> dict:
     repo = record["repository"]
+    if not GITHUB_USER.fullmatch(github_user):
+        raise ValueError("github_customer_required")
     # Exact target only. A pre-existing repository is never overwritten by this command.
     probe = subprocess.run(["gh", "api", f"repos/{repo}", "--jq", ".full_name"],
                            capture_output=True, text=True, encoding="utf-8", timeout=30)
@@ -132,7 +135,20 @@ def apply(destination: Path, record: dict) -> dict:
     remote = json.loads(run(["gh", "api", f"repos/{repo}/commits/main"]))
     if remote.get("sha") != head:
         raise RuntimeError("repository_commit_readback_failed")
-    record.update({"state": "created", "commit": head, "url": created["html_url"]})
+    invitation = run(["gh", "api", "-X", "PUT", f"repos/{repo}/collaborators/{github_user}",
+                      "-f", "permission=pull"])
+    if invitation:
+        invite = json.loads(invitation)
+        if invite.get("invitee", {}).get("login", "").lower() != github_user.lower() or invite.get("permissions") != "read":
+            raise RuntimeError("customer_invitation_readback_failed")
+        access = "invited"
+    else:
+        permission = json.loads(run(["gh", "api", f"repos/{repo}/collaborators/{github_user}/permission"]))
+        if permission.get("permission") not in {"read", "write", "admin"}:
+            raise RuntimeError("customer_access_readback_failed")
+        access = "active"
+    record.update({"state": "created", "commit": head, "url": created["html_url"],
+                   "github_user": github_user, "customer_access": access})
     return record
 
 
@@ -143,13 +159,14 @@ def main() -> None:
     parser.add_argument("--apply", action="store_true")
     parser.add_argument("--expected-packet-id")
     parser.add_argument("--expected-intake-version", type=int)
+    parser.add_argument("--github-user")
     args = parser.parse_args()
     with tempfile.TemporaryDirectory(prefix="forge-repo-") as tmp:
         staged = Path(tmp) / "source"
         record = prepare(args.packet.resolve(), staged)
         if args.apply:
             require_hosted_approval(record, args.expected_packet_id, args.expected_intake_version)
-            record = apply(staged, record)
+            record = apply(staged, record, args.github_user or "")
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(json.dumps(record, indent=2, sort_keys=True) + "\n", encoding="utf-8")
         print(json.dumps({"state": record["state"], "repository": record["repository"], "packet_id": record["packet_id"], "files": len(record["files"]), "receipt": str(args.output)}))
