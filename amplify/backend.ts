@@ -30,6 +30,7 @@ const backend = defineBackend({
 const atlasStack = Stack.of(backend.forgeAtlas.resources.lambda);
 const atlasDocuments = atlasStorage(atlasStack);
 atlasDocuments.grantRead(backend.forgeAtlas.resources.lambda, 'gbautomation/artist-packet-expert/index.html');
+atlasDocuments.grantRead(backend.forgeAtlas.resources.lambda, 'gbautomation/youtube-intel/index.html');
 backend.forgeAtlas.addEnvironment('DOCUMENT_BUCKET', atlasDocuments.bucketName);
 backend.forgeAtlas.addEnvironment('COGNITO_ISSUER', atlasIssuer(atlasStack,backend.auth.resources.userPool.userPoolId));
 backend.forgeAtlas.resources.lambda.addToRolePolicy(new PolicyStatement({

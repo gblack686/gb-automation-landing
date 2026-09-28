@@ -13,10 +13,12 @@ page.on('request',request=>{
  if (/\.s3\.[a-z0-9-]+\.amazonaws\.com/.test(request.url()) || request.postData()?.includes('forgeAtlasRead')) privateRequests.push(new URL(request.url()).hostname);
 });
 try {
- await page.goto(base+'/atlas/artist-packet-expert');
+ for(const expert of ['artist-packet-expert','youtube-intel']){
+ await page.goto(base+'/atlas/'+expert);
  await page.waitForURL(url=>url.pathname==='/login',{timeout:30000});
- assert.equal(new URL(page.url()).searchParams.get('next'),'/atlas/artist-packet-expert');
- assert.equal(await page.locator('iframe[title="Artist Packet Expert Atlas"]').count(),0);
+ assert.equal(new URL(page.url()).searchParams.get('next'),'/atlas/'+expert);
+ assert.equal(await page.locator('iframe').count(),0);
+ }
  assert.deepEqual(privateRequests,[]);
  assert.deepEqual(errors,[]);
  const result={ok:true,base,checks:['Production anonymous navigation redirects to login with return path','No private document or Atlas API request before authentication','No browser errors']};

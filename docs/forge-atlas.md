@@ -14,8 +14,11 @@ only activity, planning and paginated history reads. Session text stays in
 memory. The original offline document and loopback preview remain supported.
 Layout changes and document notes in the hosted sandbox last for that open tab.
 
-AppSync authenticates every read. The backend pins `gbautomation` and
-`artist-packet-expert`; caller-supplied tenant/expert/SQL is rejected. The
+AppSync authenticates every read. The backend pins `gbautomation` and resolves
+the selected workspace through `shared/forgeWorkspaces.json`; caller-supplied
+tenant, arbitrary expert and SQL are rejected. The default remains
+`artist-packet-expert`. See [YouTube workspace](forge-youtube-workspace.md) for
+the additional explicitly bound read-only expert. The
 service-only `agent_forge_atlas_read` RPC supplies existing session/message/trace,
 PRD and Kanban projections. Explicit ownership is required, with no profile-name
 fallback. The backend returns verified project-qualified Langfuse URLs. This is

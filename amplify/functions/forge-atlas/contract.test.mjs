@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { makeHandler, project, traceURL } from './contract.mjs';
+import { makeHandler, project, traceURL, workspaceFor } from './contract.mjs';
 const issuer = 'https://cognito-idp.us-east-1.amazonaws.com/us-east-1_test';
 // Envelope verified against the deployed InvokeFnForgeAtlasReadLambdaDataSource mapping.
 const event = input => ({identity:{claims:{iss:issuer,sub:'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa','cognito:groups':['tenant-gbautomation']}},typeName:'Query',fieldName:'forgeAtlasRead',arguments:{input}});
@@ -63,4 +63,27 @@ test('numeric metrics are bounded and unusable values remain unknown',() => {
  const result=project({view:'atlas'},{traces:[{row_key:'a',observed_at:'2026-09-22T00:00:00Z',tokens:'20',cost:-1,duration:'Infinity',events:null}],runs:[],sessions:[]});
  assert.equal(result.datasets.traces[0].row_key,'traces-1');assert.equal(result.datasets.traces[0].tokens,20);assert.equal(result.datasets.traces[0].cost,null);assert.equal(result.datasets.traces[0].duration,null);
  assert.throws(()=>project({view:'atlas'},{traces:Array(201),runs:[],sessions:[]}));
+});
+
+test('YouTube selection binds document, RPC, planning digest and review state',async()=>{
+ let selected,body;
+ const handler=makeHandler({issuer,document:async binding=>{selected=binding;return binding;},rpc:async input=>{body=input;return [];}});
+ const request=view=>event({view,workspace:'youtube-intel',...(view==='history'?{query:{view:'sessions'}}:{})});
+ assert.equal((await handler(request('document'))).payload.data.agent_id,'youtube-intel');
+ assert.equal(selected.config_sha256,workspaceFor('youtube-intel').config_sha256);
+ const history=(await handler(request('history'))).payload.data;
+ assert.equal(body.p_expert,'youtube-intel');assert.equal(body.p_tenant,'gbautomation');
+ assert.equal(history.agent_id,'youtube-intel');
+ assert.equal((await handler(request('approvalSnapshot'))).payload.data.connection.execution_enabled,false);
+ const planning=project({view:'planning',workspace:'youtube-intel'},{prds:[],cards:[]});
+ assert.equal(planning.config_sha256,selected.config_sha256);
+ assert.throws(()=>project({view:'planning',workspace:'youtube-intel'},{prds:[{client:'gbautomation',owner_expert:'artist-packet-expert'}],cards:[]}));
+});
+
+test('workspace selection is an explicit allowlist, not caller supplied ownership',async()=>{
+ let reads=0;const handler=makeHandler({issuer,document:async()=>{reads++;return {};}});
+ for(const workspace of [null,'','other-expert','expert-gbautomation-youtube-intel','../youtube-intel','__proto__','constructor',{},[]])
+  assert.equal((await handler(event({view:'document',workspace}))).payload.error,'invalid_request');
+ const foreign=event({view:'document',workspace:'youtube-intel'});foreign.identity.claims['cognito:groups']=['tenant-other'];
+ assert.equal((await handler(foreign)).payload.error,'tenant_access_required');assert.equal(reads,0);
 });

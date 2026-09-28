@@ -55,7 +55,8 @@ function App() {
           {/* Public — homepage + PRDs */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/atlas/artist-packet-expert" element={<RequireAuth allowedGroups={['tenant-gbautomation']}><ForgeAtlas /></RequireAuth>} />
+          <Route path="/atlas/artist-packet-expert" element={<RequireAuth allowedGroups={['tenant-gbautomation']}><ForgeAtlas expertId="artist-packet-expert" key="artist-packet-expert" /></RequireAuth>} />
+          <Route path="/atlas/youtube-intel" element={<RequireAuth allowedGroups={['tenant-gbautomation']}><ForgeAtlas expertId="youtube-intel" key="youtube-intel" /></RequireAuth>} />
           <Route path="/chat" element={<ChatRedirect />} />
           <Route path="/welcome" element={<WelcomePage />} />
           <Route path="/hub" element={<ClientHubPage />} />
