@@ -1,7 +1,7 @@
 import { GetSecretValueCommand, SecretsManagerClient } from '@aws-sdk/client-secrets-manager';
 import { GetObjectCommand, HeadObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { makeHandler, TENANT, EXPERT } from './contract.mjs';
+import { makeHandler, TENANT } from './contract.mjs';
 import { proposalPath, projectProposals } from './proposals.mjs';
 
 let secret: {url:string;key:string}|undefined;
@@ -38,13 +38,13 @@ async function proposals(request: {view:string;query:Record<string,unknown>}) {
  if (raw.length > 250000) throw Error('Response too large');
  return projectProposals(request,JSON.parse(raw),response.headers.get('content-range'));
 }
-async function document() {
+async function document(binding: {agent_id:string}) {
  const client = new S3Client({});
- const location = {Bucket:process.env.DOCUMENT_BUCKET,Key:`${TENANT}/${EXPERT}/index.html`};
+ const location = {Bucket:process.env.DOCUMENT_BUCKET,Key:`${TENANT}/${binding.agent_id}/index.html`};
  const head = await client.send(new HeadObjectCommand(location));
  const sha256 = head.Metadata?.sha256;
  if (!sha256 || !/^[a-f0-9]{64}$/.test(sha256) || !head.ContentLength || head.ContentLength > 16000000) throw Error('Document unavailable');
  const url = await getSignedUrl(client,new GetObjectCommand({...location,ResponseCacheControl:'private, no-store'}),{expiresIn:60});
- return {url,sha256,bytes:head.ContentLength,agent_id:EXPERT,tenant_id:TENANT};
+ return {url,sha256,bytes:head.ContentLength,agent_id:binding.agent_id,tenant_id:TENANT};
 }
 export const handler = makeHandler({issuer:process.env.COGNITO_ISSUER,rpc,document,proposals});

@@ -1,8 +1,8 @@
 import { generateClient } from 'aws-amplify/data';
 let client;
-export async function readAtlas(view, query = {}) {
+export async function readAtlas(view, query = {}, workspace = 'artist-packet-expert') {
  client ||= generateClient();
- const result = await client.queries.forgeAtlasRead({input:JSON.stringify({view,query})},{authMode:'userPool'});
+ const result = await client.queries.forgeAtlasRead({input:JSON.stringify({view,query,workspace})},{authMode:'userPool'});
  if (result.errors?.length) throw Error('Sign in again to open your workspace.');
  let payload = result.data?.payload;
  if (typeof payload === 'string') payload = JSON.parse(payload);

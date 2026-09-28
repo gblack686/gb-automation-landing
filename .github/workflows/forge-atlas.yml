@@ -3,6 +3,7 @@ on:
   pull_request:
     paths:
       - 'amplify/**'
+      - 'shared/forgeWorkspaces.json'
       - 'src/pages/ForgeAtlas.jsx'
       - 'src/lib/forgeAtlasClient.js'
       - 'src/lib/forgeVisualClient.js'
@@ -21,6 +22,7 @@ on:
     branches: [master]
     paths:
       - 'amplify/**'
+      - 'shared/forgeWorkspaces.json'
       - 'src/pages/ForgeAtlas.jsx'
       - 'src/lib/forgeAtlasClient.js'
       - 'src/lib/forgeVisualClient.js'
@@ -71,6 +73,7 @@ jobs:
           node node_modules/vite/bin/vite.js --host 127.0.0.1 --port 5197 --strictPort > /tmp/forge-atlas-vite.log 2>&1 &
           for attempt in $(seq 1 30); do curl --silent --fail http://127.0.0.1:5197/ > /dev/null && break; sleep 1; done
           node scripts/validate-forge-atlas.mjs
+          FORGE_ATLAS_EXPERT=youtube-intel node scripts/validate-forge-atlas.mjs
       - name: Test production authentication gate
         env:
           PLAYWRIGHT_CHANNEL: chromium

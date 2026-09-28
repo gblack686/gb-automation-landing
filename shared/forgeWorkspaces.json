@@ -1,0 +1,19 @@
+{
+  "artist-packet-expert": {
+    "tenant_id": "gbautomation",
+    "agent_id": "artist-packet-expert",
+    "display_name": "Artist Packet Expert",
+    "config_sha256": "bf142e4e937a53701b4a27b02d90068ee0c8f73636f123dd97a56a661e3040e5",
+    "visual_enabled": true,
+    "report_origin": null
+  },
+  "youtube-intel": {
+    "tenant_id": "gbautomation",
+    "agent_id": "youtube-intel",
+    "display_name": "YouTube Intelligence",
+    "profile": "expert-gbautomation-youtube-intel",
+    "config_sha256": "26ca10b8f7c1bcdda67bbeb5967cfff46185ba3991307c338d04daff47301513",
+    "visual_enabled": false,
+    "report_origin": "https://6ab9d13b0b89b5644e56270a--gbautoxyz.netlify.app"
+  }
+}

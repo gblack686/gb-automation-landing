@@ -71,3 +71,16 @@ test('hosted snapshot labels activation state and exposes no decision capability
  assert.equal(result.ok,true);assert.equal(result.data.mode,'live_read_only');
  assert.equal(result.data.connection.writes_enabled,false);assert.equal(result.data.connection.email_enabled,false);assert.equal(result.data.connection.execution_enabled,false);
 });
+
+test('YouTube proposal count and detail require YouTube producer ownership',()=>{
+ for(const view of ['proposals','proposal']){
+  const request={view,query:{proposal_id:'prop_one'},workspace:'youtube-intel'};
+  const url=new URL('https://example.invalid'+proposalPath(request));
+  assert.equal(url.searchParams.get('producer_runs.owner_expert'),'eq.youtube-intel');
+  assert.throws(()=>projectProposals(request,[row],'0-0/1'),/ownership/);
+  const youtube={...row,producer_runs:{...producer,owner_expert:'youtube-intel'}};
+  const result=projectProposals(request,[youtube],'0-0/1');
+  assert.equal(result.agent_id,'youtube-intel');
+  assert.throws(()=>projectProposals({...request,workspace:'artist-packet-expert'},[youtube],'0-0/1'),/ownership/);
+ }
+});
