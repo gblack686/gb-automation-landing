@@ -7,7 +7,7 @@ import {resolve,join} from 'node:path';
 import {pathToFileURL} from 'node:url';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
-import {INTAKE_PROMPT} from '../amplify/functions/forge-builder/canonical/voice.mjs';
+import {INTAKE_PROMPT,MAX_VOICE_SECONDS} from '../amplify/functions/forge-builder/canonical/voice.mjs';
 const proof=process.env.FORGE_BUILDER_PROOF;if(!proof)throw Error('FORGE_BUILDER_PROOF must name a completed container proof directory');
 const fixture=JSON.parse(await readFile(join(proof,'ui-states.json'),'utf8'));
 const output=process.env.FORGE_BUILDER_UI_OUTPUT||'artifacts/forge-atlas-validation/builder';await mkdir(output,{recursive:true});
@@ -25,11 +25,11 @@ const browser=await chromium.launch({headless:true,channel:process.env.PLAYWRIGH
 const page=await browser.newPage({viewport:{width:1440,height:1100}}),errors=[],commands=[];page.on('pageerror',e=>errors.push(e.message));page.setDefaultTimeout(30000);
 let state=structuredClone(fixture.states[0].state),operator=true,voiceClaims=0;
 const done=new Map(),payload=fixture.payload;
-const view=s=>({...structuredClone(s),payload,operator,visuals:{},draft:{...s.draft,packet:s.draft.packet?{...s.draft.packet,download:'#'}:null}});
+const view=s=>({...structuredClone(s),payload,operator,visuals:{},voice:{...s.voice,max_seconds:MAX_VOICE_SECONDS},draft:{...s.draft,packet:s.draft.packet?{...s.draft.packet,download:'#'}:null}});
 await page.exposeFunction('testRequest',async(input,write)=>{
  if(input.action==='read')return view(state);
  if(input.action==='status')return {id:input.id,status:'done',data:view(done.get(input.id))};
- if(input.action==='claim_voice'){voiceClaims++;return {signed_url:'wss://test.invalid',session_id:input.id,max_seconds:300,prompt:INTAKE_PROMPT,tool_id:'test'};}
+ if(input.action==='claim_voice'){voiceClaims++;return {signed_url:'wss://test.invalid',session_id:input.id,max_seconds:MAX_VOICE_SECONDS,prompt:INTAKE_PROMPT,tool_id:'test'};}
  if(input.action==='packet')return fixture.packet;
  assert.equal(write,true);assert.equal(operator,true);commands.push(input);
  if(input.action==='retry')return {id:input.id,status:'queued'};
@@ -77,7 +77,10 @@ try{
  assert.equal(await page.evaluate(()=>window.voiceEnded),false);assert.equal(state.workflow,null);
  assert.match(await page.evaluate(()=>window.voiceOptions.overrides.agent.firstMessage),/always revise/);
  assert.match(await page.evaluate(()=>window.voiceOptions.overrides.agent.prompt.prompt),/Wait for the human's answer/);
- await page.clock.fastForward(240000);
+ await page.getByText(/Up to 15 minutes per pilot session/).waitFor();
+ await page.clock.fastForward(300000);
+ assert.equal(await page.evaluate(()=>window.voiceEnded),false);assert.equal(await page.evaluate(()=>window.voiceContext?.length||0),0);
+ await page.clock.fastForward(540000);
  await page.getByText(/About one minute remains before the pilot session limit/).waitFor();
  assert.equal(await page.evaluate(()=>window.voiceEnded),false);assert.equal(await page.evaluate(()=>window.voiceContext.length),1);
  await page.evaluate(()=>{window.previousVoice=window.voiceOptions;});
@@ -88,7 +91,7 @@ try{
  await page.waitForFunction(()=>window.voiceStarted&&!window.voiceEnded);
  await page.evaluate(()=>window.previousVoice.onDisconnect());
  assert.equal(await page.getByRole('button',{name:'Finish conversation',exact:true}).isEnabled(),true);
- await page.clock.fastForward(300000);
+ await page.clock.fastForward(900000);
  await page.getByText(/The pilot session limit was reached/).waitFor();
  assert.equal(await page.evaluate(()=>window.voiceEndCount),2);assert.equal(state.workflow,null);
  assert.equal(state.draft.answers.success.status,'captured');
@@ -98,6 +101,6 @@ try{
  assert.equal(await page.evaluate(()=>window.voiceEndCount),3);
  operator=false;await mount();assert.equal(await page.getByRole('button',{name:'Save answer',exact:true}).isDisabled(),true);
  assert.deepEqual(errors,[]);
- const receipt={pass:true,checks:['hosted storage wording','shared five-field brief','proposal/scope/plan gates','exact ZIP download bytes','generated card and 3D preview','mobile layout','saved reload','microphone consent before reservation','verbatim voice capture','complete brief stays connected','human finishes conversation','limit warning before disconnect','timeout preserves unapproved editable draft','stale disconnect cannot stop a new session','voice cleanup on close','member read-only'],commands:commands.length,voice_claims:voiceClaims,provider_calls:0};
+ const receipt={pass:true,checks:['hosted storage wording','shared five-field brief','proposal/scope/plan gates','exact ZIP download bytes','generated card and 3D preview','mobile layout','saved reload','microphone consent before reservation','verbatim voice capture','complete brief stays connected','human finishes conversation','no cutoff at five minutes','warning at fourteen minutes','fifteen-minute timeout preserves unapproved editable draft','stale disconnect cannot stop a new session','voice cleanup on close','member read-only'],commands:commands.length,voice_claims:voiceClaims,provider_calls:0};
  await writeFile(output+'/receipt.json',JSON.stringify(receipt,null,2));console.log(JSON.stringify(receipt));
 }finally{await browser.close();}

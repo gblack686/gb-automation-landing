@@ -2,6 +2,7 @@
 import {randomUUID} from 'node:crypto';
 
 export const DEFAULT_AGENT='agent_7801k999ndjreah8914cn4pfy1mq';
+export const MAX_VOICE_SECONDS=15*60;
 export const INTAKE_PROMPT=`You help a visitor prepare an expert blueprint for Greg at GBAutomation.
 There are five information areas: problem (work to improve), audience (people), data_access (tools and inputs), output (deliverable), success (observable result).
 Start from the supplied current brief. Do not re-ask captured answers. A natural answer can cover several areas.
@@ -25,13 +26,13 @@ export async function reserveVoice({store,draftId,confirmed}) {
   const reservation=await store.db.query(`insert into pilot_builder_voice(id,draft_id)
     select $1,$2 where (select count(*) from pilot_builder_voice where created_at >= date_trunc('day',now())) < 3 returning id`,[randomUUID(),draftId]);
   if(!reservation.rows.length)throw Error('voice_daily_limit');
-  return {session_id:reservation.rows[0].id,max_seconds:300};
+  return {session_id:reservation.rows[0].id,max_seconds:MAX_VOICE_SECONDS};
 }
 
 export function createVoice({store,draftId,fetcher=fetch,apiKey=process.env.ELEVENLABS_API_KEY,
   agentId=process.env.FORGE_ELEVENLABS_AGENT_ID||DEFAULT_AGENT,toolId=process.env.FORGE_ELEVENLABS_TOOL_ID,enabled=process.env.FORGE_VOICE_ENABLED==='true'}={}) {
   const ready=enabled&&!!apiKey;
-  const status=()=>({provider:'elevenlabs',agent_id:agentId,configured:ready,max_seconds:300,
+  const status=()=>({provider:'elevenlabs',agent_id:agentId,configured:ready,max_seconds:MAX_VOICE_SECONDS,
     max_sessions_per_day:3,reason:ready?null:'ElevenLabs server connection needs setup',audio_stored_by_forge:false});
   async function call(path){
     const response=await fetcher('https://api.elevenlabs.io/v1/convai/'+path,{headers:{'xi-api-key':apiKey},signal:AbortSignal.timeout(15000),redirect:'error'});
@@ -56,7 +57,7 @@ export function createVoice({store,draftId,fetcher=fetch,apiKey=process.env.ELEV
     }
     if(!tools.some(t=>t.type==='client'&&t.name==='capture_intake'&&t.expects_response===true)||
       !settings?.conversation?.client_events?.includes('client_tool_call')||
-      !Number.isInteger(settings?.conversation?.max_duration_seconds)||settings.conversation.max_duration_seconds<1||settings.conversation.max_duration_seconds>300||
+      settings?.conversation?.max_duration_seconds!==MAX_VOICE_SECONDS||
       settings?.turn?.silence_end_call_timeout!==-1||
       platform?.privacy?.record_voice!==false||platform?.privacy?.retention_days!==0||
       platform?.overrides?.conversation_config_override?.agent?.prompt?.prompt!==true||
@@ -70,7 +71,7 @@ export function createVoice({store,draftId,fetcher=fetch,apiKey=process.env.ELEV
     const session=await call('conversation/get-signed-url?agent_id='+encodeURIComponent(agentId));
     const url=new URL(session.signed_url);
     if(url.protocol!=='wss:'||url.hostname!=='api.elevenlabs.io'||url.username||url.password)throw Error('voice_session_rejected');
-    return {signed_url:url.href,session_id:sessionId,max_seconds:300,prompt:INTAKE_PROMPT,tool_id:toolId||null};
+    return {signed_url:url.href,session_id:sessionId,max_seconds:MAX_VOICE_SECONDS,prompt:INTAKE_PROMPT,tool_id:toolId||null};
   }
   async function start(confirmed){
     if(!ready)throw Error('voice_not_configured');

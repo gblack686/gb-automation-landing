@@ -1,7 +1,7 @@
 {
   "schema_version": "forge-builder-source.v1",
   "source_repository": "gbauto/gbautomation",
-  "source_base_commit": "9256b32a01b8c3988a0e9a76a4aeb61d54bb6f95",
+  "source_base_commit": "928afd0ec222ae568e4728fdcaf2855c864a99f5",
   "files": [
     {
       "path": "apps/forge-approval-pilot/.local-assets/turntable.js",
@@ -30,7 +30,7 @@
     },
     {
       "path": "apps/forge-approval-pilot/builder-smoke.py",
-      "sha256": "33ad4c9fc29b309f7829df0bce90a3f50d5236ab574067e4fda042579a8eef59",
+      "sha256": "0eac36679079f746b377448658648bcbdae6b3f87bbddf653aec991aebabc2e7",
       "bytes": 7879
     },
     {
@@ -85,8 +85,8 @@
     },
     {
       "path": "apps/forge-approval-pilot/setup_voice.py",
-      "sha256": "eb255b5cea7080304f0d7267daa15020803b36c5c9efe82ef5fd8c1165061e22",
-      "bytes": 7836
+      "sha256": "92a932035606e098acfac8027c587dc9908d58e075108a781db0669b13b73311",
+      "bytes": 7892
     },
     {
       "path": "apps/forge-approval-pilot/start_builder.py",
@@ -110,13 +110,13 @@
     },
     {
       "path": "apps/forge-approval-pilot/voice-smoke.py",
-      "sha256": "1b7a8a6eeb0471b3ebc65f5ae4a3200dbbf5f4dee067610cf5747eabb4676947",
+      "sha256": "b5d2ecce4ee7c232eea6592821fb31f449264b07957a3ebf70a857b865a162cc",
       "bytes": 5334
     },
     {
       "path": "apps/forge-approval-pilot/voice.mjs",
-      "sha256": "665ba1ffd36e04cf83ce7c44b54fb451f5f176dfd4c77b688969914c39087054",
-      "bytes": 6411
+      "sha256": "04ccf35a1c818d7993dc27a397b27c33316590c5e4f82e770560da495369d3bf",
+      "bytes": 6398
     },
     {
       "path": "apps/forge-builder-host/export_voice_ledger.mjs",
@@ -160,8 +160,8 @@
     },
     {
       "path": "apps/forge-builder-host/runtime.mjs",
-      "sha256": "3003972015704550f9ed9543c87b671beb6fb5d0c57057985953e27ae54ad011",
-      "bytes": 8408
+      "sha256": "e9726dd955db25012b66f846cda8020571fb95730d7ea46d269c0da56b410336",
+      "bytes": 8440
     },
     {
       "path": "apps/forge-builder-host/snapshot.py",
@@ -1720,5 +1720,5 @@
     }
   ],
   "dockerfile_sha256": "1634b68b1308d9df398f0b62d9e01dcc313e593dd7c05210684d1eabe3e68a28",
-  "sha256": "ff5d6b7651f0c71b4e53992bfe21cdf1362a022f40dc25ad749b7bfbb5e68234"
+  "sha256": "0163e4230d7f1538bce42f52fadf0cf75b2c56a57439a9728f2bd17967a60a1f"
 }

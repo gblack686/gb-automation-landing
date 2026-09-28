@@ -65,7 +65,7 @@ if __name__ == '__main__':
     parser.add_argument('--live', action='store_true', required=True)
     args = parser.parse_args()
     # A hung browser may also stop its JS timers. Bound the owned browser from
-    # outside Chromium; the provider separately enforces its 300-second ceiling.
+    # outside Chromium; the provider separately enforces its 900-second ceiling.
     def stop_owned_browser():
         for child in reversed(psutil.Process().children(recursive=True)):
             try:

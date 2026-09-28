@@ -18,7 +18,7 @@ def run(url: str, output: Path):
         def api(route):
             body = route.request.post_data_json
             if body.get('action') == 'voice':
-                route.fulfill(json={'ok': True, 'result': {'signed_url': 'wss://api.elevenlabs.io/fixture', 'prompt': 'Synthetic browser voice contract', 'max_seconds': 300}})
+                route.fulfill(json={'ok': True, 'result': {'signed_url': 'wss://api.elevenlabs.io/fixture', 'prompt': 'Synthetic browser voice contract', 'max_seconds': 900}})
                 return
             route.continue_()
 

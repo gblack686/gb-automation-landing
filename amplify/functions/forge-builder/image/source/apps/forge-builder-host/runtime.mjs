@@ -6,7 +6,7 @@ import {fileURLToPath} from 'node:url';
 import {createStore} from '../forge-approval-pilot/store.mjs';
 import {createAdapters,python} from '../forge-approval-pilot/adapters.mjs';
 import {createBuilder} from '../forge-approval-pilot/builder.mjs';
-import {reserveVoice} from '../forge-approval-pilot/voice.mjs';
+import {reserveVoice,MAX_VOICE_SECONDS} from '../forge-approval-pilot/voice.mjs';
 import {createForgeService} from '../../supabase/functions/human-approval-action/forge.mjs';
 
 const repo=fileURLToPath(new URL('../../',import.meta.url));
@@ -58,7 +58,7 @@ export async function openRuntime({dataRoot,bootstrapRoot,actor}) {
     const adapters=await createAdapters({store,config,dataRoot,runPython});
     const service=createForgeService({rpc:store.rpc,config,readArtifacts:adapters.readArtifacts});
     const builder=await createBuilder({store,service,adapters,config,dataRoot,profilePath,visualsPath,runPython,principal:{role:'operator',actor},
-      voiceFactory:({store,draftId})=>({status:()=>({provider:'elevenlabs',configured:settings.voice_enabled===true,max_seconds:300,max_sessions_per_day:3,
+      voiceFactory:({store,draftId})=>({status:()=>({provider:'elevenlabs',configured:settings.voice_enabled===true,max_seconds:MAX_VOICE_SECONDS,max_sessions_per_day:3,
         reason:settings.voice_enabled?null:'Voice connection is awaiting release setup',audio_stored_by_forge:false}),
         start:confirmed=>{if(!settings.voice_enabled)throw Error('voice_not_configured');return reserveVoice({store,draftId,confirmed});}})});
     if(Object.entries(builder.binding).some(([k,v])=>settings[k]!==v))throw Error('hosted_bootstrap_binding_mismatch');

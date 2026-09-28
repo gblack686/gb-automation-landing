@@ -15,6 +15,7 @@ import re
 import urllib.request
 
 AGENT = 'agent_7801k999ndjreah8914cn4pfy1mq'
+MAX_VOICE_SECONDS = 15 * 60
 FIELDS = ['problem', 'audience', 'data_access', 'output', 'success']
 TOOL = {'type': 'client', 'name': 'capture_intake',
         'description': 'Capture explicit facts, corrections, uncertainty or skips into the five-area Forge brief. Only use this tool when the session prompt asks for Forge intake.',
@@ -27,7 +28,7 @@ TOOL = {'type': 'client', 'name': 'capture_intake',
                     'status': {'type': 'string', 'enum': ['captured', 'needs_clarification', 'skipped'], 'description': 'Unknown or skipped is never captured.'},
                     'evidence': {'type': 'string', 'description': 'Verbatim excerpt of the current user utterance supporting this change.'}
                 }}}}}}
-PATCH = {'conversation_config': {'conversation': {'max_duration_seconds': 300},
+PATCH = {'conversation_config': {'conversation': {'max_duration_seconds': MAX_VOICE_SECONDS},
                                   'turn': {'silence_end_call_timeout': -1}},
          'platform_settings': {'privacy': {'record_voice': False, 'retention_days': 0,
                                            'apply_to_existing_conversations': False},
@@ -103,7 +104,7 @@ def run(args):
     privacy = after['platform_settings']['privacy']
     if privacy['record_voice'] or privacy['retention_days'] != 0 or privacy['apply_to_existing_conversations']:
         raise ValueError('privacy_readback_failed')
-    if (new['conversation']['max_duration_seconds'] != 300 or
+    if (new['conversation']['max_duration_seconds'] != MAX_VOICE_SECONDS or
             new.get('turn', {}).get('silence_end_call_timeout') != -1 or
             'client_tool_call' not in new['conversation']['client_events']):
         raise ValueError('conversation_readback_failed')
