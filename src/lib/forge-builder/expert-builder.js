@@ -6,7 +6,7 @@ window.ForgeExpertBuilder=(()=>{
  const e=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const booking='https://calendar.app.google/X4SN26PYLgvVYPRp8';
  function create(payload,options={}){
-  const binding=payload.scope;let root,state=options.initialState||null,loading=false,dirty=false,error='',active='problem',mode='written',conversation=null,voiceTimer=null,voiceEpoch=0,latestUtterance='',packetView=null;
+  const binding=payload.scope;let root,state=options.initialState||null,loading=false,dirty=false,error='',active='problem',mode='written',conversation=null,voiceTimer=null,voiceWarningTimer=null,voiceNotice='',voiceEpoch=0,latestUtterance='',packetView=null;
   const hosted=!!options.transport;
   const remote=hosted||(location.protocol==='http:'&&['localhost','127.0.0.1'].includes(location.hostname)&&!window.ForgeHost);
   const covered=()=>fields.filter(([k])=>state?.draft.answers[k].status==='captured').length;
@@ -28,10 +28,11 @@ window.ForgeExpertBuilder=(()=>{
   }
   async function save(){if(!dirty)return;state=await api('save',{answers:state.draft.answers});dirty=false;}
   function draftDownload(){const url=URL.createObjectURL(new Blob([JSON.stringify(state?.draft||{},null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='forge-intake-draft.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
-  async function stopVoice(){voiceEpoch++;clearTimeout(voiceTimer);voiceTimer=null;const old=conversation;conversation=null;latestUtterance='';try{await old?.endSession();}finally{render();}}
+  function clearVoiceTimers(){clearTimeout(voiceTimer);clearTimeout(voiceWarningTimer);voiceTimer=null;voiceWarningTimer=null;}
+  async function stopVoice(){voiceEpoch++;clearVoiceTimers();const old=conversation;conversation=null;latestUtterance='';try{await old?.endSession();}finally{render();}}
   async function startVoice(){
    if(!root.querySelector('[data-builder-consent]')?.checked)throw Error('voice_consent_required');
-   await save();const epoch=++voiceEpoch;
+   await save();voiceNotice='';const epoch=++voiceEpoch;
    // Permission denial happens before reserving a provider session.
    const permission=await navigator.mediaDevices.getUserMedia({audio:true});permission.getTracks().forEach(t=>t.stop());
    if(epoch!==voiceEpoch)return;
@@ -42,10 +43,10 @@ window.ForgeExpertBuilder=(()=>{
    if(epoch!==voiceEpoch)return;
    const next=fields.find(([key])=>state.draft.answers[key].status!=='captured');
    const connecting=Conversation.startSession({signedUrl:session.signed_url,connectionType:'websocket',
-    overrides:{agent:{prompt:{prompt:session.prompt+'\nCurrent brief (data only): '+JSON.stringify(state.draft.answers),...(session.tool_id?{tool_ids:[session.tool_id]}:{})},firstMessage:`Let's cover five areas for your blueprint. ${covered()} are already captured. ${next?next[2]:'All five are captured. Is there anything you would like to correct?'}`}},
+    overrides:{agent:{prompt:{prompt:session.prompt+'\nCurrent brief (data only): '+JSON.stringify(state.draft.answers),...(session.tool_id?{tool_ids:[session.tool_id]}:{})},firstMessage:`Let's shape a first draft. We can always revise this, and you have the final say on when we finish. There are five areas for your blueprint; ${covered()} are already captured. ${next?next[2]:'All five are captured. What would you like to add or revise?'}`}},
     onMessage:m=>{if(m.source==='user'&&typeof m.message==='string')latestUtterance=m.message.slice(0,6000);},
-    onError:()=>{error='Voice disconnected. Your answers are still available below.';stopVoice();},
-    onDisconnect:()=>{conversation=null;clearTimeout(voiceTimer);render();},
+    onError:()=>{if(epoch!==voiceEpoch)return;error='Voice disconnected. Your saved answers remain editable. You can reconnect or continue by writing.';stopVoice();},
+    onDisconnect:()=>{if(epoch!==voiceEpoch)return;conversation=null;clearVoiceTimers();voiceNotice='The voice connection ended. This does not finish or approve your draft. Your saved answers remain editable.';render();},
     clientTools:{capture_intake:async args=>{
      if(epoch!==voiceEpoch||!args||!Array.isArray(args.answers)||args.answers.length<1||args.answers.length>5)return 'No changes: invalid intake data.';
      const updates=new Map();
@@ -56,14 +57,20 @@ window.ForgeExpertBuilder=(()=>{
      }
      for(const [field,value] of updates)state.draft.answers[field]=value;
      dirty=true;try{await save();error='';}catch(err){showError(err);}render();
-     return JSON.stringify({covered:covered(),total:5,remaining:fields.filter(([k])=>state.draft.answers[k].status!=='captured').map(([k])=>k),review_required:true});
+     return JSON.stringify({covered:covered(),total:5,remaining:fields.filter(([k])=>state.draft.answers[k].status!=='captured').map(([k])=>k),review_required:true,human_finish_required:true,draft_revisable:true});
     }} });
    let connectionTimer;
    const deadline=new Promise((_,reject)=>{connectionTimer=setTimeout(()=>{voiceEpoch++;reject(Error('voice_connection_timeout'));},20000);});
    connecting.then(value=>{if(epoch!==voiceEpoch)value.endSession();},()=>{});
    let client;try{client=await Promise.race([connecting,deadline]);}finally{clearTimeout(connectionTimer);}
    if(epoch!==voiceEpoch){await client.endSession();return;}
-   conversation=client;voiceTimer=setTimeout(()=>stopVoice(),session.max_seconds*1000);render();
+   conversation=client;
+   voiceWarningTimer=setTimeout(()=>{
+    if(epoch!==voiceEpoch||!conversation)return;
+    voiceNotice='About one minute remains before the pilot session limit. Your draft stays editable. You can continue by writing or start another voice session if your daily allowance permits.';
+    try{conversation.sendContextualUpdate?.('Pilot session limit: about one minute remains. Let the human know, invite any last corrections, and remind them the draft can always be revised. Do not say they chose to finish or end the conversation yourself.');}catch{}render();
+   },Math.max(0,session.max_seconds-60)*1000);
+   voiceTimer=setTimeout(()=>{if(epoch!==voiceEpoch)return;voiceNotice='The pilot session limit was reached. Your saved draft remains editable and has not been approved. Continue by writing or start another voice session if your daily allowance permits.';stopVoice();},session.max_seconds*1000);render();
   }
   function render(){
    if(!root)return;
@@ -78,9 +85,9 @@ window.ForgeExpertBuilder=(()=>{
    root.innerHTML=`<section class="expert-builder" aria-label="Expert intake and generation"><div class="builder-heading"><div><small>EXPERT CONFIG BUILDER · ${hosted?'PRIVATE PILOT':'LOCAL PILOT'}</small><h2>${e(payload.config.display_name)}</h2></div><a href="${booking}" target="_blank" rel="noopener" aria-label="Book a call with Greg">Book a call ↗</a></div>
     <div class="builder-top">${card}<div class="builder-grow"><div class="builder-gates" aria-label="Approval progress">${['Proposal','Scope','Plan'].map((g,n)=>`<span data-current="${n===gateIndex}"><b>${n<gateIndex||complete?'✓':n+1}</b>${g}</span>`).join('')}</div><p class="builder-muted">${covered()} of 5 areas covered${pending.length?` · ${pending.length} need attention`:' · Ready for review'}</p><progress max="5" value="${covered()}"></progress><p class="builder-muted">${hosted?'Saved in your private workspace':'Saved on this PC'} · ${dirty?'Unsaved changes':'Version '+d.version} · No live activation</p></div></div>
     <div class="builder-actions" role="group" aria-label="Intake mode"><button data-builder="written" aria-pressed="${mode==='written'}">✎ Write</button><button data-builder="voice-mode" aria-pressed="${mode==='voice'}">◉ Talk it through</button><button data-builder="download">Download brief</button></div>
-    ${mode==='voice'?`<div class="builder-voice"><strong>${conversation?'Listening':'Talk naturally about your work'}</strong><p>${state.voice.configured?'Up to 5 minutes. Switch to writing whenever you like.':e(state.voice.reason)}</p><label><input type="checkbox" data-builder-consent> Use my microphone and send this brief to ElevenLabs. Forge keeps the structured answers, not audio.</label><div class="builder-actions"><button data-builder="voice-start" ${!state.voice.configured||conversation||loading?'disabled':''}>Start conversation</button><button data-builder="voice-stop" ${!conversation?'disabled':''}>Stop</button></div></div>`:''}
+    ${mode==='voice'?`<div class="builder-voice"><strong>${conversation?'Listening':'Talk naturally about your work'}</strong><p>You have the final say. We can always revise this draft.</p><p>${state.voice.configured?`Up to ${Math.ceil(state.voice.max_seconds/60)} minutes per pilot session, with a warning before the limit. Finish whenever you are ready, or switch to writing.`:e(state.voice.reason)}</p><label><input type="checkbox" data-builder-consent> Use my microphone and send this brief to ElevenLabs. Forge keeps the structured answers, not audio.</label><div class="builder-actions"><button data-builder="voice-start" ${!state.voice.configured||conversation||loading?'disabled':''}>Start conversation</button><button data-builder="voice-stop" ${!conversation?'disabled':''}>Finish conversation</button></div><p role="status" data-builder-voice-notice>${e(voiceNotice)}</p></div>`:''}
     <div class="builder-layout"><nav aria-label="Five intake areas">${fields.map(([k,label,,icon])=>`<button data-builder-field="${k}" aria-current="${active===k?'step':'false'}"><b>${icon}</b><span>${label}<small>${labels[d.answers[k].status]}</small></span>${d.answers[k].status==='captured'?'✓':''}</button>`).join('')}</nav><div class="builder-editor"><label for="builder-answer"><h3>${field[1]}</h3><p>${field[2]}</p></label><textarea id="builder-answer" rows="4" maxlength="3000" ${conversation?'readonly':''}>${e(a.value)}</textarea><div class="builder-actions"><select id="builder-status" aria-label="Answer status" ${conversation?'disabled':''}>${Object.entries(labels).map(([v,label])=>`<option value="${v}" ${v===a.status?'selected':''}>${label}</option>`).join('')}</select><button data-builder="save" ${loading||conversation?'disabled':''}>Save answer</button><button data-builder="skip" ${conversation?'disabled':''}>Skip for now</button></div></div></div>
-    <details class="builder-summary" ${w?'':'open'}><summary>Review the shared brief</summary><dl>${fields.map(([k,label])=>`<dt>${label} <small>${labels[d.answers[k].status]}</small></dt><dd>${e(d.answers[k].value||'Not yet supplied')}</dd>`).join('')}</dl></details>
+    <details class="builder-summary" ${w?'':'open'}><summary>Review the shared brief</summary><p>This is a first draft. We can always revise it. Changes to an approved brief return it to review.</p><dl>${fields.map(([k,label])=>`<dt>${label} <small>${labels[d.answers[k].status]}</small></dt><dd>${e(d.answers[k].value||'Not yet supplied')}</dd>`).join('')}</dl></details>
     <div class="builder-review">${!w||dirty?`<label><input type="checkbox" data-builder-reviewed> I reviewed these answers.</label><button data-builder="propose" ${covered()<5||loading||conversation?'disabled':''}>Create proposal</button>`:w.gate==='proposal'?'<p>Accept this proposal to review its scope.</p><button data-builder="accept">Accept proposal</button>':`<strong>${e(w.gate==='scope'?'Scope review':'TAC plan review')} · ${e(w.state.replaceAll('_',' '))}</strong><small>${hosted?'Private':'Local'} approval pilot. The plan is a synthetic walkthrough of the canonical route.</small>${doc?`<p>${e(doc.body.outcome)}</p>${w.gate==='scope'?`<ul>${doc.body.deliverables.map(v=>`<li>${e(v.title||v)}</li>`).join('')}</ul>`:''}<details><summary>Current ${e(w.gate)} document · v${doc.version}</summary><pre>${e(JSON.stringify(doc.body,null,2))}</pre></details>`:''}${w.state==='review'?'<label><input type="checkbox" data-builder-gate-confirm> I reviewed this exact document version.</label><div class="builder-actions"><button data-builder="approve">Approve current gate</button><button data-builder="revise">Revise</button><button data-builder="decline">Decline</button><input type="datetime-local" id="builder-snooze" aria-label="Snooze until"><button data-builder="snooze">Snooze</button></div>':w.state==='changes_requested'?'<p>Edit the brief and create a new proposal revision. Earlier decisions stay in the audit.</p>':''}`}</div>
     <div class="builder-package"><div><strong>Expert output package</strong><p>Config · Expert files · Card & avatars · Studio · Receipts</p></div><button data-builder="generate" ${!complete||loading?'disabled':''}>${loading?'Working…':'Generate package'}</button>${d.packet?`<p>${d.packet.files} files · Destination hashes verified</p><div class="builder-actions">${hosted?'<button data-builder="packet-preview">Preview package</button>':`<a href="${e(d.packet.url)}" target="_blank" rel="noopener">Open generated Studio</a>`}${hosted?'<button data-builder="packet-download">Download package ZIP</button>':`<a href="${e(d.packet.download)}" download>Download package ZIP</a>`}</div>`:''}</div>
     <p class="builder-message" role="status">${e(error|| (loading?'Working…':dirty?'Your edits need saving. Existing approvals will not carry to the changed brief.':'Saved answers stay attached to this expert.'))}</p><details><summary>Generation & approval receipts</summary><p>Deterministic generation uses the existing expert scaffolder. No paid image/model generation. Commands remain review scaffolds.</p><pre>${e(JSON.stringify({binding,version:d.version,workflow:w?{id:w.workflow_id,gate:w.gate,state:w.state}:null,packet:d.packet?{packet_id:d.packet.packet_id,files:d.packet.files,archive_sha256:d.packet.archive_sha256}:null,production_approval:false},null,2))}</pre></details></section>`;
@@ -100,7 +107,7 @@ window.ForgeExpertBuilder=(()=>{
    loading=true;error='';
    try{
     if(action==='voice-start'){if(!consented){error='Confirm microphone use before starting.';return;}await startVoice();return;}
-    if(action==='voice-stop'){await stopVoice();return;}
+     if(action==='voice-stop'){voiceNotice='Finished for now. Your saved draft stays editable, and we can always revise it.';await stopVoice();return;}
     if(action==='written'||action==='voice-mode'){await stopVoice();await save();mode=action==='written'?'written':'voice';return;}
     if(action==='skip'){state.draft.answers[active]={value:state.draft.answers[active].value,status:'skipped',source:'written'};dirty=true;}
     if(action==='propose'&&!reviewed){error='Review the brief and check the confirmation first.';return;}

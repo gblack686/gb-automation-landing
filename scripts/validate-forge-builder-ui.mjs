@@ -7,16 +7,17 @@ import {resolve,join} from 'node:path';
 import {pathToFileURL} from 'node:url';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
+import {INTAKE_PROMPT} from '../amplify/functions/forge-builder/canonical/voice.mjs';
 const proof=process.env.FORGE_BUILDER_PROOF;if(!proof)throw Error('FORGE_BUILDER_PROOF must name a completed container proof directory');
 const fixture=JSON.parse(await readFile(join(proof,'ui-states.json'),'utf8'));
-const output='artifacts/forge-atlas-validation/builder';await mkdir(output,{recursive:true});
+const output=process.env.FORGE_BUILDER_UI_OUTPUT||'artifacts/forge-atlas-validation/builder';await mkdir(output,{recursive:true});
 const bundle=await build({stdin:{contents:`import React from 'react';import{createRoot}from'react-dom/client';import Builder from './src/components/ForgeExpertBuilder';window.root=createRoot(document.getElementById('root'));window.root.render(<Builder onClose={()=>window.root.unmount()}/>);`,resolveDir:process.cwd(),loader:'jsx'},
  jsx:'automatic',bundle:true,write:false,format:'iife',outdir:'fixture',plugins:[{name:'test-boundaries',setup(b){
   b.onResolve({filter:/forgeBuilderClient$/},()=>({path:'client',namespace:'test'}));
   b.onResolve({filter:/^aws-amplify\/auth$/},()=>({path:'auth',namespace:'test'}));
   b.onResolve({filter:/^@elevenlabs\/client$/},()=>({path:'voice',namespace:'test'}));
   b.onLoad({filter:/.*/,namespace:'test'},args=>({loader:'js',contents:args.path==='auth'?`export const getCurrentUser=async()=>({userId:'browser-fixture'});`:
-   args.path==='voice'?`export const Conversation={startSession:async options=>{window.voiceOptions=options;window.voiceStarted=true;return {endSession:async()=>{window.voiceEnded=true;}};}};`:
+   args.path==='voice'?`export const Conversation={startSession:async options=>{window.voiceOptions=options;window.voiceStarted=true;window.voiceEnded=false;return {endSession:async()=>{window.voiceEnded=true;window.voiceEndCount=(window.voiceEndCount||0)+1;options.onDisconnect();},sendContextualUpdate:message=>{(window.voiceContext||=[]).push(message);}};}};`:
    `export const builderRequest=(i,w)=>window.testRequest(i,w);export const verifiedBuilderAsset=async()=>{throw Error('No bootstrap card in this fixture');};export async function builderAsset(id,path){const r=await window.testAsset(id,path);return {...r,bytes:Uint8Array.from(atob(r.base64),c=>c.charCodeAt(0))};}`}));
  }}]});
 const js=bundle.outputFiles.find(f=>f.path.endsWith('.js')).text,css=bundle.outputFiles.find(f=>f.path.endsWith('.css')).text;console.log('Built browser fixture');
@@ -28,7 +29,7 @@ const view=s=>({...structuredClone(s),payload,operator,visuals:{},draft:{...s.dr
 await page.exposeFunction('testRequest',async(input,write)=>{
  if(input.action==='read')return view(state);
  if(input.action==='status')return {id:input.id,status:'done',data:view(done.get(input.id))};
- if(input.action==='claim_voice'){voiceClaims++;return {signed_url:'wss://test.invalid',session_id:input.id,max_seconds:300,prompt:'Synthetic intake',tool_id:'test'};}
+ if(input.action==='claim_voice'){voiceClaims++;return {signed_url:'wss://test.invalid',session_id:input.id,max_seconds:300,prompt:INTAKE_PROMPT,tool_id:'test'};}
  if(input.action==='packet')return fixture.packet;
  assert.equal(write,true);assert.equal(operator,true);commands.push(input);
  if(input.action==='retry')return {id:input.id,status:'queued'};
@@ -62,13 +63,41 @@ try{
  await page.screenshot({path:output+'/mobile.png',fullPage:true});
  await page.getByRole('button',{name:'Reload saved version',exact:true}).click();await page.getByRole('button',{name:'Preview package',exact:true}).waitFor();
  state=structuredClone(fixture.states[0].state);await mount();
+ await page.clock.install();
  await page.getByRole('button',{name:/Talk it through/}).click();await page.getByRole('button',{name:'Start conversation',exact:true}).click();assert.equal(voiceClaims,0);
  await page.locator('[data-builder-consent]').check();await page.getByRole('button',{name:'Start conversation',exact:true}).click();await page.waitForFunction(()=>window.voiceStarted===true);assert.equal(voiceClaims,1);
  const captured=await page.evaluate(async()=>{window.voiceOptions.onMessage({source:'user',message:'Approved artist files produce a weekly packet.'});return window.voiceOptions.clientTools.capture_intake({answers:[{field:'output',status:'captured',value:'Weekly packet',evidence:'weekly packet'}]});});
  assert.match(captured,/covered/);assert.equal(state.draft.answers.output.value,'Weekly packet');
+ const closing=await page.evaluate(async()=>{
+  const utterance='Artists need approved Drive inputs to produce a weekly packet with every credit verified.';
+  window.voiceOptions.onMessage({source:'user',message:utterance});
+  return JSON.parse(await window.voiceOptions.clientTools.capture_intake({answers:['problem','audience','data_access','output','success'].map(field=>({field,status:'captured',value:utterance,evidence:utterance}))}));
+ });
+ assert.equal(closing.covered,5);assert.equal(closing.human_finish_required,true);assert.equal(closing.draft_revisable,true);
+ assert.equal(await page.evaluate(()=>window.voiceEnded),false);assert.equal(state.workflow,null);
+ assert.match(await page.evaluate(()=>window.voiceOptions.overrides.agent.firstMessage),/always revise/);
+ assert.match(await page.evaluate(()=>window.voiceOptions.overrides.agent.prompt.prompt),/Wait for the human's answer/);
+ await page.clock.fastForward(240000);
+ await page.getByText(/About one minute remains before the pilot session limit/).waitFor();
+ assert.equal(await page.evaluate(()=>window.voiceEnded),false);assert.equal(await page.evaluate(()=>window.voiceContext.length),1);
+ await page.evaluate(()=>{window.previousVoice=window.voiceOptions;});
+ await page.getByRole('button',{name:'Finish conversation',exact:true}).click();
+ assert.equal(await page.evaluate(()=>window.voiceEndCount),1);await page.getByText(/Finished for now/).waitFor();
+ await page.clock.fastForward(60000);assert.equal(await page.evaluate(()=>window.voiceEndCount),1);
+ await page.locator('[data-builder-consent]').check();await page.getByRole('button',{name:'Start conversation',exact:true}).click();
+ await page.waitForFunction(()=>window.voiceStarted&&!window.voiceEnded);
+ await page.evaluate(()=>window.previousVoice.onDisconnect());
+ assert.equal(await page.getByRole('button',{name:'Finish conversation',exact:true}).isEnabled(),true);
+ await page.clock.fastForward(300000);
+ await page.getByText(/The pilot session limit was reached/).waitFor();
+ assert.equal(await page.evaluate(()=>window.voiceEndCount),2);assert.equal(state.workflow,null);
+ assert.equal(state.draft.answers.success.status,'captured');
+ await page.locator('[data-builder-consent]').check();await page.getByRole('button',{name:'Start conversation',exact:true}).click();
+ await page.waitForFunction(()=>window.voiceStarted&&!window.voiceEnded);
  await page.getByRole('button',{name:'Close',exact:true}).click();await page.waitForFunction(()=>window.voiceEnded===true);
+ assert.equal(await page.evaluate(()=>window.voiceEndCount),3);
  operator=false;await mount();assert.equal(await page.getByRole('button',{name:'Save answer',exact:true}).isDisabled(),true);
  assert.deepEqual(errors,[]);
- const receipt={pass:true,checks:['hosted storage wording','shared five-field brief','proposal/scope/plan gates','exact ZIP download bytes','generated card and 3D preview','mobile layout','saved reload','microphone consent before reservation','verbatim voice capture','voice cleanup on close','member read-only'],commands:commands.length,voice_claims:voiceClaims,provider_calls:0};
+ const receipt={pass:true,checks:['hosted storage wording','shared five-field brief','proposal/scope/plan gates','exact ZIP download bytes','generated card and 3D preview','mobile layout','saved reload','microphone consent before reservation','verbatim voice capture','complete brief stays connected','human finishes conversation','limit warning before disconnect','timeout preserves unapproved editable draft','stale disconnect cannot stop a new session','voice cleanup on close','member read-only'],commands:commands.length,voice_claims:voiceClaims,provider_calls:0};
  await writeFile(output+'/receipt.json',JSON.stringify(receipt,null,2));console.log(JSON.stringify(receipt));
 }finally{await browser.close();}

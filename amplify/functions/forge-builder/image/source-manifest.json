@@ -1,7 +1,7 @@
 {
   "schema_version": "forge-builder-source.v1",
   "source_repository": "gbauto/gbautomation",
-  "source_base_commit": "660c5f1017f5f08891ff4ad7e38f9ee06142bec1",
+  "source_base_commit": "9256b32a01b8c3988a0e9a76a4aeb61d54bb6f95",
   "files": [
     {
       "path": "apps/forge-approval-pilot/.local-assets/turntable.js",
@@ -85,8 +85,8 @@
     },
     {
       "path": "apps/forge-approval-pilot/setup_voice.py",
-      "sha256": "687a5b98c5df81365489551304a6ebd008a7f2dbc549b1be3c1cb1d52f1379fa",
-      "bytes": 7511
+      "sha256": "eb255b5cea7080304f0d7267daa15020803b36c5c9efe82ef5fd8c1165061e22",
+      "bytes": 7836
     },
     {
       "path": "apps/forge-approval-pilot/start_builder.py",
@@ -115,8 +115,8 @@
     },
     {
       "path": "apps/forge-approval-pilot/voice.mjs",
-      "sha256": "60722b2d243886e582b98b279fe54015b45fd238255977d2aee5545eb47e5e6a",
-      "bytes": 5479
+      "sha256": "665ba1ffd36e04cf83ce7c44b54fb451f5f176dfd4c77b688969914c39087054",
+      "bytes": 6411
     },
     {
       "path": "apps/forge-builder-host/export_voice_ledger.mjs",
@@ -1160,8 +1160,8 @@
     },
     {
       "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-workspace/expert-builder.js",
-      "sha256": "3b35b4f7354bc293234bf28afa5994312fd4f057cb08584b7a1f6a73e0fd7481",
-      "bytes": 19461
+      "sha256": "4f315a4aac5f238a19e5b9c6114a3311ba23a59919b0928ba5bbd122ba42d8df",
+      "bytes": 21255
     },
     {
       "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-workspace/history.js",
@@ -1720,5 +1720,5 @@
     }
   ],
   "dockerfile_sha256": "1634b68b1308d9df398f0b62d9e01dcc313e593dd7c05210684d1eabe3e68a28",
-  "sha256": "fd15b8469722296b615c3ffa4653f42d331b1e9b2d8b221a8e055804914a8a78"
+  "sha256": "ff5d6b7651f0c71b4e53992bfe21cdf1362a022f40dc25ad749b7bfbb5e68234"
 }

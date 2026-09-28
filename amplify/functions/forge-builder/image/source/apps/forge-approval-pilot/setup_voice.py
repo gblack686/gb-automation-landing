@@ -2,7 +2,8 @@
 
 No conversation is started. The default prompt, voice and historical recordings
 are preserved. The intake tool is attached alongside existing tools, as required
-by provider session overrides. New sessions stop at five minutes and keep no audio.
+by provider session overrides. Pauses never end a call. The bounded pilot duration
+is separate from the human's decision to finish. New sessions keep no audio.
 Secrets stay in process memory; receipts contain setting names and provider IDs.
 """
 import argparse
@@ -26,7 +27,8 @@ TOOL = {'type': 'client', 'name': 'capture_intake',
                     'status': {'type': 'string', 'enum': ['captured', 'needs_clarification', 'skipped'], 'description': 'Unknown or skipped is never captured.'},
                     'evidence': {'type': 'string', 'description': 'Verbatim excerpt of the current user utterance supporting this change.'}
                 }}}}}}
-PATCH = {'conversation_config': {'conversation': {'max_duration_seconds': 300}},
+PATCH = {'conversation_config': {'conversation': {'max_duration_seconds': 300},
+                                  'turn': {'silence_end_call_timeout': -1}},
          'platform_settings': {'privacy': {'record_voice': False, 'retention_days': 0,
                                            'apply_to_existing_conversations': False},
                                'overrides': {'conversation_config_override': {
@@ -101,11 +103,14 @@ def run(args):
     privacy = after['platform_settings']['privacy']
     if privacy['record_voice'] or privacy['retention_days'] != 0 or privacy['apply_to_existing_conversations']:
         raise ValueError('privacy_readback_failed')
-    if new['conversation']['max_duration_seconds'] != 300 or 'client_tool_call' not in new['conversation']['client_events']:
+    if (new['conversation']['max_duration_seconds'] != 300 or
+            new.get('turn', {}).get('silence_end_call_timeout') != -1 or
+            'client_tool_call' not in new['conversation']['client_events']):
         raise ValueError('conversation_readback_failed')
     receipt = {**preview, 'status': 'provider_readback_pass', 'tool_id': tool_id,
                'prompt_sha256': hashlib.sha256(json.dumps(new['agent']['prompt'], sort_keys=True).encode()).hexdigest(),
-               'max_duration_seconds': new['conversation']['max_duration_seconds'],
+                'max_duration_seconds': new['conversation']['max_duration_seconds'],
+                'silence_end_call_timeout': new['turn']['silence_end_call_timeout'],
                'privacy': privacy, 'overrides': after['platform_settings']['overrides']}
     (args.output / 'voice-setup-receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
     print(json.dumps({k: receipt[k] for k in ['status', 'agent_id', 'tool_id', 'conversation_started', 'default_prompt_changed', 'existing_recordings_changed']}))
