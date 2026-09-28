@@ -1,6 +1,13 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { makeHandler, project, traceURL } from './contract.mjs';
+import { makeHandler, project, traceURL, operatorBootstrap } from './contract.mjs';
+
+test('legacy bootstrap is restricted to the exact operator subject',() => {
+ const operator='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+ assert.equal(operatorBootstrap(operator,operator)?.source,'operator_bootstrap');
+ assert.equal(operatorBootstrap('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',operator),null);
+ assert.equal(operatorBootstrap(operator,undefined),null);
+});
 const issuer = 'https://cognito-idp.us-east-1.amazonaws.com/us-east-1_test';
 // Envelope verified against the deployed InvokeFnForgeAtlasReadLambdaDataSource mapping.
 const event = input => ({identity:{claims:{iss:issuer,sub:'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa','cognito:groups':['tenant-gbautomation']}},typeName:'Query',fieldName:'forgeAtlasRead',arguments:{input}});

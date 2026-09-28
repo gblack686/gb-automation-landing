@@ -88,6 +88,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("repository_receipt", type=Path)
     parser.add_argument("--customer-sub", required=True)
+    parser.add_argument("--operator-sub", required=True)
     parser.add_argument("--display-name", required=True)
     parser.add_argument("--config-sha256", required=True)
     parser.add_argument("--bucket", required=True)
@@ -95,13 +96,15 @@ def main() -> None:
     parser.add_argument("--activate", action="store_true")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
-    if not SUB.fullmatch(args.customer_sub) or not SHA.fullmatch(args.config_sha256) or not args.bucket.startswith("amplify-"):
+    if (not SUB.fullmatch(args.customer_sub) or not SUB.fullmatch(args.operator_sub)
+            or args.customer_sub.lower() == args.operator_sub.lower()
+            or not SHA.fullmatch(args.config_sha256) or not args.bucket.startswith("amplify-")):
         raise ValueError("registry_target_invalid")
     receipt = json.loads(args.repository_receipt.read_text(encoding="utf-8"))
     if receipt.get("state") != "created" or receipt.get("schema_version") != "forge-repository-handoff.v1":
         raise ValueError("created_repository_required")
     incoming = {"tenant_id":TENANT,"agent_id":receipt["agent_id"],"display_name":args.display_name,
-                "config_sha256":args.config_sha256,"subjects":[args.customer_sub],"status":"pending",
+                "config_sha256":args.config_sha256,"subjects":[args.customer_sub,args.operator_sub],"status":"pending",
                 "packet_id":receipt["packet_id"],"repository":receipt["repository"]}
     if args.activate:
         if not args.apply: raise ValueError("activation_requires_hosted_readback")

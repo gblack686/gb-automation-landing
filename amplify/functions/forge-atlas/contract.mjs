@@ -6,6 +6,11 @@ const agentSlug = /^[a-z][a-z0-9-]{2,62}$/;
 // Cognito subjects use the UUID-shaped hex layout but do not promise RFC variant bits.
 // The verified deployment issuer and tenant group provide authorization.
 const cognitoSubject = /^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i;
+export function operatorBootstrap(sub, allowedSub) {
+ if (typeof sub !== 'string' || !cognitoSubject.test(sub) || !allowedSub || sub !== allowedSub) return null;
+ return {source:'operator_bootstrap',agents:[{tenant_id:TENANT,agent_id:EXPERT,
+  display_name:'Artist Packet Expert',config_sha256:CONFIG_SHA,subjects:[sub],status:'active'}]};
+}
 class ReadError extends Error {}
 const deny = code => { throw new ReadError(code); };
 const object = value => value && typeof value === 'object' && !Array.isArray(value);

@@ -37,6 +37,7 @@ atlasDocuments.grantRead(backend.forgeAtlas.resources.lambda, 'gbautomation/*/in
 atlasDocuments.grantRead(backend.forgeAtlas.resources.lambda, 'gbautomation/forge-agent-registry.v1.json');
 backend.forgeAtlas.addEnvironment('DOCUMENT_BUCKET', atlasDocuments.bucketName);
 backend.forgeAtlas.addEnvironment('COGNITO_ISSUER', atlasIssuer(atlasStack,backend.auth.resources.userPool.userPoolId));
+if (process.env.FORGE_LEGACY_OPERATOR_SUB) backend.forgeAtlas.addEnvironment('FORGE_LEGACY_OPERATOR_SUB', process.env.FORGE_LEGACY_OPERATOR_SUB);
 backend.forgeAtlas.resources.lambda.addToRolePolicy(new PolicyStatement({
   effect: Effect.ALLOW, actions: ['secretsmanager:GetSecretValue'],
   resources: [atlasSecretArn(atlasStack)],
