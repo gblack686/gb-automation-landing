@@ -57,7 +57,8 @@ export async function openRuntime({dataRoot,bootstrapRoot,actor}) {
   try {
     const adapters=await createAdapters({store,config,dataRoot,runPython});
     const service=createForgeService({rpc:store.rpc,config,readArtifacts:adapters.readArtifacts});
-    const builder=await createBuilder({store,service,adapters,config,dataRoot,profilePath,visualsPath,runPython,principal:{role:'operator',actor},
+    const builder=await createBuilder({store,service,adapters,config,dataRoot,profilePath,visualsPath,runPython,
+      approvalContext:'hosted_worker',principal:{role:'operator',actor},
       voiceFactory:({store,draftId})=>({status:()=>({provider:'elevenlabs',configured:settings.voice_enabled===true,max_seconds:MAX_VOICE_SECONDS,max_sessions_per_day:3,
         reason:settings.voice_enabled?null:'Voice connection is awaiting release setup',audio_stored_by_forge:false}),
         start:confirmed=>{if(!settings.voice_enabled)throw Error('voice_not_configured');return reserveVoice({store,draftId,confirmed});}})});

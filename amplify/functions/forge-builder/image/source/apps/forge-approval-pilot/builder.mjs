@@ -28,9 +28,10 @@ export function validateAnswers(answers) {
 }
 
 export async function createBuilder({store,service,adapters,config,dataRoot,profilePath,visualsPath,voiceOptions={},
-  voiceFactory=createVoice,principal={role:'operator',actor:'greg'},runPython=python}) {
+  voiceFactory=createVoice,principal={role:'operator',actor:'greg'},runPython=python,approvalContext='local_pilot_only'}) {
   if(principal?.role!=='operator'||typeof principal.actor!=='string'||!principal.actor||principal.actor.length>200)throw Error('builder_operator_required');
   if(!config.pilot||config.agent!=='artist-packet-expert')throw Error('builder_requires_local_artist_pilot');
+  if(!['local_pilot_only','hosted_worker'].includes(approvalContext))throw Error('approval_context_invalid');
   const profile=JSON.parse(await readFile(profilePath,'utf8'));
   if(profile.config.agent_id!==config.agent||profile.planning?.tenant_id!==config.tenant)throw Error('builder_profile_scope_mismatch');
   const metadata=JSON.parse(await runPython(join(repo,'apps/forge-approval-pilot/builder_profile.py'),[profilePath]));
@@ -115,7 +116,8 @@ export async function createBuilder({store,service,adapters,config,dataRoot,prof
       validateRoutes(doc,await adapters.readArtifacts(doc));
       const release=await service.handle({mode:'forge.command',command:'release',input:{workflow_id:w.workflow_id,binding:doc.body.binding}},{role:'coordinator',actor:'pilot-coordinator'});
       const output=JSON.parse(await runPython(join(repo,'apps/forge-approval-pilot/generate_packet.py'),[],{
-        root,profile:profilePath,draft:{...d,packet:null},release,visuals,prior_archive_sha256:d.packet?.archive_sha256}));
+        root,profile:profilePath,draft:{...d,packet:null},release,visuals,approval_context:approvalContext,
+        prior_archive_sha256:d.packet?.archive_sha256}));
       const packet={packet_id:output.packet_id,files:output.manifest.files.length,archive_sha256:output.archive_sha256,
         url:'/api/forge/builder/packets/'+output.packet_id+'/index.html',download:'/api/forge/builder/packets/'+output.packet_id+'.zip'};
       await store.db.query('insert into pilot_builder_packets values($1,$2,$3,$4) on conflict do nothing',[packet.packet_id,id,d.version,JSON.stringify(output)]);

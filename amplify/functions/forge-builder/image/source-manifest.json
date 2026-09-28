@@ -1,7 +1,7 @@
 {
   "schema_version": "forge-builder-source.v1",
   "source_repository": "gbauto/gbautomation",
-  "source_base_commit": "928afd0ec222ae568e4728fdcaf2855c864a99f5",
+  "source_base_commit": "1c8db5a5752a86db8221342c7681fb3f8166ab39",
   "files": [
     {
       "path": "apps/forge-approval-pilot/.local-assets/turntable.js",
@@ -35,8 +35,8 @@
     },
     {
       "path": "apps/forge-approval-pilot/builder.mjs",
-      "sha256": "c53d84c06febeaee1642f418d256101599ba4d9fd5ea12c61949e5e10050ece2",
-      "bytes": 11332
+      "sha256": "f338c3f87113b8cb144daf78a2a7e29a7c0d4417a8ed868be26490b758baed0f",
+      "bytes": 11519
     },
     {
       "path": "apps/forge-approval-pilot/builder_profile.py",
@@ -55,8 +55,8 @@
     },
     {
       "path": "apps/forge-approval-pilot/generate_packet.py",
-      "sha256": "be1afab99f2d3f8585e76ced8d14f61fde68cd27693b5d8f16a8dc54394c641b",
-      "bytes": 13120
+      "sha256": "26b50ef44b92907a5a86fd142b26e8353be9dc5c65bef126bd5385dcca7d716d",
+      "bytes": 13455
     },
     {
       "path": "apps/forge-approval-pilot/package-lock.json",
@@ -119,6 +119,11 @@
       "bytes": 6398
     },
     {
+      "path": "apps/forge-builder-host/compose_handoff.py",
+      "sha256": "afcd3ffde3f677fc99943d8bec9d83cbc610f6ac21b03f35f2d02df7b647146d",
+      "bytes": 4363
+    },
+    {
       "path": "apps/forge-builder-host/export_voice_ledger.mjs",
       "sha256": "9df7b80c59648f71b9cfff21cc418ce7d17559c6bb0c8e785860047511ade7d2",
       "bytes": 2310
@@ -149,6 +154,16 @@
       "bytes": 7255
     },
     {
+      "path": "apps/forge-builder-host/provision_repository.py",
+      "sha256": "a9e244fd5757403c7b56b2a34f1d90112fa59abce697f08bfe4cd1dd89a99e86",
+      "bytes": 8722
+    },
+    {
+      "path": "apps/forge-builder-host/publish_registry.py",
+      "sha256": "bfb271dfe83ac49d3fee70d3c494ccf9c2187f38c3bda8f7d3141c8d2ba2ee6c",
+      "bytes": 7098
+    },
+    {
       "path": "apps/forge-builder-host/release_bootstrap.py",
       "sha256": "3365ccf4e1020ae72e97c3b84e303bc4d257c87f36db30963c9c5e90151046a1",
       "bytes": 5621
@@ -160,8 +175,8 @@
     },
     {
       "path": "apps/forge-builder-host/runtime.mjs",
-      "sha256": "e9726dd955db25012b66f846cda8020571fb95730d7ea46d269c0da56b410336",
-      "bytes": 8440
+      "sha256": "fe051f22ad827ba3e1c6e836ec05a6e86c315748a0cd43ff4fbf741daaae79a9",
+      "bytes": 8479
     },
     {
       "path": "apps/forge-builder-host/snapshot.py",
@@ -177,6 +192,21 @@
       "path": "apps/forge-builder-host/test/make_fixture.py",
       "sha256": "90ea31c16dad329e1f49c907879f318ad5e05c1133433c2679722d470f5c2137",
       "bytes": 2174
+    },
+    {
+      "path": "apps/forge-builder-host/test/test_compose_handoff.py",
+      "sha256": "3586067c06482e8e1776996ddf09902495abd0faf93bb3fec594e0ef158be057",
+      "bytes": 2567
+    },
+    {
+      "path": "apps/forge-builder-host/test/test_provision_repository.py",
+      "sha256": "19a671a23e16ab94ba2dc1b80a678aed6aab29d4166f70c2d7b0f3dddb609160",
+      "bytes": 2746
+    },
+    {
+      "path": "apps/forge-builder-host/test/test_publish_registry.py",
+      "sha256": "a35df13ff2e2526becad76f830daa3012b27c85f321f5818f294e16534ffc772",
+      "bytes": 1641
     },
     {
       "path": "apps/forge-builder-host/test/test_release.py",
@@ -1720,5 +1750,5 @@
     }
   ],
   "dockerfile_sha256": "1634b68b1308d9df398f0b62d9e01dcc313e593dd7c05210684d1eabe3e68a28",
-  "sha256": "0163e4230d7f1538bce42f52fadf0cf75b2c56a57439a9728f2bd17967a60a1f"
+  "sha256": "1a53c3917fedf56fadec6725e3993b3f8738a9a4f10f2f1a0c026f54a68f6735"
 }

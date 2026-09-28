@@ -90,6 +90,9 @@ def generate(request: dict) -> dict:
             release.get('workflow_id') != draft.get('workflow_id') or
             not release.get('decision_event') or release.get('execution_performed') is not False):
         raise ValueError('bound_plan_release_required')
+    approval_context = request.get('approval_context', 'local_pilot_only')
+    if approval_context not in {'local_pilot_only', 'hosted_worker'}:
+        raise ValueError('approval_context_invalid')
     answers = draft['answers']
     if any(answers[k]['status'] != 'captured' or not answers[k]['value'].strip()
            for k in ('problem', 'audience', 'data_access', 'output', 'success')):
@@ -128,7 +131,7 @@ def generate(request: dict) -> dict:
         source_paths += [Path(__file__).parent / '.local-assets/turntable.js']
     sources = {p.relative_to(ROOT).as_posix(): digest(p.read_bytes())
                for p in source_paths if p.is_file()}
-    key = digest(canonical({'draft': draft, 'release': release, 'assets': asset_hashes,
+    key = digest(canonical({'draft': draft, 'release': release, 'approval_context': approval_context, 'assets': asset_hashes,
                             'config': config, 'sources': sources}))
     output = root / 'packets' / key
     archive = root / 'packets' / (key + '.zip')
@@ -186,7 +189,7 @@ def generate(request: dict) -> dict:
         profile['planning'] = {'tenant_id': binding['tenant_id'], 'board_slug': binding['board_slug']}
         profile.pop('artifacts', None)
         profile.pop('atlas', None)
-        profile['source_note'] = 'Operator-reviewed intake assertions. Local pilot package; runtime inactive.'
+        profile['source_note'] = 'Operator-reviewed intake assertions. Generated source package; runtime inactive.'
         write('profile.json', canonical(profile))
         plan = planning_request(profile)
         plan['source_refs']['intake'] = {'id': draft['id'], 'version': draft['version'], 'path': 'intake.json'}
@@ -195,14 +198,15 @@ def generate(request: dict) -> dict:
         packet = {'schema_version': 'forge-expert-packet.v1', 'packet_id': key,
                   'binding': binding, 'generated_config_sha256': config_digest(config),
                   'intake_version': draft['version'], 'workflow_id': draft['workflow_id'],
-                  'approval_evidence': 'local_pilot_only', 'runtime_authorized': False,
+                  'approval_evidence': 'hosted_verified' if approval_context == 'hosted_worker' else 'local_pilot_only',
+                  'runtime_authorized': False,
                   'provider_calls': 0, 'generation_kind': 'deterministic_existing_scaffolder',
                   'repository': {'strategy': 'existing_repository', 'url': 'https://github.com/gbauto/gbautomation',
                                  'created': False, 'commit': None},
                   'visual': {k: {'path': names[k], 'sha256': v} for k, v in asset_hashes.items()},
                   'limitations': ['Scaffold commands remain echo-only until implemented and reviewed.',
                                  'Runtime/model, skill bindings and credentials retain supplied values or unresolved setup.',
-                                 'Local pilot gates are not production implementation approval.']}
+                                 'Repository creation and runtime activation require separate release checks.']}
         page, _, _ = render_private_studio(profile, asset_root=stage)
         page = page.replace('<script id="private-studio-data"', '<script id="forge-generated-packet" type="application/json">' + script_json(packet) + '</script><script id="private-studio-data"')
         write('index.html', page)

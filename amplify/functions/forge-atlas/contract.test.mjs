@@ -64,3 +64,23 @@ test('numeric metrics are bounded and unusable values remain unknown',() => {
  assert.equal(result.datasets.traces[0].row_key,'traces-1');assert.equal(result.datasets.traces[0].tokens,20);assert.equal(result.datasets.traces[0].cost,null);assert.equal(result.datasets.traces[0].duration,null);
  assert.throws(()=>project({view:'atlas'},{traces:Array(201),runs:[],sessions:[]}));
 });
+test('registered-agent list and reads are scoped to the Cognito subject',async () => {
+ const subject='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+ const other='bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
+ const rows=[
+  {tenant_id:'gbautomation',agent_id:'artist-packet-expert',display_name:'Artist Packet Expert',config_sha256:'a'.repeat(64),subjects:[subject],status:'active'},
+  {tenant_id:'gbautomation',agent_id:'music-release-expert',display_name:'Music Release Expert',config_sha256:'b'.repeat(64),subjects:[subject],status:'active'},
+  {tenant_id:'gbautomation',agent_id:'private-expert',display_name:'Private Expert',config_sha256:'c'.repeat(64),subjects:[other],status:'active'},
+ ];
+ let expert=null;
+ const handler=makeHandler({issuer,registry:async()=>({source:'s3',agents:rows}),document:async id=>({agent_id:id}),
+  rpc:async input=>{expert=input.p_expert;return {traces:[],runs:[],sessions:[]};}});
+ const listing=(await handler(event({view:'agents'}))).payload;
+ assert.deepEqual(listing.data.agents.map(row=>row.agent_id),['artist-packet-expert','music-release-expert']);
+ assert.equal(listing.data.source,'s3');
+ assert.equal(JSON.stringify(listing).includes('subjects'),false);
+ const selected=(await handler(event({view:'atlas',agent_id:'music-release-expert'}))).payload;
+ assert.equal(selected.ok,true);assert.equal(selected.data.agent_id,'music-release-expert');assert.equal(expert,'music-release-expert');
+ assert.equal((await handler(event({view:'document',agent_id:'private-expert'}))).payload.error,'agent_access_required');
+ assert.equal((await handler(event({view:'document',agent_id:'../../evil'}))).payload.error,'invalid_request');
+});

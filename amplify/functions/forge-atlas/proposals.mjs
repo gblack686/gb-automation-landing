@@ -4,8 +4,9 @@ const columns = ['proposal_id','tenant','card_title','source_type','source_event
 const ownership = 'producer_runs!inner(producer_run_id,tenant,owner_expert)';
 const scope = {tenant_id:TENANT,agent_id:EXPERT};
 const text = (value,max=4000) => typeof value === 'string' ? value.slice(0,max) : '';
-export function proposalPath({view,query}) {
- const params = new URLSearchParams({tenant:`eq.${TENANT}`,'producer_runs.tenant':`eq.${TENANT}`,'producer_runs.owner_expert':`eq.${EXPERT}`,select:columns.join(',')+','+ownership+(view==='proposal'?',payload':''),limit:view==='proposal'?'1':'50'});
+export function proposalPath({view,query,agent_id=EXPERT}) {
+ const agent=agent_id;
+ const params = new URLSearchParams({tenant:`eq.${TENANT}`,'producer_runs.tenant':`eq.${TENANT}`,'producer_runs.owner_expert':`eq.${agent}`,select:columns.join(',')+','+ownership+(view==='proposal'?',payload':''),limit:view==='proposal'?'1':'50'});
  if (view === 'proposal') params.set('proposal_id',`eq.${query.proposal_id}`);
  else {
   params.set('offset',String(query.offset || 0));
@@ -17,12 +18,13 @@ export function proposalPath({view,query}) {
  return `/rest/v1/agent_os_proposals?${params}`;
 }
 export function projectProposals(request,rows,contentRange) {
+ const agent=request.agent_id || EXPERT;
  if (!Array.isArray(rows) || rows.length > (request.view==='proposal'?1:50)
      || rows.some(row=>!row || row.tenant!==TENANT || !/^prop_[a-z0-9_]+$/.test(row.proposal_id)
        || !row.producer_run_id || row.producer_runs?.producer_run_id!==row.producer_run_id
-       || row.producer_runs?.tenant!==TENANT || row.producer_runs?.owner_expert!==EXPERT)) throw Error('Invalid proposal ownership');
+       || row.producer_runs?.tenant!==TENANT || row.producer_runs?.owner_expert!==agent)) throw Error('Invalid proposal ownership');
  const projected = rows.map(row=> {
-  const value={...scope,...Object.fromEntries(columns.filter(k=>k!=='tenant').map(k=>[k,row[k]]))};
+  const value={...scope,agent_id:agent,...Object.fromEntries(columns.filter(k=>k!=='tenant').map(k=>[k,row[k]]))};
   if (request.view==='proposal') {
    if(row.proposal_id!==request.query.proposal_id)throw Error('Invalid proposal identity');
    const payload=row.payload || {};
