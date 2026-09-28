@@ -11,6 +11,7 @@ import hashlib
 import json
 import os
 from email.utils import getaddresses
+from email.policy import SMTP
 from pathlib import Path
 import subprocess
 import sys
@@ -44,7 +45,7 @@ def headers(value: dict) -> dict[str, str]:
 
 def send(receipt: dict, acceptance: dict, recipient: str, output: Path, *, apply: bool = False) -> dict:
     message = compose(receipt, recipient, acceptance)
-    raw = message.as_bytes()
+    raw = message.as_bytes(policy=SMTP)
     result = {"schema_version": "forge-handoff-email.v1", "state": "prepared",
               "message_id": message["Message-ID"], "recipient_sha256": hashlib.sha256(recipient.lower().encode()).hexdigest(),
               "mime_sha256": hashlib.sha256(raw).hexdigest(), "repository": receipt["repository"],

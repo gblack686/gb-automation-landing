@@ -139,7 +139,7 @@ def apply(destination: Path, record: dict, github_user: str) -> dict:
                       "-f", "permission=pull"])
     if invitation:
         invite = json.loads(invitation)
-        if invite.get("invitee", {}).get("login", "").lower() != github_user.lower() or invite.get("permissions") != "read":
+        if invite.get("invitee", {}).get("login", "").lower() != github_user.lower() or invite.get("permissions") not in {"read", "pull"}:
             raise RuntimeError("customer_invitation_readback_failed")
         access = "invited"
     else:
