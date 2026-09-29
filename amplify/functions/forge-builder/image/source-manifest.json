@@ -1,7 +1,7 @@
 {
   "schema_version": "forge-builder-source.v1",
   "source_repository": "gbauto/gbautomation",
-  "source_base_commit": "b07bb628df57ce31823efe2c2238af99697c84ee",
+  "source_base_commit": "6e153b14adc30d30c3b8e6977650dba1d7c56622",
   "files": [
     {
       "path": "apps/forge-approval-pilot/.local-assets/turntable.js",
@@ -755,8 +755,8 @@
     },
     {
       "path": "resources/lib/tracing.py",
-      "sha256": "4e342bd0002860b84d65541035c1e413ad414d8654a71c23c27e7390cb22c9ab",
-      "bytes": 51496
+      "sha256": "c74d69a7513b709bfc985eff58708731e83eac7dd107b96c2b9de5140ee7010c",
+      "bytes": 51814
     },
     {
       "path": "resources/lib/usage_pricing.py",
@@ -1760,5 +1760,5 @@
     }
   ],
   "dockerfile_sha256": "1634b68b1308d9df398f0b62d9e01dcc313e593dd7c05210684d1eabe3e68a28",
-  "sha256": "6c2a067ee365258bab987895d40db04d7142a04c32731e8d8a857429f83a163f"
+  "sha256": "9b874ffd6ea7b3cc94ec8a7a9c7b4ec270fb5ae7bf76f6ecebbbc5097ea85774"
 }

@@ -61,14 +61,14 @@ LANGFUSE_SCORE_NAMES = {"greg_human", "judge_llm", "drift", "manager_outcome", "
 def emit_otlp_payload(payload: bytes, *, timeout: float = 30) -> dict[str, Any]:
     """Send a bounded, pre-sanitized native trace batch using v4 ingestion."""
     if not payload or len(payload) > 8 * 1024 * 1024:
-        return {"ok": False, "error": "payload_limit"}
+        return {"ok": False, "error": "payload_limit", "delivery_state": "not_sent"}
     try:
         from opentelemetry.proto.collector.trace.v1.trace_service_pb2 import ExportTraceServiceResponse
         _load_dotenv()
         _hydrate_from_aws_sm()
         public_key, secret_key = os.getenv("LANGFUSE_PUBLIC_KEY"), os.getenv("LANGFUSE_SECRET_KEY")
         if not public_key or not secret_key:
-            return {"ok": False, "error": "credentials_unavailable"}
+            return {"ok": False, "error": "credentials_unavailable", "delivery_state": "not_sent"}
         host = (os.getenv("LANGFUSE_HOST") or os.getenv("LANGFUSE_BASE_URL") or "https://us.cloud.langfuse.com").rstrip("/")
         request = urllib.request.Request(host + "/api/public/otel/v1/traces", method="POST", data=payload,
             headers={"Content-Type": "application/x-protobuf", "x-langfuse-ingestion-version": "4",
@@ -79,19 +79,20 @@ def emit_otlp_payload(payload: bytes, *, timeout: float = 30) -> dict[str, Any]:
             receipt = json.loads(raw)
             partial = receipt.get("partialSuccess") or receipt.get("partial_success") or {}
             if partial.get("rejectedSpans") not in (None, 0, "0") or partial.get("rejected_spans") not in (None, 0, "0") or partial.get("errorMessage") or partial.get("error_message"):
-                return {"ok": False, "error": "otel_partial_success"}
+                return {"ok": False, "error": "otel_partial_success", "delivery_state": "uncertain"}
             if receipt.get("errors") or receipt.get("error") or receipt.get("success") is False:
-                return {"ok": False, "error": "otel_rejected"}
+                return {"ok": False, "error": "otel_rejected", "delivery_state": "uncertain"}
             # Never return/log queue-job receipts: they can contain auth metadata.
         else:
             receipt = ExportTraceServiceResponse.FromString(raw)
             if receipt.partial_success.rejected_spans or receipt.partial_success.error_message:
-                return {"ok": False, "error": "otel_partial_success"}
-        return {"ok": True}
+                return {"ok": False, "error": "otel_partial_success", "delivery_state": "uncertain"}
+        return {"ok": True, "delivery_state": "accepted"}
     except urllib.error.HTTPError as exc:
-        return {"ok": False, "error": "http_error", "status": exc.code}
+        return {"ok": False, "error": "http_error", "status": exc.code,
+                "delivery_state": "rejected" if exc.code in (400, 401, 403, 413, 429) else "uncertain"}
     except Exception as exc:
-        return {"ok": False, "error": type(exc).__name__}
+        return {"ok": False, "error": type(exc).__name__, "delivery_state": "uncertain"}
 
 
 def emit_ingestion_batch(events: Sequence[Mapping[str, Any]], *, timeout: float = 30) -> dict[str, Any]:
