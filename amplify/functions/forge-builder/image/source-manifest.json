@@ -1,0 +1,1764 @@
+{
+  "schema_version": "forge-builder-source.v1",
+  "source_repository": "gbauto/gbautomation",
+  "source_base_commit": "6e153b14adc30d30c3b8e6977650dba1d7c56622",
+  "files": [
+    {
+      "path": "apps/forge-approval-pilot/.local-assets/turntable.js",
+      "sha256": "014e0669e888297d7cf011d27be6a4aa201bde003305c340c1a7fc447ac1d425",
+      "bytes": 562035
+    },
+    {
+      "path": "apps/forge-approval-pilot/adapters.mjs",
+      "sha256": "522c16ef24f9132dd5a7573edff5a6e693937815c89882b6a16787bb8dc57c97",
+      "bytes": 7820
+    },
+    {
+      "path": "apps/forge-approval-pilot/artifacts.py",
+      "sha256": "5d10a1eb3e27b2b4fdb48484037f30b9c7bddc40e84c3d3aa928707dd955f556",
+      "bytes": 7474
+    },
+    {
+      "path": "apps/forge-approval-pilot/browser-smoke.py",
+      "sha256": "8db8b6df177511af880bfc62df55fc805ca6c5a84493041cb5bf99b4e2cd5cc7",
+      "bytes": 6316
+    },
+    {
+      "path": "apps/forge-approval-pilot/build-voice.mjs",
+      "sha256": "c7ede4bb3028a11595499ffc0f96bd4f769ec3349bdce710cbe750ec5a992035",
+      "bytes": 531
+    },
+    {
+      "path": "apps/forge-approval-pilot/builder-smoke.py",
+      "sha256": "0eac36679079f746b377448658648bcbdae6b3f87bbddf653aec991aebabc2e7",
+      "bytes": 7879
+    },
+    {
+      "path": "apps/forge-approval-pilot/builder.mjs",
+      "sha256": "f338c3f87113b8cb144daf78a2a7e29a7c0d4417a8ed868be26490b758baed0f",
+      "bytes": 11519
+    },
+    {
+      "path": "apps/forge-approval-pilot/builder_profile.py",
+      "sha256": "d4b2acfe1d9032c1b815005c7c573f4d3fb4ca528bc69d9497da87d8d1ea28d1",
+      "bytes": 540
+    },
+    {
+      "path": "apps/forge-approval-pilot/connected-smoke.py",
+      "sha256": "71ebf5654fde56d3d22af21889c3ea670f27a86dabc2e009217494983f54ac84",
+      "bytes": 3086
+    },
+    {
+      "path": "apps/forge-approval-pilot/connected.mjs",
+      "sha256": "2f0f9cabb46de43ae5bd81c636599c664ae98515add92359d8540bd349c638bc",
+      "bytes": 9120
+    },
+    {
+      "path": "apps/forge-approval-pilot/generate_packet.py",
+      "sha256": "26b50ef44b92907a5a86fd142b26e8353be9dc5c65bef126bd5385dcca7d716d",
+      "bytes": 13455
+    },
+    {
+      "path": "apps/forge-approval-pilot/package-lock.json",
+      "sha256": "d7f6f2e652229d6e3ac82953aa730a295bd0751a3a5657a35208592d425552b8",
+      "bytes": 21668
+    },
+    {
+      "path": "apps/forge-approval-pilot/package.json",
+      "sha256": "cd92730eb5d391fd9d76d56d7ba493eec8fe7e4a09fbfabdb97e0ab9c2222c08",
+      "bytes": 636
+    },
+    {
+      "path": "apps/forge-approval-pilot/proof.mjs",
+      "sha256": "4243e97f5894016a2b16e1d8d19aa753774ce7170c86a0aacc689da95036b2fe",
+      "bytes": 3492
+    },
+    {
+      "path": "apps/forge-approval-pilot/resume-fixture.py",
+      "sha256": "30c885a2e4e7ca8567bdfecfd911c26a062168f97abd2c78e5d03d769f93c912",
+      "bytes": 2863
+    },
+    {
+      "path": "apps/forge-approval-pilot/server.mjs",
+      "sha256": "2013eeab9e1013442f93268fd849d4539f8ca0ddd548e339c6722f0d2a4d7de3",
+      "bytes": 12879
+    },
+    {
+      "path": "apps/forge-approval-pilot/setup_voice.py",
+      "sha256": "92a932035606e098acfac8027c587dc9908d58e075108a781db0669b13b73311",
+      "bytes": 7892
+    },
+    {
+      "path": "apps/forge-approval-pilot/start_builder.py",
+      "sha256": "82b2bbffc49a01473705b3c4ba687d1ebc80ab0b64611147a3fc6bff693f5264",
+      "bytes": 1764
+    },
+    {
+      "path": "apps/forge-approval-pilot/store.mjs",
+      "sha256": "d9d28b6ebb2704ae169eb76ba494e6689547f19565fcd8ca5aa47bc4a51e83f2",
+      "bytes": 2683
+    },
+    {
+      "path": "apps/forge-approval-pilot/turntable.mjs",
+      "sha256": "283de29fade47cf816f1f04b5fa01d11ead94d478e50324bd2d3cf52f2169a4c",
+      "bytes": 3640
+    },
+    {
+      "path": "apps/forge-approval-pilot/voice-client.mjs",
+      "sha256": "8dcb1cfbdf55ef8533bbb562e07ae7575cac473cf33f085e1596ce0a07397161",
+      "bytes": 72
+    },
+    {
+      "path": "apps/forge-approval-pilot/voice-smoke.py",
+      "sha256": "b5d2ecce4ee7c232eea6592821fb31f449264b07957a3ebf70a857b865a162cc",
+      "bytes": 5334
+    },
+    {
+      "path": "apps/forge-approval-pilot/voice.mjs",
+      "sha256": "04ccf35a1c818d7993dc27a397b27c33316590c5e4f82e770560da495369d3bf",
+      "bytes": 6398
+    },
+    {
+      "path": "apps/forge-builder-host/compose_handoff.py",
+      "sha256": "8a8f9f198af37a075a0a5faae6e0093c58f7d983965570a95dcb1f465d26d40e",
+      "bytes": 4995
+    },
+    {
+      "path": "apps/forge-builder-host/export_voice_ledger.mjs",
+      "sha256": "9df7b80c59648f71b9cfff21cc418ce7d17559c6bb0c8e785860047511ade7d2",
+      "bytes": 2310
+    },
+    {
+      "path": "apps/forge-builder-host/handler.mjs",
+      "sha256": "912b5a0e9a4ee32fa381f6b03a5a8ecb1b87e084ff2ae4794fed96bedf352d4e",
+      "bytes": 7935
+    },
+    {
+      "path": "apps/forge-builder-host/package-lock.json",
+      "sha256": "71fbf8a556dc68005c0deaa8960dfd5830d541dd0adbceb287eabc5297efab05",
+      "bytes": 54781
+    },
+    {
+      "path": "apps/forge-builder-host/package.json",
+      "sha256": "8d97d4219922a7e065b546bb76194463a6e7deda613d3bcbbc19a9e3fee5682e",
+      "bytes": 165
+    },
+    {
+      "path": "apps/forge-builder-host/package_bootstrap.py",
+      "sha256": "bf05b1e123f9cba4eeb44c7a201aadcd5e7d51aa67848a6c0dab7738fca4fb08",
+      "bytes": 3904
+    },
+    {
+      "path": "apps/forge-builder-host/package_source.py",
+      "sha256": "fe63a2632ea2d4d7f5f823a3a065d19f928a29edd3fd60809ceb4d563f9029d7",
+      "bytes": 7255
+    },
+    {
+      "path": "apps/forge-builder-host/provision_repository.py",
+      "sha256": "42130737e7dbc6e8561fb10eeaa8d715082121b554735a52c7cf6ed9b558c0b1",
+      "bytes": 9777
+    },
+    {
+      "path": "apps/forge-builder-host/publish_registry.py",
+      "sha256": "ee9aab4e9bef02efa49eac73dffcb98d2070437d9b3129d826384072230c2e58",
+      "bytes": 7297
+    },
+    {
+      "path": "apps/forge-builder-host/release_bootstrap.py",
+      "sha256": "3365ccf4e1020ae72e97c3b84e303bc4d257c87f36db30963c9c5e90151046a1",
+      "bytes": 5621
+    },
+    {
+      "path": "apps/forge-builder-host/requirements.txt",
+      "sha256": "ff7274a7e9b4af4c80bb3474320356e449171d794fbf865c3a7e8788de8db9f3",
+      "bytes": 48
+    },
+    {
+      "path": "apps/forge-builder-host/runtime.mjs",
+      "sha256": "fe051f22ad827ba3e1c6e836ec05a6e86c315748a0cd43ff4fbf741daaae79a9",
+      "bytes": 8479
+    },
+    {
+      "path": "apps/forge-builder-host/send_handoff.py",
+      "sha256": "06d6424f9b08f5efa248d6556231d83ded317e0c438364bf75646bfb662bf7ce",
+      "bytes": 4934
+    },
+    {
+      "path": "apps/forge-builder-host/snapshot.py",
+      "sha256": "b8054f62246ae0608bea806802a447ce9e688b2cd25cad58db0b878fb66ab249",
+      "bytes": 2335
+    },
+    {
+      "path": "apps/forge-builder-host/test/integration.mjs",
+      "sha256": "6b9aaf1b736ae4fe4a870beda5cbc173ae1f7edeecd75544b79675cf55faabf4",
+      "bytes": 6159
+    },
+    {
+      "path": "apps/forge-builder-host/test/make_fixture.py",
+      "sha256": "90ea31c16dad329e1f49c907879f318ad5e05c1133433c2679722d470f5c2137",
+      "bytes": 2174
+    },
+    {
+      "path": "apps/forge-builder-host/test/test_compose_handoff.py",
+      "sha256": "84bfe00b650d7bd193e89b5559b3b48227a2c9566c9692ca89c40103ead42f08",
+      "bytes": 2728
+    },
+    {
+      "path": "apps/forge-builder-host/test/test_provision_repository.py",
+      "sha256": "19a671a23e16ab94ba2dc1b80a678aed6aab29d4166f70c2d7b0f3dddb609160",
+      "bytes": 2746
+    },
+    {
+      "path": "apps/forge-builder-host/test/test_publish_registry.py",
+      "sha256": "a35df13ff2e2526becad76f830daa3012b27c85f321f5818f294e16534ffc772",
+      "bytes": 1641
+    },
+    {
+      "path": "apps/forge-builder-host/test/test_release.py",
+      "sha256": "883443c2a6f09ebc39f807a4614e79db364fe1464c5fe91e08ce8dc17f024e29",
+      "bytes": 1705
+    },
+    {
+      "path": "apps/forge-builder-host/test/test_send_handoff.py",
+      "sha256": "d2b11049a259845811a8dc27840a62cf3df51478c70096c6f95fcd154c4298aa",
+      "bytes": 3348
+    },
+    {
+      "path": "apps/forge-builder-host/test/test_snapshot.py",
+      "sha256": "f0ee911fe7a46cc2e385373cca7450188ac127db27f6d7fa2646d39397bf1f93",
+      "bytes": 2470
+    },
+    {
+      "path": "apps/forge-builder-host/test/worker.test.mjs",
+      "sha256": "5e68030d43938149a6c65e382f8880cc433c61ff4e641b7249528f65649edcc3",
+      "bytes": 3852
+    },
+    {
+      "path": "apps/forge-builder-host/worker.mjs",
+      "sha256": "ce111da7e4433486f6ad676f09b6d2dc45065acc80d7de389089c7f5ab0eb3af",
+      "bytes": 2646
+    },
+    {
+      "path": "artifacts/forge-approval-intake-2026-09-24/implementation-approval.json",
+      "sha256": "454ef0f4add8cac4decb128d6c57ed922d93e606ff4994d8eac0aa185ba191e3",
+      "bytes": 3186
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/app.js",
+      "sha256": "ed87ad32b9ae249aa4fa12177e721082594eb1c44812d052a398bcbf7f09833f",
+      "bytes": 29031
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/CONTRACT.md",
+      "sha256": "6f1c657af5ec984454a34348b2d05808835bd61739049626cbd7d229ec3d6f51",
+      "bytes": 7176
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/data.js",
+      "sha256": "3111c06fff6e8d3338cc21949a79d91f74b567ecf16cd30535d735c81ff23fd1",
+      "bytes": 18719
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/DESIGN.md",
+      "sha256": "3f666c23b19d5c138fec839a10e1320c3a168c0fcc6ac09814504e00640d15b7",
+      "bytes": 5992
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/index.html",
+      "sha256": "dc0e9ed495ef5ca19c3f57f3d33d75ddf56f276ec1dde447bf131cfb56fce0ef",
+      "bytes": 4711
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/manifest.json",
+      "sha256": "8ac082fbc342da5f218cd7740e01e56202802a8ebd6d2682b5fdb5af107504e9",
+      "bytes": 15036
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/README.md",
+      "sha256": "ef2c534ea28b7f4862dc9fab087ded4bff51549809bdf02e4cc8bd41966c10a8",
+      "bytes": 2659
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/suite.css",
+      "sha256": "ed8d5f835e35d4147ab5e55ce1c3fb855090c40e36572f82ca7b8b3ece717a42",
+      "bytes": 34275
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/artifacts-390.png",
+      "sha256": "71720dd2dbce9408a19d3b9820d732ce4cc56c5ea318a233ded497adbec04862",
+      "bytes": 147353
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/artifacts-full.png",
+      "sha256": "084d33f7a63770cb0b2d9b8d88fca4654288a1d9c24e9bb6fe4172fcf84838ab",
+      "bytes": 167763
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/artifacts-preview.png",
+      "sha256": "85c0f15bcc1a13851bbf5b854af5e04db87ed5822c4be1d765eac54918d31a11",
+      "bytes": 97989
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/browser-checks.json",
+      "sha256": "89591d3771a35a0a9d19a8ab8b72c50354a311cc4a7677dd04d3873997dfedfe",
+      "bytes": 22563
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/build_manifest.mjs",
+      "sha256": "b4e68655928667eb874b85fc08d29cf8767f3747d8d7ac1886f0751661038fb8",
+      "bytes": 2966
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/canvas-390.png",
+      "sha256": "0fd9840de5a6f53f21d90ae90d456d5fbc7ca40d1cce23997799d5672ac48dd3",
+      "bytes": 135851
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/canvas-full.png",
+      "sha256": "d73235c7e0f987afe3fbf67745b4103ddacfa7c087a6e22199a12cf4452907ab",
+      "bytes": 151719
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/canvas-preview.png",
+      "sha256": "ee8d61ed9df29dc9a03b36b4b3b994459906dfe5fc9be246a0226658373124b2",
+      "bytes": 104690
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/changes-390.png",
+      "sha256": "9c91b20ea23ae00b62e8a29e90c53b08196ca2bf98b4ececd77ff65c69936768",
+      "bytes": 99331
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/changes-full.png",
+      "sha256": "1a81c3ac4f61da6dda40d212165eda886768861f152befd8a402b6f0a8c13419",
+      "bytes": 142246
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/changes-preview.png",
+      "sha256": "f764e621fc677ee2458432e0f831dea8eca2f50f1877e01be63546d30ae6c147",
+      "bytes": 107005
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/chat-390.png",
+      "sha256": "444d9a18e6a330398759fec4b0a51b70d80fcf5ec0b53e7b168dc78ba3f0205e",
+      "bytes": 130607
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/chat-full.png",
+      "sha256": "515979ea0002def9032e1755ce6ceb91c18661db1755814a5e5d3b801016836a",
+      "bytes": 158372
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/chat-preview.png",
+      "sha256": "4fba5de0e51db6b0b1b5f1ca92f854978026102302964eff3060634320ff08df",
+      "bytes": 99272
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/check_suite.py",
+      "sha256": "aa6bc834683020e09d30c14ce9e079b49226356b9d116bb652c843c45891d384",
+      "bytes": 14864
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/checks-390.png",
+      "sha256": "229e69fcc994049b420d3ebf69d8a2a01ce531a0add4b82e3c1516b11cf3ad8a",
+      "bytes": 99245
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/checks-full.png",
+      "sha256": "99b4f4eeb047cdb85ae48d03e59ad30e085a7775fa8e74a11d0e6d76d29b453a",
+      "bytes": 147505
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/checks-preview.png",
+      "sha256": "adf04df2870f3613874c3cd5814b2e8dd5a97c1ca983bda50e9e773689d0a6bc",
+      "bytes": 112460
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/commands-390.png",
+      "sha256": "7f35f52c085136c3813768ad84a1c1373dde00e983b1e666cd357f19f200942b",
+      "bytes": 104782
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/commands-full.png",
+      "sha256": "7237504171d8a6dd20c5320cc333e9eb19f9356f43b01264d9092b64a207294b",
+      "bytes": 152474
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/commands-preview.png",
+      "sha256": "7d34a0cf48dc6673622e2765e8c8479d8039aeaacf1fc401753240939008abee",
+      "bytes": 104503
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/config-390.png",
+      "sha256": "1ea46267d7f9c81737043ff81d9ffb6be541435253fc76a3ea734bf7ff6aa4dd",
+      "bytes": 130119
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/config-full.png",
+      "sha256": "17d3aac0076f4d0c301e882b5bc49274e10300e0439116250be7a58f5ba7f91b",
+      "bytes": 169507
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/config-preview.png",
+      "sha256": "6d3a77b84027fbf6d7a075c00078cce9f91a2e5aa51e9ea31e0642436e1f67b3",
+      "bytes": 103183
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/console-390.png",
+      "sha256": "3e4c683b46b5c5ce0fb9ac1838712220dd6f363037e18d5d64a7927b774964c6",
+      "bytes": 113493
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/console-full.png",
+      "sha256": "e01932c2cea60f879ffa30cf0725215746c50233a861c3d5a1e6d0954f61af39",
+      "bytes": 153572
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/console-preview.png",
+      "sha256": "b78e262a16905419fd7bd1a71f7a5024d98335f9dc49a0e2520098fcf8554fab",
+      "bytes": 97891
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/data-map.png",
+      "sha256": "5d62c444c6ef70bb2e3cbb4bad76547fcc85f458a6be015eb6f3ecafa321cb24",
+      "bytes": 206181
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/design-contrast-dark.png",
+      "sha256": "81a1691e0adc6ea3900dc845e2985e16ba72e75c22398e9022c3856778b4a1c2",
+      "bytes": 172631
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/design-contrast.png",
+      "sha256": "29367cdda4e86eba37fc2539f0ebad52c2b244edeafb5c661f77025caaf4a6a9",
+      "bytes": 173149
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/design-editorial-dark.png",
+      "sha256": "a74c2c74c617554df094fad087c761ff2ab4cd659926c76664d4869698545fab",
+      "bytes": 173253
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/design-editorial.png",
+      "sha256": "23c61e6b2ed5e9370bd5bba361e5341bbc38db3c3cf00ab35a6ccc3e8fc52d47",
+      "bytes": 173435
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/design-glass-dark.png",
+      "sha256": "aeb42b0220ded12c29b0456b8e5858338f0972e8f224f413a5b5fd63f1e615dc",
+      "bytes": 184674
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/design-glass.png",
+      "sha256": "52aebb974b0cc9c81b21bc60f4f2546ba308e5450498c6e25deb5f1dcc428fb3",
+      "bytes": 189903
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/design-precision-dark.png",
+      "sha256": "283b63a569ea889ef106d720d2a73abfb72b0967520352b7837a3b96c0c41ea9",
+      "bytes": 169295
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/design-precision.png",
+      "sha256": "201f210d9a0d139bcc7f1cd7d144d6772d460f402b8eef800d15e78b2e6f27a8",
+      "bytes": 166647
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/design-studio-dark.png",
+      "sha256": "2d34c7c714a310be005d9be1e70b2d8d01e48e61424bb587b5baaa85b19001e6",
+      "bytes": 173048
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/design-studio.png",
+      "sha256": "4ce4bede9f91b5bf00930a7da1bb5abf7e14573a079577da3726b3d1b52e8f60",
+      "bytes": 173371
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/gallery.png",
+      "sha256": "9035f2a7539b7f140542908caf7019e8ffacaf421241a8228e42ba495821bc14",
+      "bytes": 390016
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/knowledge-390.png",
+      "sha256": "ad42df2bc7f4fc1fa3f935ef2544e6a2de2abfca68c9be5554981c900b273f25",
+      "bytes": 137794
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/knowledge-full.png",
+      "sha256": "5e97670c94ed147d1f1727246891e379d04d5405129f497bcf1e4b6356e673e5",
+      "bytes": 170228
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/knowledge-preview.png",
+      "sha256": "bda258b0bbd3d4abff5501cc61dcd9bf735b899c679c995f52954481be9b0715",
+      "bytes": 102098
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/presence-390.png",
+      "sha256": "aa03a1616370c1e5bbbfe214dc43fe369a2b927c61d95321408ea95e8bf4e8c3",
+      "bytes": 171667
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/presence-full.png",
+      "sha256": "b8396eb9999ae12f38a3134b6c3a8f1adc4120fb10d798f7a05a89e2c0157c56",
+      "bytes": 240124
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/presence-preview.png",
+      "sha256": "2f1e717b5f850afe59fb6ebbed8a1b884f574659b9a50b72cda1f6d4a011079d",
+      "bytes": 123512
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/proposals-390.png",
+      "sha256": "d6ca1260bbf8ce4bb39395ebc94831a52e5b69ee85b51b4705ca36bc171b23e3",
+      "bytes": 122187
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/proposals-full.png",
+      "sha256": "3ffe752e5d985e5cd94dbaafaa50a2faccd2233c1f0777c0670f7af92d950c18",
+      "bytes": 160882
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/proposals-preview.png",
+      "sha256": "a232a1d2e563721aae78db73f11a442a7d1a7a0bd188528f95d787a376473946",
+      "bytes": 100899
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/skills-390.png",
+      "sha256": "e7ad8d45ff0ccec9865bc2ec1004e6d805437ece651f416a33bd4fff9de66005",
+      "bytes": 121985
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/skills-full.png",
+      "sha256": "4ce4bede9f91b5bf00930a7da1bb5abf7e14573a079577da3726b3d1b52e8f60",
+      "bytes": 173371
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/skills-preview.png",
+      "sha256": "1fe3f39d92674d3f1fd7c0a6d026247b87d9d4bd8500614432deff36799e0aa7",
+      "bytes": 106163
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/tasks-390.png",
+      "sha256": "212e6481d85bb86684ec6cad8b8cb289a168e0cc6fb74e73ead8f26d0cd1e7c8",
+      "bytes": 84920
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/tasks-full.png",
+      "sha256": "8f488a28f38608104e05280fb8916d435cda9a0fc7cdef8851c9a9093709e3c9",
+      "bytes": 130270
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/tasks-preview.png",
+      "sha256": "f3b0891ab0fff6f090c09a5b37fb66423333dbd58e5b410ad57a4eeec82b40a6",
+      "bytes": 101985
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/validation/theme-check.json",
+      "sha256": "6b2fb049d3ae71c5932436d4477a918e9e1b8d9f4ca05fd7b26e0c1c63cca563",
+      "bytes": 578
+    },
+    {
+      "path": "artifacts/forge-connected-windows-2026-09-23/windows.js",
+      "sha256": "e94d84c039b52f586f0537d7893d8ee795eb3fa1320e048de7dc1e6a49401fad",
+      "bytes": 37763
+    },
+    {
+      "path": "config/agent-operating-policy.yaml",
+      "sha256": "c05f90c24d3c95435dfb44a4628437cf4eca878c7b15219e659d07a64d6042aa",
+      "bytes": 6591
+    },
+    {
+      "path": "config/justfile-section-registry.yaml",
+      "sha256": "57fd8bc949af9a8efa97f35d9cae94e7638210858689604b14ae3a5100077c41",
+      "bytes": 14150
+    },
+    {
+      "path": "config/schemas/agent-operating-policy.v1.schema.json",
+      "sha256": "071fe9591342ff7e87cc621bb7d85a3fb90ea5d5f368d89613be55ad40273a36",
+      "bytes": 6458
+    },
+    {
+      "path": "experts/gbautomation/_template/_template.md",
+      "sha256": "eff9fd8b5d6eb9cf7c8228f5ac2053ef0e4c07f29267daa482031a79e7e8004b",
+      "bytes": 2529
+    },
+    {
+      "path": "experts/gbautomation/_template/data/README.md",
+      "sha256": "c7088a4f899585c22f94dfe2d4d030b4c2d4a86d9cedcb2cff16dd45b3224dad",
+      "bytes": 2130
+    },
+    {
+      "path": "experts/gbautomation/_template/data/surfaces.json.example",
+      "sha256": "8d806254059c35f3e765b9effb6abe25f9f932599510e7d641bb53bfff639c72",
+      "bytes": 355
+    },
+    {
+      "path": "experts/gbautomation/_template/expertise.md",
+      "sha256": "27a7d91bf85660b9284733bb7d51c5f5f185ba9be4694fa3a96404274a567d16",
+      "bytes": 2392
+    },
+    {
+      "path": "experts/gbautomation/_template/graph.md",
+      "sha256": "b5c962315ce5d29c8e4bad4bece8b57e94c15e9aba9d32355938ba2f231ea3bd",
+      "bytes": 5008
+    },
+    {
+      "path": "experts/gbautomation/_template/install.md",
+      "sha256": "d7c62f201323f09dee027e036e3bc358f526b75cdca5f379dc1be03a7e05c658",
+      "bytes": 3510
+    },
+    {
+      "path": "experts/gbautomation/_template/justfile",
+      "sha256": "372388afa3b3b2046460dda84eb88b0f946f88540125b2661e81242786028d9b",
+      "bytes": 5431
+    },
+    {
+      "path": "experts/gbautomation/_template/maintenance.md",
+      "sha256": "8cdade203f5cf117829bd73cfd5cd63c34d9d0f50809875f86ea3306fe45a1d6",
+      "bytes": 3393
+    },
+    {
+      "path": "experts/gbautomation/_template/plan.md",
+      "sha256": "efcba84b14df2581d00189a7b8f551cbd2a20149bc46d5b84ecca8800a80ecb8",
+      "bytes": 1618
+    },
+    {
+      "path": "experts/gbautomation/_template/plan_build_improve.md",
+      "sha256": "dff7e7878eb40f794ea04c17a2994ddaf605c0ebbd4321a3189b0a306b36760b",
+      "bytes": 2314
+    },
+    {
+      "path": "experts/gbautomation/_template/prime.md",
+      "sha256": "1fcd776ad6b0aa4c5432c88dadd07c49fb9e55e1be85530a9d6189991b68d818",
+      "bytes": 1714
+    },
+    {
+      "path": "experts/gbautomation/_template/profile/config.yaml",
+      "sha256": "8b2010e717476a636c720d505aaa6885436bb78de3653eb4e18c2cbef6233313",
+      "bytes": 1075
+    },
+    {
+      "path": "experts/gbautomation/_template/profile/distribution.yaml",
+      "sha256": "9c316482d1e003a7924375ac89364252e2871df35ff0bf2310742b9b167f0e3c",
+      "bytes": 283
+    },
+    {
+      "path": "experts/gbautomation/_template/profile/SOUL.md",
+      "sha256": "9649cd7371c21e079167e12cb7838b544199098c473fb8f91c96afdfab14813e",
+      "bytes": 315
+    },
+    {
+      "path": "experts/gbautomation/_template/quality/behavior-cases.json.example",
+      "sha256": "daf4e380b3399676285572e7a13b47a2a420dc45000a8e1e3e9439b53ee2ed57",
+      "bytes": 1665
+    },
+    {
+      "path": "experts/gbautomation/_template/quality/README.md",
+      "sha256": "9e1f2d5047a26f425c4b7ef95beaa903d821e6e719817fa8e8e5b49ce1887395",
+      "bytes": 3061
+    },
+    {
+      "path": "experts/gbautomation/_template/question.md",
+      "sha256": "a6c02ff15bf182c53192669d17279793e421acf5be2467ee7267ee19429394e6",
+      "bytes": 2146
+    },
+    {
+      "path": "experts/gbautomation/_template/README.md",
+      "sha256": "6ac2d8a060cc7160da3fdcf7fdf55f4ac780b08df419500de902efe86a7c4db4",
+      "bytes": 11341
+    },
+    {
+      "path": "experts/gbautomation/_template/reports/outputs.yaml",
+      "sha256": "22aaf1bb56724f42bfbaaf49bee2d94cf38c49b509096ceb437b1c51fbb9e130",
+      "bytes": 399
+    },
+    {
+      "path": "experts/gbautomation/_template/reports/README.md",
+      "sha256": "41bbedb0b6dd5cc35cdeab9ab6c30b1fe4e00855142f71e5f6859b718ab0ac8c",
+      "bytes": 2336
+    },
+    {
+      "path": "experts/gbautomation/_template/self-improve.md",
+      "sha256": "c24a7b652b1aa5a4e6aba5cc462a17a585587ced28edec82eeb9f0db273d12fe",
+      "bytes": 8832
+    },
+    {
+      "path": "experts/gbautomation/_template/sprint/expert-sprint.yaml",
+      "sha256": "8754b62ce4137720048b2ad2c900a05670e91c882b7279e21d634b9704ac18b6",
+      "bytes": 655
+    },
+    {
+      "path": "resources/lib/__init__.py",
+      "sha256": "c590f23b8bdc8dc5ee03c49a5942c08b340d74cd0f264512276b1b2e3401b1dc",
+      "bytes": 177
+    },
+    {
+      "path": "resources/lib/agent_operating_policy.py",
+      "sha256": "15d22f72230f4f858ac30f84d6c29f87527ef5486ad026f681aa74abe0c5e4bd",
+      "bytes": 7550
+    },
+    {
+      "path": "resources/lib/architecture_artifact.py",
+      "sha256": "5b25b844ea99d570f569d35ded05915d957d0bc0e85bc776485c8e5c38348c3e",
+      "bytes": 12694
+    },
+    {
+      "path": "resources/lib/gbauto_doc_template.py",
+      "sha256": "6e19b5cef18db48b25599d7459f9ac4f900376eb27e55c78ba2c2a9b961ac64b",
+      "bytes": 116663
+    },
+    {
+      "path": "resources/lib/gbauto_theme_presets.py",
+      "sha256": "53a5f14f00c18b85b2a5105b6f5cb9986f498b24e20d3e1724c3c23b883ff3b1",
+      "bytes": 27679
+    },
+    {
+      "path": "resources/lib/gmail_send_policy.py",
+      "sha256": "de36222b5870fdc8243ead506b2b5e3623aa83a8e2d62d6e77f204d17d6c6dff",
+      "bytes": 11405
+    },
+    {
+      "path": "resources/lib/host_env.py",
+      "sha256": "bd2ee679b11c2bfadc9a303be943f53f08fc1750a3d691d86f080149860da564",
+      "bytes": 3795
+    },
+    {
+      "path": "resources/lib/native_session_observability.py",
+      "sha256": "9be8bb898f21ae44006f2f290e4ac6fbd96bc2eac770591403feb849ab061538",
+      "bytes": 20676
+    },
+    {
+      "path": "resources/lib/plan_email.py",
+      "sha256": "07ab675709a5c89c5840c43846e1d309b00079c20a4a04bc9114a9e971b1b0e7",
+      "bytes": 8607
+    },
+    {
+      "path": "resources/lib/pr_analytics.py",
+      "sha256": "e0fa2a6035e3d94ed5808367407067eca836b92010c1a54a3b2913397a06b2ef",
+      "bytes": 20984
+    },
+    {
+      "path": "resources/lib/queue.py",
+      "sha256": "63196d388e5a07d7df277dd24fa24a6e5e9b1d32c23c41a35ad8107d529f83ca",
+      "bytes": 9115
+    },
+    {
+      "path": "resources/lib/secrets.py",
+      "sha256": "aaa69f891a51850ada14fd59334526ca10fee75dc5b6dea9a0a24c2b5fdd8a81",
+      "bytes": 5931
+    },
+    {
+      "path": "resources/lib/telegram_nudge.py",
+      "sha256": "502f4c1add49b907e140b56744fd0424d61b781a139ec08839a05d8eee6bae5f",
+      "bytes": 5455
+    },
+    {
+      "path": "resources/lib/tracing.py",
+      "sha256": "c74d69a7513b709bfc985eff58708731e83eac7dd107b96c2b9de5140ee7010c",
+      "bytes": 51814
+    },
+    {
+      "path": "resources/lib/usage_pricing.py",
+      "sha256": "148056f3329a5edec5bb0db73ad51804b9ebff2daf48a336a761f2726bc2507c",
+      "bytes": 2440
+    },
+    {
+      "path": "resources/skills/agent-card-forge/examples/expert-visual-brief.example.json",
+      "sha256": "951eb94218bcbc799554cfebf2df89c7b2e2a60983fe95a27eb4cda39848015b",
+      "bytes": 2037
+    },
+    {
+      "path": "resources/skills/agent-card-forge/scripts/visual_intake_bundle.py",
+      "sha256": "d028e5a37ad0f7c3879fbe331a4748120f0774348abb7859a4ebe1923aba6b1f",
+      "bytes": 1592
+    },
+    {
+      "path": "resources/skills/agent-card-forge/templates/avatar-3d/.gitignore",
+      "sha256": "853bdb9e4c430bb46f05289d0d2c37d6b99128f78ab80d4fa929c50af733be90",
+      "bytes": 15
+    },
+    {
+      "path": "resources/skills/agent-card-forge/templates/avatar-3d/artist-packet-bust.ts",
+      "sha256": "ddefbfbfe5b705564abffd465e5afc4d83cef037402919a9881ca75bd287edad",
+      "bytes": 14785
+    },
+    {
+      "path": "resources/skills/agent-card-forge/templates/avatar-3d/package-lock.json",
+      "sha256": "713f4af96cc151aae8a0d9c30f3a72c44914007ab84d41c839e984071eb314ba",
+      "bytes": 14904
+    },
+    {
+      "path": "resources/skills/agent-card-forge/templates/avatar-3d/package.json",
+      "sha256": "bfc6bb946e058ac9dd82b8a6cb680cc96df2ee287151e5d228501b353107a726",
+      "bytes": 235
+    },
+    {
+      "path": "resources/skills/agent-card-forge/templates/avatar-3d/viewer.html",
+      "sha256": "08a5604eb2cc4cf39c15ab48627b2fc505eba419802f8f9d96dc0431fa1ee3e6",
+      "bytes": 3576
+    },
+    {
+      "path": "resources/skills/agent-card-forge/templates/avatar-3d/viewer.ts",
+      "sha256": "676312ffda81f958dd09d827a36bbe8368d34b59e49d8c6ca4d794ec907f1172",
+      "bytes": 8531
+    },
+    {
+      "path": "resources/skills/agent-card-forge/templates/card_template.html",
+      "sha256": "f7d71c1959c5e10f6cec260574e410f9edbb366e73dcbfe9e05daed3f909b1c6",
+      "bytes": 6511
+    },
+    {
+      "path": "resources/skills/agent-card-forge/templates/visual-intake/app.js",
+      "sha256": "34c3974869782ffb909450f6af77f3b1e928d91d34b75b1804502120a049fe9c",
+      "bytes": 17663
+    },
+    {
+      "path": "resources/skills/agent-card-forge/templates/visual-intake/card-catalog.json",
+      "sha256": "d60b2838e4ef48bac78f49ae27610795bfc07e4901ef283f91c52b1421ac02fb",
+      "bytes": 1575608
+    },
+    {
+      "path": "resources/skills/agent-card-forge/templates/visual-intake/index.html",
+      "sha256": "de1a85a214ca189e249d4e65ab0d25d2ad0c341111c08c80e5aac4742521aa08",
+      "bytes": 5942
+    },
+    {
+      "path": "resources/skills/agent-card-forge/templates/visual-intake/standalone.js",
+      "sha256": "084f804076ba44ada5f963883fd2cc29ababdd71f3ea0e8648be25001596b9aa",
+      "bytes": 581
+    },
+    {
+      "path": "resources/skills/agent-card-forge/templates/visual-intake/style.css",
+      "sha256": "5ed01b14ed919d3802230de976c7ad25d4a70eed7273db6efcb53f066eec6da5",
+      "bytes": 10246
+    },
+    {
+      "path": "resources/skills/agent-forge/templates/agent-expert-config.schema.json",
+      "sha256": "5f35c54ad6fe96c59838c40def91c99386ac41c10e10e45cecfcb000c9677050",
+      "bytes": 1498
+    },
+    {
+      "path": "resources/skills/get-gbauto-theme/assets/gb-logo-chrome-avatar.png",
+      "sha256": "cbe6a6f700167522fbf76d76c6327de56c079f4af76d38cbef632abd8f73f0f7",
+      "bytes": 108402
+    },
+    {
+      "path": "resources/skills/get-gbauto-theme/assets/gb-logo-chrome.png",
+      "sha256": "42936a44f143d4cae85203c24f485d6161fa1a97e44b000f7affc5368855e02b",
+      "bytes": 25403
+    },
+    {
+      "path": "resources/skills/get-gbauto-theme/assets/gb-logo-report.md",
+      "sha256": "ca167ae9bdf31ab99b5d6faa1f5614d1473de2c1469a97b303f1e93179de3a14",
+      "bytes": 628
+    },
+    {
+      "path": "resources/skills/get-gbauto-theme/assets/gb-logo-report.png",
+      "sha256": "4c1950ec9e3a8d1770bcc974d9d0ac7f17834d91ece3ac5e2f108b61d9b554a4",
+      "bytes": 6854
+    },
+    {
+      "path": "resources/skills/get-gbauto-theme/assets/gb-logo.png",
+      "sha256": "ccc593ef48d9c40041acbcd45e877ad084d02c323335192added215f32770af0",
+      "bytes": 302668
+    },
+    {
+      "path": "resources/skills/get-gbauto-theme/assets/gb-signature.png",
+      "sha256": "ccc593ef48d9c40041acbcd45e877ad084d02c323335192added215f32770af0",
+      "bytes": 302668
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/fixtures/single-expert/profile-page.json",
+      "sha256": "3b0b227e9b890f576ed1dc37f911cc46c59ba01d3ef5120ffbfd7f4e27dd37c3",
+      "bytes": 4773
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/_common.py",
+      "sha256": "f304baadbaa1ecd5d4eab55dcde4c1eda73d63b7665b4901d4e2342966d45a3f",
+      "bytes": 8449
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/assemble_index.py",
+      "sha256": "e0b6db9080da179cfece7688d25887c94ee4b0188af284964b5414cecaba85fb",
+      "bytes": 39372
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/build_forge_samples.py",
+      "sha256": "d7119c15ce6cae258a07b6172e26569453ed38e8eeddf82f01afedb5bb836c03",
+      "bytes": 7143
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/build_hosted_reader_sql.py",
+      "sha256": "aadc04fe48ba0d4ea061be225fcc6394bee0a3f9c502be56455e98843c2b7607",
+      "bytes": 7026
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/capture_card_images.py",
+      "sha256": "6b6255b7557463af4185ff7984a26c1f1512206742fc048176ef35e2a480106f",
+      "bytes": 2716
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/expire_trial.py",
+      "sha256": "9f3acf71bff1cabeea526639c1b6a619b4d3c216cb03df3e22a3edb087c5505c",
+      "bytes": 2989
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/fetch_mtg_art.py",
+      "sha256": "8291d3522b75ed5345f669c2d341944189fa2af62c35d0b308548bf8875e6ac7",
+      "bytes": 10169
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/forge_agent_cards.py",
+      "sha256": "83e9a34b3b9129543e5aa6c867f766ecb2401cd964db57f9897a896291e38359",
+      "bytes": 5202
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/forge_artifacts.py",
+      "sha256": "79bc8bda57bbd3cacd9b47cb60831f980c6d13546704422826a3b9f04fce1d1e",
+      "bytes": 4517
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/forge_atlas.py",
+      "sha256": "d8a11a08fcb71da50cdfbd5ba1eb1e8ec54b19a967fd13894cb7b5683c3b3d0d",
+      "bytes": 7949
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/forge_history.py",
+      "sha256": "61fd5c2af99848c78a2dfa17c33ea2a8f171ab409b4fb48f5efaf8fcb3a8b779",
+      "bytes": 7462
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/forge_plan_template.py",
+      "sha256": "7642311fff95027411be9a93cbce1b596b5dbca9ce17c27107cd8af6cf2e250e",
+      "bytes": 6540
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/forge_planning.py",
+      "sha256": "b0b4e2c745993dc60a69e09bc411c1997d9337fb9ff7e5a8f8e0c62b6b61ef82",
+      "bytes": 16488
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/generate_image_prompts.py",
+      "sha256": "44a5d3b394386a62dbe285638c728acbc6768cc6caf55ae86da448696961dff2",
+      "bytes": 4336
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/generate_team_manifest.py",
+      "sha256": "8997cb55f3d6b9700e02f6184e65155c25951eac71fd17aca094b86e7c409236",
+      "bytes": 13310
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/publish_preview.py",
+      "sha256": "f28eeaa8b167b5009d4bc4eee3f4e4b2660f15e896249db8d7e9fd34d338cd45",
+      "bytes": 5466
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/render_brand_presets_css.py",
+      "sha256": "ed8581314edd074f7fc04639b90c00cbcbe30bd241f8f9eb441e6f6af9182c79",
+      "bytes": 7097
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/render_expert_profile.py",
+      "sha256": "54db748146f2bedca4f7b7c234b012f45f9cd5db05a134477189a0b6bcd13a89",
+      "bytes": 5969
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/render_forge_studio_private.py",
+      "sha256": "0a91c9bc00a48f5ca9f14df7dbc364ec2b3a3490a9d5cc856599fb27a3a66bc2",
+      "bytes": 9814
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/render_forge_workspace.py",
+      "sha256": "44a137ae782adc49f20b330a58ad24fbba3b8f8d1d5e9aedf5eb43ed7a4bb6cc",
+      "bytes": 22752
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/render_research_report.py",
+      "sha256": "f930cfcd6003f0ccb63b759514d8818033ab19ff08d691a906d76d9cf22261be",
+      "bytes": 10027
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/render_team_brief.py",
+      "sha256": "9429341d789632db1adde79f5e6d515216044b94dac19dd5faeaf772621d3738",
+      "bytes": 4652
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/render_transcript_mock.py",
+      "sha256": "43ad58600feb7acc4936c7a8065c2fcd0caee1da6acb3409e0d4d897aa14596a",
+      "bytes": 4776
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/research_company.py",
+      "sha256": "dbe812f2d15a6e88ae89160c41c9329a750f74365dc34c997fd859ac1eac5067",
+      "bytes": 3462
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/research_subagent.py",
+      "sha256": "5b4f544eb805ca06c9aaeb9c4f3b86c638ecba3b6df70f2819b241e47d5fb791",
+      "bytes": 11392
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/retrieve_brand_packet.py",
+      "sha256": "98c28a2d72537827b7b5fee6dd0115c701a5b8434eee70615debc7c5a35c5bdd",
+      "bytes": 19480
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/roster_subagent.py",
+      "sha256": "142c58abab75763004b207cb05d2567354b21a453a02e70fe10558e5e7e5f00b",
+      "bytes": 9423
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/run_intake.py",
+      "sha256": "40f21e261540849b12cf5826a3d598509136077f34b3cbb9c4336af344f155e2",
+      "bytes": 2539
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/seed_agent_art.py",
+      "sha256": "7372a76de11fd2da84bc9078d4cb11cff55a843d94bd410901eb80f6e264b0ff",
+      "bytes": 9224
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/serve_forge_workspace.py",
+      "sha256": "40fcd7fd3884c1206c36bab6cb49e1443028790f69a01316b4f54d254556ed10",
+      "bytes": 9059
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/smoke_forge_atlas.py",
+      "sha256": "d8fddf03ef239f0a0e17146a85e6f687671b167722fd3679619d1b1c83c6ac99",
+      "bytes": 13420
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/smoke_forge_history.py",
+      "sha256": "1c2104c76b823ae832eea365c14d4b0f2f280a7bc7e694df98721bb915804a1b",
+      "bytes": 6431
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/smoke_forge_hosted.py",
+      "sha256": "9679a8c94521efc3554e9ba817536dc5a3c2eb2ef2137ace7dcb768a330c0c27",
+      "bytes": 8109
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/smoke_forge_plan_template.py",
+      "sha256": "4d5278aca1f1827d6b52fb1b078d413f4d96fdd3c26381e2120ba3426ba26c9b",
+      "bytes": 7618
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/smoke_forge_planning.py",
+      "sha256": "64a43cd504c427a267977dfa8428e18313e7fafb558395d65b98cd971d3a7fa4",
+      "bytes": 15173
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/smoke_forge_private_studio.py",
+      "sha256": "ef190a685cd925a78997bf816e175cc96d3b2e62d8cd9f9690f3e6e5a8f20de9",
+      "bytes": 19662
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/smoke_forge_workspace.py",
+      "sha256": "257d12ece2fd0e9919332d41ce50edf839cdb4d07fc2764f6b895a42216bce65",
+      "bytes": 8018
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/smoke_preview.py",
+      "sha256": "b2ce5f5f37233ea3d37613eec0b9a8b7154bb27b60a7a356a0d5b01383e879c8",
+      "bytes": 3792
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/substantiate_claims.py",
+      "sha256": "5c3153143cd9f512a57d7bc01b9414f84ebb94389b8896b270f8816cb8b817a0",
+      "bytes": 4975
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/validate_lead_magnet.py",
+      "sha256": "a794f95ecf8a4bb2d3cca31d1aca46fe647af5e55903daaf4621c861ac710af5",
+      "bytes": 16173
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/scripts/verify_logo_asset.py",
+      "sha256": "1c7f9c1ce74b2df78df69678a11c0c9fa85524d877a43ce040568ea1cf6dc186",
+      "bytes": 5291
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/agent-profile.html.j2",
+      "sha256": "a830ec802e183d7803b8f664f332cc8ef09a4d5a67a8686d017095680364a164",
+      "bytes": 6768
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/approved-mtg-cards.json",
+      "sha256": "aba391d10c748bec9365099fd0950e040afb4ca6b0c824ce0a0cad83a26712f6",
+      "bytes": 89448
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/brand-packet.schema.json",
+      "sha256": "18d089dc96495211f1d0ad87e21c0a6dba63f96a5a47c03206939497a5970f33",
+      "bytes": 3270
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/brand-presets.schema.json",
+      "sha256": "61757f08d7345144b9122f21383faa146dfc84659a8e3d1e34fc4c5ef9047e33",
+      "bytes": 1122
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/claim-map.schema.json",
+      "sha256": "33ad240226c682f158791d2adb617effad078eca739e6e91aec9417f4659c8f1",
+      "bytes": 1475
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/expert-profile-page.schema.json",
+      "sha256": "e79011c8cf06b5fac491476ba7bc0df6a4e9561d08374ae78fbf1b21edec71a5",
+      "bytes": 5146
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-artifact-manifest.schema.json",
+      "sha256": "3d71a38d13910b918b28ad448f2a5102b197c11f24d100b67866bd5a05f7dd6f",
+      "bytes": 2289
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-atlas-snapshot.schema.json",
+      "sha256": "ac40b95768e1753e99985bd07717e33378d60b3edd9a3a6d6aff80e8dc100ee3",
+      "bytes": 1437
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-planning-snapshot.schema.json",
+      "sha256": "0f5d6f140f7b3dcfaa04e2d98297598344b4d24ae3cdb14b4cb3c196fb4518db",
+      "bytes": 5597
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-workspace/approvals.css",
+      "sha256": "1c00782f5e1aa763c8ff6e9de6070de5596e7dd4c0486cae0c68d8ebb79e79d5",
+      "bytes": 3855
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-workspace/approvals.js",
+      "sha256": "c82e5e2e542bca890deb79384f1c03733741f3117bb189ba7ab1c787f1ef3e6e",
+      "bytes": 21386
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-workspace/assets/font-0.ttf",
+      "sha256": "1b08e7fc267a5c7e1d614100f604b83e7e8a0be241f0f288faa2b3ac93a683ba",
+      "bytes": 324820
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-workspace/assets/font-1.ttf",
+      "sha256": "8c883f63b2c4157d997319f2c8bc6995ed4357ef371940d31ca159004a4aae63",
+      "bytes": 325304
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-workspace/assets/font-2.ttf",
+      "sha256": "e7a1aaf7eda9f2fad4131725fa556265ec75ca7b2d756260173a040363e8d4f7",
+      "bytes": 326048
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-workspace/assets/font-3.ttf",
+      "sha256": "b37284b5701b6b168dfc770aa1a4ac492106422fd3ba76bc7641e37434e8019c",
+      "bytes": 326468
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-workspace/assets/font-4.ttf",
+      "sha256": "a7a0a9114e29fbf6e83a339ed930d5d8ae69fe4217c34fdd95386d995929d6e8",
+      "bytes": 119892
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-workspace/assets/font-5.ttf",
+      "sha256": "b8f5e0a8bdd6a12c722ca5635d9da87e77ccbb2d0172112e34e00c4e55f2cd5a",
+      "bytes": 109472
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-workspace/assets/font-6.ttf",
+      "sha256": "68c4493c7c6c9aaff48defeeb6408e7ce705efc4c33363de4d9d6f5e07775064",
+      "bytes": 111588
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-workspace/assets/fonts.css",
+      "sha256": "7b3069e84bf957aa95f30b936c794e4948b6462b02127ff318c423dbe333fac8",
+      "bytes": 1036
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-workspace/assets/gb-signature.png",
+      "sha256": "ccc593ef48d9c40041acbcd45e877ad084d02c323335192added215f32770af0",
+      "bytes": 302668
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-workspace/atlas.js",
+      "sha256": "5a2b743d5bbf1c689f28294eba4c29e840ccc9e25944e9c4388306aebd71c189",
+      "bytes": 11539
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-workspace/designs.css",
+      "sha256": "95c810636d9985c4c3e8b809f651dfc93e9918db597e53dfab6aee8262e43c85",
+      "bytes": 21583
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-workspace/document.css",
+      "sha256": "a766aa6046f6cb9da9cacababdf227a5ed9ee47c5ea34ea23b9e08a9e9380e7a",
+      "bytes": 11569
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-workspace/expert-builder.css",
+      "sha256": "d900761df5fa84a666aaba4d0e911eee2b2ca4c9c17eb002cb4d716ea28957bf",
+      "bytes": 3431
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-workspace/expert-builder.js",
+      "sha256": "4f315a4aac5f238a19e5b9c6114a3311ba23a59919b0928ba5bbd122ba42d8df",
+      "bytes": 21255
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-workspace/history.js",
+      "sha256": "fd4be210093e3287828aff76b875fb28f3a810aedc022339fb368dec4944981f",
+      "bytes": 6156
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-workspace/host-bridge.js",
+      "sha256": "4b860c59d5d18e41a1d7703dd4f26c6323a068cc0c239b441c1ea22423bea330",
+      "bytes": 2012
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-workspace/index.html.j2",
+      "sha256": "33c1e77823c76cb5de3217c5293cb82fd27e83c960f29c12f55a424de82b350b",
+      "bytes": 6349
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-workspace/mode.css",
+      "sha256": "01acdfa158cce241f87ae79b7ea2c0c0a600c2336d40aca2944c16c2e915ae77",
+      "bytes": 5581
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-workspace/mode.js",
+      "sha256": "0dfbe648fff259465f1a6d736ca96e6977a8da03cb8a2adc51189cd214da7dd5",
+      "bytes": 1239
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-workspace/plan-template.css",
+      "sha256": "35e96373523d23a9c2db1b390ea15d6917c03662a59754ddfc7b7e04d56b75cb",
+      "bytes": 4948
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-workspace/plan-template.js",
+      "sha256": "055cc64b14b801cacc6ebe83429027cdc7d2107c7859744d02a79188ff134b21",
+      "bytes": 8720
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-workspace/planning.js",
+      "sha256": "6274e307ea01aa2506bd1de3db6d09830ce374faacfe5aebc21f3ad61b7a7c27",
+      "bytes": 16279
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-workspace/private-studio.css",
+      "sha256": "e5b3eede64eb6bd1fad8f08c6f900d56454c1bab292e27fa47a801555bbdb87a",
+      "bytes": 2777
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-workspace/private-studio.js",
+      "sha256": "795f3c2cde3e85af35f858c0b61ee6b40a45bd00c6237cf93a7fe288237bd490",
+      "bytes": 32724
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-workspace/provenance.json",
+      "sha256": "11c0a0b93459634fa013399b1a84ffcd6a20bed28db4b884f515b5ae8473f1c3",
+      "bytes": 1511
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-workspace/samples/architecture.sample.yaml",
+      "sha256": "44eb1b8c0257a41494b11d4fdd2d2522186b56429e4a80b4b66a35be56257f23",
+      "bytes": 693
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-workspace/samples/expert-config.sample.yaml",
+      "sha256": "45f6d4c060c92d3941040e40212cad23cfd3418b3c43b441fba520a66a49547b",
+      "bytes": 465
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-workspace/samples/expert-output.sample.html",
+      "sha256": "0c1c2dc9bafaeb238f6efbb266dca18b7ed2bd4f005f1dfb8c0a001b08b1cfbc",
+      "bytes": 1130
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-workspace/samples/handoff-manifest.sample.json",
+      "sha256": "f918e66452296716f8d3fc94321857648359d50d1efde3c21ae4bad53404979e",
+      "bytes": 435
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-workspace/samples/implementation-plan.sample.html",
+      "sha256": "b3a7a195125f3eb8474f9eb85cc4ff3dbdce8217cbd71e5f3386e6e61595b682",
+      "bytes": 2222481
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-workspace/samples/validation-receipt.sample.json",
+      "sha256": "eb7fd9c3b41e7d0252d1d7450329489f340db535844166ce65910c0bb238dc5a",
+      "bytes": 275
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-workspace/workshop.css",
+      "sha256": "53c1e47dce2c50920d9ed31a065c1c3dc8f5540092f941e8b74e1cc9c57351a5",
+      "bytes": 31006
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-workspace/workshop.js",
+      "sha256": "466c5eb80435671e959f97122326d67b22216a35fd09d772d322fd4944608fef",
+      "bytes": 25020
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/image-provenance.schema.json",
+      "sha256": "f5ea56a17155a94e672a230daef348925c7ed76dd6f7e609ed09170d7265c429",
+      "bytes": 1354
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/implementation-card.yaml.j2",
+      "sha256": "b562c4ec692e27d321a2993fd9711a0f56778f08a168617c75845f0ea032a80e",
+      "bytes": 1418
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/intake.schema.json",
+      "sha256": "1882158f8f56efd7c11a4eec0e651ea3b2f6f7d983e4565d8fc0f220533e0bf0",
+      "bytes": 909
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/lead-magnet-page.spec.md",
+      "sha256": "9d04e3b1d2ecc4b31a53f055b0c928bd15469ccca516b344f4a5024d93f64339",
+      "bytes": 2130
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/logo-verification.schema.json",
+      "sha256": "f9039380babd9827beebee71df085d134dabf53287320f07c23ba24ad9f436e5",
+      "bytes": 708
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/mtg-card-map.json",
+      "sha256": "c6495507d4101221a94fba0f660d52c530688e11136936ab1c566956ef569d78",
+      "bytes": 1725
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/pricing-client-report.html.j2",
+      "sha256": "80758e178367297f2460d891e32f55ca353ca6aa3b3675096804dba06f23d3da",
+      "bytes": 9910
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/prospect-index-client-report.html.j2",
+      "sha256": "72043d43c981957b7926537ed209e2194d101069eecd931f3f76811a64d74710",
+      "bytes": 45345
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/prospect-index-neon.html.j2",
+      "sha256": "71c0aa6bc07349ef80c7e560b98a0529a54f85b5a3dcfc223caf98b3e1a1478f",
+      "bytes": 20542
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/prospect-index.html.j2",
+      "sha256": "95ab44d0c14f0e5629c3d046f3a23d018e8904027773455b781478b0b3ac1f53",
+      "bytes": 13234
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/research-citations.schema.json",
+      "sha256": "90de13972961cbe5351bbe1434b569764def4b37e6e77033845824437009fb92",
+      "bytes": 1138
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/research-content.schema.json",
+      "sha256": "f7e891cf8445082e9b35e9b032fc6e9e8803c9813192d7d0b1da17e718091f78",
+      "bytes": 1880
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/research-report.html.j2",
+      "sha256": "18e3f5266dee066019a8193cbfcdb6ec97d7bdb6ac6d77aa7b21a57ed9de7ae1",
+      "bytes": 13368
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/roster-content.schema.json",
+      "sha256": "934209c7ccbf68e979ebc5f46443859de3029ca990b931cb22e3db4a68557b59",
+      "bytes": 992
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/sanitized-hermes-team.schema.json",
+      "sha256": "7cf6d84f0a6b1c08cb123b6c441ffb49a35c40ed5a532dbd47ce17fdaac4e1dd",
+      "bytes": 3045
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/team-brief.md.j2",
+      "sha256": "7e275b30c0b551a51da93672ed5818b0073420d6e8b539473d75d8132685b98a",
+      "bytes": 1210
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/themes/client-report.json",
+      "sha256": "5d86438255b108fd6f1f9c2dfe8cfaec4c6a77db9d147f0ea6d8588e7afbcf82",
+      "bytes": 1058
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/themes/neon-oiran.json",
+      "sha256": "018ff9cb8a93245297b004cc15399028f276d7cdb1f01cc7dc9571be99d53454",
+      "bytes": 844
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/transcript-mock.html.j2",
+      "sha256": "c5e39a49607898c46cc24b7021ead55600d28ce168997d07d74886fb2decd6bf",
+      "bytes": 4762
+    },
+    {
+      "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/validation-receipt.schema.json",
+      "sha256": "d9597be4f462e692a3ca16b8dac8956727e5adb7cdc05613c794230d962ecedc",
+      "bytes": 869
+    },
+    {
+      "path": "resources/skills/tac-plan/references/html-output-standard.md",
+      "sha256": "d85713e672fb5caa853c116be02b5564f53e6acb061b5353a04f8b42ee01b073",
+      "bytes": 3500
+    },
+    {
+      "path": "resources/skills/tac-plan/workflows/plan-lifecycle.md",
+      "sha256": "3764f4f23c84068a6de5489f2e78d7ee134083aae0ab87d7149f6344b7fdb823",
+      "bytes": 4490
+    },
+    {
+      "path": "scripts/agent_os_contract_persistence.py",
+      "sha256": "2294fd677636174e5f163882ec4da30d62024d614999d7dbff3c334a099728fc",
+      "bytes": 1236
+    },
+    {
+      "path": "scripts/human_approval_enroll.py",
+      "sha256": "ab384c470b1f3180fe00d183a24a2e741a5d76749a0ee33d860fc72f75fabb33",
+      "bytes": 3822
+    },
+    {
+      "path": "scripts/human_approval_gate.py",
+      "sha256": "9edd150beae725693baf8e70b8f1abf3cf8c16b159d25ba8663fb08f1ec88787",
+      "bytes": 26239
+    },
+    {
+      "path": "scripts/human_approval_labels.py",
+      "sha256": "a0643a7666d2077c1d01c102271178f056547f187141932c2ba80fa151943468",
+      "bytes": 4129
+    },
+    {
+      "path": "scripts/human_approval_notify.py",
+      "sha256": "3624af394aee4eb5ecfed5792bf451051111abcc39698931a5981b78492649de",
+      "bytes": 3710
+    },
+    {
+      "path": "scripts/human_approval_poll.py",
+      "sha256": "e6a3e02f1e8d75873d1187a63add2e442f64eb3a2ddbc50a054d61195017b069",
+      "bytes": 7796
+    },
+    {
+      "path": "scripts/human_approval_resume.py",
+      "sha256": "9504d27774ebf7b0fcfc8889369510d9e4935f0a7180220e7ca76cdf5e11ea60",
+      "bytes": 16414
+    },
+    {
+      "path": "scripts/justfile_registry_check.py",
+      "sha256": "2550c278d5990f979db9e826ba3bc4b5d25ab6e91509dfb60482e0ff2ee5c980",
+      "bytes": 13295
+    },
+    {
+      "path": "scripts/plan_intake.py",
+      "sha256": "068095b25b033a648cfd14919e19741ca56352ef4b90b180cf6b64a538ee8bf5",
+      "bytes": 14135
+    },
+    {
+      "path": "scripts/render_expert_justfiles.py",
+      "sha256": "462eaa9bbca7b3736cba994efbba452add9fc218f4796a08f0f0acedfdbaa17a",
+      "bytes": 11657
+    },
+    {
+      "path": "scripts/scaffold_expert_from_config.py",
+      "sha256": "3b976379fdc2acbe7bb6b80db3d4ef116ee90179abbd36a6dd6487e89098f9e1",
+      "bytes": 20942
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/__init__.py",
+      "sha256": "206d5d9dc2d66cebc45ea4ab26e94b08de91722da720311202d9006e55a30ef5",
+      "bytes": 7091
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/_pins.py",
+      "sha256": "7e429240f09d70842a1efb4fa7c97c79f348cd8834269db7d18e3b7a58f0ba55",
+      "bytes": 20255
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/_repo.py",
+      "sha256": "10d2175d88ad2fff3b27d37d2765e1ad1113923c1fab8eccccd2473441a2d589",
+      "bytes": 3487
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/contract_records.py",
+      "sha256": "9ed67cdc1e50008dec55cebe648ade0dde344cb61627ea5619176bf66c779052",
+      "bytes": 25418
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/agent-configuration.v1.schema.json",
+      "sha256": "882eac817fa04d067761f348ddc6708b7e91485ea0198dbc297ed74c51b5722a",
+      "bytes": 11224
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/agent-expert-route-run.v1.schema.json",
+      "sha256": "a9778891b17dec42b220fdb75e08c090538ebcbfc8f27b2b45c090478609a00d",
+      "bytes": 3068
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/agent-forge-planning-package.v1.schema.json",
+      "sha256": "d73cf2ba638368d4a80db1cf8ad89ceac2b4de600b884a2e190a535fd158f271",
+      "bytes": 2608
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/agent-forge-research-dossier.v1.schema.json",
+      "sha256": "74d563b370c02113a768cb3d48066e008a82d524b97404e0a99674ed5342fb3a",
+      "bytes": 6147
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/agent-forge-research-validation.v1.schema.json",
+      "sha256": "5db3d98ddbc69c575cfdc830baf8233726c3f2918fa14e0ed5fedeb080790bf2",
+      "bytes": 2115
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/agent-forge.design-draft.v1.schema.json",
+      "sha256": "2594fca63fc8b4ec0b21c3914677a0f563118c87a5b35f62bacee33ee64086df",
+      "bytes": 19043
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/agent-os-contract-coverage.v1.schema.json",
+      "sha256": "facb94d51fe6c6560d340732be7e90f58fd40aec91d8eb66bb6b220f704795a8",
+      "bytes": 3351
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/agent-os-data-contract-registry.v1.schema.json",
+      "sha256": "a444e996ac37970b4060e58e2ff4eb6401d21828acd231df6752e8e234d44d27",
+      "bytes": 3710
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/artifact-index.v1.schema.json",
+      "sha256": "abb93aec4ff65ad8cd95e3fe8030f99874070ebad3d430bcc46cdc6e09f39083",
+      "bytes": 2994
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/atlas-estate-projection.v1.schema.json",
+      "sha256": "b1a6c64e7022f4b812b265cec554c78c84822be279ab9d936d586c49975b2e02",
+      "bytes": 13688
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/atlas-projection.v1.schema.json",
+      "sha256": "bb377ae7586d397b544479cacc283d466d1423057b2d5f7b96d8789afd831b01",
+      "bytes": 2642
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/build-receipt.v1.schema.json",
+      "sha256": "895383f71cbf55730f927430fda7edf25e18fe02eb083543bbb0fbc3a055fed0",
+      "bytes": 3474
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/capability-registry.v1.schema.json",
+      "sha256": "71b1c65f3404385d866c2743e26f66f6d7095a882cc7c495e7dfd423da83fc22",
+      "bytes": 3535
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/delegation-ack.v1.schema.json",
+      "sha256": "b2e0d9a7d7595ed3f658cb1164976899db9af8c7550fabef284c1bc2e60c52d8",
+      "bytes": 6620
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/derived-producer.v1.schema.json",
+      "sha256": "6db38b79a787bcf3a9fd24002a1986dcebfe12a04c39bedbdaceb3e95da7d416",
+      "bytes": 1966
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/deterministic-operation.v1.schema.json",
+      "sha256": "e4964efd343c23e2a0685ad55510d77d90a46a596d9bd1da28767d3cc8dd49f0",
+      "bytes": 8145
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/ecom-orchestrator-contract.v1.schema.json",
+      "sha256": "27f8a387ebae2bfa75d5741ec05933ac74d162edacf75a8278e327df5d2e9797",
+      "bytes": 13824
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/expert-ownership.v1.schema.json",
+      "sha256": "a6d9a63380d474f2c8736f8d97ccc97d1ea3f75722fa025e552cde84915592c5",
+      "bytes": 5047
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/fleet-profile.v1.schema.json",
+      "sha256": "e5885b017474b01e909ac94c08ba5ecbee039a720b444c68dea01797ec8f44c5",
+      "bytes": 2436
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/forge-approval-delivery.v1.schema.json",
+      "sha256": "c321580924cac6722ce882e854b6b43b37ac96d9dbc426d166c622efc52464aa",
+      "bytes": 1057
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/forge-approval-release.v1.schema.json",
+      "sha256": "353caa078d3b1cde13f0972a9b37e1d1893c4325ce3a971ed0608e36423a7391",
+      "bytes": 2361
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/forge-approval-scope-grant.v1.schema.json",
+      "sha256": "c6b9d5883f8f8c0348cd39ead4092cbc1f34f66141f7a6f84c71b3a4d8fa5913",
+      "bytes": 2642
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/forge-artifact-routing.v1.schema.json",
+      "sha256": "c972de8f6ca01d0bc46217636d01a56a516c0e4951fb801cddb016b3bba44c96",
+      "bytes": 1792
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/forge-draft.v1.schema.json",
+      "sha256": "68d88ec3c540b507e350c235062c39094e510ba8df4e88b7bbb0f047ce61a023",
+      "bytes": 3856
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/forge-validation.v1.schema.json",
+      "sha256": "e794b812e9b6b7b5d81e5889f4ad0011ebb1088b9d8d2ac5d2dac01276fbb4bf",
+      "bytes": 2908
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/gbauto-plan-intake.v1.schema.json",
+      "sha256": "9f30cffa99054fcbe4658b0e4c1af59b53a4fdfb9bce1696a87829f5e00c8f3f",
+      "bytes": 8434
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/gbauto-plan-writer.v1.schema.json",
+      "sha256": "ad1e949165802d662fcd806f3aabccaa542dd82980654ee991f5ddac4e048e13",
+      "bytes": 2934
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/gbauto-tac-artifact-manifest.v1.schema.json",
+      "sha256": "be600c4b446c1119cd5bcb6b83626c0d06e1acfaa38c9db9b0ae8aa0b4a0064c",
+      "bytes": 2876
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/gbauto.atlas-query.v1.schema.json",
+      "sha256": "2f41a78b94782f345cf95a7e8ce0db1fa3fa7614bc25ac3ecdb98bf61a4368ed",
+      "bytes": 3588
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/gbauto.atlas-reference.v1.schema.json",
+      "sha256": "79f46aa62f4cbdc617f9217d93b8eaa473dcbd290ca0e716c5f81d4ee84bf333",
+      "bytes": 2584
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/gbauto.atlas-result.v1.schema.json",
+      "sha256": "39116aca12a0bba4e9bfcd9b781448e2b058502e4d23ba4342f88783dec03d5b",
+      "bytes": 14717
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/gbautomation-client-hub-artifact-feed.v1.schema.json",
+      "sha256": "078e335895fe36a76b7b82c410cc828a27ed5438a91870d6eb8645481e4118e8",
+      "bytes": 3084
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/gbautomation-client-hub-index.v1.schema.json",
+      "sha256": "2c0cfa2851f624af34f7b14c2d468dfdaee8dafc076d0941c16334450a45fcd5",
+      "bytes": 2923
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/master-sheet-registry.v1.schema.json",
+      "sha256": "3a4777bf443c1432ab185a5cfb42fe14be01185b559a8d0fe93d2ce27c3d73da",
+      "bytes": 2803
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/master-sheet-row.v1.schema.json",
+      "sha256": "c48cc91733dfc8484e0ab5c47398c861ba2b16d30f0a252a964ca2a095c2291d",
+      "bytes": 4628
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/proposal.v1.schema.json",
+      "sha256": "98468075683d20f8996e9047aabee2eaad6cfbf6bd1971a3b51d1c3d922ee2fa",
+      "bytes": 9019
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/report-evidence.v1.schema.json",
+      "sha256": "5026c8993ab101a45228d9159b0e85486ac86827886dabe62f5581198a8d47c6",
+      "bytes": 5521
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/session-intelligence.v1.schema.json",
+      "sha256": "7231a5086b961de05a9138213e19e9b7357c60cadbb77fb54490dd41038038bb",
+      "bytes": 4075
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/sheet-approval-intent.v1.schema.json",
+      "sha256": "df19554cd4fe5c907ac7e21211f24319b32c684c1aff263268da2dd6bd569141",
+      "bytes": 3064
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/sheet-projection-receipt.v1.schema.json",
+      "sha256": "b6ffa09344dfcd0a70c9613d6a32e1ab773a412e762a5e3a93b75ea0ad4925a7",
+      "bytes": 2490
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/skill-capability.v1.schema.json",
+      "sha256": "11d60314b235190f07cccfc0dcf5f90c7e713b1f8c43f4cb840b584022979354",
+      "bytes": 1969
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/source-adapter-registry.v1.schema.json",
+      "sha256": "c19bdc57f1c2c738dabf866d08c648126656e85ab0b91ca9b4560b99296bdcad",
+      "bytes": 4580
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/source-event.v1.schema.json",
+      "sha256": "0943cad393f5061cdbdecf21df528a098c9a0860b4551602c827ddc3903440d3",
+      "bytes": 7334
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/tac-adw-pilot-fixtures.v1.schema.json",
+      "sha256": "d7f06b33186dc60ac781b0d00abdedef9dada13a6bb796bb836d9deafbdba631",
+      "bytes": 4726
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/tac-adw-registry.v1.schema.json",
+      "sha256": "44d0eb00d211ad57c2e3bbd8d8dff25b56804b454cb1bedd249822ce591e8811",
+      "bytes": 8191
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/tac-dispatch-request.v1.schema.json",
+      "sha256": "bee4fe4fd9e700234116968f4887e0de94515cd227127676a335e23453bb1df6",
+      "bytes": 15396
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/tac-methodology-retrieval.v1.schema.json",
+      "sha256": "1bc0d76894e514b402f6e31a8aaf147ba8ccc6273adba2afb2fb9064df81edf4",
+      "bytes": 1896
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/tac-retrieval-bundle.v1.schema.json",
+      "sha256": "3bd41dc635fff2b8dbb760b7bb4ead2c869c2e1ac86de40afaea3482c8c29615",
+      "bytes": 1716
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/tac-routing-decision-receipt.v1.schema.json",
+      "sha256": "56c37ed95261e11c60f46cb0b62e16284636460e785023054fe154e210bfe23e",
+      "bytes": 6808
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/test-run-review.v1.schema.json",
+      "sha256": "b480a1f086f5381cb24f43c92af88e2b4e54a9f01e77f13bb9c2aa9fdf0813d0",
+      "bytes": 7418
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/trace-link.v1.schema.json",
+      "sha256": "b793f1e9bb2f8fbc495e47e277dc7fe6b6983bcb3b1ea39a826f8f7a6d3c3535",
+      "bytes": 5822
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/transcript-intake.v1.schema.json",
+      "sha256": "17b7f963d3ffa870da6e730373c535440d8fb7a344cf37f97b867577de702744",
+      "bytes": 4204
+    },
+    {
+      "path": "services/gbauto_agent_os/src/gbauto_agent_os/schemas/transcript-orchestration-output.v1.schema.json",
+      "sha256": "56beae109d85ac07fcc0f177e2737c3a5dd02ec623869984fbf723fb94a0312d",
+      "bytes": 3515
+    },
+    {
+      "path": "supabase/functions/human-approval-action/forge.mjs",
+      "sha256": "8033e007a62bfbd09cd4be46d4b4d5907e89a5a6bedba0909175e38286ca429a",
+      "bytes": 16890
+    },
+    {
+      "path": "supabase/migrations/20260924090000_forge_approval_workflow.sql",
+      "sha256": "d0519e630affa2c87b7a8496be3887a540841cfcf204fdd30796200265a1617f",
+      "bytes": 41065
+    }
+  ],
+  "dockerfile_sha256": "1634b68b1308d9df398f0b62d9e01dcc313e593dd7c05210684d1eabe3e68a28",
+  "sha256": "9b874ffd6ea7b3cc94ec8a7a9c7b4ec270fb5ae7bf76f6ecebbbc5097ea85774"
+}

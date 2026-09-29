@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gbautomation.local/schemas/gbautomation-client-hub-index.v1.schema.json",
+  "title": "GBAutomation Client Hub Index",
+  "type": "object",
+  "required": ["schema", "generated_at", "source", "source_paths", "surfaces"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {"const": "gbautomation.client_hub_index.v1"},
+    "generated_at": {"type": "string", "minLength": 1},
+    "source": {"type": "string", "minLength": 1},
+    "source_paths": {
+      "type": "object",
+      "required": ["prd_index", "artifact_manifest", "boards_root"],
+      "additionalProperties": {"type": "string"},
+      "properties": {
+        "prd_index": {"type": "string"},
+        "artifact_manifest": {"type": "string"},
+        "boards_root": {"type": "string"}
+      }
+    },
+    "surfaces": {
+      "type": "array",
+      "minItems": 9,
+      "items": {"$ref": "#/$defs/surface"}
+    }
+  },
+  "$defs": {
+    "freshness_label": {
+      "enum": ["current", "stale", "unavailable"]
+    },
+    "surface": {
+      "type": "object",
+      "required": ["surface", "source", "generated_at", "freshness_label", "stale", "stale_reason", "rows"],
+      "additionalProperties": true,
+      "properties": {
+        "surface": {
+          "enum": [
+            "prd_index",
+            "artifact_index",
+            "prd_merge_state",
+            "pickup_ideas",
+            "kanban_portfolio",
+            "drafts_review_queue",
+            "blocked_work",
+            "latest_plans_reports",
+            "recently_merged_work"
+          ]
+        },
+        "source": {"type": "string", "minLength": 1},
+        "source_path": {"type": "string"},
+        "source_url": {"type": "string"},
+        "source_generated_at": {"type": ["string", "null"]},
+        "generated_at": {"type": "string", "minLength": 1},
+        "freshness_label": {"$ref": "#/$defs/freshness_label"},
+        "stale": {"type": "boolean"},
+        "stale_reason": {"type": ["string", "null"]},
+        "row_count": {"type": "integer", "minimum": 0},
+        "source_row_count": {"type": "integer", "minimum": 0},
+        "rows": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/row"}
+        }
+      }
+    },
+    "row": {
+      "type": "object",
+      "required": ["source", "generated_at", "freshness_label", "stale", "stale_reason"],
+      "additionalProperties": true,
+      "properties": {
+        "source": {"type": "string", "minLength": 1},
+        "source_path": {"type": "string"},
+        "source_url": {"type": "string"},
+        "source_generated_at": {"type": ["string", "null"]},
+        "generated_at": {"type": "string", "minLength": 1},
+        "freshness_label": {"$ref": "#/$defs/freshness_label"},
+        "stale": {"type": "boolean"},
+        "stale_reason": {"type": ["string", "null"]},
+        "redacted": {"type": "boolean"}
+      }
+    }
+  }
+}

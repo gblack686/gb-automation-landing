@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>{{company_name}} — Drafted Hermes Agent Team | GBAutomation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..500;1,6..72,300..500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Brand tokens sourced from second-brain/systems/brand/gbauto-brand-tokens.md — do not edit hexes here */
+:root{
+  --terracotta:#D97757; --terracotta-hover:#B75F43; --ink:#191919;
+  --cream:#F3F1E7; --cream2:#E6E4D9; --stone:#D6D4C8;
+  --mute:#8C8A84; --mute2:#5C5C5C;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  .reveal{opacity:1 !important;transform:none !important;transition:none !important}
+}
+body{background:var(--cream);color:var(--ink);font-family:'Inter',sans-serif;font-weight:400;line-height:1.6;overflow-x:hidden}
+h1,h2,h3{font-family:'Newsreader',serif;font-weight:400;line-height:1.15}
+a{color:inherit}
+.wrap{max-width:1060px;margin:0 auto;padding:0 24px}
+/* progress indicator */
+#progress{position:fixed;top:0;left:0;height:3px;width:0;background:var(--terracotta);z-index:60}
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(243,241,231,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--stone)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;padding-top:12px;padding-bottom:12px;gap:16px}
+.lockup{display:flex;align-items:center;gap:10px;font-weight:600;font-size:13px;letter-spacing:.02em}
+.lockup .dot{width:10px;height:10px;border-radius:50%;background:var(--terracotta)}
+.navlinks{display:flex;gap:18px;font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--mute2)}
+.navlinks a{text-decoration:none}
+.navlinks a:hover{color:var(--terracotta)}
+@media(max-width:820px){.navlinks{display:none}}
+details.mobile-nav{display:none}
+@media(max-width:820px){
+  details.mobile-nav{display:block;position:relative}
+  details.mobile-nav summary{list-style:none;cursor:pointer;font-size:11px;text-transform:uppercase;letter-spacing:.12em;padding:6px 12px;border:1px solid var(--stone);border-radius:999px;background:rgba(255,255,255,.6)}
+  details.mobile-nav div{position:absolute;right:0;top:40px;background:var(--cream);border:1px solid var(--stone);border-radius:14px;padding:14px 18px;display:flex;flex-direction:column;gap:10px;font-size:12px;min-width:220px;box-shadow:0 12px 30px rgba(25,25,25,.08)}
+  details.mobile-nav a{text-decoration:none}
+}
+/* sections */
+section{padding:72px 0;border-bottom:1px solid var(--stone)}
+.eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:.18em;color:var(--mute);margin-bottom:10px}
+.sec-title{font-size:clamp(26px,4vw,38px);margin-bottom:14px}
+.sec-sub{color:var(--mute2);max-width:640px;margin-bottom:28px}
+/* hero */
+#hero{padding:88px 0 72px;position:relative}
+#hero h1{font-size:clamp(34px,5.4vw,56px);max-width:820px;font-style:italic}
+#hero .thesis{font-size:18px;color:var(--mute2);max-width:640px;margin:20px 0 28px}
+#hero figure{margin-top:44px;border:1px solid var(--stone);border-radius:18px;overflow:hidden;background:var(--cream2)}
+#hero figure svg,#hero figure img{display:block;width:100%;height:auto}
+.safety{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.6);border:1px solid var(--stone);border-radius:999px;padding:7px 14px;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--mute2);margin-bottom:22px}
+.safety .ping{width:7px;height:7px;border-radius:50%;background:var(--terracotta)}
+.cta-row{display:flex;gap:14px;flex-wrap:wrap}
+.btn{display:inline-block;padding:13px 26px;border-radius:999px;font-size:14px;font-weight:500;text-decoration:none;transition:transform .15s ease,background .15s ease}
+.btn:hover{transform:translateY(-2px)}
+.btn-primary{background:var(--ink);color:var(--cream)}
+.btn-primary:hover{background:var(--terracotta)}
+.btn-ghost{border:1px solid var(--stone);color:var(--ink);background:rgba(255,255,255,.5)}
+.btn-ghost:hover{border-color:var(--terracotta);color:var(--terracotta)}
+/* cards */
+.grid{display:grid;gap:18px}
+.grid.cols-2{grid-template-columns:repeat(2,1fr)}
+.grid.cols-3{grid-template-columns:repeat(3,1fr)}
+@media(max-width:820px){.grid.cols-2,.grid.cols-3{grid-template-columns:1fr}}
+.panel{background:rgba(230,228,217,.55);backdrop-filter:blur(12px);border:1px solid var(--stone);border-radius:16px;padding:22px}
+.panel h3{font-size:19px;margin-bottom:8px}
+.panel p{font-size:14px;color:var(--mute2)}
+.chip{display:inline-block;font-size:10px;text-transform:uppercase;letter-spacing:.1em;padding:3px 10px;border-radius:999px;border:1px solid var(--stone);color:var(--mute2);margin-bottom:10px}
+.chip.verified{border-color:var(--terracotta);color:var(--terracotta)}
+.chip.inferred{border-color:var(--stone)}
+.chip.needs_call{color:var(--mute)}
+.tier{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--terracotta)}
+.cite{font-size:12px;color:var(--mute);margin-top:8px}
+.cite a{color:var(--mute2)}
+figure.viz{border:1px solid var(--stone);border-radius:16px;overflow:hidden;background:var(--cream2)}
+figure.viz svg,figure.viz img{display:block;width:100%;height:auto}
+figcaption{font-size:11px;color:var(--mute);padding:10px 14px;border-top:1px solid var(--stone)}
+ol.days{counter-reset:day;list-style:none;display:grid;gap:10px}
+ol.days li{background:rgba(230,228,217,.55);border:1px solid var(--stone);border-radius:12px;padding:14px 18px;font-size:14px;color:var(--mute2)}
+ol.days li strong{color:var(--ink);font-weight:500}
+.lead-card{border-left:3px solid var(--terracotta)}
+.reveal{opacity:0;transform:translateY(14px);transition:opacity .55s ease,transform .55s ease}
+.reveal.active{opacity:1;transform:none}
+footer{padding:44px 0;font-size:12px;color:var(--mute);text-align:center}
+/* print / PDF brief */
+@media print{
+  nav,#progress,.cta-row,.btn,details.mobile-nav{display:none !important}
+  body{background:none}
+  section{padding:22px 0;border-bottom:1px solid var(--stone);break-inside:avoid}
+  .reveal{opacity:1;transform:none}
+  #hero figure,figure.viz{border:1px solid var(--stone)}
+}
+</style>
+</head>
+<body>
+<div id="progress" aria-hidden="true"></div>
+<nav aria-label="Section navigation">
+  <div class="wrap">
+    <span class="lockup"><span class="dot"></span>{{lockup_text}}</span>
+    <div class="navlinks">
+      <a href="#company-snapshot">Snapshot</a><a href="#opportunity-map">Opportunities</a><a href="#team">Team</a><a href="#workflow">Workflow</a><a href="#safeguards">Safeguards</a><a href="#trial-plan">14-Day Plan</a><a href="#cta">Next Step</a>
+    </div>
+    <details class="mobile-nav">
+      <summary>Menu</summary>
+      <div>
+        <a href="#company-snapshot">Company snapshot</a><a href="#opportunity-map">Opportunity map</a><a href="#lead-agent">Lead agent</a><a href="#team">Specialist team</a><a href="#workflow">Workflow</a><a href="#safeguards">Safeguards</a><a href="#daily-experience">Daily experience</a><a href="#visuals">Visuals</a><a href="#trial-plan">14-day plan</a><a href="#cta">Next step</a><a href="#brief">Team brief</a>
+      </div>
+    </details>
+  </div>
+</nav>
+
+<main>
+<section id="hero">
+  <div class="wrap">
+    <div class="safety"><span class="ping"></span>{{safety_line}}</div>
+    <h1>{{hero_headline}}</h1>
+    <p class="thesis">{{thesis}}</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#team">Review the drafted team</a>
+      <a class="btn btn-ghost" href="#cta">Book the 14-day walkthrough</a>
+    </div>
+    <figure>{{hero_visual}}</figure>
+  </div>
+</section>
+
+<section id="company-snapshot">
+  <div class="wrap reveal">
+    <p class="eyebrow">01 — Verified company snapshot</p>
+    <h2 class="sec-title">What we verified from public sources</h2>
+    <p class="sec-sub">Every statement below carries its citation and an honest confidence label: verified, inferred, or needs-a-call.</p>
+    <div class="grid cols-2">{{snapshot_cards}}</div>
+  </div>
+</section>
+
+<section id="opportunity-map">
+  <div class="wrap reveal">
+    <p class="eyebrow">02 — Opportunity map</p>
+    <h2 class="sec-title">Where a drafted team could help</h2>
+    <p class="sec-sub">Hypotheses derived from public facts and your stated goal — labeled, not asserted.</p>
+    <div class="grid cols-3">{{opportunity_cards}}</div>
+  </div>
+</section>
+
+<section id="lead-agent">
+  <div class="wrap reveal">
+    <p class="eyebrow">03 — Proposed lead agent</p>
+    <h2 class="sec-title">One accountable synthesizer</h2>
+    <div class="panel lead-card">{{lead_agent_card}}</div>
+  </div>
+</section>
+
+<section id="team">
+  <div class="wrap reveal">
+    <p class="eyebrow">04 — Specialist-agent team</p>
+    <h2 class="sec-title">The drafted roster</h2>
+    <p class="sec-sub">Each agent has one purpose, a bounded model tier, and no live access until activation is approved.</p>
+    <div class="grid cols-2">{{specialist_cards}}</div>
+  </div>
+</section>
+
+<section id="workflow">
+  <div class="wrap reveal">
+    <p class="eyebrow">05 — Agent interactions</p>
+    <h2 class="sec-title">How work flows</h2>
+    <p class="sec-sub">Intake signals flow through specialist analysis into one lead synthesis, and nothing leaves without a human approval gate.</p>
+    <figure class="viz">{{workflow_visual}}<figcaption>Deterministic schematic — {{workflow_caption}}</figcaption></figure>
+  </div>
+</section>
+
+<section id="safeguards">
+  <div class="wrap reveal">
+    <p class="eyebrow">06 — Safeguards &amp; approval gates</p>
+    <h2 class="sec-title">Draft-only until you say otherwise</h2>
+    <div class="grid cols-2">{{safeguard_cards}}</div>
+  </div>
+</section>
+
+<section id="daily-experience">
+  <div class="wrap reveal">
+    <p class="eyebrow">07 — Example daily experience</p>
+    <h2 class="sec-title">A day with the team, once activated</h2>
+    <div class="grid cols-2">{{daily_cards}}</div>
+  </div>
+</section>
+
+<section id="visuals">
+  <div class="wrap reveal">
+    <p class="eyebrow">08 — Visual set</p>
+    <h2 class="sec-title">Team &amp; workflow visuals</h2>
+    <p class="sec-sub">Every visual carries provenance — what facts shaped it, and what was deliberately left out.</p>
+    <div class="grid cols-2">{{visual_figures}}</div>
+  </div>
+</section>
+
+<section id="trial-plan">
+  <div class="wrap reveal">
+    <p class="eyebrow">09 — 14-day guided walkthrough</p>
+    <h2 class="sec-title">Activation, if and when you approve it</h2>
+    <ol class="days">{{trial_days}}</ol>
+  </div>
+</section>
+
+<section id="cta">
+  <div class="wrap reveal">
+    <p class="eyebrow">10 — Next step</p>
+    <h2 class="sec-title">Your call, {{cta_name}}</h2>
+    <p class="sec-sub">Book a walkthrough, ask for a revision, or tell us this isn't for you — all three are one reply away.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="{{cta_href}}" data-cta="book">Book the walkthrough call</a>
+      <a class="btn btn-ghost" href="{{revise_href}}" data-cta="revise">Request a revision</a>
+    </div>
+  </div>
+</section>
+
+<section id="brief">
+  <div class="wrap reveal">
+    <p class="eyebrow">11 — Take it with you</p>
+    <h2 class="sec-title">Print or save the team brief</h2>
+    <p class="sec-sub">This page prints clean — use your browser's Print / Save-as-PDF for a decision-maker-ready brief, or request the Markdown version.</p>
+    <div class="cta-row"><a class="btn btn-ghost" href="#" data-cta="print" onclick="window.print();return false">Print / save as PDF</a></div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">Drafted for a Hermes-based guided walkthrough by GBAutomation · {{generated_on}} · Public sources only · No systems connected</div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var bar = document.getElementById("progress");
+  function onScroll(){
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    bar.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + "%";
+  }
+  window.addEventListener("scroll", onScroll, {passive:true});
+  onScroll();
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var reveals = document.querySelectorAll(".reveal");
+  if (reduced || !("IntersectionObserver" in window)) {
+    reveals.forEach(function(el){ el.classList.add("active"); });
+  } else {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting) { entry.target.classList.add("active"); io.unobserve(entry.target); }
+      });
+    }, {threshold: 0.12});
+    reveals.forEach(function(el){ io.observe(el); });
+  }
+})();
+</script>
+</body>
+</html>

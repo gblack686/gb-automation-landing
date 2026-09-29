@@ -1,0 +1,513 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gbautomation.xyz/schemas/atlas-estate-projection.v1.schema.json",
+  "title": "Expert Atlas agent-os estate projection v1",
+  "description": "Deterministic git-only projection of the whole GBAuto agent estate (experts, ownership, fleet profiles, skills, Canopy snippets, contracts, Supabase persistence relations, source families, derived producers, plans, artifact registry, tests, lineage) plus the contract/ownership/persistence graph rendered by the Atlas /agent-os review page. Extends the atlas-projection.v1 hash-readback envelope (ADR-01) from 'the plan' to 'the estate': every item carries a content hash computed from bytes on disk, never embedded by hand, and the envelope carries generated_at, source_commit, and the freshness/readback block. Item records intentionally carry NO timestamps so two generate runs over an unchanged tree are byte-identical apart from the envelope stamps.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "route",
+    "identifier",
+    "version",
+    "source_commit",
+    "generated_at",
+    "freshness_seconds",
+    "publication_route",
+    "gate_status",
+    "readback_result",
+    "mismatch_reason",
+    "status",
+    "issues",
+    "warnings",
+    "projections",
+    "graph"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "atlas-estate-projection.v1"
+    },
+    "route": {
+      "$ref": "#/definitions/route"
+    },
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{2,119}$"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "source_commit": {
+      "$ref": "#/definitions/commit"
+    },
+    "generated_at": {
+      "$ref": "#/definitions/timestamp"
+    },
+    "freshness_seconds": {
+      "$ref": "#/definitions/freshnessSeconds"
+    },
+    "publication_route": {
+      "$ref": "#/definitions/route"
+    },
+    "plan_projection": {
+      "type": "object",
+      "description": "Hash binding carried over from the atlas-projection.v1 bootstrap (ADR-01).",
+      "required": [
+        "plan_path",
+        "plan_sha256",
+        "architecture_path",
+        "architecture_file_sha256",
+        "architecture_payload_sha256"
+      ],
+      "properties": {
+        "plan_path": {
+          "$ref": "#/definitions/repositoryPath"
+        },
+        "plan_sha256": {
+          "$ref": "#/definitions/sha256"
+        },
+        "architecture_path": {
+          "$ref": "#/definitions/repositoryPath"
+        },
+        "architecture_file_sha256": {
+          "$ref": "#/definitions/sha256"
+        },
+        "architecture_payload_sha256": {
+          "$ref": "#/definitions/sha256"
+        }
+      },
+      "additionalProperties": false
+    },
+    "gate_status": {
+      "enum": [
+        "pending",
+        "implementation_approved",
+        "mismatch",
+        "unknown"
+      ]
+    },
+    "readback_result": {
+      "enum": [
+        "not_run",
+        "match",
+        "mismatch"
+      ]
+    },
+    "mismatch_reason": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1,
+      "maxLength": 8000
+    },
+    "status": {
+      "enum": [
+        "ok",
+        "issues"
+      ]
+    },
+    "issues": {
+      "description": "Fail-closed findings: ownerless registered domains and unresolvable owner_expert references (ADR-03). Non-empty means generate exits 2.",
+      "type": "array",
+      "maxItems": 2000,
+      "items": {
+        "$ref": "#/definitions/finding"
+      }
+    },
+    "warnings": {
+      "description": "Non-blocking findings: contract schema_version drift, missing optional inputs, missing source fixtures.",
+      "type": "array",
+      "maxItems": 2000,
+      "items": {
+        "$ref": "#/definitions/finding"
+      }
+    },
+    "projections": {
+      "type": "object",
+      "required": [
+        "experts",
+        "domains",
+        "fleet_profiles",
+        "skills",
+        "canopy_snippets",
+        "contracts",
+        "supabase_relations",
+        "source_families",
+        "derived_producers",
+        "plans",
+        "artifact_registry",
+        "tests",
+        "lineage_edges"
+      ],
+      "properties": {
+        "experts": {
+          "$ref": "#/definitions/section"
+        },
+        "domains": {
+          "$ref": "#/definitions/section"
+        },
+        "fleet_profiles": {
+          "$ref": "#/definitions/section"
+        },
+        "skills": {
+          "$ref": "#/definitions/section"
+        },
+        "canopy_snippets": {
+          "$ref": "#/definitions/section"
+        },
+        "contracts": {
+          "$ref": "#/definitions/section"
+        },
+        "supabase_relations": {
+          "$ref": "#/definitions/section"
+        },
+        "source_families": {
+          "$ref": "#/definitions/section"
+        },
+        "derived_producers": {
+          "$ref": "#/definitions/section"
+        },
+        "plans": {
+          "$ref": "#/definitions/section"
+        },
+        "artifact_registry": {
+          "$ref": "#/definitions/section"
+        },
+        "tests": {
+          "$ref": "#/definitions/section"
+        },
+        "lineage_edges": {
+          "$ref": "#/definitions/section"
+        }
+      },
+      "additionalProperties": false
+    },
+    "graph": {
+      "type": "object",
+      "description": "Contract/ownership/persistence graph for the D3 force view. Nodes are experts, contracts, Supabase relations, source families, derived producers, and fleet profiles; edges are ownership, contract consumption, and contract-to-relation persistence mappings.",
+      "required": [
+        "generated_at",
+        "source_commit",
+        "freshness_seconds",
+        "content_sha256",
+        "node_count",
+        "edge_count",
+        "nodes",
+        "edges"
+      ],
+      "properties": {
+        "generated_at": {
+          "$ref": "#/definitions/timestamp"
+        },
+        "source_commit": {
+          "$ref": "#/definitions/commit"
+        },
+        "freshness_seconds": {
+          "$ref": "#/definitions/freshnessSeconds"
+        },
+        "content_sha256": {
+          "$ref": "#/definitions/sha256"
+        },
+        "node_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "edge_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "nodes": {
+          "type": "array",
+          "maxItems": 5000,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "kind",
+              "label",
+              "hash",
+              "flags",
+              "config"
+            ],
+            "properties": {
+              "id": {
+                "$ref": "#/definitions/identifier"
+              },
+              "kind": {
+                "enum": [
+                  "expert",
+                  "contract",
+                  "relation",
+                  "source",
+                  "producer",
+                  "profile"
+                ]
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "hash": {
+                "$ref": "#/definitions/sha256OrNull"
+              },
+              "path": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/repositoryPath"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "flags": {
+                "$ref": "#/definitions/flags"
+              },
+              "meta": {
+                "type": "object"
+              },
+              "config": {
+                "type": "object",
+                "description": "Bounded, public-safe YAML or JSON config shown by the click-to-inspect graph detail panel.",
+                "required": [
+                  "format",
+                  "source_path",
+                  "text"
+                ],
+                "properties": {
+                  "format": {
+                    "enum": [
+                      "yaml",
+                      "json"
+                    ]
+                  },
+                  "source_path": {
+                    "$ref": "#/definitions/repositoryPath"
+                  },
+                  "text": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 100000
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "edges": {
+          "type": "array",
+          "maxItems": 20000,
+          "items": {
+            "type": "object",
+            "required": [
+              "source",
+              "target",
+              "kind"
+            ],
+            "properties": {
+              "source": {
+                "$ref": "#/definitions/identifier"
+              },
+              "target": {
+                "$ref": "#/definitions/identifier"
+              },
+              "kind": {
+                "enum": [
+                  "owns",
+                  "consumes",
+                  "emits",
+                  "reuses",
+                  "persists_to"
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "definitions": {
+    "section": {
+      "type": "object",
+      "description": "One projection. Carries its own generated_at, source_commit, and freshness_seconds (the atlas-projection.v1 freshness block, per projection) plus content_sha256 — a digest over the timestamp-free item list, so it changes only when the estate changes.",
+      "required": [
+        "projection_id",
+        "generated_at",
+        "source_commit",
+        "freshness_seconds",
+        "content_sha256",
+        "count",
+        "items"
+      ],
+      "properties": {
+        "projection_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]{2,63}$"
+        },
+        "generated_at": {
+          "$ref": "#/definitions/timestamp"
+        },
+        "source_commit": {
+          "$ref": "#/definitions/commit"
+        },
+        "freshness_seconds": {
+          "$ref": "#/definitions/freshnessSeconds"
+        },
+        "content_sha256": {
+          "$ref": "#/definitions/sha256"
+        },
+        "count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "items": {
+          "type": "array",
+          "maxItems": 20000,
+          "items": {
+            "$ref": "#/definitions/item"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "item": {
+      "type": "object",
+      "description": "A projected estate item. Additional per-kind descriptive keys are allowed; timestamps inside item records are NOT (they would break byte-identical regeneration).",
+      "required": [
+        "id",
+        "kind",
+        "sha256",
+        "flags"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/identifier"
+        },
+        "kind": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]{2,63}$"
+        },
+        "sha256": {
+          "$ref": "#/definitions/sha256OrNull"
+        },
+        "path": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/repositoryPath"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "flags": {
+          "$ref": "#/definitions/flags"
+        }
+      },
+      "additionalProperties": true
+    },
+    "finding": {
+      "type": "object",
+      "required": [
+        "code",
+        "subject",
+        "message"
+      ],
+      "properties": {
+        "code": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]{2,63}$"
+        },
+        "subject": {
+          "$ref": "#/definitions/identifier"
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        }
+      },
+      "additionalProperties": false
+    },
+    "flags": {
+      "type": "array",
+      "maxItems": 20,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "stale_hash",
+          "missing_owner",
+          "incompatible_contract_version",
+          "missing_on_disk",
+          "unregistered_expert",
+          "missing_fixture",
+          "missing_contract_mapping",
+          "unknown_supabase_relation",
+          "schema_path_mismatch"
+        ]
+      }
+    },
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 300
+    },
+    "route": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "pattern": "^/"
+    },
+    "commit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z$"
+    },
+    "freshnessSeconds": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 31536000
+    },
+    "repositoryPath": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "allOf": [
+        {
+          "not": {
+            "pattern": "^(?:[A-Za-z]:[\\\\/]|/)"
+          }
+        },
+        {
+          "not": {
+            "pattern": "(?:^|[\\\\/])\\.\\.(?:[\\\\/]|$)"
+          }
+        }
+      ]
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "sha256OrNull": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/sha256"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "additionalProperties": false
+}

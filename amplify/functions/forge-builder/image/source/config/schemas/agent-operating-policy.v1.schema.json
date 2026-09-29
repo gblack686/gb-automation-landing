@@ -1,0 +1,280 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "agent-operating-policy.v1"
+    },
+    "status": {
+      "const": "source_contract_only"
+    },
+    "tenant": {
+      "const": "gbautomation"
+    },
+    "planning": {
+      "type": "object",
+      "properties": {
+        "lifecycle": {
+          "type": "string",
+          "minLength": 1
+        },
+        "preferences": {
+          "type": "string",
+          "minLength": 1
+        },
+        "renderer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "html_standard": {
+          "type": "string",
+          "minLength": 1
+        },
+        "public_reports_url": {
+          "type": "string",
+          "minLength": 1
+        },
+        "netlify_site_id": {
+          "type": "string",
+          "pattern": "^[a-f0-9-]{36}$"
+        },
+        "artifact_url_source": {
+          "const": "verified_publish_receipt"
+        }
+      },
+      "required": [
+        "lifecycle",
+        "preferences",
+        "renderer",
+        "html_standard",
+        "public_reports_url",
+        "netlify_site_id",
+        "artifact_url_source"
+      ],
+      "additionalProperties": false
+    },
+    "defaults": {
+      "type": "object",
+      "properties": {
+        "unknown_profile": {
+          "const": "deny"
+        },
+        "specialist_domain_operations": {
+          "const": "explicit_binding_required"
+        },
+        "production_credentials": {
+          "const": "isolated_service_identity_required"
+        },
+        "execution_enabled": {
+          "const": false
+        }
+      },
+      "required": [
+        "unknown_profile",
+        "specialist_domain_operations",
+        "production_credentials",
+        "execution_enabled"
+      ],
+      "additionalProperties": false
+    },
+    "roles": {
+      "type": "object",
+      "minProperties": 6,
+      "propertyNames": {
+        "enum": [
+          "planner",
+          "engineer",
+          "specialist",
+          "validator",
+          "ops",
+          "database_admin"
+        ]
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "owns": {
+            "type": "string",
+            "minLength": 1
+          },
+          "operations": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          },
+          "handoffs": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "required": [
+          "owns",
+          "operations",
+          "handoffs"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "profiles": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "pattern": "^[a-z][a-z0-9-]+$"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "minLength": 1
+          },
+          "display_name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "extra_operations": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "role",
+          "extra_operations"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "operations": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "pattern": "^[a-z][a-z_.]+$"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "access": {
+            "enum": [
+              "read",
+              "write",
+              "administer"
+            ]
+          },
+          "scope": {
+            "enum": [
+              "project",
+              "task",
+              "own_run",
+              "domain",
+              "approved_release",
+              "approved_database_change"
+            ]
+          },
+          "targets": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true,
+            "minItems": 1
+          },
+          "prerequisites": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true,
+            "minItems": 1
+          }
+        },
+        "required": [
+          "access",
+          "scope",
+          "targets",
+          "prerequisites"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "domain_evidence": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true,
+            "minItems": 1
+          },
+          "shared_infrastructure_writes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          },
+          "excluded_sibling_workflow": {
+            "type": "string",
+            "minLength": 1
+          },
+          "current_gap": {
+            "type": "string",
+            "minLength": 1
+          },
+          "ownership_note": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "sources",
+          "shared_infrastructure_writes",
+          "excluded_sibling_workflow",
+          "current_gap",
+          "ownership_note"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "deferred": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "schema_version",
+    "status",
+    "tenant",
+    "planning",
+    "defaults",
+    "roles",
+    "profiles",
+    "operations",
+    "domain_evidence",
+    "deferred"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Agent responsibility and target-operation declarations; no runtime grant"
+}

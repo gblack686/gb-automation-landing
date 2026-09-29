@@ -1,0 +1,167 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gbautomation.xyz/schemas/forge-draft.v1.schema.json",
+  "title": "GBAuto Agent Forge draft v1",
+  "description": "Draft wrapper around one agent-configuration.v1 package as it moves compose -> validate -> diff -> submit. A draft is inert: it never activates anything. The only route out of Agent Forge is a gated proposal.v1 (ADR-14), referenced here as proposal_ref once submit has run. Full agent-configuration.v1 validation of the embedded configuration is delegated to scripts/agent_forge.py rather than duplicated here.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "draft_id",
+    "status",
+    "target",
+    "tenant",
+    "configuration",
+    "diff",
+    "validation_ref",
+    "proposal_ref",
+    "created_at"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "forge-draft.v1"
+    },
+    "draft_id": {
+      "type": "string",
+      "pattern": "^forgedraft_[a-z0-9_]+$",
+      "maxLength": 200
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "validated",
+        "proposed",
+        "submitted",
+        "rejected"
+      ]
+    },
+    "target": {
+      "enum": [
+        "new_profile",
+        "profile_update",
+        "skill_update"
+      ]
+    },
+    "tenant": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "configuration": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "config_id",
+        "version"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "agent-configuration.v1"
+        }
+      }
+    },
+    "diff": {
+      "type": "object",
+      "description": "Summary of the rendered draft-vs-current diff. diff_ref points at the rendered unified diff text; digest binds its exact bytes.",
+      "required": [
+        "summary",
+        "added_lines",
+        "removed_lines",
+        "changed_paths",
+        "diff_ref",
+        "digest"
+      ],
+      "properties": {
+        "summary": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "added_lines": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "removed_lines": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "changed_paths": {
+          "type": "array",
+          "maxItems": 200,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          }
+        },
+        "diff_ref": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/repoPath"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "digest": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "validation_ref": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/repoPath"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "proposal_ref": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/repoPath"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "minLength": 1,
+      "maxLength": 40
+    },
+    "notes": {
+      "type": "array",
+      "maxItems": 50,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 500
+      }
+    }
+  },
+  "definitions": {
+    "repoPath": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 300,
+      "pattern": "^[A-Za-z0-9._/-]+$"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,84 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gbautomation.xyz/schemas/derived-producer.v1.schema.json",
+  "title": "GBAuto Agent OS derived-producer run record v1",
+  "description": "One derived-producer run (self-improvement, dreaming, preferences, research/design decision, blocker). Lineage to originating source events is mandatory; boundaries per producer kind live in config/agent-os/derived-producers.yaml.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "producer_kind",
+    "producer_run_id",
+    "input_source_event_ids",
+    "output_variant",
+    "owner_expert",
+    "determinism",
+    "confidence",
+    "trace_id",
+    "replay_policy"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "derived-producer.v1"
+    },
+    "producer_kind": {
+      "enum": [
+        "self_improvement",
+        "dreaming",
+        "preferences",
+        "research_design_decision",
+        "blocker"
+      ]
+    },
+    "producer_run_id": {
+      "type": "string",
+      "pattern": "^producer_[a-z0-9_]+$",
+      "maxLength": 200
+    },
+    "input_source_event_ids": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 500,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 200
+      }
+    },
+    "output_variant": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "owner_expert": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "determinism": {
+      "enum": [
+        "deterministic",
+        "agentic"
+      ]
+    },
+    "confidence": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 1
+    },
+    "trace_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "replay_policy": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    }
+  },
+  "additionalProperties": false
+}

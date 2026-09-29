@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gbautomation.xyz/schemas/capability-registry.v1.schema.json",
+  "title": "Generated GBAutomation Capability Registry v1",
+  "type": "object",
+  "required": ["schema_version", "source_commit", "content_sha256", "sources", "capabilities", "entities", "links", "coverage"],
+  "properties": {
+    "schema_version": {"const": "gbauto.capability-registry.v1"},
+    "source_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "content_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "sources": {"type": "array", "items": {"$ref": "#/$defs/source"}},
+    "capabilities": {"type": "array", "items": {"$ref": "#/$defs/capability"}},
+    "entities": {"type": "array", "items": {"$ref": "#/$defs/entity"}},
+    "links": {"type": "array", "items": {"$ref": "#/$defs/normalizedLink"}},
+    "coverage": {"$ref": "#/$defs/coverage"}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "source": {
+      "type": "object",
+      "required": ["path", "kind", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "kind": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      },
+      "additionalProperties": false
+    },
+    "capability": {
+      "type": "object",
+      "required": ["capability_id", "slug", "source_path", "descriptor_status", "name", "description"],
+      "properties": {
+        "capability_id": {"type": "string", "pattern": "^skill:[a-z0-9][a-z0-9-]{1,79}$"},
+        "slug": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,79}$"},
+        "source_path": {"type": "string", "minLength": 1},
+        "descriptor_path": {"type": ["string", "null"]},
+        "descriptor_status": {"enum": ["present", "absent", "invalid"]},
+        "name": {"type": "string"},
+        "description": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "entity": {
+      "type": "object",
+      "required": ["entity_key", "kind", "id", "path", "source_sha256", "resolver_status"],
+      "properties": {
+        "entity_key": {"type": "string", "minLength": 1},
+        "kind": {"type": "string", "minLength": 1},
+        "id": {"type": ["string", "null"]},
+        "path": {"type": ["string", "null"]},
+        "source_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+        "resolver_status": {"enum": ["resolved", "unresolved", "not_applicable"]}
+      },
+      "additionalProperties": false
+    },
+    "normalizedLink": {
+      "type": "object",
+      "required": ["source_capability_id", "rel", "kind", "target_id", "target_path", "target_key", "resolver_status"],
+      "properties": {
+        "source_capability_id": {"type": "string"},
+        "rel": {"type": "string"},
+        "kind": {"type": "string"},
+        "target_id": {"type": ["string", "null"]},
+        "target_path": {"type": ["string", "null"]},
+        "target_key": {"type": "string"},
+        "resolver_status": {"enum": ["resolved", "unresolved", "not_applicable"]}
+      },
+      "additionalProperties": false
+    },
+    "coverage": {
+      "type": "object",
+      "required": ["counts", "unresolved", "warnings"],
+      "properties": {
+        "counts": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+        "unresolved": {"type": "array", "items": {"type": "string"}},
+        "warnings": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    }
+  }
+}

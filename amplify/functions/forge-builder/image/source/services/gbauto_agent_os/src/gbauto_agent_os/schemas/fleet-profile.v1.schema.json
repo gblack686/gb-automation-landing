@@ -1,0 +1,101 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gbautomation.xyz/schemas/fleet-profile.v1.schema.json",
+  "title": "GBAuto Agent OS fleet runtime profile v1",
+  "description": "ADR-04 contract: experts own doctrine; fleet profiles own runtime identity, tools, permissions, and skills. owner_expert must reference an entry in the expert-ownership.v1 registry (enforced by scripts/validate_expert_ownership.py validate-profile). suggested_skills is capped at 15 per fleet doctrine.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "profile_id",
+    "display_name",
+    "owner_expert",
+    "role_behavior",
+    "tool_allowlist",
+    "permission_allowlist",
+    "suggested_skills",
+    "startup_context",
+    "tenant",
+    "runtime",
+    "receipts_policy"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "fleet-profile.v1"
+    },
+    "profile_id": {
+      "$ref": "#/definitions/kebab"
+    },
+    "display_name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "owner_expert": {
+      "$ref": "#/definitions/kebab"
+    },
+    "role_behavior": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4000
+    },
+    "tool_allowlist": {
+      "type": "array",
+      "maxItems": 100,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/definitions/boundedString"
+      }
+    },
+    "permission_allowlist": {
+      "type": "array",
+      "maxItems": 100,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/definitions/boundedString"
+      }
+    },
+    "suggested_skills": {
+      "type": "array",
+      "maxItems": 15,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/definitions/boundedString"
+      }
+    },
+    "startup_context": {
+      "type": "array",
+      "maxItems": 50,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/definitions/boundedString"
+      }
+    },
+    "tenant": {
+      "$ref": "#/definitions/kebab"
+    },
+    "runtime": {
+      "enum": [
+        "hermes"
+      ]
+    },
+    "receipts_policy": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    }
+  },
+  "definitions": {
+    "kebab": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80,
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "boundedString": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    }
+  },
+  "additionalProperties": false
+}

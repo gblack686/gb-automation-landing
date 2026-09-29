@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gbautomation.dev/schemas/tac-methodology-retrieval.v1.schema.json",
+  "title": "TAC Methodology Retrieval v1",
+  "type": "object",
+  "required": ["schema_version", "created_at", "queries", "sources_scanned", "match_count", "results"],
+  "properties": {
+    "schema_version": {"const": "tac-methodology-retrieval.v1"},
+    "created_at": {"type": "string"},
+    "build_run_id": {"type": ["string", "null"]},
+    "prd_identifier": {"type": ["string", "null"]},
+    "queries": {"type": "array", "items": {"type": "string"}},
+    "sources_scanned": {"type": "integer", "minimum": 0},
+    "source_inventory": {"type": "array"},
+    "match_count": {"type": "integer", "minimum": 0},
+    "limit": {"type": "integer", "minimum": 0},
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source_type", "source_path", "line_span", "score", "confidence", "matched_terms", "excerpt"],
+        "properties": {
+          "rank": {"type": "integer"},
+          "source_type": {"type": "string"},
+          "source_path": {"type": "string"},
+          "line_span": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "integer"}},
+          "timestamp_span": {"type": ["array", "null"], "items": {"type": "number"}},
+          "title": {"type": ["string", "null"]},
+          "date": {"type": ["string", "null"]},
+          "score": {"type": "number"},
+          "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+          "matched_terms": {"type": "array", "items": {"type": "string"}},
+          "excerpt": {"type": "string"},
+          "source_hash": {"type": ["string", "null"]}
+        },
+        "additionalProperties": true
+      }
+    },
+    "no_match_evidence": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,80 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gbautomation.xyz/schemas/forge-artifact-routing.v1.schema.json",
+  "title": "forge-artifact-routing.v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "status",
+    "document_sha256",
+    "artifacts"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "forge-artifact-routing.v1"
+    },
+    "status": {
+      "const": "pass"
+    },
+    "document_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "artifacts": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "kind",
+          "path",
+          "sha256",
+          "artifact_id",
+          "tenant",
+          "workflow_id",
+          "scope_sha256",
+          "index_readback"
+        ],
+        "properties": {
+          "kind": {
+            "enum": [
+              "intake",
+              "plan",
+              "architecture"
+            ]
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "artifact_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "tenant": {
+            "type": "string",
+            "minLength": 1
+          },
+          "workflow_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "scope_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "index_readback": {
+            "const": true
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": false
+}

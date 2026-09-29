@@ -12,6 +12,8 @@ import {forgeVisual,forgeVisualWorker} from './functions/forge-visual/resource';
 import {Duration} from 'aws-cdk-lib';
 import {Queue} from 'aws-cdk-lib/aws-sqs';
 import {SqsEventSource} from 'aws-cdk-lib/aws-lambda-event-sources';
+import {forgeBuilder,forgeBuilderWorker} from './functions/forge-builder/resource';
+import {builderInfrastructure} from './functions/forge-builder/infrastructure.mjs';
 
 /**
  * @see https://docs.amplify.aws/react/build-a-backend/ to add storage, functions, and more
@@ -25,18 +27,24 @@ const backend = defineBackend({
   forgeAtlas,
   forgeVisual,
   forgeVisualWorker,
+  forgeBuilder,
+  forgeBuilderWorker,
 });
 
 const atlasStack = Stack.of(backend.forgeAtlas.resources.lambda);
 const atlasDocuments = atlasStorage(atlasStack);
-atlasDocuments.grantRead(backend.forgeAtlas.resources.lambda, 'gbautomation/artist-packet-expert/index.html');
+atlasDocuments.grantRead(backend.forgeAtlas.resources.lambda, 'gbautomation/*/index.html');
+atlasDocuments.grantRead(backend.forgeAtlas.resources.lambda, 'gbautomation/forge-agent-registry.v1.json');
 backend.forgeAtlas.addEnvironment('DOCUMENT_BUCKET', atlasDocuments.bucketName);
 backend.forgeAtlas.addEnvironment('COGNITO_ISSUER', atlasIssuer(atlasStack,backend.auth.resources.userPool.userPoolId));
+if (process.env.FORGE_LEGACY_OPERATOR_SUB) backend.forgeAtlas.addEnvironment('FORGE_LEGACY_OPERATOR_SUB', process.env.FORGE_LEGACY_OPERATOR_SUB);
 backend.forgeAtlas.resources.lambda.addToRolePolicy(new PolicyStatement({
   effect: Effect.ALLOW, actions: ['secretsmanager:GetSecretValue'],
   resources: [atlasSecretArn(atlasStack)],
 }));
 backend.addOutput({custom: {forge_atlas_bucket_name: atlasDocuments.bucketName}});
+builderInfrastructure(atlasStack,{bucket:atlasDocuments,api:backend.forgeBuilder,
+ worker:backend.forgeBuilderWorker,issuer:atlasIssuer(atlasStack,backend.auth.resources.userPool.userPoolId)});
 
 const visualRoot='gbautomation/artist-packet-expert/visuals';
 const visualDLQ=new Queue(atlasStack,'ForgeVisualDeadLetters',{retentionPeriod:Duration.days(14)});

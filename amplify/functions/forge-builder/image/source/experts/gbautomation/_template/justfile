@@ -1,0 +1,134 @@
+# {{EXPERT_TITLE}} expert — operator recipes. `just --list` to browse.
+#
+# Rendered from the §1F standard by scripts/render_expert_justfiles.py — change
+# the standard there, not here. Family-specific recipes live under `domain-verbs`
+# and survive re-rendering; everything else is overwritten. Deterministic recipes
+# run code and print facts. Agentic recipes hand the same work to Claude Code
+# through this family's routes. Nothing here applies a change without the recipe
+# that says apply.
+#
+# NOTE: `just` uses {{ }} for its own interpolation. Anything in braces below is
+# just(1) syntax, not a scaffold placeholder.
+
+# ------------------------------------------------------------------- settings
+# dotenv for local overrides; a POSIX shell on every OS so Codex (PowerShell on
+# Windows) and Claude Code (bash) run the same recipe text.
+
+set dotenv-load := true
+set windows-shell := ["sh", "-cu"]
+
+# ------------------------------------------------------------------ variables
+# `root` is always resolved from git — never a hardcoded path. `profile` is the
+# Hermes distribution name this family installs on the Mac Mini.
+
+expert  := "{{EXPERT}}"
+tree    := "{{TREE}}"
+profile := "expert-" + tree + "-" + expert
+root    := `git rev-parse --show-toplevel`
+mm      := "bash " + root + "/resources/skills/mac-mini-ssh/scripts/mm.sh"
+
+# List all recipes (a bare `just` browses, never runs)
+default:
+    @just --list
+
+# -------------------------------------------------------------- deterministic
+
+# Install drift: is this expert's repo copy in sync with ~/.claude?
+check:
+    cd "{{root}}" && bash scripts/install_experts.sh --check {{expert}}
+
+# Sync THIS expert repo -> ~/.claude (backs up first). Gated: run `just check` first.
+install:
+    cd "{{root}}" && bash scripts/install_experts.sh --apply {{expert}}
+
+# Re-check after an apply — must report IN-SYNC to count as complete
+verify:
+    cd "{{root}}" && bash scripts/install_experts.sh --check {{expert}}
+
+# Source drift: has the ground truth behind expertise.md moved?
+drift:
+    cd "{{root}}" && python scripts/check_expert_source_drift.py --expert {{expert}}
+
+# Which of the standard routes does this family actually have?
+routes:
+    @ls -1 "{{justfile_directory()}}"/*.md | xargs -n1 basename | sed 's/\.md$//' | sort
+
+# Run this expert's CI gate: lint, every owned pytest module, and this
+# family's tests/ doc replay if it ships one. A real failure fails this recipe.
+test:
+    cd "{{root}}" && python scripts/expert_ci_gate.py --expert {{expert}} --replay
+
+# All deterministic checks, error-tolerant (one finding must not abort the rest)
+audit:
+    @echo "--- install drift ---"
+    -@just check
+    @echo "--- source drift ---"
+    -@just drift
+    @echo "--- routes present ---"
+    -@just routes
+    @echo "--- tests ---"
+    -@just test
+
+# -------------------------------------------------------------------- dry-run
+# Every write-capable recipe has a plan-only twin. `install` writes; this lists.
+
+# Plan only — what `just install` would sync, without syncing
+install-dry:
+    cd "{{root}}" && bash scripts/install_experts.sh --check {{expert}}
+
+# -------------------------------------------------------------------- agentic
+# One route call per recipe. Domain logic lives in the route file, never here.
+
+# Ask a read-only question of this expert
+question q:
+    claude "/experts:{{expert}}:question {{q}}"
+
+# Propose a change (produces a plan; applies nothing)
+plan req:
+    claude "/experts:{{expert}}:plan {{req}}"
+
+# Validate expertise.md against live sources and propose updates
+improve:
+    claude "/experts:{{expert}}:self-improve"
+
+# Query the second-brain knowledge graph for this domain
+graph q="--freshness":
+    claude "/experts:{{expert}}:graph {{q}}"
+
+# Three-axis drift report: install, model, structural
+maintain:
+    claude "/experts:{{expert}}:maintenance"
+
+# Full ACT -> LEARN -> REUSE chain (halts for approval after the plan)
+pbi req:
+    claude "/experts:{{expert}}:plan_build_improve {{req}}"
+
+# --------------------------------------------------------------- domain-verbs
+# Family-specific, additive. A write-capable verb ends in -apply and has a
+# read-only sibling. Preserved verbatim when this file is re-rendered.
+
+proposals:
+    cd "{{root}}" && python resources/skills/setup-prime-self-improve/scripts/run_proposals.py --expert {{expert}}
+
+proposals-apply:
+    cd "{{root}}" && python resources/skills/setup-prime-self-improve/scripts/run_proposals.py --expert {{expert}} --write
+
+digest:
+    cd "{{root}}" && python resources/skills/gmail-manager/scripts/send_proposals_digest.py --expert {{expert}} --to gblack686@gmail.com --dry-run
+
+deploy:
+    cd "{{root}}" && python scripts/deploy_expert.py --expert {{expert}}
+
+# --------------------------------------------------------------------- remote
+# Runs on the Mac Mini through mm.sh (never raw ssh). Read-only. `just` is not
+# installed on the Mini — recipes stay thin so crons call the same scripts.
+
+# Is this family's Hermes profile installed on the Mini, and what did it last log?
+remote-status:
+    {{mm}} 'p="$HOME/.hermes/profiles/{{profile}}"; if [ -d "$p" ]; then echo "$p"; ls -t "$p/logs" 2>/dev/null | head -5; else echo "{{profile}}: not installed on this Mini"; fi'
+
+# BEGIN MANAGED EXPERT PRIME RECIPE
+# Refresh bounded current context through the shared PRIME engine
+prime:
+    claude "/experts:{{expert}}:prime"
+# END MANAGED EXPERT PRIME RECIPE

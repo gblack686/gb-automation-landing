@@ -1,7 +1,8 @@
 import { GetSecretValueCommand, SecretsManagerClient } from '@aws-sdk/client-secrets-manager';
 import { GetObjectCommand, HeadObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { makeHandler, TENANT, EXPERT } from './contract.mjs';
+import { createHash } from 'node:crypto';
+import { makeHandler, TENANT, operatorBootstrap } from './contract.mjs';
 import { proposalPath, projectProposals } from './proposals.mjs';
 
 let secret: {url:string;key:string}|undefined;
@@ -38,13 +39,30 @@ async function proposals(request: {view:string;query:Record<string,unknown>}) {
  if (raw.length > 250000) throw Error('Response too large');
  return projectProposals(request,JSON.parse(raw),response.headers.get('content-range'));
 }
-async function document() {
+async function registry(claims: {sub:string}) {
+ const key = `${TENANT}/forge-agent-registry.v1.json`;
  const client = new S3Client({});
- const location = {Bucket:process.env.DOCUMENT_BUCKET,Key:`${TENANT}/${EXPERT}/index.html`};
+ let response;
+ try { response = await client.send(new GetObjectCommand({Bucket:process.env.DOCUMENT_BUCKET,Key:key})); }
+ catch (error:unknown) {
+  const bootstrap = operatorBootstrap(claims.sub,process.env.FORGE_LEGACY_OPERATOR_SUB);
+  if ((error as {name?:string})?.name === 'NoSuchKey' && bootstrap) return bootstrap;
+  throw error;
+ }
+ if (!response.ContentLength || response.ContentLength > 100000 || !/^[a-f0-9]{64}$/.test(response.Metadata?.sha256 || '')) throw Error('Registry unavailable');
+ const raw = await response.Body?.transformToString();
+ if (!raw || Buffer.byteLength(raw) !== response.ContentLength || createHash('sha256').update(raw).digest('hex') !== response.Metadata?.sha256) throw Error('Registry changed');
+ const parsed = JSON.parse(raw);
+ if (parsed?.schema_version !== 'forge-agent-registry.v1' || parsed.tenant_id !== TENANT || !Array.isArray(parsed.agents)) throw Error('Registry invalid');
+ return {source:'s3',agents:parsed.agents};
+}
+async function document(agent:string) {
+ const client = new S3Client({});
+ const location = {Bucket:process.env.DOCUMENT_BUCKET,Key:`${TENANT}/${agent}/index.html`};
  const head = await client.send(new HeadObjectCommand(location));
  const sha256 = head.Metadata?.sha256;
  if (!sha256 || !/^[a-f0-9]{64}$/.test(sha256) || !head.ContentLength || head.ContentLength > 16000000) throw Error('Document unavailable');
  const url = await getSignedUrl(client,new GetObjectCommand({...location,ResponseCacheControl:'private, no-store'}),{expiresIn:60});
- return {url,sha256,bytes:head.ContentLength,agent_id:EXPERT,tenant_id:TENANT};
+ return {url,sha256,bytes:head.ContentLength,agent_id:agent,tenant_id:TENANT};
 }
-export const handler = makeHandler({issuer:process.env.COGNITO_ISSUER,rpc,document,proposals});
+export const handler = makeHandler({issuer:process.env.COGNITO_ISSUER,rpc,document,proposals,registry});

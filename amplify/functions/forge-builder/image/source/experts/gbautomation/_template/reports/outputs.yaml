@@ -1,0 +1,9 @@
+schema_version: gbauto-expert-report-outputs.v1
+expert_id: "{{TREE}}/{{EXPERT}}"
+catalog: resources/template-registry/expert-report-outputs.yaml
+sample_library: config/reports/sample-library.json
+template_registry: resources/template-registry/approved-report-templates.yaml
+section_registry: config/agent-os/report-section-registry.yaml
+sample_policy: required_always
+primary_skills: []
+outputs: []

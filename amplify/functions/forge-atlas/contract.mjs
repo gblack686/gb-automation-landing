@@ -1,9 +1,16 @@
 export const EXPERT = 'artist-packet-expert';
+// Tenant agent selection is validated against a server-owned registration list.
 export const TENANT = 'gbautomation';
 export const CONFIG_SHA = 'bf142e4e937a53701b4a27b02d90068ee0c8f73636f123dd97a56a661e3040e5';
+const agentSlug = /^[a-z][a-z0-9-]{2,62}$/;
 // Cognito subjects use the UUID-shaped hex layout but do not promise RFC variant bits.
 // The verified deployment issuer and tenant group provide authorization.
 const cognitoSubject = /^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i;
+export function operatorBootstrap(sub, allowedSub) {
+ if (typeof sub !== 'string' || !cognitoSubject.test(sub) || !allowedSub || sub !== allowedSub) return null;
+ return {source:'operator_bootstrap',agents:[{tenant_id:TENANT,agent_id:EXPERT,
+  display_name:'Artist Packet Expert',config_sha256:CONFIG_SHA,subjects:[sub],status:'active'}]};
+}
 class ReadError extends Error {}
 const deny = code => { throw new ReadError(code); };
 const object = value => value && typeof value === 'object' && !Array.isArray(value);
@@ -16,13 +23,15 @@ export function authenticate(event, issuer) {
  return claims;
 }
 export function requestFor(event, issuer) {
- authenticate(event, issuer);
+ const claims = authenticate(event, issuer);
  // Amplify's FunctionDirectiveStack forwards typeName/fieldName at the top level.
  if (event.typeName !== 'Query' || event.fieldName !== 'forgeAtlasRead' || Object.keys(event.arguments || {}).join() !== 'input') deny('invalid_request');
  let input = event.arguments.input;
  if (typeof input === 'string') { try { input = JSON.parse(input); } catch { deny('invalid_request'); } }
- if (!object(input) || JSON.stringify(input).length > 4096 || Object.keys(input).some(k => !['view','query'].includes(k))
-     || !['document','atlas','planning','history','approvalSnapshot','proposals','proposal'].includes(input.view)) deny('invalid_request');
+ if (!object(input) || JSON.stringify(input).length > 4096 || Object.keys(input).some(k => !['view','query','agent_id'].includes(k))
+     || !['agents','document','atlas','planning','history','approvalSnapshot','proposals','proposal'].includes(input.view)
+     || (input.agent_id !== undefined && !agentSlug.test(input.agent_id))
+     || (input.view === 'agents' && input.agent_id !== undefined)) deny('invalid_request');
  const query = input.query || {};
  if (!object(query)) deny('invalid_request');
  if (!['history','proposals','proposal'].includes(input.view) && Object.keys(query).length) deny('invalid_request');
@@ -41,7 +50,7 @@ export function requestFor(event, issuer) {
   if (query.view !== 'sessions' && !query.session_key) deny('invalid_request');
   if (query.view !== 'traces' && query.message_key) deny('invalid_request');
  }
- return {view:input.view,query};
+ return {view:input.view,query,agent_id:input.agent_id || EXPERT,claims};
 }
 
 export function traceURL(url,id) {
@@ -50,11 +59,12 @@ export function traceURL(url,id) {
 }
 const rows = (value, limit) => { if (!Array.isArray(value) || value.length > limit) throw Error('Invalid read'); return value; };
 export function project(request, raw, now = new Date().toISOString()) {
+ const agent = request.agent_id || EXPERT;
  if (request.view === 'history') {
   const q = request.query, key = {sessions:'session_key',messages:'message_key',traces:'trace_id'}[q.view];
   const page = rows(raw,51).slice(0,50).map(row => q.view === 'traces' ? {...row,langfuse_url:traceURL(row.langfuse_url,row.trace_id)} : row);
   if (page.some(row => !identity(row[key]))) throw Error('Invalid identity');
-  return {schema_version:'forge-history-page.v1',source:'supabase',tenant_id:TENANT,agent_id:EXPERT,
+  return {schema_version:'forge-history-page.v1',source:'supabase',tenant_id:TENANT,agent_id:agent,
    view:q.view,session_key:q.session_key || null,message_key:q.message_key || null,rows:page,next:raw.length > 50 ? page.at(-1)[key] : null};
  }
  if (request.view === 'atlas') {
@@ -66,11 +76,11 @@ export function project(request, raw, now = new Date().toISOString()) {
    }
    return output;
   });
-  return {schema_version:'forge-atlas-snapshot.v1',source:'supabase',agent_id:EXPERT,captured_at:now,days:90,limit_per_dataset:200,datasets};
+  return {schema_version:'forge-atlas-snapshot.v1',source:'supabase',agent_id:agent,captured_at:now,days:90,limit_per_dataset:200,datasets};
  }
  const prds = rows(raw.prds,100).map(p => {
   const claims = [p.owner_expert,p.frontmatter?.owner_expert,p.metadata?.master_sheet_projection?.owner_expert,p.source_refs?.forge?.agent_id].filter(Boolean);
-  if (p.client !== TENANT || !claims.length || claims.some(v => v !== EXPERT)) throw Error('Invalid owner');
+  if (p.client !== TENANT || !claims.length || claims.some(v => v !== agent)) throw Error('Invalid owner');
   const digest = p.source_refs?.forge?.config_sha256 || null;
   if (digest && !/^[a-f0-9]{64}$/.test(digest)) throw Error('Invalid lineage');
   const updated = [p.updated_at,p.file_mtime,p.indexed_at].find(v => v && Number.isFinite(Date.parse(v)));
@@ -79,20 +89,35 @@ export function project(request, raw, now = new Date().toISOString()) {
  });
  const cards = rows(raw.cards,200);
  if (cards.some(c => !Array.isArray(c.prd_ids) || c.prd_ids.some(id => !prds.some(p => p.prd_id === id)))) throw Error('Invalid link');
- return {schema_version:'forge-planning-snapshot.v1',tenant_id:TENANT,agent_id:EXPERT,board_slug:'gbautomation',config_sha256:CONFIG_SHA,
+ return {schema_version:'forge-planning-snapshot.v1',tenant_id:TENANT,agent_id:agent,board_slug:'gbautomation',config_sha256:request.config_sha256 || CONFIG_SHA,
   captured_at:now,source:'supabase',prds,cards,artifacts:[]};
 }
 
-export function makeHandler({issuer,rpc,document,proposals}) {
+export function makeHandler({issuer,rpc,document,proposals,registry=async claims=>[{
+ tenant_id:TENANT,agent_id:EXPERT,display_name:'Artist Packet Expert',config_sha256:CONFIG_SHA,subjects:[claims.sub],status:'active'
+}]}) {
  return async event => {
   try {
    const request = requestFor(event,issuer);
-   if (request.view === 'document') return {payload:{ok:true,data:await document()}};
+   const registered=await registry(request.claims);
+   const entries=Array.isArray(registered)?registered:registered?.agents;
+   const source=Array.isArray(registered)?'baseline':registered?.source;
+   if(!Array.isArray(entries)||entries.length>100)deny('registry_unavailable');
+   const visible=entries.filter(row=>row?.tenant_id===TENANT && agentSlug.test(row.agent_id)
+    && typeof row.display_name==='string' && row.display_name.length>0 && row.display_name.length<=120
+    && /^[a-f0-9]{64}$/.test(row.config_sha256) && Array.isArray(row.subjects)
+    && row.subjects.includes(request.claims.sub) && ['active','pending'].includes(row.status));
+   if(request.view==='agents')return {payload:{ok:true,data:{schema_version:'forge-agent-registry.v1',tenant_id:TENANT,source,
+    agents:visible.map(({agent_id,display_name,config_sha256,status})=>({agent_id,display_name,config_sha256,status}))}}};
+   const selected=visible.find(row=>row.agent_id===request.agent_id);
+   if(!selected)deny('agent_access_required');
+   request.config_sha256=selected.config_sha256;
+   if (request.view === 'document') return {payload:{ok:true,data:await document(request.agent_id)}};
    if (request.view === 'approvalSnapshot') return {payload:{ok:true,data:{mode:'live_read_only',workflows:[],engineering:null,recipient_options:[],
-    connection:{source:'supabase',tenant:TENANT,agent:EXPERT,writes_enabled:false,email_enabled:false,execution_enabled:false,review_host:'web'}}}};
+    connection:{source:'supabase',tenant:TENANT,agent:request.agent_id,writes_enabled:false,email_enabled:false,execution_enabled:false,review_host:'web'}}}};
    if (['proposals','proposal'].includes(request.view)) return {payload:{ok:true,data:await proposals(request)}};
    const q = request.query;
-   const raw = await rpc({p_tenant:TENANT,p_expert:EXPERT,p_view:request.view === 'history' ? q.view : request.view,
+   const raw = await rpc({p_tenant:TENANT,p_expert:request.agent_id,p_view:request.view === 'history' ? q.view : request.view,
     p_session_key:q.session_key || null,p_message_key:q.message_key || null,p_after:q.after || null});
    return {payload:{ok:true,data:project(request,raw)}};
   } catch(error) {

@@ -1,0 +1,14 @@
+{
+  "schema_version": "forge-handoff-example.v1",
+  "example": true,
+  "status": "example_not_approved",
+  "dispatchable": false,
+  "runtime_authorized": false,
+  "expert": "sample-packet-expert",
+  "files": [
+    "expert-config.sample.yaml",
+    "architecture.sample.yaml",
+    "implementation-plan.sample.html"
+  ],
+  "required_next_step": "Confirm scope through TAC-plan; obtain separate implementation and activation approvals."
+}

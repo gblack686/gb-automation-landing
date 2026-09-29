@@ -27,6 +27,7 @@
     "@aws-sdk/client-s3": "3.922.0",
     "@aws-sdk/client-sqs": "^3.922.0",
     "@aws-sdk/s3-request-presigner": "3.922.0",
+    "@elevenlabs/client": "1.25.0",
     "@elevenlabs/react": "^0.9.1",
     "@gltf-transform/core": "^4.2.1",
     "@gltf-transform/extensions": "^4.2.1",

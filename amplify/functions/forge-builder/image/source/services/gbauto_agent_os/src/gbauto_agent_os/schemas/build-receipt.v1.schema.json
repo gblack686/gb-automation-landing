@@ -1,0 +1,99 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gbautomation.xyz/schemas/build-receipt.v1.json",
+  "title": "TAC Build Receipt v1",
+  "type": "object",
+  "required": [
+    "schema_version", "run_id", "identifier", "title",
+    "started_at", "ended_at", "status",
+    "branch", "commits", "cost_usd", "turns",
+    "agent_team", "verifier", "pr"
+  ],
+  "properties": {
+    "schema_version": {"type": "integer", "const": 1},
+    "run_id": {"type": "string", "description": "YYYY-MM-DD-IDENTIFIER-HHMMSS"},
+    "identifier": {"type": "string", "description": "Linear identifier e.g. GBA-447"},
+    "title": {"type": "string"},
+    "linear_url": {"type": "string", "format": "uri"},
+    "started_at": {"type": ["string", "null"], "format": "date-time"},
+    "ended_at": {"type": ["string", "null"], "format": "date-time"},
+    "duration_s": {"type": ["integer", "null"]},
+    "status": {
+      "type": "string",
+      "enum": ["pr_opened", "merged", "pushed_no_pr", "noop", "failed_silent", "error", "timeout", "push_failed", "skipped", "verification_failed", "verification_needs_human", "verification_error", "failed"]
+    },
+    "branch": {"type": "string"},
+    "repo": {"type": "string", "description": "owner/name"},
+    "commits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["sha", "message"],
+        "properties": {
+          "sha": {"type": "string"},
+          "message": {"type": "string"},
+          "files_changed": {"type": "integer"}
+        }
+      }
+    },
+    "files_total_added": {"type": "integer"},
+    "files_total_changed": {"type": "integer"},
+    "files_total_deleted": {"type": "integer"},
+    "cost_usd": {"type": "number"},
+    "turns": {"type": "integer"},
+    "tool_uses": {"type": "integer"},
+    "agent_team": {
+      "type": ["object", "null"],
+      "properties": {
+        "main": {
+          "type": "object",
+          "properties": {
+            "model": {"type": "string"},
+            "messages": {"type": "integer"},
+            "input_tokens": {"type": "integer"},
+            "output_tokens": {"type": "integer"},
+            "cache_read_tokens": {"type": "integer"},
+            "cost_usd": {"type": "number"}
+          }
+        },
+        "subagents": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "task_description": {"type": "string"},
+              "duration_ms": {"type": "integer"},
+              "model": {"type": "string"},
+              "cost_usd": {"type": "number"}
+            }
+          }
+        }
+      }
+    },
+    "verifier": {
+      "type": ["object", "null"],
+      "properties": {
+        "mode": {"type": "string", "enum": ["block", "warn", "off"]},
+        "deterministic_verdict": {"type": "string", "enum": ["pass", "fail", "skip"]},
+        "checks": {"type": "array"}
+      }
+    },
+    "pr": {
+      "type": ["object", "null"],
+      "properties": {
+        "number": {"type": ["integer", "null"]},
+        "url": {"type": "string"},
+        "state": {"type": "string"}
+      }
+    },
+    "summary_short": {
+      "type": "string",
+      "description": "One-line outcome extracted from agent output, NOT LLM-generated",
+      "maxLength": 200
+    },
+    "stderr_tail": {"type": "string", "maxLength": 1000},
+    "failure_reason": {"type": "string", "maxLength": 500},
+    "_schema_validation_error": {"type": "string"}
+  },
+  "additionalProperties": true
+}

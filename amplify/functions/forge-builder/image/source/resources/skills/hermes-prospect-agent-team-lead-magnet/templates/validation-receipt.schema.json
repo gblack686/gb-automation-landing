@@ -1,0 +1,24 @@
+{
+  "$comment": "leadmagnet-validation-receipt.v1 — output of validate_lead_magnet.py",
+  "type": "object",
+  "required": ["schema_version", "prospect_slug", "overall", "gates"],
+  "properties": {
+    "schema_version": {"type": "string", "enum": ["leadmagnet-validation-receipt.v1"]},
+    "prospect_slug": {"type": "string"},
+    "overall": {"type": "string", "enum": ["pass", "fail"]},
+    "approval_state": {"type": "string", "enum": ["draft", "preview_approved", "activation_approved"]},
+    "gates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["gate", "status"],
+        "properties": {
+          "gate": {"type": "string"},
+          "status": {"type": "string", "enum": ["pass", "fail", "skipped"]},
+          "detail": {"type": "string"}
+        }
+      }
+    },
+    "remote_registration": {"type": "string"}
+  }
+}

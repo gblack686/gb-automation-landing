@@ -1,0 +1,37 @@
+name: "expert-{{TREE}}-{{EXPERT}}"
+role: "{{EXPERT_TITLE}} Expert"
+model:
+  default: gpt-5.6-sol
+  provider: openai-codex
+auth:
+  shared_providers: [openai-codex]
+plugins:
+  enabled: [observability/langfuse]
+x_gbautomation_observability:
+  schema_version: expert-observability.v1
+  required: true
+  adapter: hermes-native-otel.v1
+  capture_mode: sanitized
+  sample_rate: 1.0
+  tenant: gbautomation
+  expert_id: "{{EXPERT}}"
+  supabase_mirror: langfuse_traces
+approvals:
+  mode: manual
+  timeout: 600
+  cron_mode: deny
+memory:
+  memory_enabled: true
+  user_profile_enabled: false
+delegation:
+  orchestrator_enabled: false
+  max_concurrent_children: 1
+  max_spawn_depth: 1
+  subagent_auto_approve: false
+x_gbautomation_expert_profile:
+  schema_version: gbauto-expert-profile.v1
+  expert_id: "{{TREE}}/{{EXPERT}}"
+  canonical_expertise: "experts/{{TREE}}/{{EXPERT}}/expertise.md"
+  prime_route: "experts/{{TREE}}/{{EXPERT}}/prime.md"
+  sprint_contract: "experts/{{TREE}}/{{EXPERT}}/sprint/expert-sprint.yaml"
+  report_outputs: "experts/{{TREE}}/{{EXPERT}}/reports/outputs.yaml"

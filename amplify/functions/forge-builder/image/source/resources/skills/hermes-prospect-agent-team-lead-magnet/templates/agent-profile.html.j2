@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>{{agent_name}} — Draft Agent Profile | {{company_name}}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* neon-oiran theme — palette manifest: templates/themes/neon-oiran.json */
+:root{
+  --void:#0A0608; --void2:#0A0A0C; --panel:#111112; --panel2:#18181B; --edge:#1F1F22;
+  --cyan:#67E8F9; --terracotta:#D97757; --terracotta-hover:#B75F43;
+  --cream:#F3F1E7; --cream2:#E6E4D9; --stone:#D6D4C8; --mute:#8C8A84; --mute2:#5C5C5C;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--cream);font-family:'Inter',sans-serif;font-weight:300;line-height:1.65;overflow-x:hidden}
+h1,h2,h3{font-family:'Bebas Neue',sans-serif;font-weight:400;letter-spacing:.04em;line-height:1.05}
+a{color:inherit}
+.wrap{max-width:960px;margin:0 auto;padding:0 24px}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} }
+nav{position:sticky;top:0;z-index:50;background:rgba(10,6,8,.78);backdrop-filter:blur(14px);border-bottom:1px solid rgba(243,241,231,.08)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;padding:13px 24px}
+.lockup{display:flex;align-items:center;gap:10px;font-size:11px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:rgba(243,241,231,.85)}
+.lockup .dot{width:8px;height:8px;border-radius:50%;background:var(--terracotta);box-shadow:0 0 10px var(--terracotta)}
+.back{font-size:10px;text-transform:uppercase;letter-spacing:.24em;color:var(--cyan);text-decoration:none}
+.back:hover{text-shadow:0 0 12px rgba(103,232,249,.8)}
+/* banner */
+.banner{position:relative;height:min(46vh,420px);overflow:hidden;border-bottom:1px solid var(--edge);background:var(--void2)}
+.banner img,.banner svg{width:100%;height:100%;object-fit:cover;display:block;opacity:.85}
+.banner::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,6,8,.15) 30%,var(--void))}
+.banner .title{position:absolute;left:0;right:0;bottom:22px;z-index:2}
+.banner h1{font-size:clamp(44px,7vw,84px);text-transform:uppercase;
+  background:linear-gradient(100deg,var(--cream) 40%,var(--terracotta) 75%,var(--cyan) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.tierline{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:6px}
+.chip{display:inline-block;font-size:9px;text-transform:uppercase;letter-spacing:.22em;padding:5px 13px;border:1px solid rgba(103,232,249,.35);border-radius:2px;color:var(--cyan)}
+.chip.warm{border-color:rgba(217,119,87,.5);color:var(--terracotta)}
+.art-credit{font-size:9px;color:var(--mute2);letter-spacing:.06em}
+section{padding:52px 0;border-bottom:1px solid rgba(243,241,231,.06)}
+.eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:.34em;color:var(--terracotta);margin-bottom:12px}
+.eyebrow::before{content:"// "}
+.sec-title{font-size:clamp(26px,3.6vw,38px);margin-bottom:14px;text-transform:uppercase}
+.grid{display:grid;gap:16px}
+.grid.cols-2{grid-template-columns:repeat(2,1fr)}
+@media(max-width:760px){.grid.cols-2{grid-template-columns:1fr}}
+.panel{background:linear-gradient(160deg,var(--panel2),var(--panel));border:1px solid var(--edge);border-radius:12px;padding:22px;position:relative;overflow:hidden}
+.panel::before{content:"";position:absolute;inset:0 0 auto 0;height:1px;background:linear-gradient(90deg,transparent,rgba(103,232,249,.4),transparent)}
+.panel h3{font-size:20px;text-transform:uppercase;margin-bottom:8px;color:var(--cream)}
+.panel p,.panel li{font-size:13px;color:var(--mute)}
+.panel ul{list-style:none;display:grid;gap:8px}
+.panel li::before{content:"▸ ";color:var(--terracotta)}
+pre.config{background:var(--void2);border:1px solid var(--edge);border-left:2px solid var(--terracotta);border-radius:8px;padding:20px;font-size:12px;line-height:1.7;color:var(--cream2);overflow-x:auto;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}
+.mission{font-size:16px;color:var(--stone);max-width:640px}
+footer{padding:40px 0;font-size:11px;color:var(--mute2);text-align:center;letter-spacing:.08em}
+@media print{
+  nav{display:none !important}
+  body{background:none;color:var(--void)}
+  .banner h1{color:var(--void);-webkit-text-fill-color:initial;background:none}
+  .panel{background:none;border:1px solid var(--stone)}
+  .panel p,.panel li{color:var(--mute2)}
+}
+</style>
+</head>
+<body>
+<nav aria-label="Agent profile navigation">
+  <div class="wrap">
+    <span class="lockup"><span class="dot"></span>{{lockup_text}}</span>
+    <a class="back" href="../index.html">← Back to the roster</a>
+  </div>
+</nav>
+
+<header class="banner">
+  {{banner_art}}
+  <div class="title"><div class="wrap">
+    <h1>{{agent_name}}</h1>
+    <div class="tierline">
+      <span class="chip warm">model tier: {{model_tier}}</span>
+      <span class="chip warm">role: {{role_tier}}</span>
+      <span class="chip">status: drafted — not active</span>
+      {{card_chip}}
+    </div>
+  </div></div>
+</header>
+
+<main>
+<section id="mission">
+  <div class="wrap">
+    <p class="eyebrow">01 — Mission</p>
+    <h2 class="sec-title">Why this agent exists</h2>
+    <p class="mission">{{purpose}}</p>
+  </div>
+</section>
+
+<section id="config">
+  <div class="wrap">
+    <p class="eyebrow">02 — Draft profile config</p>
+    <h2 class="sec-title">The sanitized manifest entry</h2>
+    <pre class="config">{{config_yaml}}</pre>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="wrap">
+    <p class="eyebrow">03 — Proposed skills (this role)</p>
+    <h2 class="sec-title">What it would learn to do</h2>
+    <div class="grid cols-2">{{skill_cards}}</div>
+    <p class="eyebrow" style="margin-top:40px">03b — GBAuto core rack (shared by every agent)</p>
+    <div class="grid cols-2">{{core_rack_cards}}</div>
+  </div>
+</section>
+
+<section id="boundaries">
+  <div class="wrap">
+    <p class="eyebrow">04 — Boundaries &amp; wiring</p>
+    <h2 class="sec-title">What it may not do</h2>
+    <div class="grid cols-2">
+      <div class="panel"><h3>Approval boundaries</h3><ul>{{boundary_items}}</ul></div>
+      <div class="panel"><h3>Inputs → outputs</h3><ul>{{io_items}}</ul></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">{{footer_line}}</div>
+</footer>
+</body>
+</html>

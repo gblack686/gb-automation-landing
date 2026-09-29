@@ -1,0 +1,346 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gbautomation.xyz/schemas/proposal.v1.schema.json",
+  "title": "GBAuto Agent OS proposal union v1",
+  "description": "One proposal union across all registered source variants and derived producers (ADR-09: unknown or malformed variants fail validation). ADR-14 state semantics are encoded as TOTAL conditionals (WS8a-F06): state=blocked REQUIRES a blocker object (failed dependency/validation with owner and next safe action) and EVERY other state forbids one, so no proposal can be simultaneously ready and failed. WS8a-F01: the dispatchable states (queued, approved) REQUIRE an approval block naming the capability that released them — optionally carrying capability_evidence that the delegation router verifies — so a released state can never be asserted without a capability anywhere in the chain.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "proposal_id",
+    "tenant",
+    "source",
+    "card",
+    "workflow",
+    "state"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "proposal.v1"
+    },
+    "proposal_id": {
+      "type": "string",
+      "pattern": "^prop_[a-z0-9_]+$",
+      "maxLength": 200
+    },
+    "tenant": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "type",
+        "source_event_id",
+        "synthetic"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "telegram_voice",
+            "telegram_text",
+            "google_meet_transcript",
+            "youtube_transcript",
+            "report_feedback",
+            "website_feedback",
+            "second_brain_item",
+            "client_inbox_message",
+            "health_event",
+            "sprint_signal",
+            "research_scrape",
+            "agent_forge_planning"
+          ]
+        },
+        "source_event_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "synthetic": {
+          "type": "boolean"
+        },
+        "channel_whitelist_entry": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "meeting_reference": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "consent_state": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "artifact_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "section_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        }
+      },
+      "additionalProperties": false
+    },
+    "producer": {
+      "type": "object",
+      "required": [
+        "kind",
+        "producer_run_id",
+        "input_source_event_ids",
+        "output_variant",
+        "trace_id"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "self_improvement",
+            "dreaming",
+            "preferences",
+            "research_design_decision",
+            "blocker"
+          ]
+        },
+        "producer_run_id": {
+          "type": "string",
+          "pattern": "^producer_[a-z0-9_]+$",
+          "maxLength": 200
+        },
+        "input_source_event_ids": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 500,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          }
+        },
+        "output_variant": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "trace_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        }
+      },
+      "additionalProperties": false
+    },
+    "card": {
+      "type": "object",
+      "required": [
+        "type",
+        "title",
+        "color_token"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "color_token": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        }
+      },
+      "additionalProperties": false
+    },
+    "workflow": {
+      "type": "object",
+      "required": [
+        "route"
+      ],
+      "properties": {
+        "route": {
+          "enum": [
+            "feature",
+            "research",
+            "hotfix",
+            "planning",
+            "feedback_triage",
+            "self_improvement"
+          ]
+        },
+        "step": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 99
+        },
+        "step_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 99
+        }
+      },
+      "additionalProperties": false
+    },
+    "state": {
+      "enum": [
+        "gated",
+        "blocked",
+        "queued",
+        "approved",
+        "denied"
+      ]
+    },
+    "approval": {
+      "type": "object",
+      "description": "The capability this proposal is waiting on (state=gated) or was released by (state=queued/approved). Required for every dispatchable state — naming the capability is the floor, and capability_evidence is how a release proves it rather than asserting it.",
+      "required": [
+        "capability_required"
+      ],
+      "properties": {
+        "capability_required": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "capability_evidence": {
+          "type": "object",
+          "description": "Proof that the named capability was minted and verified: the delegation router reads this to decide whether a released proposal is verified or merely asserted. Extra keys from the approval-decision receipt are preserved.",
+          "required": [
+            "capability_id"
+          ],
+          "properties": {
+            "capability_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "receipt_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "decision": {
+              "enum": [
+                "allow",
+                "deny"
+              ]
+            },
+            "reason_code": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "target_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "tenant": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "decided_at": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40
+            },
+            "verified_at": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40
+            },
+            "single_use_consumed": {
+              "type": "boolean"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "blocker": {
+      "type": "object",
+      "required": [
+        "blocker_type",
+        "owner",
+        "next_safe_action"
+      ],
+      "properties": {
+        "blocker_type": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "owner": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "next_safe_action": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "$comment": "ADR-14 / WS8a-F06: total blocker conditional. Only 'blocked' may carry a blocker; gated, queued, approved and denied all forbid one, so no proposal is simultaneously ready and failed.",
+      "if": {
+        "properties": {
+          "state": {
+            "const": "blocked"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "then": {
+        "required": [
+          "blocker"
+        ]
+      },
+      "else": {
+        "not": {
+          "required": [
+            "blocker"
+          ]
+        }
+      }
+    },
+    {
+      "$comment": "ADR-14 / WS8a-F01: the dispatchable states require an approval block. A producer cannot emit state=queued/approved and be released with no capability named anywhere in the chain.",
+      "if": {
+        "properties": {
+          "state": {
+            "enum": [
+              "queued",
+              "approved"
+            ]
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "then": {
+        "required": [
+          "approval"
+        ]
+      }
+    }
+  ],
+  "additionalProperties": false
+}

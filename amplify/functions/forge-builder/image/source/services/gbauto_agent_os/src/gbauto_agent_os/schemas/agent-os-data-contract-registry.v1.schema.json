@@ -1,0 +1,143 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gbautomation.xyz/schemas/agent-os-data-contract-registry.v1.schema.json",
+  "title": "GBAuto Agent OS data contract registry v1",
+  "description": "Canonical registry binding every Agent OS JSON data contract to a governed Supabase relation and recording available sample data. Contracts with a purpose-built runtime table use native_table; all other contracts use the shared agent_os_contract_records envelope instead of proliferating empty one-off tables.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "registry_version",
+    "supabase_schema",
+    "registry_relation",
+    "shared_record_relation",
+    "coverage_view_relation",
+    "relations",
+    "entries"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "agent-os-data-contract-registry.v1"
+    },
+    "registry_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "supabase_schema": {
+      "type": "string",
+      "pattern": "^[a-z_][a-z0-9_]{0,62}$"
+    },
+    "registry_relation": {
+      "$ref": "#/definitions/relationName"
+    },
+    "shared_record_relation": {
+      "$ref": "#/definitions/relationName"
+    },
+    "coverage_view_relation": {
+      "$ref": "#/definitions/relationName"
+    },
+    "relations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "items": {
+        "type": "object",
+        "required": [
+          "relation",
+          "relation_kind",
+          "migration_path"
+        ],
+        "properties": {
+          "relation": {
+            "$ref": "#/definitions/relationName"
+          },
+          "relation_kind": {
+            "enum": [
+              "table"
+            ]
+          },
+          "migration_path": {
+            "$ref": "#/definitions/repositoryPath"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1000
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 500,
+      "items": {
+        "type": "object",
+        "required": [
+          "contract_id",
+          "schema_path",
+          "mapping_mode",
+          "supabase_relation",
+          "sample_paths"
+        ],
+        "properties": {
+          "contract_id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9.-]*\\.v[0-9]+$",
+            "maxLength": 160
+          },
+          "schema_path": {
+            "$ref": "#/definitions/repositoryPath"
+          },
+          "mapping_mode": {
+            "enum": [
+              "native_table",
+              "shared_envelope"
+            ]
+          },
+          "supabase_relation": {
+            "$ref": "#/definitions/relationName"
+          },
+          "sample_paths": {
+            "type": "array",
+            "maxItems": 20,
+            "uniqueItems": true,
+            "items": {
+              "$ref": "#/definitions/repositoryPath"
+            }
+          },
+          "notes": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1000
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "definitions": {
+    "relationName": {
+      "type": "string",
+      "pattern": "^[a-z_][a-z0-9_]{0,62}$"
+    },
+    "repositoryPath": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "allOf": [
+        {
+          "not": {
+            "pattern": "^(?:[A-Za-z]:[\\\\/]|/)"
+          }
+        },
+        {
+          "not": {
+            "pattern": "(?:^|[\\\\/])\\.\\.(?:[\\\\/]|$)"
+          }
+        }
+      ]
+    }
+  },
+  "additionalProperties": false
+}

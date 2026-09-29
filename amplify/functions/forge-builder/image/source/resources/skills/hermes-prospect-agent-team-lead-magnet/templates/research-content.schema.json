@@ -1,0 +1,51 @@
+{
+  "$comment": "codex --output-schema contract for research_subagent.py — forces the research subagent's final message into the research-content.json shape (strict structured-output style: every object closed + fully required).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["company", "model", "generated_on", "sources_consulted", "sections"],
+  "properties": {
+    "company": {"type": "string"},
+    "model": {"type": "string"},
+    "generated_on": {"type": "string"},
+    "sources_consulted": {"type": "integer"},
+    "sections": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["anchor", "title", "paragraphs", "facts"],
+        "properties": {
+          "anchor": {"type": "string"},
+          "title": {"type": "string"},
+          "paragraphs": {"type": "array", "items": {"type": "string"}},
+          "facts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["text", "confidence", "sources"],
+              "properties": {
+                "text": {"type": "string"},
+                "confidence": {"type": "string", "enum": ["verified", "inferred", "needs_call"]},
+                "sources": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": ["title", "url", "accessed_at"],
+                    "properties": {
+                      "title": {"type": "string"},
+                      "url": {"type": "string"},
+                      "accessed_at": {"type": "string"}
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

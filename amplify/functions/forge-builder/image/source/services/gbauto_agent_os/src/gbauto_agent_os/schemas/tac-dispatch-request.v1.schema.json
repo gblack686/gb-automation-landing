@@ -1,0 +1,539 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gbautomation.xyz/schemas/tac-dispatch-request.v1.schema.json",
+  "title": "GBAuto Agent OS TAC dispatch request v1",
+  "description": "A durable REQUEST artifact produced by the delegation seam after a proposal.v1 has been resolved to its owning specialist expert and runtime profile. This contract produces requests only: kanban.write_mode is const request_only, so composing or queueing a request never writes a live Kanban board, never dispatches to a host, and never mutates anything outside the local durable queue. tac_prompt_contract carries the level_4_delegation_prompt contract from resources/skills/tac-hermes-dispatch/SKILL.md (reuse evidence or explicit no-match, validation gate, smoke gate, receipt policy, and the composed prompt text). idempotency_key makes duplicate dispatch detectable: it is keyed on the SOURCE EVENT and its routing, not on the proposal id, so re-proposing one origin event cannot fan out to many dispatches. ADR-14 state semantics are TOTAL: state=blocked REQUIRES a blocker, and every other state (pending_dispatch, dispatched, gated) FORBIDS one — gated means ready and awaiting a valid approval capability, never failed. A dispatchable state additionally requires approval.capability_required to have been named, and approval.verification records whether the release was proved or merely asserted.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "request_id",
+    "idempotency_key",
+    "created_at",
+    "synthetic",
+    "proposal_ref",
+    "specialist_expert",
+    "primary_domain",
+    "runtime_profile",
+    "resolution",
+    "tac_prompt_contract",
+    "kanban",
+    "state"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "tac-dispatch-request.v1"
+    },
+    "request_id": {
+      "description": "Deterministic proposal-scoped identity: the same proposal composes to the same request_id every time (ADR-05).",
+      "type": "string",
+      "pattern": "^tacreq_[a-z0-9_]+$",
+      "maxLength": 120
+    },
+    "idempotency_key": {
+      "description": "The queue dedup decision, digested from the SOURCE EVENT and its routing (tenant, source_event_id, route, card_type) and deliberately NOT from proposal_id. Re-proposing one origin event under a fresh proposal id is a detected duplicate, not a second dispatch.",
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "created_at": {
+      "$ref": "#/definitions/timestamp"
+    },
+    "synthetic": {
+      "type": "boolean"
+    },
+    "ack_ref": {
+      "description": "The delegation-ack.v1 this request was resolved behind, or null when composed outside an ack cycle.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^ack_[a-z0-9_]+$",
+      "maxLength": 120
+    },
+    "proposal_ref": {
+      "type": "object",
+      "required": [
+        "proposal_id",
+        "tenant",
+        "source_event_id",
+        "route",
+        "card_type",
+        "proposal_state"
+      ],
+      "properties": {
+        "proposal_id": {
+          "type": "string",
+          "pattern": "^prop_[a-z0-9_]+$",
+          "maxLength": 200
+        },
+        "tenant": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{1,63}$"
+        },
+        "source_event_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "route": {
+          "enum": [
+            "feature",
+            "research",
+            "hotfix",
+            "planning",
+            "feedback_triage",
+            "self_improvement"
+          ]
+        },
+        "card_type": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "card_title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "proposal_state": {
+          "enum": [
+            "gated",
+            "blocked",
+            "queued",
+            "approved",
+            "denied"
+          ]
+        },
+        "producer_kind": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 120
+        }
+      },
+      "additionalProperties": false
+    },
+    "specialist_expert": {
+      "$ref": "#/definitions/kebab"
+    },
+    "primary_domain": {
+      "$ref": "#/definitions/kebab"
+    },
+    "runtime_profile": {
+      "$ref": "#/definitions/kebab"
+    },
+    "resolution": {
+      "description": "How the specialist was selected. Selection is data-driven: (workflow.route, card.type) resolves through the routing map to a first-class domain, and the expert-ownership.v1 registry names that domain's single owner expert (ADR-03).",
+      "type": "object",
+      "required": [
+        "rule_id",
+        "matched_card_type",
+        "domain_source",
+        "runtime_profile_source",
+        "routing_map_ref",
+        "ownership_registry_ref"
+      ],
+      "properties": {
+        "rule_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "matched_card_type": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 120
+        },
+        "domain_source": {
+          "enum": [
+            "card_type_map",
+            "route_default"
+          ]
+        },
+        "runtime_profile_source": {
+          "enum": [
+            "expert_registry_preference",
+            "expert_registry_declared",
+            "route_fallback"
+          ]
+        },
+        "routing_map_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "ownership_registry_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        }
+      },
+      "additionalProperties": false
+    },
+    "tac_prompt_contract": {
+      "type": "object",
+      "required": [
+        "tac_level",
+        "prompt_format",
+        "reuse_evidence",
+        "validation_gate",
+        "smoke_gate",
+        "receipt_policy",
+        "hard_gates",
+        "prompt"
+      ],
+      "properties": {
+        "tac_level": {
+          "const": "level_4_delegation_prompt"
+        },
+        "prompt_format": {
+          "type": "object",
+          "required": [
+            "schema_version",
+            "canonical_source",
+            "required_sections",
+            "quality_gates"
+          ],
+          "properties": {
+            "schema_version": {
+              "const": "tac-prompt-format.v1"
+            },
+            "canonical_source": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "quality_digest": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "required_sections": {
+              "type": "array",
+              "minItems": 5,
+              "maxItems": 20,
+              "uniqueItems": true,
+              "items": {
+                "$ref": "#/definitions/boundedString"
+              }
+            },
+            "quality_gates": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 30,
+              "uniqueItems": true,
+              "items": {
+                "$ref": "#/definitions/boundedString"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "reuse_evidence": {
+          "description": "TAC-first reuse policy: at least one entry, either a cited reused component or an explicit no_match evidence record.",
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 30,
+          "items": {
+            "type": "object",
+            "required": [
+              "match",
+              "component",
+              "source",
+              "evidence"
+            ],
+            "properties": {
+              "match": {
+                "enum": [
+                  "reuse",
+                  "no_match"
+                ]
+              },
+              "component": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "source": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              },
+              "relevance": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "evidence": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 500
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "validation_gate": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "smoke_gate": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "receipt_policy": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "hard_gates": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 30,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/boundedString"
+          }
+        },
+        "human_gate": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "prompt": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20000
+        }
+      },
+      "additionalProperties": false
+    },
+    "kanban": {
+      "type": "object",
+      "required": [
+        "board",
+        "dag_route",
+        "step_count",
+        "entry_profile",
+        "profile_sequence",
+        "write_mode"
+      ],
+      "properties": {
+        "board": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "dag_route": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "step_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 99
+        },
+        "entry_profile": {
+          "$ref": "#/definitions/kebab"
+        },
+        "profile_sequence": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 30,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/kebab"
+          }
+        },
+        "write_mode": {
+          "description": "Const request_only: this seam produces durable request artifacts and never writes a live board.",
+          "const": "request_only"
+        }
+      },
+      "additionalProperties": false
+    },
+    "state": {
+      "enum": [
+        "pending_dispatch",
+        "dispatched",
+        "gated",
+        "blocked"
+      ]
+    },
+    "approval": {
+      "description": "The ADR-14 approval gate this request rides. capability_required names the operator decision; verification records how that claim was checked when the request left the gate.",
+      "type": "object",
+      "required": [
+        "capability_required"
+      ],
+      "properties": {
+        "capability_required": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "verification": {
+          "$ref": "#/definitions/capabilityVerification"
+        }
+      },
+      "additionalProperties": false
+    },
+    "blocker": {
+      "$ref": "#/definitions/blocker"
+    }
+  },
+  "definitions": {
+    "kebab": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80,
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "boundedString": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "timestamp": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "capabilityVerification": {
+      "description": "How the delegation seam checked the approval claim. admitted answers 'may this leave the gate?'; verified answers 'was the release proved?'. They are distinct on purpose: a capability that is named but unevidenced is admitted with verified:false and a reason saying the release is asserted, not proved. A request in a dispatchable state must carry admitted:true.",
+      "type": "object",
+      "required": [
+        "admitted",
+        "verified",
+        "reason_code",
+        "reason",
+        "checked_at"
+      ],
+      "properties": {
+        "admitted": {
+          "type": "boolean"
+        },
+        "verified": {
+          "type": "boolean"
+        },
+        "reason_code": {
+          "enum": [
+            "capability_absent",
+            "capability_named_unverified",
+            "capability_verified",
+            "capability_evidence_malformed",
+            "capability_evidence_denied",
+            "capability_evidence_incomplete",
+            "capability_evidence_action_mismatch",
+            "capability_evidence_tenant_mismatch",
+            "capability_evidence_target_mismatch",
+            "capability_evidence_not_single_use",
+            "capability_evidence_replayed",
+            "capability_evidence_expired"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "checked_at": {
+          "$ref": "#/definitions/timestamp"
+        }
+      },
+      "additionalProperties": false
+    },
+    "blocker": {
+      "type": "object",
+      "required": [
+        "blocker_type",
+        "owner",
+        "next_safe_action"
+      ],
+      "properties": {
+        "blocker_type": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "owner": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "next_safe_action": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "description": "ADR-14, TOTAL: exactly the blocked state carries a blocker. pending_dispatch, dispatched and gated all forbid one, so 'ready and awaiting approval' can never be conflated with 'failed'.",
+      "if": {
+        "properties": {
+          "state": {
+            "const": "blocked"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "then": {
+        "required": [
+          "blocker"
+        ]
+      },
+      "else": {
+        "not": {
+          "required": [
+            "blocker"
+          ]
+        }
+      }
+    },
+    {
+      "description": "ADR-14 / WS8a-F01: a dispatchable state must name the approval capability it cleared, and its verification must record an admitted release.",
+      "if": {
+        "properties": {
+          "state": {
+            "enum": [
+              "pending_dispatch",
+              "dispatched"
+            ]
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "then": {
+        "required": [
+          "approval"
+        ],
+        "properties": {
+          "approval": {
+            "properties": {
+              "verification": {
+                "properties": {
+                  "admitted": {
+                    "const": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "additionalProperties": false
+}

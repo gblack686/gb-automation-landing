@@ -1,0 +1,32 @@
+{
+  "schema_version": "expert-quality-behavior-cases.v1",
+  "expert": "{{EXPERT}}",
+  "status": "PENDING_AUTHORING",
+  "note": "Illustrative placeholders only. This file is not read by any test, CI gate, or replay harness (see quality/README.md). Every 'expected' value below is unimplemented/null on purpose -- filling in a plausible-looking value here does NOT make it evidence. Real coverage requires a real test_*.py assertion attributed in config/agent-os/expert-ownership.yaml's owned_paths for this expert.",
+  "cases": [
+    {
+      "id": "domain-positive-example",
+      "category": "domain_positive",
+      "description": "A real in-domain request {{EXPERT}} must answer correctly.",
+      "input": "REPLACE ME: a realistic in-domain question/request for {{EXPERT}}",
+      "expected": null,
+      "expected_status": "UNIMPLEMENTED"
+    },
+    {
+      "id": "out-of-domain-example",
+      "category": "out_of_domain_no_match",
+      "description": "A request outside {{EXPERT}}'s domain boundary -- it must decline or route elsewhere, never fabricate an in-domain-looking answer.",
+      "input": "REPLACE ME: a request that is clearly outside {{EXPERT}}'s domain boundary",
+      "expected": null,
+      "expected_status": "UNIMPLEMENTED"
+    },
+    {
+      "id": "invalid-input-boundary-example",
+      "category": "invalid_input_boundary",
+      "description": "Malformed, empty, or boundary-condition input {{EXPERT}} must handle without crashing or confidently hallucinating a wrong answer.",
+      "input": "REPLACE ME: an empty/malformed/edge-case input for {{EXPERT}}",
+      "expected": null,
+      "expected_status": "UNIMPLEMENTED"
+    }
+  ]
+}

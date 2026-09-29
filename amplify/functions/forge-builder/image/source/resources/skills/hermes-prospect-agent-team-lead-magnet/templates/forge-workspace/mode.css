@@ -1,0 +1,76 @@
+/* Dark colors measured on gbautomation.xyz. Keep mode independent of design. */
+.forge #mode-toggle {display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+.forge #mode-toggle .icon {width:16px;height:16px}
+.forge #mode-toggle[aria-pressed=true] {border-color:var(--terracotta);color:var(--terracotta)}
+body.forge[data-mode=dark] {
+ --app-canvas:#030405;
+ --app-header:rgba(5,7,10,.74);
+ --app-surface:#0e1218;
+ --window-surface:rgba(14,18,24,.74);
+ --window-head:rgba(5,7,10,.74);
+ --window-border:rgba(255,255,255,.15);
+ --window-shadow:0 12px 40px rgba(0,0,0,.2);
+ --title-color:#f3f1e7;
+ --panel-text:#f3f1e7;
+ --panel-muted:#ccCfcf;
+ --text-muted:#ccCfcf;
+ --panel-line:rgba(255,255,255,.15);
+ --stone:rgba(255,255,255,.15);
+ --quiet-accent:#d97757;
+ --input-surface:#05070a;
+ --code-surface:#05070a;
+ --selection-fill:rgba(217,119,87,.12);
+ background:var(--app-canvas);
+ color:var(--panel-text);
+ color-scheme:dark;
+}
+.forge[data-mode=dark] .app-header {background:var(--app-header);border-color:rgba(255,255,255,.12);backdrop-filter:blur(20px)}
+.forge[data-mode=dark] .workspace-bar {background:var(--app-canvas)}
+.forge[data-mode=dark] .brand-logo {filter:invert(1)}
+.forge[data-mode=dark] .workspace-watermark {filter:grayscale(1) invert(1);opacity:.09}
+.forge[data-mode=dark] .window {backdrop-filter:blur(18px)}
+.forge[data-mode=dark] .window-titlebar {border-bottom-color:var(--window-border)}
+.forge[data-mode=dark] .window-body {scrollbar-color:#565d65 transparent}
+.forge[data-mode=dark] .canvas-grid {background-image:radial-gradient(#ffffff44 .6px,transparent .6px)}
+.forge[data-mode=dark] :is(.header-divider,.progress) {background:var(--panel-line)}
+.forge[data-mode=dark] :is(.expert-mark,.segmented,.design-switcher,.help-note,.artifact-thumb) {background:var(--app-surface);border-color:var(--panel-line);color:var(--panel-text)}
+.forge[data-mode=dark] .expert-mark {color:var(--terracotta)}
+.forge[data-mode=dark] :is(.light-button,.layout-label select,.window-menu,.launcher input,.skip-link) {background:var(--input-surface);color:var(--panel-text);border-color:var(--window-border)}
+.forge[data-mode=dark] :is(.segmented button,.design-switcher button,.dock-button,.app-status) {color:var(--panel-muted)}
+.forge[data-mode=dark] :is(.segmented button[aria-pressed=true],.design-switcher button[aria-pressed=true],.dock-button[aria-pressed=true]) {background:#242a32;color:var(--panel-text);box-shadow:none}
+.forge[data-mode=dark] :is(.design-switcher button span,.eyebrow,.launcher-item>.icon,.launcher-item>span:last-child) {color:var(--terracotta)}
+.forge[data-mode=dark] :is(.light-button:hover,.design-switcher button:hover,.dock-button:hover,.launcher-item:hover,.window-menu button:hover) {background:#242a32}
+.forge[data-mode=dark] .window-dock {background:var(--app-header);border-color:var(--window-border);box-shadow:var(--window-shadow)}
+.forge[data-mode=dark] :is(.launcher,dialog,#design-dialog,#toast) {background:var(--app-surface);color:var(--panel-text);border-color:var(--window-border)}
+.forge[data-mode=dark] dialog::backdrop {background:#030405b3}
+.forge[data-mode=dark] .launcher-item {color:var(--panel-text);border-color:var(--panel-line)}
+.forge[data-mode=dark] .launcher input::placeholder {color:var(--panel-muted);opacity:1}
+.forge[data-mode=dark] :is(.design-card h3,.design-guidance strong) {color:var(--panel-text)}
+.forge[data-mode=dark] #design-dialog :is(.design-intro,.design-card p,.design-guidance p) {color:var(--panel-muted)}
+.forge[data-mode=dark] #design-dialog :is(.design-card-title span,.design-guidance a) {color:var(--terracotta)}
+.forge[data-mode=dark] .design-card {background:var(--input-surface);border-color:var(--window-border)}
+.forge[data-mode=dark] .design-card button {background:#242a32;color:var(--panel-text)}
+.forge[data-mode=dark] .design-card button[aria-pressed=true] {background:var(--terracotta);color:#191919}
+.forge[data-mode=dark] .design-guidance .applied-rules {background:var(--input-surface)}
+.forge[data-mode=dark] :is(.window input:not([type=checkbox]),.window textarea,.window select,.panel-button,.review-options button,.chip) {border-color:#626972}
+.forge[data-mode=dark] :is(.chip.orange,.chip.amber,.chip.green,.chip.cream,.panel-notice,.list-item.selected,.recipe-button.selected) {border-color:#d9775766}
+.forge[data-mode=dark] .panel-button.primary {background:var(--terracotta);color:#191919;border-color:var(--terracotta)}
+.forge[data-mode=dark] .panel-button.primary:hover {background:#e18b6f}
+.forge[data-mode=dark] .presence-label {background:var(--app-header);border-color:var(--window-border)}
+.forge[data-mode=dark] .presence-label i {background:var(--terracotta)}
+.forge[data-mode=dark] dialog a {color:var(--terracotta)}
+/* Contrast has a locally scoped light document canvas; dark mode replaces it. */
+.forge[data-mode=dark] .canvas-body {
+ --panel-text:inherit;--panel-muted:inherit;--panel-line:inherit;
+ --window-head:inherit;--window-border:inherit;--input-surface:inherit;
+ --code-surface:inherit;--quiet-accent:inherit;
+ background:transparent;color:var(--panel-text);
+}
+.forge[data-mode=dark] .canvas-tabs {background:var(--window-head)}
+.forge[data-mode=dark][data-design=precision] .window-titlebar>span:first-child {background:#242a32;color:var(--terracotta)}
+.forge[data-mode=dark][data-design=precision] .doc-stats {border-color:var(--panel-line)}
+@media(max-width:570px){
+ .forge #mode-toggle {min-width:34px;min-height:36px;justify-content:center}
+ .forge #mode-toggle .mode-label {display:none}
+ .forge .header-end {flex-wrap:wrap}
+}

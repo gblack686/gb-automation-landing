@@ -1,0 +1,32 @@
+{
+  "$comment": "leadmagnet-roster-content.v1 — strict structured-output contract for roster_subagent.py (codex --output-schema requires additionalProperties:false and fully-required objects)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["company", "model", "lead", "specialists"],
+  "properties": {
+    "company": {"type": "string"},
+    "model": {"type": "string"},
+    "lead": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["display_name", "purpose"],
+      "properties": {
+        "display_name": {"type": "string"},
+        "purpose": {"type": "string"}
+      }
+    },
+    "specialists": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "display_name", "purpose"],
+        "properties": {
+          "id": {"type": "string"},
+          "display_name": {"type": "string"},
+          "purpose": {"type": "string"}
+        }
+      }
+    }
+  }
+}

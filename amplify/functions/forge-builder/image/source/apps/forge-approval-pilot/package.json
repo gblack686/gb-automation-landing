@@ -1,0 +1,24 @@
+{
+  "name": "@gbauto/forge-approval-pilot",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Isolated PostgreSQL proof harness for the Agent Forge approval workflow",
+  "scripts": {
+    "test": "node --experimental-strip-types --test test/*.test.mjs",
+    "start": "node server.mjs",
+    "build:clients": "node build-voice.mjs",
+    "test:builder": "node --test test/builder.test.mjs"
+  },
+  "dependencies": {
+    "@electric-sql/pglite": "0.3.14",
+    "@elevenlabs/client": "1.25.0",
+    "three": "0.160.0"
+  },
+  "engines": {
+    "node": ">=22.6"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  }
+}

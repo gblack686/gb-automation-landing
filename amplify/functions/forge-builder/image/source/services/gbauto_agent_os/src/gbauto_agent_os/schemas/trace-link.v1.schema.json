@@ -1,0 +1,186 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gbautomation.xyz/schemas/trace-link.v1.schema.json",
+  "title": "GBAuto Agent OS Langfuse trace-correlation link v1",
+  "description": "The correlation contract between one Langfuse trace (or span) and the Supabase evidence rows it produced (ADR-15: schema or trace correlation gaps fail closed). A link carries identifiers and measurements only: it never carries payloads, prompts, outputs, headers, tokens-as-credentials, or any secret-bearing field. Field names align with resources/lib/tracing.py — trace_id/session correlation keys come from attribution_metadata(), and the tokens object mirrors the canonical usage-detail keys emitted by _coerce_usage_details (input, output, cache_read, reasoning, total).",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "trace_id"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "trace-link.v1"
+    },
+    "trace_id": {
+      "description": "Langfuse trace id. Same character class as source-event.v1.trace_id so an intake event and its trace link validate against one identifier rule.",
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.:-]{4,128}$"
+    },
+    "span_id": {
+      "description": "Optional observation/span id within the trace. Not a correlation key on its own — a link needs at least one evidence key.",
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.:-]{4,128}$"
+    },
+    "source_event_id": {
+      "description": "public.source_events.source_event_id (source-event.v1).",
+      "type": "string",
+      "pattern": "^src_[a-z0-9_]+$",
+      "maxLength": 120
+    },
+    "proposal_id": {
+      "description": "public.agent_os_proposals.proposal_id (proposal.v1).",
+      "type": "string",
+      "pattern": "^prop_[a-z0-9_]+$",
+      "maxLength": 200
+    },
+    "task_id": {
+      "description": "public.kanban_task_proposals.task_id — the board record once a proposal is promoted.",
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.:-]{1,200}$"
+    },
+    "pr_number": {
+      "description": "GitHub pull-request number, joins public.pr_report_receipts.pr_number.",
+      "type": "integer",
+      "minimum": 1
+    },
+    "report_ref": {
+      "description": "Published report reference — public.pr_report_receipts.report_url or report_artifact_path. Query strings carrying a credential are rejected.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "not": {
+        "pattern": "(?i)(token|api[_-]?key|apikey|secret|password|passwd|signature|sig|credential|access[_-]?key|session[_-]?key|bearer)[=:]"
+      }
+    },
+    "artifact_ref": {
+      "description": "public.artifact_locations.artifact_id, registry_path, or public_url. Query strings carrying a credential are rejected (presigned URLs belong in the private bucket flow, never in a trace link).",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "not": {
+        "pattern": "(?i)(token|api[_-]?key|apikey|secret|password|passwd|signature|sig|credential|access[_-]?key|session[_-]?key|bearer|x-amz-)[=:]"
+      }
+    },
+    "skill_run_id": {
+      "description": "public.skill_runs.run_id (ADR-15 skill evidence).",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "cron_run_id": {
+      "description": "public.cron_runs.tick_id — the managed-cron tick, named cron_run_id here because the physical column is tick_id.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "test_run_id": {
+      "description": "public.test_runs.run_id (ADR-13 Test Registry).",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "tokens": {
+      "description": "Usage counts, mirroring the canonical keys of resources/lib/tracing.py::_coerce_usage_details. Counts only — never token strings.",
+      "type": "object",
+      "properties": {
+        "input": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "output": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cache_read": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "reasoning": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "total": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "minProperties": 1,
+      "additionalProperties": false
+    },
+    "cost_usd": {
+      "description": "Trace cost in USD, joins public.langfuse_traces.total_cost.",
+      "type": "number",
+      "minimum": 0
+    },
+    "error": {
+      "description": "Failure classification. Carries a class and a pre-redacted message only — raw exception text may quote credentials and must be scrubbed before it reaches this contract.",
+      "type": "object",
+      "required": [
+        "error_class"
+      ],
+      "properties": {
+        "error_class": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_.]{0,119}$"
+        },
+        "redacted_message": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "retryable": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "anyOf": [
+    {
+      "required": [
+        "source_event_id"
+      ]
+    },
+    {
+      "required": [
+        "proposal_id"
+      ]
+    },
+    {
+      "required": [
+        "task_id"
+      ]
+    },
+    {
+      "required": [
+        "pr_number"
+      ]
+    },
+    {
+      "required": [
+        "report_ref"
+      ]
+    },
+    {
+      "required": [
+        "artifact_ref"
+      ]
+    },
+    {
+      "required": [
+        "skill_run_id"
+      ]
+    },
+    {
+      "required": [
+        "cron_run_id"
+      ]
+    },
+    {
+      "required": [
+        "test_run_id"
+      ]
+    }
+  ],
+  "additionalProperties": false
+}

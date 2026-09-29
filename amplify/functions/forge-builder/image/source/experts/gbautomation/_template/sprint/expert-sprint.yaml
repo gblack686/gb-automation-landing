@@ -1,0 +1,21 @@
+schema_version: expert-sprint.v1
+expert_id: "{{TREE}}/{{EXPERT}}"
+owner_expert: "{{EXPERT}}"
+tree: "{{TREE}}"
+profile: "expert-{{TREE}}-{{EXPERT}}"
+status: active
+board_mode: logical_lane
+board: gbautomation
+lane_filter:
+  owner_expert: "{{EXPERT}}"
+  tenant: gbautomation
+proposal_contract: proposal.v1
+open_floor: 25
+open_ceiling: 60
+per_run_creation_cap: 10
+counted_states: [gated]
+review_surfaces:
+  lane_url: "/expert-sprints/{{TREE}}/{{EXPERT}}/"
+  card_url_template: "/expert-sprints/cards/?proposal_id={proposal_id}"
+  spreadsheet: "/expert-sprints/expert-proposals.xlsx"
+  spreadsheet_columns: [proposal_id, owner_expert, title, state, card_url]

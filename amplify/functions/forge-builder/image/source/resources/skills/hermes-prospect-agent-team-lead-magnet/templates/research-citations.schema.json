@@ -1,0 +1,35 @@
+{
+  "$comment": "tac-research-citations.v1 — output of research_company.py",
+  "type": "object",
+  "required": ["schema_version", "company_url", "facts"],
+  "properties": {
+    "schema_version": {"type": "string", "enum": ["tac-research-citations.v1"]},
+    "company_url": {"type": "string"},
+    "facts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["fact_id", "text", "confidence", "sources"],
+        "properties": {
+          "fact_id": {"type": "string"},
+          "text": {"type": "string"},
+          "confidence": {"type": "string", "enum": ["verified", "inferred", "needs_call"]},
+          "category": {"type": "string"},
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["url", "title", "accessed_at"],
+              "properties": {
+                "url": {"type": "string"},
+                "title": {"type": "string"},
+                "accessed_at": {"type": "string"},
+                "quote_or_fact": {"type": "string"}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

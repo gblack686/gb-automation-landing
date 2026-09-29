@@ -1,0 +1,11 @@
+name: "expert-{{TREE}}-{{EXPERT}}"
+version: 1.0.0
+description: "Hermes profile for the canonical {{TREE}}/{{EXPERT}} expert."
+hermes_requires: ">=0.20.0"
+author: GBAutomation
+license: Proprietary
+env_requires: []
+distribution_owned:
+  - SOUL.md
+  - config.yaml
+  - distribution.yaml

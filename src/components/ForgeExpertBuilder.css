@@ -1,0 +1,7 @@
+.forge-builder-overlay{position:fixed;inset:40px 0 0;z-index:140;overflow:auto;background:#f3f1e7;color:#191919;padding:24px max(24px,calc((100vw - 1140px)/2));font:15px/1.5 Arial,sans-serif}
+.forge-builder-overlay>header{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:12px}.forge-builder-overlay>header>div{display:flex;gap:12px}
+.forge-builder-overlay button{cursor:pointer}.forge-builder-overlay>header button,.forge-builder-packet button{border:1px solid #c1bcae;border-radius:8px;padding:8px 14px;background:#fff}.forge-builder-overlay button:disabled{opacity:.45;cursor:default}
+.forge-builder-overlay .expert-builder{max-width:none;background:transparent}.forge-builder-notice{font-size:13px;color:#585548;padding:8px 0}
+.forge-builder-visuals{display:grid;grid-template-columns:minmax(250px,1fr) minmax(160px,300px);gap:24px;align-items:center}.forge-builder-visuals>img{max-width:100%;max-height:440px;justify-self:center}.forge-builder-visuals canvas{max-width:100%}.forge-builder-packet pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:400px;overflow:auto}
+.forge-builder-visuals .visual-model{height:430px;min-width:0}
+@media(max-width:700px){.forge-builder-overlay{padding:16px}.forge-builder-overlay>header{align-items:flex-start;flex-direction:column}.forge-builder-visuals{grid-template-columns:1fr}.forge-builder-overlay .builder-top{flex-direction:column}}

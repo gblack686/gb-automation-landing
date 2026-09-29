@@ -1,0 +1,14 @@
+{
+  "$comment": "neon-oiran theme manifest — palette derived from the operator's Downloads 'Neon Oiran — Cyber Geisha Action RPG' template, fused with the GB terracotta/cream thread. The brand gate validates neon-theme pages against THIS file instead of the GB SOT (documented exception, operator-directed 2026-07-12).",
+  "theme": "neon-oiran",
+  "required_hexes": ["#0A0608", "#67E8F9", "#D97757", "#F3F1E7"],
+  "allowed_hexes": [
+    "#0A0608", "#0A0A0C", "#09090B", "#111112", "#18181B", "#1F1F22",
+    "#67E8F9", "#FF3333", "#EF4444",
+    "#D97757", "#B75F43", "#F3F1E7", "#E6E4D9", "#D6D4C8",
+    "#8C8A84", "#5C5C5C", "#191919", "#FFFFFF", "#000000"
+  ],
+  "forbidden_styles": ["#3b82f6", "#667eea"],
+  "fonts": ["Bebas Neue", "Inter"],
+  "effects": ["scanline", "blur-in reveal", "neon glow", "backdrop blur", "gradient borders"]
+}

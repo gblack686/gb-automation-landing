@@ -4,9 +4,14 @@ import { macMiniOps } from '../functions/mac-mini-ops/resource';
 import { capabilityEdit } from '../functions/capability-edit/resource';
 import { forgeAtlas } from '../functions/forge-atlas/resource';
 import {forgeVisual} from '../functions/forge-visual/resource';
+import {forgeBuilder} from '../functions/forge-builder/resource';
 
 const schema = a.schema({
   ForgeAtlasResult: a.customType({payload:a.json()}),
+  forgeBuilderRead:a.query().arguments({input:a.json().required()}).returns(a.ref('ForgeAtlasResult'))
+    .authorization(allow=>[allow.authenticated()]).handler(a.handler.function(forgeBuilder)),
+  forgeBuilderCommand:a.mutation().arguments({input:a.json().required()}).returns(a.ref('ForgeAtlasResult'))
+    .authorization(allow=>[allow.authenticated()]).handler(a.handler.function(forgeBuilder)),
   forgeVisualRead:a.query().arguments({input:a.json().required()}).returns(a.ref('ForgeAtlasResult'))
     .authorization(allow=>[allow.authenticated()]).handler(a.handler.function(forgeVisual)),
   forgeVisualCommand:a.mutation().arguments({input:a.json().required()}).returns(a.ref('ForgeAtlasResult'))

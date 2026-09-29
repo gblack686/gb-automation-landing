@@ -1,0 +1,134 @@
+schema_version: agent-operating-policy.v1
+status: source_contract_only
+tenant: gbautomation
+planning:
+  lifecycle: resources/skills/tac-plan/workflows/plan-lifecycle.md
+  preferences: second-brain/os/USER.md
+  renderer: resources/lib/gbauto_doc_template.py
+  html_standard: resources/skills/tac-plan/references/html-output-standard.md
+  public_reports_url: https://gbautoxyz.netlify.app
+  netlify_site_id: d0f641dd-0228-4dff-b0bb-d5f7f47382cc
+  artifact_url_source: verified_publish_receipt
+defaults:
+  unknown_profile: deny
+  specialist_domain_operations: explicit_binding_required
+  production_credentials: isolated_service_identity_required
+  execution_enabled: false
+roles:
+  planner:
+    owns: Approved plans and architecture
+    operations: [context.read, plan.write, receipt.append]
+    handoffs: {implementation: tac-builder, database_administration: dbforge, release: tac-ops}
+  engineer:
+    owns: Assigned agent and application implementation
+    operations: [context.read, code.write, development_db.use, receipt.append]
+    handoffs: {validation: tac-validator, database_administration: dbforge, release: tac-ops}
+  specialist:
+    owns: Established domain workflows
+    operations: [context.read, receipt.append]
+    handoffs: {implementation: tac-builder, database_administration: dbforge, release: tac-ops}
+  validator:
+    owns: Independent verification
+    operations: [context.read, validation.run, verification.append]
+    handoffs: {implementation: tac-builder, database_administration: dbforge, release: tac-ops}
+  ops:
+    owns: Approved releases and publication receipts
+    operations: [context.read, release.deploy, receipt.append]
+    handoffs: {implementation: tac-builder, database_administration: dbforge}
+  database_admin:
+    owns: Approved production schema and permission changes
+    operations: [context.read, database.administer, receipt.append]
+    handoffs: {implementation: tac-builder, release: tac-ops}
+profiles:
+  tac-director: {role: planner, extra_operations: []}
+  tac-lead: {role: planner, extra_operations: []}
+  tac-architect: {role: planner, extra_operations: []}
+  tac-researcher: {role: specialist, extra_operations: []}
+  tac-builder: {role: engineer, display_name: TAC Engineer, extra_operations: []}
+  tac-validator: {role: validator, extra_operations: []}
+  tac-ops: {role: ops, extra_operations: []}
+  tac-self-improve: {role: specialist, extra_operations: []}
+  tac-artifact-generator: {role: specialist, extra_operations: []}
+  dbforge: {role: database_admin, extra_operations: []}
+  expert-gbautomation-youtube-intel:
+    role: specialist
+    extra_operations: [youtube.proposals.count, youtube.proposals.propose, youtube.artifacts.record]
+operations:
+  context.read:
+    access: read
+    scope: project
+    targets: [approved_project_context, approved_plan_and_intake_index]
+    prerequisites: [authenticated_project_membership, bounded_read]
+  plan.write:
+    access: write
+    scope: project
+    targets: [canonical_plan_artifacts, validated_intake_receipts]
+    prerequisites: [confirmed_scope, canonical_planning_lifecycle]
+  code.write:
+    access: write
+    scope: task
+    targets: [assigned_worktree]
+    prerequisites: [bound_implementation_approval, assigned_file_ownership]
+  development_db.use:
+    access: write
+    scope: task
+    targets: [isolated_development_database]
+    prerequisites: [nonproduction_identity, assigned_task]
+  receipt.append:
+    access: write
+    scope: own_run
+    targets: [own_execution_receipts]
+    prerequisites: [validated_receipt, idempotent_append, authenticated_run_identity]
+  validation.run:
+    access: write
+    scope: task
+    targets: [isolated_validation_environment]
+    prerequisites: [independent_validator, assigned_task]
+  verification.append:
+    access: write
+    scope: own_run
+    targets: [verification_receipts]
+    prerequisites: [independent_validator, immutable_source_evidence]
+  release.deploy:
+    access: write
+    scope: approved_release
+    targets: [approved_deployment_target, verified_publication_receipt]
+    prerequisites: [bound_release_authority, validated_bundle, isolated_publisher_identity]
+  database.administer:
+    access: administer
+    scope: approved_database_change
+    targets: [approved_migration, approved_grants, approved_rls]
+    prerequisites: [bound_database_change_authority, isolated_dbforge_identity, readback]
+  youtube.proposals.count:
+    access: read
+    scope: domain
+    targets: [public.agent_os_proposals]
+    prerequisites: [tenant_gbautomation, expert_youtube_intel, source_family_youtube_intel, aggregate_only]
+  youtube.proposals.propose:
+    access: write
+    scope: domain
+    targets: [public.source_events, public.producer_runs, public.agent_os_proposals]
+    prerequisites: [tenant_gbautomation, expert_youtube_intel, gated_proposal_only, atomic_evidence_and_proposal_write, idempotent_write, existing_sprint_caps]
+  youtube.artifacts.record:
+    access: write
+    scope: domain
+    targets: [public.youtube_intel_channels, public.youtube_intel_videos, public.youtube_intel_artifacts]
+    prerequisites: [tenant_gbautomation, expert_youtube_intel, own_video_artifacts, idempotent_write, cross_tenant_conflict_guard]
+domain_evidence:
+  youtube-intel:
+    sources:
+      - resources/skills/youtube-whitelist-intel/SKILL.md
+      - resources/skills/youtube-whitelist-intel/scripts/whitelist_writers.py
+      - resources/skills/youtube-whitelist-intel/scripts/youtube_whitelist_intel.py
+      - services/youtube_intel_api/supabase_sync.py
+    shared_infrastructure_writes:
+      - host_job_runs through the existing receipt writer
+      - langfuse_traces through the existing telemetry mirror
+    excluded_sibling_workflow: The whitelist calls sync_scan_to_supabase with report=null, so channel/video/artifact rows are required but youtube_intel_scan_runs and youtube_intel_run_videos are not. Do not inherit the sibling liked-video scanner's full five-table mirror.
+    current_gap: Proposal DML currently uses migrate apply. A later scoped adapter must preserve the atomic write and sprint caps without granting migration authority. The mirror uses global video/artifact conflict keys, so tenant-safe conflict handling must also be proven before scoped production access.
+    ownership_note: These are required workflow operations on shared records, not ownership of entire shared tables.
+deferred:
+  - schema snapshots and entity relationship maps
+  - foreign-key inventories and SQL output contracts
+  - production authorization transport and database grants
+  - live profile installation and runtime activation

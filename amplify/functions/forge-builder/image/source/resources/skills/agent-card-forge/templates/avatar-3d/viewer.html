@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Forge avatar · 3D study</title><style>
+*{box-sizing:border-box}body{margin:0;background:#101927;color:#e5eaf0;font:14px system-ui,sans-serif}
+button,a{font:inherit}button{color:inherit;background:#ffffff0c;border:1px solid #ffffff25;border-radius:8px;padding:9px 12px;cursor:pointer}
+button:hover,button[aria-pressed=true]{background:#d9905030;border-color:#d99050}button:focus-visible,a:focus-visible,canvas:focus-visible{outline:2px solid #edae76;outline-offset:3px}
+#workspace{padding:22px;background:radial-gradient(ellipse at 35% 36%,#263c56,#101927 70%);min-height:100vh}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px}.top p{margin:4px 0;color:#a6b2c2;font-size:12px}h1{font-size:19px;font-weight:500;margin:0}
+.badge{color:#edb889;border:1px solid #d9905060;padding:5px 10px;border-radius:20px;font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+.compare{display:grid;grid-template-columns:minmax(0,1fr) 180px;gap:16px;margin-top:10px}#stage{height:560px;min-height:320px;position:relative;touch-action:none;overflow:hidden}
+canvas{display:block;width:100%;height:100%}.reference{padding-top:38px}.reference img{width:100%;border-radius:12px;border:1px solid #e4b89638}.reference p{font-size:12px;color:#a6b2c2;line-height:1.6}.reference a{color:#edb889}.label{letter-spacing:.1em;text-transform:uppercase;font-size:10px;color:#95a8bb}
+.controls{display:flex;gap:7px;flex-wrap:wrap;justify-content:center}.foot{display:flex;justify-content:space-between;gap:12px;color:#a6b2c2;font-size:12px;margin-top:16px}.fine{font-size:11px;color:#91a1b2;text-align:center;line-height:1.6;margin:12px 0 0}
+@media(max-width:600px){#workspace{padding:14px}.compare{grid-template-columns:minmax(0,1fr) 86px;gap:4px}#stage{height:440px}.reference{padding-top:30px}.reference p{font-size:10px}.top h1{font-size:16px}.badge{font-size:9px}.controls button{font-size:12px;padding:9px}.foot{flex-direction:column;align-items:center;gap:4px}}
+@media(min-width:1200px){#stage{height:calc(100vh - 208px);min-height:540px}.compare{grid-template-columns:minmax(0,1fr) 240px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+</style></head><body><main id="workspace">
+<div class="top"><div><h1>@@AGENT@@</h1><p>Forge portrait / painted miniature study 02</p></div><span class="badge">Painted draft</span></div>
+<div class="compare"><div id="stage"></div><aside class="reference"><p class="label">Original portrait</p><img src="@@REFERENCE@@" alt="Original finished Forge avatar"><p>Actual portrait pixels paint the face, armor, hair and packet.</p><p>Miniature detailing. Indigo and ember lighting.</p><p>Inferred sides and back. Static bust, no rig.</p><p><a href="model.ts" download>Editable source ↗</a></p></aside></div>
+<div class="controls" aria-label="Model controls"><button data-view="front">Front</button><button data-view="side">Side</button><button data-view="back">Back</button><button id="reset">Reset</button><button id="spin" aria-pressed="false">↻ Turntable</button><button id="wire" aria-pressed="false">Mesh</button><button id="fullscreen">⛶ Expand</button><button id="export">↓ GLB</button></div>
+<div class="foot"><span id="viewer-status" role="status">Loading the 3D study…</span><span id="metrics"></span></div>
+<p class="fine">Procedural Three.js study · likeness awaits your review · current Forge avatar preserved</p>
+</main><script>@@BUNDLE@@</script></body></html>

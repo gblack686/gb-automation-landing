@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>{{company_name}} × GBAutomation — Engagement Pricing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--void:#0A0608;--void2:#0A0A0C;--panel:#18181B;--panel2:#111112;--edge:#1F1F22;
+  --cyan:#67E8F9;--terracotta:#D97757;--terracotta-hover:#B75F43;--cream:#F3F1E7;--cream2:#E6E4D9;
+  --mute:#8C8A84;--accent:{{accent_hex}}}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--void);color:var(--cream);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:'Bebas Neue',sans-serif;font-weight:400;letter-spacing:.02em}
+.wrap{max-width:1080px;margin:0 auto;padding:0 28px}
+nav{position:sticky;top:0;z-index:50;background:rgba(10,6,8,.78);backdrop-filter:blur(14px);border-bottom:1px solid rgba(243,241,231,.08)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;padding-top:13px;padding-bottom:13px;gap:16px}
+.lockup{display:flex;align-items:center;gap:12px;font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:rgba(243,241,231,.85)}
+.lockup img{height:22px;width:auto;display:block}
+.lockup .x{color:var(--mute);letter-spacing:.14em}
+.lockup .gb-mark{height:18px;width:auto;opacity:.92}
+.backlink{font-size:10px;text-transform:uppercase;letter-spacing:.22em;color:var(--mute);text-decoration:none}
+.backlink:hover{color:var(--cyan)}
+header{padding:76px 0 30px;text-align:left}
+.eyebrow{font-size:20px;text-transform:uppercase;letter-spacing:.34em;color:var(--terracotta);margin-bottom:12px}
+.eyebrow::before{content:"// "}
+header h1{font-size:clamp(40px,6vw,72px);text-transform:uppercase;
+  background:linear-gradient(100deg,var(--cream) 30%,var(--terracotta) 62%,var(--cyan) 95%);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+header p{color:var(--mute);max-width:640px;margin-top:14px;font-size:14px}
+/* tier ladder svg */
+.ladder{margin:34px 0 8px;border:1px solid var(--edge);border-radius:14px;
+  background:linear-gradient(160deg,rgba(24,24,27,.6),rgba(10,10,12,.6));padding:18px 18px 12px}
+.ladder svg{display:block;width:100%;height:auto}
+.ladder figcaption{font-size:9px;text-transform:uppercase;letter-spacing:.24em;color:var(--mute);text-align:center;padding-top:10px}
+/* pricing grid */
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:36px 0 10px}
+@media(max-width:900px){.tiers{grid-template-columns:1fr}}
+.tier{background:var(--panel2);border:1px solid var(--edge);border-radius:16px;padding:26px 24px 22px;display:flex;flex-direction:column;position:relative}
+.tier.featured{border-color:rgba(217,119,87,.55);box-shadow:0 0 34px rgba(217,119,87,.14)}
+.tier .band{font-size:9px;text-transform:uppercase;letter-spacing:.26em;color:var(--cyan);margin-bottom:14px}
+.tier.featured .band{color:var(--terracotta)}
+.tier h2{font-size:30px;text-transform:uppercase;margin-bottom:2px}
+.tier .price{font-family:'Bebas Neue',sans-serif;font-size:46px;color:var(--cream);margin:10px 0 2px}
+.tier .price span{font-size:16px;color:var(--mute);letter-spacing:.06em}
+.tier .mode{font-size:11px;color:var(--terracotta);text-transform:uppercase;letter-spacing:.2em;margin-bottom:16px}
+.tier ul{list-style:none;margin:0 0 20px;display:grid;gap:9px}
+.tier li{font-size:13px;color:var(--cream2);line-height:1.45;padding-left:18px;position:relative}
+.tier li::before{content:"";position:absolute;left:0;top:7px;width:7px;height:7px;border-radius:50%;
+  background:var(--cyan);box-shadow:0 0 8px rgba(103,232,249,.7)}
+.tier.featured li::before{background:var(--terracotta);box-shadow:0 0 8px rgba(217,119,87,.7)}
+.tier li.minus::before{background:var(--mute);box-shadow:none}
+.tier li.minus{color:var(--mute)}
+.tier .foot{margin-top:auto;font-size:10px;color:var(--mute);letter-spacing:.06em;padding-top:8px}
+.pin{position:absolute;top:-11px;left:24px;background:var(--terracotta);color:var(--void);
+  font-size:9px;text-transform:uppercase;letter-spacing:.2em;font-weight:600;padding:4px 12px;border-radius:999px}
+.note{font-size:11px;color:var(--mute);margin:6px 0 30px}
+.cta-row{display:flex;gap:14px;flex-wrap:wrap;margin:26px 0 84px}
+.btn{display:inline-block;padding:14px 30px;border-radius:4px;font-size:11px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;text-decoration:none;transition:transform .15s ease,box-shadow .15s ease,background .15s ease}
+.btn:hover{transform:translateY(-2px)}
+.btn-primary{background:var(--terracotta);color:var(--void)}
+.btn-primary:hover{background:var(--terracotta-hover);box-shadow:0 0 28px rgba(217,119,87,.5)}
+.btn-ghost{border:1px solid rgba(103,232,249,.35);color:var(--cyan);background:rgba(103,232,249,.05)}
+.btn-ghost:hover{box-shadow:0 0 22px rgba(103,232,249,.35)}
+@media print{nav{display:none}}
+</style>
+</head>
+<body>
+<nav><div class="wrap">
+  <span class="lockup">{{lockup_html}}</span>
+  <a class="backlink" href="index.html">&larr; Back to your team page</a>
+</div></nav>
+
+<header class="wrap">
+  <p class="eyebrow">Pricing — three ways to run it</p>
+  <h1>Pick your operating mode.</h1>
+  <p>Same drafted team, three levels of involvement — from a one-time build you own outright to an embedded engineering partner. Every tier starts from the 14-day build.</p>
+</header>
+
+<main class="wrap">
+  <figure class="ladder">
+    <svg viewBox="0 0 900 150" role="img" aria-label="Three engagement tiers: build, hosted, embedded">
+      <defs>
+        <marker id="arr" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0 0 L8 4 L0 8 z" fill="#67E8F9"/>
+        </marker>
+      </defs>
+      <!-- step 1 -->
+      <rect x="20" y="88" width="240" height="44" rx="10" fill="none" stroke="#67E8F9" stroke-opacity=".5"/>
+      <text x="140" y="107" text-anchor="middle" fill="#F3F1E7" font-family="Inter,sans-serif" font-size="13" font-weight="600">SELF-HOSTED BUILD</text>
+      <text x="140" y="123" text-anchor="middle" fill="#8C8A84" font-family="Inter,sans-serif" font-size="10">you run it</text>
+      <!-- step 2 -->
+      <rect x="330" y="52" width="240" height="44" rx="10" fill="none" stroke="#D97757"/>
+      <text x="450" y="71" text-anchor="middle" fill="#F3F1E7" font-family="Inter,sans-serif" font-size="13" font-weight="600">HOSTED &amp; GUIDED</text>
+      <text x="450" y="87" text-anchor="middle" fill="#8C8A84" font-family="Inter,sans-serif" font-size="10">we run it with you</text>
+      <!-- step 3 -->
+      <rect x="640" y="16" width="240" height="44" rx="10" fill="none" stroke="#67E8F9" stroke-opacity=".5"/>
+      <text x="760" y="35" text-anchor="middle" fill="#F3F1E7" font-family="Inter,sans-serif" font-size="13" font-weight="600">EMBEDDED PARTNER</text>
+      <text x="760" y="51" text-anchor="middle" fill="#8C8A84" font-family="Inter,sans-serif" font-size="10">we build with you</text>
+      <!-- arrows up the ladder -->
+      <path d="M262 100 C 300 96, 300 82, 328 76" fill="none" stroke="#67E8F9" stroke-opacity=".7" marker-end="url(#arr)"/>
+      <path d="M572 64 C 610 60, 610 46, 638 40" fill="none" stroke="#67E8F9" stroke-opacity=".7" marker-end="url(#arr)"/>
+    </svg>
+    <figcaption>every tier starts from the same 14-day build</figcaption>
+  </figure>
+
+  <div class="tiers">
+    <article class="tier">
+      <p class="band">01 — Own it</p>
+      <h2>Self-Hosted Build</h2>
+      <p class="price">$999 <span>one-time</span></p>
+      <p class="mode">You run it</p>
+      <ul>
+        <li>14-day build &amp; configuration of your Telegram agent team</li>
+        <li>30 days of support included</li>
+        <li>Runs on your own hardware — you own the whole stack</li>
+        <li class="minus">Mac Mini not included — bring your own machine</li>
+        <li class="minus">After support ends, you're on your own</li>
+      </ul>
+      <p class="foot">Best if you have someone technical in-house.</p>
+    </article>
+
+    <article class="tier featured">
+      <span class="pin">Most guided</span>
+      <p class="band">02 — Host it</p>
+      <h2>Hosted &amp; Guided</h2>
+      <p class="price">$3,500 <span>/ month</span></p>
+      <p class="mode">We run it with you</p>
+      <ul>
+        <li>Everything in the 14-day build</li>
+        <li>We host and maintain it for you — always-on managed node</li>
+        <li>Telegram in-chat support</li>
+        <li>Daily Telegram nudges &amp; direction — a guided operation</li>
+        <li>You can pretty much operate on your own</li>
+      </ul>
+      <p class="foot">Best if you want the outcome without running infrastructure.</p>
+    </article>
+
+    <article class="tier">
+      <p class="band">03 — Scale it</p>
+      <h2>Embedded Partner</h2>
+      <p class="price">$9,999 <span>/ month</span></p>
+      <p class="mode">We build with you</p>
+      <ul>
+        <li>Everything in Hosted &amp; Guided</li>
+        <li>Hands-on development of new workflows and agents</li>
+        <li>A dedicated human resource working alongside your team</li>
+      </ul>
+      <p class="foot">Best if the agent team is becoming core to how you operate.</p>
+    </article>
+  </div>
+
+  <p class="note">Hardware (Mac Mini) is sold separately on the self-hosted tier. Pricing applies to the team drafted for {{company_name}}.</p>
+
+  <div class="cta-row">
+    <a class="btn btn-primary" href="{{cta_href}}" data-cta="book">Book the walkthrough call</a>
+    <a class="btn btn-ghost" href="index.html">Back to your team page</a>
+  </div>
+</main>
+</body>
+</html>

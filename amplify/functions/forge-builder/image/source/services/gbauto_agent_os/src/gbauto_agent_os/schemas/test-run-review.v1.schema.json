@@ -1,0 +1,277 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gbautomation.xyz/schemas/test-run-review.v1.schema.json",
+  "title": "GBAuto Agent OS test-run review v1",
+  "description": "One normalized review row for a single test case (ADR-13). This is the ONE review contract over the three source tables that already exist (test_runs, test_run_outputs, tac_test_runs); readback.source_table preserves which physical ledger the row came from, so normalization never loses the source table. ADR-13 'green requires write plus readback' is encoded, not merely documented: green may only be true when result is pass AND readback.written AND readback.verified, so a row claiming pass with readback.verified false is either green:false (not green) or schema-invalid. The readback itself must be VERIFIABLE, not self-asserted: whenever readback.verified is true the row must name the row that was read back (readback.row_ref) and when the verification happened (readback.verified_at), both non-empty. A booleans-only readback cannot reach green.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "review_id",
+    "suite",
+    "case",
+    "environment",
+    "result",
+    "green",
+    "duration_ms",
+    "artifact_refs",
+    "trace_id",
+    "commit",
+    "ci_run_ref",
+    "readback"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "test-run-review.v1"
+    },
+    "review_id": {
+      "type": "string",
+      "pattern": "^trr_[0-9a-f]{16}$"
+    },
+    "suite": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 300
+    },
+    "case": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "environment": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "result": {
+      "enum": [
+        "pass",
+        "fail",
+        "skip",
+        "error"
+      ]
+    },
+    "green": {
+      "type": "boolean",
+      "description": "ADR-13 verdict for this row. True requires result=pass AND a persisted row AND a verified readback of that row that carries its own evidence (row_ref + verified_at)."
+    },
+    "duration_ms": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 86400000
+    },
+    "artifact_refs": {
+      "type": "array",
+      "maxItems": 50,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 500,
+        "not": {
+          "pattern": "(?i)(token|api[_-]?key|secret|signature|x-amz-[a-z-]+)="
+        }
+      }
+    },
+    "trace_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "pattern": "^[A-Za-z0-9._:-]+$"
+    },
+    "commit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "ci_run_ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 300,
+      "not": {
+        "pattern": "(?i)(token|api[_-]?key|secret|signature)="
+      }
+    },
+    "tenant": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "recorded_at": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 40
+    },
+    "waiver": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 500
+    },
+    "failure_class": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 200,
+      "description": "Pre-redacted failure class only. No stack traces, no captured output, no payloads."
+    },
+    "readback": {
+      "type": "object",
+      "description": "Evidence that the run was persisted AND read back. source_table names the physical ledger so the three existing registries are normalized without being erased. written/verified are claims; row_ref and verified_at are the evidence that makes 'verified' checkable, and the conditionals below require them whenever verified is true.",
+      "required": [
+        "written",
+        "verified",
+        "source_table"
+      ],
+      "properties": {
+        "written": {
+          "type": "boolean"
+        },
+        "verified": {
+          "type": "boolean"
+        },
+        "source_table": {
+          "enum": [
+            "test_runs",
+            "test_run_outputs",
+            "tac_test_runs"
+          ]
+        },
+        "row_ref": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 200
+        },
+        "verified_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 40
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "description": "ADR-13: green requires write PLUS readback.",
+      "if": {
+        "required": [
+          "green"
+        ],
+        "properties": {
+          "green": {
+            "const": true
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "result",
+          "readback"
+        ],
+        "properties": {
+          "result": {
+            "const": "pass"
+          },
+          "readback": {
+            "required": [
+              "written",
+              "verified"
+            ],
+            "properties": {
+              "written": {
+                "const": true
+              },
+              "verified": {
+                "const": true
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "description": "ADR-13: a verified readback must be VERIFIABLE. Claiming readback.verified requires naming the row that was read back (row_ref) and when it was verified (verified_at); a booleans-only readback is refused, so a fabricated run cannot mint a green row.",
+      "if": {
+        "required": [
+          "readback"
+        ],
+        "properties": {
+          "readback": {
+            "required": [
+              "verified"
+            ],
+            "properties": {
+              "verified": {
+                "const": true
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "readback": {
+            "required": [
+              "row_ref",
+              "verified_at"
+            ],
+            "properties": {
+              "row_ref": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "verified_at": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40,
+                "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}",
+                "description": "When the readback was performed. An unparseable stamp is unverifiable and fails closed exactly like a missing one."
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "description": "A readback cannot be verified against a row that was never written.",
+      "if": {
+        "required": [
+          "readback"
+        ],
+        "properties": {
+          "readback": {
+            "required": [
+              "verified"
+            ],
+            "properties": {
+              "verified": {
+                "const": true
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "readback": {
+            "required": [
+              "written"
+            ],
+            "properties": {
+              "written": {
+                "const": true
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "additionalProperties": false
+}

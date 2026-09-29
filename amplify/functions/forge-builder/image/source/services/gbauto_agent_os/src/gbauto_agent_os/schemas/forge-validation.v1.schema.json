@@ -1,0 +1,109 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gbautomation.xyz/schemas/forge-validation.v1.schema.json",
+  "title": "GBAuto Agent Forge validation receipt v1",
+  "description": "Fail-closed validation receipt for one forge-draft.v1. Every check in the enumerated set must be present and must record pass or fail with an operator-readable detail; overall is pass only when every check passed. A missing, unrunnable, or ambiguous check is a fail, never a skip (ADR-05: deterministic code validates; failures cannot be hidden behind a summary).",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "validation_id",
+    "draft_id",
+    "draft_sha256",
+    "checks",
+    "overall",
+    "validated_at"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "forge-validation.v1"
+    },
+    "validation_id": {
+      "type": "string",
+      "pattern": "^forgeval_[a-z0-9_]+$",
+      "maxLength": 200
+    },
+    "draft_id": {
+      "type": "string",
+      "pattern": "^forgedraft_[a-z0-9_]+$",
+      "maxLength": 200
+    },
+    "draft_ref": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "draft_sha256": {
+      "description": "sha256 over the draft's substance (excluding status/validation_ref, which validation stamps afterwards). Binds this receipt to the exact draft it describes so submit can refuse a hand-written or stale receipt (WS8a-F04).",
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "checks": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "required": [
+          "check",
+          "result",
+          "detail"
+        ],
+        "properties": {
+          "check": {
+            "enum": [
+              "ownership_valid",
+              "permissions_within_allowlist",
+              "skills_exist",
+              "skill_versions_pinned",
+              "canopy_refs_exist",
+              "canopy_grants_nothing",
+              "no_secret_values",
+              "diff_rendered"
+            ]
+          },
+          "result": {
+            "enum": [
+              "pass",
+              "fail"
+            ]
+          },
+          "detail": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "schema_errors": {
+      "type": "array",
+      "maxItems": 200,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 2000
+      }
+    },
+    "overall": {
+      "enum": [
+        "pass",
+        "fail"
+      ]
+    },
+    "validated_at": {
+      "type": "string",
+      "format": "date-time",
+      "minLength": 1,
+      "maxLength": 40
+    }
+  },
+  "additionalProperties": false
+}

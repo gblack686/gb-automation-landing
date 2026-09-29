@@ -1,0 +1,359 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gbautomation.local/schemas/tac-adw-registry.v1.schema.json",
+  "title": "TAC ADW Registry v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "registry_id",
+    "owner",
+    "generated_map",
+    "pilot_catalog",
+    "workflows"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "tac-adw-registry.v1"
+    },
+    "registry_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "owner": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string"
+    },
+    "generated_map": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "path",
+        "generator"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "tac-software-factory-map.v1"
+        },
+        "path": {
+          "type": "string"
+        },
+        "generator": {
+          "type": "string"
+        }
+      }
+    },
+    "pilot_catalog": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "path",
+        "runner",
+        "runbook",
+        "production_execution_allowed"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "tac-adw-pilot-fixtures.v1"
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "runner": {
+          "type": "string",
+          "minLength": 1
+        },
+        "runbook": {
+          "type": "string",
+          "minLength": 1
+        },
+        "production_execution_allowed": {
+          "const": false
+        }
+      }
+    },
+    "workflows": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/workflow"
+      }
+    }
+  },
+  "$defs": {
+    "workflow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "title",
+        "schema_version",
+        "owner_profile",
+        "allowed_profiles",
+        "aliases",
+        "route",
+        "executable",
+        "inheritance",
+        "requires_retrieval_bundle",
+        "retrieval_bundle",
+        "model",
+        "model_policy_ref",
+        "validation_gate_refs",
+        "safety_notes",
+        "closeout_class",
+        "git_policy"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]*$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "schema_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "owner_profile": {
+          "type": "string",
+          "minLength": 1
+        },
+        "allowed_profiles": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "route": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "purpose": {
+          "type": "string"
+        },
+        "executable": {
+          "type": "boolean"
+        },
+        "inheritance": {
+          "enum": [
+            "metadata_only",
+            "concrete_workflow"
+          ]
+        },
+        "requires_retrieval_bundle": {
+          "type": "boolean"
+        },
+        "retrieval_bundle": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "schema_version",
+            "consumption",
+            "accepted_sources",
+            "required_fields"
+          ],
+          "properties": {
+            "schema_version": {
+              "const": "tac-retrieval-bundle.v1"
+            },
+            "consumption": {
+              "enum": [
+                "required_existing_or_generated",
+                "inherited_contract_metadata_only"
+              ]
+            },
+            "accepted_sources": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required_fields": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "model": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "policy_ref",
+            "deferred_metadata_fields",
+            "selection"
+          ],
+          "properties": {
+            "policy_ref": {
+              "type": "string"
+            },
+            "deferred_metadata_fields": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string"
+              }
+            },
+            "selection": {
+              "type": "string"
+            }
+          }
+        },
+        "model_policy_ref": {
+          "type": "string"
+        },
+        "validation_gate_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "safety_notes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "closeout_class": {
+          "type": "string",
+          "minLength": 1
+        },
+        "git_policy": {
+          "type": "string",
+          "minLength": 1
+        },
+        "metadata": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "contract_fields": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "pilot_fixture_ids": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9-]*$"
+              }
+            },
+            "rollout_status": {
+              "enum": [
+                "pilot_fixture",
+                "pilot_validated"
+              ]
+            },
+            "node_defaults": {
+              "$ref": "#/$defs/nodeContractFragment"
+            },
+            "nodes": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/nodeContractFragment"
+              }
+            }
+          }
+        }
+      }
+    },
+    "nodeContractFragment": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "key": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]*$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "purpose": {
+          "type": "string",
+          "minLength": 1
+        },
+        "parents": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]*$"
+          }
+        },
+        "inputs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "outputs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "required_profile": {
+          "type": "string",
+          "minLength": 1
+        },
+        "validation_gate": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "fallback_policy": {
+          "type": "object"
+        },
+        "model_tier": {
+          "type": "object"
+        },
+        "deferred_metadata": {
+          "type": "object"
+        },
+        "hooks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "closeout_git_doctrine": {
+          "type": "object"
+        },
+        "retrieval_bundle_requirement": {
+          "type": "object"
+        },
+        "skills": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

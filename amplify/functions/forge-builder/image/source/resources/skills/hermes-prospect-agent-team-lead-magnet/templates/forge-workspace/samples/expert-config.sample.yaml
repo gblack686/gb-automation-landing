@@ -1,0 +1,14 @@
+# EXAMPLE ONLY. Not approved. Not dispatchable. No runtime is connected.
+schema_version: agent_expert_config.v1
+agent_id: sample-packet-expert
+display_name: Sample Packet Expert
+purpose: 'Synthetic example: prepare a reviewed HTML packet from an approved brief.'
+client_context_refs:
+- fixture:approved-brief
+profile_config: {}
+prime_commands: []
+preset_commands: []
+skills: []
+validation_workflows: []
+secrets_required: []
+activation_gate: human_approval_required

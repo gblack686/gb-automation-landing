@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__TITLE__</title>
+<style>
+  :root{
+    --card-w: 500px;
+    --frame: #1f5c3a;          /* green creature frame */
+    --frame-2: #123b25;
+    --gold: #c9a94e;
+    --parch: #efe6cf;
+    --parch-2: #e2d4b0;
+    --ink: #1a1408;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:#14110c;
+    color:#e8e2d4;
+    font-family:"Georgia","Times New Roman",serif;
+    display:flex;flex-direction:column;align-items:center;
+    gap:28px;padding:40px 16px;min-height:100vh;
+  }
+  h1{font-size:20px;font-weight:600;letter-spacing:.02em;color:#cdc4ad;text-align:center}
+  .row{display:flex;gap:36px;flex-wrap:wrap;justify-content:center;align-items:flex-start}
+  .caption{font-size:12px;color:#9a927f;text-align:center;margin-top:10px;max-width:var(--card-w)}
+  .caption b{color:#c9a94e}
+
+  /* ---- CARD ---- */
+  .card{
+    width:var(--card-w);
+    aspect-ratio: 5 / 7;
+    border-radius:20px;
+    padding:16px;
+    background:
+      radial-gradient(120% 90% at 30% 0%, #2c7a4d 0%, var(--frame) 45%, var(--frame-2) 100%);
+    box-shadow:
+      0 0 0 2px var(--gold),
+      0 18px 40px rgba(0,0,0,.55),
+      inset 0 0 0 6px rgba(0,0,0,.25);
+    display:flex;flex-direction:column;gap:8px;
+    position:relative;
+  }
+  /* title bar */
+  .titlebar{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    background:linear-gradient(180deg,#f4ecd6,#d8c79c);
+    border:1px solid rgba(0,0,0,.35);
+    border-radius:10px;
+    padding:7px 12px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.6);
+  }
+  .name{color:var(--ink);font-weight:700;font-size:19px;letter-spacing:.01em;line-height:1.1}
+  .costrow{flex:none;display:flex;gap:3px}
+  .pip{
+    width:21px;height:21px;border-radius:50%;
+    background:radial-gradient(circle at 35% 28%,#c7f2ce,#2c8f4e 68%,#14622f);
+    box-shadow:0 1px 2px rgba(0,0,0,.5), inset 0 -2px 3px rgba(0,0,0,.4);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .pip svg{width:14px;height:14px;display:block}
+  /* art window */
+  .art{
+    aspect-ratio: 3 / 2;
+    border:2px solid rgba(0,0,0,.5);
+    border-radius:6px;
+    background-color:#0c1a12;
+    background-size:cover;background-position:center;
+    box-shadow: inset 0 0 20px rgba(0,0,0,.6);
+  }
+  /* type line */
+  .typeline{
+    display:flex;align-items:center;justify-content:space-between;
+    background:linear-gradient(180deg,#f4ecd6,#d8c79c);
+    border:1px solid rgba(0,0,0,.35);
+    border-radius:8px;
+    padding:5px 12px;
+    color:var(--ink);font-weight:700;font-size:14px;
+  }
+  .setsym{width:20px;height:20px;border-radius:50%;overflow:hidden;flex:none;
+    box-shadow:0 0 0 1px var(--gold), inset 0 0 0 1px rgba(255,255,255,.12)}
+  .setsym img{width:100%;height:100%;object-fit:cover;display:block}
+  /* rules text */
+  .textbox{
+    flex:1;
+    background:linear-gradient(180deg,var(--parch),var(--parch-2));
+    border:1px solid rgba(0,0,0,.35);
+    border-radius:8px;
+    padding:12px 14px;
+    color:var(--ink);
+    display:flex;flex-direction:column;justify-content:space-between;
+  }
+  .rules{font-size:14.5px;line-height:1.4}
+  .rules .abil{font-weight:600}
+  .flavor{font-style:italic;font-size:12.5px;color:#5c5138;border-top:1px solid rgba(0,0,0,.18);padding-top:8px;margin-top:8px}
+  /* footer + P/T */
+  .footer{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;color:#e8e2d4;font-size:10px}
+  .footcol{display:flex;flex-direction:column;gap:4px;min-width:0}
+  .credit{opacity:.82;line-height:1.4}
+  .pt{
+    background:linear-gradient(180deg,#f4ecd6,#d8c79c);
+    border:1px solid rgba(0,0,0,.45);border-radius:8px;
+    padding:3px 12px;color:var(--ink);font-weight:800;font-size:17px;
+    box-shadow:0 2px 4px rgba(0,0,0,.4);
+  }
+</style>
+</head>
+<body>
+  <h1>__TITLE__</h1>
+  <div class="row" id="row"></div>
+
+<script>
+  // Filename -> data URI. Injected by render_cards.py so the page is self-contained.
+  const ART_MAP = __ART_MAP__;
+  function artSrc(name){ return ART_MAP[name] || name; }
+
+  // Model tier -> mana-cost band (number of leaf pips). Reference only; each card sets its own cost.
+  const TIERS = {
+    "gpt-5.6-sol":   {min:4, max:6},   // premium model — heaviest cost
+    "gpt-5.6-terra": {min:3, max:5},   // mid tier
+    "gpt-5.6-luna":  {min:1, max:2}    // cheapest model
+  };
+
+  // A single green "leaf" mana pip (SVG). No text — a real leaf glyph.
+  const LEAF = `<span class="pip"><svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M12 2.5 C6.5 6 5 12.5 6.5 19.5 C13.5 18.5 19.5 12 19 4.5 C15 6.5 13.5 5.5 12 2.5 Z" fill="#eaf8e1"/>
+    <path d="M8.3 17.8 C10.8 12.5 14.2 8.4 17.4 6.2" stroke="#2c8f4e" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  </svg></span>`;
+  const leafCost = n => Array.from({length:n}, () => LEAF).join("");
+
+  // The cards to render, injected by render_cards.py from a cards JSON file.
+  const CARDS = __CARDS__;
+
+  function render(c){
+    const rules = (c.rules || []).map(r =>
+      `<p><span class="abil">${r.abil || ""}</span>${r.text || ""}</p>`).join("");
+    const original = c.original ? ` · ${c.original}` : "";
+    const collector = c.collector ? ` · ${c.set || ""} ${c.collector}` : "";
+    return `
+      <div>
+        <div class="card">
+          <div class="titlebar">
+            <div class="name">${c.name}</div>
+            <div class="costrow">${leafCost(c.cost || 0)}</div>
+          </div>
+          <div class="art"${c.art ? ` style="background-image:url('${artSrc(c.art)}')"` : ""}></div>
+          <div class="typeline">
+            <span>${c.agentType} — ${c.tier}</span>
+            <span class="setsym" title="GBAutomation — ${c.set || ""}"><img src="${artSrc('gb-badge.png')}" alt="GB"></span>
+          </div>
+          <div class="textbox">
+            <div class="rules">${rules}
+              ${c.flavor ? `<div class="flavor">${c.flavor}</div>` : ""}
+            </div>
+          </div>
+          <div class="footer">
+            <div class="footcol">
+              <div class="credit">${c.illus || "Illus. gpt-image-2"}${original}${collector}</div>
+            </div>
+            <div class="pt">${c.pt || ""}</div>
+          </div>
+        </div>
+        <div class="caption"><b>${c.cost || 0}</b> leaf mana (${c.tier}) · art <b>${c.art}</b></div>
+      </div>`;
+  }
+
+  document.getElementById("row").innerHTML = CARDS.map(render).join("");
+</script>
+</body>
+</html>

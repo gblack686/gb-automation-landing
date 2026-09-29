@@ -7,6 +7,9 @@ on:
       - 'src/lib/forgeAtlasClient.js'
       - 'src/lib/forgeVisualClient.js'
       - 'src/lib/forgeVisualPacket.js'
+      - 'src/lib/forgeBuilder*'
+      - 'src/lib/forge-builder/**'
+      - 'scripts/validate-forge-builder*'
       - 'src/components/Forge*'
       - 'scripts/validate-forge-visual.mjs'
       - 'src/App.jsx'
@@ -25,6 +28,9 @@ on:
       - 'src/lib/forgeAtlasClient.js'
       - 'src/lib/forgeVisualClient.js'
       - 'src/lib/forgeVisualPacket.js'
+      - 'src/lib/forgeBuilder*'
+      - 'src/lib/forge-builder/**'
+      - 'scripts/validate-forge-builder*'
       - 'src/components/Forge*'
       - 'scripts/validate-forge-visual.mjs'
       - 'src/App.jsx'
@@ -50,8 +56,19 @@ jobs:
       - run: npm ci --ignore-scripts --no-audit
       - run: node --test amplify/functions/forge-atlas/*.test.mjs
       - run: node --test amplify/functions/forge-visual/*.test.mjs
+      - run: node scripts/validate-forge-builder-source.mjs
+      - run: node --test amplify/functions/forge-builder/*.test.mjs src/lib/forgeBuilderTransport.test.mjs
       - run: npx tsc --project amplify/tsconfig.json --noEmit --incremental false
       - run: npx eslint src/pages/ForgeAtlas.jsx src/lib/forgeAtlasClient.js src/lib/forgeVisualClient.js src/lib/forgeVisualPacket.js src/components/ForgeVisualStudio.jsx src/components/ForgeModelViewer.jsx
+      - run: npx eslint src/components/ForgeExpertBuilder.jsx src/lib/forgeBuilderClient.js src/lib/forgeBuilderTransport.js
+      - name: Build the isolated generator image
+        run: docker build --platform linux/amd64 -t gbauto-forge-builder:ci amplify/functions/forge-builder/image
+      - name: Prove restart, quota and deterministic packet generation
+        run: |
+          mkdir -p artifacts/forge-atlas-validation/builder-proof
+          docker run --rm --user "$(id -u):$(id -g)" --network none --read-only --tmpfs /tmp --mount type=bind,source="$PWD/artifacts/forge-atlas-validation/builder-proof",target=/proof --entrypoint forge-python gbauto-forge-builder:ci apps/forge-builder-host/test/make_fixture.py /proof/bootstrap
+          docker run --rm --user "$(id -u):$(id -g)" --network none --read-only --tmpfs /tmp --mount type=bind,source="$PWD/artifacts/forge-atlas-validation/builder-proof/bootstrap",target=/bootstrap,readonly --mount type=bind,source="$PWD/artifacts/forge-atlas-validation/builder-proof",target=/proof --entrypoint node gbauto-forge-builder:ci apps/forge-builder-host/test/integration.mjs /bootstrap /proof
+          test -r artifacts/forge-atlas-validation/builder-proof/package/package.zip
       - run: python -m py_compile scripts/validate-forge-atlas-live.py
       - name: Local build configuration
         run: |
@@ -64,6 +81,10 @@ jobs:
       - run: node scripts/validate-forge-visual.mjs
         env:
           PLAYWRIGHT_CHANNEL: chromium
+      - run: node scripts/validate-forge-builder-ui.mjs
+        env:
+          PLAYWRIGHT_CHANNEL: chromium
+          FORGE_BUILDER_PROOF: artifacts/forge-atlas-validation/builder-proof
       - name: Test private document host
         env:
           PLAYWRIGHT_CHANNEL: chromium

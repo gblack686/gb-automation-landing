@@ -1,0 +1,79 @@
+{
+  "$comment": "prospect-hermes-team.v1 — output of generate_team_manifest.py. Draft manifest only; never a runnable live config.",
+  "type": "object",
+  "required": ["schema_version", "prospect", "team", "workflow", "channels", "observability", "trial", "safety"],
+  "properties": {
+    "schema_version": {"type": "string", "enum": ["prospect-hermes-team.v1"]},
+    "prospect": {
+      "type": "object",
+      "required": ["company_name", "company_url", "desired_business_outcome", "public_sources"],
+      "properties": {
+        "company_name": {"type": "string"},
+        "company_url": {"type": "string"},
+        "prospect_person": {"type": ["string", "null"]},
+        "desired_business_outcome": {"type": "string"},
+        "public_sources": {"type": "array"}
+      }
+    },
+    "team": {
+      "type": "object",
+      "required": ["lead_agent", "specialist_agents"],
+      "properties": {
+        "lead_agent": {
+          "type": "object",
+          "required": ["id", "display_name", "purpose", "model_tier", "memory_scope", "approval_boundaries"],
+          "properties": {
+            "model_tier": {"type": "string", "enum": ["sol"]},
+            "memory_scope": {"type": "string", "enum": ["draft_only_no_private_memory"]}
+          }
+        },
+        "specialist_agents": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "display_name", "purpose", "model_tier"],
+            "properties": {
+              "model_tier": {"type": "string", "enum": ["luna", "terra", "sol"]}
+            }
+          }
+        }
+      }
+    },
+    "workflow": {
+      "type": "object",
+      "required": ["trigger", "kanban_owner", "daily_report_shape"],
+      "properties": {
+        "trigger": {"type": "string", "enum": ["manual_preview_generation"]}
+      }
+    },
+    "channels": {
+      "type": "object",
+      "required": ["preview_surface", "messaging", "chat_ids"],
+      "properties": {
+        "preview_surface": {"type": "string", "enum": ["static_netlify_preview"]},
+        "messaging": {"type": "string", "enum": ["none_until_activation"]},
+        "chat_ids": {"type": "string", "enum": ["redacted_not_collected"]}
+      }
+    },
+    "observability": {
+      "type": "object",
+      "required": ["langfuse_tags", "supabase_run_table", "supabase_output_table"]
+    },
+    "trial": {
+      "type": "object",
+      "required": ["status", "shutdown_action"],
+      "properties": {
+        "status": {"type": "string", "enum": ["draft", "preview_approved", "active", "expired", "converted", "shut_down"]}
+      }
+    },
+    "safety": {
+      "type": "object",
+      "required": ["secrets_policy", "data_policy", "publication_policy"],
+      "properties": {
+        "secrets_policy": {"type": "string", "enum": ["no_secrets_no_oauth_no_private_paths"]},
+        "data_policy": {"type": "string", "enum": ["public_research_only_until_activation"]},
+        "publication_policy": {"type": "string", "enum": ["netlify_preview_only_before_human_approval"]}
+      }
+    }
+  }
+}

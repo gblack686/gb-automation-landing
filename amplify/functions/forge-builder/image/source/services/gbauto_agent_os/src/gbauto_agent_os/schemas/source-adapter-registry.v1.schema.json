@@ -1,0 +1,163 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gbautomation.xyz/schemas/source-adapter-registry.v1.schema.json",
+  "title": "GBAuto Agent OS typed source-adapter registry v1",
+  "description": "Registers every first-class intake source family (ADR-02) with its owner expert (ADR-03), activation state, tenant/consent/trace policy, tenant allowlist, idempotency rule, fixture, and reuse citation. Registration NEVER grants live activation. WS8a-F13: the tenant is a component of the idempotency key, so every adapter must declare the tenants it may serve; a tenant outside that set is refused at normalization and never becomes an event.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "adapters"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "source-adapter-registry.v1"
+    },
+    "allowed_tenants": {
+      "description": "Registry-wide tenant allowlist applied to any adapter that declares none of its own. Never a wildcard.",
+      "$ref": "#/definitions/tenantList"
+    },
+    "adapters": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 50,
+      "items": {
+        "$ref": "#/definitions/adapter"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "tenantList": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 50,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9-]{1,63}$"
+      }
+    },
+    "repositoryPath": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "allOf": [
+        {
+          "not": {
+            "pattern": "^(?:[A-Za-z]:[\\\\/]|/)"
+          }
+        },
+        {
+          "not": {
+            "pattern": "(?:^|[\\\\/])\\.\\.(?:[\\\\/]|$)"
+          }
+        }
+      ]
+    },
+    "adapter": {
+      "type": "object",
+      "required": [
+        "source_family",
+        "variants",
+        "owner_expert",
+        "event_schema",
+        "activation_state",
+        "tenant_policy",
+        "allowed_tenants",
+        "consent_policy",
+        "idempotency_key_rule",
+        "trace_policy",
+        "fixture_path",
+        "reuse_of"
+      ],
+      "properties": {
+        "source_family": {
+          "enum": [
+            "telegram",
+            "google_meet",
+            "youtube_intel",
+            "website_report_feedback",
+            "second_brain_backlog",
+            "client_agent_inbox",
+            "error_health",
+            "sprint_manager",
+            "web_research_scrape",
+            "agent_forge_planning"
+          ]
+        },
+        "variants": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 20,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{1,63}$"
+          }
+        },
+        "owner_expert": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{1,63}$"
+        },
+        "event_schema": {
+          "const": "source-event.v1"
+        },
+        "activation_state": {
+          "enum": [
+            "contracted",
+            "synthetic_green",
+            "live_gated",
+            "live"
+          ]
+        },
+        "tenant_policy": {
+          "enum": [
+            "operator_only",
+            "per_client"
+          ]
+        },
+        "allowed_tenants": {
+          "description": "Every tenant this adapter may mint an event for. Required, non-empty, and never a wildcard: normalization refuses any tenant outside this set (WS8a-F13). An operator_only adapter may only list operator tenants.",
+          "$ref": "#/definitions/tenantList"
+        },
+        "consent_policy": {
+          "enum": [
+            "operator_internal",
+            "client_consented",
+            "public_content"
+          ]
+        },
+        "idempotency_key_rule": {
+          "type": "string",
+          "pattern": "^sha256:[a-z_]+(\\|[a-z_]+)*$"
+        },
+        "trace_policy": {
+          "enum": [
+            "langfuse_required",
+            "langfuse_optional"
+          ]
+        },
+        "fixture_path": {
+          "$ref": "#/definitions/repositoryPath"
+        },
+        "reuse_of": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 10,
+              "uniqueItems": true,
+              "items": {
+                "$ref": "#/definitions/repositoryPath"
+              }
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

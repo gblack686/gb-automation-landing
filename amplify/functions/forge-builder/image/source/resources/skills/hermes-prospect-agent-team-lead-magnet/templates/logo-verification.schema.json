@@ -1,0 +1,17 @@
+{
+  "$comment": "prospect-logo-verification.v1 — output of verify_logo_asset.py",
+  "type": "object",
+  "required": ["schema_version", "mode", "company_name", "rights_basis"],
+  "properties": {
+    "schema_version": {"type": "string", "enum": ["prospect-logo-verification.v1"]},
+    "mode": {"type": "string", "enum": ["verified_logo", "text_lockup"]},
+    "company_name": {"type": "string"},
+    "logo_source_url": {"type": ["string", "null"]},
+    "rights_basis": {
+      "type": "string",
+      "enum": ["press_kit_or_brand_page", "explicit_permission", "unclear_use_text_lockup"]
+    },
+    "hermes_attribution": {"type": "string", "enum": ["text_only_no_logo"]},
+    "notes": {"type": "string"}
+  }
+}

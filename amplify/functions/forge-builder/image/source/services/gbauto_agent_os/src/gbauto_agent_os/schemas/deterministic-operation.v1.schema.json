@@ -1,0 +1,312 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gbautomation.xyz/schemas/deterministic-operation.v1.schema.json",
+  "title": "GBAuto Agent OS deterministic operation registry v1",
+  "description": "The ADR-16 allowlist for the authenticated operator console. The console may invoke NOTHING that is not an entry in this registry. `target` is either a repo-relative script path (kind: api) or an Edge Function name (kind: edge_function) — never a raw URL, never a shell command, never SQL. The target pattern rejects whitespace, shell metacharacters, parent-directory traversal and any '://' scheme, so an arbitrary command or endpoint cannot be smuggled in through registration.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "operations"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "deterministic-operation.v1"
+    },
+    "operations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 200,
+      "items": {
+        "$ref": "#/definitions/operation"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "safe_target": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 300,
+      "allOf": [
+        {
+          "not": {
+            "pattern": "://"
+          }
+        },
+        {
+          "not": {
+            "pattern": "\\.\\."
+          }
+        },
+        {
+          "not": {
+            "pattern": "\\s"
+          }
+        },
+        {
+          "not": {
+            "pattern": "[;&|`$><*?!\\\\\"']"
+          }
+        },
+        {
+          "not": {
+            "pattern": "^[/~]"
+          }
+        },
+        {
+          "not": {
+            "pattern": "^[A-Za-z]:"
+          }
+        }
+      ]
+    },
+    "argv_token": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "pattern": "^[A-Za-z0-9_{}.=/:,@-]+$"
+    },
+    "inline_schema": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "const": "object"
+        },
+        "properties": {
+          "type": "object"
+        },
+        "required": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": {
+          "type": "boolean"
+        }
+      }
+    },
+    "operation": {
+      "type": "object",
+      "required": [
+        "operation_id",
+        "title",
+        "owner_expert",
+        "kind",
+        "target",
+        "argv_template",
+        "input_schema",
+        "output_schema",
+        "auth_scope",
+        "tenant_scope",
+        "timeout_ms",
+        "redaction",
+        "cost_estimate",
+        "receipt_mapping"
+      ],
+      "properties": {
+        "operation_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{2,63}$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "owner_expert": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{1,63}$",
+          "description": "Must resolve to an active owner_expert in config/agent-os/expert-ownership.yaml (ADR-03). scripts/deterministic_console.py fails closed on an unknown owner."
+        },
+        "kind": {
+          "enum": [
+            "api",
+            "edge_function"
+          ]
+        },
+        "target": {
+          "$ref": "#/definitions/safe_target"
+        },
+        "argv_template": {
+          "type": "array",
+          "maxItems": 30,
+          "items": {
+            "$ref": "#/definitions/argv_token"
+          },
+          "description": "Argument vector rendered with shell=False. Tokens are literals or {input.<key>} placeholders resolved from the schema-validated input. Never a shell string."
+        },
+        "read_only": {
+          "type": "boolean",
+          "default": true
+        },
+        "input_schema": {
+          "$ref": "#/definitions/inline_schema"
+        },
+        "output_schema": {
+          "$ref": "#/definitions/inline_schema"
+        },
+        "auth_scope": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*(:[a-z][a-z0-9-]*)+$",
+          "description": "Scope the caller's token reference must carry. The console never reads a secret value; it records only the reference."
+        },
+        "tenant_scope": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 20,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{1,63}$"
+          }
+        },
+        "timeout_ms": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 600000
+        },
+        "redaction": {
+          "type": "object",
+          "required": [
+            "fields",
+            "patterns"
+          ],
+          "properties": {
+            "fields": {
+              "type": "array",
+              "maxItems": 50,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              }
+            },
+            "patterns": {
+              "type": "array",
+              "maxItems": 50,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "cost_estimate": {
+          "type": "object",
+          "required": [
+            "usd",
+            "basis"
+          ],
+          "properties": {
+            "usd": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "basis": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            }
+          },
+          "additionalProperties": false
+        },
+        "receipt_mapping": {
+          "type": "object",
+          "required": [
+            "receipt_table",
+            "trace_id_field",
+            "evidence_keys"
+          ],
+          "properties": {
+            "receipt_table": {
+              "enum": [
+                "host_job_runs",
+                "skill_runs",
+                "test_runs",
+                "artifact_locations"
+              ]
+            },
+            "trace_id_field": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "evidence_keys": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              }
+            },
+            "artifact_ref_field": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 120
+            }
+          },
+          "additionalProperties": false
+        },
+        "notes": {
+          "type": "string",
+          "maxLength": 600
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "description": "kind api resolves to a repo-relative Python entrypoint.",
+          "if": {
+            "required": [
+              "kind"
+            ],
+            "properties": {
+              "kind": {
+                "const": "api"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "target": {
+                "pattern": "^[A-Za-z0-9_][A-Za-z0-9_./-]*\\.py$"
+              }
+            }
+          }
+        },
+        {
+          "description": "kind edge_function resolves to a bare function name, never an invocation URL.",
+          "if": {
+            "required": [
+              "kind"
+            ],
+            "properties": {
+              "kind": {
+                "const": "edge_function"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "target": {
+                "pattern": "^[a-z][a-z0-9_-]{1,79}$"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

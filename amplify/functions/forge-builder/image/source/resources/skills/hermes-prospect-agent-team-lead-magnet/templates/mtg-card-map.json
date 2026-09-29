@@ -1,0 +1,19 @@
+{
+  "$comment": "Agent role -> pinned Magic: The Gathering card whose art fronts the agent card. Every pin MUST come from templates/approved-mtg-cards.json (the operator's favorited cards from the avatar-set-gallery vote exports) — fetch_mtg_art.py enforces this and substitutes from the pool otherwise. Fetched from Scryfall (fuzzy named lookup). RIGHTS: card art is (c) Wizards of the Coast; WotC Fan Content Policy is NON-COMMERCIAL — internal demos only until replaced with licensed/generated art at Gate 3. Artist attribution is mandatory wherever the art renders.",
+  "roles": {
+    "lead_agent": {"card": "Memnarch", "why": "the artifact mastermind who runs the whole plane"},
+    "customer-ops-scout": {"card": "Skyhunter Prowler", "why": "vigilant patrol scout"},
+    "workflow-mapper": {"card": "Joiner Adept", "why": "turns any terrain into a working map"},
+    "proof-claims-guard": {"card": "Drannith Magistrate", "why": "polices what may be claimed"},
+    "reporting-agent": {"card": "Scrivener", "why": "the record, written and returned"},
+    "inbox-crm-analyst": {"card": "Thought Courier", "why": "sorts what arrives, keeps what matters"},
+    "escalation-coordinator": {"card": "Opal-Eye, Konda's Yojimbo", "why": "absorbs the flare-ups and redirects them"},
+    "content-ops-agent": {"card": "Etched Oracle", "why": "polished artifact output on demand"},
+    "order-flow-analyst": {"card": "Lodestone Myr", "why": "keeps the freight moving"}
+  },
+  "tier_fallbacks": {
+    "sol": {"card": "Akroma, Angel of Wrath", "why": "senior heavyweight tier"},
+    "terra": {"card": "Solemn Simulacrum", "why": "the reliable builder"},
+    "luna": {"card": "Ornithopter", "why": "fast, cheap, everywhere"}
+  }
+}

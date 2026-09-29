@@ -17,9 +17,10 @@ let mismatch=false,fail=false;const requests=[];
 const browser=await chromium.launch({headless:true,...(process.env.PLAYWRIGHT_EXECUTABLE?{executablePath:process.env.PLAYWRIGHT_EXECUTABLE}:{channel:process.env.PLAYWRIGHT_CHANNEL||'chrome'})});
 const page=await browser.newPage({viewport:{width:1500,height:1000}});const errors=[];page.on('pageerror',e=>errors.push(e.message));
 page.setDefaultTimeout(20000);
-await page.route('**/src/lib/forgeAtlasClient.js*',r=>r.fulfill({contentType:'application/javascript',body:`export async function readAtlas(view,query={}) {const response=await fetch('/__atlas_fixture',{method:'POST',body:JSON.stringify({view,query})});if(!response.ok)throw Error('Unavailable');return response.json();}`}));
+await page.route('**/src/lib/forgeAtlasClient.js*',r=>r.fulfill({contentType:'application/javascript',body:`export async function readAtlas(view,query={},agent_id=null) {const response=await fetch('/__atlas_fixture',{method:'POST',body:JSON.stringify({view,query,agent_id})});if(!response.ok)throw Error('Unavailable');return response.json();}`}));
 await page.route('**/__atlas_fixture',async route=>{
  const request=route.request().postDataJSON();requests.push(request);
+ if(request.view==='agents')return route.fulfill({json:{schema_version:'forge-agent-registry.v1',tenant_id:'gbautomation',source:'s3',agents:[{agent_id:'artist-packet-expert',display_name:'Artist Packet Expert',config_sha256:'a'.repeat(64),status:'active'}]}});
  if(fail && request.view!=='document')return route.fulfill({status:503,body:'unavailable'});
  if(request.view==='document')return route.fulfill({json:{url,sha256:mismatch?'0'.repeat(64):sha256,bytes:Buffer.byteLength(html),agent_id:'artist-packet-expert',tenant_id:'gbautomation'}});
  if(request.view==='approvalSnapshot')return route.fulfill({json:{mode:'live_read_only',workflows:[],connection:{tenant:'gbautomation',writes_enabled:false,review_host:'web'}}});
@@ -32,6 +33,9 @@ const checks=[];
 try {
  await page.goto(base+'/atlas/artist-packet-expert',{waitUntil:'domcontentloaded',timeout:60000});
  const iframe=page.locator('iframe[title="Artist Packet Expert Atlas"]');await iframe.waitFor();
+ assert.equal(await page.getByRole('combobox',{name:'Registered agents'}).inputValue(),'artist-packet-expert');
+ assert(requests.some(r=>r.view==='agents'));
+ assert(requests.some(r=>r.view==='document'&&r.agent_id==='artist-packet-expert'));
  console.log('Private document loaded through the fixture transport');
  assert.equal(await iframe.getAttribute('sandbox'),'allow-scripts allow-downloads allow-popups allow-popups-to-escape-sandbox');
  const frame=await iframe.contentFrame();

@@ -3,3 +3,7 @@ public/forge/*.html text eol=lf
 public/forge/*.js text eol=lf
 public/forge/*.css text eol=lf
 public/forge/*.json text eol=lf
+# The source packager normalizes text; preserve its exact manifest bytes.
+amplify/functions/forge-builder/image/** -text
+amplify/functions/forge-builder/canonical/*.mjs -text
+src/lib/forge-builder/** -text

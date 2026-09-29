@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>{{company_name}} × GBAutomation — Your Drafted Hermes Agent Team</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* client-report theme (neon fusion) — palette manifest: templates/themes/client-report.json.
+   Skin derived from the operator's Neon Oiran template; client logo + accent from
+   logo-verification.json; Hermes caduceus glyph as the fixed backdrop (operator-directed). */
+:root{
+  --void:#0A0608; --void2:#0A0A0C; --panel:#111112; --panel2:#18181B; --edge:#1F1F22;
+  --cyan:#67E8F9; --terracotta:#D97757; --terracotta-hover:#B75F43;
+  --cream:#F3F1E7; --cream2:#E6E4D9; --stone:#D6D4C8; --mute:#8C8A84; --mute2:#5C5C5C;
+  --accent:{{accent_hex}};
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  .reveal{opacity:1 !important;transform:none !important;filter:none !important;transition:none !important}
+  #scanline{display:none}
+}
+body{background:var(--void);color:var(--cream);font-family:'Inter',sans-serif;font-weight:300;line-height:1.65;overflow-x:hidden}
+h1,h2,h3{font-family:'Bebas Neue',sans-serif;font-weight:400;letter-spacing:.04em;line-height:1.04}
+a{color:inherit}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+/* ambience: scanline sweep + glow orbs + Hermes caduceus backdrop */
+#scanline{position:fixed;left:0;width:100%;height:120px;z-index:5;pointer-events:none;opacity:.5;
+  background:linear-gradient(180deg,transparent,rgba(103,232,249,.05) 45%,rgba(103,232,249,.12) 50%,rgba(103,232,249,.05) 55%,transparent);
+  animation:scan 9s linear infinite}
+@keyframes scan{0%{top:-15%;opacity:0}8%{opacity:.5}92%{opacity:.5}100%{top:110%;opacity:0}}
+.orb{position:fixed;border-radius:50%;filter:blur(110px);pointer-events:none;z-index:0}
+.orb.a{width:460px;height:460px;background:rgba(217,119,87,.13);top:-140px;right:-120px}
+.orb.b{width:420px;height:420px;background:rgba(103,232,249,.08);bottom:-160px;left:-140px}
+.hermes-backdrop{position:fixed;inset:0;margin:auto;width:min(66vw,680px);height:auto;
+  opacity:.09;z-index:0;pointer-events:none;filter:drop-shadow(0 0 80px rgba(103,232,249,.7))}
+.gb-backdrop-overlay{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:77vw;max-width:none;height:auto;max-height:94vh;object-fit:contain;
+  opacity:.05;z-index:0;pointer-events:none}
+/* workflow catalog 5x5 grid */
+.wf-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+@media(max-width:980px){.wf-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:620px){.wf-grid{grid-template-columns:repeat(2,1fr)}}
+.wf-cell{background:var(--panel);border:1px solid var(--edge);border-radius:10px;padding:12px;
+  font-size:12.5px;letter-spacing:.03em;color:var(--cream2);display:flex;flex-direction:column;
+  gap:6px;min-height:74px;transition:border-color .25s ease,transform .25s ease}
+.wf-cell:hover{border-color:var(--accent);transform:translateY(-2px)}
+.wf-cell .wf-num{font-family:'Bebas Neue',sans-serif;font-size:12px;color:var(--mute);letter-spacing:.14em}
+/* section 00 hermes intro */
+.hermes-intro{display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center;margin-top:8px}
+@media(max-width:700px){.hermes-intro{grid-template-columns:1fr}}
+.hermes-intro-logo{height:120px;width:auto;opacity:.95;filter:drop-shadow(0 0 24px rgba(103,232,249,.35))}
+.hermes-stars{margin-top:12px;font-size:13px;color:var(--cream2);letter-spacing:.04em}
+.hermes-stars .stars{color:var(--terracotta);letter-spacing:.18em;margin-right:8px}
+.rack-item .rack-gb{height:12px;width:auto;margin-left:8px;vertical-align:middle;opacity:.75}
+/* kanban board (mirrors the transcript-mock sprint board) */
+.kb-head{display:flex;align-items:center;gap:10px;margin-top:22px}
+.kb-head img{height:18px;width:auto}
+.kb-head span{font-size:9px;text-transform:uppercase;letter-spacing:.2em;color:var(--mute)}
+.kb-board{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
+@media(max-width:760px){.kb-board{grid-template-columns:repeat(2,1fr)}}
+.kb-col{background:var(--panel);border:1px solid var(--edge);border-radius:10px;padding:10px;min-height:150px}
+.kb-col h3{font-family:'Inter',sans-serif;font-size:9px;text-transform:uppercase;letter-spacing:.2em;color:var(--mute);padding:2px 4px 10px;display:flex;justify-content:space-between;font-weight:500}
+.kb-col h3 span{color:var(--cyan)}
+.kb-card{background:var(--panel2);border:1px solid var(--edge);border-radius:8px;padding:10px;margin-bottom:8px}
+.kb-card p{font-size:11.5px;color:var(--cream2);line-height:1.4}
+.kb-card .tag{display:inline-block;margin-top:8px;font-size:8px;text-transform:uppercase;letter-spacing:.14em;color:var(--terracotta)}
+/* forged-card swap on the active carousel panel */
+.roster.carousel .agent-card .art img.card-full{display:none;object-fit:contain;object-position:center;background:var(--void2);border-radius:14px}
+.roster.carousel .agent-card.active .art img.card-full{display:block}
+.roster.carousel .agent-card.active .art img.card-portrait{display:none}
+.roster.carousel .agent-card.active:has(.card-full){background:var(--void2)}
+.roster.carousel .agent-card.active:has(.card-full) .meta{display:none}
+/* section 03 phone -> orchestrator -> specialists -> report -> phone flow */
+.flow-figure{margin:28px 0 0;border:1px solid var(--edge);border-radius:14px;background:linear-gradient(160deg,rgba(24,24,27,.6),rgba(10,10,12,.6));padding:18px 18px 12px}
+.flow-figure svg{display:block;width:100%;height:auto}
+.flow-figure figcaption{font-size:9px;text-transform:uppercase;letter-spacing:.24em;color:var(--mute2);text-align:center;padding-top:10px}
+.lockup .gb-mark{height:18px;width:auto;opacity:.92}
+/* section 02 orchestrator + card image */
+.orchestrator-row{display:grid;grid-template-columns:1.6fr 1fr;gap:20px;align-items:stretch}
+@media(max-width:880px){.orchestrator-row{grid-template-columns:1fr}}
+.orchestrator-row .panel.lead-card{display:flex;flex-direction:column;min-height:100%}
+.orchestrator-row .panel.lead-card .open{margin-top:auto;padding-top:16px}
+.lead-card-image{margin:0;text-align:center}
+.lead-card-image img{width:100%;max-width:320px;border-radius:14px;box-shadow:0 0 0 1px rgba(103,232,249,.2),0 20px 50px rgba(0,0,0,.6),0 0 40px rgba(103,232,249,.12);transition:transform .25s ease}
+.lead-card-image img:hover{transform:rotate(-1.5deg) scale(1.02)}
+.lead-card-image figcaption{font-size:9px;color:var(--mute2);letter-spacing:.08em;margin-top:10px;text-transform:uppercase}
+/* forged (agent-card-forge) card embeds */
+.lead-card-forged iframe{width:100%;max-width:330px;height:444px;border:0;border-radius:14px;
+  background:transparent;box-shadow:0 0 0 1px rgba(103,232,249,.2),0 20px 50px rgba(0,0,0,.6),0 0 40px rgba(103,232,249,.12)}
+.cards-embed iframe{height:600px}
+/* progress */
+#progress{position:fixed;top:0;left:0;height:2px;width:0;background:linear-gradient(90deg,var(--terracotta),var(--cyan));z-index:60;box-shadow:0 0 12px rgba(103,232,249,.6)}
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(10,6,8,.78);backdrop-filter:blur(14px);border-bottom:1px solid rgba(243,241,231,.08)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;padding-top:13px;padding-bottom:13px;gap:16px}
+.lockup{display:flex;align-items:center;gap:12px;font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:rgba(243,241,231,.85)}
+.lockup img{height:22px;width:auto;display:block}
+.lockup .x{color:var(--mute);letter-spacing:.14em}
+.navlinks{display:flex;gap:18px;font-size:10px;text-transform:uppercase;letter-spacing:.22em;color:var(--mute)}
+.navlinks a{text-decoration:none;transition:color .15s,text-shadow .15s}
+.navlinks a:hover{color:var(--cyan);text-shadow:0 0 12px rgba(103,232,249,.8)}
+@media(max-width:900px){.navlinks{display:none}}
+details.mobile-nav{display:none}
+@media(max-width:900px){
+  details.mobile-nav{display:block;position:relative}
+  details.mobile-nav summary{list-style:none;cursor:pointer;font-size:10px;text-transform:uppercase;letter-spacing:.22em;padding:7px 14px;border:1px solid var(--edge);border-radius:999px;background:rgba(24,24,27,.6);color:var(--cream)}
+  details.mobile-nav > div{position:absolute;right:0;top:42px;background:var(--void2);border:1px solid var(--edge);border-radius:12px;padding:16px 20px;display:flex;flex-direction:column;gap:11px;font-size:12px;min-width:240px;box-shadow:0 16px 44px rgba(0,0,0,.7)}
+  details.mobile-nav a{text-decoration:none;color:var(--cream2)}
+}
+/* sections */
+section{padding:80px 0;border-bottom:1px solid rgba(243,241,231,.06);position:relative;z-index:1}
+.eyebrow{font-size:20px;text-transform:uppercase;letter-spacing:.34em;color:var(--terracotta);margin-bottom:12px}
+.eyebrow::before{content:"// "}
+.sec-title{font-size:clamp(32px,4.4vw,50px);margin-bottom:14px;text-transform:uppercase}
+.sec-sub{color:var(--mute);max-width:660px;margin-bottom:30px;font-size:14px}
+/* hero */
+#hero{padding:92px 0 76px;overflow:hidden}
+/* company logo as the hero banner image (logo-first branding) */
+#hero .hero-banner-logo{position:absolute;inset:0;margin:auto;width:min(78%,780px);height:auto;
+  z-index:-1;opacity:.08;pointer-events:none;filter:drop-shadow(0 0 60px rgba(103,232,249,.35))}
+#hero .hero-art{position:absolute;top:0;right:-6%;height:115%;width:44%;object-fit:cover;z-index:-2;
+  opacity:.32;-webkit-mask-image:linear-gradient(100deg,transparent 6%,#000 60%);
+  mask-image:linear-gradient(100deg,transparent 6%,#000 60%)}
+#hero .hero-art-veil{position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(10,6,8,.2),rgba(10,6,8,.85) 88%,var(--void))}
+#hero .brandmark{margin-bottom:28px}
+#hero .brandmark img{height:40px;width:auto;display:block}
+#hero h1{font-size:clamp(48px,7.4vw,96px);max-width:900px;text-transform:uppercase;
+  background:linear-gradient(100deg,var(--cream) 30%,var(--terracotta) 62%,var(--cyan) 95%);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+#hero .thesis{font-size:16px;color:var(--stone);max-width:620px;margin:24px 0 32px}
+.safety{display:inline-flex;align-items:center;gap:9px;background:rgba(24,24,27,.55);border:1px solid rgba(103,232,249,.25);border-radius:999px;padding:8px 16px;font-size:10px;text-transform:uppercase;letter-spacing:.22em;color:rgba(243,241,231,.8);margin-bottom:26px;backdrop-filter:blur(8px)}
+.safety .ping{width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 10px var(--cyan)}
+.cta-row{display:flex;gap:14px;flex-wrap:wrap}
+.btn{display:inline-block;padding:14px 30px;border-radius:4px;font-size:11px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;text-decoration:none;transition:transform .15s ease,box-shadow .15s ease,background .15s ease,color .15s ease}
+.btn:hover{transform:translateY(-2px)}
+.btn-primary{background:var(--terracotta);color:var(--void)}
+.btn-primary:hover{background:var(--terracotta-hover);box-shadow:0 0 28px rgba(217,119,87,.5)}
+.btn-ghost{border:1px solid rgba(103,232,249,.35);color:var(--cyan);background:rgba(103,232,249,.05)}
+.btn-ghost:hover{box-shadow:0 0 22px rgba(103,232,249,.35)}
+/* cards */
+.grid{display:grid;gap:18px}
+.grid.cols-2{grid-template-columns:repeat(2,1fr)}
+.grid.cols-3{grid-template-columns:repeat(3,1fr)}
+@media(max-width:880px){.grid.cols-2,.grid.cols-3{grid-template-columns:1fr}}
+.panel{background:linear-gradient(160deg,var(--panel2),var(--panel));border:1px solid var(--edge);border-radius:12px;padding:24px;position:relative;overflow:hidden}
+.panel::before{content:"";position:absolute;inset:0 0 auto 0;height:1px;background:linear-gradient(90deg,transparent,rgba(103,232,249,.4),transparent)}
+.panel h3{font-size:21px;margin-bottom:8px;text-transform:uppercase;color:var(--cream)}
+.panel p{font-size:13px;color:var(--mute)}
+.panel .code{font-size:9px;color:var(--mute2);letter-spacing:.08em;display:block;margin-top:8px;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}
+.tier{font-size:9px;text-transform:uppercase;letter-spacing:.26em;color:var(--terracotta)}
+.cite{font-size:11px;color:var(--mute2);margin-top:10px}
+.lead-card{border-left:2px solid var(--terracotta)}
+.lead-card .open{font-size:9px;text-transform:uppercase;letter-spacing:.26em;color:var(--cyan);display:inline-block;margin-top:12px;text-decoration:none}
+.lead-card .open::after{content:" →"}
+/* collapsible folds, neon chrome */
+details.fold{border:1px solid var(--edge);border-radius:12px;background:linear-gradient(160deg,rgba(24,24,27,.7),rgba(17,17,18,.7));margin-top:14px}
+details.fold summary{list-style:none;cursor:pointer;padding:16px 22px;font-size:11px;text-transform:uppercase;letter-spacing:.22em;color:var(--mute);display:flex;justify-content:space-between;align-items:center}
+details.fold summary::after{content:"+";font-size:16px;color:var(--cyan)}
+details.fold[open] summary::after{content:"–"}
+details.fold > .fold-body{padding:4px 22px 24px}
+/* roster — MTG art cards; expands into the Neon Oiran panel carousel on desktop */
+.roster{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px}
+.agent-card .vlabel{display:none}
+.carousel-dots{display:none}
+@media(min-width:881px){
+  .roster.carousel{display:flex;gap:12px;height:560px}
+  .roster.carousel .agent-card{flex:1 1 0;min-width:0;position:relative;transition:flex .85s cubic-bezier(.22,1,.36,1)}
+  .roster.carousel .agent-card .art{position:absolute;inset:0;aspect-ratio:auto}
+  .roster.carousel .agent-card .art img,.roster.carousel .agent-card .art svg{width:100%;height:100%;object-fit:cover}
+  .roster.carousel .agent-card .meta{position:absolute;left:0;right:0;bottom:0;margin:0;padding:24px;opacity:0;transform:translateY(14px);transition:opacity .5s .25s ease,transform .5s .25s ease}
+  .roster.carousel .agent-card.active{flex:4.2 1 0;border-color:rgba(103,232,249,.5);box-shadow:0 0 0 1px rgba(103,232,249,.25),0 18px 48px rgba(0,0,0,.6)}
+  /* forged card goes FULL PANE: pane width = card ratio × the 560px row, as a
+     PIXEL flex-basis so the .85s flex transition still interpolates (flex:0 0
+     auto + aspect-ratio snapped — operator flagged the lost smoothness) */
+  .roster.carousel .agent-card.active:has(.card-full){flex:0 0 calc(560px * 552 / 772)}
+  .roster.carousel .agent-card.active .art img.card-full{object-fit:cover;border-radius:0;background:transparent}
+  .roster.carousel .agent-card.active .meta{opacity:1;transform:none}
+  .roster.carousel .agent-card .vlabel{display:block;position:absolute;left:50%;bottom:22px;transform:translateX(-50%);writing-mode:vertical-rl;font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:.14em;text-transform:uppercase;color:rgba(243,241,231,.85);white-space:nowrap;transition:opacity .3s;text-shadow:0 2px 12px rgba(0,0,0,.9);z-index:2}
+  .roster.carousel .agent-card.active .vlabel{opacity:0}
+  .roster.carousel .agent-card:hover{transform:none}
+  .carousel-dots{display:flex;gap:8px;align-items:center;margin-top:18px;background:rgba(24,24,27,.55);border:1px solid var(--edge);border-radius:999px;padding:10px 14px;width:max-content;backdrop-filter:blur(8px)}
+  .carousel-dots button{height:4px;width:26px;border:0;border-radius:2px;background:rgba(243,241,231,.2);cursor:pointer;transition:width .3s,background .3s,box-shadow .3s;padding:0}
+  .carousel-dots button.active{width:52px;background:var(--cyan);box-shadow:0 0 10px rgba(103,232,249,.8)}
+}
+.agent-card{display:block;text-decoration:none;background:var(--panel);border:1px solid var(--edge);border-radius:12px;overflow:hidden;position:relative;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
+.agent-card:hover{transform:translateY(-5px);border-color:rgba(103,232,249,.5);box-shadow:0 0 0 1px rgba(103,232,249,.25),0 18px 48px rgba(0,0,0,.6),0 0 34px rgba(103,232,249,.12)}
+.agent-card .art{aspect-ratio:4/3;background:var(--void2);position:relative;overflow:hidden}
+.agent-card .art img,.agent-card .art svg{display:block;width:100%;height:100%;object-fit:cover;transition:transform .35s ease}
+.agent-card:hover .art img{transform:scale(1.06)}
+.agent-card .art::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(10,6,8,.92))}
+.agent-card .meta{position:relative;padding:16px 18px 18px;margin-top:-44px}
+.agent-card .meta h3{font-size:21px;text-transform:uppercase;color:var(--cream);margin:4px 0 6px}
+.agent-card .meta p{font-size:12px;color:var(--mute);min-height:36px}
+.agent-card .open{font-size:9px;text-transform:uppercase;letter-spacing:.26em;color:var(--cyan);margin-top:10px;display:inline-block}
+.agent-card .open::after{content:" →"}
+.art-credit{font-size:9px;color:var(--mute2);letter-spacing:.06em;margin-top:8px;display:block}
+.rack-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:10px;margin-top:12px}
+.rack-item{border:1px solid var(--edge);border-radius:8px;padding:13px 15px;background:rgba(10,10,12,.5)}
+.rack-item strong{display:block;font-size:13px;color:var(--cyan);font-weight:500;letter-spacing:.04em}
+.rack-item span{font-size:11px;color:var(--mute)}
+/* embedded report preview (live iframe of the generated research report) */
+.report-embed{border:1px solid var(--edge);border-radius:12px;overflow:hidden;margin-top:20px;background:var(--void2);box-shadow:0 0 0 1px rgba(103,232,249,.08),0 18px 48px rgba(0,0,0,.5)}
+.report-embed iframe{width:100%;height:540px;border:0;display:block}
+.report-embed .embed-bar{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-bottom:1px solid var(--edge);font-size:9px;text-transform:uppercase;letter-spacing:.24em;color:var(--mute)}
+.report-embed .embed-bar span:last-child{color:var(--cyan)}
+figure.viz{border:1px solid var(--edge);border-radius:12px;overflow:hidden;background:var(--panel);margin-top:18px}
+figure.viz svg{display:block;width:100%;height:auto;opacity:.92}
+figcaption{font-size:10px;color:var(--mute2);padding:10px 16px;border-top:1px solid var(--edge);text-transform:uppercase;letter-spacing:.14em}
+.reveal{opacity:0;transform:translateY(18px);filter:blur(6px);transition:opacity .6s ease,transform .6s ease,filter .6s ease}
+.reveal.active{opacity:1;transform:none;filter:none}
+footer{padding:48px 0;font-size:11px;color:var(--mute2);text-align:center;letter-spacing:.08em;position:relative;z-index:1}
+/* print / PDF brief */
+@media print{
+  nav,#progress,#scanline,.orb,.hermes-backdrop,.cta-row,.btn,details.mobile-nav{display:none !important}
+  body{background:none;color:var(--void)}
+  section{padding:22px 0;border-bottom:1px solid var(--stone);break-inside:avoid}
+  .reveal{opacity:1;transform:none;filter:none}
+  .panel,.agent-card,details.fold,.rack-item{background:none;border:1px solid var(--stone)}
+  .panel h3,.agent-card .meta h3,#hero h1,.rack-item strong{color:var(--void);-webkit-text-fill-color:initial;background:none}
+  .panel p,.agent-card .meta p,#hero .thesis,.rack-item span{color:var(--mute2)}
+  details.fold:not([open]) > .fold-body{display:block}
+  .lockup img,#hero .brandmark img{filter:none}
+}
+</style>
+</head>
+<body>
+<div id="progress" aria-hidden="true"></div>
+<div id="scanline" aria-hidden="true"></div>
+<div class="orb a" aria-hidden="true"></div>
+<div class="orb b" aria-hidden="true"></div>
+{{hermes_backdrop}}
+<nav aria-label="Report navigation">
+  <div class="wrap">
+    <span class="lockup">{{lockup_html}}</span>
+    <div class="navlinks">
+      <a href="#hermes">Hermes</a><a href="#reports">Reports</a><a href="#transcript-sprint">Action Items</a><a href="#architecture">Architecture</a><a href="#specialists">Specialists</a><a href="#workflows">Workflows</a><a href="#prd-system">PRD System</a><a href="#kanban">Board</a><a href="#cta">Engage</a>
+    </div>
+    <details class="mobile-nav">
+      <summary>Contents</summary>
+      <div>
+        <a href="#hermes">What is Hermes</a><a href="#reports">Reports on demand</a><a href="#transcript-sprint">Notes → action items</a><a href="#architecture">The architecture</a><a href="#orchestrator">Meet your orchestrator</a><a href="#specialists">Meet your specialists</a><a href="#workflows">Workflow presets</a><a href="#prd-system">Philosophy &amp; the PRD system</a><a href="#kanban">The board</a><a href="#cta">Next step</a><a href="#brief">Save the brief</a>
+      </div>
+    </details>
+  </div>
+</nav>
+
+<main>
+<section id="hero">
+  {{hero_art}}
+  <div class="wrap">
+    <div class="brandmark">{{hero_brandmark}}</div>
+    <div class="safety"><span class="ping"></span>{{safety_line}}</div>
+    <h1>A Hermes agent team, drafted for {{company_name}}.</h1>
+    <p class="thesis">{{thesis}}</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#specialists">Meet the team</a>
+      <a class="btn btn-ghost" href="#cta">Book the 14-day walkthrough</a>
+    </div>
+  </div>
+</section>
+
+<section id="hermes">
+  <div class="wrap reveal">
+    <p class="eyebrow">00 — What is Hermes</p>
+    <h2 class="sec-title">The leading AI assistant everyone is using.</h2>
+    <div class="hermes-intro">
+      <img class="hermes-intro-logo" src="assets/brand/hermes-agent-white.svg" alt="Hermes — the mark behind this whole page">
+      <div>
+        <p class="sec-sub">Hermes is the open-source assistant framework. It isn’t the intelligence; it’s the harness. The brain is whichever model you choose (Claude or GPT), the memory is your second brain — bring your own API key and both stay yours.</p>
+        <p class="hermes-stars"><span class="stars" aria-hidden="true">★★★★★</span> 214,000+ GitHub stars — the leading open-source AI assistant.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="reports">
+  <div class="wrap reveal">
+    <p class="eyebrow">01 — Reports on demand</p>
+    <h2 class="sec-title">Custom, on-demand reports at your fingertips.</h2>
+    <p class="sec-sub">Ask a question, get a finished report — branded, cited, and reviewable on your phone. This one was generated for {{company_name}} from public sources alone; every report your team ships uses the same grounded format.</p>
+    {{report_preview}}
+    <div class="cta-row" style="margin-top:24px">
+      <a class="btn btn-ghost" href="{{report_example_url}}" rel="noopener" target="_blank" data-cta="report-example">{{report_example_label}}</a>
+    </div>
+  </div>
+</section>
+
+<section id="transcript-sprint">
+  <div class="wrap reveal">
+    <p class="eyebrow">02 — Notes become action items</p>
+    <h2 class="sec-title">AI note-taking that ends in action items, not notes.</h2>
+    <p class="sec-sub">Your meetings are already transcribed — this turns the transcript into an actionable plan. Action items are extracted and deduplicated, you approve the triage, and each one becomes a tracked task on the board, run by the Sprint Cadence.</p>
+    <div class="grid cols-2">{{pipeline_cards}}</div>
+    {{transcript_preview}}
+    <div class="cta-row" style="margin-top:24px">
+      <a class="btn btn-ghost" href="{{transcript_template_url}}" rel="noopener" target="_blank" data-cta="transcript-template">{{transcript_link_label}}</a>
+    </div>
+  </div>
+</section>
+
+<section id="architecture">
+  <div class="wrap reveal">
+    <p class="eyebrow">03 — The architecture</p>
+    <h2 class="sec-title">Your team works. You approve from your phone.</h2>
+    <p class="sec-sub">One ask from your phone. The orchestrator fans the work out to specialists, each specialist produces a verified report — receipts attached — and every report fans back into your hand.</p>
+    <figure class="flow-figure">
+      <svg viewBox="0 0 1180 340" role="img" aria-label="Your phone sends the ask to the orchestrator, work fans out to specialists, each produces a verified report, and the reports fan back in to your phone">
+        <defs>
+          <marker id="flow-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="var(--mute)"/>
+          </marker>
+        </defs>
+        <!-- connectors -->
+        <g stroke="rgba(140,138,132,.55)" fill="none" stroke-dasharray="4 5">
+          <path d="M124,170 L248,170" marker-end="url(#flow-arrow)"/>
+          <path d="M336,150 C400,105 430,75 480,62" marker-end="url(#flow-arrow)"/>
+          <path d="M338,163 C400,150 430,140 480,134" marker-end="url(#flow-arrow)"/>
+          <path d="M338,177 C400,190 430,200 480,206" marker-end="url(#flow-arrow)"/>
+          <path d="M336,190 C400,235 430,265 480,278" marker-end="url(#flow-arrow)"/>
+          <path d="M536,62 L688,62" marker-end="url(#flow-arrow)"/>
+          <path d="M536,134 L688,134" marker-end="url(#flow-arrow)"/>
+          <path d="M536,206 L688,206" marker-end="url(#flow-arrow)"/>
+          <path d="M536,278 L688,278" marker-end="url(#flow-arrow)"/>
+          <path d="M768,62 C880,75 950,120 1016,152" marker-end="url(#flow-arrow)"/>
+          <path d="M768,134 C880,142 950,155 1016,164" marker-end="url(#flow-arrow)"/>
+          <path d="M768,206 C880,198 950,185 1016,176" marker-end="url(#flow-arrow)"/>
+          <path d="M768,278 C880,265 950,220 1016,188" marker-end="url(#flow-arrow)"/>
+        </g>
+        <!-- your phone (the ask) -->
+        <rect x="44" y="100" width="76" height="140" rx="16" fill="var(--void2)" stroke="var(--edge)" stroke-width="1.5"/>
+        <rect x="60" y="110" width="44" height="6" rx="3" fill="var(--panel2)"/>
+        <rect x="56" y="128" width="52" height="34" rx="8" fill="var(--panel2)" stroke="var(--edge)"/>
+        <rect x="62" y="136" width="34" height="4" rx="2" fill="var(--cream)" opacity=".8"/>
+        <rect x="62" y="146" width="40" height="4" rx="2" fill="var(--mute)"/>
+        <circle cx="82" cy="200" r="10" fill="none" stroke="var(--terracotta)"/>
+        <circle cx="82" cy="200" r="4" fill="var(--terracotta)"/>
+        <text x="82" y="272" text-anchor="middle" font-size="11" fill="var(--mute)" letter-spacing="2">YOUR PHONE</text>
+        <text x="82" y="290" text-anchor="middle" font-size="9" fill="var(--mute2)" letter-spacing="2">THE ASK</text>
+        <!-- orchestrator -->
+        <circle cx="296" cy="170" r="38" fill="var(--panel2)" stroke="var(--edge)" stroke-width="1.5"/>
+        <circle cx="296" cy="170" r="10" fill="var(--terracotta)"/>
+        <circle cx="296" cy="170" r="20" fill="none" stroke="rgba(217,119,87,.35)"/>
+        <text x="296" y="236" text-anchor="middle" font-size="11" fill="var(--mute)" letter-spacing="2">ORCHESTRATOR</text>
+        <!-- specialists fan -->
+        <g>
+          <circle cx="508" cy="62" r="24" fill="var(--void2)" stroke="var(--edge)" stroke-width="1.5"/><circle cx="508" cy="62" r="6" fill="var(--cyan)"/>
+          <circle cx="508" cy="134" r="24" fill="var(--void2)" stroke="var(--edge)" stroke-width="1.5"/><circle cx="508" cy="134" r="6" fill="var(--cyan)"/>
+          <circle cx="508" cy="206" r="24" fill="var(--void2)" stroke="var(--edge)" stroke-width="1.5"/><circle cx="508" cy="206" r="6" fill="var(--cyan)"/>
+          <circle cx="508" cy="278" r="24" fill="var(--void2)" stroke="var(--edge)" stroke-width="1.5"/><circle cx="508" cy="278" r="6" fill="var(--cyan)"/>
+        </g>
+        <text x="508" y="326" text-anchor="middle" font-size="11" fill="var(--mute)" letter-spacing="2">SPECIALISTS</text>
+        <!-- one verified report per specialist (fan out again) -->
+        <g>
+          <rect x="700" y="30" width="64" height="64" rx="7" fill="var(--panel2)" stroke="var(--edge)" stroke-width="1.5"/>
+          <rect x="710" y="42" width="36" height="4" rx="2" fill="var(--cream)" opacity=".85"/>
+          <rect x="710" y="54" width="44" height="3" rx="1.5" fill="var(--mute)"/>
+          <rect x="710" y="63" width="40" height="3" rx="1.5" fill="var(--mute)"/>
+          <rect x="710" y="72" width="30" height="3" rx="1.5" fill="var(--mute2)"/>
+          <circle cx="764" cy="34" r="9" fill="var(--cyan)"/><path d="M760,34 L763,38 L769,30" stroke="var(--void)" stroke-width="2" fill="none"/>
+          <rect x="700" y="102" width="64" height="64" rx="7" fill="var(--panel2)" stroke="var(--edge)" stroke-width="1.5"/>
+          <rect x="710" y="114" width="36" height="4" rx="2" fill="var(--cream)" opacity=".85"/>
+          <rect x="710" y="126" width="44" height="3" rx="1.5" fill="var(--mute)"/>
+          <rect x="710" y="135" width="40" height="3" rx="1.5" fill="var(--mute)"/>
+          <rect x="710" y="144" width="30" height="3" rx="1.5" fill="var(--mute2)"/>
+          <circle cx="764" cy="106" r="9" fill="var(--cyan)"/><path d="M760,106 L763,110 L769,102" stroke="var(--void)" stroke-width="2" fill="none"/>
+          <rect x="700" y="174" width="64" height="64" rx="7" fill="var(--panel2)" stroke="var(--edge)" stroke-width="1.5"/>
+          <rect x="710" y="186" width="36" height="4" rx="2" fill="var(--cream)" opacity=".85"/>
+          <rect x="710" y="198" width="44" height="3" rx="1.5" fill="var(--mute)"/>
+          <rect x="710" y="207" width="40" height="3" rx="1.5" fill="var(--mute)"/>
+          <rect x="710" y="216" width="30" height="3" rx="1.5" fill="var(--mute2)"/>
+          <circle cx="764" cy="178" r="9" fill="var(--cyan)"/><path d="M760,178 L763,182 L769,174" stroke="var(--void)" stroke-width="2" fill="none"/>
+          <rect x="700" y="246" width="64" height="64" rx="7" fill="var(--panel2)" stroke="var(--edge)" stroke-width="1.5"/>
+          <rect x="710" y="258" width="36" height="4" rx="2" fill="var(--cream)" opacity=".85"/>
+          <rect x="710" y="270" width="44" height="3" rx="1.5" fill="var(--mute)"/>
+          <rect x="710" y="279" width="40" height="3" rx="1.5" fill="var(--mute)"/>
+          <rect x="710" y="288" width="30" height="3" rx="1.5" fill="var(--mute2)"/>
+          <circle cx="764" cy="250" r="9" fill="var(--cyan)"/><path d="M760,250 L763,254 L769,246" stroke="var(--void)" stroke-width="2" fill="none"/>
+        </g>
+        <text x="732" y="20" text-anchor="middle" font-size="11" fill="var(--mute)" letter-spacing="2">VERIFIED REPORTS</text>
+        <text x="732" y="330" text-anchor="middle" font-size="9" fill="var(--mute2)" letter-spacing="2">RECEIPTS ATTACHED</text>
+        <!-- back on your phone (approve) -->
+        <rect x="1024" y="100" width="76" height="140" rx="16" fill="var(--void2)" stroke="var(--edge)" stroke-width="1.5"/>
+        <rect x="1040" y="110" width="44" height="6" rx="3" fill="var(--panel2)"/>
+        <rect x="1036" y="126" width="52" height="40" rx="8" fill="var(--panel2)" stroke="var(--edge)"/>
+        <rect x="1042" y="134" width="32" height="4" rx="2" fill="var(--cream)" opacity=".8"/>
+        <rect x="1042" y="144" width="40" height="4" rx="2" fill="var(--mute)"/>
+        <rect x="1042" y="154" width="26" height="4" rx="2" fill="var(--mute)"/>
+        <rect x="1036" y="178" width="25" height="14" rx="7" fill="var(--cyan)"/>
+        <rect x="1065" y="178" width="23" height="14" rx="7" fill="none" stroke="var(--edge)"/>
+        <text x="1048" y="188" text-anchor="middle" font-size="7" fill="var(--void)" font-weight="600">YES</text>
+        <text x="1076" y="188" text-anchor="middle" font-size="7" fill="var(--mute)">NO</text>
+        <text x="1062" y="272" text-anchor="middle" font-size="11" fill="var(--mute)" letter-spacing="2">YOUR PHONE</text>
+        <text x="1062" y="290" text-anchor="middle" font-size="9" fill="var(--mute2)" letter-spacing="2">TAP APPROVE</text>
+      </svg>
+      <figcaption>ask → orchestrate → fan out → one verified report per specialist → fan in → approve from your phone</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="orchestrator">
+  <div class="wrap reveal">
+    <p class="eyebrow">04 — Meet your orchestrator</p>
+    <h2 class="sec-title">One lead agent connects to your second brain.</h2>
+    <p class="sec-sub">The orchestrator works from your company's second brain — the shared context every decision is grounded in. Every specialist reports to it, and it reports to you: one daily brief, one approval queue, one name on every decision.</p>
+    <div class="orchestrator-row">
+      <div class="panel lead-card">{{orchestrator_card}}</div>
+      {{lead_card_image}}
+    </div>
+  </div>
+</section>
+
+<section id="specialists">
+  <div class="wrap reveal">
+    <p class="eyebrow">05 — Meet your specialists</p>
+    <h2 class="sec-title">Fine-tune your operatives</h2>
+    <p class="sec-sub">{{specialists_sub}}</p>
+    <div class="roster carousel" id="op-carousel">{{specialist_cards}}</div>
+    <div class="carousel-dots" id="op-dots" aria-label="Operative index"></div>
+    <details class="fold" open><summary>The shared toolkit every agent ships with</summary><div class="fold-body">
+      <div class="rack-grid">{{core_rack_items}}</div>
+      <p class="cite">Role-specific skills live on each agent's profile page — click any card above.</p>
+    </div></details>
+    {{agent_cards_embed}}
+  </div>
+</section>
+
+<section id="workflows">
+  <div class="wrap reveal">
+    <p class="eyebrow">06 — Workflow presets</p>
+    <h2 class="sec-title">Twenty-five workflow presets, ready to make your own.</h2>
+    <p class="sec-sub">Discovery doesn't produce a slide deck — it produces a build queue. These 25 presets come from real client intakes (names generalized): proven shapes you test, customize, and make your own — each with its own approval gates and validation checks before anything runs.</p>
+    <div class="wf-grid">
+      <div class="wf-cell"><span class="wf-num">01</span>AR aging follow-ups</div>
+      <div class="wf-cell"><span class="wf-num">02</span>Daily cash position brief</div>
+      <div class="wf-cell"><span class="wf-num">03</span>New client workspace setup</div>
+      <div class="wf-cell"><span class="wf-num">04</span>Data discrepancy checker</div>
+      <div class="wf-cell"><span class="wf-num">05</span>Weekly client digest</div>
+      <div class="wf-cell"><span class="wf-num">06</span>Vendor payment scheduler</div>
+      <div class="wf-cell"><span class="wf-num">07</span>Multi-source dashboard sync</div>
+      <div class="wf-cell"><span class="wf-num">08</span>Invoice generation &amp; tracking</div>
+      <div class="wf-cell"><span class="wf-num">09</span>Client health scoring</div>
+      <div class="wf-cell"><span class="wf-num">10</span>Bank reconciliation alerts</div>
+      <div class="wf-cell"><span class="wf-num">11</span>Expense report processing</div>
+      <div class="wf-cell"><span class="wf-num">12</span>YouTube researcher</div>
+      <div class="wf-cell"><span class="wf-num">13</span>LinkedIn networker</div>
+      <div class="wf-cell"><span class="wf-num">14</span>LinkedIn signal detector</div>
+      <div class="wf-cell"><span class="wf-num">15</span>Monthly close checklist</div>
+      <div class="wf-cell"><span class="wf-num">16</span>End-to-end client onboarding</div>
+      <div class="wf-cell"><span class="wf-num">17</span>AI financial review</div>
+      <div class="wf-cell"><span class="wf-num">18</span>Customer service triage</div>
+      <div class="wf-cell"><span class="wf-num">19</span>Portfolio-wide consolidation</div>
+      <div class="wf-cell"><span class="wf-num">20</span>Vendor communication hub</div>
+      <div class="wf-cell"><span class="wf-num">21</span>Prospect research &amp; outreach drafts</div>
+      <div class="wf-cell"><span class="wf-num">22</span>Meeting prep briefs</div>
+      <div class="wf-cell"><span class="wf-num">23</span>Newsletter aggregator</div>
+      <div class="wf-cell"><span class="wf-num">24</span>Team task distribution</div>
+      <div class="wf-cell"><span class="wf-num">25</span>Usage &amp; adoption analytics</div>
+    </div>
+    <p class="cite" style="margin-top:16px">From a real GBAutomation client intake — your catalog is mapped to your business in the first session.</p>
+  </div>
+</section>
+
+<section id="prd-system">
+  <div class="wrap reveal">
+    <p class="eyebrow">07 — Philosophy &amp; the PRD system</p>
+    <h2 class="sec-title">Two human gates. Everything between is zero-touch.</h2>
+    <p class="sec-sub">"The goal is not to remove people from the process. It's to remove the unnecessary touches between intent and a reviewable result." Work begins as a plan you approve and ends as a report you review — planning and reviewing are the only two places your time is spent, so they're the only two places work slows down for you.</p>
+    <figure class="flow-figure">
+      <svg viewBox="0 0 1180 300" role="img" aria-label="Many streams of work narrow to gate one where you approve the plan, run wide and zero-touch through execution, narrow again at gate two where you review the report, then ship">
+        <defs>
+          <marker id="gate-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="var(--mute)"/>
+          </marker>
+        </defs>
+        <!-- incoming ideas converge on gate 1 -->
+        <g stroke="rgba(140,138,132,.55)" fill="none" stroke-dasharray="4 5">
+          <path d="M40,60 C160,70 240,120 296,142"/>
+          <path d="M40,105 C160,110 240,130 296,146"/>
+          <path d="M40,150 L296,150"/>
+          <path d="M40,195 C160,190 240,170 296,154"/>
+          <path d="M40,240 C160,230 240,180 296,158"/>
+        </g>
+        <text x="40" y="34" font-size="11" fill="var(--mute)" letter-spacing="2">EVERYTHING YOU WANT BUILT</text>
+        <!-- gate 1: the planning bottleneck -->
+        <rect x="308" y="60" width="10" height="74" rx="5" fill="var(--terracotta)"/>
+        <rect x="308" y="166" width="10" height="74" rx="5" fill="var(--terracotta)"/>
+        <circle cx="313" cy="150" r="26" fill="none" stroke="rgba(217,119,87,.4)"/>
+        <text x="313" y="268" text-anchor="middle" font-size="11" fill="var(--terracotta)" letter-spacing="2">GATE 1 — YOU APPROVE THE PLAN</text>
+        <!-- wide zero-touch band between the gates -->
+        <g stroke="rgba(103,232,249,.4)" fill="none">
+          <path d="M330,150 C400,110 480,92 590,92 C700,92 780,110 848,148"/>
+          <path d="M330,150 C400,130 480,121 590,121 C700,121 780,131 848,149"/>
+          <path d="M330,150 L848,150"/>
+          <path d="M330,150 C400,170 480,179 590,179 C700,179 780,169 848,151"/>
+          <path d="M330,150 C400,190 480,208 590,208 C700,208 780,190 848,152"/>
+        </g>
+        <text x="590" y="66" text-anchor="middle" font-size="11" fill="var(--cyan)" letter-spacing="3">ZERO-TOUCH EXECUTION</text>
+        <text x="590" y="240" text-anchor="middle" font-size="9" fill="var(--mute2)" letter-spacing="2">RESEARCH · BUILD · VALIDATE · PACKAGE — NO TOUCHES NEEDED</text>
+        <!-- gate 2: the review bottleneck -->
+        <rect x="862" y="60" width="10" height="74" rx="5" fill="var(--terracotta)"/>
+        <rect x="862" y="166" width="10" height="74" rx="5" fill="var(--terracotta)"/>
+        <circle cx="867" cy="150" r="26" fill="none" stroke="rgba(217,119,87,.4)"/>
+        <text x="867" y="268" text-anchor="middle" font-size="11" fill="var(--terracotta)" letter-spacing="2">GATE 2 — YOU REVIEW THE REPORT</text>
+        <!-- shipped -->
+        <path d="M884,150 L1044,150" stroke="rgba(140,138,132,.55)" fill="none" stroke-dasharray="4 5" marker-end="url(#gate-arrow)"/>
+        <circle cx="1082" cy="150" r="24" fill="var(--panel2)" stroke="rgba(103,232,249,.5)"/>
+        <path d="M1072,150 L1079,158 L1092,142" stroke="var(--cyan)" stroke-width="2.5" fill="none"/>
+        <text x="1082" y="196" text-anchor="middle" font-size="11" fill="var(--mute)" letter-spacing="2">SHIPPED</text>
+      </svg>
+      <figcaption>your time is the bottleneck — so the system only asks for it twice</figcaption>
+    </figure>
+    <div class="grid cols-2">{{gate_cards}}</div>
+    <div class="grid cols-2" style="margin-top:16px">{{philosophy_cards}}</div>
+    <div class="cta-row" style="margin-top:24px">
+      <a class="btn btn-ghost" href="{{zero_touch_url}}" rel="noopener" target="_blank" data-cta="zero-touch">Read the full philosophy</a>
+    </div>
+  </div>
+</section>
+
+<section id="kanban">
+  <div class="wrap reveal">
+    <p class="eyebrow">08 — The board</p>
+    <h2 class="sec-title">A board you already know.</h2>
+    <p class="sec-sub">Every task the team runs lives on a Kanban board — the same triage / approved / in-progress / done you've used everywhere else. The difference: the cards move themselves, and each one carries its receipt.</p>
+    {{kanban_board}}
+  </div>
+</section>
+
+<section id="cta">
+  <div class="wrap reveal">
+    <p class="eyebrow">09 — Next move</p>
+    <h2 class="sec-title">Your call, {{cta_name}}</h2>
+    <p class="sec-sub">The team above is a draft — nothing is connected, and activating a guided 14-day walkthrough is entirely your decision. Book a call, ask for a revision, or pass.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="{{cta_href}}" data-cta="book">Book the walkthrough call</a>
+      <a class="btn btn-ghost" href="pricing.html" data-cta="pricing">View pricing</a>
+      <a class="btn btn-ghost" href="{{revise_href}}" data-cta="revise">Request a revision</a>
+    </div>
+  </div>
+</section>
+
+<section id="brief">
+  <div class="wrap reveal">
+    <p class="eyebrow">10 — Take it with you</p>
+    <h2 class="sec-title">Print or save the team brief</h2>
+    <p class="sec-sub">This page prints clean — use Print / Save-as-PDF for a decision-maker-ready brief.</p>
+    <div class="cta-row"><a class="btn btn-ghost" href="#" data-cta="print" onclick="window.print();return false">Print / save as PDF</a></div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">Drafted for a Hermes-based guided walkthrough by GBAutomation · {{generated_on}} · Public sources only · No systems connected{{footer_art_credit}}</div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var bar = document.getElementById("progress");
+  function onScroll(){
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    bar.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + "%";
+  }
+  window.addEventListener("scroll", onScroll, {passive:true});
+  onScroll();
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var reveals = document.querySelectorAll(".reveal");
+  if (reduced || !("IntersectionObserver" in window)) {
+    reveals.forEach(function(el){ el.classList.add("active"); });
+  } else {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting) { entry.target.classList.add("active"); io.unobserve(entry.target); }
+      });
+    }, {threshold: 0.12});
+    reveals.forEach(function(el){ io.observe(el); });
+  }
+
+  // Expanding-panel roster carousel (Neon Oiran pattern, vanilla JS).
+  // Inactive panel click = expand; active panel click = follow the profile link.
+  var carousel = document.getElementById("op-carousel");
+  var dotsWrap = document.getElementById("op-dots");
+  var wide = window.matchMedia("(min-width: 881px)").matches;
+  if (carousel && dotsWrap && wide && !reduced) {
+    var panels = Array.prototype.slice.call(carousel.querySelectorAll(".agent-card"));
+    if (panels.length > 1) {
+      var current = 0;
+      var timer = null;
+      panels.forEach(function(_, i){
+        var dot = document.createElement("button");
+        dot.type = "button";
+        dot.setAttribute("aria-label", "Operative " + (i + 1));
+        dot.addEventListener("click", function(){ setActive(i); stopAuto(); });
+        dotsWrap.appendChild(dot);
+      });
+      var dots = Array.prototype.slice.call(dotsWrap.children);
+      function setActive(index){
+        current = index;
+        panels.forEach(function(p, i){ p.classList.toggle("active", i === index); });
+        dots.forEach(function(d, i){ d.classList.toggle("active", i === index); });
+      }
+      function stopAuto(){ if (timer) { clearInterval(timer); timer = null; } }
+      panels.forEach(function(panel, i){
+        panel.addEventListener("click", function(evt){
+          if (!panel.classList.contains("active")) {
+            evt.preventDefault();
+            setActive(i);
+            stopAuto();
+          }
+        });
+      });
+      setActive(0);
+      timer = setInterval(function(){ setActive((current + 1) % panels.length); }, 4500);
+    }
+  }
+})();
+</script>
+</body>
+</html>

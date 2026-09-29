@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "agent_expert_config.v1",
+  "title": "Agent Expert config",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "agent_id",
+    "display_name",
+    "purpose",
+    "client_context_refs",
+    "profile_config",
+    "prime_commands",
+    "preset_commands",
+    "skills",
+    "validation_workflows",
+    "secrets_required",
+    "activation_gate"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "agent_expert_config.v1"
+    },
+    "agent_id": {
+      "type": "string"
+    },
+    "display_name": {
+      "type": "string"
+    },
+    "purpose": {
+      "type": "string"
+    },
+    "client_context_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "profile_config": {
+      "type": "object"
+    },
+    "prime_commands": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "preset_commands": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "skills": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "validation_workflows": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "secrets_required": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^secret_pointer:"
+      }
+    },
+    "activation_gate": {
+      "const": "human_approval_required"
+    }
+  }
+}

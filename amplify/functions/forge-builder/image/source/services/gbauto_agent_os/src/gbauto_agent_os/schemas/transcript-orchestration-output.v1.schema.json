@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "gbautomation.transcript-orchestration-output.v1",
+  "title": "Transcript orchestration output contract",
+  "description": "What the second-brain orchestrator profile must produce for a parent transcript work request (written to second-brain/tasks/sessions/<session>/gba-triage.json). Client child requests attach their own client-triage.json in the same shape under client_findings.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "idempotency_key",
+    "session_id",
+    "executive_summary",
+    "decisions",
+    "action_items",
+    "client_findings",
+    "artifacts",
+    "status"
+  ],
+  "properties": {
+    "schema_version": { "const": "transcript-orchestration-output.v1" },
+    "idempotency_key": { "type": "string" },
+    "session_id": { "type": "string" },
+    "executive_summary": { "type": "string", "minLength": 1 },
+    "decisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["title", "source_quote"],
+        "properties": {
+          "title": { "type": "string" },
+          "detail": { "type": "string" },
+          "source_quote": { "type": "string" }
+        }
+      }
+    },
+    "action_items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["title", "owner"],
+        "properties": {
+          "title": { "type": "string" },
+          "owner": { "enum": ["Greg", "Client", "Both", "Unassigned"] },
+          "priority": { "enum": ["urgent", "high", "normal", "low"] },
+          "detail": { "type": "string" },
+          "source_quote": { "type": "string" }
+        }
+      }
+    },
+    "open_questions": { "type": "array", "items": { "type": "string" } },
+    "risks": { "type": "array", "items": { "type": "string" } },
+    "client_findings": {
+      "type": "array",
+      "description": "One entry per client child request. A failed child MUST still appear with status=failed — parent results never depend on child success.",
+      "items": {
+        "type": "object",
+        "required": ["client", "status"],
+        "properties": {
+          "client": { "type": "string" },
+          "status": { "enum": ["completed", "failed", "quarantined"] },
+          "child_task_id": { "type": "string" },
+          "triage_path": { "type": "string" },
+          "summary": { "type": "string" }
+        }
+      }
+    },
+    "kanban_proposals": {
+      "type": "array",
+      "description": "Task ids of proposal cards created — every one MUST be human-gated; auto-dispatch is forbidden.",
+      "items": { "type": "string" }
+    },
+    "artifacts": {
+      "type": "object",
+      "required": ["transcript_report_path", "transcript_report_sha256"],
+      "properties": {
+        "transcript_report_path": {
+          "type": "string",
+          "description": "REQUIRED (Greg ruling 2026-07-16): gbauto.transcript_report.v1 variant HTML under artifacts/transcript-reports/ (scripts/gbauto_transcript_report.py)"
+        },
+        "transcript_report_url": { "type": "string" },
+        "transcript_report_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "report_html": { "type": "string" },
+        "email_draft_id": { "type": "string" },
+        "telegram_notice": { "type": "string" },
+        "receipt": { "type": "string" }
+      }
+    },
+    "status": { "enum": ["ok", "partial", "failed"] },
+    "errors": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": true
+}
