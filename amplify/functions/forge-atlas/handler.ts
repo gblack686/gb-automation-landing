@@ -39,6 +39,17 @@ async function proposals(request: {view:string;query:Record<string,unknown>}) {
  if (raw.length > 250000) throw Error('Response too large');
  return projectProposals(request,JSON.parse(raw),response.headers.get('content-range'));
 }
+async function approvalSnapshot(request: {agent_id:string}) {
+ const secret = await credentials();
+ const response = await fetch(`${secret.url}/rest/v1/rpc/forge_approval_snapshot`,{
+  method:'POST',headers:{apikey:secret.key,Authorization:`Bearer ${secret.key}`,'Content-Type':'application/json'},
+  body:JSON.stringify({p_tenant:TENANT,p_agent:request.agent_id}),signal:AbortSignal.timeout(15000),
+ });
+ if (!response.ok) throw Error('Approval read unavailable');
+ const raw = await response.text();
+ if (raw.length > 1000000) throw Error('Approval response too large');
+ return JSON.parse(raw);
+}
 async function registry(claims: {sub:string}) {
  const key = `${TENANT}/forge-agent-registry.v1.json`;
  const client = new S3Client({});
@@ -65,4 +76,4 @@ async function document(agent:string) {
  const url = await getSignedUrl(client,new GetObjectCommand({...location,ResponseCacheControl:'private, no-store'}),{expiresIn:60});
  return {url,sha256,bytes:head.ContentLength,agent_id:agent,tenant_id:TENANT};
 }
-export const handler = makeHandler({issuer:process.env.COGNITO_ISSUER,rpc,document,proposals,registry});
+export const handler = makeHandler({issuer:process.env.COGNITO_ISSUER,rpc,document,proposals,approvalSnapshot,registry});
