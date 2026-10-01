@@ -58,6 +58,29 @@ export function traceURL(url,id) {
   && url.split('/').at(-1) === id ? url : null;
 }
 const rows = (value, limit) => { if (!Array.isArray(value) || value.length > limit) throw Error('Invalid read'); return value; };
+export function projectApprovalSnapshot(raw, agent, now = new Date().toISOString()) {
+ const workflows = rows(raw,100).map(w => {
+  if (!object(w) || w.tenant !== TENANT || w.agent_id !== agent
+      || !identity(w.workflow_id) || !identity(w.title)
+      || !['proposal','scope','plan'].includes(w.gate) || !identity(w.state)) throw Error('Invalid approval scope');
+  return {
+   workflow_id:w.workflow_id,title:w.title,gate:w.gate,state:w.state,
+   client_id:typeof w.client_id === 'string' ? w.client_id : null,
+   project_id:typeof w.project_id === 'string' ? w.project_id : null,
+   proposal_id:typeof w.proposal_id === 'string' ? w.proposal_id : null,
+   scope_version:Number.isSafeInteger(w.scope_version) ? w.scope_version : 0,
+   plan_version:Number.isSafeInteger(w.plan_version) ? w.plan_version : 0,
+   documents:[],artifacts:[],
+   events:rows(w.events,200).map(e=>({role:e.role,action:e.action,created_at:e.created_at})),
+   deliveries:rows(w.deliveries,100).map(d=>({kind:d.kind,recipient_role:d.recipient_role,state:d.state})),
+   reminders:rows(w.reminders,100).map(r=>({recipient_role:r.recipient_role,wake_at:r.wake_at})),
+   grant_data:null,grant_revoked:Boolean(w.grant_revoked)
+  };
+ });
+ return {schema_version:'forge-approval-snapshot.v1',mode:'live_read_only',source:'supabase',
+  tenant_id:TENANT,agent_id:agent,captured_at:now,workflows,engineering:null,recipient_options:[],
+  connection:{source:'supabase',tenant:TENANT,agent,writes_enabled:false,email_enabled:false,execution_enabled:false,review_host:'web'}};
+}
 export function project(request, raw, now = new Date().toISOString()) {
  const agent = request.agent_id || EXPERT;
  if (request.view === 'history') {
@@ -93,7 +116,7 @@ export function project(request, raw, now = new Date().toISOString()) {
   captured_at:now,source:'supabase',prds,cards,artifacts:[]};
 }
 
-export function makeHandler({issuer,rpc,document,proposals,registry=async claims=>[{
+export function makeHandler({issuer,rpc,document,proposals,approvalSnapshot=async()=>{throw Error('Approval source unavailable');},registry=async claims=>[{
  tenant_id:TENANT,agent_id:EXPERT,display_name:'Artist Packet Expert',config_sha256:CONFIG_SHA,subjects:[claims.sub],status:'active'
 }]}) {
  return async event => {
@@ -113,8 +136,7 @@ export function makeHandler({issuer,rpc,document,proposals,registry=async claims
    if(!selected)deny('agent_access_required');
    request.config_sha256=selected.config_sha256;
    if (request.view === 'document') return {payload:{ok:true,data:await document(request.agent_id)}};
-   if (request.view === 'approvalSnapshot') return {payload:{ok:true,data:{mode:'live_read_only',workflows:[],engineering:null,recipient_options:[],
-    connection:{source:'supabase',tenant:TENANT,agent:request.agent_id,writes_enabled:false,email_enabled:false,execution_enabled:false,review_host:'web'}}}};
+   if (request.view === 'approvalSnapshot') return {payload:{ok:true,data:projectApprovalSnapshot(await approvalSnapshot(request),request.agent_id)}};
    if (['proposals','proposal'].includes(request.view)) return {payload:{ok:true,data:await proposals(request)}};
    const q = request.query;
    const raw = await rpc({p_tenant:TENANT,p_expert:request.agent_id,p_view:request.view === 'history' ? q.view : request.view,

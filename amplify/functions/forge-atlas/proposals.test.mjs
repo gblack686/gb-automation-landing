@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {makeHandler,requestFor} from './contract.mjs';
+import {makeHandler,requestFor,projectApprovalSnapshot} from './contract.mjs';
 import {proposalPath,projectProposals} from './proposals.mjs';
 const issuer='https://cognito-idp.us-east-1.amazonaws.com/us-east-1_test';
 const event=(view,query={})=>({identity:{claims:{iss:issuer,sub:'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa','cognito:groups':['tenant-gbautomation']}},typeName:'Query',fieldName:'forgeAtlasRead',arguments:{input:{view,query}}});
@@ -67,7 +67,17 @@ test('list and detail fail closed for missing, unrelated or foreign producer own
  assert.throws(()=>requestFor(event('proposal',{proposal_id:'prop_one',agent_id:'other-expert'}),issuer));
 });
 test('hosted snapshot labels activation state and exposes no decision capability',async()=>{
- const result=(await makeHandler({issuer})(event('approvalSnapshot'))).payload;
+ const raw=[{tenant:'gbautomation',agent_id:'artist-packet-expert',workflow_id:'flow_one',title:'Review',gate:'scope',state:'review',
+  client_id:'gbautomation',project_id:'forge',proposal_id:'prop_one',scope_version:2,plan_version:1,
+  documents:[{body:{private:'hidden'}}],artifacts:[{source_ref:'private'}],events:[{role:'client',action:'approved',created_at:'2026-09-30T00:00:00Z',note:'private'}],
+  deliveries:[{kind:'review_email',recipient_role:'client',state:'delivered',result:{provider_id:'private'}}],reminders:[],grant_data:{private:'hidden'}}];
+ const result=(await makeHandler({issuer,approvalSnapshot:async()=>raw})(event('approvalSnapshot'))).payload;
  assert.equal(result.ok,true);assert.equal(result.data.mode,'live_read_only');
+ assert.equal(result.data.source,'supabase');assert.equal(result.data.workflows.length,1);
+ assert.equal(result.data.workflows[0].documents.length,0);
+ assert.equal(result.data.workflows[0].events[0].note,undefined);
+ assert.equal(result.data.workflows[0].deliveries[0].result,undefined);
  assert.equal(result.data.connection.writes_enabled,false);assert.equal(result.data.connection.email_enabled,false);assert.equal(result.data.connection.execution_enabled,false);
+ assert.throws(()=>projectApprovalSnapshot([{...raw[0],agent_id:'other-expert'}],'artist-packet-expert'));
+ assert.equal((await makeHandler({issuer})(event('approvalSnapshot'))).payload.ok,false);
 });
