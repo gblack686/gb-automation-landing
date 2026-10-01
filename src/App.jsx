@@ -32,6 +32,7 @@ import SmokeClientChat from './clients/smoke-client/pages/ChatPage';
 import Jid5274Portal from './clients/jid5274/routes';
 import OpsRoutes from './ops/routes';
 import ForgeAtlas from './pages/ForgeAtlas';
+import ForgeIntake from './pages/ForgeIntake';
 
 function CommandLayerVisibility() {
   const { pathname } = useLocation();
@@ -56,6 +57,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/atlas/:agentId" element={<RequireAuth allowedGroups={['tenant-gbautomation']}><ForgeAtlas /></RequireAuth>} />
+          <Route path="/forge-intake" element={<RequireAuth><ForgeIntake /></RequireAuth>} />
           <Route path="/chat" element={<ChatRedirect />} />
           <Route path="/welcome" element={<WelcomePage />} />
           <Route path="/hub" element={<ClientHubPage />} />

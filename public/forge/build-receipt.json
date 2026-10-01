@@ -1,6 +1,6 @@
 {
   "type": "forge-intake.static-build.v1",
-  "api": "/api/forge-intake",
+  "api": "https://aejkzyjrlsfryfidwedm.supabase.co/functions/v1/forge-intake",
   "preview_only": true,
   "files": [
     {
@@ -9,7 +9,7 @@
     },
     {
       "path": "forge/app.js",
-      "sha256": "3af4ac671f1ce3d65319cbced2bdcf7a5cad72cdb450b3624fc17ff03b561267"
+      "sha256": "7472cf196b10151a6ea0e879cb46e030d3001f51dd4974bcade29e972f9de472"
     },
     {
       "path": "forge/style.css",
@@ -25,7 +25,7 @@
     },
     {
       "path": "forge/template-tree.generated.js",
-      "sha256": "fd64c989b25697ca2fe7e942bcc14697f4188155fb01b9602746a11d401a58aa"
+      "sha256": "ada39c8cb2e46813cbca172cf52e4d8293747811e206d5b554f58d8b980362d8"
     },
     {
       "path": "forge/gb-signature.png",
@@ -41,7 +41,7 @@
     },
     {
       "path": "forge/config.js",
-      "sha256": "5c6cdb6e52213452e7bc0aa1ad3a0afa9b82c1e879efa2715dd608f8b1600882"
+      "sha256": "8cb35b07af11f9bc76b1e6d152f4f064baf6927e04de63dadc2e9b2e75dbc335"
     }
   ],
   "production_deployment": false
