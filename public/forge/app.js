@@ -1,10 +1,11 @@
 'use strict';
 const $=id=>document.getElementById(id),app=$('app');
-const previewOnly=window.FORGE_PREVIEW_ONLY===true;
+const hostedFrame=(()=>{try{return window.parent!==window&&window.parent.location.origin===location.origin&&window.parent.location.pathname==='/forge-intake';}catch{return false;}})();
+const previewOnly=window.FORGE_PREVIEW_ONLY===true&&!hostedFrame;
 const e=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let token=sessionStorage.getItem('forge.session')||'',catalog=[],local=false,live=false,operatorEmail='',draft=null,step=0,answers={},business={summary:'',website:null},email='',pendingKey=null,pollTimer;
 let initial=true,questions=[],loginMode='create',identity=null;
-const hostedAuth=!previewOnly&&window.parent!==window;
+const hostedAuth=hostedFrame;
 function cognitoToken(){return new Promise((resolve,reject)=>{const id=crypto.randomUUID();const timer=setTimeout(()=>{window.removeEventListener('message',receive);reject(Error('unauthorized'));},10000);function receive(event){if(event.origin!==location.origin||event.source!==window.parent||event.data?.kind!=='forge-auth-result'||event.data.id!==id)return;clearTimeout(timer);window.removeEventListener('message',receive);if(typeof event.data.token==='string'&&event.data.token)resolve(event.data.token);else reject(Error('unauthorized'));}window.addEventListener('message',receive);window.parent.postMessage({kind:'forge-auth-request',id},location.origin);});}
 const unknown="I'm not sure";
 const labels={problem:'What work would you love to take off your plate?',audience:'Who does this work, and who needs the result?',data_access:'Which tools or information does it involve?',output:'What should your AI team help produce?',success:'What would a useful result look like?'};
