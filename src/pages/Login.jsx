@@ -1,17 +1,18 @@
 import { useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Authenticator, useAuthenticator } from '@aws-amplify/ui-react';
+import { fetchAuthSession } from 'aws-amplify/auth';
 import { ArrowLeft, LockKeyhole, ShieldCheck } from 'lucide-react';
 
-function getNextPath(search) {
+function getNextPath(search, groups = []) {
   const params = new URLSearchParams(search);
   const next = params.get('next');
-  if (!next || !next.startsWith('/')) return '/apps';
-  return next;
+  if (next?.startsWith('/') && !next.startsWith('//')) return next;
+  return groups.includes('tenant-gbautomation') ? '/atlas/artist-packet-expert' : '/apps';
 }
 
 /**
- * Redirects to ?next= (or /apps) once the user is authenticated.
+ * Preserves deep links and sends GBAutomation members to their Forge workspace.
  */
 function PostAuthRedirect() {
   const { authStatus } = useAuthenticator((ctx) => [ctx.authStatus]);
@@ -19,9 +20,18 @@ function PostAuthRedirect() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (authStatus === 'authenticated') {
-      navigate(getNextPath(location.search), { replace: true });
-    }
+    if (authStatus !== 'authenticated') return;
+    let active = true;
+    fetchAuthSession()
+      .then((session) => {
+        if (!active) return;
+        const groups = session.tokens?.accessToken?.payload?.['cognito:groups'] || [];
+        navigate(getNextPath(location.search, groups), { replace: true });
+      })
+      .catch(() => {
+        if (active) navigate(getNextPath(location.search), { replace: true });
+      });
+    return () => { active = false; };
   }, [authStatus, location.search, navigate]);
 
   return null;
