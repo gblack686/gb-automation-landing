@@ -9,8 +9,12 @@ light/dark palettes and five visual variants are preserved. Expert facts come fr
 the source snapshot in `source-data.js`; they are not a live runtime inventory.
 The server catalog records the source revision and the editable draft defaults.
 
-`connected.js` connects private drafts and the single health recipe through the
-same-origin React host. `workshop.js` exposes a narrow presentation adapter. The
+`source-data.js` lists all 33 recipes in the checked-in YouTube Justfile as of
+the recorded source revision. It labels the ten connected read-only recipes,
+the approval-gated commands, and commands requiring a Hermes operator session.
+The server catalog lists the ten connected recipes; it is not the complete
+Justfile inventory. `connected.js` connects private drafts and those ten recipes
+through the same-origin React host. `workshop.js` exposes a narrow presentation adapter. The
 connected checks window replaces the design example's fixed readiness score.
 Conversation, proposals, tasks and changes remain explicitly labeled examples.
 No authentication tokens, credentials or private drafts are shipped in this folder.

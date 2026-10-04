@@ -1,7 +1,8 @@
 'use strict';
 (() => {
  const EXPERT='gbautomation/youtube-intel', pending=new Map(), view=window.ForgeWorkshopView;
- const READ_ONLY=new Set(['check','verify','drift','routes','test','audit','install-dry','validate-playbook','proposals']);
+ const READ_ONLY=new Set(window.FORGE_SOURCE.connected_recipes.filter(recipe=>recipe!=='health'));
+ const APPROVAL=new Set(window.FORGE_SOURCE.approval_recipes);
  const form=document.getElementById('config-form'), save=form.querySelector('button[type=submit],button:not([type])');
  const run=document.querySelector('[data-action="demo-run"]');
  let connected=false,version=0,catalog=null,lastSaved=null,busy=false,runId=null,runRecipe=null,runRequest=null,saveRequest=null,pollTimer=null,pulseTimer=null,pollStarted=0;
@@ -39,7 +40,7 @@
   const recipe=view.recipe(),allowed=recipe==='health'||READ_ONLY.has(recipe);
   run.disabled=!connected||busy||!allowed||(!!runId&&runRecipe!==recipe);
   run.textContent=allowed?(runId?(runRecipe===recipe?'Refresh run status':'Another run is active'):(recipe==='health'?'Run health check':`Run ${recipe}`)):
-    /(?:-apply$|^install$|^deploy$)/.test(recipe)?'Approval required':'Use Hermes operator session';
+    APPROVAL.has(recipe)?'Approval required':'Use Hermes operator session';
  }
  document.addEventListener('forge-workshop.recipe-selected',controls);
  function note(text){document.querySelector('.config-note').textContent=text;}

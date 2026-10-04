@@ -66,6 +66,20 @@ const proposals = [
 const recipeDescriptions = {
  health:'Read the expert smoke-test definitions and inspect health.',prime:'Load bounded, current expert context.',drift:'Compare expert definitions with the source of truth.',test:'Replay the expert’s defined tests.',proposals:'Generate a proposal report for this expert.',
  'proposals-apply':'Write proposal results through the expert’s proposal workflow.',check:'Check the expert installation contract.',verify:'Verify the expert installation contract.',install:'Apply the expert installation.',audit:'Run the check, drift, routes, and test recipes.',routes:'List the expert’s available command routes.',question:'Ask a question using the expert route.',plan:'Prepare a plan through the expert route.',improve:'Run the expert’s self-improvement route.',graph:'Inspect expert graph context.',maintain:'Run the expert maintenance route.',pbi:'Enter the expert plan/build/improve route.',default:'List the available Justfile recipes.','validate-playbook':'Validate the portable expert playbook contract.'
+ ,'install-dry':'Preview installation drift without applying changes.',
+ 'liked-scan':'Inspect liked videos without catalog writes.',
+ 'liked-scan-apply':'Sync and process liked videos under the persisted budget.',
+ 'liked-test':'Run the liked-video tests.',
+ 'code-graph-build':'Preview the scoped expert graph build.',
+ 'code-graph-build-apply':'Build the scoped expert graph.',
+ 'code-graph':'Inspect the existing expert graph.',
+ 'code-graph-check':'Check the existing expert graph for drift.',
+ 'code-graph-ask':'Ask a question of the existing expert graph.',
+ 'code-graph-grep':'Search the existing expert graph.',
+ 'code-graph-callers':'Find callers in the existing expert graph.',
+ digest:'Preview the proposal digest without sending email.',
+ deploy:'Deploy this expert through the operator workflow.',
+ 'remote-status':'Inspect the installed Hermes profile on the Mac Mini.'
 };
 const notice = text => `<div class="panel-notice">${text}</div>`;
 const searchBox = (id, placeholder) => `<div class="search-wrap">${icon('search')}<input type="search" id="${id}" placeholder="${placeholder}" aria-label="${placeholder}"></div>`;
@@ -99,12 +113,12 @@ function skillList(query) {
 function skillDetail(skill) {return `<span class="eyebrow">${escape(skill.name)}</span><p class="small spaced">${escape(skill.output)}</p><p class="tiny spaced">Input: ${escape(skill.input)}</p><div class="row spaced"><span class="chip">Source-linked</span><button class="text-button" data-action="use-skill">Use in conversation ↗</button></div>`;}
 function recipeList() {
  const filtered=S.recipes.filter(r=>(r.id+' '+(recipeDescriptions[r.id]||'')).toLowerCase().includes(searchRecipes.toLowerCase()));
- return filtered.map(r=>`<button class="recipe-button ${activeRecipe===r.id?'selected':''}" data-recipe="${r.id}">${icon('commands')}<code>${escape(r.id)}</code><span class="recipe-type">${r.parameters?'takes input':'recipe'}</span></button>`).join('') || '<p class="empty">No recipes match this search.</p>';
+ return filtered.map(r=>{const mode=S.connected_recipes.includes(r.id)?'Live':S.approval_recipes.includes(r.id)?'Approval':'Hermes';return `<button class="recipe-button ${activeRecipe===r.id?'selected':''}" data-recipe="${r.id}">${icon('commands')}<code>${escape(r.id)}</code><span class="recipe-type">${r.parameters?'Input · ':''}${mode}</span></button>`;}).join('') || '<p class="empty">No recipes match this search.</p>';
 }
 function commandDetail() {
  const r=S.recipes.find(r=>r.id===activeRecipe)||S.recipes[0];
  const needsInput=r.parameters && !r.parameters.includes('=');
- return `<p class="tiny">${escape(recipeDescriptions[r.id]||'Run the source-defined expert recipe.')}</p>${r.parameters?`<label class="spaced"><span>Recipe input (${escape(r.parameters)})</span><input id="recipe-argument" maxlength="240" placeholder="${needsInput?'Enter a value…':'Optional argument…'}" ${needsInput?'required':''}></label>`:''}<div class="command-line mono"><span>$</span><code id="command-preview">just ${escape(r.id)}</code></div><details class="recipe-source"><summary>Inspect recipe source</summary><pre>${escape(r.source)}</pre></details>`;
+ return `<p class="tiny">${escape(recipeDescriptions[r.id]||'Inspect the source-defined expert recipe.')}</p>${r.parameters?`<label class="spaced"><span>Recipe input (${escape(r.parameters)})</span><input id="recipe-argument" maxlength="240" placeholder="${needsInput?'Enter a value…':'Optional argument…'}" ${needsInput?'required':''}></label>`:''}<div class="command-line mono"><span>$</span><code id="command-preview">just ${escape(r.id)}</code></div><details class="recipe-source"><summary>Recipe source summary</summary><pre>${escape(r.source)}</pre></details>`;
 }
 function proposalList() {
  return proposals.map(p=>{

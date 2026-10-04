@@ -43,6 +43,11 @@ async function frame(){await page.locator('iframe[title="Agent Workshop Studio"]
 async function waitText(locator,text){await locator.filter({hasText:text}).waitFor();}
 try {
   await page.goto(base+'/workshop',{waitUntil:'domcontentloaded',timeout:60000});let f=await frame();console.log('Studio connected to local fixture');
+  assert.equal(await f.locator('#recipe-list .recipe-button').count(),33);
+  await f.locator('#recipe-list [data-recipe="liked-scan"]').waitFor();
+  await f.locator('#recipe-list [data-recipe="code-graph-ask"]').waitFor();
+  assert.match(await f.locator('#recipe-list [data-recipe="install"]').innerText(),/Approval/);
+  checks.push('All 33 source Justfile recipes are visible with run status');
   await f.locator('body').evaluate(el=>{el.dataset.testTransport='local-fixture';document.querySelector('.app-status>span').textContent='LOCAL TEST FIXTURE: saves and health responses are simulated. No live command runs.';});
   assert.deepEqual(await page.locator('iframe[title="Agent Workshop Studio"]').boundingBox(),{x:0,y:0,width:1600,height:1000});checks.push('Full-screen Studio iframe');
   await waitText(f.locator('#connected-checks'),'Identity verified');
