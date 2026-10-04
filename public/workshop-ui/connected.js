@@ -138,6 +138,7 @@
    view.log(job.result.ok?'Recipe completed.':'Recipe completed with findings.');
    for(const line of job.result.summary||[])view.log(line);
    view.log('Receipt '+job.id+' · '+job.result.duration_ms+' ms');
+   checks(`${job.result.recipe||runRecipe} ${job.result.ok?'completed':'completed with findings'}. Receipt ${job.id}.`);
   }else if(job.status==='error'){
    const message=['health_request_expired','recipe_request_expired'].includes(job.error)?'Request expired before completion. You can submit a new run.':'Recipe failed. Review the private worker logs.';
    view.log(message);checks(message);
