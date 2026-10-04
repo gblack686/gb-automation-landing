@@ -1,5 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { makeHandler, project, traceURL, operatorBootstrap, YOUTUBE_CONFIG_SHA } from './contract.mjs';
 
 test('legacy bootstrap is restricted to the exact operator subject',() => {
@@ -9,6 +10,13 @@ test('legacy bootstrap is restricted to the exact operator subject',() => {
  assert.equal(operatorBootstrap(operator,operator)?.agents[1].config_sha256,YOUTUBE_CONFIG_SHA);
  assert.equal(operatorBootstrap('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',operator),null);
  assert.equal(operatorBootstrap(operator,undefined),null);
+});
+test('main operator digest admits only the exact second Cognito subject',() => {
+ const admin='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+ const main='bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb';
+ const digest=createHash('sha256').update(main).digest('hex');
+ assert.deepEqual(operatorBootstrap(main,admin,digest)?.agents.map(agent=>agent.agent_id),['artist-packet-expert','youtube-intel']);
+ assert.equal(operatorBootstrap('cccccccc-cccc-cccc-cccc-cccccccccccc',admin,digest),null);
 });
 const issuer = 'https://cognito-idp.us-east-1.amazonaws.com/us-east-1_test';
 // Envelope verified against the deployed InvokeFnForgeAtlasReadLambdaDataSource mapping.
