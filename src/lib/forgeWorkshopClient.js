@@ -7,9 +7,9 @@ export async function workshopCommand(method,input) {
   if(!operation)throw new Error('Command unavailable.');
   client ||= generateClient();
   const response=await client[operation[0]][operation[1]]({input:JSON.stringify(input)},{authMode:'userPool'});
-  if(response.errors?.length)throw new Error('The workshop service could not complete the request. Sign in again or retry.');
+  if(response.errors?.length)throw new Error('workshop_transport_error');
   let data=response.data?.payload;
   if(typeof data==='string')data=JSON.parse(data);
-  if(!data)throw new Error('The workshop service is unavailable.');
+  if(!data)throw new Error('workshop_transport_error');
   return data;
 }

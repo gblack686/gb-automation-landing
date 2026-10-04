@@ -16,7 +16,10 @@ async function rpc(name:string,body:unknown) {
     method:'POST',headers:{apikey:secret.key,Authorization:`Bearer ${secret.key}`,'Content-Type':'application/json'},
     body:JSON.stringify(body),signal:AbortSignal.timeout(12000),
   });
-  if(!result.ok)throw new Error('workshop unavailable');
+  if(!result.ok){
+    console.error('forge_workshop_rpc_http_error', {status:result.status});
+    throw new Error('workshop unavailable');
+  }
   return result.json();
 }
 export const handler=makeHandler({issuer:process.env.COGNITO_ISSUER,enabled:process.env.FORGE_WORKSHOP_ENABLED==='true',rpc,catalog});

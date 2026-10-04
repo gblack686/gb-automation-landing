@@ -63,10 +63,16 @@ export function makeHandler({issuer,enabled,rpc,catalog}) {
         p_issuer:actor.issuer,p_subject:actor.subject,p_command:command,
         p_input:input,p_request_sha256:digest({command,input}),
       });
-      if(!result?.ok) return {payload:{ok:false,error:result?.error||'workshop_unavailable'}};
+      if(!result?.ok) {
+        const code=typeof result?.error==='string' && /^[a-z][a-z0-9_]{1,63}$/.test(result.error)
+          ? result.error : 'workshop_unavailable';
+        console.warn('forge_workshop_rejected', {command,code});
+        return {payload:{ok:false,error:code}};
+      }
       return {payload:{...result,...(command==='read'?{catalog}:{})}};
     } catch(error) {
       // Never return database errors, environment, raw tokens, or provider output.
+      console.warn('forge_workshop_failed', {code:error instanceof WorkshopError?error.code:'workshop_unavailable'});
       return {payload:{ok:false,error:error instanceof WorkshopError?error.code:'workshop_unavailable'}};
     }
   };

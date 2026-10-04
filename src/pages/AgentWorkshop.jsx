@@ -2,6 +2,9 @@ import { useEffect, useRef } from 'react';
 import { workshopCommand } from '../lib/forgeWorkshopClient';
 
 const METHODS=new Set(['read','save','run','status']);
+const SAFE_ERRORS=new Set(['authentication_required','tenant_access_required','identity_link_required',
+  'workshop_not_enabled','workshop_unavailable','workshop_transport_error','stale_draft_version',
+  'health_check_already_requested','run_not_found','invalid_configuration','secret_like_configuration']);
 export default function AgentWorkshop() {
   const frame=useRef(null);
   useEffect(()=>{
@@ -13,7 +16,7 @@ export default function AgentWorkshop() {
         ||JSON.stringify(message).length>10000)return;
       let payload;
       try { payload=await workshopCommand(message.method,message.input); }
-      catch { payload={ok:false,error:'workshop_unavailable'}; }
+      catch (error) { payload={ok:false,error:SAFE_ERRORS.has(error?.message)?error.message:'workshop_unavailable'}; }
       frame.current?.contentWindow?.postMessage({type:'forge-workshop.response.v1',id:message.id,payload},window.location.origin);
     };
     window.addEventListener('message',receive);
