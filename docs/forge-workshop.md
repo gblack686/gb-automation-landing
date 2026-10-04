@@ -14,8 +14,11 @@ website Cognito session. The only connected capabilities are a private YouTube
 expert configuration draft and the installed expert's `health` Justfile recipe.
 Saving a draft does not apply it. Health does not validate unapplied draft settings.
 
-This is source implementation, not a production activation receipt. The Lambda
-defaults to `FORGE_WORKSHOP_ENABLED=false`. Google OAuth remains optional future
+Production activation completed on 2026-10-03. The deployed Lambda and Mac Mini
+worker both have `FORGE_WORKSHOP_ENABLED=true`; the source function resource
+contains the enabled Lambda flag. The main operator account
+(`gblack686@gmail.com`) and the separate agent admin account are explicitly
+linked to the existing Forge owner. Google OAuth remains optional future
 federation; the existing email/password Cognito flow is sufficient for this slice.
 
 ## Request boundary
@@ -72,13 +75,18 @@ The companion source is `gbauto/gbautomation`, migration
 `resources/skills/mac-mini-ops-telemetry/scripts/forge_health.py`, and runbook
 `second-brain/operations/forge-workshop-activation.md`.
 
-Website `master` auto-deploys. Keep this change disabled until a coordinated release
-is approved. The release sequence is: deploy the gated website adapter, apply the
-reviewed migration, install the fixed worker from merged source, explicitly link
-the operator's Cognito subject to the existing Forge owner, enable the two gates,
-then verify save/reload and one health request under the real account. Verify the
-old ops route cannot return that receipt. Deployment must regenerate Amplify
-outputs so the four new custom operations exist in the browser client.
+Website `master` has auto-build disabled. After merging a website PR, start an
+Amplify `master` RELEASE job and wait for BUILD, DEPLOY, and VERIFY to succeed.
+Release job 176 completed all three stages after PR #56. The reviewed migration,
+Mini worker, account bindings, and both gates were activated in the coordinated
+release. A direct production Lambda canary using the verified main account saved
+and reloaded a draft and completed one `health` request through the Mini; this
+checks the function and worker path but bypasses AppSync authentication. The
+health result reported findings (`healthy: false`) rather than a transport failure.
+The signed YouTube document was fetched and SHA-256 verified under the main
+account, and the live Chrome session displayed its authenticated Studio and
+registered-agent selector. Deployment must regenerate Amplify outputs so the
+four new custom operations exist in the browser client.
 Use the Amplify `amplify.yml` pipeline, which deploys the backend and generates
 those outputs. The repository's older Netlify workflow writes placeholder auth
 outputs and cannot activate this connection; do not use it as sign-in evidence.
