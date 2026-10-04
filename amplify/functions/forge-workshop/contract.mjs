@@ -71,7 +71,7 @@ export function canonical(value) {
 }
 export const digest=value=>createHash('sha256').update(canonical(value)).digest('hex');
 
-export function makeHandler({issuer,enabled,rpc,catalog}) {
+export function makeHandler({issuer,enabled,rpc,catalog,pulseRead=async()=>null}) {
   return async event=>{
     try {
       const actor=principal(event,issuer);
@@ -87,7 +87,13 @@ export function makeHandler({issuer,enabled,rpc,catalog}) {
         console.warn('forge_workshop_rejected', {command,code});
         return {payload:{ok:false,error:code}};
       }
-      return {payload:{...result,...(command==='read'?{catalog}:{})}};
+      if(command==='read') {
+        // Pulse is optional telemetry. A collector outage must not hide drafts
+        // or the last health receipt from an authenticated operator.
+        const pulse=await Promise.resolve().then(pulseRead).catch(()=>null);
+        return {payload:{...result,catalog,pulse}};
+      }
+      return {payload:result};
     } catch(error) {
       // Never return database errors, environment, raw tokens, or provider output.
       console.warn('forge_workshop_failed', {code:error instanceof WorkshopError?error.code:'workshop_unavailable'});

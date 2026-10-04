@@ -13,12 +13,13 @@ window.ForgePrivate = (() => {
  const tables={skills:'Configuration skill bindings',commands:'Configuration command bindings',experts:'agent_expert_config.v1',sessions:'agent_sessions',artifacts:'Packaged artifacts / PRD projection',proposals:'agent_os_proposals',checks:'Configuration readiness',configs:'agent_expert_config.v1',sources:'client_context_refs',tasks:'Scoped Kanban projection',runs:'Activity metrics projection',intents:'Approval workflow',prds:'prd_artifacts'};
  window.FORGE_CONTRACTS={keys,tables,sources:{},relations:[['proposals','task_id','tasks','reference','Linked task',''],['artifacts','prd_id','prds','reference','Artifact PRD','']]};
  const ui=(title,icon,state='unverified',category='Packaged configuration')=>({title,icon,state,category,scope:'shared'});
+ const commandTitle=value=>typeof value==='string'?value:String(value?.id||'Unnamed recipe').replace(/[-_]/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
  const seed=Object.fromEntries(Object.keys(keys).map(k=>[k,[]]));
  seed.schema_version='forge-private-studio.v1';seed.demo=false;seed.uiLinks=[];
  seed.experts=[{...config,ui:ui(config.display_name,'user','draft')}];
  seed.configs=[{...config,config_id:P.scope.config_sha256,ui:ui(config.display_name,'settings','draft')}];
  seed.skills=config.skills.map(name=>({skill_name:name,ui:ui(name,'spark','unverified')}));
- seed.commands=[...config.prime_commands.map(value=>[value,'Startup']),...config.preset_commands.map(value=>[value,'Preset'])].map(([value,category],i)=>({command_id:'command-'+i,command:value,ui:ui(typeof value==='string'?value:JSON.stringify(value),'terminal','unverified',category)}));
+ seed.commands=[...config.prime_commands.map(value=>[value,'Startup']),...config.preset_commands.map(value=>[value,'Preset'])].map(([value,category],i)=>({command_id:'command-'+i,command:value,ui:ui(commandTitle(value),'terminal','unverified',category)}));
  seed.sources=config.client_context_refs.map(value=>({source_id:value,ui:ui(value,'brain','reference','Configuration reference')}));
  seed.artifacts=P.artifacts.map(a=>({...a,ui:ui(a.title,'file','packaged',a.mime)}));
  seed.checks=[['identity','Identity',Boolean(config.agent_id)],['skills','Skill bindings',config.skills.length>0],['commands','Command bindings',seed.commands.length>0],['context','Context references',config.client_context_refs.length>0],['validation','Validation workflows',config.validation_workflows.length>0],['runtime','Runtime verification',false]].map(([check_id,title,supplied])=>({check_id,supplied,ui:ui(title,'shield',supplied?'supplied':'unverified','Configuration only')}));
@@ -38,6 +39,12 @@ window.ForgePrivate = (() => {
  const rows=(kind,list,limit=3)=>list.slice(0,limit).map(r=>F.miniRow(kind,r)).join('');
  const no=(text,detail='No matching saved records are available.')=>F.empty(text,detail);
  function field(label,value,glyph='link'){return `<div><small>${i(glyph)} ${e(label)}</small><p><code>${e(value||'Not linked')}</code></p></div>`;}
+ function commandDetail(r){
+  const command=r.command;
+  if(typeof command==='string')return `<div class="private-detail"><h3>${e(commandTitle(command))}</h3><p>Packaged recipe binding. Runtime execution has not been verified.</p><pre>${e(command)}</pre>${act(i('play')+' Run now','disabled','',true)}</div>`;
+  const mode={read_only:'Read only',dry_run:'Dry run',mutation:'Changes files or settings'}[command.mode]||'Mode not specified';
+  return `<div class="private-detail"><h3>${e(commandTitle(command))}</h3><p>${e(r.ui.category)} recipe · ${e(mode)}</p><div class="private-fields">${field('Recipe ID',command.id,'terminal')}${field('Definition',command.root,'file')}${field('Approval',command.approval_required?'Required before changes':'Not required by configuration','shield')}</div>${Array.isArray(command.argv)&&command.argv.length?`<details><summary>Declared arguments</summary><pre>${e(command.argv.join(' '))}</pre></details>`:''}${act(i('play')+' Run now','disabled','',true)}<p>Execution, last-run result and output are not connected in this Atlas view. The signed-in Workshop connects the YouTube health recipe.</p></div>`;
+ }
  function record(kind,r){return `<details class="spaced"><summary>Saved fields</summary><pre>${e(JSON.stringify(r,null,2))}</pre></details>`;}
  function loaded(key,count){status[key]=`Supabase · ${count} records · ${new Date().toLocaleTimeString()}`;}
  async function read(key,view,input,accept){
@@ -190,7 +197,7 @@ window.ForgePrivate = (() => {
   F.defs.find(d=>d.id==='tasks').title='Expert Config Builder';
   loadVisual();
   F.views.skills=listWindow('skills','Skill bindings',r=>`<div class="private-detail"><h3>${e(r.skill_name)}</h3><p>Binding supplied in this draft. Runtime installation has not been verified.</p>${F.chip('configs',P.scope.config_sha256)}</div>`);
-  F.views.commands=listWindow('commands','Command bindings',r=>`<div class="private-detail"><pre>${e(typeof r.command==='string'?r.command:JSON.stringify(r.command,null,2))}</pre>${act(i('play')+' Run now','disabled','',true)}<p>No execution endpoint, last-run result or output stream is connected.</p></div>`);
+  F.views.commands=listWindow('commands','Command bindings',commandDetail);
   F.views.commands.preview=()=>F.metrics([[F.D.commands.length,'Command bindings']])+F.flow([['terminal','Recipe'],['play','Run'],['file','Output']],true)+act(i('play')+' Run now','disabled','',true)+'<p class="tiny spaced">Execution and output are not connected.</p>';
   F.views.presence={preview:avatarPreview,full:()=>`${generatedHero()}<div class="row wrap"><img class="private-portrait" src="${P.avatar}" alt="Current expert portrait"><div><h1>${e(config.display_name)}</h1><p>${e(P.tagline)}</p>${P.avatar_credit?`<small>Current portrait reference: ${e(P.avatar_credit.name)} · ${e(P.avatar_credit.artist)}</small>`:''}</div></div>${approvedCard(true)}<div class="private-toolbar">${nav('Sessions','chat')}${nav('Build expert config','tasks')}${nav('Activity','console')}</div><div id="avatar-intake" aria-label="Avatar character studio"></div>`};
   F.views.chat={preview:()=>historyBody(false),full:()=>historyBody(true)};
