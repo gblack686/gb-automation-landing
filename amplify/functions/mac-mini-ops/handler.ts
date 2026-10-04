@@ -266,7 +266,8 @@ export const handler = async (event: Json) => {
     if (op === 'macMiniRequest') {
       const id = String(args.id || '');
       const sel = 'select=id,action,status,result,error,requested_by,requested_at,completed_at';
-      const rows = await pgGet(`mac_mini_action_requests?id=eq.${encodeURIComponent(id)}&${sel}&limit=1`);
+      // Workshop results require the explicit Forge owner binding, not this ops route.
+      const rows = await pgGet(`mac_mini_action_requests?action=neq.forge_health&id=eq.${encodeURIComponent(id)}&${sel}&limit=1`);
       return { payload: { request: Array.isArray(rows) && rows.length ? rows[0] : null } };
     }
 

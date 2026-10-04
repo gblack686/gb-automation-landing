@@ -7,6 +7,7 @@ import ForgeExpertBuilder from '../components/ForgeExpertBuilder';
 import {visualRequest,visualAsset} from '../lib/forgeVisualClient';
 
 const CSP = "default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval'; style-src 'unsafe-inline'; img-src data: blob:; font-src data:; frame-src 'self' about: blob:; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'";
+const YOUTUBE_REPORT_ORIGIN = 'https://6ab9d13b0b89b5644e56270a--gbautoxyz.netlify.app';
 export default function ForgeAtlas() {
  const frame = useRef(null);
  const [channel] = useState(() => crypto.randomUUID());
@@ -80,7 +81,9 @@ export default function ForgeAtlas() {
     const doc = await readAtlas('document',{},selectedAgent.agent_id);
     const url = new URL(doc.url);
     if (url.protocol !== 'https:' || !/^[a-z0-9.-]+\.s3\.[a-z0-9-]+\.amazonaws\.com$/.test(url.hostname)
-        || doc.agent_id !== selectedAgent.agent_id || doc.tenant_id !== 'gbautomation' || doc.bytes > 16000000) throw Error('Invalid document');
+        || url.pathname !== `/gbautomation/${selectedAgent.agent_id}/index.html`
+        || doc.agent_id !== selectedAgent.agent_id || doc.tenant_id !== 'gbautomation'
+        || !Number.isSafeInteger(doc.bytes) || doc.bytes <= 0 || doc.bytes > 16000000) throw Error('Invalid document');
     const response = await fetch(url,{cache:'no-store',credentials:'omit',signal:abort.signal});
     if (!response.ok) throw Error('Document unavailable');
     const bytes = await response.arrayBuffer();
@@ -89,9 +92,16 @@ export default function ForgeAtlas() {
     if (hash !== doc.sha256) throw Error('Document changed');
     const content = new TextDecoder().decode(bytes);
     if (!content.includes('<head>') || !content.includes('forge-atlas.request.v1')) throw Error('Document needs an update');
+    if (content.includes('id="private-studio-data"')) {
+     const packaged = JSON.parse(new DOMParser().parseFromString(content,'text/html').getElementById('private-studio-data').textContent);
+     if (packaged.scope?.agent_id !== selectedAgent.agent_id || packaged.scope?.tenant_id !== 'gbautomation'
+         || packaged.scope?.config_sha256 !== selectedAgent.config_sha256) throw Error('Document binding changed');
+    }
     const requestedWindow=new URLSearchParams(window.location.search).get('window');
     const startWindow = ['proposals','presence'].includes(requestedWindow) ? `<meta name="forge-start-window" content="${requestedWindow}">` : '';
-    if (active) setHtml(content.replace('<head>',`<head><meta http-equiv="Content-Security-Policy" content="${CSP}"><meta name="forge-host-channel" content="${channel}">${startWindow}`));
+    const policy = selectedAgent.agent_id === 'youtube-intel'
+      ? CSP.replace("frame-src 'self' about: blob:",`frame-src 'self' about: blob: ${YOUTUBE_REPORT_ORIGIN}`) : CSP;
+    if (active) setHtml(content.replace('<head>',`<head><meta http-equiv="Content-Security-Policy" content="${policy}"><meta name="forge-host-channel" content="${channel}">${startWindow}`));
    } catch { if (active) setError('Your workspace could not load. Please retry or sign in again.'); }
   })();
   return () => { active = false; abort.abort(); stopAuth(); window.removeEventListener('message',receive); };
@@ -109,7 +119,7 @@ export default function ForgeAtlas() {
    window.history.replaceState(null,'',`/atlas/${next.agent_id}`);
   }} style={{color:'#191919',background:'#F3F1E7',padding:'4px 8px',maxWidth:200}}>
    {agents.map(agent=><option key={agent.agent_id} value={agent.agent_id}>{agent.display_name}</option>)}
-  </select><a href={`/atlas/${selectedAgent.agent_id}?window=presence`}>Avatar</a>{selectedAgent.agent_id==='artist-packet-expert'&&<button onClick={()=>setVisual({brief:null})}>Avatar jobs</button>}{selectedAgent.agent_id==='artist-packet-expert'&&<button onClick={()=>setBuilder(true)}>Expert Config Builder</button>}<a href={`/atlas/${selectedAgent.agent_id}?window=proposals`}>Proposals</a><button onClick={() => signOut()}>Sign out</button></nav>
+  </select><a href={`/atlas/${selectedAgent.agent_id}?window=presence`}>Avatar</a>{selectedAgent.agent_id==='artist-packet-expert'&&<button onClick={()=>setVisual({brief:null})}>Avatar jobs</button>}{selectedAgent.agent_id==='artist-packet-expert'&&<button onClick={()=>setBuilder(true)}>Expert Config Builder</button>}{selectedAgent.agent_id==='youtube-intel'&&<a href="/workshop">YouTube health</a>}<a href={`/atlas/${selectedAgent.agent_id}?window=proposals`}>Proposals</a><button onClick={() => signOut()}>Sign out</button></nav>
  </header><iframe ref={frame} name={`forge-atlas:${channel}`} title={`${selectedAgent.display_name} Atlas`} srcDoc={html}
   sandbox="allow-scripts allow-downloads allow-popups allow-popups-to-escape-sandbox"
   referrerPolicy="no-referrer" style={{position:'fixed',inset:'40px 0 0',width:'100%',height:'calc(100dvh - 40px)',border:0,zIndex:100}} />
