@@ -1,10 +1,12 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { makeHandler, project, traceURL, operatorBootstrap } from './contract.mjs';
+import { makeHandler, project, traceURL, operatorBootstrap, YOUTUBE_CONFIG_SHA } from './contract.mjs';
 
 test('legacy bootstrap is restricted to the exact operator subject',() => {
  const operator='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
  assert.equal(operatorBootstrap(operator,operator)?.source,'operator_bootstrap');
+ assert.deepEqual(operatorBootstrap(operator,operator)?.agents.map(agent=>agent.agent_id),['artist-packet-expert','youtube-intel']);
+ assert.equal(operatorBootstrap(operator,operator)?.agents[1].config_sha256,YOUTUBE_CONFIG_SHA);
  assert.equal(operatorBootstrap('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',operator),null);
  assert.equal(operatorBootstrap(operator,undefined),null);
 });
