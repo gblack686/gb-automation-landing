@@ -35,6 +35,15 @@ test('AWSJSON read accepts object, document, and encoded document without wideni
   assert.equal((await h.handler({...event(),arguments:{input:triple}})).payload.error,'invalid_request');
   assert.equal(h.calls.length,0);
 });
+test('deployed AppSync Lambda event uses top-level fieldName',async()=>{
+  const h=harness();
+  const result=await h.handler({identity,fieldName:'forgeWorkshopRead',arguments:{input:JSON.stringify({expert_id:EXPERT})}});
+  assert.equal(result.payload.ok,true);
+  assert.equal(h.calls[0].body.p_command,'read');
+  const conflicting=await h.handler({...event(),fieldName:'forgeWorkshopRun'});
+  assert.equal(conflicting.payload.error,'invalid_request');
+  assert.equal(h.calls.length,1);
+});
 test('activation defaults closed',async()=>{
   const h=harness(false);assert.equal((await h.handler(event())).payload.error,'workshop_not_enabled');assert.equal(h.calls.length,0);
 });
