@@ -37,7 +37,11 @@ export function inputFor(event) {
   }
   if(!input || JSON.stringify(input).length>8192) deny('invalid_request');
   const keys={read:['expert_id'],save:['expert_id','config','expected_version','request_id'],run:['expert_id','recipe','request_id'],status:['expert_id','run_id']};
-  const command={forgeWorkshopRead:'read',forgeWorkshopSave:'save',forgeWorkshopRun:'run',forgeWorkshopStatus:'status'}[event.info?.fieldName];
+  // Amplify's deployed Lambda resolver sends fieldName at the event root.
+  // Keep info.fieldName for direct contract fixtures and reject disagreement.
+  if(event.fieldName && event.info?.fieldName && event.fieldName!==event.info.fieldName) deny('invalid_request');
+  const fieldName=event.fieldName||event.info?.fieldName;
+  const command={forgeWorkshopRead:'read',forgeWorkshopSave:'save',forgeWorkshopRun:'run',forgeWorkshopStatus:'status'}[fieldName];
   if(!command || !exact(input,keys[command])) {
     console.warn('forge_workshop_input_shape', {fieldKnown:Boolean(command),type:typeof input,
       count:input&&typeof input==='object'?Object.keys(input).length:null,
