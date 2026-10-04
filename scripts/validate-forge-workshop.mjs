@@ -24,7 +24,7 @@ const handler=makeHandler({issuer:identity.claims.iss,enabled:true,catalog,pulse
     if(failSave)return {ok:false,error:failSave};
     draft={configuration:p_input.config,version:(draft?.version||0)+1};return {ok:true,draft};
   }
-  if(p_command==='run'){runCount++;job={id:p_input.request_id,status:'pending'};return {ok:true,run:job};}
+  if(p_command==='run'){runCount++;job={id:p_input.request_id,recipe:p_input.recipe,status:'pending'};return {ok:true,run:job};}
   return {ok:true,run:job};
 }});
 const browser=await chromium.launch({headless:true,...(process.env.PLAYWRIGHT_EXECUTABLE?{executablePath:process.env.PLAYWRIGHT_EXECUTABLE}:{channel:process.env.PLAYWRIGHT_CHANNEL||'chrome'})});
@@ -91,11 +91,18 @@ try {
   job={...job,status:'done',result:{schema_version:'forge-workshop-health.v1',healthy:false,checks:[{id:'query.supabase',status:'blocked'}]}};
   await f.locator('#dock [data-open="commands"]').click();
   await f.locator('[data-action="demo-run"]').click();
-  await waitText(f.locator('#console-log'),'completed with findings');checks.push('Only health can run; unhealthy completion remains a finding');
+  await waitText(f.locator('#console-log'),'completed with findings');checks.push('Unhealthy completion remains a finding');
   assert.equal(runCount,1);checks.push('Polling pauses after five minutes; explicit refresh does not resubmit');
   await f.locator('#dock [data-open="commands"]').click();
   await f.locator('[data-action="demo-run"]').click();await waitText(f.locator('#console-log'),'pending');
-  job={...job,status:'error'};await waitText(f.locator('#console-log'),'Health check failed');checks.push('Worker execution errors are distinct from health findings');
+  job={...job,status:'error'};await waitText(f.locator('#console-log'),'Recipe failed');checks.push('Worker execution errors are distinct from health findings');
+  await f.locator('#dock [data-open="commands"]').click();
+  await f.locator('[data-recipe="routes"]').click();
+  assert.ok(await f.locator('[data-action="demo-run"]').isEnabled());
+  await f.locator('[data-action="demo-run"]').click();await waitText(f.locator('#console-log'),'pending');
+  job={...job,status:'done',result:{schema_version:'forge-workshop-recipe.v1',recipe:'routes',ok:true,summary:['health','routes'],duration_ms:25}};
+  await f.locator('#dock [data-open="commands"]').click();await f.locator('[data-action="demo-run"]').click();
+  await waitText(f.locator('#console-log'),'Recipe completed');checks.push('Reviewed read-only recipe runs and returns a bounded receipt');
   const before=requests;
   await page.evaluate(()=>window.postMessage({type:'forge-workshop.request.v1',id:'forged',method:'run',input:{}},location.origin));
   await page.waitForTimeout(200);assert.equal(requests,before);checks.push('Messages from the wrong window cannot invoke the bridge');

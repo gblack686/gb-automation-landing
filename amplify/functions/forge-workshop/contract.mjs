@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 
 export const EXPERT = 'gbautomation/youtube-intel';
+export const READ_ONLY_RECIPES = new Set(['check','verify','drift','routes','test','audit','install-dry','validate-playbook','proposals']);
 export const TENANT = 'gbautomation';
 export const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 // Cognito subjects use a UUID-shaped hex layout without promising RFC version
@@ -51,7 +52,7 @@ export function inputFor(event) {
   if(input.expert_id!==EXPERT) deny('expert_not_allowed');
   if(['save','run'].includes(command) && !UUID.test(input.request_id||'')) deny('invalid_request_id');
   if(command==='status' && !UUID.test(input.run_id||'')) deny('invalid_run_id');
-  if(command==='run' && input.recipe!=='health') deny('recipe_not_allowed');
+  if(command==='run' && input.recipe!=='health' && !READ_ONLY_RECIPES.has(input.recipe)) deny('recipe_not_allowed');
   if(command==='save') {
     if(!Number.isInteger(input.expected_version)||input.expected_version<0) deny('invalid_version');
     const c=input.config;
@@ -77,7 +78,9 @@ export function makeHandler({issuer,enabled,rpc,catalog,pulseRead=async()=>null}
       const actor=principal(event,issuer);
       const {command,input}=inputFor(event);
       if(!enabled) deny('workshop_not_enabled');
-      const result=await rpc('agent_forge_workshop_command',{
+      const route=(command==='status'||(command==='run'&&input.recipe!=='health'))
+        ?'agent_forge_workshop_recipe_command':'agent_forge_workshop_command';
+      const result=await rpc(route,{
         p_issuer:actor.issuer,p_subject:actor.subject,p_command:command,
         p_input:input,p_request_sha256:digest({command,input}),
       });

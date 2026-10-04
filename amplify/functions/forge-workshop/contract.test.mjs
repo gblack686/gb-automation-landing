@@ -76,12 +76,13 @@ test('only linked reads receive optional expert pulse; telemetry outages preserv
   assert.equal((await failed(event())).payload.pulse,null);
   assert.equal((await handler({...event(),identity:{claims:{}}})).payload.error,'authentication_required');
 });
-test('valid saves, health requests and lookups reach only the service RPC',async()=>{
-  for(const [field,input,command] of [
-    ['forgeWorkshopSave',{expert_id:EXPERT,config:configuration,expected_version:0,request_id:id},'save'],
-    ['forgeWorkshopRun',{expert_id:EXPERT,recipe:'health',request_id:id},'run'],
-    ['forgeWorkshopStatus',{expert_id:EXPERT,run_id:id},'status'],
-  ]) {const h=harness();assert.equal((await h.handler(event(field,input))).payload.ok,true);assert.equal(h.calls[0].name,'agent_forge_workshop_command');assert.equal(h.calls[0].body.p_command,command);assert.deepEqual(h.calls[0].body.p_input,input);}
+test('reviewed recipes and status use only the scoped service RPCs',async()=>{
+  for(const [field,input,command,route] of [
+    ['forgeWorkshopSave',{expert_id:EXPERT,config:configuration,expected_version:0,request_id:id},'save','agent_forge_workshop_command'],
+    ['forgeWorkshopRun',{expert_id:EXPERT,recipe:'health',request_id:id},'run','agent_forge_workshop_command'],
+    ['forgeWorkshopRun',{expert_id:EXPERT,recipe:'routes',request_id:id},'run','agent_forge_workshop_recipe_command'],
+    ['forgeWorkshopStatus',{expert_id:EXPERT,run_id:id},'status','agent_forge_workshop_recipe_command'],
+  ]) {const h=harness();assert.equal((await h.handler(event(field,input))).payload.ok,true);assert.equal(h.calls[0].name,route);assert.equal(h.calls[0].body.p_command,command);assert.deepEqual(h.calls[0].body.p_input,input);}
 });
 test('database failures do not expose error text or credentials',async()=>{
   const handler=makeHandler({issuer,enabled:true,catalog:{},rpc:async()=>{throw new Error('secret fixture');}});
