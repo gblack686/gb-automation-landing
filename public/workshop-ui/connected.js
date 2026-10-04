@@ -1,22 +1,23 @@
 'use strict';
 (() => {
  const EXPERT='gbautomation/youtube-intel', pending=new Map(), view=window.ForgeWorkshopView;
+ const READ_ONLY=new Set(['check','verify','drift','routes','test','audit','install-dry','validate-playbook','proposals']);
  const form=document.getElementById('config-form'), save=form.querySelector('button[type=submit],button:not([type])');
  const run=document.querySelector('[data-action="demo-run"]');
- let connected=false,version=0,catalog=null,lastSaved=null,busy=false,runId=null,runRequest=null,saveRequest=null,pollTimer=null,pulseTimer=null,pollStarted=0;
+ let connected=false,version=0,catalog=null,lastSaved=null,busy=false,runId=null,runRecipe=null,runRequest=null,saveRequest=null,pollTimer=null,pulseTimer=null,pollStarted=0;
  const status=document.createElement('button');status.id='connection-status';status.className='light-button';status.textContent='Connecting…';
  status.title='Refresh the saved configuration and command status';document.querySelector('.header-end').prepend(status);
- document.querySelector('.app-status>span').textContent='Configuration drafts + health checks can connect. Other windows are demonstrations.';
+ document.querySelector('.app-status>span').textContent='Configuration drafts and reviewed read-only recipes connect to the Mini. Other windows are demonstrations.';
  document.querySelector('.config-note').textContent='Sign in through the Workshop to load and save a private configuration draft.';
  document.querySelector('#window-checks .window-body').innerHTML='<span class="eyebrow">VERIFIED STATUS</span><h3 class="spaced">Expert on the Mac Mini</h3><div id="connected-checks" class="panel-notice spaced" role="status">Connection not verified.</div><section class="private-detail spaced" aria-label="Live expert pulse"><div class="row"><h3>Live pulse</h3><button id="refresh-expert-pulse" class="light-button" type="button">Refresh pulse</button></div><div id="expert-pulse" class="spaced" role="status">Waiting for Mini telemetry.</div></section><p class="small spaced">Saving preserves your configuration as a private draft. It does not install or change the expert.</p><p class="small spaced">Health checks inspect the existing expert on the private worker. They do not validate unsaved or unapplied draft settings.</p>';
- document.querySelector('.help-note').textContent='Configuration drafts and the health recipe use your signed-in Workshop account when activated. Saving a draft does not apply it. Conversations, proposals and other commands remain demonstrations.';
- document.querySelector('#window-console .chip').textContent='Health receipts';
- document.querySelector('#window-console .row.spaced .tiny').textContent='Only the approved health recipe can connect';
- view.clearLog();view.log('Open a signed-in Workshop connection to request or retrieve a health check.');
+ document.querySelector('.help-note').textContent='Configuration drafts and reviewed read-only recipes use your signed-in Workshop account. Saving a draft does not apply it. Agentic and write-capable recipes keep their operator and approval gates.';
+ document.querySelector('#window-console .chip').textContent='Recipe receipts';
+ document.querySelector('#window-console .row.spaced .tiny').textContent='Run reviewed recipes on the Mac Mini';
+ view.clearLog();view.log('Open a signed-in Workshop connection to run or retrieve a reviewed recipe.');
  form.elements.model.readOnly=true;
  form.elements.purpose.maxLength=2000;
  save.textContent='Save draft';save.disabled=true;run.disabled=true;
- const errors={identity_link_required:'Your website account needs an operator-approved Forge identity link.',tenant_access_required:'This account does not have GBAutomation access.',authentication_required:'Sign in again to reconnect.',workshop_not_enabled:'The Workshop connection is prepared but has not been activated.',workshop_transport_error:'The website could not read the Workshop response. Retry connection or sign in again.',stale_draft_version:'This draft changed in another tab. Your edits are preserved. Use Refresh connection to load the saved version.',secret_like_configuration:'Remove credentials from the configuration.',invalid_configuration:'Check the name, purpose, model and video cap.',health_check_already_requested:'A health check is already queued or running.',run_not_found:'That health check is unavailable to this account.',workshop_unavailable:'Could not reach the Workshop service. Your edits are preserved; retry when connected.'};
+ const errors={identity_link_required:'Your website account needs an operator-approved Forge identity link.',tenant_access_required:'This account does not have GBAutomation access.',authentication_required:'Sign in again to reconnect.',workshop_not_enabled:'The Workshop connection is prepared but has not been activated.',workshop_transport_error:'The website could not read the Workshop response. Retry connection or sign in again.',stale_draft_version:'This draft changed in another tab. Your edits are preserved. Use Refresh connection to load the saved version.',secret_like_configuration:'Remove credentials from the configuration.',invalid_configuration:'Check the name, purpose, model and video cap.',health_check_already_requested:'A health check is already queued or running.',run_already_requested:'Another recipe is queued or running. Refresh its receipt first.',run_not_found:'That recipe receipt is unavailable to this account.',workshop_unavailable:'Could not reach the Workshop service. Your edits are preserved; retry when connected.'};
  const friendly=e=>errors[e?.message]||'The request could not be completed. Your edits are preserved.';
  function rpc(method,input){return new Promise((resolve,reject)=>{
   if(window.parent===window){reject(new Error('authentication_required'));return;}
@@ -35,8 +36,10 @@
  function controls(){
   save.disabled=!connected||busy;
   for(const field of form.querySelectorAll('input,textarea'))field.disabled=busy;
-  const allowed=view.recipe()==='health';run.disabled=!connected||busy||!allowed;
-  run.textContent=allowed?(runId?'Refresh health status':'Run health check'):'Recipe not connected';
+  const recipe=view.recipe(),allowed=recipe==='health'||READ_ONLY.has(recipe);
+  run.disabled=!connected||busy||!allowed||(!!runId&&runRecipe!==recipe);
+  run.textContent=allowed?(runId?(runRecipe===recipe?'Refresh run status':'Another run is active'):(recipe==='health'?'Run health check':`Run ${recipe}`)):
+    /(?:-apply$|^install$|^deploy$)/.test(recipe)?'Approval required':'Use Hermes operator session';
  }
  document.addEventListener('forge-workshop.recipe-selected',controls);
  function note(text){document.querySelector('.config-note').textContent=text;}
@@ -91,7 +94,7 @@
  }
  async function load(){
   if(busy)return;
-  busy=true;clearTimeout(pollTimer);runId=null;controls();
+  busy=true;clearTimeout(pollTimer);runId=null;runRecipe=null;controls();
   status.textContent='Connecting…';status.disabled=true;
   try {
    const data=await rpc('read',{expert_id:EXPERT});catalog=data.catalog;
@@ -122,20 +125,25 @@
   clearTimeout(pollTimer);
   const active=['pending','running'].includes(job.status);
   if(active&&runId!==job.id)pollStarted=Date.now();
+  runRecipe=job.recipe||runRecipe||'health';
   runId=active?job.id:null;
-  view.clearLog();view.log('Health check '+job.id+' • '+job.status);
+  view.clearLog();view.log(runRecipe+' '+job.id+' • '+job.status);
   if(job.result?.schema_version==='forge-workshop-health.v1'){
    view.log(job.result.healthy?'Health check passed.':'Health check completed with findings.');
    const labels={'expert.structure':'Expert profile structure','prime.quick_paths':'Startup quick paths','prime.read_only':'Read-only startup','index.sessions':'Session index','index.git':'Git index','index.prs':'Pull request index','index.kanban':'Kanban index','query.supabase':'Supabase query','query.langfuse':'Langfuse query','question.golden_set':'Golden questions','proposal.minimum_count':'Proposal coverage','self_improve.dry_run':'Improvement preview'};
    const states={static_pass:'configured',live_pass:'passed live check',live_empty:'connected, no records',pass:'passed',fail:'failed',blocked:'blocked',unavailable:'unavailable',not_configured:'not configured',available:'available'};
    for(const item of job.result.checks||[])view.log((labels[item.id]||item.id)+': '+(states[item.status]||item.status));
    checks(`Configuration draft v${version}. Health: ${job.result.healthy?'passed':'findings require review'}. Receipt ${job.id}.`);
+  }else if(job.result?.schema_version==='forge-workshop-recipe.v1'){
+   view.log(job.result.ok?'Recipe completed.':'Recipe completed with findings.');
+   for(const line of job.result.summary||[])view.log(line);
+   view.log('Receipt '+job.id+' · '+job.result.duration_ms+' ms');
   }else if(job.status==='error'){
-   const message=job.error==='health_request_expired'?'Health request expired before completion. You can request a new check.':'Health check failed. Review the private worker logs.';
+   const message=['health_request_expired','recipe_request_expired'].includes(job.error)?'Request expired before completion. You can submit a new run.':'Recipe failed. Review the private worker logs.';
    view.log(message);checks(message);
   }
   if(active){
-   if(Date.now()-pollStarted<300000){pollTimer=setTimeout(poll,2500);checks('Health check '+job.status+'. Waiting for the private worker.');}
+   if(Date.now()-pollStarted<300000){pollTimer=setTimeout(poll,2500);checks(runRecipe+' '+job.status+'. Waiting for the private worker.');}
    else {checks('Health is still pending. Automatic refresh paused. Use Refresh health status to check again.');view.log('Automatic refresh paused after five minutes. No new command was submitted.');}
   }
   else runRequest=null;
@@ -153,10 +161,11 @@
    event.stopImmediatePropagation();event.preventDefault();if(lastSaved)view.setDraft(lastSaved);note('Restored the last loaded draft in this form.');return;
   }
   if(button.dataset.action!=='demo-run')return;
-  event.stopImmediatePropagation();event.preventDefault();if(!connected||busy||view.recipe()!=='health')return;
+  event.stopImmediatePropagation();event.preventDefault();
+  const recipe=view.recipe();if(!connected||busy||(recipe!=='health'&&!READ_ONLY.has(recipe))||(runId&&runRecipe!==recipe))return;
   view.open('console');if(runId){pollStarted=Date.now();poll();return;}
-  runRequest ||= crypto.randomUUID();busy=true;controls();view.log('Requesting a health check…');
-  try{showRun((await rpc('run',{expert_id:EXPERT,recipe:'health',request_id:runRequest})).run);}
+  runRequest ||= crypto.randomUUID();runRecipe=recipe;busy=true;controls();view.log('Requesting '+recipe+'…');
+  try{showRun((await rpc('run',{expert_id:EXPERT,recipe,request_id:runRequest})).run);}
   catch(e){view.log(friendly(e));}
   finally{busy=false;controls();}
  },true);
