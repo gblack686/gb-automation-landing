@@ -11,7 +11,13 @@ await mkdir(out,{recursive:true});
 const catalog=JSON.parse(await readFile(new URL('../amplify/functions/forge-workshop/catalog.json',import.meta.url),'utf8'));
 const identity={claims:{iss:'https://cognito-idp.us-east-1.amazonaws.com/us-east-1_fixture',sub:'9945d1fa-b333-489e-ba78-b4792161887d','cognito:groups':['tenant-gbautomation']}};
 let draft=null,job=null,failSave=null,runCount=0,requests=0;
-const handler=makeHandler({issuer:identity.claims.iss,enabled:true,catalog,rpc:async(_name,{p_command,p_input})=>{
+const now=new Date().toISOString();
+const pulse={observed_at:now,gateway_running:true,jobs:[
+  {name:'expert-nightly',enabled:true,last_status:'ok',last_run_at:now,next_run_at:now,failure_streak:0},
+  {name:'youtube-whitelist-intel',enabled:true,last_status:'ok',last_run_at:now,next_run_at:now,failure_streak:0},
+  {name:'youtube-liked-intel',enabled:true,last_status:'ok',last_run_at:now,next_run_at:now,failure_streak:0},
+ ],logs:[{name:'agent.log',updated_at:now}]};
+const handler=makeHandler({issuer:identity.claims.iss,enabled:true,catalog,pulseRead:async()=>pulse,rpc:async(_name,{p_command,p_input})=>{
   if(p_command==='read')return {ok:true,draft,run:job};
   if(p_command==='save'){
     if(failSave)return {ok:false,error:failSave};
@@ -39,6 +45,11 @@ try {
   await f.locator('body').evaluate(el=>{el.dataset.testTransport='local-fixture';document.querySelector('.app-status>span').textContent='LOCAL TEST FIXTURE: saves and health responses are simulated. No live command runs.';});
   assert.deepEqual(await page.locator('iframe[title="Agent Workshop Studio"]').boundingBox(),{x:0,y:0,width:1600,height:1000});checks.push('Full-screen Studio iframe');
   await waitText(f.locator('#connected-checks'),'Identity verified');
+  assert.equal(await f.locator('#expert-pulse .pulse-jobs li').count(),3);
+  await waitText(f.locator('#expert-pulse'),'Gateway running');checks.push('Three readable Mini job cards and log update times');
+  await f.locator('#window-checks button.maximize').click();
+  await page.screenshot({path:out+'/studio-pulse.png'});
+  await f.locator('#window-checks button.maximize').click();
   assert.equal(await f.locator('#window-checks .readiness-number').count(),0);checks.push('Real status replaces sample readiness score');
   await page.screenshot({path:out+'/studio-light.png'});
   await f.locator('#mode-toggle').click();
