@@ -102,7 +102,9 @@ try {
   await f.locator('[data-action="demo-run"]').click();await waitText(f.locator('#console-log'),'pending');
   job={...job,status:'done',result:{schema_version:'forge-workshop-recipe.v1',recipe:'routes',ok:true,summary:['health','routes'],duration_ms:25}};
   await f.locator('#dock [data-open="commands"]').click();await f.locator('[data-action="demo-run"]').click();
-  await waitText(f.locator('#console-log'),'Recipe completed');checks.push('Reviewed read-only recipe runs and returns a bounded receipt');
+  await waitText(f.locator('#console-log'),'Recipe completed');
+  await waitText(f.locator('#connected-checks'),'routes completed');
+  checks.push('Reviewed read-only recipe runs and returns a bounded receipt');
   const before=requests;
   await page.evaluate(()=>window.postMessage({type:'forge-workshop.request.v1',id:'forged',method:'run',input:{}},location.origin));
   await page.waitForTimeout(200);assert.equal(requests,before);checks.push('Messages from the wrong window cannot invoke the bridge');
