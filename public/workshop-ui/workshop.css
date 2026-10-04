@@ -76,5 +76,10 @@ body.gallery{overflow-y:auto;height:auto;min-height:100dvh}.gallery .app-header{
 #expert-pulse .pulse-jobs strong{display:block;font-size:15px;line-height:1.35}
 #expert-pulse .pulse-state{display:block;color:var(--text-muted);font-size:13px;margin-top:3px}
 #expert-pulse .pulse-jobs p{font-size:13px;line-height:1.5;margin:9px 0 0;overflow-wrap:anywhere}
+#expert-pulse .pulse-history{border-top:1px solid var(--stone);padding:12px 0;font-size:13px}
+#expert-pulse .pulse-history strong{display:block;font-size:14px;margin-bottom:7px}
+#expert-pulse .pulse-history ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:6px 14px}
+#expert-pulse .pulse-history li{overflow-wrap:anywhere}
 #expert-pulse .pulse-logs{border-top:1px solid var(--stone);padding-top:12px;display:flex;flex-wrap:wrap;gap:5px 14px;font-size:13px}
 #expert-pulse .pulse-logs strong{flex-basis:100%;font-size:14px}
+#expert-pulse .pulse-log-event{display:block;color:var(--text-muted);padding-left:12px}

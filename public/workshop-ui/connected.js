@@ -57,9 +57,22 @@
    row.append(title,state,times);jobs.append(row);
   }
   if(jobs.childElementCount)pulseBox.append(jobs);
+  const history=document.createElement('section');history.className='pulse-history';
+  const historyTitle=document.createElement('strong');historyTitle.textContent='Recent runs';history.append(historyTitle);
+  const runList=document.createElement('ul');
+  for(const item of pulse.runs||[]){
+   const row=document.createElement('li');
+   row.textContent=`${names[item.job]||item.job} · ${item.status} · ${when(item.finished_at||item.started_at||item.claimed_at)}`;
+   runList.append(row);
+  }
+  if(!runList.childElementCount){const row=document.createElement('li');row.textContent='No recent run receipts available';runList.append(row);}
+  history.append(runList);pulseBox.append(history);
   const logs=document.createElement('div');logs.className='pulse-logs';
-  const logTitle=document.createElement('strong');logTitle.textContent='Log update times';logs.append(logTitle);
-  for(const log of pulse.logs||[]){const line=document.createElement('span');line.textContent=`${log.name}: ${when(log.updated_at)}`;logs.append(line);}
+  const logTitle=document.createElement('strong');logTitle.textContent='Recent log activity';logs.append(logTitle);
+  for(const log of pulse.logs||[]){
+   const line=document.createElement('span');line.textContent=`${log.name}: updated ${when(log.updated_at)}`;logs.append(line);
+   for(const event of log.events||[]){const excerpt=document.createElement('span');excerpt.className='pulse-log-event';excerpt.textContent=`${when(event.at)} · ${event.level}: ${event.summary}`;logs.append(excerpt);}
+  }
   if(!pulse.logs?.length){const line=document.createElement('span');line.textContent='No log metadata available';logs.append(line);}
   pulseBox.append(logs);
  }
