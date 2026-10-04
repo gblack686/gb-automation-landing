@@ -23,13 +23,27 @@ export function principal(event, issuer) {
 }
 export function inputFor(event) {
   const a=event.arguments||{};
-  if(!exact(a,['input'])) deny('invalid_request');
+  if(!exact(a,['input'])) {
+    console.warn('forge_workshop_argument_shape', {count:Object.keys(a).length,hasInput:Object.hasOwn(a,'input')});
+    deny('invalid_request');
+  }
   let input=a.input;
-  if(typeof input==='string') { try { input=JSON.parse(input); } catch { deny('invalid_request'); } }
+  // AppSync's AWSJSON argument may arrive as an object, a JSON document, or
+  // a JSON-encoded document, depending on the generated client serializer.
+  // Bound parsing to two layers and keep the exact command schema below.
+  for(let layer=0;layer<2 && typeof input==='string';layer++) {
+    if(input.length>8192) deny('invalid_request');
+    try { input=JSON.parse(input); } catch { deny('invalid_request'); }
+  }
   if(!input || JSON.stringify(input).length>8192) deny('invalid_request');
   const keys={read:['expert_id'],save:['expert_id','config','expected_version','request_id'],run:['expert_id','recipe','request_id'],status:['expert_id','run_id']};
   const command={forgeWorkshopRead:'read',forgeWorkshopSave:'save',forgeWorkshopRun:'run',forgeWorkshopStatus:'status'}[event.info?.fieldName];
-  if(!command || !exact(input,keys[command])) deny('invalid_request');
+  if(!command || !exact(input,keys[command])) {
+    console.warn('forge_workshop_input_shape', {fieldKnown:Boolean(command),type:typeof input,
+      count:input&&typeof input==='object'?Object.keys(input).length:null,
+      hasExpert:input&&typeof input==='object'&&Object.hasOwn(input,'expert_id')});
+    deny('invalid_request');
+  }
   if(input.expert_id!==EXPERT) deny('expert_not_allowed');
   if(['save','run'].includes(command) && !UUID.test(input.request_id||'')) deny('invalid_request_id');
   if(command==='status' && !UUID.test(input.run_id||'')) deny('invalid_run_id');

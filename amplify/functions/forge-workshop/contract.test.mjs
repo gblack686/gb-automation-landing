@@ -24,6 +24,17 @@ test('Cognito hex subjects without RFC version bits use the verified issuer and 
   assert.equal(result.payload.ok,true);
   assert.equal(h.calls[0].body.p_subject,cognito.sub);
 });
+test('AWSJSON read accepts object, document, and encoded document without widening scope',async()=>{
+  const input={expert_id:EXPERT};
+  for(const value of [input,JSON.stringify(input),JSON.stringify(JSON.stringify(input))]) {
+    const h=harness();const result=await h.handler({...event(),arguments:{input:value}});
+    assert.equal(result.payload.ok,true);assert.deepEqual(h.calls[0].body.p_input,input);
+  }
+  const h=harness();
+  const triple=JSON.stringify(JSON.stringify(JSON.stringify(input)));
+  assert.equal((await h.handler({...event(),arguments:{input:triple}})).payload.error,'invalid_request');
+  assert.equal(h.calls.length,0);
+});
 test('activation defaults closed',async()=>{
   const h=harness(false);assert.equal((await h.handler(event())).payload.error,'workshop_not_enabled');assert.equal(h.calls.length,0);
 });
