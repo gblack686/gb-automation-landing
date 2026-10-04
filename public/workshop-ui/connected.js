@@ -3,12 +3,12 @@
  const EXPERT='gbautomation/youtube-intel', pending=new Map(), view=window.ForgeWorkshopView;
  const form=document.getElementById('config-form'), save=form.querySelector('button[type=submit],button:not([type])');
  const run=document.querySelector('[data-action="demo-run"]');
- let connected=false,version=0,catalog=null,lastSaved=null,busy=false,runId=null,runRequest=null,saveRequest=null,pollTimer=null,pollStarted=0;
+ let connected=false,version=0,catalog=null,lastSaved=null,busy=false,runId=null,runRequest=null,saveRequest=null,pollTimer=null,pulseTimer=null,pollStarted=0;
  const status=document.createElement('button');status.id='connection-status';status.className='light-button';status.textContent='Connecting…';
  status.title='Refresh the saved configuration and command status';document.querySelector('.header-end').prepend(status);
  document.querySelector('.app-status>span').textContent='Configuration drafts + health checks can connect. Other windows are demonstrations.';
  document.querySelector('.config-note').textContent='Sign in through the Workshop to load and save a private configuration draft.';
- document.querySelector('#window-checks .window-body').innerHTML='<span class="eyebrow">VERIFIED STATUS</span><h3 class="spaced">Draft first. Check next.</h3><div id="connected-checks" class="panel-notice spaced" role="status">Connection not verified.</div><p class="small spaced">Saving preserves your configuration as a private draft. It does not install or change the expert.</p><p class="small spaced">Health checks inspect the existing expert on the private worker. They do not validate unsaved or unapplied draft settings.</p>';
+ document.querySelector('#window-checks .window-body').innerHTML='<span class="eyebrow">VERIFIED STATUS</span><h3 class="spaced">Expert on the Mac Mini</h3><div id="connected-checks" class="panel-notice spaced" role="status">Connection not verified.</div><section class="private-detail spaced" aria-label="Live expert pulse"><div class="row"><h3>Live pulse</h3><button id="refresh-expert-pulse" class="light-button" type="button">Refresh pulse</button></div><div id="expert-pulse" class="small spaced" role="status">Waiting for Mini telemetry.</div></section><p class="small spaced">Saving preserves your configuration as a private draft. It does not install or change the expert.</p><p class="small spaced">Health checks inspect the existing expert on the private worker. They do not validate unsaved or unapplied draft settings.</p>';
  document.querySelector('.help-note').textContent='Configuration drafts and the health recipe use your signed-in Workshop account when activated. Saving a draft does not apply it. Conversations, proposals and other commands remain demonstrations.';
  document.querySelector('#window-console .chip').textContent='Health receipts';
  document.querySelector('#window-console .row.spaced .tiny').textContent='Only the approved health recipe can connect';
@@ -41,6 +41,25 @@
  document.addEventListener('forge-workshop.recipe-selected',controls);
  function note(text){document.querySelector('.config-note').textContent=text;}
  function checks(text){document.getElementById('connected-checks').textContent=text;}
+ const pulseBox=document.getElementById('expert-pulse');
+ const when=value=>value&&Number.isFinite(Date.parse(value))?new Date(value).toLocaleString():'unknown';
+ function showPulse(pulse){
+  pulseBox.replaceChildren();
+  if(!pulse?.observed_at){pulseBox.textContent='No current expert telemetry is available from the Mini.';return;}
+  const age=Date.now()-Date.parse(pulse.observed_at),stale=!Number.isFinite(age)||age>5*60*1000;
+  const heading=document.createElement('p');heading.textContent=`${stale?'Stale telemetry':'Live telemetry'} · ${when(pulse.observed_at)} · Gateway ${pulse.gateway_running?'running':'not running'}`;pulseBox.append(heading);
+  const jobs=document.createElement('ul');
+  for(const job of pulse.jobs||[]){const row=document.createElement('li');row.textContent=`${job.name}: ${job.enabled?'enabled':'disabled'} · ${job.last_status||'no result'} · last ${when(job.last_run_at)} · next ${when(job.next_run_at)}${job.failure_streak?' · '+job.failure_streak+' consecutive failures':''}`;jobs.append(row);}
+  if(jobs.childElementCount)pulseBox.append(jobs);
+  const logs=document.createElement('p');logs.textContent='Log activity: '+((pulse.logs||[]).map(log=>`${log.name} updated ${when(log.updated_at)}`).join(' · ')||'no metadata available');pulseBox.append(logs);
+ }
+ async function refreshPulse(){
+  if(!connected)return;
+  try{showPulse((await rpc('read',{expert_id:EXPERT})).pulse);}
+  catch{pulseBox.textContent='Could not refresh Mini telemetry. Retry in a moment.';}
+ }
+ function schedulePulse(){clearInterval(pulseTimer);pulseTimer=setInterval(refreshPulse,120000);}
+ document.getElementById('refresh-expert-pulse').addEventListener('click',refreshPulse);
  function showDraft(draft){
   version=draft?.version||0;lastSaved=draft?.configuration||catalog.configuration;
   view.setDraft(lastSaved);
@@ -54,9 +73,9 @@
   try {
    const data=await rpc('read',{expert_id:EXPERT});catalog=data.catalog;
    if(catalog?.expert_id!==EXPERT)throw new Error('workshop_unavailable');
-   connected=true;status.textContent='Refresh connection';showDraft(data.draft);
+   connected=true;status.textContent='Refresh connection';showDraft(data.draft);showPulse(data.pulse);schedulePulse();
    if(data.run)showRun(data.run);
-  }catch(e){connected=false;status.textContent='Retry connection';note(friendly(e));checks(friendly(e));}
+  }catch(e){connected=false;clearInterval(pulseTimer);status.textContent='Retry connection';note(friendly(e));checks(friendly(e));}
   finally{busy=false;status.disabled=false;controls();}
  }
  status.addEventListener('click',()=>{
@@ -84,7 +103,9 @@
   view.clearLog();view.log('Health check '+job.id+' • '+job.status);
   if(job.result?.schema_version==='forge-workshop-health.v1'){
    view.log(job.result.healthy?'Health check passed.':'Health check completed with findings.');
-   for(const item of job.result.checks||[])view.log(item.id+': '+item.status);
+   const labels={'expert.structure':'Expert profile structure','prime.quick_paths':'Startup quick paths','prime.read_only':'Read-only startup','index.sessions':'Session index','index.git':'Git index','index.prs':'Pull request index','index.kanban':'Kanban index','query.supabase':'Supabase query','query.langfuse':'Langfuse query','question.golden_set':'Golden questions','proposal.minimum_count':'Proposal coverage','self_improve.dry_run':'Improvement preview'};
+   const states={static_pass:'configured',live_pass:'passed live check',live_empty:'connected, no records',pass:'passed',fail:'failed',blocked:'blocked',unavailable:'unavailable',not_configured:'not configured',available:'available'};
+   for(const item of job.result.checks||[])view.log((labels[item.id]||item.id)+': '+(states[item.status]||item.status));
    checks(`Configuration draft v${version}. Health: ${job.result.healthy?'passed':'findings require review'}. Receipt ${job.id}.`);
   }else if(job.status==='error'){
    const message=job.error==='health_request_expired'?'Health request expired before completion. You can request a new check.':'Health check failed. Review the private worker logs.';
@@ -116,7 +137,7 @@
   catch(e){view.log(friendly(e));}
   finally{busy=false;controls();}
  },true);
- window.addEventListener('beforeunload',()=>{clearTimeout(pollTimer);for(const p of pending.values())clearTimeout(p.timer);});
+ window.addEventListener('beforeunload',()=>{clearTimeout(pollTimer);clearInterval(pulseTimer);for(const p of pending.values())clearTimeout(p.timer);});
  if(window.parent===window){status.textContent='Open signed-in Workshop';status.onclick=()=>location.assign('/workshop');note('Open /workshop and sign in to connect. No commands are available on this standalone page.');}
  controls();
 })();

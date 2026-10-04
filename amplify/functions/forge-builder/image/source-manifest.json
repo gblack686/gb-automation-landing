@@ -1250,8 +1250,8 @@
     },
     {
       "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-workspace/private-studio.js",
-      "sha256": "795f3c2cde3e85af35f858c0b61ee6b40a45bd00c6237cf93a7fe288237bd490",
-      "bytes": 32724
+      "sha256": "45debc8e417d1fe5f5ac2d7f622949cff5e35256434c1db3036ba8a6995cf524",
+      "bytes": 33751
     },
     {
       "path": "resources/skills/hermes-prospect-agent-team-lead-magnet/templates/forge-workspace/provenance.json",
@@ -1760,5 +1760,5 @@
     }
   ],
   "dockerfile_sha256": "1634b68b1308d9df398f0b62d9e01dcc313e593dd7c05210684d1eabe3e68a28",
-  "sha256": "9b874ffd6ea7b3cc94ec8a7a9c7b4ec270fb5ae7bf76f6ecebbbc5097ea85774"
+  "sha256": "f5594842e6be4cf66163320d64de54b1b3613adeae7da48919818b07d7ad52cc"
 }

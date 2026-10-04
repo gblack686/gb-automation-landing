@@ -66,6 +66,16 @@ test('actor is derived from identity; catalog and digest are server-owned',async
   assert.equal(h.calls[0].body.p_command,'read');assert.equal(h.calls[0].body.p_request_sha256.length,64);
   assert.equal(digest({a:1,b:2}),digest({b:2,a:1}));
 });
+test('only linked reads receive optional expert pulse; telemetry outages preserve draft access',async()=>{
+  const pulse={observed_at:'2026-10-04T06:00:00Z',gateway_running:true,jobs:[]};
+  const handler=makeHandler({issuer,enabled:true,catalog:{expert_id:EXPERT},
+    rpc:async()=>({ok:true,draft:null}),pulseRead:async()=>pulse});
+  assert.deepEqual((await handler(event())).payload.pulse,pulse);
+  const failed=makeHandler({issuer,enabled:true,catalog:{expert_id:EXPERT},
+    rpc:async()=>({ok:true,draft:null}),pulseRead:async()=>{throw Error('private telemetry error');}});
+  assert.equal((await failed(event())).payload.pulse,null);
+  assert.equal((await handler({...event(),identity:{claims:{}}})).payload.error,'authentication_required');
+});
 test('valid saves, health requests and lookups reach only the service RPC',async()=>{
   for(const [field,input,command] of [
     ['forgeWorkshopSave',{expert_id:EXPERT,config:configuration,expected_version:0,request_id:id},'save'],

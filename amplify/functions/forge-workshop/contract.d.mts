@@ -1,6 +1,7 @@
 export type WorkshopEvent = {
   identity?: { claims?: Record<string, unknown> };
   arguments?: Record<string, unknown>;
+  fieldName?: string;
   info?: { fieldName?: string };
 };
 export type WorkshopPayload = { ok: boolean; error?: string; [key: string]: unknown };
@@ -9,4 +10,5 @@ export function makeHandler(options: {
   enabled: boolean;
   rpc: (name: string, body: unknown) => Promise<WorkshopPayload>;
   catalog: unknown;
+  pulseRead?: () => Promise<unknown>;
 }): (event: WorkshopEvent) => Promise<{ payload: WorkshopPayload }>;
