@@ -69,3 +69,12 @@ body.gallery{overflow-y:auto;height:auto;min-height:100dvh}.gallery .app-header{
   .forge .document-header{flex-wrap:wrap}
   .forge .proposal-actions button{font-size:12px}
 }
+#expert-pulse{font-size:14px;line-height:1.5;color:inherit}
+#expert-pulse .pulse-summary{font-size:14px;margin:12px 0 16px}
+#expert-pulse .pulse-jobs{list-style:none;padding:0;margin:0 0 16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}
+#expert-pulse .pulse-jobs li{border:1px solid var(--stone);border-radius:8px;padding:12px;background:var(--window-surface,rgba(255,255,255,.55));min-width:0}
+#expert-pulse .pulse-jobs strong{display:block;font-size:15px;line-height:1.35}
+#expert-pulse .pulse-state{display:block;color:var(--text-muted);font-size:13px;margin-top:3px}
+#expert-pulse .pulse-jobs p{font-size:13px;line-height:1.5;margin:9px 0 0;overflow-wrap:anywhere}
+#expert-pulse .pulse-logs{border-top:1px solid var(--stone);padding-top:12px;display:flex;flex-wrap:wrap;gap:5px 14px;font-size:13px}
+#expert-pulse .pulse-logs strong{flex-basis:100%;font-size:14px}

@@ -8,7 +8,7 @@
  status.title='Refresh the saved configuration and command status';document.querySelector('.header-end').prepend(status);
  document.querySelector('.app-status>span').textContent='Configuration drafts + health checks can connect. Other windows are demonstrations.';
  document.querySelector('.config-note').textContent='Sign in through the Workshop to load and save a private configuration draft.';
- document.querySelector('#window-checks .window-body').innerHTML='<span class="eyebrow">VERIFIED STATUS</span><h3 class="spaced">Expert on the Mac Mini</h3><div id="connected-checks" class="panel-notice spaced" role="status">Connection not verified.</div><section class="private-detail spaced" aria-label="Live expert pulse"><div class="row"><h3>Live pulse</h3><button id="refresh-expert-pulse" class="light-button" type="button">Refresh pulse</button></div><div id="expert-pulse" class="small spaced" role="status">Waiting for Mini telemetry.</div></section><p class="small spaced">Saving preserves your configuration as a private draft. It does not install or change the expert.</p><p class="small spaced">Health checks inspect the existing expert on the private worker. They do not validate unsaved or unapplied draft settings.</p>';
+ document.querySelector('#window-checks .window-body').innerHTML='<span class="eyebrow">VERIFIED STATUS</span><h3 class="spaced">Expert on the Mac Mini</h3><div id="connected-checks" class="panel-notice spaced" role="status">Connection not verified.</div><section class="private-detail spaced" aria-label="Live expert pulse"><div class="row"><h3>Live pulse</h3><button id="refresh-expert-pulse" class="light-button" type="button">Refresh pulse</button></div><div id="expert-pulse" class="spaced" role="status">Waiting for Mini telemetry.</div></section><p class="small spaced">Saving preserves your configuration as a private draft. It does not install or change the expert.</p><p class="small spaced">Health checks inspect the existing expert on the private worker. They do not validate unsaved or unapplied draft settings.</p>';
  document.querySelector('.help-note').textContent='Configuration drafts and the health recipe use your signed-in Workshop account when activated. Saving a draft does not apply it. Conversations, proposals and other commands remain demonstrations.';
  document.querySelector('#window-console .chip').textContent='Health receipts';
  document.querySelector('#window-console .row.spaced .tiny').textContent='Only the approved health recipe can connect';
@@ -47,11 +47,21 @@
   pulseBox.replaceChildren();
   if(!pulse?.observed_at){pulseBox.textContent='No current expert telemetry is available from the Mini.';return;}
   const age=Date.now()-Date.parse(pulse.observed_at),stale=!Number.isFinite(age)||age>5*60*1000;
-  const heading=document.createElement('p');heading.textContent=`${stale?'Stale telemetry':'Live telemetry'} · ${when(pulse.observed_at)} · Gateway ${pulse.gateway_running?'running':'not running'}`;pulseBox.append(heading);
-  const jobs=document.createElement('ul');
-  for(const job of pulse.jobs||[]){const row=document.createElement('li');row.textContent=`${job.name}: ${job.enabled?'enabled':'disabled'} · ${job.last_status||'no result'} · last ${when(job.last_run_at)} · next ${when(job.next_run_at)}${job.failure_streak?' · '+job.failure_streak+' consecutive failures':''}`;jobs.append(row);}
+  const heading=document.createElement('p');heading.className='pulse-summary';heading.textContent=`${stale?'Stale telemetry':'Live telemetry'} · observed ${when(pulse.observed_at)} · Gateway ${pulse.gateway_running?'running':'not running'}`;pulseBox.append(heading);
+  const names={'expert-nightly':'Expert nightly review','youtube-whitelist-intel':'Trusted channel scan','youtube-liked-intel':'Liked video scan'};
+  const jobs=document.createElement('ul');jobs.className='pulse-jobs';
+  for(const job of pulse.jobs||[]){
+   const row=document.createElement('li'),title=document.createElement('strong'),state=document.createElement('span'),times=document.createElement('p');
+   title.textContent=names[job.name]||job.name;state.className='pulse-state';state.textContent=`${job.enabled?'Enabled':'Disabled'} · ${job.last_status||'no result'}`;
+   times.textContent=`Last: ${when(job.last_run_at)} · Next: ${when(job.next_run_at)}${job.failure_streak?' · '+job.failure_streak+' consecutive failures':''}`;
+   row.append(title,state,times);jobs.append(row);
+  }
   if(jobs.childElementCount)pulseBox.append(jobs);
-  const logs=document.createElement('p');logs.textContent='Log activity: '+((pulse.logs||[]).map(log=>`${log.name} updated ${when(log.updated_at)}`).join(' · ')||'no metadata available');pulseBox.append(logs);
+  const logs=document.createElement('div');logs.className='pulse-logs';
+  const logTitle=document.createElement('strong');logTitle.textContent='Log update times';logs.append(logTitle);
+  for(const log of pulse.logs||[]){const line=document.createElement('span');line.textContent=`${log.name}: ${when(log.updated_at)}`;logs.append(line);}
+  if(!pulse.logs?.length){const line=document.createElement('span');line.textContent='No log metadata available';logs.append(line);}
+  pulseBox.append(logs);
  }
  async function refreshPulse(){
   if(!connected)return;
