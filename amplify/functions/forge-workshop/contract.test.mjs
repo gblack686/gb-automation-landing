@@ -17,6 +17,13 @@ test('Cognito issuer, subject and tenant claims are mandatory before any RPC',as
     const h=harness();assert.equal((await h.handler({...event(),identity:{claims}})).payload.ok,false);assert.equal(h.calls.length,0);
   }
 });
+test('Cognito hex subjects without RFC version bits use the verified issuer and tenant',async()=>{
+  const h=harness();
+  const cognito={...identity.claims,sub:'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'};
+  const result=await h.handler({...event(),identity:{claims:cognito}});
+  assert.equal(result.payload.ok,true);
+  assert.equal(h.calls[0].body.p_subject,cognito.sub);
+});
 test('activation defaults closed',async()=>{
   const h=harness(false);assert.equal((await h.handler(event())).payload.error,'workshop_not_enabled');assert.equal(h.calls.length,0);
 });
