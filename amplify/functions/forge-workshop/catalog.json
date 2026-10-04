@@ -1,7 +1,7 @@
 {
   "expert_id": "gbautomation/youtube-intel",
   "profile": "expert-gbautomation-youtube-intel",
-  "source_revision": "bf72dc539d1a54d53c555edeff1dd55a268ae72d",
+  "source_revision": "9e66e1285916e079e61fefb39066054da61fd36b",
   "provider": "openai-codex",
   "scan_days": 7,
   "channel_count": 11,
@@ -16,6 +16,51 @@
     {
       "id": "health",
       "title": "Check expert health",
+      "read_only": true
+    },
+    {
+      "id": "check",
+      "title": "Check expert installation drift",
+      "read_only": true
+    },
+    {
+      "id": "verify",
+      "title": "Verify expert installation",
+      "read_only": true
+    },
+    {
+      "id": "drift",
+      "title": "Check expert source drift",
+      "read_only": true
+    },
+    {
+      "id": "routes",
+      "title": "List expert routes",
+      "read_only": true
+    },
+    {
+      "id": "test",
+      "title": "Run expert tests",
+      "read_only": true
+    },
+    {
+      "id": "audit",
+      "title": "Run expert audit",
+      "read_only": true
+    },
+    {
+      "id": "install-dry",
+      "title": "Preview installation",
+      "read_only": true
+    },
+    {
+      "id": "validate-playbook",
+      "title": "Validate expert playbook",
+      "read_only": true
+    },
+    {
+      "id": "proposals",
+      "title": "Preview expert proposals",
       "read_only": true
     }
   ]
