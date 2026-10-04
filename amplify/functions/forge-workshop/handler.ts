@@ -28,6 +28,8 @@ async function rpc(name:string,body:unknown) {
 }
 const jobNames=new Set(['expert-nightly','youtube-whitelist-intel','youtube-liked-intel']);
 const logNames=new Set(['agent.log','gateway.log','errors.log']);
+const runStatuses=new Set(['claimed','running','completed','failed','unknown']);
+const eventLevels=new Set(['info','warning','error','critical']);
 function timestamp(value:unknown) {
   return typeof value==='string' && value.length<=40 && Number.isFinite(Date.parse(value)) ? value : null;
 }
@@ -51,9 +53,16 @@ async function pulseRead() {
       last_status:['ok','error','running'].includes(item.last_status)?item.last_status:null,
       failure_streak:Number.isInteger(item.failure_streak)&&item.failure_streak>=0&&item.failure_streak<=999?item.failure_streak:0,
     })):[],
+    runs:Array.isArray(expert.runs)?expert.runs.filter((item:any)=>jobNames.has(item?.job)&&runStatuses.has(item?.status)).slice(0,10).map((item:any)=>({
+      job:item.job,status:item.status,claimed_at:timestamp(item.claimed_at),
+      started_at:timestamp(item.started_at),finished_at:timestamp(item.finished_at),
+    })):[],
     logs:Array.isArray(expert.logs)?expert.logs.filter((item:any)=>logNames.has(item?.name)).slice(0,3).map((item:any)=>({
       name:item.name,updated_at:timestamp(item.updated_at),
       bytes:Number.isSafeInteger(item.bytes)&&item.bytes>=0?item.bytes:null,
+      events:Array.isArray(item.events)?item.events.filter((event:any)=>eventLevels.has(event?.level)
+        &&typeof event?.summary==='string'&&/^[A-Za-z0-9_. -]{1,80}$/.test(event.summary)).slice(0,4)
+        .map((event:any)=>({at:timestamp(event.at),level:event.level,summary:event.summary})):[],
     })):[],
   };
 }

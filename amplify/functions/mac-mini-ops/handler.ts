@@ -314,7 +314,12 @@ export const handler = async (event: Json) => {
       `ops_dashboard_snapshots?snapshot_key=eq.${TELEMETRY_KEY}&select=snapshot,generated_at,updated_at&limit=1`,
     );
     const row = Array.isArray(rows) && rows.length ? rows[0] : null;
-    return { payload: { snapshot: row?.snapshot || null, generated_at: row?.generated_at || null } };
+    // This legacy ops query is available to any signed-in account. Expert run
+    // and log evidence has a stricter owner/tenant binding in Forge Workshop.
+    const snapshot=row?.snapshot;
+    const publicSnapshot=snapshot && typeof snapshot==='object' && !Array.isArray(snapshot)
+      ? Object.fromEntries(Object.entries(snapshot).filter(([key])=>key!=='expert')) : null;
+    return { payload: { snapshot: publicSnapshot, generated_at: row?.generated_at || null } };
   } catch (error) {
     return { payload: { error: error instanceof Error ? error.message : 'mac-mini-ops failed' } };
   }
