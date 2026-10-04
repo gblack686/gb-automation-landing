@@ -7,8 +7,8 @@ export const forgeWorkshop = defineFunction({
   timeoutSeconds: 20,
   environment: {
     SUPABASE_SECRET_ID: 'gbautomation/infrastructure/supabase/gbauto',
-    // Explicit deployment gate. Enable only after migration, identity binding,
-    // and the private worker have been installed and verified together.
-    FORGE_WORKSHOP_ENABLED: 'false',
+    // Activated after the production migration, exact owner binding, and Mini
+    // worker installation were verified on 2026-10-03.
+    FORGE_WORKSHOP_ENABLED: 'true',
   },
 });
