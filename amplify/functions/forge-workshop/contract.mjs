@@ -3,6 +3,9 @@ import { createHash } from 'node:crypto';
 export const EXPERT = 'gbautomation/youtube-intel';
 export const TENANT = 'gbautomation';
 export const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+// Cognito subjects use a UUID-shaped hex layout without promising RFC version
+// or variant bits. AppSync issuer and tenant claims still bind the actor.
+export const COGNITO_SUBJECT = /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i;
 export class WorkshopError extends Error { constructor(code) { super(code); this.code=code; } }
 const deny = code => { throw new WorkshopError(code); };
 export function exact(value, keys) {
@@ -13,7 +16,7 @@ export function principal(event, issuer) {
   // This handler is invoked only by a Cognito-authorized AppSync operation.
   // Never accept identity, tenant, owner, or email from GraphQL arguments.
   const claims=event?.identity?.claims;
-  if(!issuer || !claims || claims.iss!==issuer || !UUID.test(claims.sub||'')) deny('authentication_required');
+  if(!issuer || !claims || claims.iss!==issuer || !COGNITO_SUBJECT.test(claims.sub||'')) deny('authentication_required');
   const groups=claims['cognito:groups'];
   if(!Array.isArray(groups) || !groups.includes('tenant-gbautomation')) deny('tenant_access_required');
   return {issuer,subject:claims.sub,tenant:TENANT};
