@@ -1,8 +1,8 @@
 # Forge Workshop: first connected slice
 
 The authenticated `/atlas/:agent_id` host can select Artist Packet Expert or
-YouTube Intelligence for the exact legacy operator when the private S3 registry
-is absent. The YouTube document is the canonical `youtube-intel` package with
+YouTube Intelligence for the exact legacy admin and main operator Cognito subjects
+when the private S3 registry is absent. The YouTube document is the canonical `youtube-intel` package with
 config SHA-256 `4e835524a45dacf2eb509b51809ca09ca2f805a28c57807acaf8a9eaba5389c7`.
 The host verifies the signed document length, SHA-256, tenant, agent, and packaged
 config binding before running its sandboxed iframe. Other accounts still require

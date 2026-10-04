@@ -1,14 +1,19 @@
+import { createHash } from 'node:crypto';
+
 export const EXPERT = 'artist-packet-expert';
 // Tenant agent selection is validated against a server-owned registration list.
 export const TENANT = 'gbautomation';
 export const CONFIG_SHA = 'bf142e4e937a53701b4a27b02d90068ee0c8f73636f123dd97a56a661e3040e5';
 export const YOUTUBE_CONFIG_SHA = '4e835524a45dacf2eb509b51809ca09ca2f805a28c57807acaf8a9eaba5389c7';
+// The main operator Cognito subject is held as a digest, not an account ID in source.
+export const MAIN_OPERATOR_SUBJECT_SHA = '1193744c59425c9c71db9516110593d3d9b697645fe99bf17c06f65abea449b8';
 const agentSlug = /^[a-z][a-z0-9-]{2,62}$/;
 // Cognito subjects use the UUID-shaped hex layout but do not promise RFC variant bits.
 // The verified deployment issuer and tenant group provide authorization.
 const cognitoSubject = /^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i;
-export function operatorBootstrap(sub, allowedSub) {
- if (typeof sub !== 'string' || !cognitoSubject.test(sub) || !allowedSub || sub !== allowedSub) return null;
+export function operatorBootstrap(sub, allowedSub, mainSubjectSha = MAIN_OPERATOR_SUBJECT_SHA) {
+ if (typeof sub !== 'string' || !cognitoSubject.test(sub) || !allowedSub
+     || (sub !== allowedSub && createHash('sha256').update(sub.toLowerCase()).digest('hex') !== mainSubjectSha)) return null;
  return {source:'operator_bootstrap',agents:[
   {tenant_id:TENANT,agent_id:EXPERT,display_name:'Artist Packet Expert',config_sha256:CONFIG_SHA,subjects:[sub],status:'active'},
   {tenant_id:TENANT,agent_id:'youtube-intel',display_name:'YouTube Intelligence',config_sha256:YOUTUBE_CONFIG_SHA,subjects:[sub],status:'active'},
