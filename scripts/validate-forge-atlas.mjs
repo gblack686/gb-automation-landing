@@ -26,6 +26,7 @@ await page.route('**/__atlas_fixture',async route=>{
  if(request.view==='approvalSnapshot')return route.fulfill({json:{mode:'live_read_only',workflows:[],connection:{tenant:'gbautomation',writes_enabled:false,review_host:'web'}}});
  if(request.view==='proposals')return route.fulfill({json:{tenant_id:'gbautomation',agent_id:'artist-packet-expert',rows:[{tenant_id:'gbautomation',agent_id:'artist-packet-expert',proposal_id:'prop_web',card_title:'Web proposal',source_type:'youtube_transcript',card_type:'expert-portfolio-proposal',state:'gated'}],offset:request.query.offset||0,total:1,limit:50}});
  if(request.view==='proposal')return route.fulfill({json:{tenant_id:'gbautomation',agent_id:'artist-packet-expert',proposal_id:'prop_web',card_title:'Web proposal',source_type:'youtube_transcript',card_type:'expert-portfolio-proposal',state:'gated',summary:'A <script> is text',action_items:['Inspect the brief'],updated_at:'2026-09-24T00:00:00Z'}});
+ if(request.view==='schedule')return route.fulfill({json:{schema_version:'forge-schedule.v1',agent_id:'artist-packet-expert',profile:'artist-packet-expert',date:request.query.date,timezone:'America/Los_Angeles',captured_at:new Date().toISOString(),source:'Hermes profile jobs.json',coverage:'Exact profile',jobs:[]}});
  return route.fulfill({json:{private_fixture:'private runtime value',view:request.view}});
 });
 await page.route(url,route=>route.fulfill({contentType:'text/html',body:html,headers:{'Access-Control-Allow-Origin':base}}));
@@ -46,6 +47,10 @@ try {
  assert.equal(proposals.rows[0].proposal_id,'prop_web');
  assert(requests.some(r=>r.view==='proposals'&&r.query.search==='brief'&&r.query.state==='gated'));
  checks.push('Proposal filters pass through the authenticated host');
+ const schedule=await frame.locator('body').evaluate(async()=>window.ForgeHost.read('schedule',{date:'2026-10-05'}));
+ assert.equal(schedule.profile,'artist-packet-expert');
+ assert(requests.some(r=>r.view==='schedule'&&r.query.date==='2026-10-05'&&r.agent_id==='artist-packet-expert'));
+ checks.push('Schedule date crosses the authenticated host with the selected expert fixed by the parent');
  if(process.env.FORGE_ATLAS_HTML) {
   await page.getByRole('link',{name:'Proposals',exact:true}).click();
   if(html.includes('private-studio-data')) {
