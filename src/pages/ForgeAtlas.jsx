@@ -92,10 +92,27 @@ export default function ForgeAtlas() {
     if (hash !== doc.sha256) throw Error('Document changed');
     const content = new TextDecoder().decode(bytes);
     if (!content.includes('<head>') || !content.includes('forge-atlas.request.v1')) throw Error('Document needs an update');
-    if (content.includes('id="private-studio-data"')) {
-     const packaged = JSON.parse(new DOMParser().parseFromString(content,'text/html').getElementById('private-studio-data').textContent);
+    const parsed = new DOMParser().parseFromString(content,'text/html');
+    const privateStudioData = parsed.getElementById('private-studio-data');
+    const forgeData = parsed.getElementById('forge-data');
+    if (privateStudioData) {
+     const packaged = JSON.parse(privateStudioData.textContent);
      if (packaged.scope?.agent_id !== selectedAgent.agent_id || packaged.scope?.tenant_id !== 'gbautomation'
          || packaged.scope?.config_sha256 !== selectedAgent.config_sha256) throw Error('Document binding changed');
+    }
+    if (forgeData) {
+     const packaged = JSON.parse(forgeData.textContent);
+     const planningData = parsed.getElementById('planning-data');
+     const scheduleData = parsed.getElementById('schedule-data');
+     if (!planningData || !scheduleData) throw Error('Document binding missing');
+     const scope = JSON.parse(planningData.textContent).scope;
+     const schedule = JSON.parse(scheduleData.textContent);
+     const expectedProfile = selectedAgent.agent_id === 'youtube-intel' ? 'expert-gbautomation-youtube-intel' : selectedAgent.agent_id;
+     if (packaged.agent_id !== selectedAgent.agent_id || packaged.yaml_sha256 !== selectedAgent.config_sha256
+         || scope?.tenant_id !== 'gbautomation' || scope?.agent_id !== selectedAgent.agent_id
+         || scope?.config_sha256 !== selectedAgent.config_sha256
+         || schedule.agent_id !== selectedAgent.agent_id || schedule.profile !== expectedProfile)
+       throw Error('Document binding changed');
     }
     const requestedWindow=new URLSearchParams(window.location.search).get('window');
     const startWindow = ['proposals','presence'].includes(requestedWindow) ? `<meta name="forge-start-window" content="${requestedWindow}">` : '';

@@ -33,6 +33,12 @@ the browser receives neither that credential nor the fleet response. Missing
 expert catalogs fail as unavailable. Launchd and other profiles stay in the
 operator fleet calendar. The rendered Forge document must be republished from
 the matching monorepo renderer before this window appears on the signed-in site.
+For YouTube, render the 18-window workspace from the canonical
+`build_youtube_forge.py` profile projection using `assemble_index.py
+--forge-workspace`. The document must bind website agent `youtube-intel`,
+Hermes profile `expert-gbautomation-youtube-intel`, and the registered config
+digest. The host checks all three before running the document. The currently
+published 13-window private Studio has no Schedules window.
 
 ## Release and readback
 
@@ -45,6 +51,9 @@ the matching monorepo renderer before this window appears on the signed-in site.
    `index.html` to the output `custom.forge_atlas_bucket_name`, key
    `gbautomation/artist-packet-expert/index.html`, with metadata `sha256` set to
    the file's SHA-256, content type `text/html`, cache control `private, no-store`.
+   For YouTube Schedules, use the reviewed 18-window document and the separate
+   `gbautomation/youtube-intel/index.html` key. Preserve the previous S3 object
+   version for rollback and verify the uploaded bytes and document binding.
    Do not upload raw answers, local logs, generation requests or transcripts.
 4. Verify signed-out redirect, foreign-tenant API denial, unsigned S3 denial,
    real-account document open, source hash, scoped data and trace navigation.
