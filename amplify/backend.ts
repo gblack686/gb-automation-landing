@@ -8,7 +8,7 @@ import { capabilityEdit } from './functions/capability-edit/resource';
 import { forgeAtlas } from './functions/forge-atlas/resource';
 import { forgeWorkshop } from './functions/forge-workshop/resource';
 import { Stack } from 'aws-cdk-lib';
-import { atlasIssuer, atlasSecretArn, atlasStorage } from './functions/forge-atlas/infrastructure.mjs';
+import { atlasIssuer, atlasSecretArn, scheduleSecretArn, atlasStorage } from './functions/forge-atlas/infrastructure.mjs';
 import {forgeVisual,forgeVisualWorker} from './functions/forge-visual/resource';
 import {Duration} from 'aws-cdk-lib';
 import {Queue} from 'aws-cdk-lib/aws-sqs';
@@ -43,7 +43,7 @@ backend.forgeAtlas.addEnvironment('COGNITO_ISSUER', atlasIssuer(atlasStack,backe
 if (process.env.FORGE_LEGACY_OPERATOR_SUB) backend.forgeAtlas.addEnvironment('FORGE_LEGACY_OPERATOR_SUB', process.env.FORGE_LEGACY_OPERATOR_SUB);
 backend.forgeAtlas.resources.lambda.addToRolePolicy(new PolicyStatement({
   effect: Effect.ALLOW, actions: ['secretsmanager:GetSecretValue'],
-  resources: [atlasSecretArn(atlasStack)],
+  resources: [atlasSecretArn(atlasStack),scheduleSecretArn(atlasStack)],
 }));
 backend.addOutput({custom: {forge_atlas_bucket_name: atlasDocuments.bucketName}});
 builderInfrastructure(atlasStack,{bucket:atlasDocuments,api:backend.forgeBuilder,

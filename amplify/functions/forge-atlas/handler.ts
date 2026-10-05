@@ -6,6 +6,28 @@ import { makeHandler, TENANT, operatorBootstrap } from './contract.mjs';
 import { proposalPath, projectProposals } from './proposals.mjs';
 
 let secret: {url:string;key:string}|undefined;
+let scheduleAuth: string|undefined;
+async function scheduleCredentials() {
+ if (!scheduleAuth) {
+  const result = await new SecretsManagerClient({}).send(new GetSecretValueCommand({SecretId:process.env.SCHEDULE_SECRET_ID}));
+  const value = JSON.parse(result.SecretString || '{}');
+  if (typeof value.username !== 'string' || !/^[A-Za-z0-9_-]{1,80}$/.test(value.username)
+      || typeof value.password !== 'string' || value.password.length < 1 || value.password.length > 512
+      || /[\x00-\x1f\x7f]/.test(value.password)) throw Error('Schedule configuration unavailable');
+  scheduleAuth = `Basic ${Buffer.from(`${value.username}:${value.password}`).toString('base64')}`;
+ }
+ return scheduleAuth;
+}
+async function schedule(day:string) {
+ const auth = await scheduleCredentials();
+ const response = await fetch(`https://gregs-mac-mini.tail4e0ac6.ts.net/api/gbauto/schedule?date=${encodeURIComponent(day)}`,{
+  headers:{Authorization:auth,Accept:'application/json'},signal:AbortSignal.timeout(12000),
+ });
+ if (!response.ok) throw Error('Schedule read unavailable');
+ const raw = await response.text();
+ if (raw.length > 3000000) throw Error('Schedule response too large');
+ return JSON.parse(raw);
+}
 async function credentials() {
  if (!secret) {
   const result = await new SecretsManagerClient({}).send(new GetSecretValueCommand({SecretId:process.env.SUPABASE_SECRET_ID}));
@@ -76,4 +98,4 @@ async function document(agent:string) {
  const url = await getSignedUrl(client,new GetObjectCommand({...location,ResponseCacheControl:'private, no-store'}),{expiresIn:60});
  return {url,sha256,bytes:head.ContentLength,agent_id:agent,tenant_id:TENANT};
 }
-export const handler = makeHandler({issuer:process.env.COGNITO_ISSUER,rpc,document,proposals,approvalSnapshot,registry});
+export const handler = makeHandler({issuer:process.env.COGNITO_ISSUER,rpc,document,proposals,schedule,approvalSnapshot,registry});

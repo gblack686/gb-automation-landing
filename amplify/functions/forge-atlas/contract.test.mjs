@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { makeHandler, project, traceURL, operatorBootstrap, YOUTUBE_CONFIG_SHA } from './contract.mjs';
+import { makeHandler, project, projectSchedule, traceURL, operatorBootstrap, YOUTUBE_CONFIG_SHA } from './contract.mjs';
 
 test('legacy bootstrap is restricted to the exact operator subject',() => {
  const operator='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
@@ -67,6 +67,29 @@ test('private storage is never called for unapproved operations',async () => {
  let calls=0;const handler=makeHandler({issuer,document:async()=>{calls++;return {sha256:'abc'};}});
  assert.equal((await handler(event({view:'run',command:'terminal'}))).payload.ok,false);
  assert.equal((await handler(event({view:'document'}))).payload.ok,true);assert.equal(calls,1);
+});
+test('schedule read accepts only a date and returns exact registered profile rows',async () => {
+ const day='2026-10-05',agent='artist-packet-expert';let calls=0;
+ const own={id:'job-own',name:'Owned job',scheduler:'Hermes',profile:agent,schedule:'0 9 * * *',kind:'cron',precision:'clock',enabled:true,state:'active',next_run_at:null,last_run_at:null,last_status:'ok',last_error:null,times:[day+'T09:00:00-07:00']};
+ const raw={schema_version:'gbauto-schedule.v1',timezone:'America/Los_Angeles',date:day,generated_at:'2026-10-05T18:00:00Z',source_updated_at:{[agent]:null,'other-agent':null},jobs:[own,{...own,id:'job-other',profile:'other-agent'},{...own,id:'launchd',scheduler:'launchd',profile:null}]};
+ const handler=makeHandler({issuer,schedule:async selected=>{calls++;assert.equal(selected,day);return raw;}});
+ const result=(await handler(event({view:'schedule',query:{date:day}}))).payload;
+ assert.equal(result.ok,true);assert.deepEqual(result.data.jobs.map(job=>job.id),['job-own']);
+ assert.equal(result.data.agent_id,agent);assert.equal(result.data.profile,agent);
+ for(const input of [{view:'schedule',query:{}},{view:'schedule',query:{date:day,profile:'other-agent'}},{view:'schedule',query:{date:'tomorrow'}},{view:'schedule',agent_id:'other-agent',query:{date:day}}]) {
+  assert.equal((await handler(event(input))).payload.ok,false);
+ }
+ assert.equal(calls,1);
+ assert.throws(()=>projectSchedule({...raw,source_updated_at:{}},agent,agent,day),/source unavailable/);
+ assert.throws(()=>projectSchedule({...raw,jobs:[own,{...own,id:'job-own'}]},agent,agent,day),/Duplicate/);
+});
+test('YouTube website identity maps only to its installed Hermes profile',async () => {
+ const day='2026-10-05',profile='expert-gbautomation-youtube-intel';
+ const raw={schema_version:'gbauto-schedule.v1',timezone:'America/Los_Angeles',date:day,generated_at:'2026-10-05T18:00:00Z',source_updated_at:{[profile]:null},jobs:[{id:'youtube-job',name:'YouTube nightly',scheduler:'Hermes',profile,schedule:'0 9 * * *',kind:'cron',precision:'clock',enabled:true,state:'active',times:[day+'T09:00:00-07:00']}]};
+ const handler=makeHandler({issuer,schedule:async()=>raw,registry:async claims=>[{tenant_id:'gbautomation',agent_id:'youtube-intel',display_name:'YouTube Intelligence',config_sha256:YOUTUBE_CONFIG_SHA,subjects:[claims.sub],status:'active'}]});
+ const result=(await handler(event({view:'schedule',agent_id:'youtube-intel',query:{date:day}}))).payload;
+ assert.equal(result.ok,true);assert.equal(result.data.agent_id,'youtube-intel');assert.equal(result.data.profile,profile);
+ assert.deepEqual(result.data.jobs.map(job=>job.id),['youtube-job']);
 });
 test('errors hide database/provider details',async () => {
  const handler=makeHandler({issuer,rpc:async()=>{throw Error('password=private');}});

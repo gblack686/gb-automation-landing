@@ -10,7 +10,7 @@ authorization and document bindings.
 
 The parent verifies the document's SHA-256 and renders it in an opaque sandbox.
 The frame cannot read parent credentials or localStorage. Its channel permits
-only activity, planning and paginated history reads. Session text stays in
+only scoped activity, planning, schedule and paginated history reads. Session text stays in
 memory. The original offline document and loopback preview remain supported.
 Layout changes and document notes in the hosted sandbox last for that open tab.
 
@@ -20,6 +20,19 @@ service-only `agent_forge_atlas_read` RPC supplies existing session/message/trac
 PRD and Kanban projections. Explicit ownership is required, with no profile-name
 fallback. The backend returns verified project-qualified Langfuse URLs. This is
 a read-only control-panel slice; it does not dispatch arbitrary commands.
+
+The Schedules window requests one Pacific date through the same authenticated
+bridge. The backend fixes the expert from the Cognito registration, fetches the
+Mini's existing schedule projection through the HTTPS Basic Auth gate, and
+returns only Hermes jobs whose profile exactly matches the server-owned binding.
+The existing website ID `youtube-intel` binds explicitly to the installed
+`expert-gbautomation-youtube-intel` profile; other IDs use their exact name.
+It reads
+the operator gateway credential from the existing Secrets Manager secret;
+the browser receives neither that credential nor the fleet response. Missing
+expert catalogs fail as unavailable. Launchd and other profiles stay in the
+operator fleet calendar. The rendered Forge document must be republished from
+the matching monorepo renderer before this window appears on the signed-in site.
 
 ## Release and readback
 

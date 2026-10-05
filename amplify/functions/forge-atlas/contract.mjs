@@ -37,12 +37,15 @@ export function requestFor(event, issuer) {
  let input = event.arguments.input;
  if (typeof input === 'string') { try { input = JSON.parse(input); } catch { deny('invalid_request'); } }
  if (!object(input) || JSON.stringify(input).length > 4096 || Object.keys(input).some(k => !['view','query','agent_id'].includes(k))
-     || !['agents','document','atlas','planning','history','approvalSnapshot','proposals','proposal'].includes(input.view)
+     || !['agents','document','atlas','planning','history','schedule','approvalSnapshot','proposals','proposal'].includes(input.view)
      || (input.agent_id !== undefined && !agentSlug.test(input.agent_id))
      || (input.view === 'agents' && input.agent_id !== undefined)) deny('invalid_request');
  const query = input.query || {};
  if (!object(query)) deny('invalid_request');
- if (!['history','proposals','proposal'].includes(input.view) && Object.keys(query).length) deny('invalid_request');
+ if (!['history','schedule','proposals','proposal'].includes(input.view) && Object.keys(query).length) deny('invalid_request');
+ if (input.view === 'schedule' && (Object.keys(query).join() !== 'date'
+     || typeof query.date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(query.date)
+     || Number.isNaN(Date.parse(`${query.date}T12:00:00Z`)))) deny('invalid_request');
  if (input.view === 'proposals') {
   if (Object.keys(query).some(k => !['offset','search','state'].includes(k))
       || (query.offset !== undefined && (!Number.isSafeInteger(query.offset) || query.offset < 0 || query.offset > 100000))
@@ -66,6 +69,35 @@ export function traceURL(url,id) {
   && url.split('/').at(-1) === id ? url : null;
 }
 const rows = (value, limit) => { if (!Array.isArray(value) || value.length > limit) throw Error('Invalid read'); return value; };
+export function projectSchedule(raw, agent, profile, day) {
+ if (!agentSlug.test(agent) || !agentSlug.test(profile) || raw?.schema_version !== 'gbauto-schedule.v1'
+     || raw.timezone !== 'America/Los_Angeles' || raw.date !== day
+     || !Number.isFinite(Date.parse(raw.generated_at)) || !object(raw.source_updated_at)
+     || !Object.hasOwn(raw.source_updated_at,profile)) throw Error('Schedule source unavailable');
+ const jobs = rows(raw.jobs,2000).filter(row => row?.scheduler === 'Hermes' && row.profile === profile);
+ if (jobs.length > 200) throw Error('Schedule row limit exceeded');
+ const selected=jobs.map(row => {
+  if (!identity(row.id) || row.id.length > 160 || typeof row.name !== 'string' || row.name.length > 240
+      || typeof row.schedule !== 'string' || row.schedule.length > 240
+      || !['clock','relative'].includes(row.precision) || typeof row.enabled !== 'boolean'
+      || !Array.isArray(row.times) || row.times.length > 1440
+      || row.times.some(t => typeof t !== 'string' || !Number.isFinite(Date.parse(t)))) throw Error('Invalid schedule row');
+  return {
+   id:row.id,name:row.name,schedule:row.schedule,kind:String(row.kind||'').slice(0,240),
+   precision:row.precision,state:String(row.state||'').slice(0,240),enabled:row.enabled,
+   next_run_at:typeof row.next_run_at==='string'?row.next_run_at.slice(0,240):null,
+   last_run_at:typeof row.last_run_at==='string'?row.last_run_at.slice(0,240):null,
+   last_status:typeof row.last_status==='string'?row.last_status.slice(0,240):null,
+   last_error:typeof row.last_error==='string'?row.last_error.slice(0,240):null,
+   times:row.times,
+  };
+ });
+ if (selected.reduce((count,row)=>count+row.times.length,0) > 5000) throw Error('Schedule occurrence limit exceeded');
+ if (new Set(selected.map(row=>row.id)).size !== selected.length) throw Error('Duplicate schedule identity');
+ return {schema_version:'forge-schedule.v1',agent_id:agent,profile,date:day,
+  timezone:'America/Los_Angeles',captured_at:raw.generated_at,source:'Hermes profile jobs.json',
+  coverage:'Exact expert Hermes profile jobs only; launchd and other schedulers remain in the fleet calendar',jobs:selected};
+}
 export function projectApprovalSnapshot(raw, agent, now = new Date().toISOString()) {
  const workflows = rows(raw,100).map(w => {
   if (!object(w) || w.tenant !== TENANT || w.agent_id !== agent
@@ -124,7 +156,7 @@ export function project(request, raw, now = new Date().toISOString()) {
   captured_at:now,source:'supabase',prds,cards,artifacts:[]};
 }
 
-export function makeHandler({issuer,rpc,document,proposals,approvalSnapshot=async()=>{throw Error('Approval source unavailable');},registry=async claims=>[{
+export function makeHandler({issuer,rpc,document,proposals,schedule=async()=>{throw Error('Schedule source unavailable');},approvalSnapshot=async()=>{throw Error('Approval source unavailable');},registry=async claims=>[{
  tenant_id:TENANT,agent_id:EXPERT,display_name:'Artist Packet Expert',config_sha256:CONFIG_SHA,subjects:[claims.sub],status:'active'
 }]}) {
  return async event => {
@@ -144,6 +176,10 @@ export function makeHandler({issuer,rpc,document,proposals,approvalSnapshot=asyn
    if(!selected)deny('agent_access_required');
    request.config_sha256=selected.config_sha256;
    if (request.view === 'document') return {payload:{ok:true,data:await document(request.agent_id)}};
+   if (request.view === 'schedule') {
+    const profile=request.agent_id==='youtube-intel'?'expert-gbautomation-youtube-intel':request.agent_id;
+    return {payload:{ok:true,data:projectSchedule(await schedule(request.query.date),request.agent_id,profile,request.query.date)}};
+   }
    if (request.view === 'approvalSnapshot') return {payload:{ok:true,data:projectApprovalSnapshot(await approvalSnapshot(request),request.agent_id)}};
    if (['proposals','proposal'].includes(request.view)) return {payload:{ok:true,data:await proposals(request)}};
    const q = request.query;

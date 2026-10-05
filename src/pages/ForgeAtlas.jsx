@@ -43,7 +43,7 @@ export default function ForgeAtlas() {
    if (event.source !== frame.current?.contentWindow || event.origin !== 'null'
        || message?.type !== 'forge-atlas.request.v1' || message.channel !== channel
        || typeof message.id !== 'string' || !/^\d{1,9}$/.test(message.id)
-       || !['atlas','planning','history','approvalSnapshot','proposals','proposal','visualOpen','visualActive','builderOpen'].includes(message.view) || JSON.stringify(message).length > 18000) return;
+       || !['atlas','planning','history','schedule','approvalSnapshot','proposals','proposal','visualOpen','visualActive','builderOpen'].includes(message.view) || JSON.stringify(message).length > 18000) return;
    if (pending.has(message.view)) return;
    pending.add(message.view);
    let payload,ok = false;
