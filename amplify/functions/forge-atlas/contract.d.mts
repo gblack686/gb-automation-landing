@@ -8,6 +8,7 @@ export function makeHandler(options: {
   rpc: (body: unknown) => Promise<unknown>;
   document: (agent: string) => Promise<unknown>;
   schedule?: (day: string) => Promise<unknown>;
+  search?: (request: {agent_id:string;query:{query:string;source:string;limit:number}}) => Promise<unknown>;
   proposals: (request: {view: string; query: Record<string, unknown>; agent_id?: string}) => Promise<unknown>;
   approvalSnapshot?: (request: {agent_id: string}) => Promise<unknown>;
   registry?: (claims: {sub:string}) => Promise<unknown>;

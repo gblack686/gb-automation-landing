@@ -4,9 +4,23 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { createHash } from 'node:crypto';
 import { makeHandler, TENANT, operatorBootstrap } from './contract.mjs';
 import { proposalPath, projectProposals } from './proposals.mjs';
+import { runSearch } from './search.mjs';
+import { classifySearch } from './jev-search.mjs';
 
 let secret: {url:string;key:string}|undefined;
 let scheduleAuth: string|undefined;
+let typesafeKey: string|undefined;
+async function typesafeCredentials() {
+ if(!process.env.TYPESAFE_SECRET_ID)throw Error('Jev key unavailable');
+ if(!typesafeKey){
+  const result=await new SecretsManagerClient({}).send(new GetSecretValueCommand({SecretId:process.env.TYPESAFE_SECRET_ID}));
+  const value=JSON.parse(result.SecretString||'{}');
+  const key=value.api_key||value.TYPESAFE_API_KEY;
+  if(typeof key!=='string'||key.length<12||key.length>512)throw Error('Jev key unavailable');
+  typesafeKey=key;
+ }
+ return typesafeKey;
+}
 async function scheduleCredentials() {
  if (!scheduleAuth) {
   const result = await new SecretsManagerClient({}).send(new GetSecretValueCommand({SecretId:process.env.SCHEDULE_SECRET_ID}));
@@ -72,6 +86,43 @@ async function approvalSnapshot(request: {agent_id:string}) {
  if (raw.length > 1000000) throw Error('Approval response too large');
  return JSON.parse(raw);
 }
+async function search(request: {agent_id:string;query:{query:string;source:string;limit:number}}) {
+ const read = async (url:string, options:RequestInit, max=300000) => {
+  const response=await fetch(url,{...options,signal:AbortSignal.timeout(12000)});
+  if(!response.ok)throw Error('Search source unavailable');
+  const body=await response.text();
+  if(body.length>max)throw Error('Search source too large');
+  return JSON.parse(body);
+ };
+ const adapters={
+  classify:async (query:string) => classifySearch(query,await typesafeCredentials()),
+  proposal:async (query:string,agent:string) => {
+   const data:any=await proposals({view:'proposals',query:{search:query,offset:0},agent_id:agent});
+   return {rows:data.rows.map((row:any)=>({id:row.proposal_id,title:row.card_title||row.proposal_id,
+    snippet:row.source_type||'',status:row.state||'',updated_at:row.updated_at||''})),truncated:data.total>data.rows.length};
+  },
+  session:async (query:string,agent:string) => {
+   const secret=await credentials();
+   const data=await read(`${secret.url}/rest/v1/rpc/forge_search_session_intents`,{method:'POST',headers:{apikey:secret.key,Authorization:`Bearer ${secret.key}`,'Content-Type':'application/json'},body:JSON.stringify({p_tenant:TENANT,p_expert:agent,p_query:query,p_limit:40})});
+   if(!Array.isArray(data.rows)||data.rows.length>41)throw Error('Invalid summary source');
+   return {rows:data.rows.map((row:any)=>({id:row.intent_event_id,title:String(row.intent_summary||'').slice(0,120),snippet:row.intent_summary||'',status:row.intent_type||'',updated_at:row.updated_at||''})),truncated:Boolean(data.truncated)};
+  },
+  pr:async (query:string) => {
+   const terms=`${query} is:pr repo:gbauto/gbautomation repo:gblack686/gb-automation-landing`;
+   const data=await read(`https://api.github.com/search/issues?q=${encodeURIComponent(terms)}&per_page=40`,{headers:{Accept:'application/vnd.github+json','User-Agent':'gbautomation-forge-search',...(process.env.GITHUB_TOKEN?{Authorization:`Bearer ${process.env.GITHUB_TOKEN}`}:{})}});
+   if(!Array.isArray(data.items)||data.items.length>40)throw Error('Invalid PR source');
+   const allowed=/^https:\/\/github\.com\/(?:gbauto\/gbautomation|gblack686\/gb-automation-landing)\/pull\/[0-9]+$/;
+   return {rows:data.items.filter((row:any)=>allowed.test(row.html_url||'')).map((row:any)=>({id:String(row.id),title:row.title||'',snippet:row.repository_url?.split('/').slice(-2).join('/')||'',status:row.state||'',updated_at:row.updated_at||'',href:row.html_url||''})),truncated:data.total_count>40};
+  },
+  code:async (query:string) => {
+   const auth=await scheduleCredentials();
+   const data=await read(`https://gregs-mac-mini.tail4e0ac6.ts.net/api/gbauto/forge-graft-search?q=${encodeURIComponent(query)}&limit=40`,{headers:{Authorization:auth,Accept:'application/json'}});
+   if(data.schema_version!=='forge-graft-search.v1'||!Array.isArray(data.results)||data.results.length>40)throw Error('Invalid Graft source');
+   return {rows:data.results.map((row:any)=>({id:row.id,title:row.title,snippet:row.snippet,href:row.href})),coverage:data.coverage};
+  },
+ };
+ return runSearch(request,adapters);
+}
 async function registry(claims: {sub:string}) {
  const key = `${TENANT}/forge-agent-registry.v1.json`;
  const client = new S3Client({});
@@ -98,4 +149,4 @@ async function document(agent:string) {
  const url = await getSignedUrl(client,new GetObjectCommand({...location,ResponseCacheControl:'private, no-store'}),{expiresIn:60});
  return {url,sha256,bytes:head.ContentLength,agent_id:agent,tenant_id:TENANT};
 }
-export const handler = makeHandler({issuer:process.env.COGNITO_ISSUER,rpc,document,proposals,schedule,approvalSnapshot,registry});
+export const handler = makeHandler({issuer:process.env.COGNITO_ISSUER,rpc,document,proposals,search,schedule,approvalSnapshot,registry});

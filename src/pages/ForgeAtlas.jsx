@@ -43,9 +43,10 @@ export default function ForgeAtlas() {
    if (event.source !== frame.current?.contentWindow || event.origin !== 'null'
        || message?.type !== 'forge-atlas.request.v1' || message.channel !== channel
        || typeof message.id !== 'string' || !/^\d{1,9}$/.test(message.id)
-       || !['atlas','planning','history','schedule','approvalSnapshot','proposals','proposal','visualOpen','visualActive','builderOpen'].includes(message.view) || JSON.stringify(message).length > 18000) return;
-   if (pending.has(message.view)) return;
-   pending.add(message.view);
+       || !['atlas','planning','history','schedule','approvalSnapshot','proposals','proposal','search','visualOpen','visualActive','builderOpen'].includes(message.view) || JSON.stringify(message).length > 18000) return;
+   const pendingKey=message.view==='search'?`search:${message.id}`:message.view;
+   if (pending.has(pendingKey) || (message.view==='search'&&[...pending].filter(key=>key.startsWith('search:')).length>=4)) return;
+   pending.add(pendingKey);
    let payload,ok = false;
    try {
     if(message.view==='builderOpen'){
@@ -65,10 +66,16 @@ export default function ForgeAtlas() {
       if(current.avatars?.avatar64){const icon=await visualAsset(current.id,'avatar64',abort.signal);if(icon.asset.sha256!==current.avatars.avatar64.sha256||icon.asset.input_sha256!==r.asset.sha256)throw Error('Wrong avatar lineage');payload.avatar_icon=encode(icon.bytes);payload.avatar_icon_sha256=icon.asset.sha256;}
       if(current.agent_card){const card=await visualAsset(current.id,'agent_card',abort.signal);payload.agent_card=encode(card.bytes);payload.agent_card_sha256=card.asset.sha256;}
      }
-    }else payload = await readAtlas(message.view,message.input,selectedAgent.agent_id);
+    }else {
+     payload = await readAtlas(message.view,message.input,selectedAgent.agent_id);
+     if(message.view==='search' && (payload?.schema_version!=='forge-unified-search.v1'
+       || payload.tenant_id!=='gbautomation' || payload.agent_id!==selectedAgent.agent_id
+       || payload.query!==message.input?.query || !Array.isArray(payload.results) || payload.results.length>40
+       || !payload.coverage || ['proposal','session','pr','code'].some(key=>!['available','empty','stale','unavailable'].includes(payload.coverage[key]))))throw Error('Invalid search result');
+    }
     ok = true;
    } catch { payload = null; }
-   finally { pending.delete(message.view); }
+   finally { pending.delete(pendingKey); }
    if (active) frame.current?.contentWindow?.postMessage({type:'forge-atlas.response.v1',channel,id:message.id,ok,payload},'*');
   };
   window.addEventListener('message',receive);
