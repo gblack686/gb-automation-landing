@@ -1,5 +1,29 @@
 # Private Artist Packet Expert Atlas
 
+## Expert chat from the Working Canvas
+
+The 18-window document's Markdown preview can attach an expert-owned file path
+and SHA-256 to **Discuss this file** in Conversation. The Expert chat tab appears
+only when the authenticated host confirms that the private chat API and a
+Mac Mini worker pulse from the last 60 seconds are available. The opaque iframe sends `start`, `send`, and `poll` through its
+random channel; it receives no database, Cognito, or Hermes credentials.
+
+The `forgeChatRead` and `forgeChatCommand` AppSync operations authenticate the
+deployment issuer, tenant group, Cognito subject, and registered agent on every
+call. They bind the selected agent to a server-owned Hermes profile and persist
+only owner-scoped sessions and turns in service-only Supabase tables. `poll`
+filters by tenant, owner subject, agent, profile, and session ID. The Mac Mini
+worker verifies an attached Markdown file under the exact expert source root,
+rejects symlinks, oversize files, and stale SHA values, then runs a bounded
+`hermes chat` turn with `HERMES_CRON_SESSION=1` and the `clarify` toolset. The
+worker stores the Hermes session ID and resumes it on later turns.
+
+Deploy `20261006030000_forge_expert_chat.sql`, the website backend, the
+matching private Forge document, and the Mini worker before expecting a live
+reply. The worker install and readback order are in
+`gbautomation/apps/forge-expert-chat/README.md`. A failed or absent backend
+capability keeps the Expert chat tab hidden.
+
 ## ShapeShift workspace search
 
 The Conversation window sends a bounded `search` read through the opaque-document host channel. Cognito and the registered agent list bind it to one tenant and expert. The Lambda returns a `forge-unified-search.v1` envelope with proposal, conversation-summary, PR, and Graft code hits, plus explicit coverage for each source. The document gets no credentials or write methods.

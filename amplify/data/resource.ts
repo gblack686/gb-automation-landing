@@ -28,6 +28,10 @@ const schema = a.schema({
     .authorization(allow=>[allow.authenticated()]).handler(a.handler.function(forgeVisual)),
   forgeAtlasRead: a.query().arguments({input:a.json().required()}).returns(a.ref('ForgeAtlasResult'))
     .authorization(allow => [allow.authenticated()]).handler(a.handler.function(forgeAtlas)),
+  forgeChatRead: a.query().arguments({input:a.json().required()}).returns(a.ref('ForgeAtlasResult'))
+    .authorization(allow => [allow.authenticated()]).handler(a.handler.function(forgeAtlas)),
+  forgeChatCommand: a.mutation().arguments({input:a.json().required()}).returns(a.ref('ForgeAtlasResult'))
+    .authorization(allow => [allow.authenticated()]).handler(a.handler.function(forgeAtlas)),
   LangfuseTracePayload: a.customType({
     payload: a.json(),
   }),
