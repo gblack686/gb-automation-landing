@@ -180,8 +180,8 @@ async function document(agent:string) {
  const location = {Bucket:process.env.DOCUMENT_BUCKET,Key:`${TENANT}/${agent}/index.html`};
  const head = await client.send(new HeadObjectCommand(location));
  const sha256 = head.Metadata?.sha256;
- if (!sha256 || !/^[a-f0-9]{64}$/.test(sha256) || !head.ContentLength || head.ContentLength > 16000000) throw Error('Document unavailable');
- const url = await getSignedUrl(client,new GetObjectCommand({...location,ResponseCacheControl:'private, no-store'}),{expiresIn:60});
+ if (!sha256 || !/^[a-f0-9]{64}$/.test(sha256) || !head.ContentLength || head.ContentLength > 16000000 || !head.VersionId) throw Error('Document unavailable');
+ const url = await getSignedUrl(client,new GetObjectCommand({...location,VersionId:head.VersionId,ResponseCacheControl:'private, no-store'}),{expiresIn:60});
  return {url,sha256,bytes:head.ContentLength,agent_id:agent,tenant_id:TENANT};
 }
 async function chatDb(table:string, options:{method?:string;body?:unknown;query?:Record<string,string>}={}) {
