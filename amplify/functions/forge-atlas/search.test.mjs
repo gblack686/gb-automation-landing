@@ -41,3 +41,9 @@ test('Jev hint ranks results when present and falls back on provider errors',asy
  const fallback=await runSearch(request,adapters);
  assert.equal(fallback.classifier,'literal');assert.equal(fallback.results.length,2);
 });
+test('an explicit source prefix is stripped for the matching selected facet',async()=>{
+ let observed='';
+ const result=await runSearch({agent_id:'artist-packet-expert',query:{query:'pr: proof',source:'pr',limit:40}},
+  {pr:async query=>{observed=query;return {rows:[]}}});
+ assert.equal(observed,'proof');assert.equal(result.source,'pr');
+});

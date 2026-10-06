@@ -7,7 +7,7 @@ export async function runSearch(request, adapters) {
  const raw = request.query.query.trim();
  const prefix = /^(proposal|session|pr|code):\s*(.+)$/i.exec(raw);
  const selected = request.query.source === 'all' && prefix ? prefix[1].toLowerCase() : request.query.source;
- const query = prefix && request.query.source === 'all' ? prefix[2].trim() : raw;
+ const query = prefix && (request.query.source === 'all' || request.query.source === prefix[1].toLowerCase()) ? prefix[2].trim() : raw;
  let intentSource = null, classifier = 'literal';
  if(selected === 'all' && typeof adapters.classify === 'function') {
   try { const hint = await adapters.classify(query); if(SEARCH_SOURCES.includes(hint)) { intentSource=hint; classifier='jev'; } }
