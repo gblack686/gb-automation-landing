@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Hub } from 'aws-amplify/utils';
 import { signOut } from 'aws-amplify/auth';
-import { readAtlas } from '../lib/forgeAtlasClient';
+import { readAtlas, expertChat } from '../lib/forgeAtlasClient';
 import ForgeVisualStudio from '../components/ForgeVisualStudio';
 import ForgeExpertBuilder from '../components/ForgeExpertBuilder';
 import {visualRequest,visualAsset} from '../lib/forgeVisualClient';
@@ -40,6 +40,26 @@ export default function ForgeAtlas() {
   const pending = new Set();
   const receive = async event => {
    const message = event.data;
+   if(event.source===frame.current?.contentWindow && event.origin==='null'
+      && message?.type==='forge-chat.request.v1' && message.channel===channel
+      && typeof message.id==='string' && /^\d{1,9}$/.test(message.id)
+      && ['start','send','poll'].includes(message.action) && JSON.stringify(message).length<=10500){
+    const input=message.input;
+    if(!input || typeof input!=='object' || Array.isArray(input)
+       || Object.keys(input).some(key=>!['session_id','content','source'].includes(key)))return;
+    const key=`chat:${message.id}`;
+    if(pending.has(key))return;
+    pending.add(key);
+    let payload=null,ok=false;
+    try{
+     payload=await expertChat(message.action,input,selectedAgent.agent_id);
+     if(payload?.tenant_id!=='gbautomation'||payload.agent_id!==selectedAgent.agent_id)throw Error('Wrong expert');
+     ok=true;
+    }catch{payload=null;}
+    finally{pending.delete(key);}
+    if(active)frame.current?.contentWindow?.postMessage({type:'forge-chat.response.v1',channel,id:message.id,ok,payload},'*');
+    return;
+   }
    if (event.source !== frame.current?.contentWindow || event.origin !== 'null'
        || message?.type !== 'forge-atlas.request.v1' || message.channel !== channel
        || typeof message.id !== 'string' || !/^\d{1,9}$/.test(message.id)
@@ -134,6 +154,14 @@ export default function ForgeAtlas() {
   })();
   return () => { active = false; abort.abort(); stopAuth(); window.removeEventListener('message',receive); };
  },[attempt,channel,selectedAgent]);
+ const frameLoaded=async()=>{
+  if(!html||!selectedAgent)return;
+  try{
+   const capability=await expertChat('capability',{},selectedAgent.agent_id);
+   if(capability?.enabled===true && capability.agent_id===selectedAgent.agent_id
+      && capability.tenant_id==='gbautomation')frame.current?.contentWindow?.postMessage({type:'forge-chat.ready.v1',channel},'*');
+  }catch{/* Chat stays hidden until the backend is deployed. */}
+ };
  if (!html) return <main className="min-h-screen grid place-content-center bg-[#F3F1E7] text-[#191919] p-8 text-center">
   <h1 className="text-3xl font-serif">{selectedAgent?.display_name||'Agent Forge'}</h1>
   <p role="status" className="mt-4">{error || 'Opening your private workspace…'}</p>
@@ -148,7 +176,7 @@ export default function ForgeAtlas() {
   }} style={{color:'#191919',background:'#F3F1E7',padding:'4px 8px',maxWidth:200}}>
    {agents.map(agent=><option key={agent.agent_id} value={agent.agent_id}>{agent.display_name}</option>)}
   </select><a href={`/atlas/${selectedAgent.agent_id}?window=presence`}>Avatar</a>{selectedAgent.agent_id==='artist-packet-expert'&&<button onClick={()=>setVisual({brief:null})}>Avatar jobs</button>}{selectedAgent.agent_id==='artist-packet-expert'&&<button onClick={()=>setBuilder(true)}>Expert Config Builder</button>}{selectedAgent.agent_id==='youtube-intel'&&<a href="/workshop">YouTube health</a>}<a href={`/atlas/${selectedAgent.agent_id}?window=proposals`}>Proposals</a><button onClick={() => signOut()}>Sign out</button></nav>
- </header><iframe ref={frame} name={`forge-atlas:${channel}`} title={`${selectedAgent.display_name} Atlas`} srcDoc={html}
+ </header><iframe ref={frame} name={`forge-atlas:${channel}`} title={`${selectedAgent.display_name} Atlas`} srcDoc={html} onLoad={frameLoaded}
   sandbox="allow-scripts allow-downloads allow-popups allow-popups-to-escape-sandbox"
   referrerPolicy="no-referrer" style={{position:'fixed',inset:'40px 0 0',width:'100%',height:'calc(100dvh - 40px)',border:0,zIndex:100}} />
   {visual&&<ForgeVisualStudio brief={visual.brief} onClose={()=>setVisual(null)} onAdopt={()=>frame.current?.contentWindow?.postMessage({type:'forge-visual.updated.v1',channel},'*')}/>}

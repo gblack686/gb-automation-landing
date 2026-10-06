@@ -7,6 +7,7 @@ import { proposalPath, projectProposals } from './proposals.mjs';
 import { runSearch } from './search.mjs';
 import { classifySearch } from './jev-search.mjs';
 import { projectOperatorData } from './operator-data.mjs';
+import { makeChatHandler } from './chat.mjs';
 
 let secret: {url:string;key:string}|undefined;
 let scheduleAuth: string|undefined;
@@ -183,4 +184,21 @@ async function document(agent:string) {
  const url = await getSignedUrl(client,new GetObjectCommand({...location,ResponseCacheControl:'private, no-store'}),{expiresIn:60});
  return {url,sha256,bytes:head.ContentLength,agent_id:agent,tenant_id:TENANT};
 }
-export const handler = makeHandler({issuer:process.env.COGNITO_ISSUER,rpc,document,proposals,search,operatorData,operatorSubject:process.env.FORGE_LEGACY_OPERATOR_SUB,schedule,approvalSnapshot,registry});
+async function chatDb(table:string, options:{method?:string;body?:unknown;query?:Record<string,string>}={}) {
+ const {url,key}=await credentials();
+ const path=table==='forge_chat_capability'?'forge_chat_sessions':table;
+ const params=new URLSearchParams(table==='forge_chat_capability'?{select:'id',limit:'0'}:options.query || {});
+ const response=await fetch(`${url}/rest/v1/${path}${params.size?'?'+params:''}`,{
+  method:options.method||'GET',headers:{apikey:key,Authorization:`Bearer ${key}`,
+   'Content-Type':'application/json',Prefer:'return=representation'},
+  body:options.body?JSON.stringify(options.body):undefined,signal:AbortSignal.timeout(15000),
+ });
+ if(!response.ok)throw Error('Chat store unavailable');
+ const raw=await response.text();
+ if(raw.length>300000)throw Error('Chat response too large');
+ return table==='forge_chat_capability'?{enabled:true}:JSON.parse(raw);
+}
+const readHandler=makeHandler({issuer:process.env.COGNITO_ISSUER,rpc,document,proposals,search,operatorData,operatorSubject:process.env.FORGE_LEGACY_OPERATOR_SUB,schedule,approvalSnapshot,registry});
+const chatHandler=makeChatHandler({issuer:process.env.COGNITO_ISSUER,registry,db:chatDb});
+export const handler=(event:unknown)=>['forgeChatRead','forgeChatCommand'].includes((event as {fieldName?:string})?.fieldName||'')
+ ?chatHandler(event):readHandler(event);
