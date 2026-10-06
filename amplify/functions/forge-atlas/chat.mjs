@@ -46,6 +46,8 @@ export function makeChatHandler({issuer, registry, db}) {
     const rows=await db('forge_chat_capability',{});
     return {payload:{ok:true,data:{schema_version:'forge-chat-capability.v1',enabled:rows?.enabled===true,tenant_id:TENANT,agent_id:input.agent_id}}};
    }
+   if(['start','send'].includes(input.action) && (await db('forge_chat_capability',{}))?.enabled!==true)
+    throw Error('chat_unavailable');
    if(input.action==='start') {
     if(Object.keys(input).sort().join()!=='action,agent_id')throw Error('invalid_request');
     const id=randomUUID();

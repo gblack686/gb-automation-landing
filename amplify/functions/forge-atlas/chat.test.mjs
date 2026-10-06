@@ -30,12 +30,12 @@ test('chat capability and sends are bound to registration and Cognito owner',asy
  assert.equal(insert.profile,'expert-gbautomation-youtube-intel');
  assert.equal(insert.source_sha256,sha);
  assert.equal((await handler(event('poll',{session_id:sid},other))).payload.error,'agent_access_required');
- assert.equal(calls.length,4);
+ assert.equal(calls.length,5);
 });
 
 test('chat denies foreign paths, forged profiles and wrong operation envelopes',async()=>{
  let reads=0;
- const handler=makeChatHandler({issuer,registry:registration,db:async table=>{reads++;return table==='forge_chat_sessions'?[{id:sid}]:[];}});
+ const handler=makeChatHandler({issuer,registry:registration,db:async table=>{reads++;return table==='forge_chat_capability'?{enabled:true}:table==='forge_chat_sessions'?[{id:sid}]:[];}});
  for(const source of [{path:'experts/gbautomation/other/README.md',sha256:sha},
   {path:'experts/gbautomation/youtube-intel/../other.md',sha256:sha},
   {path:'experts/gbautomation/youtube-intel/README.md',sha256:'bad'}]){
@@ -45,7 +45,7 @@ test('chat denies foreign paths, forged profiles and wrong operation envelopes',
  assert.equal((await handler(forged)).payload.error,'invalid_request');
  const wrong=event('send',{session_id:sid,content:'hello'});wrong.typeName='Query';
  assert.equal((await handler(wrong)).payload.error,'invalid_request');
- assert.equal(reads,3);
+ assert.equal(reads,6);
 });
 
 test('a registered second owner cannot poll the first owner session',async()=>{

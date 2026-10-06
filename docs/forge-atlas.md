@@ -4,8 +4,8 @@
 
 The 18-window document's Markdown preview can attach an expert-owned file path
 and SHA-256 to **Discuss this file** in Conversation. The Expert chat tab appears
-only when the authenticated host confirms that the private chat table and API
-are available. The opaque iframe sends `start`, `send`, and `poll` through its
+only when the authenticated host confirms that the private chat API and a
+Mac Mini worker pulse from the last 60 seconds are available. The opaque iframe sends `start`, `send`, and `poll` through its
 random channel; it receives no database, Cognito, or Hermes credentials.
 
 The `forgeChatRead` and `forgeChatCommand` AppSync operations authenticate the

@@ -186,8 +186,8 @@ async function document(agent:string) {
 }
 async function chatDb(table:string, options:{method?:string;body?:unknown;query?:Record<string,string>}={}) {
  const {url,key}=await credentials();
- const path=table==='forge_chat_capability'?'forge_chat_sessions':table;
- const params=new URLSearchParams(table==='forge_chat_capability'?{select:'id',limit:'0'}:options.query || {});
+ const path=table==='forge_chat_capability'?'forge_chat_worker_heartbeat':table;
+ const params=new URLSearchParams(table==='forge_chat_capability'?{select:'seen_at',name:'eq.mini',limit:'1'}:options.query || {});
  const response=await fetch(`${url}/rest/v1/${path}${params.size?'?'+params:''}`,{
   method:options.method||'GET',headers:{apikey:key,Authorization:`Bearer ${key}`,
    'Content-Type':'application/json',Prefer:'return=representation'},
@@ -196,7 +196,10 @@ async function chatDb(table:string, options:{method?:string;body?:unknown;query?
  if(!response.ok)throw Error('Chat store unavailable');
  const raw=await response.text();
  if(raw.length>300000)throw Error('Chat response too large');
- return table==='forge_chat_capability'?{enabled:true}:JSON.parse(raw);
+ const data=JSON.parse(raw);
+ return table==='forge_chat_capability'?{enabled:Array.isArray(data)&&data.length===1
+  && typeof data[0].seen_at==='string' && Date.now()-Date.parse(data[0].seen_at)<60000
+  && Date.now()-Date.parse(data[0].seen_at)>=-10000}:data;
 }
 const readHandler=makeHandler({issuer:process.env.COGNITO_ISSUER,rpc,document,proposals,search,operatorData,operatorSubject:process.env.FORGE_LEGACY_OPERATOR_SUB,schedule,approvalSnapshot,registry});
 const chatHandler=makeChatHandler({issuer:process.env.COGNITO_ISSUER,registry,db:chatDb});
