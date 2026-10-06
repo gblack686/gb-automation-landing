@@ -14,6 +14,6 @@ test('issuer and secret access are bound to this deployment',() => {
  const stack=new Stack(new App(),'AtlasScope',{env:{region:'us-east-1',account:'123456789012'}});
  assert.match(atlasSecretArn(stack),/:secretsmanager:us-east-1:123456789012:secret:gbautomation\/infrastructure\/supabase\/gbauto-\*$/);
  assert.match(scheduleSecretArn(stack),/:secretsmanager:us-east-1:123456789012:secret:gbautomation\/core\/hermes-chat-basic-auth-\*$/);
- assert.match(typesafeSecretArn(stack),/:secretsmanager:us-east-1:123456789012:secret:gbautomation\/infrastructure\/typesafe-jev-\*$/);
+ assert.match(typesafeSecretArn(stack),/:secretsmanager:us-east-1:123456789012:secret:gbautomation\/typesafe\/api-key-\*$/);
  assert.deepEqual(stack.resolve(atlasIssuer(stack,'us-east-1_example')),{'Fn::Join':['',['https://cognito-idp.us-east-1.',{Ref:'AWS::URLSuffix'},'/us-east-1_example']]});
 });

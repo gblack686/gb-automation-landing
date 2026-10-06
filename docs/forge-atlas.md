@@ -6,7 +6,7 @@ The Conversation window sends a bounded `search` read through the opaque-documen
 
 Proposal hits reuse the expert-owned `agent_os_proposals` projection and the scoped TAC PRD projection. Conversation hits use the service-only `forge_search_session_intents` RPC, which joins summaries to explicitly owned agent sessions and never returns raw transcripts. PR metadata is read from the allowlisted GBAutomation and website repositories. Graft runs on the Mini through a bounded Basic Auth protected sidecar route. Missing sources remain unavailable, not zero matches.
 
-Optional Jev ranking reads `gbautomation/infrastructure/typesafe-jev` in Secrets Manager. The JSON secret must contain `api_key` or `TYPESAFE_API_KEY`. When the secret or provider is unavailable, literal search still works. The SQL migration, Mini sidecar update, Lambda update, and regenerated private Forge document must all be present before live four-source readback.
+Optional Jev ranking reads the existing `gbautomation/typesafe/api-key` secret in Secrets Manager. The secret is a plain API key; JSON values with `api_key` or `TYPESAFE_API_KEY` are also accepted. When the secret or provider is unavailable, literal search still works. The SQL migration, Mini sidecar update, Lambda update, and regenerated private Forge document must all be present before live four-source readback.
 
 `/atlas/artist-packet-expert` hosts the selected Forge document after website
 sign-in. The GBAutomation portal dashboard links to it. The document comes from

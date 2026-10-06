@@ -14,8 +14,12 @@ async function typesafeCredentials() {
  if(!process.env.TYPESAFE_SECRET_ID)throw Error('Jev key unavailable');
  if(!typesafeKey){
   const result=await new SecretsManagerClient({}).send(new GetSecretValueCommand({SecretId:process.env.TYPESAFE_SECRET_ID}));
-  const value=JSON.parse(result.SecretString||'{}');
-  const key=value.api_key||value.TYPESAFE_API_KEY;
+  const raw=result.SecretString||'';
+  let key=raw;
+  if(raw.trim().startsWith('{')){
+   const value=JSON.parse(raw);
+   key=value.api_key||value.TYPESAFE_API_KEY;
+  }
   if(typeof key!=='string'||key.length<12||key.length>512)throw Error('Jev key unavailable');
   typesafeKey=key;
  }
