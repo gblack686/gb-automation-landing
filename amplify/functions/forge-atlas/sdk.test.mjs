@@ -7,10 +7,11 @@ import { build } from 'esbuild';
 test('the locked SDK signs the private GET without network access',async () => {
  const client=new S3Client({region:'us-east-1',credentials:{accessKeyId:'test-access-key',secretAccessKey:'test-secret-key'}});
  try {
-  const url=new URL(await getSignedUrl(client,new GetObjectCommand({Bucket:'forge-test',Key:'gbautomation/artist-packet-expert/index.html',ResponseCacheControl:'private, no-store'}),{expiresIn:60}));
+  const url=new URL(await getSignedUrl(client,new GetObjectCommand({Bucket:'forge-test',Key:'gbautomation/artist-packet-expert/index.html',VersionId:'reviewed-version',ResponseCacheControl:'private, no-store'}),{expiresIn:60}));
   assert.equal(url.hostname,'forge-test.s3.us-east-1.amazonaws.com');
   assert.equal(url.searchParams.get('X-Amz-Expires'),'60');
   assert.equal(url.searchParams.get('response-cache-control'),'private, no-store');
+  assert.equal(url.searchParams.get('versionId'),'reviewed-version');
  } finally {client.destroy();}
 });
 
