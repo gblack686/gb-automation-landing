@@ -187,7 +187,7 @@ export function makeHandler({issuer,rpc,document,proposals,search=async()=>{thro
    if (request.view === 'document') return {payload:{ok:true,data:await document(request.agent_id)}};
    if (request.view === 'search') return {payload:{ok:true,data:await search(request)}};
    if (request.view === 'operatorData') {
-    if(!operatorSubject || request.claims.sub !== operatorSubject)deny('operator_access_required');
+    if(!operatorBootstrap(request.claims.sub,operatorSubject))deny('operator_access_required');
     return {payload:{ok:true,data:await operatorData(request)}};
    }
    if (request.view === 'schedule') {
