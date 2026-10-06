@@ -43,7 +43,7 @@ export default function ForgeAtlas() {
    if (event.source !== frame.current?.contentWindow || event.origin !== 'null'
        || message?.type !== 'forge-atlas.request.v1' || message.channel !== channel
        || typeof message.id !== 'string' || !/^\d{1,9}$/.test(message.id)
-       || !['atlas','planning','history','schedule','approvalSnapshot','proposals','proposal','search','visualOpen','visualActive','builderOpen'].includes(message.view) || JSON.stringify(message).length > 18000) return;
+       || !['atlas','planning','history','schedule','approvalSnapshot','proposals','proposal','search','operatorData','visualOpen','visualActive','builderOpen'].includes(message.view) || JSON.stringify(message).length > 18000) return;
    const pendingKey=message.view==='search'?`search:${message.id}`:message.view;
    if (pending.has(pendingKey) || (message.view==='search'&&[...pending].filter(key=>key.startsWith('search:')).length>=4)) return;
    pending.add(pendingKey);
@@ -72,6 +72,10 @@ export default function ForgeAtlas() {
        || payload.tenant_id!=='gbautomation' || payload.agent_id!==selectedAgent.agent_id
        || payload.query!==message.input?.query || !Array.isArray(payload.results) || payload.results.length>40
        || !payload.coverage || ['proposal','session','pr','code'].some(key=>!['available','empty','stale','unavailable'].includes(payload.coverage[key]))))throw Error('Invalid search result');
+     if(message.view==='operatorData' && (payload?.schema_version!=='forge-operator-data.v1'
+       || payload.tenant_id!=='gbautomation' || payload.agent_id!==selectedAgent.agent_id
+       || payload.surface!==message.input?.surface || !Array.isArray(payload.lanes)
+       || payload.lanes.length>12))throw Error('Invalid operator source');
     }
     ok = true;
    } catch { payload = null; }

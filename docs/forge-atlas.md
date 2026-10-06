@@ -8,6 +8,20 @@ Proposal hits reuse the expert-owned `agent_os_proposals` projection and the sco
 
 Optional Jev ranking reads the existing `gbautomation/typesafe/api-key` secret in Secrets Manager. The secret is a plain API key; JSON values with `api_key` or `TYPESAFE_API_KEY` are also accepted. When the secret or provider is unavailable, literal search still works. The SQL migration, Mini sidecar update, Lambda update, and regenerated private Forge document must all be present before live four-source readback.
 
+## Primary operator workspace
+
+The 18-window Forge document, evolved from the original 16-window design, is
+the primary GBAutomation browser UI. The Hermes WebUI shell is retired. Its
+working Mini sidecar stays online as an independent data service. The
+`operatorData` read accepts only summary, artifact, graph, trace, report,
+knowledge-search and fleet-schedule requests. It requires the exact operator
+Cognito subject as well as normal tenant and registered-agent checks. The
+Lambda holds the Mini Basic Auth credential and projects bounded display rows;
+the opaque document receives no credential, raw SQL or arbitrary sidecar URL.
+Run Console, Artifacts, Second Brain and Schedules render those reads inside
+the existing workspace windows. The old WebUI bookmark should redirect to
+Forge only after the 18-window document and Lambda are deployed and read back.
+
 `/atlas/artist-packet-expert` hosts the selected Forge document after website
 sign-in. The GBAutomation portal dashboard links to it. The document comes from
 a private, versioned S3 object, not from the public site bundle. A 60-second
