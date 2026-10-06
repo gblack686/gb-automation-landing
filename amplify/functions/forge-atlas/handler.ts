@@ -64,7 +64,7 @@ async function rpc(body:unknown) {
  if (raw.length > 1000000) throw Error('Response too large');
  return JSON.parse(raw);
 }
-async function proposals(request: {view:string;query:Record<string,unknown>}) {
+async function proposals(request: {view:string;query:Record<string,unknown>;agent_id?:string}) {
  const secret = await credentials();
  const response = await fetch(`${secret.url}${proposalPath(request)}`,{
   headers:{apikey:secret.key,Authorization:`Bearer ${secret.key}`,Prefer:'count=exact'},
