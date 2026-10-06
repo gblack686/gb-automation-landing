@@ -7,17 +7,25 @@ const base=process.env.FORGE_ATLAS_BASE || 'http://127.0.0.1:5197';
 const output='artifacts/forge-atlas-validation';await mkdir(output,{recursive:true});
 const fixture=`<!doctype html><html><head></head><body><h1>Hosted document fixture</h1><script>
  const channel=document.querySelector('meta[name="forge-host-channel"]').content;let sequence=0;const pending=new Map();
- window.ForgeHost={read(view,input={}){return new Promise((resolve,reject)=>{const id=String(++sequence);setTimeout(()=>{if(pending.delete(id))reject(Error('Timed out'));},10000);pending.set(id,{resolve,reject});parent.postMessage({type:'forge-atlas.request.v1',channel,id,view,input},'*');});}};
- addEventListener('message',e=>{if(e.source!==parent||e.data?.channel!==channel||e.data.type!=='forge-atlas.response.v1')return;const p=pending.get(e.data.id);if(p){pending.delete(e.data.id);e.data.ok?p.resolve(e.data.payload):p.reject(Error('Unavailable'));}});
+ window.ForgeHost={chatReady:false,read(view,input={}){return new Promise((resolve,reject)=>{const id=String(++sequence);setTimeout(()=>{if(pending.delete(id))reject(Error('Timed out'));},10000);pending.set(id,{resolve,reject,type:'forge-atlas.response.v1'});parent.postMessage({type:'forge-atlas.request.v1',channel,id,view,input},'*');});},chat(action,input={}){return new Promise((resolve,reject)=>{const id=String(++sequence);setTimeout(()=>{if(pending.delete(id))reject(Error('Timed out'));},10000);pending.set(id,{resolve,reject,type:'forge-chat.response.v1'});parent.postMessage({type:'forge-chat.request.v1',channel,id,action,input},'*');});}};
+ addEventListener('message',e=>{if(e.source!==parent||e.data?.channel!==channel)return;if(e.data.type==='forge-chat.ready.v1'){ForgeHost.chatReady=true;return;}const p=pending.get(e.data.id);if(p&&p.type===e.data.type){pending.delete(e.data.id);e.data.ok?p.resolve(e.data.payload):p.reject(Error('Unavailable'));}});
  </script></body></html>`;
 const html=process.env.FORGE_ATLAS_HTML ? await readFile(process.env.FORGE_ATLAS_HTML,'utf8') : fixture;
 const sha256=createHash('sha256').update(html).digest('hex');
 const url='https://fixture-bucket.s3.us-east-1.amazonaws.com/gbautomation/artist-packet-expert/index.html';
-let mismatch=false,fail=false;const requests=[];
+let mismatch=false,fail=false;const requests=[],chatRequests=[];
 const browser=await chromium.launch({headless:true,...(process.env.PLAYWRIGHT_EXECUTABLE?{executablePath:process.env.PLAYWRIGHT_EXECUTABLE}:{channel:process.env.PLAYWRIGHT_CHANNEL||'chrome'})});
 const page=await browser.newPage({viewport:{width:1500,height:1000}});const errors=[];page.on('pageerror',e=>errors.push(e.message));
 page.setDefaultTimeout(20000);
-await page.route('**/src/lib/forgeAtlasClient.js*',r=>r.fulfill({contentType:'application/javascript',body:`export async function readAtlas(view,query={},agent_id=null) {const response=await fetch('/__atlas_fixture',{method:'POST',body:JSON.stringify({view,query,agent_id})});if(!response.ok)throw Error('Unavailable');return response.json();}`}));
+await page.route('**/src/lib/forgeAtlasClient.js*',r=>r.fulfill({contentType:'application/javascript',body:`export async function readAtlas(view,query={},agent_id=null) {const response=await fetch('/__atlas_fixture',{method:'POST',body:JSON.stringify({view,query,agent_id})});if(!response.ok)throw Error('Unavailable');return response.json();}export async function expertChat(action,input,agent_id){const response=await fetch('/__chat_fixture',{method:'POST',body:JSON.stringify({action,input,agent_id})});if(!response.ok)throw Error('Chat unavailable');return response.json();}`}));
+await page.route('**/__chat_fixture',async route=>{
+ const request=route.request().postDataJSON();chatRequests.push(request);
+ const envelope={tenant_id:'gbautomation',agent_id:'artist-packet-expert',session_id:'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb'};
+ if(request.action==='capability')return route.fulfill({json:{schema_version:'forge-chat-capability.v1',enabled:true,tenant_id:envelope.tenant_id,agent_id:envelope.agent_id}});
+ if(request.action==='start')return route.fulfill({json:{...envelope,status:'ready'}});
+ if(['send','poll'].includes(request.action))return route.fulfill({json:{...envelope,status:'ready',messages:[{role:'user',content:'Summarize the file'},{role:'assistant',content:'A bounded answer.'}]}});
+ return route.fulfill({status:400,body:'invalid chat action'});
+});
 await page.route('**/__atlas_fixture',async route=>{
  const request=route.request().postDataJSON();requests.push(request);
  if(request.view==='agents')return route.fulfill({json:{schema_version:'forge-agent-registry.v1',tenant_id:'gbautomation',source:'s3',agents:[{agent_id:'artist-packet-expert',display_name:'Artist Packet Expert',config_sha256:'a'.repeat(64),status:'active'}]}});
@@ -41,6 +49,11 @@ try {
  assert.equal(await iframe.getAttribute('sandbox'),'allow-scripts allow-downloads allow-popups allow-popups-to-escape-sandbox');
  const frame=await iframe.contentFrame();
  await frame.locator('body').waitFor();
+ await frame.locator('body').evaluate(()=>new Promise((resolve,reject)=>{if(ForgeHost.chatReady)return resolve();const poll=setInterval(()=>{if(ForgeHost.chatReady){clearInterval(poll);clearTimeout(timeout);resolve();}},50);const timeout=setTimeout(()=>{clearInterval(poll);reject(Error('Chat capability missing'));},10000);}));
+ const chat=await frame.locator('body').evaluate(async()=>{const started=await ForgeHost.chat('start',{});const sent=await ForgeHost.chat('send',{session_id:started.session_id,content:'Summarize the file',source:{path:'resources/deployments/artist-packet-expert/README.md',sha256:'a'.repeat(64)}});return sent;});
+ assert.equal(chat.messages[1].content,'A bounded answer.');
+ assert(chatRequests.some(r=>r.action==='send'&&r.agent_id==='artist-packet-expert'&&r.input.source.path==='resources/deployments/artist-packet-expert/README.md'));
+ checks.push('Expert chat crosses the authenticated host with selected-agent and source binding');
  const result=await frame.locator('body').evaluate(async()=>window.ForgeHost.read('history',{view:'sessions'}));
  assert.equal(result.private_fixture,'private runtime value');checks.push('Authenticated host transport returns a bounded private read to the sandbox');
  const proposals=await frame.locator('body').evaluate(async()=>window.ForgeHost.read('proposals',{search:'brief',offset:0,state:'gated'}));
