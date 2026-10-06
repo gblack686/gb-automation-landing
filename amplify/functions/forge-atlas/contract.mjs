@@ -37,12 +37,16 @@ export function requestFor(event, issuer) {
  let input = event.arguments.input;
  if (typeof input === 'string') { try { input = JSON.parse(input); } catch { deny('invalid_request'); } }
  if (!object(input) || JSON.stringify(input).length > 4096 || Object.keys(input).some(k => !['view','query','agent_id'].includes(k))
-     || !['agents','document','atlas','planning','history','schedule','approvalSnapshot','proposals','proposal','search'].includes(input.view)
+     || !['agents','document','atlas','planning','history','schedule','approvalSnapshot','proposals','proposal','search','operatorData'].includes(input.view)
      || (input.agent_id !== undefined && !agentSlug.test(input.agent_id))
      || (input.view === 'agents' && input.agent_id !== undefined)) deny('invalid_request');
  const query = input.query || {};
  if (!object(query)) deny('invalid_request');
- if (!['history','schedule','proposals','proposal','search'].includes(input.view) && Object.keys(query).length) deny('invalid_request');
+ if (!['history','schedule','proposals','proposal','search','operatorData'].includes(input.view) && Object.keys(query).length) deny('invalid_request');
+ if (input.view === 'operatorData' && (Object.keys(query).some(k => !['surface','q','date'].includes(k))
+     || !['summary','artifacts','graph','traces','reports','search','fleetSchedule'].includes(query.surface)
+     || (query.surface === 'search' ? typeof query.q !== 'string' || query.q.trim().length < 2 || query.q.length > 120 || /[\x00-\x1f\x7f]/.test(query.q) : query.q !== undefined)
+     || (query.surface === 'fleetSchedule' ? typeof query.date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(query.date) || Number.isNaN(Date.parse(`${query.date}T12:00:00Z`)) : query.date !== undefined))) deny('invalid_request');
  if (input.view === 'search' && (Object.keys(query).sort().join() !== 'limit,query,source'
      || typeof query.query !== 'string' || query.query.trim().length < 2 || query.query.length > 240
      || /[\x00-\x1f\x7f]/.test(query.query) || /^\s*[*%_]+\s*$/.test(query.query)
@@ -161,7 +165,7 @@ export function project(request, raw, now = new Date().toISOString()) {
   captured_at:now,source:'supabase',prds,cards,artifacts:[]};
 }
 
-export function makeHandler({issuer,rpc,document,proposals,search=async()=>{throw Error('Search source unavailable');},schedule=async()=>{throw Error('Schedule source unavailable');},approvalSnapshot=async()=>{throw Error('Approval source unavailable');},registry=async claims=>[{
+export function makeHandler({issuer,rpc,document,proposals,search=async()=>{throw Error('Search source unavailable');},operatorData=async()=>{throw Error('Operator source unavailable');},operatorSubject='',schedule=async()=>{throw Error('Schedule source unavailable');},approvalSnapshot=async()=>{throw Error('Approval source unavailable');},registry=async claims=>[{
  tenant_id:TENANT,agent_id:EXPERT,display_name:'Artist Packet Expert',config_sha256:CONFIG_SHA,subjects:[claims.sub],status:'active'
 }]}) {
  return async event => {
@@ -182,6 +186,10 @@ export function makeHandler({issuer,rpc,document,proposals,search=async()=>{thro
    request.config_sha256=selected.config_sha256;
    if (request.view === 'document') return {payload:{ok:true,data:await document(request.agent_id)}};
    if (request.view === 'search') return {payload:{ok:true,data:await search(request)}};
+   if (request.view === 'operatorData') {
+    if(!operatorSubject || request.claims.sub !== operatorSubject)deny('operator_access_required');
+    return {payload:{ok:true,data:await operatorData(request)}};
+   }
    if (request.view === 'schedule') {
     const profile=request.agent_id==='youtube-intel'?'expert-gbautomation-youtube-intel':request.agent_id;
     return {payload:{ok:true,data:projectSchedule(await schedule(request.query.date),request.agent_id,profile,request.query.date)}};

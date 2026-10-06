@@ -6,6 +6,7 @@ import { makeHandler, TENANT, operatorBootstrap, project } from './contract.mjs'
 import { proposalPath, projectProposals } from './proposals.mjs';
 import { runSearch } from './search.mjs';
 import { classifySearch } from './jev-search.mjs';
+import { projectOperatorData } from './operator-data.mjs';
 
 let secret: {url:string;key:string}|undefined;
 let scheduleAuth: string|undefined;
@@ -45,6 +46,20 @@ async function schedule(day:string) {
  const raw = await response.text();
  if (raw.length > 3000000) throw Error('Schedule response too large');
  return JSON.parse(raw);
+}
+async function operatorData(request:{agent_id:string;query:{surface:string;q?:string;date?:string}}) {
+ const {surface,q,date}=request.query;
+ if(surface==='fleetSchedule')return projectOperatorData(surface,await schedule(date||''),request.agent_id);
+ const params=new URLSearchParams({tenant:'gbautomation',limit:'20'});
+ if(surface==='search'&&q)params.set('q',q);
+ const auth=await scheduleCredentials();
+ const response=await fetch(`https://gregs-mac-mini.tail4e0ac6.ts.net/api/gbauto/${surface}?${params}`,{
+  headers:{Authorization:auth,Accept:'application/json'},signal:AbortSignal.timeout(15000),
+ });
+ if(!response.ok)throw Error('Operator source unavailable');
+ const raw=await response.text();
+ if(raw.length>500000)throw Error('Operator source too large');
+ return projectOperatorData(surface,JSON.parse(raw),request.agent_id);
 }
 async function credentials() {
  if (!secret) {
@@ -168,4 +183,4 @@ async function document(agent:string) {
  const url = await getSignedUrl(client,new GetObjectCommand({...location,ResponseCacheControl:'private, no-store'}),{expiresIn:60});
  return {url,sha256,bytes:head.ContentLength,agent_id:agent,tenant_id:TENANT};
 }
-export const handler = makeHandler({issuer:process.env.COGNITO_ISSUER,rpc,document,proposals,search,schedule,approvalSnapshot,registry});
+export const handler = makeHandler({issuer:process.env.COGNITO_ISSUER,rpc,document,proposals,search,operatorData,operatorSubject:process.env.FORGE_LEGACY_OPERATOR_SUB,schedule,approvalSnapshot,registry});
