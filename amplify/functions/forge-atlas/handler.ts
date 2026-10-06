@@ -2,7 +2,7 @@ import { GetSecretValueCommand, SecretsManagerClient } from '@aws-sdk/client-sec
 import { GetObjectCommand, HeadObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { createHash } from 'node:crypto';
-import { makeHandler, TENANT, operatorBootstrap } from './contract.mjs';
+import { makeHandler, TENANT, operatorBootstrap, project } from './contract.mjs';
 import { proposalPath, projectProposals } from './proposals.mjs';
 import { runSearch } from './search.mjs';
 import { classifySearch } from './jev-search.mjs';
@@ -86,7 +86,7 @@ async function approvalSnapshot(request: {agent_id:string}) {
  if (raw.length > 1000000) throw Error('Approval response too large');
  return JSON.parse(raw);
 }
-async function search(request: {agent_id:string;query:{query:string;source:string;limit:number}}) {
+async function search(request: {agent_id:string;config_sha256?:string;query:{query:string;source:string;limit:number}}) {
  const read = async (url:string, options:RequestInit, max=300000) => {
   const response=await fetch(url,{...options,signal:AbortSignal.timeout(12000)});
   if(!response.ok)throw Error('Search source unavailable');
@@ -97,9 +97,24 @@ async function search(request: {agent_id:string;query:{query:string;source:strin
  const adapters={
   classify:async (query:string) => classifySearch(query,await typesafeCredentials()),
   proposal:async (query:string,agent:string) => {
-   const data:any=await proposals({view:'proposals',query:{search:query,offset:0},agent_id:agent});
-   return {rows:data.rows.map((row:any)=>({id:row.proposal_id,title:row.card_title||row.proposal_id,
-    snippet:row.source_type||'',status:row.state||'',updated_at:row.updated_at||''})),truncated:data.total>data.rows.length};
+   const [cards,plans]=await Promise.allSettled([
+    proposals({view:'proposals',query:{search:query,offset:0},agent_id:agent}),
+    rpc({p_tenant:TENANT,p_expert:agent,p_view:'planning',p_session_key:null,p_message_key:null,p_after:null}),
+   ]);
+   if(cards.status==='rejected'&&plans.status==='rejected')throw Error('Proposal sources unavailable');
+   const rows:any[]=[];let truncated=false;
+   if(cards.status==='fulfilled'){
+    const data:any=cards.value;
+    rows.push(...data.rows.map((row:any)=>({id:row.proposal_id,title:row.card_title||row.proposal_id,
+     snippet:row.source_type||'',status:row.state||'',updated_at:row.updated_at||''})));
+    truncated ||= data.total>data.rows.length;
+   }
+   if(plans.status==='fulfilled'){
+    const data:any=project({view:'planning',agent_id:agent,config_sha256:request.config_sha256},plans.value);
+    rows.push(...data.prds.filter((row:any)=>`${row.title} ${row.path}`.toLowerCase().includes(query.toLowerCase())).map((row:any)=>({id:row.prd_id,title:row.title,snippet:'TAC plan · '+row.path,status:row.status,updated_at:row.updated_at||''})));
+    truncated ||= data.prds.length===100;
+   }
+   return {rows:rows.slice(0,41),coverage:cards.status==='rejected'||plans.status==='rejected'?'stale':'available',truncated:truncated||rows.length>40};
   },
   session:async (query:string,agent:string) => {
    const secret=await credentials();

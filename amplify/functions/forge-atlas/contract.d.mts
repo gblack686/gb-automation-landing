@@ -3,6 +3,7 @@ export const TENANT: 'gbautomation';
 export const CONFIG_SHA: string;
 export function operatorBootstrap(sub: string, allowedSub: string | undefined): unknown | null;
 export function projectApprovalSnapshot(raw: unknown, agent: string, now?: string): unknown;
+export function project(request: {view:string;agent_id:string;config_sha256?:string}, raw: unknown): unknown;
 export function makeHandler(options: {
   issuer: string | undefined;
   rpc: (body: unknown) => Promise<unknown>;

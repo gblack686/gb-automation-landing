@@ -4,7 +4,7 @@
 
 The Conversation window sends a bounded `search` read through the opaque-document host channel. Cognito and the registered agent list bind it to one tenant and expert. The Lambda returns a `forge-unified-search.v1` envelope with proposal, conversation-summary, PR, and Graft code hits, plus explicit coverage for each source. The document gets no credentials or write methods.
 
-Proposal hits reuse the expert-owned `agent_os_proposals` projection. Conversation hits use the service-only `forge_search_session_intents` RPC, which joins summaries to explicitly owned agent sessions and never returns raw transcripts. PR metadata is read from the allowlisted GBAutomation and website repositories. Graft runs on the Mini through a bounded Basic Auth protected sidecar route. Missing sources remain unavailable, not zero matches.
+Proposal hits reuse the expert-owned `agent_os_proposals` projection and the scoped TAC PRD projection. Conversation hits use the service-only `forge_search_session_intents` RPC, which joins summaries to explicitly owned agent sessions and never returns raw transcripts. PR metadata is read from the allowlisted GBAutomation and website repositories. Graft runs on the Mini through a bounded Basic Auth protected sidecar route. Missing sources remain unavailable, not zero matches.
 
 Optional Jev ranking reads `gbautomation/infrastructure/typesafe-jev` in Secrets Manager. The JSON secret must contain `api_key` or `TYPESAFE_API_KEY`. When the secret or provider is unavailable, literal search still works. The SQL migration, Mini sidecar update, Lambda update, and regenerated private Forge document must all be present before live four-source readback.
 
