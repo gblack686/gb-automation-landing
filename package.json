@@ -34,6 +34,7 @@
     "@gltf-transform/extensions": "^4.2.1",
     "@gltf-transform/functions": "^4.2.1",
     "@supabase/supabase-js": "^2.110.8",
+    "@typesafe-ai/sdk": "^0.6.0",
     "aws-amplify": "^6.15.7",
     "fflate": "0.8.2",
     "lucide-react": "^0.552.0",

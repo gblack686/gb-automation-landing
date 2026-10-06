@@ -1,0 +1,1 @@
+export function runSearch(request: {agent_id:string;query:{query:string;source:string;limit:number}}, adapters: Record<string,(query:string,agent:string,limit:number)=>Promise<unknown>>): Promise<unknown>;
