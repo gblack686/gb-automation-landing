@@ -13,7 +13,7 @@ const fixture=`<!doctype html><html><head></head><body><h1>Hosted document fixtu
 const html=process.env.FORGE_ATLAS_HTML ? await readFile(process.env.FORGE_ATLAS_HTML,'utf8') : fixture;
 const sha256=createHash('sha256').update(html).digest('hex');
 const url='https://fixture-bucket.s3.us-east-1.amazonaws.com/gbautomation/artist-packet-expert/index.html';
-let mismatch=false,fail=false;const requests=[],chatRequests=[];
+let mismatch=false,fail=false,capabilityAttempts=0;const requests=[],chatRequests=[];
 const browser=await chromium.launch({headless:true,...(process.env.PLAYWRIGHT_EXECUTABLE?{executablePath:process.env.PLAYWRIGHT_EXECUTABLE}:{channel:process.env.PLAYWRIGHT_CHANNEL||'chrome'})});
 const page=await browser.newPage({viewport:{width:1500,height:1000}});const errors=[];page.on('pageerror',e=>errors.push(e.message));
 page.setDefaultTimeout(20000);
@@ -21,7 +21,10 @@ await page.route('**/src/lib/forgeAtlasClient.js*',r=>r.fulfill({contentType:'ap
 await page.route('**/__chat_fixture',async route=>{
  const request=route.request().postDataJSON();chatRequests.push(request);
  const envelope={tenant_id:'gbautomation',agent_id:'artist-packet-expert',session_id:'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb'};
- if(request.action==='capability')return route.fulfill({json:{schema_version:'forge-chat-capability.v1',enabled:true,tenant_id:envelope.tenant_id,agent_id:envelope.agent_id}});
+ if(request.action==='capability'){
+  if(++capabilityAttempts===1)return route.fulfill({status:503,body:'Transient capability failure'});
+  return route.fulfill({json:{schema_version:'forge-chat-capability.v1',enabled:true,tenant_id:envelope.tenant_id,agent_id:envelope.agent_id}});
+ }
  if(request.action==='start')return route.fulfill({json:{...envelope,status:'ready'}});
  if(['send','poll'].includes(request.action))return route.fulfill({json:{...envelope,status:'ready',messages:[{role:'user',content:'Summarize the file'},{role:'assistant',content:'A bounded answer.'}]}});
  return route.fulfill({status:400,body:'invalid chat action'});
@@ -40,7 +43,7 @@ await page.route('**/__atlas_fixture',async route=>{
 await page.route(url,route=>route.fulfill({contentType:'text/html',body:html,headers:{'Access-Control-Allow-Origin':base}}));
 const checks=[];
 try {
- await page.goto(base+'/atlas/artist-packet-expert',{waitUntil:'domcontentloaded',timeout:60000});
+ await page.goto(base+'/atlas/artist-packet-expert?window=chat',{waitUntil:'domcontentloaded',timeout:60000});
  const iframe=page.locator('iframe[title="Artist Packet Expert Atlas"]');await iframe.waitFor();
  assert.equal(await page.getByRole('combobox',{name:'Registered agents'}).inputValue(),'artist-packet-expert');
  assert(requests.some(r=>r.view==='agents'));
@@ -49,7 +52,10 @@ try {
  assert.equal(await iframe.getAttribute('sandbox'),'allow-scripts allow-downloads allow-popups allow-popups-to-escape-sandbox');
  const frame=await iframe.contentFrame();
  await frame.locator('body').waitFor();
+ assert.equal(await frame.locator('meta[name="forge-start-window"]').getAttribute('content'),'chat');
  await frame.locator('body').evaluate(()=>new Promise((resolve,reject)=>{if(ForgeHost.chatReady)return resolve();const poll=setInterval(()=>{if(ForgeHost.chatReady){clearInterval(poll);clearTimeout(timeout);resolve();}},50);const timeout=setTimeout(()=>{clearInterval(poll);reject(Error('Chat capability missing'));},10000);}));
+ assert(capabilityAttempts>=2);
+ checks.push('Chat deep link is bound to the iframe; a transient capability failure retries successfully');
  const chat=await frame.locator('body').evaluate(async()=>{const started=await ForgeHost.chat('start',{});const sent=await ForgeHost.chat('send',{session_id:started.session_id,content:'Summarize the file',source:{path:'resources/deployments/artist-packet-expert/README.md',sha256:'a'.repeat(64)}});return sent;});
  assert.equal(chat.messages[1].content,'A bounded answer.');
  assert(chatRequests.some(r=>r.action==='send'&&r.agent_id==='artist-packet-expert'&&r.input.source.path==='resources/deployments/artist-packet-expert/README.md'));
