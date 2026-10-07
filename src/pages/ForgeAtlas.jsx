@@ -10,6 +10,7 @@ const CSP = "default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval'; style
 const YOUTUBE_REPORT_ORIGIN = 'https://6ab9d13b0b89b5644e56270a--gbautoxyz.netlify.app';
 export default function ForgeAtlas() {
  const frame = useRef(null);
+ const chatProbeVersion = useRef(0);
  const [channel] = useState(() => crypto.randomUUID());
  const [html,setHtml] = useState('');
  const [error,setError] = useState('');
@@ -18,6 +19,7 @@ export default function ForgeAtlas() {
  const [builder,setBuilder]=useState(()=>new URLSearchParams(window.location.search).get('window')==='tasks');
  const [agents,setAgents]=useState([]);
  const [selectedAgent,setSelectedAgent]=useState(null);
+ useEffect(() => () => { chatProbeVersion.current += 1; }, [html, selectedAgent]);
  useEffect(()=>{
   let active=true;
   readAtlas('agents').then(data=>{
@@ -146,7 +148,7 @@ export default function ForgeAtlas() {
        throw Error('Document binding changed');
     }
     const requestedWindow=new URLSearchParams(window.location.search).get('window');
-    const startWindow = ['proposals','presence'].includes(requestedWindow) ? `<meta name="forge-start-window" content="${requestedWindow}">` : '';
+    const startWindow = ['proposals','presence','chat'].includes(requestedWindow) ? `<meta name="forge-start-window" content="${requestedWindow}">` : '';
     const policy = selectedAgent.agent_id === 'youtube-intel'
       ? CSP.replace("frame-src 'self' about: blob:",`frame-src 'self' about: blob: ${YOUTUBE_REPORT_ORIGIN}`) : CSP;
     if (active) setHtml(content.replace('<head>',`<head><meta http-equiv="Content-Security-Policy" content="${policy}"><meta name="forge-host-channel" content="${channel}">${startWindow}`));
@@ -156,11 +158,20 @@ export default function ForgeAtlas() {
  },[attempt,channel,selectedAgent]);
  const frameLoaded=async()=>{
   if(!html||!selectedAgent)return;
-  try{
-   const capability=await expertChat('capability',{},selectedAgent.agent_id);
-   if(capability?.enabled===true && capability.agent_id===selectedAgent.agent_id
-      && capability.tenant_id==='gbautomation')frame.current?.contentWindow?.postMessage({type:'forge-chat.ready.v1',channel},'*');
-  }catch{/* Chat stays hidden until the backend is deployed. */}
+  const version=++chatProbeVersion.current;
+  for(const delay of [0,1500,4000,8000]){
+   if(delay)await new Promise(resolve=>setTimeout(resolve,delay));
+   if(version!==chatProbeVersion.current)return;
+   try{
+    const capability=await expertChat('capability',{},selectedAgent.agent_id);
+    if(version!==chatProbeVersion.current)return;
+    if(capability?.enabled===true && capability.agent_id===selectedAgent.agent_id
+       && capability.tenant_id==='gbautomation'){
+     frame.current?.contentWindow?.postMessage({type:'forge-chat.ready.v1',channel},'*');
+     return;
+    }
+   }catch{/* Retry a transient capability failure while this frame remains active. */}
+  }
  };
  if (!html) return <main className="min-h-screen grid place-content-center bg-[#F3F1E7] text-[#191919] p-8 text-center">
   <h1 className="text-3xl font-serif">{selectedAgent?.display_name||'Agent Forge'}</h1>

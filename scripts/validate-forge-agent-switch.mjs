@@ -16,7 +16,7 @@ const browser = await chromium.launch({headless:true,channel:process.env.PLAYWRI
 const page = await browser.newPage({viewport:{width:1440,height:900}});
 const errors = [];
 page.on('pageerror', error => errors.push(error.stack || error.message));
-await page.route('**/src/lib/forgeAtlasClient.js*', route => route.fulfill({contentType:'application/javascript',body:`export async function readAtlas(view,query={},agent_id=null){return (await fetch('/__atlas_switch_fixture',{method:'POST',body:JSON.stringify({view,query,agent_id})})).json()}`}));
+await page.route('**/src/lib/forgeAtlasClient.js*', route => route.fulfill({contentType:'application/javascript',body:`export async function readAtlas(view,query={},agent_id=null){return (await fetch('/__atlas_switch_fixture',{method:'POST',body:JSON.stringify({view,query,agent_id})})).json()} export async function expertChat(){return {enabled:false}}`}));
 await page.route('**/__atlas_switch_fixture', route => {
  const {view,agent_id,query} = route.request().postDataJSON();
  if (view === 'agents') return route.fulfill({json:{agents:[
