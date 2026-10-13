@@ -19,15 +19,15 @@ export default function HeroIntroVideo() {
           controls={started}
           playsInline
           preload="none"
-          src="/media/greg-intro-v2.mp4"
-          poster="/media/greg-intro-v2-poster.jpg"
+          src="/media/greg-intro-v3.mp4"
+          poster="/media/greg-intro-v3-poster.jpg"
           width="720"
           height="1280"
           aria-label="Greg introduces GBAutomation and how to work together"
           onPlay={() => setStarted(true)}
           onError={() => setFailed(true)}
         >
-          <a href="/media/greg-intro-v2.mp4">Watch Greg's introduction</a>
+          <a href="/media/greg-intro-v3.mp4">Watch Greg's introduction</a>
         </video>
         {!started && !failed && (
           <button className="hero-intro-play" type="button" onClick={play} aria-label="Play Greg's introduction, 1 minute 47 seconds">
@@ -37,7 +37,7 @@ export default function HeroIntroVideo() {
         )}
       </div>
       <figcaption id="hero-intro-caption">
-        {failed ? <span role="status">Having trouble playing? <a href="/media/greg-intro-v2.mp4">Open the video.</a></span> : 'Meet Greg and see how we can work together.'}
+        {failed ? <span role="status">Having trouble playing? <a href="/media/greg-intro-v3.mp4">Open the video.</a></span> : 'Meet Greg and see how we can work together.'}
       </figcaption>
     </figure>
   );

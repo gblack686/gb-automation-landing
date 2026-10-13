@@ -69,7 +69,7 @@ def main():
         video = page.locator('.hero-intro-video video')
         check('Introduction replaces placeholder with local player', video.count() == 1 and page.locator('#home-hero-copy iframe').count() == 0 and 'Intro video coming soon' not in page.locator('.hero-intro-video').inner_text())
         check('Video waits for user playback with sound', video.evaluate('(v)=>!v.autoplay && !v.loop && !v.muted && v.paused && v.preload==="none" && v.playsInline'))
-        check('No video download before play', not any('/media/greg-intro-v2.mp4' in url for url in requests))
+        check('No video download before play', not any('/media/greg-intro-v3.mp4' in url for url in requests))
         check('Video poster loads', video.evaluate('async (v)=>{const img=new Image();img.src=v.poster;await img.decode();return img.naturalWidth===540 && img.naturalHeight===960}'))
         order = page.locator('.particle-home-content > *').evaluate_all('(xs)=>xs.map(e=>e.id || (e.classList.contains("home-hero")?"hero":e.tagName.toLowerCase()))')
         check('Ten sections with gallery beneath Zero Touch', order == ['hero', 'agent-forge', 'portfolio', 'section', 'features', 'zero-touch', 'gallery', 'process', 'contact', 'footer'])
