@@ -1,189 +1,141 @@
-# GB Automation Landing Page
+# GB Automation Website and Forge
 
-A modern, responsive landing page for GB Automation's Agentic Systems Program built with React, Tailwind CSS, and AWS Amplify.
+## Purpose
 
-## Features
+GB Automation's public Agentic Systems Program website and authenticated Forge
+workspace. The public landing page explains the offer and collects contact
+requests. Forge provides expert workspaces, proposals, private resources and
+review surfaces. Existing Pi owners execute Mini work; this frontend does not
+start another owner or expose arbitrary Mini routes.
 
-- 📱 Fully responsive design
-- 🎨 Modern UI with Tailwind CSS
-- ⚡ Fast performance with Vite
-- 📝 Contact form with AWS Amplify backend
-- 🔒 Secure API with DynamoDB storage
-- ☁️ Deploy to AWS with one command
+## Status
 
-## Tech Stack
+Active application using React 18.3, Vite 7, Tailwind CSS and AWS Amplify Gen 2
+(Cognito, AppSync, Lambda, DynamoDB and private S3). Source provenance:
+`source_kind: gbautomation_local`, `source_label: GB Automation`.
 
-- **Frontend:** React 19, Tailwind CSS
-- **Build Tool:** Vite
-- **Backend:** AWS Amplify Gen 2
-- **Database:** DynamoDB (via Amplify Data)
-- **Hosting:** AWS Amplify Hosting
-- **Form Management:** React Hook Form
+Hosted resource delivery, bounded Pi requests and benchmark reads are source
+prepared and disabled by default. They require separate deployment and real
+identity/infrastructure acceptance. Local fixtures and CI do not prove live
+activation. See [hosted resources](docs/hosted-resources.md).
 
-## Getting Started
+## Repository Layout
 
-### Prerequisites
+| Path | Responsibility |
+| --- | --- |
+| `src/` | React routes, public components and Forge UI |
+| `amplify/` | Backend definitions, functions and colocated `*.test.mjs` tests |
+| `scripts/` | Browser validators, deterministic build and operator tools |
+| `docs/` | Feature contracts and operational guides |
+| `public/` | Public static assets and intentionally published reports |
+| `.github/workflows/` | Source checks; distinct from production deployment |
+| `amplify.yml` | Reviewed Amplify build/deployment recipe |
+| `artifacts/` | Local generated proof; do not publish private receipts here |
 
-- Node.js 18+ (preferably 20+)
-- npm or pnpm
-- AWS Account
-- AWS CLI configured
+There is no separate top-level tests directory: backend tests are colocated,
+browser checks live in `scripts/`, and the landing smoke is `test-site.js`.
 
-### Installation
+## Setup
 
-1. Clone the repository:
-```bash
-git clone <your-repo-url>
-cd gb-automation-landing
+Use Node 24.22.1 for the hosted-access candidate (the validated runtime) and the
+committed npm lockfile:
+
+```sh
+npm ci
+npm run dev -- --host 127.0.0.1
 ```
 
-2. Install dependencies:
-```bash
-npm install
-```
+Vite normally serves `http://127.0.0.1:5173`. An existing environment's
+`amplify_outputs.json` supplies browser-safe endpoint/auth identifiers. Private
+server configuration is described in the feature docs; never put service keys
+in Vite variables or source. AWS Secrets Manager is the secret authority.
+Offline browser validators use synthetic fixtures. Live sign-in needs an
+authorized deployed backend; starting Vite does not provision it.
 
-3. Start the development server:
-```bash
-npm run dev
-```
+## Validation
 
-The app will be available at `http://localhost:5173`
+Run the relevant source checks from the repository root:
 
-## AWS Amplify Setup
-
-### Deploy to AWS Sandbox (Development)
-
-1. Make sure AWS CLI is configured with your credentials:
-```bash
-aws configure
-```
-
-2. Deploy to AWS Amplify sandbox:
-```bash
-npm run amplify:sandbox
-```
-
-This will:
-- Create a DynamoDB table for contact submissions
-- Set up a GraphQL API
-- Generate API credentials
-- Create `amplify_outputs.json` with configuration
-
-### Deploy to Production
-
-For production deployment, you have two options:
-
-#### Option 1: Git-based CI/CD (Recommended)
-
-1. Push your code to GitHub
-2. Go to [AWS Amplify Console](https://console.aws.amazon.com/amplify)
-3. Connect your repository
-4. Amplify will automatically build and deploy on every push
-
-#### Option 2: Manual Deployment
-
-```bash
+```sh
+node --test amplify/functions/forge-atlas/*.test.mjs
+node --test amplify/functions/forge-workshop/*.test.mjs
+npx tsc --noEmit -p amplify/tsconfig.json
 npm run build
-npm run amplify:deploy
 ```
 
-## Project Structure
+With a local Vite server running, `node scripts/validate-hosted-resources.mjs`
+and `node scripts/validate-forge-atlas.mjs` exercise browser fixtures; follow
+their documented fixture variables and base URL in the script source.
+`npm test`, `npm run test:tenant` and `npm run test:client-hub` cover other
+surfaces. Run the checks for the changed feature; do not treat an unrelated
+landing smoke as authenticated Forge acceptance. Keep failed attempts and
+exact source/test identities in the private implementation evidence.
 
-```
-gb-automation-landing/
-├── amplify/
-│   ├── backend.ts           # Amplify backend definition
-│   ├── data/
-│   │   └── resource.ts      # Data model (DynamoDB schema)
-│   └── tsconfig.json
-├── src/
-│   ├── components/
-│   │   ├── Hero.jsx         # Hero section
-│   │   ├── Features.jsx     # Features/deliverables
-│   │   ├── Process.jsx      # 90-day process
-│   │   ├── Pricing.jsx      # Pricing section
-│   │   ├── ContactForm.jsx  # Contact form with validation
-│   │   └── Footer.jsx       # Footer
-│   ├── App.jsx              # Main app component
-│   ├── main.jsx             # React entry point
-│   └── index.css            # Tailwind imports
-├── package.json
-├── tailwind.config.js
-├── vite.config.ts
-└── README.md
-```
+## Operations
 
-## Environment Variables
+`npm run dev` runs the local UI; `npm run preview` serves the built frontend.
+Development output is in the terminal. Authorized deployed backend diagnostics
+use the existing Amplify and Lambda logs; never paste secrets into receipts.
 
-No environment variables needed! Amplify automatically generates `amplify_outputs.json` with all necessary configuration.
+Production uses Amplify Hosting. At the hosted-access review on 2026-11-05,
+auto-build was disabled: pushing a branch did not deploy it. `amplify.yml` uses
+the Amplify pipeline deployment command in its hosting environment. Both
+`npm run amplify:sandbox` and the misleadingly named `npm run amplify:deploy`
+provision a sandbox (the latter adds `--once`); neither is a local-only build
+nor this production release procedure. They require explicit cloud authority.
 
-## Available Scripts
+For release, pin merged source, preserve the previous website/backend/config
+tuple, apply only the approved delta, and run real identity/private-object
+checks. Roll back compatible paired versions and disable new admissions first.
+Keep immutable objects and job ledgers. The scoped hosted rollback is in
+[hosted resources](docs/hosted-resources.md); detailed private release evidence
+lives in GBAutomation's approved plan, not this public repo.
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run amplify:sandbox` - Deploy to AWS sandbox environment
-- `npm run amplify:deploy` - One-time deployment to AWS
+## Agent Notes
 
-## Data Model
+Read [AGENTS.md](AGENTS.md) and the relevant feature guide before editing:
 
-The contact form stores submissions in DynamoDB with the following schema:
+- [Forge Atlas](docs/forge-atlas.md)
+- [Private resources and hosted capabilities](docs/hosted-resources.md)
+- [Forge proposals](docs/forge-proposals-web.md)
+- [Forge Workshop](docs/forge-workshop.md)
+- [Visual generation](docs/forge-visual-generation.md)
+- [Tenant portals](docs/tenant-portals.md)
+- [Particle homepage](docs/particle-homepage.md)
 
-```typescript
-{
-  id: string (auto-generated)
-  name: string (required)
-  email: string (required)
-  company: string (optional)
-  phone: string (optional)
-  projectDescription: string (required)
-  message: string (optional)
-  status: enum ["new", "contacted", "qualified", "closed"]
-  createdAt: datetime (auto)
-  updatedAt: datetime (auto)
-}
-```
+Check for concurrent writers. Preserve another session's reports and existing
+dirty files. Do not include private `artifacts/` evidence in this public repo.
 
-## Customization
+## Ownership
 
-### Colors
+Owner: Greg Black / GB Automation. GitHub pull requests track source review.
+The authoritative private implementation and acceptance record for hosted
+access is GBAutomation's `second-brain/plans/2026-11-04-ui-hosted-access/`.
+Forge owns browser/auth boundaries; the existing Pi owner owns Mini execution.
+This is a GB Automation output reusing documented patterns, not original TAC canon.
 
-Edit `tailwind.config.js` to change the color scheme:
+## Branch migration
 
-```javascript
-theme: {
-  extend: {
-    colors: {
-      primary: '#2563eb',
-      secondary: '#7c3aed',
-    },
-  },
-}
-```
+Default branch: `master`
 
-### Content
+Migration blocker: The existing Amplify production branch tracks master. A
+rename requires a coordinated hosting configuration migration and rollback;
+those cloud/branch changes are outside the approved hosted-access source work.
+Retain master until that migration is separately reviewed.
 
-Update content in the component files:
-- `src/components/Hero.jsx` - Hero section text
-- `src/components/Features.jsx` - Features and deliverables
-- `src/components/Process.jsx` - Process phases
-- `src/components/Pricing.jsx` - Pricing details
+## Contact form and customization
 
-## Deployment Checklist
+The Amplify data model in `amplify/data/resource.ts` is authoritative for contact
+submissions. The landing form collects name, email, company, phone, project
+description and message; follow the model for status and server timestamps.
+Check that schema when changing fields or notifications.
 
-- [ ] Update email in `ContactForm.jsx` and `Footer.jsx`
-- [ ] Add custom domain in Amplify Console
-- [ ] Configure SSL certificate
-- [ ] Set up email notifications (optional)
-- [ ] Add Google Analytics (optional)
-- [ ] Test contact form submissions
-- [ ] Check mobile responsiveness
-- [ ] Run accessibility audit
+Public offer content lives in `src/components/Hero.jsx`, `Features.jsx`,
+`Process.jsx`, `Pricing.jsx`, `ContactForm.jsx` and `Footer.jsx`. Theme settings
+live in `tailwind.config.js` and the source styles. Validate mobile layout,
+accessibility and contact behavior after changing the landing page. Domain,
+analytics and notification changes need their own release scope.
 
-## License
+## License and support
 
-Copyright © 2025 GB Automation. All rights reserved.
-
-## Support
-
-For questions or issues, contact greg@gbautomation.xyz
+Copyright GB Automation. All rights reserved. Contact greg@gbautomation.xyz.
