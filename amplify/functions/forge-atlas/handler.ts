@@ -11,6 +11,7 @@ import { makeChatHandler } from './chat.mjs';
 import { makeResourceService, validateResourceManifest } from './resources.mjs';
 import { makeResourceStorage } from './resource-storage.mjs';
 import { makePiJobHandler } from './pi-jobs.mjs';
+import {makeLiveAppHandler} from './live-apps.mjs';
 
 let secret: {url:string;key:string}|undefined;
 let scheduleAuth: string|undefined;
@@ -205,7 +206,14 @@ async function chatDb(table:string, options:{method?:string;body?:unknown;query?
   && Date.now()-Date.parse(data[0].seen_at)>=-10000}:data;
 }
 const resourceStorage=makeResourceStorage({client:new S3Client({}),bucket:process.env.DOCUMENT_BUCKET,sign:getSignedUrl});
-const resources=makeResourceService({enabled:process.env.FORGE_RESOURCES_ENABLED==='true',...resourceStorage});
+const liveApps=makeLiveAppHandler({issuer:process.env.COGNITO_ISSUER,operatorSubject:process.env.FORGE_LEGACY_OPERATOR_SUB,registry,
+ config:process.env.FORGE_LIVE_APP_CONFIG?JSON.parse(process.env.FORGE_LIVE_APP_CONFIG):undefined,loadManifest:resourceStorage.loadManifest,
+ credential:async()=>{
+  const secretId=process.env.FORGE_LIVE_APP_SECRET_ARN;if(!secretId)throw Error('App unavailable');
+  const result=await new SecretsManagerClient({}).send(new GetSecretValueCommand({SecretId:secretId}));
+  return result.SecretString||'';
+ }});
+const resources=makeResourceService({enabled:process.env.FORGE_RESOURCES_ENABLED==='true',liveAppAvailable:liveApps.available,...resourceStorage});
 const readHandler=makeHandler({issuer:process.env.COGNITO_ISSUER,rpc,document,proposals,search,operatorData,resources,operatorSubject:process.env.FORGE_LEGACY_OPERATOR_SUB,schedule,approvalSnapshot,registry});
 const chatHandler=makeChatHandler({issuer:process.env.COGNITO_ISSUER,registry,db:chatDb});
 const piHandler=makePiJobHandler({issuer:process.env.COGNITO_ISSUER,operatorSubject:process.env.FORGE_LEGACY_OPERATOR_SUB,
@@ -231,5 +239,6 @@ const piHandler=makePiJobHandler({issuer:process.env.COGNITO_ISSUER,operatorSubj
  }});
 export const handler=(event:unknown)=>{
  const field=(event as {fieldName?:string;info?:{fieldName?:string}})?.fieldName||(event as {info?:{fieldName?:string}})?.info?.fieldName||'';
+ if(field==='forgeAppRead')return liveApps.handle(event);
  return ['forgePiRead','forgePiCommand'].includes(field)?piHandler(event):['forgeChatRead','forgeChatCommand'].includes(field)?chatHandler(event):readHandler(event);
 };

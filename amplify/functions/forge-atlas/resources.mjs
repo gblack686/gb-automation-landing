@@ -68,7 +68,7 @@ export function validateResourceManifest(raw, expectedSha, now = Date.now()) {
 
 // Authentication and registered-agent checks run in makeHandler before this adapter.
 // The catalog is a private fleet view for the exact operator, with canonical owners.
-export function makeResourceService({enabled = false, loadManifest, describeArtifact, clock = Date.now}) {
+export function makeResourceService({enabled = false, loadManifest, describeArtifact, liveAppAvailable=()=>false, clock = Date.now}) {
  return async request => {
   if (!enabled || !resourceQuery(request.view,request.query)) fail();
   const now = clock();
@@ -100,7 +100,7 @@ export function makeResourceService({enabled = false, loadManifest, describeArti
     content_sha256:row.delivery_mode==='artifact'?row.content_sha256:null,
     observed_at:row.observed_at,expires_at:row.expires_at,
     freshness:Date.parse(row.expires_at)>now?'fresh':'stale',
-    availability:row.delivery_mode==='artifact'?'saved_result':'unavailable',
+    availability:row.delivery_mode==='artifact'?'saved_result':liveAppAvailable(row,manifest.sha256)?'live_read':'unavailable',
    }))};
  };
 }

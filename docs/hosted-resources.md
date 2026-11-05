@@ -81,3 +81,26 @@ status checks, 8 isolated PostgreSQL tests, 28 Pi delivery/exporter tests and 22
 host regression tests. The embedded SQL engine is not a multi-connection race
 proof. Live identity, broker subscription and cloud permissions remain release
 acceptance work. Private receipts are in the GBAutomation hosted-access plan.
+
+## App-specific live reads
+
+`forgeAppRead` adds one separately disabled `benchmark-comparison` capability on
+the canonical Pi resource. A configured `FORGE_LIVE_APP_CONFIG` pins the HTTPS
+Mini origin, source commit, receipt hash, resource ID and current catalog digest.
+`FORGE_LIVE_APP_SECRET_ARN` identifies one AWS Secrets Manager secret containing
+a dedicated HMAC key. Its exact read grant exists only when configured. Neither
+setting is populated by default. No new account or secret has been created.
+
+After the normal operator/registry checks, the server verifies the current
+private catalog binding and signs a 30-second request for the fixed
+`/hosted-apps/read` route. It forwards no user header, URL, cookie or bearer token.
+Redirects, returned cookies, replaced bytes, identity mismatches, oversize
+responses and unknown fields fail closed. Host errors become a generic
+unavailable state. At most 200 reviewed historical attempts are returned.
+
+The gallery renders metrics as React text, preserving unknown measurements,
+event time, receipt identity and retrieval time. It does not frame a Mini app,
+change its CSP or enable WebSockets. Refresh is manual and last-good data is
+labeled after an outage. Interactive saved Bokeh HTML uses the existing opaque
+artifact sandbox. The MM2 edge is an exact release prerequisite, not a completed
+live transport claim. All other app routes remain disabled.

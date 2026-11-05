@@ -22,8 +22,10 @@ const observed='2026-11-01T10:00:00Z';
 const rows=Array.from({length:61},(_,i)=>({id:`ui.result-${i}`,title:`UI result ${i}`,kind:'ui',owner_expert:i<60?'youtube-intel':'news-agent',
  delivery_mode:'artifact',source_commit:'a'.repeat(40),content_sha256:asset.sha256,observed_at:observed,expires_at:'2026-11-01T10:15:00Z',artifact:asset}));
 rows.push({...rows[0],id:'kb.handbook',title:'Expert handbook',kind:'kb'});
+const appEnabled=process.env.FORGE_APP_FIXTURE_ENABLED==='1';let appReads=0,appFail=false;
+if(appEnabled){const live=rows[59];delete live.artifact;delete live.content_sha256;Object.assign(live,{owner_expert:'pi',delivery_mode:'live_app',app_id:'benchmark-comparison'});}
 const raw=Buffer.from(JSON.stringify({schema_version:'hosted-resource-delivery.v1',tenant_id:'gbautomation',source_commit:'a'.repeat(40),captured_at:observed,resources:rows}));
-const service=makeResourceService({enabled:true,loadManifest:async()=>({bytes:raw,sha256:hash(raw)}),describeArtifact:async()=>({url:artifactURL})});
+const service=makeResourceService({enabled:true,liveAppAvailable:row=>appEnabled&&row.id==='ui.result-59',loadManifest:async()=>({bytes:raw,sha256:hash(raw)}),describeArtifact:async()=>({url:artifactURL})});
 const handler=makeHandler({issuer,operatorSubject:operator,resources:service});
 const requests=[],checks=[];let fail=false,tamper=false,expired=false,external=0;
 const piEnabled=process.env.FORGE_PI_FIXTURE_ENABLED==='1';const piRequests=[],piJobs=new Map();let piLoseAck=true;
@@ -31,6 +33,10 @@ const browser=await chromium.launch({headless:true,channel:process.env.PLAYWRIGH
 const page=await browser.newPage({viewport:{width:1400,height:1000}});page.setDefaultTimeout(20000);
 const errors=[];page.on('pageerror',error=>errors.push(error.message));
 await page.route('https://untrusted.invalid/**',route=>{external++;return route.abort();});
+await page.route('**/src/lib/forgeLiveAppClient.js*',route=>route.fulfill({contentType:'application/javascript',body:`
+ export async function readLiveBenchmark(){const r=await fetch('/__live_app_fixture');if(!r.ok)throw Error('The Mini live view is unavailable. Saved results remain in the gallery.');return r.json();}`}));
+await page.route('**/__live_app_fixture',route=>{appReads++;return appFail?route.fulfill({status:503,body:'Unavailable'}):route.fulfill({json:{
+ retrieved_at:new Date().toISOString(),source_commit:'a'.repeat(40),receipt_sha256:'b'.repeat(64),attempts:[{attempt_id:'fixture-1',task_id:'ui-enhancement',lane:'pi',occurred_at:observed,acceptance:'pass',tokens:1234,worker_seconds:30,elapsed_seconds:null}]}});});
 await page.route('**/src/lib/forgePiClient.js*',route=>route.fulfill({contentType:'application/javascript',body:`
  export async function piRequest(action,input,agentId){const r=await fetch('/__pi_fixture',{method:'POST',body:JSON.stringify({action,input,agentId})});if(!r.ok)throw Error('Unavailable');return r.json();}`}));
 await page.route('**/__pi_fixture',async route=>{
@@ -117,6 +123,20 @@ try{
  await page.getByRole('alert').filter({hasText:'Refresh the catalog'}).waitFor();
  await page.getByRole('button',{name:'Back to gallery'}).click();expired=false;
  checks.push('Replaced object bytes and expired signed-link descriptors never render');
+ if(appEnabled){
+  await dialog.getByLabel('Expert owner').selectOption('pi');await dialog.getByRole('button',{name:'Open live view',exact:true}).click();
+  const live=page.getByRole('region',{name:'Read-only benchmark view'});await live.getByRole('cell',{name:'1,234'}).waitFor();
+  const initialReads=appReads;assert(initialReads>=1&&initialReads<=2); // React StrictMode may mount twice in the development fixture.
+  await page.waitForTimeout(1100);assert.equal(appReads,initialReads);
+  assert(await page.getByRole('dialog').evaluate(el=>el.scrollWidth<=el.clientWidth));
+  await page.screenshot({path:`${output}/live-mobile.png`,fullPage:true});
+  await page.setViewportSize({width:1400,height:1000});await page.screenshot({path:`${output}/live-desktop.png`,fullPage:true});
+  appFail=true;await live.getByRole('button',{name:'Refresh live view'}).click();await live.getByRole('alert').filter({hasText:'last successful read'}).waitFor();
+  await live.getByRole('cell',{name:'1,234'}).waitFor();assert.equal(appReads,initialReads+1);
+  await page.getByRole('button',{name:'Back to gallery'}).click();await dialog.getByLabel('Expert owner').selectOption('youtube-intel');
+  await dialog.getByRole('button',{name:'Open saved result'}).first().waitFor();
+  checks.push('Read-only live metrics preserve unknowns, mobile layout, explicit refresh and last-good offline state; zero idle polling');
+ }
  fail=true;await dialog.getByRole('button',{name:'Refresh',exact:true}).click();
  await dialog.getByRole('alert').filter({hasText:'last successful read'}).waitFor();
  assert.equal(await dialog.locator('.resource-grid > li').count(),50);
