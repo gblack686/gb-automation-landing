@@ -8,8 +8,9 @@ import { runSearch } from './search.mjs';
 import { classifySearch } from './jev-search.mjs';
 import { projectOperatorData } from './operator-data.mjs';
 import { makeChatHandler } from './chat.mjs';
-import { makeResourceService } from './resources.mjs';
+import { makeResourceService, validateResourceManifest } from './resources.mjs';
 import { makeResourceStorage } from './resource-storage.mjs';
+import { makePiJobHandler } from './pi-jobs.mjs';
 
 let secret: {url:string;key:string}|undefined;
 let scheduleAuth: string|undefined;
@@ -203,9 +204,32 @@ async function chatDb(table:string, options:{method?:string;body?:unknown;query?
   && typeof data[0].seen_at==='string' && Date.now()-Date.parse(data[0].seen_at)<60000
   && Date.now()-Date.parse(data[0].seen_at)>=-10000}:data;
 }
-const resources=makeResourceService({enabled:process.env.FORGE_RESOURCES_ENABLED==='true',
- ...makeResourceStorage({client:new S3Client({}),bucket:process.env.DOCUMENT_BUCKET,sign:getSignedUrl})});
+const resourceStorage=makeResourceStorage({client:new S3Client({}),bucket:process.env.DOCUMENT_BUCKET,sign:getSignedUrl});
+const resources=makeResourceService({enabled:process.env.FORGE_RESOURCES_ENABLED==='true',...resourceStorage});
 const readHandler=makeHandler({issuer:process.env.COGNITO_ISSUER,rpc,document,proposals,search,operatorData,resources,operatorSubject:process.env.FORGE_LEGACY_OPERATOR_SUB,schedule,approvalSnapshot,registry});
 const chatHandler=makeChatHandler({issuer:process.env.COGNITO_ISSUER,registry,db:chatDb});
-export const handler=(event:unknown)=>['forgeChatRead','forgeChatCommand'].includes((event as {fieldName?:string})?.fieldName||'')
- ?chatHandler(event):readHandler(event);
+const piHandler=makePiJobHandler({issuer:process.env.COGNITO_ISSUER,operatorSubject:process.env.FORGE_LEGACY_OPERATOR_SUB,
+ enabled:process.env.FORGE_PI_JOBS_ENABLED==='true',registry,
+ rpc:async(name,args)=>{
+  if(!['forge_pi_capability','forge_pi_submit','forge_pi_read'].includes(name))throw Error('Pi RPC unavailable');
+  const {url,key}=await credentials();
+  const response=await fetch(`${url}/rest/v1/rpc/${name}`,{method:'POST',redirect:'error',
+    headers:{apikey:key,Authorization:`Bearer ${key}`,'Content-Type':'application/json'},body:JSON.stringify(args),signal:AbortSignal.timeout(15000)});
+  if(!response.ok||!response.body)throw Error('Pi store unavailable');
+  const chunks:Uint8Array[]=[];let size=0;const reader=response.body.getReader();
+  try{while(true){const {value,done}=await reader.read();if(done)break;size+=value.length;
+    if(size>16384)throw Error('Pi response limit');chunks.push(value);}}
+  finally{await reader.cancel().catch(()=>{});reader.releaseLock();}
+  return JSON.parse(Buffer.concat(chunks).toString('utf8'));
+ },
+ authorizeResource:async(expert,action,resource,catalog)=>{
+  const manifest=await resourceStorage.loadManifest();
+  if(manifest.sha256!==catalog)return false;
+  const data=validateResourceManifest(manifest.bytes,manifest.sha256);
+  return data.resources.some((row:{id:string;owner_expert:string|null;delivery_mode:string})=>row.id===resource&&row.owner_expert===expert
+    && (action==='catalog.refresh'||row.delivery_mode==='artifact'));
+ }});
+export const handler=(event:unknown)=>{
+ const field=(event as {fieldName?:string;info?:{fieldName?:string}})?.fieldName||(event as {info?:{fieldName?:string}})?.info?.fieldName||'';
+ return ['forgePiRead','forgePiCommand'].includes(field)?piHandler(event):['forgeChatRead','forgeChatCommand'].includes(field)?chatHandler(event):readHandler(event);
+};

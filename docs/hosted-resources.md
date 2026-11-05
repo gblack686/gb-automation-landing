@@ -53,3 +53,31 @@ acceptance.
 Rollback disables `FORGE_RESOURCES_ENABLED` and restores the previous paired
 website build and private object versions. Retain all immutable artifacts,
 manifests and job ledgers. No object deletion is required.
+
+## Bounded Pi requests
+
+`FORGE_PI_JOBS_ENABLED` independently defaults to false. `forgePiRead` and
+`forgePiCommand` reuse the Cognito operator and registered expert checks. Every
+submission binds the resource owner, displayed catalog digest, fixed action and
+stable UUID request key. The API derives the actor and input digest; callers
+cannot select a URL, credential, command, path or budget. Broker credentials
+remain server-side and no lease token appears in browser responses.
+
+The gallery stores its pending request identity in session storage before
+submission. A lost response offers retry with that same identity. Status is an
+explicit read; there is no idle browser polling. Refresh publishes a prepared,
+reviewed bundle. The YouTube report action uses the existing Pi admission budget
+and returns native acceptance, not invented report completion or publication.
+
+The additive GBAutomation migration `20261105090000_forge_pi_jobs.sql` creates a
+separate disabled namespace with atomic claims, expiring leases and fenced
+completion. It has not been deployed. Private Realtime publication and policy
+enablement are separate release steps. Pi owns a delivery ledger inside its
+existing process and reconciles uncertain effects before replay. Rollback first
+disables commands, retains both ledgers and reconciles claimed/uncertain work.
+
+Phase 3 proof includes 45 website API tests, synthetic browser retries and
+status checks, 8 isolated PostgreSQL tests, 28 Pi delivery/exporter tests and 22
+host regression tests. The embedded SQL engine is not a multi-connection race
+proof. Live identity, broker subscription and cloud permissions remain release
+acceptance work. Private receipts are in the GBAutomation hosted-access plan.

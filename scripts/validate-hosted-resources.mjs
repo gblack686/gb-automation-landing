@@ -26,10 +26,24 @@ const raw=Buffer.from(JSON.stringify({schema_version:'hosted-resource-delivery.v
 const service=makeResourceService({enabled:true,loadManifest:async()=>({bytes:raw,sha256:hash(raw)}),describeArtifact:async()=>({url:artifactURL})});
 const handler=makeHandler({issuer,operatorSubject:operator,resources:service});
 const requests=[],checks=[];let fail=false,tamper=false,expired=false,external=0;
+const piEnabled=process.env.FORGE_PI_FIXTURE_ENABLED==='1';const piRequests=[],piJobs=new Map();let piLoseAck=true;
 const browser=await chromium.launch({headless:true,channel:process.env.PLAYWRIGHT_CHANNEL||'chrome'});
 const page=await browser.newPage({viewport:{width:1400,height:1000}});page.setDefaultTimeout(20000);
 const errors=[];page.on('pageerror',error=>errors.push(error.message));
 await page.route('https://untrusted.invalid/**',route=>{external++;return route.abort();});
+await page.route('**/src/lib/forgePiClient.js*',route=>route.fulfill({contentType:'application/javascript',body:`
+ export async function piRequest(action,input,agentId){const r=await fetch('/__pi_fixture',{method:'POST',body:JSON.stringify({action,input,agentId})});if(!r.ok)throw Error('Unavailable');return r.json();}`}));
+await page.route('**/__pi_fixture',async route=>{
+ const request=route.request().postDataJSON();piRequests.push(request);
+ if(request.action==='capability')return route.fulfill({json:{schema_version:'forge-pi-capability.v1',tenant_id:'gbautomation',agent_id:request.agentId,
+   enabled:piEnabled&&request.agentId==='youtube-intel',actions:piEnabled?['projection.refresh','expert.report']:[]}});
+ if(request.action==='status')return route.fulfill({json:piJobs.get(request.input.idempotency_key)||null});
+ const key=request.input.idempotency_key;
+ if(!piJobs.has(key))piJobs.set(key,{schema_version:'forge-pi-job.v1',tenant_id:'gbautomation',agent_id:request.agentId,idempotency_key:key,
+  job_id:'dddddddd-dddd-4ddd-8ddd-dddddddddddd',state:'accepted',result:{kind:'native-run',run_id:'yt_maint_browser_fixture'}});
+ if(piLoseAck){piLoseAck=false;return route.fulfill({status:503,body:'Lost acknowledgement'});}
+ return route.fulfill({json:piJobs.get(key)});
+});
 await page.route('**/src/lib/forgeAtlasClient.js*',route=>route.fulfill({contentType:'application/javascript',body:`
  export async function readAtlas(view,query={},agent_id=null){const r=await fetch('/__resource_fixture',{method:'POST',body:JSON.stringify({view,query,agent_id})});if(!r.ok)throw Error('Unavailable');return r.json();}
  export async function expertChat(){return {enabled:false};}`}));
@@ -62,6 +76,23 @@ try{
  await dialog.getByLabel('Find a resource').fill('');await dialog.getByRole('button',{name:'Search',exact:true}).click();
  await dialog.getByRole('button',{name:'Open saved result'}).first().waitFor();
  checks.push('Exact expert filters, bounded pagination, search and empty state');
+ if(piEnabled){
+  const panel=page.getByRole('region',{name:'Pi actions'});
+  await panel.getByLabel('Pi action',{exact:true}).selectOption('expert.report');
+  await panel.getByRole('button',{name:'Request from Pi'}).click();
+  await panel.getByRole('alert').filter({hasText:'outcome could not be confirmed'}).waitFor();
+  const key=piRequests.find(request=>request.action==='expert.report').input.idempotency_key;
+  await panel.getByRole('button',{name:'Retry same request'}).click();
+  await panel.getByRole('status').filter({hasText:'Admitted by Pi'}).waitFor();
+  assert.equal(piJobs.size,1);assert.equal(piRequests.filter(request=>request.action==='expert.report').length,2);
+  assert(piRequests.filter(request=>request.action==='expert.report').every(request=>request.input.idempotency_key===key));
+  await panel.getByRole('button',{name:'Check request status'}).click();
+  await panel.getByRole('status').filter({hasText:'yt_maint_browser_fixture'}).waitFor();
+  const count=piRequests.length;await page.waitForTimeout(1200);assert.equal(piRequests.length,count);
+  const saved=await page.evaluate(()=>JSON.parse(sessionStorage.getItem('forge.pi.pending.youtube-intel')));
+  assert.equal(saved.idempotency_key,key);
+  checks.push('Pi lost-ack retry keeps one identity, admission is labeled separately from completion, status is explicit and no idle polling occurs');
+ }
  await dialog.getByLabel('Resource type').selectOption('kb');await dialog.getByRole('heading',{name:'Expert handbook'}).waitFor();
  await dialog.getByLabel('Resource type').selectOption('ui');await dialog.getByRole('button',{name:'Open saved result'}).first().waitFor();
  await page.screenshot({path:`${output}/desktop.png`,fullPage:true});
@@ -96,4 +127,8 @@ try{
  assert.deepEqual(errors,[]);
  await writeFile(`${output}/browser.json`,JSON.stringify({status:'pass',scope:'Synthetic authenticated transport and private-object fixtures; no production acceptance',checks,requests:requests.length,externalArtifactRequests:external},null,2)+'\n');
  console.log(JSON.stringify({status:'pass',checks}));
+}catch(error){
+ await page.screenshot({path:`${output}/failure.png`,fullPage:true}).catch(()=>{});
+ console.error(JSON.stringify({errors,piRequests,piPanelText:await page.locator('.resource-actions').allTextContents()}));
+ throw error;
 }finally{await browser.close();}

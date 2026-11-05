@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { readResourceCatalog, readResourceArtifact, resourceDocument } from '../lib/forgeResourceClient';
 import './ForgeResourceGallery.css';
+import ForgePiActions from './ForgePiActions';
 
 export default function ForgeResourceGallery({agentId,onClose,initialKind='ui',initialOwner=''}) {
  const dialog=useRef(null),artifactAbort=useRef(null),returnFocus=useRef(null);
@@ -51,6 +52,7 @@ export default function ForgeResourceGallery({agentId,onClose,initialKind='ui',i
    {error&&<p role="alert" className="resource-warning">{error}</p>}
    <p role="status" aria-live="polite">{loading?'Loading resources…':data?`${data.total} resources${data.captured_at?' · Catalog captured '+new Date(data.captured_at).toLocaleString():''}`:'Resources unavailable.'}</p>
    {data&&!data.rows.length&&!loading&&<p>No resources match these filters.</p>}
+   {owner&&data&&<ForgePiActions key={owner} agentId={owner} rows={data.rows} catalogSha={data.catalog_sha256} onPublished={()=>setAttempt(n=>n+1)} />}
    <ul className="resource-grid">{data?.rows.map(row=><li key={row.id}>
     <p className="resource-owner">{row.owner_expert||'Unassigned'}</p><h3>{row.title}</h3>{row.description&&<p>{row.description}</p>}
     <p className="resource-meta">{row.freshness==='stale'?'Stale capture':'Captured'} · {new Date(row.observed_at).toLocaleString()}</p>

@@ -41,6 +41,7 @@ atlasDocuments.grantRead(backend.forgeAtlas.resources.lambda, 'gbautomation/forg
 // Private resource delivery is a separately enabled read capability. No write grant.
 atlasDocuments.grantRead(backend.forgeAtlas.resources.lambda, 'gbautomation/resources/*');
 backend.forgeAtlas.addEnvironment('FORGE_RESOURCES_ENABLED',process.env.FORGE_RESOURCES_ENABLED==='true'?'true':'false');
+backend.forgeAtlas.addEnvironment('FORGE_PI_JOBS_ENABLED',process.env.FORGE_PI_JOBS_ENABLED==='true'?'true':'false');
 backend.forgeAtlas.addEnvironment('DOCUMENT_BUCKET', atlasDocuments.bucketName);
 backend.forgeAtlas.addEnvironment('COGNITO_ISSUER', atlasIssuer(atlasStack,backend.auth.resources.userPool.userPoolId));
 if (process.env.FORGE_LEGACY_OPERATOR_SUB) backend.forgeAtlas.addEnvironment('FORGE_LEGACY_OPERATOR_SUB', process.env.FORGE_LEGACY_OPERATOR_SUB);
