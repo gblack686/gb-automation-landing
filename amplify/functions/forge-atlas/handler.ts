@@ -8,6 +8,8 @@ import { runSearch } from './search.mjs';
 import { classifySearch } from './jev-search.mjs';
 import { projectOperatorData } from './operator-data.mjs';
 import { makeChatHandler } from './chat.mjs';
+import { makeResourceService } from './resources.mjs';
+import { makeResourceStorage } from './resource-storage.mjs';
 
 let secret: {url:string;key:string}|undefined;
 let scheduleAuth: string|undefined;
@@ -201,7 +203,9 @@ async function chatDb(table:string, options:{method?:string;body?:unknown;query?
   && typeof data[0].seen_at==='string' && Date.now()-Date.parse(data[0].seen_at)<60000
   && Date.now()-Date.parse(data[0].seen_at)>=-10000}:data;
 }
-const readHandler=makeHandler({issuer:process.env.COGNITO_ISSUER,rpc,document,proposals,search,operatorData,operatorSubject:process.env.FORGE_LEGACY_OPERATOR_SUB,schedule,approvalSnapshot,registry});
+const resources=makeResourceService({enabled:process.env.FORGE_RESOURCES_ENABLED==='true',
+ ...makeResourceStorage({client:new S3Client({}),bucket:process.env.DOCUMENT_BUCKET,sign:getSignedUrl})});
+const readHandler=makeHandler({issuer:process.env.COGNITO_ISSUER,rpc,document,proposals,search,operatorData,resources,operatorSubject:process.env.FORGE_LEGACY_OPERATOR_SUB,schedule,approvalSnapshot,registry});
 const chatHandler=makeChatHandler({issuer:process.env.COGNITO_ISSUER,registry,db:chatDb});
 export const handler=(event:unknown)=>['forgeChatRead','forgeChatCommand'].includes((event as {fieldName?:string})?.fieldName||'')
  ?chatHandler(event):readHandler(event);

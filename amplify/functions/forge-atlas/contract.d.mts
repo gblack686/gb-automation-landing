@@ -12,6 +12,7 @@ export function makeHandler(options: {
   search?: (request: {agent_id:string;query:{query:string;source:string;limit:number}}) => Promise<unknown>;
   operatorData?: (request: {agent_id:string;query:{surface:string;q?:string;date?:string}}) => Promise<unknown>;
   operatorSubject?: string;
+  resources?: (request: {view:string;agent_id:string;query:Record<string,unknown>}) => Promise<unknown>;
   proposals: (request: {view: string; query: Record<string, unknown>; agent_id?: string}) => Promise<unknown>;
   approvalSnapshot?: (request: {agent_id: string}) => Promise<unknown>;
   registry?: (claims: {sub:string}) => Promise<unknown>;
