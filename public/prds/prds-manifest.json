@@ -393,5 +393,16 @@
     "description": "",
     "category": "pr-report",
     "public_url": "https://gbautomation.xyz/prds/pr-602-cc-task-feat-transcript-report-required"
+  },
+  {
+    "slug": "pr-1649-report-click-fullscreen-20261104",
+    "title": "PR #1649 — Open every report diagram and image fullscreen on click",
+    "date": "",
+    "status": "proposed",
+    "client": "gbautomation",
+    "priority": "",
+    "description": "",
+    "category": "pr-report",
+    "public_url": "https://gbautomation.xyz/prds/pr-1649-report-click-fullscreen-20261104"
   }
 ]
