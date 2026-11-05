@@ -1,0 +1,1118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PR #1649 — Open every report diagram and image fullscreen on click</title>
+<meta name="gbauto-renderer-id" content="gbauto.report.collapsible" />
+<meta name="gbauto-renderer-version" content="1.0.0" />
+<meta name="gbauto-shell-id" content="gbauto-doc.v1" />
+<meta name="gbauto-shell-version" content="2026-07-03" />
+<meta name="gbauto-theme-id" content="gbauto-theme.v1" />
+<meta name="gbauto-theme-version" content="2026-06-11" />
+<meta name="gbauto-report-id" content="pr-1649-report-click-fullscreen-20261104" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --terracotta:#D97757;--terracotta-hover:#B75F43;--ink:#191919;--cream-bg:#F3F1E7;--cream-2:#E6E4D9;
+    --stone:#D6D4C8;--text-mute:#8C8A84;--text-muted-2:#5C5C5C;
+    --status-green:#4F9D69;--status-amber:#C08A3E;--status-blue:#3D6EA8;--status-red:#B94A48;
+    --font-sans:'Inter',sans-serif;--font-serif:'Newsreader',serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--font-sans);background:var(--cream-bg);color:var(--ink);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-weight:300}
+  body::selection{background:rgba(217,119,87,.24)}
+  h1,h2,h3,h4{font-family:var(--font-serif);letter-spacing:0}
+  p{color:var(--text-muted-2);line-height:1.72}
+  a{color:var(--terracotta-hover);text-decoration:none;font-weight:600}
+  a:hover{text-decoration:underline}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;font-size:.92em;border:1px solid rgba(214,212,200,.86);border-radius:5px;background:rgba(230,228,217,.72);padding:1px 5px;color:var(--ink)}
+  ul{margin:10px 0 0 22px;color:var(--text-muted-2);line-height:1.7}
+  li{margin:8px 0}
+  table{width:100%;border-collapse:collapse;font-size:14px;border:1px solid var(--stone);border-radius:8px;overflow:hidden}
+  th,td{border-bottom:1px solid rgba(214,212,200,.78);padding:12px;text-align:left;vertical-align:top}
+  th{background:rgba(230,228,217,.8);color:var(--text-mute);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+  tr:last-child td{border-bottom:0}
+
+  .topbar{position:sticky;top:0;z-index:20;border-bottom:1px solid rgba(214,212,200,.7);background:rgba(243,241,231,.93);backdrop-filter:blur(12px)}
+  .topbar-inner{max-width:1360px;margin:0 auto;padding:13px 24px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+  .brand-lockup{display:inline-flex;align-items:center;gap:9px;min-height:28px}
+  .brand-logo{width:24px;height:24px;object-fit:contain;display:block}
+  .brand-text{font-family:var(--font-serif);font-weight:500;text-transform:uppercase;letter-spacing:.08em;font-size:12px}
+  .source-name{color:var(--text-muted-2);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+  header{max-width:1360px;margin:0 auto;padding:34px 24px 26px;display:grid;grid-template-columns:minmax(0,1fr) 370px;gap:28px;align-items:center}
+  header.no-visual{grid-template-columns:minmax(0,1fr)}
+  .header-copy{min-width:0}
+  .eyebrow{color:var(--terracotta);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+  h1{max-width:920px;margin:10px 0 18px;font-size:clamp(32px,4.6vw,58px);font-weight:500;line-height:1.02}
+  .subtitle{max-width:860px;color:var(--text-muted-2);font-size:16px}
+  .taxonomy-pills{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 0;max-width:980px}
+  .pill{display:inline-flex;align-items:center;gap:5px;min-height:23px;padding:2px 8px;border:1px solid var(--stone);border-radius:999px;line-height:1;background:rgba(255,255,255,.45)}
+  .pill-label{color:var(--text-mute);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+  .pill-value{color:var(--ink);font-size:11px;font-weight:600}
+  .pill-tenant{background:rgba(217,119,87,.14);border-color:rgba(217,119,87,.35)}
+  .pill-domain{background:rgba(61,110,168,.12);border-color:rgba(61,110,168,.28)}
+  .pill-surface{background:rgba(255,255,255,.62);border-color:rgba(214,212,200,.92)}
+  .pill-artifact{background:rgba(25,25,25,.08);border-color:rgba(25,25,25,.18)}
+  .pill-type{background:rgba(79,157,105,.12);border-color:rgba(79,157,105,.28)}
+  .pill-audience{background:rgba(192,138,62,.13);border-color:rgba(192,138,62,.3)}
+  .pill-visual{background:rgba(217,119,87,.1);border-color:rgba(217,119,87,.24)}
+  .pill-status{background:rgba(61,110,168,.11);border-color:rgba(61,110,168,.24)}
+  .pill-skill{background:rgba(79,157,105,.1);border-color:rgba(79,157,105,.24)}
+  .pill-entity{background:rgba(140,138,132,.12);border-color:rgba(140,138,132,.25)}
+  .pill-need{background:rgba(217,119,87,.12);border-color:rgba(217,119,87,.3)}
+
+  .layout{max-width:1360px;margin:0 auto;padding:22px 24px 56px;display:grid;grid-template-columns:300px minmax(0,1fr);gap:28px;align-items:start}
+  .section-menu{position:sticky;top:64px;border:1px solid var(--stone);border-radius:8px;background:rgba(230,228,217,.62);backdrop-filter:blur(12px);padding:12px}
+  .menu-title{margin:0 0 10px;color:var(--text-mute);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+  .menu-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
+  .menu-actions button,.section-menu nav button{min-height:34px;border:1px solid var(--stone);border-radius:6px;background:rgba(255,255,255,.46);color:rgba(25,25,25,.72);cursor:pointer;transition:border-color .18s ease,color .18s ease,background .18s ease;font-family:inherit;font-size:12px}
+  .section-menu nav{display:grid;gap:5px}
+  .section-menu nav button{width:100%;display:grid;grid-template-columns:30px 1fr;align-items:center;gap:8px;padding:6px 8px;text-align:left;line-height:1.25}
+  .section-menu nav button span{color:var(--terracotta);font-size:10px;font-weight:700;letter-spacing:.08em}
+  .menu-actions button:hover,.section-menu nav button:hover,.section-menu nav button.active{border-color:var(--terracotta);background:rgba(255,255,255,.72);color:var(--ink)}
+
+  .sections{display:grid;gap:10px}
+  details.section{border:1px solid var(--stone);border-radius:8px;background:rgba(255,255,255,.5);overflow:hidden}
+  details.section[open]{background:rgba(255,255,255,.68)}
+  details.section > summary{min-height:56px;display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:12px;align-items:center;padding:13px 16px;cursor:pointer;list-style:none}
+  details.section > summary::-webkit-details-marker{display:none}
+  .section-index{color:var(--terracotta);font-size:11px;font-weight:700;letter-spacing:.1em}
+  .section-title{font-family:var(--font-serif);font-size:21px;font-weight:500;line-height:1.18}
+  .section-count{color:var(--text-mute);font-size:14px;font-weight:600;white-space:nowrap}
+  .section-body{border-top:1px solid rgba(214,212,200,.75);padding:20px 28px 26px 42px;color:var(--text-muted-2);font-size:16px;line-height:1.72}
+  .section-body p{margin:0 0 14px}
+  .section-body strong{color:var(--ink);font-weight:600}
+  .section-body h3{margin:22px 0 8px;color:var(--ink);font-size:24px;font-weight:500}
+  .section-body h4{margin:18px 0 8px;color:var(--ink);font-family:var(--font-sans);font-size:15px;font-weight:700;letter-spacing:0;text-transform:none}
+
+  .phase-card{margin:14px 0;border:1px solid rgba(214,212,200,.86);border-radius:8px;background:rgba(230,228,217,.42);overflow:hidden}
+  .phase-card > summary{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:14px;min-height:48px;padding:12px 16px;cursor:pointer;list-style:none}
+  .phase-card > summary::-webkit-details-marker{display:none}
+  .phase-card > summary strong{font-family:var(--font-sans);font-size:15px;font-weight:700;color:var(--ink);line-height:1.3}
+  .phase-card .phase-inner{border-top:1px solid rgba(214,212,200,.75);padding:16px 18px 18px}
+  .checklist{list-style:none;margin-left:0}
+  .status{font-weight:800;color:var(--terracotta-hover)}
+  .loop{margin-top:12px;border-left:3px solid var(--terracotta);background:rgba(217,119,87,.12);padding:9px 11px;border-radius:0 8px 8px 0;color:var(--terracotta-hover)}
+  .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+  .metric{border:1px solid var(--stone);border-radius:8px;background:rgba(255,255,255,.45);padding:14px}
+  .metric strong{display:block;color:var(--ink);font-family:var(--font-serif);font-size:30px;font-weight:500;line-height:1}
+  .metric span{display:block;margin-top:7px;color:var(--text-mute);font-size:11px;font-weight:600}
+  .tag{display:inline-flex;min-width:64px;justify-content:center;border-radius:999px;padding:2px 8px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+  .existing{background:rgba(79,157,105,.12);color:var(--status-green)}
+  .new{background:rgba(217,119,87,.14);color:var(--terracotta-hover)}
+  .chip{display:inline-flex;align-items:center;font-size:11px;font-weight:600;padding:2px 9px;border-radius:999px;border:1px solid transparent}
+  .chip-green{color:var(--status-green);background:rgba(79,157,105,.12);border-color:rgba(79,157,105,.25)}
+  .chip-amber{color:var(--status-amber);background:rgba(192,138,62,.12);border-color:rgba(192,138,62,.25)}
+  .chip-blue{color:var(--status-blue);background:rgba(61,110,168,.12);border-color:rgba(61,110,168,.25)}
+  .chip-red{color:var(--status-red);background:rgba(185,74,72,.12);border-color:rgba(185,74,72,.25)}
+  .flow{width:100%;min-height:230px;margin-top:12px;border:1px solid var(--stone);border-radius:8px;background:linear-gradient(180deg,rgba(255,255,255,.34),rgba(230,228,217,.68))}
+  .flow text{font:600 13px Inter,sans-serif;fill:var(--ink)}
+  .flow .muted{fill:var(--text-muted-2);font-weight:500;font-size:11px}
+  .flow .box{fill:#f8f5ea;stroke:var(--stone);stroke-width:1.2;rx:8}
+  .flow .hot{fill:rgba(217,119,87,.16);stroke:var(--terracotta)}
+  .flow .line{stroke:var(--terracotta-hover);stroke-width:2;fill:none;marker-end:url(#arrow)}
+  .bottom-meta-row{max-width:1360px;margin:0 auto 24px;padding:0 24px;display:grid;gap:10px}
+  .metadata-card,.trace-card{border:1px solid var(--stone);border-radius:8px;background:rgba(255,255,255,.55);overflow:hidden}
+  .metadata-card > summary,.trace-card > summary{display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:52px;padding:13px 18px;cursor:pointer;list-style:none}
+  .metadata-card > summary::-webkit-details-marker,.trace-card > summary::-webkit-details-marker{display:none}
+  .metadata-card-title,.trace-title{font-family:var(--font-serif);font-size:20px;font-weight:500;color:var(--ink)}
+  .metadata-card-action,.trace-action{color:var(--terracotta);font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+  .metadata-card-body,.trace-body{border-top:1px solid rgba(214,212,200,.75);padding:16px 18px}
+  .metadata-list{display:grid;gap:10px;margin:0}
+  .metadata-list dt{color:var(--text-mute);font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:lowercase}
+  .metadata-list dd{margin:3px 0 0;color:var(--ink);font-size:13px;font-weight:500;line-height:1.45;overflow-wrap:anywhere}
+  .trace-list{margin:0;color:var(--text-muted-2);font-size:12px;line-height:1.5}
+  .trace-list li{margin:5px 0}
+  .metadata-footer{max-width:1360px;margin:0 auto;padding:24px;border-top:1px solid var(--stone)}
+  .metadata-grid{display:flex;flex-wrap:wrap;gap:28px}
+  .metadata-grid span{display:block;color:var(--text-mute);font-size:10px;text-transform:uppercase;letter-spacing:.12em;font-weight:700}
+  .metadata-grid strong{font-family:var(--font-serif);font-weight:500;font-size:15px}
+  @media(max-width:820px){header,.layout,.grid-2,.grid-3{grid-template-columns:1fr}.section-menu{position:static}.section-body{padding:14px 16px}}
+
+.visual-package{margin:0 0 14px}
+.visual-package-title{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:0 0 8px}
+.visual-package-title h2{font-family:var(--font-sans,Inter,sans-serif);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--text-mute,#8C8A84);margin:0}
+.visual-package-title span{font-size:10.5px;color:var(--text-mute,#8C8A84);font-weight:600}
+.hypeframes{display:flex;flex-wrap:wrap;gap:12px}
+.hypeframes .hypeframe{flex:1 1 0;min-width:200px;border:1px solid var(--stone,#D6D4C8);border-radius:8px;background:rgba(255,255,255,.58);overflow:hidden}
+.hypeframe svg,.hypeframe img,.hypeframe video{display:block;width:100%;height:auto;aspect-ratio:1/1;object-fit:contain}
+.hypeframe video{background:#111}
+/* Rich inline HTML diagrams are not forced to a square — let them flow. */
+.hypeframe figure,.hypeframe .hyperframe-html,.hypeframe canvas{display:block;width:100%;margin:0}
+.hypeframe figure{padding:0}
+@media(max-width:900px){.hypeframes{flex-direction:column}.hypeframes .hypeframe{flex:0 0 auto;min-width:0}}
+@media print{.topbar,.section-menu,.menu-actions{display:none!important}body{background:#fff;color:#191919}}@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.gb-media-zoom{cursor:zoom-in}
+.gb-media-zoom:focus-visible{outline:2px solid #D97757;outline-offset:3px}
+html.gb-media-open{overflow:hidden}
+.gb-media-overlay{position:fixed;inset:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;box-sizing:border-box;padding:24px;background:#F3F1E7;cursor:zoom-out}
+.gb-media-overlay>svg,.gb-media-overlay>img{display:block;width:100%;height:100%;max-width:none;max-height:none;margin:0;object-fit:contain;cursor:zoom-out}
+.gb-media-overlay foreignObject{overflow:visible}
+.gb-media-close{position:fixed;top:14px;right:18px;z-index:1;width:38px;height:38px;padding:0;border:1px solid #D6D4C8;border-radius:10px;background:#FFFFFF;color:#191919;font-size:22px;line-height:1;cursor:pointer}
+.gb-media-close:hover,.gb-media-close:focus-visible{border-color:#D97757;color:#D97757}
+@media print{.gb-media-overlay{display:none!important}.gb-media-zoom{cursor:auto}}
+
+.feedback{position:fixed;inset:0;z-index:2147483000;font-size:13px;pointer-events:none}
+.feedback .fb-tab,.feedback .fb-drawer{pointer-events:auto}
+.fb-annotation-hover{outline:2px solid var(--terracotta,#D97757)!important;outline-offset:2px!important;cursor:crosshair!important}
+.fb-annotating{cursor:crosshair}
+.fb-tab{position:fixed;right:16px;bottom:16px;display:flex;align-items:center;gap:7px;border:1px solid rgba(255,255,255,.18);border-radius:7px;background:var(--ink,#191919);color:#fff;font:inherit;font-size:12px;font-weight:750;letter-spacing:.09em;text-transform:uppercase;padding:9px 11px;cursor:pointer;box-shadow:0 12px 30px rgba(0,0,0,.2);transition:background .15s,transform .18s ease,opacity .18s}
+.fb-tab:hover{background:var(--terracotta,#D97757);transform:translateY(-1px)}
+.fb-tab-key{font-size:9px;font-weight:650;opacity:.72;letter-spacing:.03em;text-transform:none}
+.fb-drawer{position:fixed;inset:auto 0 0;width:100vw;height:auto;min-height:0;max-width:none;max-height:min(76vh,620px);box-sizing:border-box;background:rgba(243,241,231,.98);border-top:1px solid var(--stone,#D6D4C8);box-shadow:0 -18px 48px rgba(0,0,0,.18);transform:translateY(105%);transition:transform .24s cubic-bezier(.4,0,.2,1);padding:0;overflow-y:auto;display:block;backdrop-filter:blur(12px)}
+.feedback[data-fb-open="true"] .fb-drawer{transform:translateY(0)}
+.feedback[data-fb-open="true"] .fb-tab{opacity:0;pointer-events:none;transform:translateY(8px)}
+.fb-drawer-inner{width:100%;padding:10px 16px 13px}
+.fb-drawer-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:7px}
+.fb-head-copy{display:flex;align-items:baseline;gap:9px;min-width:0}
+.feedback-label{color:var(--terracotta,#D97757);font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;line-height:1.4}
+.fb-shortcuts{color:var(--text-mute,#8C8A84);font-size:11px;white-space:nowrap}
+.fb-close{display:grid;place-items:center;width:28px;height:28px;border:1px solid var(--stone,#D6D4C8);border-radius:6px;background:rgba(255,255,255,.55);font-size:18px;line-height:1;color:var(--text-muted-2,#5C5C5C);cursor:pointer;padding:0}
+.fb-close:hover{border-color:var(--terracotta,#D97757);color:var(--ink,#191919)}
+.fb-auth-row{display:flex;align-items:center;gap:8px;margin:0 0 7px;padding:6px 8px;border:1px solid var(--stone,#D6D4C8);border-radius:6px;background:rgba(255,255,255,.4)}
+.fb-auth-signin,.fb-auth-signout{border:1px solid var(--stone,#D6D4C8);border-radius:999px;background:rgba(255,255,255,.55);color:var(--ink,#191919);font:inherit;font-size:11px;font-weight:750;padding:4px 9px;cursor:pointer}
+.fb-auth-signin:hover,.fb-auth-signout:hover{border-color:var(--terracotta,#D97757)}
+.fb-auth-identity{color:var(--text-muted-2,#5C5C5C);font-size:11px;font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fb-command-bar{display:flex;align-items:center;gap:8px;margin:0 0 7px}
+.fb-command-tabs{display:flex;flex-wrap:wrap;gap:4px;margin:0}
+.fb-mode{border:1px solid transparent;border-radius:999px;background:transparent;color:var(--text-muted-2,#5C5C5C);font:inherit;font-size:11px;font-weight:750;letter-spacing:.05em;text-transform:uppercase;padding:4px 8px;cursor:pointer}
+.fb-mode[aria-selected="true"]{border-color:var(--terracotta,#D97757);background:rgba(217,119,87,.1);color:var(--ink,#191919)}
+.fb-annotate-toggle{margin-left:auto;border:1px solid var(--stone,#D6D4C8);border-radius:999px;background:rgba(255,255,255,.48);color:var(--text-muted-2,#5C5C5C);font:inherit;font-size:10px;font-weight:750;letter-spacing:.05em;text-transform:uppercase;padding:4px 7px;cursor:pointer}
+.fb-annotate-toggle[aria-pressed="true"]{border-color:var(--terracotta,#D97757);background:var(--terracotta,#D97757);color:var(--ink,#191919)}
+#fb-form{display:grid;grid-template-columns:minmax(160px,220px) minmax(0,1fr) auto;gap:8px;align-items:end}
+.feedback[data-fb-mode="settings"] #fb-form{display:none}
+.feedback[data-fb-mode="settings"] .fb-annotate-toggle{display:none}
+.fb-command-panel{grid-column:1/-1;min-width:0}
+.fb-command-panel[hidden]{display:none}
+.fb-route{display:grid;gap:5px;align-self:stretch}
+.fb-row{display:flex;align-items:center;gap:6px;color:var(--text-muted-2,#5C5C5C);font-size:12px}
+#fb-section,#fb-msg{width:100%;border:1px solid var(--stone,#D6D4C8);border-radius:6px;background:rgba(255,255,255,.62);padding:7px 8px;color:var(--ink,#191919);font:inherit;font-size:13px;box-sizing:border-box}
+#fb-section{min-width:0;height:31px;flex:1;padding-block:4px}
+#fb-msg{resize:vertical;line-height:1.4;min-height:70px;max-height:180px}
+#fb-hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.fb-expert-wrap,.fb-fleet-wrap{display:grid;gap:5px}
+.fb-feedback-intro{margin:0;border:1px solid var(--stone,#D6D4C8);border-radius:7px;background:rgba(255,255,255,.42);padding:7px 9px;color:var(--text-muted-2,#5C5C5C);font-size:11px;line-height:1.4}
+.fb-expert-head{display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--text-mute,#8C8A84);font-size:10px;font-weight:750;letter-spacing:.1em;text-transform:uppercase}
+.fb-expert-pills{display:flex;flex-wrap:wrap;gap:3px;max-height:54px;overflow:auto;padding:1px 1px 2px}
+.fb-expert-pill{border:1px solid var(--stone,#D6D4C8);border-radius:999px;background:rgba(255,255,255,.48);color:var(--text-muted-2,#5C5C5C);font:inherit;font-size:10px;font-weight:700;line-height:1;padding:4px 6px;cursor:pointer;white-space:nowrap}
+.fb-expert-pill:hover{border-color:var(--terracotta,#D97757);color:var(--ink,#191919)}
+.fb-expert-pill[aria-pressed="true"]{border-color:var(--terracotta,#D97757);background:var(--terracotta,#D97757);color:var(--ink,#191919)}
+.fb-fleet-groups{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.fb-command-group{--fb-group-accent:var(--terracotta,#D97757);--fb-group-on-accent:var(--ink,#191919);--fb-group-bg:rgba(217,119,87,.08);min-width:0;border:1px solid var(--stone,#D6D4C8);border-top:2px solid var(--fb-group-accent);border-radius:7px;background:var(--fb-group-bg);padding:6px}
+.fb-command-group[data-fb-command-group="observability"]{--fb-group-accent:#3D6EA8;--fb-group-on-accent:#FFFFFF;--fb-group-bg:rgba(61,110,168,.08)}
+.fb-command-group[data-fb-command-group="search-memory"]{--fb-group-accent:#7557A8;--fb-group-on-accent:#FFFFFF;--fb-group-bg:rgba(117,87,168,.08)}
+.fb-command-group[data-fb-command-group="git-delivery"]{--fb-group-accent:#4F9D69;--fb-group-on-accent:var(--ink,#191919);--fb-group-bg:rgba(79,157,105,.08)}
+.fb-command-group[data-fb-command-group="fleet-operations"]{--fb-group-accent:#D97757;--fb-group-on-accent:var(--ink,#191919);--fb-group-bg:rgba(217,119,87,.08)}
+.fb-command-group-title{display:flex;align-items:center;gap:5px;margin:0 0 5px;color:var(--ink,#191919);font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+.fb-command-group-title::before{content:"";width:7px;height:7px;flex:0 0 auto;border-radius:999px;background:var(--fb-group-accent)}
+.fb-command-pills{display:flex;flex-wrap:wrap;gap:4px}
+.fb-command-pill{border:1px solid color-mix(in srgb,var(--fb-group-accent) 48%,var(--stone,#D6D4C8));border-radius:999px;background:rgba(255,255,255,.58);color:var(--text-muted-2,#5C5C5C);font:inherit;font-size:10px;font-weight:700;line-height:1.1;padding:4px 6px;cursor:pointer;white-space:nowrap}
+.fb-command-pill:hover{border-color:var(--fb-group-accent);color:var(--ink,#191919)}
+.fb-command-pill[aria-pressed="true"]{border-color:var(--fb-group-accent);background:var(--fb-group-accent);color:var(--fb-group-on-accent,var(--ink,#191919))}
+.fb-target-wrap{grid-column:1/-1;display:none;align-items:center;gap:6px;min-width:0;border:1px solid rgba(217,119,87,.34);border-radius:6px;background:rgba(217,119,87,.08);padding:5px 7px}
+.feedback[data-fb-has-target="true"] .fb-target-wrap{display:flex}
+.fb-target-label{color:var(--terracotta,#D97757);font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;white-space:nowrap}
+.fb-target-copy{min-width:0;overflow:hidden;color:var(--ink,#191919);font:650 11px/1.35 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;text-overflow:ellipsis;white-space:nowrap}
+.fb-target-clear{margin-left:auto;flex:0 0 auto;border:0;background:transparent;color:var(--text-muted-2,#5C5C5C);font:inherit;font-size:12px;line-height:1;cursor:pointer;padding:1px 3px}
+.fb-actions{display:flex;flex-direction:column;align-items:stretch;gap:5px;min-width:112px}
+#fb-submit{height:34px;border:0;border-radius:6px;background:var(--ink,#191919);padding:7px 12px;color:#fff;font:inherit;font-size:13px;font-weight:750;cursor:pointer;white-space:nowrap}
+#fb-submit:hover{background:var(--terracotta,#D97757)}
+#fb-submit:disabled{opacity:.6;cursor:default}
+.fb-status{min-height:13px;color:var(--text-muted-2,#5C5C5C);font-size:12px;line-height:1.3}
+.fb-hint{margin:0;color:var(--text-mute,#8C8A84);font-size:11px;line-height:1.3}
+.fb-settings-panel{display:grid;gap:8px;min-width:0}
+.fb-settings-panel[hidden]{display:none}
+.fb-settings-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.fb-settings-head strong{display:block;color:var(--ink,#191919);font-size:13px;font-weight:800}
+.fb-settings-head p{margin:2px 0 0;color:var(--text-muted-2,#5C5C5C);font-size:11px;line-height:1.35}
+.fb-theme-reset{flex:0 0 auto;border:1px solid var(--stone,#D6D4C8);border-radius:7px;background:rgba(255,255,255,.58);color:var(--ink,#191919);font:inherit;font-size:11px;font-weight:750;padding:6px 9px;cursor:pointer}
+.fb-theme-reset:hover{border-color:var(--terracotta,#D97757)}
+.fb-theme-toolbar{display:flex;align-items:center;gap:5px}
+.fb-theme-toolbar button{border:1px solid var(--stone,#D6D4C8);border-radius:999px;background:transparent;color:var(--text-muted-2,#5C5C5C);font:inherit;font-size:10px;font-weight:750;padding:4px 8px;cursor:pointer}
+.fb-theme-toolbar button[aria-pressed="true"]{border-color:var(--terracotta,#D97757);background:rgba(217,119,87,.1);color:var(--ink,#191919)}
+.fb-theme-toolbar span{margin-left:auto;color:var(--text-mute,#8C8A84);font-size:10px;font-weight:700}
+.fb-theme-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;max-height:min(47vh,360px);overflow:auto;padding:1px 3px 3px 1px}
+.fb-theme-card{min-width:0;display:grid;gap:5px;border:1px solid var(--stone,#D6D4C8);border-radius:8px;background:rgba(255,255,255,.48);color:var(--ink,#191919);padding:7px;text-align:left;font:inherit;cursor:pointer;box-shadow:none}
+.fb-theme-card:hover{border-color:var(--terracotta,#D97757);transform:translateY(-1px)}
+.fb-theme-card[aria-pressed="true"]{border-color:var(--terracotta,#D97757);box-shadow:inset 0 0 0 1px var(--terracotta,#D97757)}
+.fb-theme-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:5px;min-width:0}
+.fb-theme-card-head>span:first-child{min-width:0}
+.fb-theme-card strong{display:block;overflow:hidden;color:inherit;font-size:11px;font-weight:800;line-height:1.2;text-overflow:ellipsis;white-space:nowrap}
+.fb-theme-card small{display:block;margin-top:2px;color:var(--text-mute,#8C8A84);font-size:9px;font-weight:750;letter-spacing:.07em;text-transform:uppercase}
+.fb-theme-check{flex:0 0 auto;color:var(--terracotta,#D97757);font-size:9px;font-weight:800;text-transform:uppercase}
+.fb-theme-swatches{display:grid;grid-template-columns:repeat(8,1fr);height:12px;overflow:hidden;border:1px solid rgba(25,25,25,.12);border-radius:4px}
+.fb-theme-swatch{background:var(--fb-theme-swatch)}
+.fb-theme-note{overflow:hidden;color:var(--text-muted-2,#5C5C5C);font-size:9px;font-weight:600;line-height:1.25;text-overflow:ellipsis;white-space:nowrap}
+.fb-theme-status{min-height:14px;margin:0;color:var(--text-muted-2,#5C5C5C);font-size:11px;font-weight:650;line-height:1.3}
+@media (max-width:900px){.fb-fleet-groups{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:860px){.fb-theme-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:720px){.fb-drawer{max-height:88vh}.fb-drawer-inner{padding:10px 10px 12px}.fb-head-copy{align-items:flex-start;flex-direction:column;gap:1px}.fb-command-bar{align-items:flex-start}.fb-annotate-toggle{margin-top:1px}#fb-form{grid-template-columns:1fr}.fb-command-panel,.fb-target-wrap{grid-column:1}.fb-actions{display:grid;grid-template-columns:auto 1fr;align-items:center}.fb-hint{grid-column:1/-1}.fb-expert-pills{max-height:72px}.fb-theme-grid{grid-template-columns:repeat(2,minmax(0,1fr));max-height:52vh}.fb-settings-head{align-items:stretch;flex-direction:column}.fb-theme-reset{align-self:flex-start}}
+@media (max-width:480px){.fb-fleet-groups{grid-template-columns:1fr}.fb-command-bar{display:grid}.fb-annotate-toggle{margin-left:0;justify-self:start}.fb-theme-toolbar span{display:none}}
+@media print{.feedback{display:none !important}}
+:root{--terracotta: #D97757;--cream-bg: #F3F1E7;--ink: #191919;--terracotta-hover: #B75F43;}
+.section-count{color:var(--text-mute,#8C8A84);font-size:14px;font-weight:600;white-space:nowrap;text-transform:none;letter-spacing:0}
+
+body[data-gbauto-color-preset]:not(.report-theme-locked){background:var(--gbauto-canvas);color:var(--gbauto-text)}
+body[data-gbauto-color-preset]:not(.report-theme-locked)::selection{background:color-mix(in srgb,var(--gbauto-accent) 28%,transparent)}
+body[data-gbauto-color-preset]:not(.report-theme-locked) p,
+body[data-gbauto-color-preset]:not(.report-theme-locked) ul,
+body[data-gbauto-color-preset]:not(.report-theme-locked) .section-body,
+body[data-gbauto-color-preset]:not(.report-theme-locked) .source-name{color:var(--gbauto-muted)}
+body[data-gbauto-color-preset]:not(.report-theme-locked) a{color:var(--gbauto-primary)}
+body[data-gbauto-color-preset]:not(.report-theme-locked) code,
+body[data-gbauto-color-preset]:not(.report-theme-locked) th{border-color:var(--gbauto-border);background:var(--gbauto-canvas-subtle);color:var(--gbauto-text)}
+body[data-gbauto-color-preset]:not(.report-theme-locked) th,
+body[data-gbauto-color-preset]:not(.report-theme-locked) td{border-bottom-color:var(--gbauto-border)}
+body[data-gbauto-color-preset]:not(.report-theme-locked) .topbar{border-color:var(--gbauto-border);background:color-mix(in srgb,var(--gbauto-canvas) 93%,transparent)}
+body[data-gbauto-color-preset]:not(.report-theme-locked) header,
+body[data-gbauto-color-preset]:not(.report-theme-locked) main.layout,
+body[data-gbauto-color-preset]:not(.report-theme-locked) .metadata-footer{background:var(--gbauto-canvas)}
+body[data-gbauto-color-preset]:not(.report-theme-locked) .pill,
+body[data-gbauto-color-preset]:not(.report-theme-locked) .section-menu,
+body[data-gbauto-color-preset]:not(.report-theme-locked) details.section,
+body[data-gbauto-color-preset]:not(.report-theme-locked) .phase-card,
+body[data-gbauto-color-preset]:not(.report-theme-locked) .metric,
+body[data-gbauto-color-preset]:not(.report-theme-locked) .metadata-card,
+body[data-gbauto-color-preset]:not(.report-theme-locked) .trace-card,
+body[data-gbauto-color-preset]:not(.report-theme-locked) .hypeframes .hypeframe,
+body[data-gbauto-color-preset]:not(.report-theme-locked) .team-panel,
+body[data-gbauto-color-preset]:not(.report-theme-locked) .role-card,
+body[data-gbauto-color-preset]:not(.report-theme-locked) .gate-card,
+body[data-gbauto-color-preset]:not(.report-theme-locked) .angel-panel,
+body[data-gbauto-color-preset]:not(.report-theme-locked) .brand-studio,
+body[data-gbauto-color-preset]:not(.report-theme-locked) .preset-preview,
+body[data-gbauto-color-preset]:not(.report-theme-locked) .interface-proof{border-color:var(--gbauto-border);background:var(--gbauto-panel);color:var(--gbauto-text)}
+body[data-gbauto-color-preset]:not(.report-theme-locked) details.section[open],
+body[data-gbauto-color-preset]:not(.report-theme-locked) .metadata-card,
+body[data-gbauto-color-preset]:not(.report-theme-locked) .trace-card{background:var(--gbauto-panel)}
+body[data-gbauto-color-preset]:not(.report-theme-locked) .section-menu,
+body[data-gbauto-color-preset]:not(.report-theme-locked) .phase-card{background:var(--gbauto-canvas-subtle)}
+body[data-gbauto-color-preset]:not(.report-theme-locked) .ascii-flow,
+body[data-gbauto-color-preset]:not(.report-theme-locked) .brand-asset-copy{border-color:var(--gbauto-border);background:var(--gbauto-panel-raised);color:var(--gbauto-text)}
+body[data-gbauto-color-preset]:not(.report-theme-locked) .menu-actions button,
+body[data-gbauto-color-preset]:not(.report-theme-locked) .section-menu nav button{border-color:var(--gbauto-border);background:var(--gbauto-panel);color:var(--gbauto-text)}
+body[data-gbauto-color-preset]:not(.report-theme-locked) .menu-actions button:hover,
+body[data-gbauto-color-preset]:not(.report-theme-locked) .section-menu nav button:hover,
+body[data-gbauto-color-preset]:not(.report-theme-locked) .section-menu nav button.active{border-color:var(--gbauto-accent);background:var(--gbauto-panel-raised);color:var(--gbauto-text)}
+body[data-gbauto-color-preset]:not(.report-theme-locked) details.section>.section-body,
+body[data-gbauto-color-preset]:not(.report-theme-locked) .phase-card .phase-inner,
+body[data-gbauto-color-preset]:not(.report-theme-locked) .metadata-card-body,
+body[data-gbauto-color-preset]:not(.report-theme-locked) .trace-body{border-color:var(--gbauto-border)}
+body[data-gbauto-color-preset]:not(.report-theme-locked) .loop{border-color:var(--gbauto-accent);background:color-mix(in srgb,var(--gbauto-accent) 15%,transparent);color:var(--gbauto-primary)}
+body[data-gbauto-color-preset]:not(.report-theme-locked) .flow,
+body[data-gbauto-color-preset]:not(.report-theme-locked) svg.header-visual{border-color:var(--gbauto-border);background:linear-gradient(180deg,var(--gbauto-panel),var(--gbauto-canvas-subtle))}
+body[data-gbauto-color-preset]:not(.report-theme-locked) .flow .box,
+body[data-gbauto-color-preset]:not(.report-theme-locked) svg.header-visual .box{fill:var(--gbauto-panel);stroke:var(--gbauto-border)}
+body[data-gbauto-color-preset]:not(.report-theme-locked) .flow .hot,
+body[data-gbauto-color-preset]:not(.report-theme-locked) svg.header-visual .hot{fill:color-mix(in srgb,var(--gbauto-accent) 18%,transparent);stroke:var(--gbauto-accent)}
+body[data-gbauto-color-preset]:not(.report-theme-locked) .metadata-footer{border-color:var(--gbauto-border)}
+body[data-gbauto-color-preset]:not(.report-theme-locked) .role-card,
+body[data-gbauto-color-preset]:not(.report-theme-locked) .gate-card{border-top-color:var(--gbauto-focus)}
+body[data-gbauto-color-preset]:not(.report-theme-locked) .group-count,
+body[data-gbauto-color-preset]:not(.report-theme-locked) .primary-link,
+body[data-gbauto-color-preset]:not(.report-theme-locked) .preset-apply[aria-pressed="true"]{background:var(--gbauto-primary);color:var(--gbauto-on-primary)}
+body[data-gbauto-color-preset]:not(.report-theme-locked) .preset-apply{border-color:var(--gbauto-border);background:var(--gbauto-panel-raised);color:var(--gbauto-text)}
+body[data-gbauto-color-preset]:not(.report-theme-locked) :focus-visible{outline:3px solid var(--gbauto-focus);outline-offset:2px}
+body[data-gbauto-color-preset]:not(.report-theme-locked) .fb-drawer{border-color:var(--gbauto-border);background:color-mix(in srgb,var(--gbauto-canvas) 97%,transparent);box-shadow:0 -18px 48px color-mix(in srgb,var(--gbauto-shadow) 42%,transparent)}
+body[data-gbauto-color-preset]:not(.report-theme-locked) .fb-mode,
+body[data-gbauto-color-preset]:not(.report-theme-locked) .fb-shortcuts,
+body[data-gbauto-color-preset]:not(.report-theme-locked) .fb-status,
+body[data-gbauto-color-preset]:not(.report-theme-locked) .fb-hint{color:var(--gbauto-muted)}
+body[data-gbauto-color-preset]:not(.report-theme-locked) .fb-mode[aria-selected="true"]{border-color:var(--gbauto-accent);background:color-mix(in srgb,var(--gbauto-accent) 15%,transparent);color:var(--gbauto-text)}
+body[data-gbauto-color-preset]:not(.report-theme-locked) .fb-close,
+body[data-gbauto-color-preset]:not(.report-theme-locked) .fb-annotate-toggle,
+body[data-gbauto-color-preset]:not(.report-theme-locked) #fb-section,
+body[data-gbauto-color-preset]:not(.report-theme-locked) #fb-msg,
+body[data-gbauto-color-preset]:not(.report-theme-locked) .fb-expert-pill,
+body[data-gbauto-color-preset]:not(.report-theme-locked) .fb-command-pill{border-color:var(--gbauto-border);background:var(--gbauto-panel);color:var(--gbauto-text)}
+body[data-gbauto-color-preset]:not(.report-theme-locked) .fb-theme-card,
+body[data-gbauto-color-preset]:not(.report-theme-locked) .fb-theme-reset,
+body[data-gbauto-color-preset]:not(.report-theme-locked) .fb-theme-toolbar button{border-color:var(--gbauto-border);background:var(--gbauto-panel);color:var(--gbauto-text)}
+body[data-gbauto-color-preset]:not(.report-theme-locked) .fb-theme-card[aria-pressed="true"],
+body[data-gbauto-color-preset]:not(.report-theme-locked) .fb-theme-toolbar button[aria-pressed="true"]{border-color:var(--gbauto-accent);box-shadow:inset 0 0 0 1px var(--gbauto-accent)}
+body[data-gbauto-color-preset]:not(.report-theme-locked) .fb-theme-card small,
+body[data-gbauto-color-preset]:not(.report-theme-locked) .fb-theme-note,
+body[data-gbauto-color-preset]:not(.report-theme-locked) .fb-theme-status,
+body[data-gbauto-color-preset]:not(.report-theme-locked) .fb-settings-head p{color:var(--gbauto-muted)}
+body[data-gbauto-color-preset]:not(.report-theme-locked) #fb-submit{background:var(--gbauto-primary);color:var(--gbauto-on-primary)}
+body[data-gbauto-color-preset]:not(.report-theme-locked) #fb-submit:hover{background:var(--gbauto-accent);color:var(--gbauto-on-accent)}
+
+body.report-theme-locked{
+  --cream:#F3F1E7 !important;--cream-bg:#F3F1E7 !important;
+  --cream-2:#E6E4D9 !important;--panel:#E6E4D9 !important;
+  --line:#D6D4C8 !important;--stone:#D6D4C8 !important;
+  --ink:#191919 !important;--muted:#5C5C5C !important;
+  --text-mute:#8C8A84 !important;--text-muted-2:#5C5C5C !important;
+  --accent:#D97757 !important;--terracotta:#D97757 !important;
+  --terracotta-hover:#B75F43 !important;color-scheme:light !important;
+}
+</style>
+</head>
+<body data-gbauto-shell="gbauto-doc.v1" data-gbauto-shell-version="2026-07-03" data-gbauto-renderer="gbauto.report.collapsible" data-gbauto-renderer-version="1.0.0" data-gbauto-theme="gbauto-theme.v1" data-gbauto-theme-version="2026-06-11" data-gbauto-color-preset="gbauto" data-gbauto-color-mode="light" class="report-theme-locked">
+<div class="topbar"><div class="topbar-inner"><div class="brand-lockup"><img class="brand-logo" src="data:image/png;base64,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" alt="GB logo"/><span class="brand-text">GBAutomation</span></div><div class="source-name">pr-1649-report-click-fullscreen-20261104.md</div></div></div>
+<header class="no-visual">
+<div class="header-copy">
+<div class="eyebrow">TAC Plan</div>
+<h1>PR #1649 — Open every report diagram and image fullscreen on click</h1>
+<p class="subtitle">Every diagram and image in a branded report now opens fullscreen on click, on any page built with `render_document`. Greg asked for this on 2026-07-20, but it only reached `pre.mermaid` in `render_collapsible_report.py`. He restated it as &quot;always&quot; on 2026-11-04.</p>
+    <div class="taxonomy-pills" data-taxonomy-source="second-brain"><span class="pill pill-tenant"><span class="pill-label">Tenant</span><span class="pill-value">gbautomation</span></span><span class="pill pill-domain"><span class="pill-label">Domain</span><span class="pill-value">feedback-triage</span></span><span class="pill pill-surface"><span class="pill-label">Surface</span><span class="pill-value">operator-swipe</span></span><span class="pill pill-artifact"><span class="pill-label">Artifact</span><span class="pill-value">pr-report</span></span><span class="pill pill-status"><span class="pill-label">Status</span><span class="pill-value">draft</span></span><span class="pill pill-skill"><span class="pill-label">Skill</span><span class="pill-value">tac-plan</span></span></div></div>
+</header>
+<main class="layout">
+<aside class="section-menu">
+<p class="menu-title">Sections</p>
+<div class="menu-actions">
+<button id="openAll" type="button">Open All</button>
+<button id="closeAll" type="button">Close All</button>
+</div>
+<nav id="sectionNav" aria-label="Document sections"></nav>
+</aside>
+<div class="sections"><details class="section" id="overview" open><summary><span class="section-index">01</span><span class="section-title">Overview</span><span class="section-count">overview - 44 words</span></summary><div class="section-body"><p><strong>Summary:</strong> Every diagram and image in a branded report now opens fullscreen on click, on any page built with <code>render_document</code>. Greg asked for this on 2026-07-20, but it only reached <code>pre.mermaid</code> in <code>render_collapsible_report.py</code>. He restated it as &quot;always&quot; on 2026-11-04.</p></div></details>
+<details class="section" id="summary"><summary><span class="section-index">02</span><span class="section-title">Summary</span><span class="section-count">summary - 270 words</span></summary><div class="section-body"><p><strong>Summary</strong> Every diagram and image in a branded report now opens fullscreen on click, on any page built with <code>render_document</code>. Greg asked for this on 2026-07-20, but it only reached <code>pre.mermaid</code> in <code>render_collapsible_report.py</code>. He restated it as &quot;always&quot; on 2026-11-04.</p>
+<ul>
+<li><strong>Behaviour:</strong> click, or Enter/Space when focused, opens it. Esc, the close button or another click closes it, and focus returns to where it was.</li>
+<li><strong>Left alone:</strong> links, buttons, charts with their own expand control, <code>g.clickable</code> nodes, small icons and the logo. <code>data-no-fullscreen</code> opts out one element.</li>
+<li><strong>Enforced:</strong> the CSS and script are pinned house fragments, so a report without them fails <code>report_conformance</code>.</li>
+</ul>
+<p><strong>Effects to know about</strong></p>
+<ul>
+<li>Existing reports get it only when re-rendered, and any older report re-checked against the gate fails until then.</li>
+<li>Hand-written pages and renderers that don&#x27;t use <code>render_document</code> don&#x27;t get it.</li>
+<li>The old Mermaid handler is removed, so one click can&#x27;t open two overlays.</li>
+<li>The fixture diff is large only because the fixtures are regenerated with their own generator.</li>
+</ul>
+<p><strong>Test plan</strong> GitHub Actions has been frozen org-wide since 2026-10-21, so <strong>no CI ran on this PR</strong>. Evidence is local, on Windows:</p>
+<ul>
+<li class="task"><input type="checkbox" disabled checked> <span>Report-related test files (31): 441 passed, 11 failed, 2 skipped. Those 11 fail identically on base 303a5d044, and none are new.</span></li>
+<li class="task"><input type="checkbox" disabled checked> <span>Browser: 45 Playwright checks pass on a <code>render_document</code> fixture, including a Mermaid-style <code>class=&quot;flowchart&quot;</code> diagram.</span></li>
+<li class="task"><input type="checkbox" disabled checked> <span>Browser: both diagrams on a real report open fullscreen with labels and arrowheads intact.</span></li>
+<li class="task"><input type="checkbox" disabled checked> <span><code>validate_report_conformance.py</code> passes on that report.</span></li>
+<li class="task"><input type="checkbox" disabled> <span>Not run: the full repo test suite, or anything on Linux.</span></li>
+</ul>
+<p>🤖 Generated with <a href="https://claude.com/claude-code">Claude Code</a></p></div></details>
+<details class="section" id="outcome"><summary><span class="section-index">03</span><span class="section-title">Outcome</span><span class="section-count">outcome - 29 words</span></summary><div class="section-body"><div class="table-wrap"><table><thead><tr><th>field</th><th>value</th></tr></thead><tbody><tr><td>state</td><td>MERGED</td></tr>
+<tr><td>branches</td><td><code>main</code> ← <code>feat/report-click-fullscreen-20261104</code></td></tr>
+<tr><td>author</td><td>gblack686</td></tr>
+<tr><td>opened</td><td>2026-11-05T04:22:58Z</td></tr>
+<tr><td>merged</td><td>2026-11-05T04:23:22Z</td></tr>
+<tr><td>time to merge</td><td>0h 0m</td></tr>
+<tr><td>merge commit</td><td><code>15bbd4ae6374</code></td></tr>
+<tr><td>closeout class</td><td>merged</td></tr></tbody></table></div></div></details>
+<details class="section" id="what-changed"><summary><span class="section-index">04</span><span class="section-title">What Changed</span><span class="section-count">what - 23 words</span></summary><div class="section-body"><p><strong>+942 / −25</strong> across 17 files.</p>
+<div class="table-wrap"><table><thead><tr><th>area</th><th>files</th><th>+</th><th>−</th></tr></thead><tbody><tr><td><code>services</code></td><td>9</td><td>803</td><td>0</td></tr>
+<tr><td><code>resources</code></td><td>5</td><td>118</td><td>22</td></tr>
+<tr><td><code>tests</code></td><td>2</td><td>20</td><td>3</td></tr>
+<tr><td><code>second-brain</code></td><td>1</td><td>1</td><td>0</td></tr></tbody></table></div></div></details>
+<details class="section" id="commits"><summary><span class="section-index">05</span><span class="section-title">Commits</span><span class="section-count">commits - 14 words</span></summary><div class="section-body"><div class="table-wrap"><table><thead><tr><th>sha</th><th>headline</th><th>date</th></tr></thead><tbody><tr><td><code>6d6510c946</code></td><td>Open every report diagram and image fullscreen on click</td><td>2026-11-05</td></tr></tbody></table></div></div></details>
+<details class="section" id="verification"><summary><span class="section-index">06</span><span class="section-title">Verification</span><span class="section-count">verification - 6 words</span></summary><div class="section-body"><div class="table-wrap"><table><thead><tr><th>check</th><th>outcome</th></tr></thead><tbody></tbody></table></div>
+<p><strong>0/0 checks passed.</strong></p></div></details>
+<details class="section" id="links-receipts"><summary><span class="section-index">07</span><span class="section-title">Links &amp; Receipts</span><span class="section-count">links - 42 words</span></summary><div class="section-body"><p><strong>Lineage:</strong> plan → PR → report: <a href="https://gbautomation.xyz/prds/prd.html">prd</a> → <a href="https://github.com/gbauto/gbautomation/pull/1649">PR #1649</a> → <a href="https://gbautomation.xyz/prds/pr-1649-report-click-fullscreen-20261104.html">report</a></p>
+<ul>
+<li>match evidence: confidence 72 via slug</li>
+</ul>
+<p><strong>KPIs</strong> (as written to <code>pr_report_receipts</code>):</p>
+<div class="table-wrap"><table><thead><tr><th>pr</th><th>plan_slug</th><th>time_to_merge</th><th>+</th><th>−</th><th>files</th><th>commits</th><th>checks</th></tr></thead><tbody><tr><td>#1649</td><td>prd</td><td>0h 0m</td><td>942</td><td>25</td><td>17</td><td>1</td><td>0/0</td></tr></tbody></table></div>
+<p>Receipt: <code>pr_report_receipts</code> / <code>prrpt_52b1e3b054b75c356ff9be3e</code> · artifact: <code>artifacts/pr-reports/1649-report-click-fullscreen-20261104/</code></p></div></details></div>
+</main>
+<div class="bottom-meta-row"><details class="metadata-card"><summary><span class="metadata-card-title">Metadata</span><span class="metadata-card-action">[expand]</span></summary><div class="metadata-card-body"><dl class="metadata-list"><div><dt>report id</dt><dd>pr-1649-report-click-fullscreen-20261104</dd></div><div><dt>generated at utc</dt><dd>2026-11-04T23:42:05-08:00</dd></div><div><dt>source task id</dt><dd>direct-authorized-turn</dd></div><div><dt>root task id</dt><dd>direct-authorized-turn</dd></div><div><dt>source paths</dt><dd>C:\Users\gblac\AppData\Local\Temp\claude\3a991d68a2a0b837\c3a1f817-ed79-4b32-bcb1-b022359642b3\scratchpad\pr-1649-report\pr-1649-report-click-fullscreen-20261104.md</dd></div><div><dt>created</dt><dd>2026-11-04T23:42:05-08:00</dd></div><div><dt>modified</dt><dd>2026-11-04T23:41:58-08:00</dd></div><div><dt>commits</dt><dd>pending</dd></div><div><dt>agent name</dt><dd>GBAutomation</dd></div><div><dt>session id</dt><dd>not-recorded</dd></div><div><dt>back refs</dt><dd>not-recorded</dd></div><div><dt>forward refs</dt><dd>not-recorded</dd></div><div><dt>renderer id</dt><dd>gbauto.report.collapsible</dd></div><div><dt>renderer version</dt><dd>1.0.0</dd></div><div><dt>shell id</dt><dd>gbauto-doc.v1</dd></div><div><dt>shell version</dt><dd>2026-07-03</dd></div><div><dt>theme id</dt><dd>gbauto-theme.v1</dd></div><div><dt>theme version</dt><dd>2026-06-11</dd></div></dl></div></details></div>
+<div class="bottom-meta-row"><details class="trace-card"><summary><span class="trace-title">Trace</span><span class="trace-action">[expand]</span></summary><div class="trace-body"><dl class="metadata-list"><div><dt>pr 732 url</dt><dd>not-applicable</dd></div><div><dt>pr 732 merge commit</dt><dd>not-applicable</dd></div><div><dt>pr 732 checks</dt><dd>not-applicable</dd></div><div><dt>pr 733 url</dt><dd>not-applicable</dd></div><div><dt>pr 733 merge commit</dt><dd>not-applicable</dd></div><div><dt>pr 733 checks</dt><dd>not-applicable</dd></div><div><dt>human approval gate id</dt><dd>not-activated</dd></div><div><dt>human approval decision</dt><dd>direct implementation authorized</dd></div><div><dt>host readback summary</dt><dd>pending implementation validation</dd></div><div><dt>origin main readback</dt><dd>pending merge</dd></div><div><dt>kanban closeout</dt><dd>not dispatched</dd></div><div><dt>residual risks</dt><dd>live cron activation remains separately gated</dd></div><div><dt>old artifact status</dt><dd>not-applicable</dd></div></dl></div></details></div>
+
+  <div class="feedback" data-fb-version="6" data-fb-open="false" data-fb-mode="expert"
+    data-fb-annotating="false" data-fb-has-target="false"
+    data-fb-annotation-source="lavish-axi" data-lavish-ui="gbauto-command-layer">
+    <button type="button" class="fb-tab" aria-expanded="false" aria-controls="fb-drawer"
+      title="Open command layer (Ctrl+K, Space, or legacy Ctrl+J)">
+      Command<span class="fb-tab-key">Ctrl+K &middot; Space</span>
+    </button>
+    <aside id="fb-drawer" class="fb-drawer" role="dialog"
+      aria-label="Document command layer" aria-hidden="true">
+      <div class="fb-drawer-inner">
+        <div class="fb-drawer-head">
+          <div class="fb-head-copy">
+            <span class="feedback-label">Document command layer</span>
+            <span class="fb-shortcuts">Ctrl+K / Space to open &middot; Ctrl+I annotate &middot; Esc to close</span>
+          </div>
+          <button type="button" class="fb-close" aria-label="Close command layer">&#215;</button>
+        </div>
+        <div class="fb-auth-row" data-fb-auth-state="signed-out">
+          <button type="button" class="fb-auth-signin" data-fb-auth-action="signin">Sign in with Google</button>
+          <span class="fb-auth-identity" hidden></span>
+          <button type="button" class="fb-auth-signout" data-fb-auth-action="signout" hidden>Sign out</button>
+        </div>
+        <div class="fb-command-bar">
+        <div class="fb-command-tabs" role="tablist" aria-label="Command type">
+          <button id="fb-tab-expert" type="button" class="fb-mode" data-fb-mode-button="expert" role="tab" aria-selected="true" aria-controls="fb-panel-expert">Ask expert</button>
+          <button id="fb-tab-fleet" type="button" class="fb-mode" data-fb-mode-button="fleet" role="tab" aria-selected="false" aria-controls="fb-panel-fleet">Fleet skills</button>
+          <button id="fb-tab-feedback" type="button" class="fb-mode" data-fb-mode-button="feedback" role="tab" aria-selected="false" aria-controls="fb-panel-feedback">Feedback</button>
+          <button id="fb-tab-settings" type="button" class="fb-mode" data-fb-mode-button="settings" role="tab" aria-selected="false" aria-controls="fb-panel-settings">Settings</button>
+        </div>
+          <button type="button" class="fb-annotate-toggle" aria-pressed="false">Annotate page</button>
+        </div>
+        <form id="fb-form" autocomplete="off">
+          <section id="fb-panel-expert" class="fb-command-panel" data-fb-panel="expert" role="tabpanel" aria-labelledby="fb-tab-expert">
+          <div class="fb-expert-wrap">
+            <div class="fb-expert-head"><span>Agent expert domains</span><span>Select to prefill</span></div>
+            <div class="fb-expert-pills" role="group" aria-label="Agent expert domains"><button type="button" class="fb-expert-pill" data-fb-expert="agent-forge" aria-pressed="false" title="Prefill /experts:agent-forge:question">Agent Forge</button><button type="button" class="fb-expert-pill" data-fb-expert="agent-os" aria-pressed="false" title="Prefill /experts:agent-os:question">Agent Os</button><button type="button" class="fb-expert-pill" data-fb-expert="artifacts" aria-pressed="false" title="Prefill /experts:artifacts:question">Artifacts</button><button type="button" class="fb-expert-pill" data-fb-expert="aws-org" aria-pressed="false" title="Prefill /experts:aws-org:question">AWS Org</button><button type="button" class="fb-expert-pill" data-fb-expert="bokeh" aria-pressed="false" title="Prefill /experts:bokeh:question">Bokeh</button><button type="button" class="fb-expert-pill" data-fb-expert="bowser" aria-pressed="false" title="Prefill /experts:bowser:question">Bowser</button><button type="button" class="fb-expert-pill" data-fb-expert="canopy" aria-pressed="false" title="Prefill /experts:canopy:question">Canopy</button><button type="button" class="fb-expert-pill" data-fb-expert="ci" aria-pressed="false" title="Prefill /experts:ci:question">Ci</button><button type="button" class="fb-expert-pill" data-fb-expert="client-platform" aria-pressed="false" title="Prefill /experts:client-platform:question">Client Platform</button><button type="button" class="fb-expert-pill" data-fb-expert="code-quality" aria-pressed="false" title="Prefill /experts:code-quality:question">Code Quality</button><button type="button" class="fb-expert-pill" data-fb-expert="crawler-feed" aria-pressed="false" title="Prefill /experts:crawler-feed:question">Crawler Feed</button><button type="button" class="fb-expert-pill" data-fb-expert="data-contract" aria-pressed="false" title="Prefill /experts:data-contract:question">Data Contract</button><button type="button" class="fb-expert-pill" data-fb-expert="data-visualization" aria-pressed="false" title="Prefill /experts:data-visualization:question">Data Visualization</button><button type="button" class="fb-expert-pill" data-fb-expert="deliverables" aria-pressed="false" title="Prefill /experts:deliverables:question">Deliverables</button><button type="button" class="fb-expert-pill" data-fb-expert="ecom" aria-pressed="false" title="Prefill /experts:ecom:question">Ecom</button><button type="button" class="fb-expert-pill" data-fb-expert="gbauto" aria-pressed="false" title="Prefill /experts:gbauto:question">GBauto</button><button type="button" class="fb-expert-pill" data-fb-expert="github" aria-pressed="false" title="Prefill /experts:github:question">GitHub</button><button type="button" class="fb-expert-pill" data-fb-expert="google-workspace" aria-pressed="false" title="Prefill /experts:google-workspace:question">Google Workspace</button><button type="button" class="fb-expert-pill" data-fb-expert="graph" aria-pressed="false" title="Prefill /experts:graph:question">Graph</button><button type="button" class="fb-expert-pill" data-fb-expert="health" aria-pressed="false" title="Prefill /experts:health:question">Health</button><button type="button" class="fb-expert-pill" data-fb-expert="hermes" aria-pressed="false" title="Prefill /experts:hermes:question">Hermes</button><button type="button" class="fb-expert-pill" data-fb-expert="hermes-dashboard" aria-pressed="false" title="Prefill /experts:hermes-dashboard:question">Hermes Dashboard</button><button type="button" class="fb-expert-pill" data-fb-expert="hooks" aria-pressed="false" title="Prefill /experts:hooks:question">Hooks</button><button type="button" class="fb-expert-pill" data-fb-expert="library" aria-pressed="false" title="Prefill /experts:library:question">Library</button><button type="button" class="fb-expert-pill" data-fb-expert="linkedin" aria-pressed="false" title="Prefill /experts:linkedin:question">Linkedin</button><button type="button" class="fb-expert-pill" data-fb-expert="marketing" aria-pressed="false" title="Prefill /experts:marketing:question">Marketing</button><button type="button" class="fb-expert-pill" data-fb-expert="music" aria-pressed="false" title="Prefill /experts:music:question">Music</button><button type="button" class="fb-expert-pill" data-fb-expert="observability" aria-pressed="false" title="Prefill /experts:observability:question">Observability</button><button type="button" class="fb-expert-pill" data-fb-expert="obsidian" aria-pressed="false" title="Prefill /experts:obsidian:question">Obsidian</button><button type="button" class="fb-expert-pill" data-fb-expert="outreach" aria-pressed="false" title="Prefill /experts:outreach:question">Outreach</button><button type="button" class="fb-expert-pill" data-fb-expert="pi" aria-pressed="false" title="Prefill /experts:pi:question">Pi</button><button type="button" class="fb-expert-pill" data-fb-expert="plugins" aria-pressed="false" title="Prefill /experts:plugins:question">Plugins</button><button type="button" class="fb-expert-pill" data-fb-expert="product-ops" aria-pressed="false" title="Prefill /experts:product-ops:question">Product Ops</button><button type="button" class="fb-expert-pill" data-fb-expert="release-engineering" aria-pressed="false" title="Prefill /experts:release-engineering:question">Release Engineering</button><button type="button" class="fb-expert-pill" data-fb-expert="sales" aria-pressed="false" title="Prefill /experts:sales:question">Sales</button><button type="button" class="fb-expert-pill" data-fb-expert="second-brain" aria-pressed="false" title="Prefill /experts:second-brain:question">Second Brain</button><button type="button" class="fb-expert-pill" data-fb-expert="security" aria-pressed="false" title="Prefill /experts:security:question">Security</button><button type="button" class="fb-expert-pill" data-fb-expert="sprint-management" aria-pressed="false" title="Prefill /experts:sprint-management:question">Sprint Management</button><button type="button" class="fb-expert-pill" data-fb-expert="supabase" aria-pressed="false" title="Prefill /experts:supabase:question">Supabase</button><button type="button" class="fb-expert-pill" data-fb-expert="sysadmin" aria-pressed="false" title="Prefill /experts:sysadmin:question">Sysadmin</button><button type="button" class="fb-expert-pill" data-fb-expert="tac" aria-pressed="false" title="Prefill /experts:tac:question">Tac</button><button type="button" class="fb-expert-pill" data-fb-expert="telegram" aria-pressed="false" title="Prefill /experts:telegram:question">Telegram</button><button type="button" class="fb-expert-pill" data-fb-expert="triage" aria-pressed="false" title="Prefill /experts:triage:question">Triage</button><button type="button" class="fb-expert-pill" data-fb-expert="website" aria-pressed="false" title="Prefill /experts:website:question">Website</button><button type="button" class="fb-expert-pill" data-fb-expert="youtube-intel" aria-pressed="false" title="Prefill /experts:youtube-intel:question">Youtube Intel</button></div>
+          </div>
+          </section>
+          <section id="fb-panel-fleet" class="fb-command-panel" data-fb-panel="fleet" role="tabpanel" aria-labelledby="fb-tab-fleet" hidden>
+          <div class="fb-fleet-wrap">
+            <div class="fb-expert-head"><span>Common fleet skills</span><span>Color-coded by command group</span></div>
+            <div class="fb-fleet-groups"><section class="fb-command-group" data-fb-command-group="observability"><div class="fb-command-group-title">Observability</div><div class="fb-command-pills" role="group" aria-label="Observability commands"><button type="button" class="fb-command-pill" data-fb-command="check-langfuse-logs" data-fb-group="observability" data-fb-skill="check-langfuse-logs" data-fb-prompt="Check Langfuse logs for" aria-pressed="false" title="Prefill request for check-langfuse-logs">Check Langfuse logs</button><button type="button" class="fb-command-pill" data-fb-command="telemetry-report" data-fb-group="observability" data-fb-skill="telemetry-report" data-fb-prompt="Generate a telemetry report for" aria-pressed="false" title="Prefill request for telemetry-report">Telemetry report</button><button type="button" class="fb-command-pill" data-fb-command="trace-lookup" data-fb-group="observability" data-fb-skill="check-langfuse-logs" data-fb-prompt="Look up this Langfuse trace:" aria-pressed="false" title="Prefill request for check-langfuse-logs">Trace lookup</button></div></section><section class="fb-command-group" data-fb-command-group="search-memory"><div class="fb-command-group-title">Search &amp; memory</div><div class="fb-command-pills" role="group" aria-label="Search &amp; memory commands"><button type="button" class="fb-command-pill" data-fb-command="session-search" data-fb-group="search-memory" data-fb-skill="session-query" data-fb-prompt="Search agent sessions for" aria-pressed="false" title="Prefill request for session-query">Session search</button><button type="button" class="fb-command-pill" data-fb-command="tac-knowledge-search" data-fb-group="search-memory" data-fb-skill="tac-kb-query" data-fb-prompt="Search the TAC knowledge base for" aria-pressed="false" title="Prefill request for tac-kb-query">TAC knowledge</button><button type="button" class="fb-command-pill" data-fb-command="work-intelligence" data-fb-group="search-memory" data-fb-skill="work-intelligence" data-fb-prompt="Build a work-intelligence view for" aria-pressed="false" title="Prefill request for work-intelligence">Work intelligence</button></div></section><section class="fb-command-group" data-fb-command-group="git-delivery"><div class="fb-command-group-title">Git &amp; delivery</div><div class="fb-command-pills" role="group" aria-label="Git &amp; delivery commands"><button type="button" class="fb-command-pill" data-fb-command="git-search" data-fb-group="git-delivery" data-fb-skill="github-index" data-fb-prompt="Search Git history for" aria-pressed="false" title="Prefill request for github-index">Git search</button><button type="button" class="fb-command-pill" data-fb-command="session-git-status" data-fb-group="git-delivery" data-fb-skill="session-git-status" data-fb-prompt="Audit this session&#x27;s Git status and push state for" aria-pressed="false" title="Prefill request for session-git-status">Session Git status</button><button type="button" class="fb-command-pill" data-fb-command="pr-checks" data-fb-group="git-delivery" data-fb-skill="gha-running-jobs-monitor" data-fb-prompt="Check pull request and CI status for" aria-pressed="false" title="Prefill request for gha-running-jobs-monitor">PR checks</button></div></section><section class="fb-command-group" data-fb-command-group="fleet-operations"><div class="fb-command-group-title">Fleet operations</div><div class="fb-command-pills" role="group" aria-label="Fleet operations commands"><button type="button" class="fb-command-pill" data-fb-command="worktree-audit" data-fb-group="fleet-operations" data-fb-skill="git-workspace-cleanup" data-fb-prompt="Audit fleet worktrees and recoverable Git state for" aria-pressed="false" title="Prefill request for git-workspace-cleanup">Worktree audit</button><button type="button" class="fb-command-pill" data-fb-command="running-actions" data-fb-group="fleet-operations" data-fb-skill="gha-running-jobs-monitor" data-fb-prompt="Show running GitHub Actions jobs for" aria-pressed="false" title="Prefill request for gha-running-jobs-monitor">Running Actions</button><button type="button" class="fb-command-pill" data-fb-command="kanban-fleet-status" data-fb-group="fleet-operations" data-fb-skill="work-intelligence" data-fb-prompt="Summarize Kanban and agent fleet status for" aria-pressed="false" title="Prefill request for work-intelligence">Kanban / fleet status</button></div></section></div>
+          </div>
+          </section>
+          <section id="fb-panel-feedback" class="fb-command-panel" data-fb-panel="feedback" role="tabpanel" aria-labelledby="fb-tab-feedback" hidden>
+            <p class="fb-feedback-intro">Leave a plain document comment or annotate a precise page target.</p>
+          </section>
+          <div class="fb-target-wrap" aria-live="polite">
+            <span class="fb-target-label">Target</span>
+            <span class="fb-target-copy"></span>
+            <button type="button" class="fb-target-clear" aria-label="Clear annotation target">&#215;</button>
+          </div>
+          <div class="fb-route">
+            <label class="fb-row">
+              <span>On</span>
+              <select id="fb-section">
+                <option value="">Whole document</option>
+                <option value="Overview">Overview</option><option value="Summary">Summary</option><option value="Outcome">Outcome</option><option value="What Changed">What Changed</option><option value="Commits">Commits</option><option value="Verification">Verification</option><option value="Links &amp; Receipts">Links &amp; Receipts</option>
+              </select>
+            </label>
+            <span id="fb-status" class="fb-status" aria-live="polite"></span>
+          </div>
+          <textarea id="fb-msg" rows="3" maxlength="4000"
+            placeholder="Ask an expert or leave document feedback&#8230;"></textarea>
+          <!-- honeypot: real users never see or fill this -->
+          <input type="text" id="fb-hp" name="website_url" tabindex="-1"
+            autocomplete="off" aria-hidden="true">
+          <!-- populated by the Google-sign-in module script below when a
+               Supabase Auth session exists; empty keeps submission anonymous -->
+          <input type="hidden" id="fb-auth-email" value="">
+          <input type="hidden" id="fb-auth-name" value="">
+          <div class="fb-actions">
+            <button type="submit" id="fb-submit">Send message</button>
+            <p class="fb-hint">Ctrl+Enter sends &middot; one Edge Function write</p>
+          </div>
+        </form>
+        <section id="fb-panel-settings" class="fb-command-panel fb-settings-panel" data-fb-panel="settings" role="tabpanel" aria-labelledby="fb-tab-settings" hidden><div class="fb-settings-head"><div><strong>Document color presets</strong><p>Preview-only on this device. GB Auto remains the internal default.</p></div><button type="button" class="fb-theme-reset" data-fb-theme-reset>Reset GB Auto</button></div><div class="fb-theme-toolbar" role="group" aria-label="Filter color presets"><button type="button" data-fb-theme-filter="all" aria-pressed="true">All</button><button type="button" data-fb-theme-filter="light" aria-pressed="false">Light</button><button type="button" data-fb-theme-filter="dark" aria-pressed="false">Dark</button><span>1 internal + 24 external</span></div><div class="fb-theme-grid"><button type="button" class="fb-theme-card" data-fb-theme-id="gbauto" data-fb-theme-mode="light" aria-pressed="true" aria-label="Apply GB Auto preset"><span class="fb-theme-card-head"><span><strong>GB Auto</strong><small>GBAUTO · light</small></span><span class="fb-theme-check" aria-hidden="true">Selected</span></span><span class="fb-theme-swatches" aria-hidden="true"><span class="fb-theme-swatch" style="--fb-theme-swatch:#F3F1E7" title="canvas: #F3F1E7"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#E6E4D9" title="canvasSubtle: #E6E4D9"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#FBFAF5" title="panel: #FBFAF5"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#191919" title="text: #191919"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#5C5C5C" title="muted: #5C5C5C"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#191919" title="primary: #191919"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#D97757" title="accent: #D97757"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#3D6EA8" title="focus: #3D6EA8"></span></span><span class="fb-theme-note">Cream neutral + terracotta accent</span></button><button type="button" class="fb-theme-card" data-fb-theme-id="l01" data-fb-theme-mode="light" aria-pressed="false" aria-label="Apply Jade Porcelain preset"><span class="fb-theme-card-head"><span><strong>Jade Porcelain</strong><small>L01 · light</small></span><span class="fb-theme-check" aria-hidden="true">Select</span></span><span class="fb-theme-swatches" aria-hidden="true"><span class="fb-theme-swatch" style="--fb-theme-swatch:#F4FBF8" title="canvas: #F4FBF8"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#E7F5F0" title="canvasSubtle: #E7F5F0"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#FFFFFF" title="panel: #FFFFFF"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#102A25" title="text: #102A25"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#47665E" title="muted: #47665E"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#0E7668" title="primary: #0E7668"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#A84834" title="accent: #A84834"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#159083" title="focus: #159083"></span></span><span class="fb-theme-note">Jade analogous + kiln-coral complement</span></button><button type="button" class="fb-theme-card" data-fb-theme-id="l02" data-fb-theme-mode="light" aria-pressed="false" aria-label="Apply Aqua Sand preset"><span class="fb-theme-card-head"><span><strong>Aqua Sand</strong><small>L02 · light</small></span><span class="fb-theme-check" aria-hidden="true">Select</span></span><span class="fb-theme-swatches" aria-hidden="true"><span class="fb-theme-swatch" style="--fb-theme-swatch:#F7F3E8" title="canvas: #F7F3E8"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#EBE6D8" title="canvasSubtle: #EBE6D8"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#FFFCF4" title="panel: #FFFCF4"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#18302B" title="text: #18302B"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#4E625C" title="muted: #4E625C"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#126F68" title="primary: #126F68"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#365D95" title="accent: #365D95"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#238D83" title="focus: #238D83"></span></span><span class="fb-theme-note">Teal anchor + cobalt split-cool</span></button><button type="button" class="fb-theme-card" data-fb-theme-id="l03" data-fb-theme-mode="light" aria-pressed="false" aria-label="Apply Sage Linen preset"><span class="fb-theme-card-head"><span><strong>Sage Linen</strong><small>L03 · light</small></span><span class="fb-theme-check" aria-hidden="true">Select</span></span><span class="fb-theme-swatches" aria-hidden="true"><span class="fb-theme-swatch" style="--fb-theme-swatch:#F2F5E9" title="canvas: #F2F5E9"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#E6EBDD" title="canvasSubtle: #E6EBDD"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#FBFCF5" title="panel: #FBFCF5"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#1F2D25" title="text: #1F2D25"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#526159" title="muted: #526159"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#2E6B55" title="primary: #2E6B55"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#9A4D35" title="accent: #9A4D35"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#43846B" title="focus: #43846B"></span></span><span class="fb-theme-note">Botanical analogous + fired-clay complement</span></button><button type="button" class="fb-theme-card" data-fb-theme-id="l04" data-fb-theme-mode="light" aria-pressed="false" aria-label="Apply Glacier Ink preset"><span class="fb-theme-card-head"><span><strong>Glacier Ink</strong><small>L04 · light</small></span><span class="fb-theme-check" aria-hidden="true">Select</span></span><span class="fb-theme-swatches" aria-hidden="true"><span class="fb-theme-swatch" style="--fb-theme-swatch:#F1F7FA" title="canvas: #F1F7FA"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#E3EEF3" title="canvasSubtle: #E3EEF3"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#FCFEFF" title="panel: #FCFEFF"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#132D38" title="text: #132D38"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#48616B" title="muted: #48616B"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#08737B" title="primary: #08737B"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#3E5792" title="accent: #3E5792"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#188E98" title="focus: #188E98"></span></span><span class="fb-theme-note">Arctic analogous + indigo depth</span></button><button type="button" class="fb-theme-card" data-fb-theme-id="l05" data-fb-theme-mode="light" aria-pressed="false" aria-label="Apply Celadon Plum preset"><span class="fb-theme-card-head"><span><strong>Celadon Plum</strong><small>L05 · light</small></span><span class="fb-theme-check" aria-hidden="true">Select</span></span><span class="fb-theme-swatches" aria-hidden="true"><span class="fb-theme-swatch" style="--fb-theme-swatch:#EFF8F1" title="canvas: #EFF8F1"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#E2EFE5" title="canvasSubtle: #E2EFE5"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#FCFEFC" title="panel: #FCFEFC"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#172C28" title="text: #172C28"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#4C625D" title="muted: #4C625D"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#166C60" title="primary: #166C60"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#744064" title="accent: #744064"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#268779" title="focus: #268779"></span></span><span class="fb-theme-note">Celadon field + aubergine complement</span></button><button type="button" class="fb-theme-card" data-fb-theme-id="l06" data-fb-theme-mode="light" aria-pressed="false" aria-label="Apply Seafoam Copper preset"><span class="fb-theme-card-head"><span><strong>Seafoam Copper</strong><small>L06 · light</small></span><span class="fb-theme-check" aria-hidden="true">Select</span></span><span class="fb-theme-swatches" aria-hidden="true"><span class="fb-theme-swatch" style="--fb-theme-swatch:#ECF8F5" title="canvas: #ECF8F5"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#DDEEEA" title="canvasSubtle: #DDEEEA"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#FAFEFD" title="panel: #FAFEFD"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#17302D" title="text: #17302D"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#4A625D" title="muted: #4A625D"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#176D63" title="primary: #176D63"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#93462F" title="accent: #93462F"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#278C80" title="focus: #278C80"></span></span><span class="fb-theme-note">Seafoam analogous + oxidized copper</span></button><button type="button" class="fb-theme-card" data-fb-theme-id="l07" data-fb-theme-mode="light" aria-pressed="false" aria-label="Apply Pearl Orchid preset"><span class="fb-theme-card-head"><span><strong>Pearl Orchid</strong><small>L07 · light</small></span><span class="fb-theme-check" aria-hidden="true">Select</span></span><span class="fb-theme-swatches" aria-hidden="true"><span class="fb-theme-swatch" style="--fb-theme-swatch:#F7F3FA" title="canvas: #F7F3FA"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#ECE5F0" title="canvasSubtle: #ECE5F0"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#FFFCFF" title="panel: #FFFCFF"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#292336" title="text: #292336"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#61596B" title="muted: #61596B"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#147064" title="primary: #147064"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#684A96" title="accent: #684A96"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#298D80" title="focus: #298D80"></span></span><span class="fb-theme-note">Pearl-lilac field + teal complement</span></button><button type="button" class="fb-theme-card" data-fb-theme-id="l08" data-fb-theme-mode="light" aria-pressed="false" aria-label="Apply Citrus Mineral preset"><span class="fb-theme-card-head"><span><strong>Citrus Mineral</strong><small>L08 · light</small></span><span class="fb-theme-check" aria-hidden="true">Select</span></span><span class="fb-theme-swatches" aria-hidden="true"><span class="fb-theme-swatch" style="--fb-theme-swatch:#F7F8EB" title="canvas: #F7F8EB"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#ECEEDC" title="canvasSubtle: #ECEEDC"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#FFFFF7" title="panel: #FFFFF7"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#263026" title="text: #263026"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#5C655A" title="muted: #5C655A"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#246B57" title="primary: #246B57"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#895B05" title="accent: #895B05"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#398670" title="focus: #398670"></span></span><span class="fb-theme-note">Mineral green + aged-marigold accent</span></button><button type="button" class="fb-theme-card" data-fb-theme-id="l09" data-fb-theme-mode="light" aria-pressed="false" aria-label="Apply Rose Quartz Circuit preset"><span class="fb-theme-card-head"><span><strong>Rose Quartz Circuit</strong><small>L09 · light</small></span><span class="fb-theme-check" aria-hidden="true">Select</span></span><span class="fb-theme-swatches" aria-hidden="true"><span class="fb-theme-swatch" style="--fb-theme-swatch:#FBF3F2" title="canvas: #FBF3F2"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#F0E5E4" title="canvasSubtle: #F0E5E4"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#FFFCFB" title="panel: #FFFCFB"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#342426" title="text: #342426"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#6D5558" title="muted: #6D5558"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#096F67" title="primary: #096F67"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#8D3E5C" title="accent: #8D3E5C"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#168D82" title="focus: #168D82"></span></span><span class="fb-theme-note">Blush field + teal/berry triad</span></button><button type="button" class="fb-theme-card" data-fb-theme-id="l10" data-fb-theme-mode="light" aria-pressed="false" aria-label="Apply Alpine Sky preset"><span class="fb-theme-card-head"><span><strong>Alpine Sky</strong><small>L10 · light</small></span><span class="fb-theme-check" aria-hidden="true">Select</span></span><span class="fb-theme-swatches" aria-hidden="true"><span class="fb-theme-swatch" style="--fb-theme-swatch:#F0F8FB" title="canvas: #F0F8FB"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#E1EEF4" title="canvasSubtle: #E1EEF4"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#FCFEFF" title="panel: #FCFEFF"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#152D3A" title="text: #152D3A"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#4C626C" title="muted: #4C626C"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#08716A" title="primary: #08716A"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#315D8B" title="accent: #315D8B"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#198E85" title="focus: #198E85"></span></span><span class="fb-theme-note">Sky/teal analogous + navy structure</span></button><button type="button" class="fb-theme-card" data-fb-theme-id="l11" data-fb-theme-mode="light" aria-pressed="false" aria-label="Apply Parchment Reef preset"><span class="fb-theme-card-head"><span><strong>Parchment Reef</strong><small>L11 · light</small></span><span class="fb-theme-check" aria-hidden="true">Select</span></span><span class="fb-theme-swatches" aria-hidden="true"><span class="fb-theme-swatch" style="--fb-theme-swatch:#F8F2E5" title="canvas: #F8F2E5"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#EBE3D3" title="canvasSubtle: #EBE3D3"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#FFFBF2" title="panel: #FFFBF2"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#332A22" title="text: #332A22"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#675C50" title="muted: #675C50"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#176C61" title="primary: #176C61"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#A34237" title="accent: #A34237"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#2A887A" title="focus: #2A887A"></span></span><span class="fb-theme-note">Parchment neutral + reef-coral complement</span></button><button type="button" class="fb-theme-card" data-fb-theme-id="l12" data-fb-theme-mode="light" aria-pressed="false" aria-label="Apply Silver Eucalyptus preset"><span class="fb-theme-card-head"><span><strong>Silver Eucalyptus</strong><small>L12 · light</small></span><span class="fb-theme-check" aria-hidden="true">Select</span></span><span class="fb-theme-swatches" aria-hidden="true"><span class="fb-theme-swatch" style="--fb-theme-swatch:#F3F6F5" title="canvas: #F3F6F5"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#E6EBE9" title="canvasSubtle: #E6EBE9"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#FEFFFF" title="panel: #FEFFFF"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#1D2B2A" title="text: #1D2B2A"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#52615F" title="muted: #52615F"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#1A6B60" title="primary: #1A6B60"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#5C4D80" title="accent: #5C4D80"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#2D877B" title="focus: #2D877B"></span></span><span class="fb-theme-note">Cool neutral + eucalyptus/violet split</span></button><button type="button" class="fb-theme-card" data-fb-theme-id="d01" data-fb-theme-mode="dark" aria-pressed="false" aria-label="Apply Abyss Mint preset"><span class="fb-theme-card-head"><span><strong>Abyss Mint</strong><small>D01 · dark</small></span><span class="fb-theme-check" aria-hidden="true">Select</span></span><span class="fb-theme-swatches" aria-hidden="true"><span class="fb-theme-swatch" style="--fb-theme-swatch:#071D27" title="canvas: #071D27"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#0D2933" title="canvasSubtle: #0D2933"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#102F38" title="panel: #102F38"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#E9FFF8" title="text: #E9FFF8"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#A9C6C2" title="muted: #A9C6C2"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#8FF4D8" title="primary: #8FF4D8"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#EC7D64" title="accent: #EC7D64"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#7DE8D0" title="focus: #7DE8D0"></span></span><span class="fb-theme-note">Deep ocean analogous + warm coral flare</span></button><button type="button" class="fb-theme-card" data-fb-theme-id="d02" data-fb-theme-mode="dark" aria-pressed="false" aria-label="Apply Deep Lagoon preset"><span class="fb-theme-card-head"><span><strong>Deep Lagoon</strong><small>D02 · dark</small></span><span class="fb-theme-check" aria-hidden="true">Select</span></span><span class="fb-theme-swatches" aria-hidden="true"><span class="fb-theme-swatch" style="--fb-theme-swatch:#082B2B" title="canvas: #082B2B"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#103535" title="canvasSubtle: #103535"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#143E3D" title="panel: #143E3D"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#ECFFF8" title="text: #ECFFF8"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#A9C9C2" title="muted: #A9C9C2"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#91E7CF" title="primary: #91E7CF"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#FF947A" title="accent: #FF947A"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#79DFCB" title="focus: #79DFCB"></span></span><span class="fb-theme-note">Lagoon monochrome + salmon complement</span></button><button type="button" class="fb-theme-card" data-fb-theme-id="d03" data-fb-theme-mode="dark" aria-pressed="false" aria-label="Apply Aubergine Current preset"><span class="fb-theme-card-head"><span><strong>Aubergine Current</strong><small>D03 · dark</small></span><span class="fb-theme-check" aria-hidden="true">Select</span></span><span class="fb-theme-swatches" aria-hidden="true"><span class="fb-theme-swatch" style="--fb-theme-swatch:#241428" title="canvas: #241428"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#301D34" title="canvasSubtle: #301D34"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#38233C" title="panel: #38233C"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#FFF5FC" title="text: #FFF5FC"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#CEB8C9" title="muted: #CEB8C9"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#8FE6CF" title="primary: #8FE6CF"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#E994B8" title="accent: #E994B8"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#7DDECC" title="focus: #7DDECC"></span></span><span class="fb-theme-note">Aubergine field + mint/rose split</span></button><button type="button" class="fb-theme-card" data-fb-theme-id="d04" data-fb-theme-mode="dark" aria-pressed="false" aria-label="Apply Midnight Cobalt preset"><span class="fb-theme-card-head"><span><strong>Midnight Cobalt</strong><small>D04 · dark</small></span><span class="fb-theme-check" aria-hidden="true">Select</span></span><span class="fb-theme-swatches" aria-hidden="true"><span class="fb-theme-swatch" style="--fb-theme-swatch:#0B1832" title="canvas: #0B1832"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#12213D" title="canvasSubtle: #12213D"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#172746" title="panel: #172746"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#F3F8FF" title="text: #F3F8FF"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#B7C3D9" title="muted: #B7C3D9"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#72D7CE" title="primary: #72D7CE"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#F1B95B" title="accent: #F1B95B"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#6DD5D1" title="focus: #6DD5D1"></span></span><span class="fb-theme-note">Cobalt night + aqua/amber split</span></button><button type="button" class="fb-theme-card" data-fb-theme-id="d05" data-fb-theme-mode="dark" aria-pressed="false" aria-label="Apply Forest Copper preset"><span class="fb-theme-card-head"><span><strong>Forest Copper</strong><small>D05 · dark</small></span><span class="fb-theme-check" aria-hidden="true">Select</span></span><span class="fb-theme-swatches" aria-hidden="true"><span class="fb-theme-swatch" style="--fb-theme-swatch:#10261E" title="canvas: #10261E"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#173027" title="canvasSubtle: #173027"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#1B392F" title="panel: #1B392F"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#F4FFF7" title="text: #F4FFF7"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#B8C9BF" title="muted: #B8C9BF"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#8EDBB8" title="primary: #8EDBB8"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#E58B61" title="accent: #E58B61"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#7BD6B5" title="focus: #7BD6B5"></span></span><span class="fb-theme-note">Forest analogous + copper complement</span></button><button type="button" class="fb-theme-card" data-fb-theme-id="d06" data-fb-theme-mode="dark" aria-pressed="false" aria-label="Apply Slate Orchid preset"><span class="fb-theme-card-head"><span><strong>Slate Orchid</strong><small>D06 · dark</small></span><span class="fb-theme-check" aria-hidden="true">Select</span></span><span class="fb-theme-swatches" aria-hidden="true"><span class="fb-theme-swatch" style="--fb-theme-swatch:#1B2331" title="canvas: #1B2331"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#242D3C" title="canvasSubtle: #242D3C"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#293344" title="panel: #293344"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#F6F5FF" title="text: #F6F5FF"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#BDC4D2" title="muted: #BDC4D2"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#79DDD0" title="primary: #79DDD0"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#C59AE8" title="accent: #C59AE8"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#76D8CF" title="focus: #76D8CF"></span></span><span class="fb-theme-note">Blue slate + teal/orchid split</span></button><button type="button" class="fb-theme-card" data-fb-theme-id="d07" data-fb-theme-mode="dark" aria-pressed="false" aria-label="Apply Espresso Tide preset"><span class="fb-theme-card-head"><span><strong>Espresso Tide</strong><small>D07 · dark</small></span><span class="fb-theme-check" aria-hidden="true">Select</span></span><span class="fb-theme-swatches" aria-hidden="true"><span class="fb-theme-swatch" style="--fb-theme-swatch:#2A1E1A" title="canvas: #2A1E1A"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#352721" title="canvasSubtle: #352721"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#3B2D27" title="panel: #3B2D27"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#FFF9F1" title="text: #FFF9F1"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#D3C1B7" title="muted: #D3C1B7"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#8BE0C7" title="primary: #8BE0C7"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#F2A978" title="accent: #F2A978"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#7AD8C2" title="focus: #7AD8C2"></span></span><span class="fb-theme-note">Roasted neutral + seafoam/apricot split</span></button><button type="button" class="fb-theme-card" data-fb-theme-id="d08" data-fb-theme-mode="dark" aria-pressed="false" aria-label="Apply Ink Rose preset"><span class="fb-theme-card-head"><span><strong>Ink Rose</strong><small>D08 · dark</small></span><span class="fb-theme-check" aria-hidden="true">Select</span></span><span class="fb-theme-swatches" aria-hidden="true"><span class="fb-theme-swatch" style="--fb-theme-swatch:#2B1821" title="canvas: #2B1821"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#36212A" title="canvasSubtle: #36212A"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#3E2731" title="panel: #3E2731"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#FFF6F8" title="text: #FFF6F8"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#D4BBC4" title="muted: #D4BBC4"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#8FE4C9" title="primary: #8FE4C9"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#EE8BAA" title="accent: #EE8BAA"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#7EDBC6" title="focus: #7EDBC6"></span></span><span class="fb-theme-note">Wine-black field + mint/rose dual</span></button><button type="button" class="fb-theme-card" data-fb-theme-id="d09" data-fb-theme-mode="dark" aria-pressed="false" aria-label="Apply Carbon Ice preset"><span class="fb-theme-card-head"><span><strong>Carbon Ice</strong><small>D09 · dark</small></span><span class="fb-theme-check" aria-hidden="true">Select</span></span><span class="fb-theme-swatches" aria-hidden="true"><span class="fb-theme-swatch" style="--fb-theme-swatch:#151C23" title="canvas: #151C23"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#1D252D" title="canvasSubtle: #1D252D"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#232D36" title="panel: #232D36"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#F4FBFF" title="text: #F4FBFF"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#B7C4CF" title="muted: #B7C4CF"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#77D8D2" title="primary: #77D8D2"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#F08670" title="accent: #F08670"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#70D3D0" title="focus: #70D3D0"></span></span><span class="fb-theme-note">Carbon-blue neutral + ice/coral split</span></button><button type="button" class="fb-theme-card" data-fb-theme-id="d10" data-fb-theme-mode="dark" aria-pressed="false" aria-label="Apply Petrol Gold preset"><span class="fb-theme-card-head"><span><strong>Petrol Gold</strong><small>D10 · dark</small></span><span class="fb-theme-check" aria-hidden="true">Select</span></span><span class="fb-theme-swatches" aria-hidden="true"><span class="fb-theme-swatch" style="--fb-theme-swatch:#0E292D" title="canvas: #0E292D"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#153438" title="canvasSubtle: #153438"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#193D40" title="panel: #193D40"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#F2FFFC" title="text: #F2FFFC"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#B3CDC9" title="muted: #B3CDC9"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#8EE9CF" title="primary: #8EE9CF"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#E7B95C" title="accent: #E7B95C"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#7DE1CB" title="focus: #7DE1CB"></span></span><span class="fb-theme-note">Petrol analogous + antique-gold complement</span></button><button type="button" class="fb-theme-card" data-fb-theme-id="d11" data-fb-theme-mode="dark" aria-pressed="false" aria-label="Apply Ultraviolet Reef preset"><span class="fb-theme-card-head"><span><strong>Ultraviolet Reef</strong><small>D11 · dark</small></span><span class="fb-theme-check" aria-hidden="true">Select</span></span><span class="fb-theme-swatches" aria-hidden="true"><span class="fb-theme-swatch" style="--fb-theme-swatch:#1A1740" title="canvas: #1A1740"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#23204B" title="canvasSubtle: #23204B"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#292653" title="panel: #292653"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#F8F5FF" title="text: #F8F5FF"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#C4BFE0" title="muted: #C4BFE0"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#83DDD1" title="primary: #83DDD1"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#F0927D" title="accent: #F0927D"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#7BD9D0" title="focus: #7BD9D0"></span></span><span class="fb-theme-note">Ultraviolet field + mint/coral triad</span></button><button type="button" class="fb-theme-card" data-fb-theme-id="d12" data-fb-theme-mode="dark" aria-pressed="false" aria-label="Apply Nocturne Sage preset"><span class="fb-theme-card-head"><span><strong>Nocturne Sage</strong><small>D12 · dark</small></span><span class="fb-theme-check" aria-hidden="true">Select</span></span><span class="fb-theme-swatches" aria-hidden="true"><span class="fb-theme-swatch" style="--fb-theme-swatch:#1D281F" title="canvas: #1D281F"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#263128" title="canvasSubtle: #263128"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#2C392E" title="panel: #2C392E"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#F7FFF4" title="text: #F7FFF4"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#BECBBB" title="muted: #BECBBB"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#91D8B0" title="primary: #91D8B0"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#C1A4E8" title="accent: #C1A4E8"></span><span class="fb-theme-swatch" style="--fb-theme-swatch:#84D2AD" title="focus: #84D2AD"></span></span><span class="fb-theme-note">Moss night + mint/lavender split</span></button></div><p class="fb-theme-status" data-fb-theme-status aria-live="polite">GB Auto selected.</p></section>
+      </div>
+    </aside>
+  </div>
+  <script>
+    (function () {
+      var FN = "https://aejkzyjrlsfryfidwedm.supabase.co/functions/v1/feedback-capture";
+      var EXPERT_FN = "https://aejkzyjrlsfryfidwedm.supabase.co/functions/v1/website-feedback-submit";
+      var KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFlamt6eWpybHNmcnlmaWR3ZWRtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1Mzc5MTUsImV4cCI6MjA5NDExMzkxNX0.UFowowM9b9fkIhrUdQ4B8uGJwbEqGPBr-bPSQe8CKA0";
+      var SLUG = "pr-1649-report-click-fullscreen-20261104";
+      var THEME_PRESETS = [{"id":"gbauto","mode":"light","name":"GB Auto","harmony":"Cream neutral + terracotta accent","note":"Canonical internal theme and reset target.","scope":"internal","tokens":{"canvas":"#F3F1E7","canvasSubtle":"#E6E4D9","panel":"#FBFAF5","panelRaised":"#E6E4D9","border":"#D6D4C8","text":"#191919","muted":"#5C5C5C","primary":"#191919","onPrimary":"#FFFFFF","accent":"#D97757","onAccent":"#191919","success":"#4F9D69","warning":"#C08A3E","danger":"#B94A48","focus":"#3D6EA8","watermark":"#D97757","shadow":"#191919"}},{"id":"l01","mode":"light","name":"Jade Porcelain","harmony":"Jade analogous + kiln-coral complement","note":"Clean institutional mint with a warm human counterpoint.","scope":"external","tokens":{"canvas":"#F4FBF8","canvasSubtle":"#E7F5F0","panel":"#FFFFFF","panelRaised":"#DFF5ED","border":"#B7D8CD","text":"#102A25","muted":"#47665E","primary":"#0E7668","onPrimary":"#FFFFFF","accent":"#A84834","onAccent":"#FFFFFF","success":"#18704A","warning":"#825B0A","danger":"#A33A3A","focus":"#159083","watermark":"#75B9A8","shadow":"#23483F"}},{"id":"l02","mode":"light","name":"Aqua Sand","harmony":"Teal anchor + cobalt split-cool","note":"Warm mineral paper offsets a precise ocean-and-cobalt system.","scope":"external","tokens":{"canvas":"#F7F3E8","canvasSubtle":"#EBE6D8","panel":"#FFFCF4","panelRaised":"#E4F1EC","border":"#C9C2B1","text":"#18302B","muted":"#4E625C","primary":"#126F68","onPrimary":"#FFFFFF","accent":"#365D95","onAccent":"#FFFFFF","success":"#287047","warning":"#855A0C","danger":"#9D3D3D","focus":"#238D83","watermark":"#77AFA6","shadow":"#383A32"}},{"id":"l03","mode":"light","name":"Sage Linen","harmony":"Botanical analogous + fired-clay complement","note":"Soft natural credibility for a consulting or research audience.","scope":"external","tokens":{"canvas":"#F2F5E9","canvasSubtle":"#E6EBDD","panel":"#FBFCF5","panelRaised":"#DFE9DC","border":"#C1CAB9","text":"#1F2D25","muted":"#526159","primary":"#2E6B55","onPrimary":"#FFFFFF","accent":"#9A4D35","onAccent":"#FFFFFF","success":"#367047","warning":"#7E5A12","danger":"#973E3E","focus":"#43846B","watermark":"#89A994","shadow":"#2D4033"}},{"id":"l04","mode":"light","name":"Glacier Ink","harmony":"Arctic analogous + indigo depth","note":"A crisp technical palette with calm enterprise authority.","scope":"external","tokens":{"canvas":"#F1F7FA","canvasSubtle":"#E3EEF3","panel":"#FCFEFF","panelRaised":"#DDEDF0","border":"#B9CDD4","text":"#132D38","muted":"#48616B","primary":"#08737B","onPrimary":"#FFFFFF","accent":"#3E5792","onAccent":"#FFFFFF","success":"#26704B","warning":"#7D5B13","danger":"#A03E45","focus":"#188E98","watermark":"#78AFB8","shadow":"#203C47"}},{"id":"l05","mode":"light","name":"Celadon Plum","harmony":"Celadon field + aubergine complement","note":"A cultured editorial direction without losing technical clarity.","scope":"external","tokens":{"canvas":"#EFF8F1","canvasSubtle":"#E2EFE5","panel":"#FCFEFC","panelRaised":"#DAEBDD","border":"#B8CEBD","text":"#172C28","muted":"#4C625D","primary":"#166C60","onPrimary":"#FFFFFF","accent":"#744064","onAccent":"#FFFFFF","success":"#2A7047","warning":"#805914","danger":"#983D48","focus":"#268779","watermark":"#80AE98","shadow":"#293B34"}},{"id":"l06","mode":"light","name":"Seafoam Copper","harmony":"Seafoam analogous + oxidized copper","note":"A material palette inspired by saltwater instruments and metal housings.","scope":"external","tokens":{"canvas":"#ECF8F5","canvasSubtle":"#DDEEEA","panel":"#FAFEFD","panelRaised":"#D4ECE6","border":"#AFCCC5","text":"#17302D","muted":"#4A625D","primary":"#176D63","onPrimary":"#FFFFFF","accent":"#93462F","onAccent":"#FFFFFF","success":"#247048","warning":"#7B5910","danger":"#9D3E3B","focus":"#278C80","watermark":"#71AD9F","shadow":"#24413B"}},{"id":"l07","mode":"light","name":"Pearl Orchid","harmony":"Pearl-lilac field + teal complement","note":"A polished creative-tech option with restrained violet authority.","scope":"external","tokens":{"canvas":"#F7F3FA","canvasSubtle":"#ECE5F0","panel":"#FFFCFF","panelRaised":"#E5F1ED","border":"#CCC1D2","text":"#292336","muted":"#61596B","primary":"#147064","onPrimary":"#FFFFFF","accent":"#684A96","onAccent":"#FFFFFF","success":"#2A714B","warning":"#805A11","danger":"#9D3F55","focus":"#298D80","watermark":"#8DABA5","shadow":"#372F43"}},{"id":"l08","mode":"light","name":"Citrus Mineral","harmony":"Mineral green + aged-marigold accent","note":"Fresh and optimistic, but grounded enough for an engineering artifact.","scope":"external","tokens":{"canvas":"#F7F8EB","canvasSubtle":"#ECEEDC","panel":"#FFFFF7","panelRaised":"#E1EEE3","border":"#C8CBB8","text":"#263026","muted":"#5C655A","primary":"#246B57","onPrimary":"#FFFFFF","accent":"#895B05","onAccent":"#FFFFFF","success":"#337047","warning":"#7A5607","danger":"#9C4040","focus":"#398670","watermark":"#8BAD97","shadow":"#344035"}},{"id":"l09","mode":"light","name":"Rose Quartz Circuit","harmony":"Blush field + teal/berry triad","note":"A softer prospect-facing palette with firm technical contrast.","scope":"external","tokens":{"canvas":"#FBF3F2","canvasSubtle":"#F0E5E4","panel":"#FFFCFB","panelRaised":"#E2F1ED","border":"#D2C1BF","text":"#342426","muted":"#6D5558","primary":"#096F67","onPrimary":"#FFFFFF","accent":"#8D3E5C","onAccent":"#FFFFFF","success":"#2B704A","warning":"#81580F","danger":"#983843","focus":"#168D82","watermark":"#91AAA5","shadow":"#493537"}},{"id":"l10","mode":"light","name":"Alpine Sky","harmony":"Sky/teal analogous + navy structure","note":"Open, breathable, and trustworthy for a high-information report.","scope":"external","tokens":{"canvas":"#F0F8FB","canvasSubtle":"#E1EEF4","panel":"#FCFEFF","panelRaised":"#DCEFEA","border":"#B7CDD6","text":"#152D3A","muted":"#4C626C","primary":"#08716A","onPrimary":"#FFFFFF","accent":"#315D8B","onAccent":"#FFFFFF","success":"#26714C","warning":"#7F5A10","danger":"#A13D46","focus":"#198E85","watermark":"#73ABB0","shadow":"#223E49"}},{"id":"l11","mode":"light","name":"Parchment Reef","harmony":"Parchment neutral + reef-coral complement","note":"A warm editorial base with a sharp marine systems identity.","scope":"external","tokens":{"canvas":"#F8F2E5","canvasSubtle":"#EBE3D3","panel":"#FFFBF2","panelRaised":"#DFEEE8","border":"#CABFAD","text":"#332A22","muted":"#675C50","primary":"#176C61","onPrimary":"#FFFFFF","accent":"#A34237","onAccent":"#FFFFFF","success":"#2B7048","warning":"#80570B","danger":"#9C3C3C","focus":"#2A887A","watermark":"#87A99E","shadow":"#493C31"}},{"id":"l12","mode":"light","name":"Silver Eucalyptus","harmony":"Cool neutral + eucalyptus/violet split","note":"A restrained professional system with a small chromatic surprise.","scope":"external","tokens":{"canvas":"#F3F6F5","canvasSubtle":"#E6EBE9","panel":"#FEFFFF","panelRaised":"#DDEBE6","border":"#C0CBC7","text":"#1D2B2A","muted":"#52615F","primary":"#1A6B60","onPrimary":"#FFFFFF","accent":"#5C4D80","onAccent":"#FFFFFF","success":"#2C7049","warning":"#7E5A11","danger":"#9D3E49","focus":"#2D877B","watermark":"#83A79E","shadow":"#303E3B"}},{"id":"d01","mode":"dark","name":"Abyss Mint","harmony":"Deep ocean analogous + warm coral flare","note":"Cinematic protocol depth with comfortable luminous text.","scope":"external","tokens":{"canvas":"#071D27","canvasSubtle":"#0D2933","panel":"#102F38","panelRaised":"#153944","border":"#31535C","text":"#E9FFF8","muted":"#A9C6C2","primary":"#8FF4D8","onPrimary":"#082A25","accent":"#EC7D64","onAccent":"#25100B","success":"#70D6A0","warning":"#E8BE69","danger":"#F08B8B","focus":"#7DE8D0","watermark":"#5AC0AE","shadow":"#02090D"}},{"id":"d02","mode":"dark","name":"Deep Lagoon","harmony":"Lagoon monochrome + salmon complement","note":"Rich teal surfaces with a warm, legible action counterpoint.","scope":"external","tokens":{"canvas":"#082B2B","canvasSubtle":"#103535","panel":"#143E3D","panelRaised":"#194946","border":"#35615D","text":"#ECFFF8","muted":"#A9C9C2","primary":"#91E7CF","onPrimary":"#0A302A","accent":"#FF947A","onAccent":"#3B130A","success":"#71D39D","warning":"#E5BE68","danger":"#F18D91","focus":"#79DFCB","watermark":"#5EB8A9","shadow":"#031212"}},{"id":"d03","mode":"dark","name":"Aubergine Current","harmony":"Aubergine field + mint/rose split","note":"A premium night palette that avoids the standard black-and-acid trope.","scope":"external","tokens":{"canvas":"#241428","canvasSubtle":"#301D34","panel":"#38233C","panelRaised":"#432B47","border":"#654B69","text":"#FFF5FC","muted":"#CEB8C9","primary":"#8FE6CF","onPrimary":"#142D28","accent":"#E994B8","onAccent":"#3A1528","success":"#77D5A1","warning":"#E8BE70","danger":"#F18D95","focus":"#7DDECC","watermark":"#8B6D90","shadow":"#0E0710"}},{"id":"d04","mode":"dark","name":"Midnight Cobalt","harmony":"Cobalt night + aqua/amber split","note":"High-trust enterprise depth with a data-viz-friendly secondary.","scope":"external","tokens":{"canvas":"#0B1832","canvasSubtle":"#12213D","panel":"#172746","panelRaised":"#1C3052","border":"#3C4D70","text":"#F3F8FF","muted":"#B7C3D9","primary":"#72D7CE","onPrimary":"#082E2B","accent":"#F1B95B","onAccent":"#3D2704","success":"#71D19C","warning":"#F0C873","danger":"#F08C93","focus":"#6DD5D1","watermark":"#526D93","shadow":"#030813"}},{"id":"d05","mode":"dark","name":"Forest Copper","harmony":"Forest analogous + copper complement","note":"Natural infrastructure tones that feel durable rather than decorative.","scope":"external","tokens":{"canvas":"#10261E","canvasSubtle":"#173027","panel":"#1B392F","panelRaised":"#224338","border":"#425F51","text":"#F4FFF7","muted":"#B8C9BF","primary":"#8EDBB8","onPrimary":"#103124","accent":"#E58B61","onAccent":"#38190D","success":"#73D09B","warning":"#E3BC69","danger":"#EF8B8B","focus":"#7BD6B5","watermark":"#607F70","shadow":"#07100C"}},{"id":"d06","mode":"dark","name":"Slate Orchid","harmony":"Blue slate + teal/orchid split","note":"A composed product palette with a precise creative edge.","scope":"external","tokens":{"canvas":"#1B2331","canvasSubtle":"#242D3C","panel":"#293344","panelRaised":"#313C4E","border":"#536071","text":"#F6F5FF","muted":"#BDC4D2","primary":"#79DDD0","onPrimary":"#0B312C","accent":"#C59AE8","onAccent":"#2E1741","success":"#74D19E","warning":"#E5BD6C","danger":"#F18D95","focus":"#76D8CF","watermark":"#738092","shadow":"#090D14"}},{"id":"d07","mode":"dark","name":"Espresso Tide","harmony":"Roasted neutral + seafoam/apricot split","note":"Warm hospitality meets technical seafoam for a less expected external style.","scope":"external","tokens":{"canvas":"#2A1E1A","canvasSubtle":"#352721","panel":"#3B2D27","panelRaised":"#46352E","border":"#67544B","text":"#FFF9F1","muted":"#D3C1B7","primary":"#8BE0C7","onPrimary":"#12332C","accent":"#F2A978","onAccent":"#43200D","success":"#78D3A0","warning":"#E8C075","danger":"#F08F8F","focus":"#7AD8C2","watermark":"#887166","shadow":"#100B09"}},{"id":"d08","mode":"dark","name":"Ink Rose","harmony":"Wine-black field + mint/rose dual","note":"Dramatic and editorial while preserving clear system-state contrast.","scope":"external","tokens":{"canvas":"#2B1821","canvasSubtle":"#36212A","panel":"#3E2731","panelRaised":"#492E39","border":"#694A58","text":"#FFF6F8","muted":"#D4BBC4","primary":"#8FE4C9","onPrimary":"#12312A","accent":"#EE8BAA","onAccent":"#411425","success":"#78D3A0","warning":"#E7BD6D","danger":"#F29099","focus":"#7EDBC6","watermark":"#896474","shadow":"#11080C"}},{"id":"d09","mode":"dark","name":"Carbon Ice","harmony":"Carbon-blue neutral + ice/coral split","note":"Technical density without pure black, generic neon, or weak gray text.","scope":"external","tokens":{"canvas":"#151C23","canvasSubtle":"#1D252D","panel":"#232D36","panelRaised":"#2A3640","border":"#475661","text":"#F4FBFF","muted":"#B7C4CF","primary":"#77D8D2","onPrimary":"#092E2B","accent":"#F08670","onAccent":"#3A130C","success":"#73D09F","warning":"#E5BE6B","danger":"#F08C92","focus":"#70D3D0","watermark":"#647984","shadow":"#06090C"}},{"id":"d10","mode":"dark","name":"Petrol Gold","harmony":"Petrol analogous + antique-gold complement","note":"A finance-adjacent premium system without default fintech blue.","scope":"external","tokens":{"canvas":"#0E292D","canvasSubtle":"#153438","panel":"#193D40","panelRaised":"#20474A","border":"#3E6263","text":"#F2FFFC","muted":"#B3CDC9","primary":"#8EE9CF","onPrimary":"#0B302A","accent":"#E7B95C","onAccent":"#382801","success":"#72D3A0","warning":"#EBC66F","danger":"#F08D91","focus":"#7DE1CB","watermark":"#5A8782","shadow":"#041113"}},{"id":"d11","mode":"dark","name":"Ultraviolet Reef","harmony":"Ultraviolet field + mint/coral triad","note":"The boldest technology direction, controlled by disciplined surfaces.","scope":"external","tokens":{"canvas":"#1A1740","canvasSubtle":"#23204B","panel":"#292653","panelRaised":"#322E60","border":"#514D79","text":"#F8F5FF","muted":"#C4BFE0","primary":"#83DDD1","onPrimary":"#0C312C","accent":"#F0927D","onAccent":"#40150E","success":"#77D0A0","warning":"#E7BF6E","danger":"#F18D98","focus":"#7BD9D0","watermark":"#706B9E","shadow":"#08061A"}},{"id":"d12","mode":"dark","name":"Nocturne Sage","harmony":"Moss night + mint/lavender split","note":"Quiet, cultivated darkness suited to long-form technical reading.","scope":"external","tokens":{"canvas":"#1D281F","canvasSubtle":"#263128","panel":"#2C392E","panelRaised":"#344335","border":"#526254","text":"#F7FFF4","muted":"#BECBBB","primary":"#91D8B0","onPrimary":"#133024","accent":"#C1A4E8","onAccent":"#291743","success":"#78D19E","warning":"#E5BE6C","danger":"#EF8D90","focus":"#84D2AD","watermark":"#718573","shadow":"#0A0F0B"}}];
+      var THEME_TOKEN_MAP = {"canvas":["--gbauto-canvas","--cream-bg"],"canvasSubtle":["--gbauto-canvas-subtle","--cream-2"],"panel":["--gbauto-panel"],"panelRaised":["--gbauto-panel-raised"],"border":["--gbauto-border","--stone"],"text":["--gbauto-text","--ink"],"muted":["--gbauto-muted","--text-mute","--text-muted-2"],"primary":["--gbauto-primary","--terracotta-hover"],"onPrimary":["--gbauto-on-primary"],"accent":["--gbauto-accent","--terracotta"],"onAccent":["--gbauto-on-accent"],"success":["--gbauto-success","--status-green"],"warning":["--gbauto-warning","--status-amber"],"danger":["--gbauto-danger","--status-red"],"focus":["--gbauto-focus","--status-blue"],"watermark":["--gbauto-watermark"],"shadow":["--gbauto-shadow"]};
+      var THEME_STORAGE_KEY = "gbauto.document.color-preset.v1";
+      var form = document.getElementById('fb-form');
+      if (!form) return;
+      var root = document.querySelector('.feedback');
+      var drawer = document.getElementById('fb-drawer');
+      var tab = root.querySelector('.fb-tab');
+      var closeBtn = root.querySelector('.fb-close');
+      var section = document.getElementById('fb-section');
+      var msg = document.getElementById('fb-msg');
+      var status = document.getElementById('fb-status');
+      var submit = document.getElementById('fb-submit');
+      var modeButtons = root.querySelectorAll('[data-fb-mode-button]');
+      var modePanels = root.querySelectorAll('[data-fb-panel]');
+      var expertButtons = root.querySelectorAll('[data-fb-expert]');
+      var fleetButtons = root.querySelectorAll('[data-fb-command]');
+      var themeButtons = root.querySelectorAll('[data-fb-theme-id]');
+      var themeFilterButtons = root.querySelectorAll('[data-fb-theme-filter]');
+      var themeReset = root.querySelector('[data-fb-theme-reset]');
+      var themeStatus = root.querySelector('[data-fb-theme-status]');
+      var annotateButton = root.querySelector('.fb-annotate-toggle');
+      var targetCopy = root.querySelector('.fb-target-copy');
+      var targetClear = root.querySelector('.fb-target-clear');
+      var selectedExpert = null;
+      var selectedFleetCommand = null;
+      var annotationTarget = null;
+      var annotationHover = null;
+      var lastFocus = null;
+
+      function themeById(themeId) {
+        return THEME_PRESETS.find(function (preset) { return preset.id === themeId; }) || THEME_PRESETS[0];
+      }
+      function storedThemeId() {
+        try { return window.localStorage.getItem(THEME_STORAGE_KEY) || 'gbauto'; }
+        catch (error) { return 'gbauto'; }
+      }
+      function persistThemeId(themeId) {
+        try { window.localStorage.setItem(THEME_STORAGE_KEY, themeId); }
+        catch (error) { /* Device storage can be unavailable in private/file contexts. */ }
+      }
+      function applyTheme(themeId, persist) {
+        var locked = document.body.classList.contains('report-theme-locked');
+        var preset = themeById(locked ? 'gbauto' : themeId);
+        // House documents use the renderer's exact surfaces and token roles.
+        // Even the GB Auto preview preset changes those roles and opacities.
+        if (!locked) {
+          Object.keys(THEME_TOKEN_MAP).forEach(function (token) {
+            THEME_TOKEN_MAP[token].forEach(function (variable) {
+              document.documentElement.style.setProperty(variable, preset.tokens[token]);
+            });
+          });
+          document.documentElement.style.setProperty('color-scheme', preset.mode);
+        }
+        document.body.setAttribute('data-gbauto-color-preset', preset.id);
+        document.body.setAttribute('data-gbauto-color-mode', preset.mode);
+        themeButtons.forEach(function (button) {
+          var selected = button.getAttribute('data-fb-theme-id') === preset.id;
+          button.disabled = locked;
+          button.setAttribute('aria-pressed', selected ? 'true' : 'false');
+          var check = button.querySelector('.fb-theme-check');
+          if (check) check.textContent = selected ? 'Selected' : 'Select';
+        });
+        if (themeReset) themeReset.disabled = locked;
+        if (themeStatus) {
+          themeStatus.textContent = locked
+            ? 'Official GBAuto document colors are fixed. Your saved preview theme is unchanged.'
+            : preset.name + ' selected' + (preset.id === 'gbauto' ? '. Internal default restored.' : '. Saved on this device.');
+        }
+        if (!locked && persist !== false) persistThemeId(preset.id);
+        return preset;
+      }
+      function setThemeFilter(mode) {
+        themeFilterButtons.forEach(function (button) {
+          button.setAttribute('aria-pressed', button.getAttribute('data-fb-theme-filter') === mode ? 'true' : 'false');
+        });
+        themeButtons.forEach(function (button) {
+          button.hidden = mode !== 'all' && button.getAttribute('data-fb-theme-mode') !== mode;
+        });
+      }
+
+      function isInteractive(target) {
+        return !!(target && target.closest && target.closest('input,textarea,select,button,a[href],[contenteditable="true"],[role="button"]'));
+      }
+      function isAnnotationExcluded(target) {
+        return !target || !target.closest || !!target.closest('.feedback,[data-lavish-ui],[data-lavish-action],script,style,link,meta');
+      }
+      function cssEscape(value) {
+        if (window.CSS && CSS.escape) return CSS.escape(value);
+        return String(value || '').replace(/[^a-zA-Z0-9_-]/g, function (char) { return String.fromCharCode(92) + char; });
+      }
+      // Reimplements the bounded, stable selector strategy used by lavish-axi
+      // (kunchenguid/lavish-axi, MIT): prefer an id, otherwise keep at most five
+      // ancestor segments and disambiguate same-tag siblings with nth-of-type.
+      function targetSelector(element) {
+        if (!element || !element.tagName) return '';
+        var parts = [];
+        var node = element;
+        while (node && node.nodeType === 1 && parts.length < 5) {
+          var part = node.tagName.toLowerCase();
+          if (node.id) {
+            part += '#' + cssEscape(node.id);
+            parts.unshift(part);
+            break;
+          }
+          var parent = node.parentElement;
+          if (parent) {
+            var same = Array.prototype.filter.call(parent.children, function (item) { return item.tagName === node.tagName; });
+            if (same.length > 1) part += ':nth-of-type(' + (same.indexOf(node) + 1) + ')';
+          }
+          parts.unshift(part);
+          node = parent;
+        }
+        return parts.join(' > ');
+      }
+      function normalizedText(value, limit) {
+        return String(value || '').replace(/\s+/g, ' ').trim().slice(0, limit || 240);
+      }
+      function nearestSection(element) {
+        var scope = element && element.closest ? element.closest('details.section,section,[data-section]') : null;
+        if (!scope) return section.value || null;
+        var heading = scope.querySelector('.section-title,h1,h2,h3,h4');
+        return normalizedText((heading && heading.textContent) || scope.id || section.value, 160) || null;
+      }
+      function elementTarget(element) {
+        return {
+          type: 'element',
+          selector: targetSelector(element),
+          tag: String(element.tagName || '').toLowerCase(),
+          text: normalizedText(element.innerText || element.textContent, 240),
+          section: nearestSection(element)
+        };
+      }
+      function textTarget(selection) {
+        if (!selection || !selection.rangeCount) return null;
+        var range = selection.getRangeAt(0);
+        var text = normalizedText(selection.toString(), 1000);
+        if (range.collapsed || !text) return null;
+        var ancestor = range.commonAncestorContainer.nodeType === 1 ? range.commonAncestorContainer : range.commonAncestorContainer.parentElement;
+        if (!ancestor || isAnnotationExcluded(ancestor) || isInteractive(ancestor)) return null;
+        return {
+          type: 'text-range',
+          selector: targetSelector(ancestor),
+          tag: 'text',
+          text: text,
+          section: nearestSection(ancestor),
+          start_offset: Number(range.startOffset) || 0,
+          end_offset: Number(range.endOffset) || 0
+        };
+      }
+      function targetSummary(target) {
+        if (!target) return '';
+        var quote = target.text ? ' — “' + target.text.slice(0, 120) + (target.text.length > 120 ? '…' : '') + '”' : '';
+        return (target.selector || target.tag || 'document') + quote;
+      }
+      function setTarget(target) {
+        annotationTarget = target || null;
+        root.setAttribute('data-fb-has-target', annotationTarget ? 'true' : 'false');
+        targetCopy.textContent = targetSummary(annotationTarget);
+        if (annotationTarget && annotationTarget.section) section.value = annotationTarget.section;
+      }
+      function clearAnnotationHover() {
+        if (annotationHover) annotationHover.classList.remove('fb-annotation-hover');
+        annotationHover = null;
+      }
+      function setAnnotationMode(enabled) {
+        clearAnnotationHover();
+        root.setAttribute('data-fb-annotating', enabled ? 'true' : 'false');
+        annotateButton.setAttribute('aria-pressed', enabled ? 'true' : 'false');
+        annotateButton.textContent = enabled ? 'Click a target' : 'Annotate page';
+        document.body.classList.toggle('fb-annotating', !!enabled);
+        if (enabled) {
+          lastFocus = null;
+          setOpen(false);
+        }
+      }
+      function setMode(mode) {
+        if (['expert', 'fleet', 'feedback', 'settings'].indexOf(mode) === -1) mode = 'expert';
+        if (mode !== 'expert') {
+          var currentExpert = selectedExpert || expertFromMessage(msg.value);
+          if (currentExpert) {
+            var prefix = '/experts:' + currentExpert + ':question ';
+            if (msg.value.indexOf(prefix) === 0) msg.value = msg.value.slice(prefix.length);
+            setExpert(null, false);
+          }
+        }
+        if (mode !== 'fleet' && selectedFleetCommand) {
+          var fleetPrefix = selectedFleetCommand.prompt;
+          if (msg.value.indexOf(fleetPrefix) === 0) msg.value = msg.value.slice(fleetPrefix.length);
+          setFleetCommand(null, false);
+        }
+        root.setAttribute('data-fb-mode', mode);
+        modeButtons.forEach(function (button) {
+          button.setAttribute('aria-selected', button.getAttribute('data-fb-mode-button') === mode ? 'true' : 'false');
+        });
+        modePanels.forEach(function (panel) {
+          panel.hidden = panel.getAttribute('data-fb-panel') !== mode;
+        });
+      }
+      function setExpert(domain, prefill) {
+        selectedExpert = domain || null;
+        expertButtons.forEach(function (button) {
+          button.setAttribute('aria-pressed', button.getAttribute('data-fb-expert') === selectedExpert ? 'true' : 'false');
+        });
+        if (selectedExpert && prefill) {
+          setMode('expert');
+          msg.value = '/experts:' + selectedExpert + ':question ';
+          msg.focus();
+          msg.setSelectionRange(msg.value.length, msg.value.length);
+        }
+      }
+      function setFleetCommand(button, prefill) {
+        selectedFleetCommand = button ? {
+          command: button.getAttribute('data-fb-command'),
+          group: button.getAttribute('data-fb-group'),
+          skill: button.getAttribute('data-fb-skill'),
+          label: normalizedText(button.textContent, 120),
+          prompt: String(button.getAttribute('data-fb-prompt') || '').replace(/\s+$/, '') + ' '
+        } : null;
+        fleetButtons.forEach(function (item) {
+          item.setAttribute('aria-pressed', item === button ? 'true' : 'false');
+        });
+        if (selectedFleetCommand && prefill) {
+          setMode('fleet');
+          msg.value = selectedFleetCommand.prompt;
+          msg.focus();
+          msg.setSelectionRange(msg.value.length, msg.value.length);
+        }
+      }
+      function expertFromMessage(text) {
+        var match = String(text || '').match(/^\/experts:([a-z0-9-]+):question(?:\s|$)/i);
+        return match ? match[1].toLowerCase() : null;
+      }
+
+      function setOpen(open) {
+        root.setAttribute('data-fb-open', open ? 'true' : 'false');
+        tab.setAttribute('aria-expanded', open ? 'true' : 'false');
+        drawer.setAttribute('aria-hidden', open ? 'false' : 'true');
+        if (open) {
+          lastFocus = document.activeElement;
+          window.setTimeout(function () {
+            var selectedTab = root.querySelector('[data-fb-mode-button][aria-selected="true"]') || modeButtons[0];
+            if (selectedTab) selectedTab.focus();
+          }, 0);
+        } else if (lastFocus && lastFocus !== document.body && lastFocus !== document.documentElement && lastFocus.focus) {
+          lastFocus.focus();
+        } else { tab.focus(); }
+      }
+      function toggle() { setOpen(root.getAttribute('data-fb-open') !== 'true'); }
+
+      tab.addEventListener('click', toggle);
+      closeBtn.addEventListener('click', function () { setOpen(false); });
+      modeButtons.forEach(function (button) {
+        button.addEventListener('click', function () { setMode(button.getAttribute('data-fb-mode-button')); });
+        button.addEventListener('keydown', function (event) {
+          var key = event.key || '';
+          if (['ArrowLeft', 'ArrowRight', 'Home', 'End'].indexOf(key) === -1) return;
+          event.preventDefault();
+          var tabs = Array.prototype.slice.call(modeButtons);
+          var current = tabs.indexOf(button);
+          var next = key === 'Home' ? 0 : (key === 'End' ? tabs.length - 1 : (current + (key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length);
+          tabs[next].focus();
+          setMode(tabs[next].getAttribute('data-fb-mode-button'));
+        });
+      });
+      expertButtons.forEach(function (button) {
+        button.addEventListener('click', function () { setExpert(button.getAttribute('data-fb-expert'), true); });
+      });
+      fleetButtons.forEach(function (button) {
+        button.addEventListener('click', function () { setFleetCommand(button, true); });
+      });
+      themeButtons.forEach(function (button) {
+        button.addEventListener('click', function () { applyTheme(button.getAttribute('data-fb-theme-id'), true); });
+      });
+      themeFilterButtons.forEach(function (button) {
+        button.addEventListener('click', function () { setThemeFilter(button.getAttribute('data-fb-theme-filter')); });
+      });
+      if (themeReset) themeReset.addEventListener('click', function () { applyTheme('gbauto', true); });
+      // applyTheme enforces the lock on initialization and every later action.
+      applyTheme(storedThemeId(), false);
+      annotateButton.addEventListener('click', function () {
+        setAnnotationMode(root.getAttribute('data-fb-annotating') !== 'true');
+      });
+      targetClear.addEventListener('click', function () { setTarget(null); });
+      msg.addEventListener('input', function () {
+        var parsed = expertFromMessage(msg.value);
+        if (selectedExpert && parsed !== selectedExpert) setExpert(null, false);
+        else if (!selectedExpert && parsed) setExpert(parsed, false);
+        if (selectedFleetCommand && msg.value.indexOf(selectedFleetCommand.prompt) !== 0) setFleetCommand(null, false);
+      });
+      // Ctrl/Cmd+K is primary; Ctrl/Cmd+J remains backward compatible. A bare
+      // Space opens from document content but never steals typing or controls.
+      document.addEventListener('keydown', function (e) {
+        var key = e.key || '';
+        if ((e.ctrlKey || e.metaKey) && key.toLowerCase() === 'i') { e.preventDefault(); setAnnotationMode(root.getAttribute('data-fb-annotating') !== 'true'); }
+        else if ((e.ctrlKey || e.metaKey) && (key.toLowerCase() === 'k' || key.toLowerCase() === 'j')) { e.preventDefault(); setAnnotationMode(false); toggle(); }
+        else if (key === ' ' && root.getAttribute('data-fb-open') !== 'true' && root.getAttribute('data-fb-annotating') !== 'true' && !e.ctrlKey && !e.metaKey && !e.altKey && !e.shiftKey && !isInteractive(e.target)) { e.preventDefault(); setOpen(true); }
+        else if (e.key === 'Escape' && root.getAttribute('data-fb-annotating') === 'true') { setAnnotationMode(false); }
+        else if (e.key === 'Escape' && root.getAttribute('data-fb-open') === 'true') { setOpen(false); }
+      });
+      // Ctrl+Enter from the comment box submits.
+      msg.addEventListener('keydown', function (e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+          e.preventDefault();
+          if (form.requestSubmit) form.requestSubmit();
+          else form.dispatchEvent(new Event('submit', { cancelable: true }));
+        }
+      });
+      // Click outside the drawer (and not on the tab) closes it.
+      document.addEventListener('click', function (e) {
+        if (root.getAttribute('data-fb-annotating') === 'true') return;
+        if (root.getAttribute('data-fb-open') !== 'true') return;
+        if (drawer.contains(e.target) || tab.contains(e.target)) return;
+        setOpen(false);
+      });
+      document.addEventListener('mouseover', function (e) {
+        if (root.getAttribute('data-fb-annotating') !== 'true' || isAnnotationExcluded(e.target) || isInteractive(e.target)) return;
+        clearAnnotationHover();
+        annotationHover = e.target;
+        annotationHover.classList.add('fb-annotation-hover');
+      }, true);
+      document.addEventListener('mouseout', function () {
+        if (root.getAttribute('data-fb-annotating') === 'true') clearAnnotationHover();
+      }, true);
+      document.addEventListener('mouseup', function (e) {
+        if (root.getAttribute('data-fb-annotating') !== 'true' || isAnnotationExcluded(e.target) || isInteractive(e.target)) return;
+        var selected = textTarget(window.getSelection());
+        if (!selected) return;
+        setTarget(selected);
+        setMode('feedback');
+        setAnnotationMode(false);
+        setOpen(true);
+      }, true);
+      document.addEventListener('click', function (e) {
+        if (root.getAttribute('data-fb-annotating') !== 'true' || isAnnotationExcluded(e.target) || isInteractive(e.target)) return;
+        e.preventDefault();
+        e.stopPropagation();
+        setTarget(elementTarget(e.target));
+        setMode('feedback');
+        setAnnotationMode(false);
+        setOpen(true);
+      }, true);
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var text = (msg.value || '').trim();
+        if (text.length < 2) { status.textContent = 'Please add a message.'; return; }
+        if (!KEY) { status.textContent = 'Feedback is not configured for this page.'; return; }
+        var expert = selectedExpert || expertFromMessage(text);
+        var fleet = selectedFleetCommand;
+        var structured = !!(expert || annotationTarget || fleet);
+        var endpoint = structured ? EXPERT_FN : FN;
+        var route = location.pathname + location.search + location.hash;
+        // Populated by the Google-sign-in module script when a Supabase Auth
+        // session exists; both stay empty for an anonymous submission, which
+        // remains fully supported.
+        var authEmailField = document.getElementById('fb-auth-email');
+        var authNameField = document.getElementById('fb-auth-name');
+        var reporterEmail = (authEmailField && authEmailField.value) || null;
+        var reporterName = (authNameField && authNameField.value) || null;
+        var payload = structured ? {
+          message: text,
+          feedback_type: expert ? 'expert_question' : (fleet ? 'fleet_skill_request' : 'document_annotation'),
+          skill_name: fleet ? fleet.skill : null,
+          page_url: location.href,
+          route: route,
+          user_agent: navigator.userAgent,
+          website_url: document.getElementById('fb-hp').value,
+          reporter_email: reporterEmail,
+          reporter_name: reporterName,
+          metadata: {
+            expert_domain: expert,
+            expert_route: expert ? '/experts:' + expert + ':question' : null,
+            fleet_command: fleet ? fleet.command : null,
+            fleet_group: fleet ? fleet.group : null,
+            skill_name: fleet ? fleet.skill : null,
+            command_label: fleet ? fleet.label : null,
+            plan_slug: SLUG,
+            section: section.value || null,
+            source: 'netlify_document_command_layer',
+            annotation_source: annotationTarget ? 'lavish-axi-inspired' : null,
+            target: annotationTarget,
+            identity: { email: reporterEmail, name: reporterName, signed_in: !!reporterEmail },
+            page_state: {
+              route: route,
+              url: location.href,
+              component: 'netlify_document_command_layer',
+              viewport: { width: window.innerWidth, height: window.innerHeight }
+            },
+            navigation_history: [{ route: route, url: location.href, at: new Date().toISOString() }]
+          }
+        } : {
+          message: text,
+          plan_slug: SLUG,
+          section: section.value || null,
+          page_url: location.href,
+          website_url: document.getElementById('fb-hp').value,
+          reporter_email: reporterEmail,
+          reporter_name: reporterName
+        };
+        submit.disabled = true;
+        status.textContent = 'Sending\u2026';
+        fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + KEY,
+            'apikey': KEY,
+          },
+          body: JSON.stringify(payload),
+        }).then(function (r) {
+          if (r.ok) {
+            form.reset();
+            setExpert(null, false);
+            setFleetCommand(null, false);
+            setTarget(null);
+            status.textContent = 'Thanks \u2014 feedback received.';
+            // Drawer closes shortly after a successful send (preferred UX).
+            setTimeout(function () { setOpen(false); status.textContent = ''; }, 1200);
+          } else { status.textContent = 'Could not send. Please try again.'; }
+        }).catch(function () {
+          status.textContent = 'Network error. Please try again.';
+        }).finally(function () { submit.disabled = false; });
+      });
+    })();
+  </script>
+  <script type="module">
+    (function () {
+      var KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFlamt6eWpybHNmcnlmaWR3ZWRtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1Mzc5MTUsImV4cCI6MjA5NDExMzkxNX0.UFowowM9b9fkIhrUdQ4B8uGJwbEqGPBr-bPSQe8CKA0";
+      var FN = "https://aejkzyjrlsfryfidwedm.supabase.co/functions/v1/feedback-capture";
+      if (!KEY || !FN) return;
+      var origin;
+      try { origin = new URL(FN).origin; } catch (error) { return; }
+      var root = document.querySelector('.feedback');
+      if (!root) return;
+      var authRow = root.querySelector('.fb-auth-row');
+      var signinBtn = root.querySelector('[data-fb-auth-action="signin"]');
+      var signoutBtn = root.querySelector('[data-fb-auth-action="signout"]');
+      var identityEl = root.querySelector('.fb-auth-identity');
+      var emailField = document.getElementById('fb-auth-email');
+      var nameField = document.getElementById('fb-auth-name');
+
+      function applyIdentity(user) {
+        var email = (user && user.email) || '';
+        var name = (user && user.user_metadata && user.user_metadata.full_name) || '';
+        if (emailField) emailField.value = email;
+        if (nameField) nameField.value = name;
+        if (authRow) authRow.setAttribute('data-fb-auth-state', email ? 'signed-in' : 'signed-out');
+        if (identityEl) {
+          identityEl.hidden = !email;
+          identityEl.textContent = email ? ('Signed in as ' + email) : '';
+        }
+        if (signinBtn) signinBtn.hidden = !!email;
+        if (signoutBtn) signoutBtn.hidden = !email;
+      }
+
+      // Optional by design: the drawer keeps working anonymously through the
+      // existing public-anon-key POST path whether or not the Supabase
+      // project has the Google provider enabled yet. If the Auth client or
+      // the provider is unreachable, the sign-in button just stays inert.
+      import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm').then(function (module) {
+        var supabase = module.createClient(origin, KEY);
+        supabase.auth.getSession().then(function (result) {
+          var session = result && result.data && result.data.session;
+          applyIdentity(session ? session.user : null);
+        });
+        supabase.auth.onAuthStateChange(function (_event, session) {
+          applyIdentity(session ? session.user : null);
+        });
+        if (signinBtn) {
+          signinBtn.addEventListener('click', function () {
+            supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: location.href } });
+          });
+        }
+        if (signoutBtn) {
+          signoutBtn.addEventListener('click', function () {
+            supabase.auth.signOut().then(function () { applyIdentity(null); });
+          });
+        }
+      }).catch(function () {
+        // Supabase Auth not configured for this project yet -- anonymous
+        // submission (the pre-existing behavior) is unaffected.
+      });
+    })();
+  </script>
+
+<footer class="metadata-footer"><div class="metadata-grid"><div><span>Generated</span><strong>2026-11-04T23:42:05-08:00</strong></div><div><span>Source</span><strong>C:\Users\gblac\AppData\Local\Temp\claude\3a991d68a2a0b837\c3a1f817-ed79-4b32-bcb1-b022359642b3\scratchpad\pr-1649-report\pr-1649-report-click-fullscreen-20261104.md</strong></div><div><span>Theme</span><strong>GBauto canonical report shell</strong></div><div><span>Author</span><strong>GBAutomation</strong></div></div></footer>
+
+  <script>
+    const sections = [...document.querySelectorAll('details.section')];
+    const nav = document.getElementById('sectionNav');
+    sections.forEach((section, i) => {
+      const idx = section.querySelector('.section-index')?.textContent ?? String(i + 1).padStart(2, '0');
+      const title = section.querySelector('.section-title')?.textContent ?? 'Section';
+      section.id = section.id || `section-${idx}`;
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.innerHTML = `<span>${idx}</span>${title}`;
+      button.addEventListener('click', () => {
+        section.open = true;
+        section.scrollIntoView({behavior:'smooth', block:'start'});
+      });
+      nav.appendChild(button);
+    });
+    document.getElementById('openAll').addEventListener('click', () => sections.forEach(s => s.open = true));
+    document.getElementById('closeAll').addEventListener('click', () => sections.forEach((s, i) => s.open = i === 0));
+    const navButtons = [...nav.querySelectorAll('button')];
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries.filter(e => e.isIntersecting).sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (!visible) return;
+      const idx = sections.indexOf(visible.target);
+      navButtons.forEach((b, i) => b.classList.toggle('active', i === idx));
+    }, {rootMargin:'-18% 0px -68% 0px', threshold:[0.1,0.25,0.5]});
+    sections.forEach(s => observer.observe(s));
+  </script>
+  <script>
+  (function(){
+    var SKIP='a,button,summary,input,select,textarea,label,[onclick],[data-no-fullscreen],g.clickable,.chart,[class^="chart-"],[class*=" chart-"],.hier-tree,.gb-media-overlay,.gb-full-overlay';
+    var MIN_SIZE=48;
+    function outermostSvg(node){
+      var svg=node.closest('svg'),parent;
+      while(svg&&svg.parentElement&&(parent=svg.parentElement.closest('svg')))svg=parent;
+      return svg;
+    }
+    function mediaFor(node){
+      if(!node||!node.closest||!node.closest('.sections')||node.closest(SKIP))return null;
+      var mermaid=node.closest('pre.mermaid');
+      if(mermaid)return mermaid.querySelector('svg');
+      return outermostSvg(node)||node.closest('img');
+    }
+    function bigEnough(media){
+      var rect=media.getBoundingClientRect();
+      return rect.width>=MIN_SIZE&&rect.height>=MIN_SIZE;
+    }
+    function mark(){
+      document.querySelectorAll('.sections svg, .sections img').forEach(function(media){
+        if(media.classList.contains('gb-media-zoom')||mediaFor(media)!==media||!bigEnough(media))return;
+        media.classList.add('gb-media-zoom');
+        media.setAttribute('tabindex','0');
+        media.setAttribute('role','button');
+        if(!media.getAttribute('aria-label'))media.setAttribute('aria-label',(media.getAttribute('alt')||'Diagram')+': open full screen');
+      });
+    }
+    function open(media){
+      var returnFocus=media;
+      var overlay=document.createElement('div');
+      overlay.className='gb-media-overlay';
+      overlay.setAttribute('role','dialog');
+      overlay.setAttribute('aria-modal','true');
+      overlay.setAttribute('aria-label','Full screen view');
+      var close=document.createElement('button');
+      close.type='button';
+      close.className='gb-media-close';
+      close.setAttribute('aria-label','Close full screen');
+      close.textContent='×';
+      var clone=media.cloneNode(true);
+      clone.classList.remove('gb-media-zoom');
+      ['tabindex','role','aria-label','width','height','loading'].forEach(function(name){clone.removeAttribute(name);});
+      if(clone.tagName.toLowerCase()==='svg'&&!clone.getAttribute('viewBox')){
+        var rect=media.getBoundingClientRect();
+        clone.setAttribute('viewBox','0 0 '+rect.width+' '+rect.height);
+      }
+      clone.style.removeProperty('max-width');
+      clone.style.removeProperty('width');
+      clone.style.removeProperty('height');
+      overlay.appendChild(close);
+      overlay.appendChild(clone);
+      function dismiss(){
+        overlay.remove();
+        document.documentElement.classList.remove('gb-media-open');
+        document.removeEventListener('keydown',onKey,true);
+        if(returnFocus&&returnFocus.focus)returnFocus.focus();
+      }
+      function onKey(event){
+        if(event.key==='Escape'){event.preventDefault();event.stopPropagation();dismiss();}
+        else if(event.key==='Tab'){event.preventDefault();close.focus();}
+      }
+      overlay.addEventListener('click',function(event){
+        if(event.target.closest&&event.target.closest('g.clickable,a'))return;
+        dismiss();
+      });
+      document.addEventListener('keydown',onKey,true);
+      document.documentElement.classList.add('gb-media-open');
+      document.body.appendChild(overlay);
+      close.focus();
+    }
+    document.addEventListener('click',function(event){
+      if(event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
+      if(String(window.getSelection?window.getSelection():''))return;
+      var media=mediaFor(event.target);
+      if(media&&bigEnough(media))open(media);
+    });
+    document.addEventListener('keydown',function(event){
+      if(event.key!=='Enter'&&event.key!==' ')return;
+      if(!event.target.classList||!event.target.classList.contains('gb-media-zoom'))return;
+      event.preventDefault();
+      open(event.target);
+    });
+    document.addEventListener('toggle',mark,true);
+    window.addEventListener('load',mark);
+    new MutationObserver(mark).observe(document.body,{childList:true,subtree:true});
+    mark();
+  })();
+  </script>
+
+
+</body>
+</html>
