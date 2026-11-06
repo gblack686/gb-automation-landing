@@ -6,6 +6,7 @@ import {readFile,mkdir,writeFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {makeResourceService} from '../amplify/functions/forge-atlas/resources.mjs';
 import {makeFactoryService} from '../amplify/functions/forge-atlas/factory.mjs';
+import {runSearch} from '../amplify/functions/forge-atlas/search.mjs';
 const root=process.env.FORGE_WORKSPACE_FIXTURES;
 if(!root)throw Error('Set FORGE_WORKSPACE_FIXTURES to the canonical renderer fixture directory');
 const base=process.env.FORGE_WORKSPACE_BASE||'http://127.0.0.1:5201';
@@ -25,6 +26,8 @@ const factoryRead=makeFactoryService({enabled:true,load:async id=>{const bytes=a
 const browser=await chromium.launch({headless:true,channel:'chrome'});
 const page=await browser.newPage({viewport:{width:1500,height:1000}});page.setDefaultTimeout(20000);
 const errors=[],checks=[],requests=[];let fail=false,tamper=false,holdArtifact=false,releaseArtifact=null,failFactory=false,foreignFactory=false;
+let records=false,holdHistory=false,releaseHistory=null,holdProposal=false,releaseProposal=null;
+const planID='prd_'+'c'.repeat(20),sessionKey='fixture-host:'+ 's'.repeat(280);
 const watchdog=setTimeout(async()=>{await writeFile(output+'/timeout.json',JSON.stringify({ok:false,checks,errors,requests},null,2));console.error('Browser validation exceeded 150 seconds: '+output);process.exit(1);},150_000);
 checks.push=(...items)=>{console.log(items.join('\n'));return Array.prototype.push.apply(checks,items);};
 page.on('pageerror',e=>errors.push(e.message));
@@ -34,6 +37,18 @@ await page.route('**/__workspace_fixture',async r=>{
  if(x.view==='agents')return r.fulfill({json:{agents:agents.map(id=>({agent_id:id,display_name:id,config_sha256:receipts[id].yaml_sha256}))}});
  if(x.view==='document')return r.fulfill({json:{agent_id:x.agent_id,tenant_id:'gbautomation',url:`https://fixture.s3.us-east-1.amazonaws.com/gbautomation/${x.agent_id}/index.html`,sha256:hash(docs[x.agent_id]),bytes:Buffer.byteLength(docs[x.agent_id])}});
  if(fail)return r.fulfill({status:503,body:'Unavailable'});
+ if(x.view==='approvalSnapshot')return r.fulfill({json:{mode:'live_read_only',workflows:[],connection:{tenant:'gbautomation',writes_enabled:false}}});
+ if(x.view==='proposals')return r.fulfill({json:{rows:[],total:0}});
+ if(x.view==='proposal'){
+  if(holdProposal&&x.query.proposal_id==='prop_slow')await new Promise(resolve=>{releaseProposal=resolve;});
+  return r.fulfill({json:{proposal_id:x.query.proposal_id,tenant_id:'gbautomation',agent_id:x.agent_id,card_title:x.query.proposal_id==='prop_review'?'Exact proposal outside first catalog page':x.query.proposal_id,source_type:'transcript',card_type:'expert-portfolio-proposal',state:'gated',summary:'Synthetic exact proposal detail',updated_at:observed}});
+ }
+ if(x.view==='planning')return r.fulfill({json:{schema_version:'forge-planning-snapshot.v1',tenant_id:'gbautomation',agent_id:x.agent_id,board_slug:'gbautomation',config_sha256:receipts[x.agent_id].yaml_sha256,captured_at:new Date().toISOString(),source:'supabase',prds:[{prd_id:planID,title:'Exact indexed plan',path:'second-brain/plans/fixture/report.html',status:'draft',updated_at:observed,config_sha256:receipts[x.agent_id].yaml_sha256,source:'prd_artifacts',body_sha256:'c'.repeat(64)}],cards:[],artifacts:[]}});
+ if(x.view==='history'){
+  if(holdHistory&&x.query.session_key==='slow-session')await new Promise(resolve=>{releaseHistory=resolve;});
+  const message=x.query.session_key===sessionKey?'Exact long-key session message':x.query.session_key;
+  return r.fulfill({json:{schema_version:'forge-history-page.v1',source:'supabase',tenant_id:'gbautomation',agent_id:x.agent_id,view:x.query.view,session_key:x.query.session_key||null,message_key:x.query.message_key||null,next:null,rows:x.query.view==='messages'?[{message_key:'message-'+x.query.session_key,seq:1,ts:observed,message_text:message,preview_truncated:false}]:[]}});
+ }
  if(x.view==='factorySnapshot'){
   if(failFactory)return r.fulfill({status:503,body:'Factory fixture unavailable'});
   try{const data=await factoryRead({...x,config_sha256:receipts[x.agent_id].yaml_sha256});
@@ -42,6 +57,13 @@ await page.route('**/__workspace_fixture',async r=>{
   }catch{return r.fulfill({status:503,body:'Invalid factory fixture'});}
  }
  if(x.view==='search'){
+  if(records){
+   const adapters={proposal:async()=>({rows:[{id:'prop_review',kind:'proposal',title:'Reviewed exact proposal'},{id:planID,kind:'plan',title:'Reviewed exact plan'}]}),
+    session:async()=>({rows:[{id:'intent-one',session_key:sessionKey,title:'Reviewed exact session'},{id:'legacy-intent',title:'Legacy session without explicit key'}]}),
+    pr:async()=>({rows:[{id:'pr-fixture',title:'Shared PR',href:'https://github.com/gbauto/gbautomation/pull/1660'}]}),
+    code:async()=>({rows:[{id:'code-fixture',title:'Shared code',href:'https://github.com/gbauto/gbautomation/blob/main/README.md#L1'}]})};
+   return r.fulfill({json:await runSearch({agent_id:x.agent_id,query:x.query},adapters)});
+  }
   if(x.query.source==='session')return r.fulfill({status:503,body:'Unavailable fixture source'});
   return r.fulfill({json:{schema_version:'forge-unified-search.v1',tenant_id:'gbautomation',agent_id:x.agent_id,query:x.query.query,
    coverage:{[x.query.source]:'available'},results:[{id:x.query.source+'-fixture',source:x.query.source,title:'Reviewed '+x.query.source+' evidence',snippet:'Synthetic search result'}]}});
@@ -117,7 +139,7 @@ try{
  assert.equal(await frame.locator('body').evaluate(async digest=>{try{await ForgeHost.read('workspaceArtifact',{resource_id:'ui.news-agent.review',catalog_sha256:digest});return false;}catch{return true;}},hash(raw)),true);
  checks.push('Expert switching clears old document and app frames; forged cross-owner artifact denied');
  await frame.getByLabel('Search expert resources').fill('missing query');
- await frame.getByRole('button',{name:'Search',exact:true}).click();
+ await frame.locator('#window-resources').getByRole('button',{name:'Search',exact:true}).click();
  await frame.getByText('No resources match these filters.',{exact:true}).waitFor();
  fail=true;await frame.getByRole('button',{name:'Refresh',exact:true}).click();await frame.getByText(/Resources could not load/).waitFor();fail=false;
  checks.push('Explicit deterministic search and honest failure versus empty-result states');
@@ -134,8 +156,58 @@ try{
  await frame.frameLocator('iframe[title="youtube-intel reviewed UI saved result"]').getByRole('heading',{name:'Reviewed UI fixture'}).waitFor();
  await frame.getByRole('button',{name:'Close app window',exact:true}).click();
  checks.push('Unified search combines owned resources and existing work sources, labels partial failure, and performs no reads while typing');
+ records=true;await frame.locator('#window-resources').getByRole('button',{name:'Search',exact:true}).click();
+ await frame.getByRole('button',{name:'Open proposal',exact:true}).waitFor();
+ assert.equal(await frame.getByRole('link',{name:'Open pull request ↗'}).getAttribute('href'),'https://github.com/gbauto/gbautomation/pull/1660');
+ assert.equal(await frame.getByRole('link',{name:'Open code location ↗'}).getAttribute('href'),'https://github.com/gbauto/gbautomation/blob/main/README.md#L1');
+ assert.equal(await frame.locator('.expert-resource-card').filter({hasText:'Legacy session without explicit key'}).getByRole('button').count(),0);
+ await frame.getByRole('button',{name:'Open proposal',exact:true}).focus();await page.keyboard.press('Enter');
+ await frame.locator('#forge-approval-dialog').getByRole('heading',{name:'Exact proposal outside first catalog page'}).waitFor();
+ assert(await frame.locator('#forge-approval-dialog [data-native-accept]').isDisabled());
+ await visibleEvidence(frame.locator('#forge-approval-dialog h2'));
+ await page.screenshot({path:output+'/record-proposal.png'});
+ await frame.locator('#forge-approval-dialog .dialog-close').click();
+ await frame.locator('body').evaluate(()=>ForgeWorkspace.open('resources'));
+ await frame.getByRole('button',{name:'Open plan',exact:true}).click();
+ await frame.locator('#planning-dialog-title').filter({hasText:'Exact indexed plan'}).waitFor();
+ await frame.getByText('The plan file is not included in this offline package. Its scoped index record is available below.',{exact:true}).waitFor();
+ await visibleEvidence(frame.locator('#planning-dialog-title'));
+ await page.screenshot({path:output+'/record-plan.png'});
+ await frame.locator('#planning-dialog').evaluate(el=>el.close());
+ await frame.locator('body').evaluate(()=>ForgeWorkspace.open('resources'));
+ await frame.getByRole('button',{name:'Open session',exact:true}).click();
+ await frame.locator('#history-rows').getByText('Exact long-key session message',{exact:true}).waitFor();
+ assert.equal(await frame.locator('#history-breadcrumb p').textContent(),sessionKey);
+ checks.push('Keyboard search opens exact proposal outside catalog page, typed plan index and untruncated session; writes stay disabled, legacy destinations unavailable, shared PR/code links exact');
+ holdHistory=true;
+ await frame.locator('body').evaluate(()=>{window.slowHistory=ForgeHistory.refresh({view:'messages',session_key:'slow-session'});});
+ for(let i=0;i<100&&!releaseHistory;i++)await page.waitForTimeout(20);assert(releaseHistory);
+ await frame.locator('body').evaluate(()=>ForgeHistory.refresh({view:'messages',session_key:'newest-session'}));
+ releaseHistory();await frame.locator('body').evaluate(()=>window.slowHistory);holdHistory=false;
+ assert.equal(await frame.locator('#history-breadcrumb p').textContent(),'newest-session');
+ holdProposal=true;
+ await frame.locator('body').evaluate(()=>{window.slowProposal=ForgeApprovals.open('prop_slow');});
+ for(let i=0;i<100&&!releaseProposal;i++)await page.waitForTimeout(20);assert(releaseProposal);
+ await frame.locator('body').evaluate(()=>ForgeApprovals.open('prop_newest'));
+ releaseProposal();await frame.locator('body').evaluate(()=>window.slowProposal);holdProposal=false;
+ assert.equal(await frame.locator('#forge-approval-dialog h2').textContent(),'prop_newest');
+ await frame.locator('#forge-approval-dialog .dialog-close').click();
+ checks.push('Late history/proposal responses cannot replace a newer selected record across the real host channel');
+ await page.setViewportSize({width:390,height:844});
+ await frame.locator('body').evaluate(()=>ForgeWorkspace.open('resources'));
+ await frame.getByRole('button',{name:'Open proposal',exact:true}).click();
+ await frame.locator('#forge-approval-dialog h2').filter({hasText:'Exact proposal outside first catalog page'}).waitFor();
+ await visibleEvidence(frame.locator('#forge-approval-dialog h2'));
+ assert(await frame.locator('body').evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+ assert(await page.locator('body').evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+ const signOutBox=await page.getByRole('button',{name:'Sign out',exact:true}).boundingBox();assert(signOutBox.x>=0&&signOutBox.x+signOutBox.width<=390);
+ await page.screenshot({path:output+'/record-mobile.png',fullPage:true});
+ await frame.locator('#forge-approval-dialog .dialog-close').click();
+ await page.setViewportSize({width:1500,height:1000});
+ await frame.locator('body').evaluate(()=>ForgeWorkspace.open('resources'));records=false;
+ checks.push('Exact proposal review is readable at 390px with no horizontal document overflow');
  await frame.getByLabel('Resource type').selectOption('ui');
- await frame.getByLabel('Search expert resources').fill('reviewed');await frame.getByRole('button',{name:'Search',exact:true}).click();
+ await frame.getByLabel('Search expert resources').fill('reviewed');await frame.locator('#window-resources').getByRole('button',{name:'Search',exact:true}).click();
  await frame.getByRole('button',{name:'Open in window',exact:true}).waitFor();tamper=true;
  await frame.getByRole('button',{name:'Open in window',exact:true}).click();await frame.getByText(/saved result could not be verified/).waitFor();tamper=false;
  checks.push('Altered saved-result bytes rejected before nested scripts execute');
@@ -188,4 +260,4 @@ try{
  await writeFile(output+'/validation.json',JSON.stringify({ok:true,checks,fixture:true,productionAcceptance:false,sourceDocuments:Object.fromEntries(agents.map(id=>[id,hash(docs[id])]))},null,2));
  console.log(JSON.stringify({ok:true,checks}));
 }catch(error){await page.screenshot({path:output+'/failure.png'}).catch(()=>{});await writeFile(output+'/failure.json',JSON.stringify({ok:false,error:String(error),errors,checks,requests},null,2));throw error;}
-finally{clearTimeout(watchdog);releaseArtifact?.();await page.unrouteAll({behavior:'ignoreErrors'});await browser.close();}
+finally{clearTimeout(watchdog);releaseArtifact?.();releaseHistory?.();releaseProposal?.();await page.unrouteAll({behavior:'ignoreErrors'});await browser.close();}

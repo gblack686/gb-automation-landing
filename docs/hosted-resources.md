@@ -54,6 +54,32 @@ Rollback disables `FORGE_RESOURCES_ENABLED` and restores the previous paired
 website build and private object versions. Retain all immutable artifacts,
 manifests and job ledgers. No object deletion is required.
 
+## Workspace record navigation
+
+Workspace search carries typed exact destinations for proposals, indexed plans
+and sessions. Proposal details use the existing owned reader even when the
+record is outside the current catalog page. Plans open their scoped index and
+only show a packaged document when its digest matches. Sessions require an
+explicit `session_key`; an intent ID or native `session_id` is never guessed
+to be a history key. Identities are preserved or rejected, never shortened.
+
+The companion source migration
+`20261106100000_forge_search_session_identity.sql` adds that explicit key to
+the existing service-only title-search RPC. It is not applied by a source push.
+Old RPC responses remain searchable with an unavailable destination. The old
+website ignores the additive field, so source rollback need not revert SQL.
+
+PR and code results are shared repository context, not expert ownership claims.
+Navigation accepts only exact PR/blob locations in the two configured repos.
+History and proposal reads allow bounded concurrency; late replies cannot
+replace a newer selection. Opening a result grants no approval or write rights.
+Mobile account controls wrap, and the document follows the measured header
+height. No model calls, typing-triggered queries or polling are added.
+
+Validation adds `shared/forgeSearchNavigation.test.mjs` and the exact-record
+scenarios in `scripts/validate-atlas-factory-workspace.mjs`. These use synthetic
+transport; real publication and identity acceptance remain release gates.
+
 ## Bounded Pi requests
 
 `FORGE_PI_JOBS_ENABLED` independently defaults to false. `forgePiRead` and

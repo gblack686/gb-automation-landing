@@ -7,6 +7,22 @@ const asset={agent_id:agent,owner_expert:agent,...input,sha256:hash,freshness:'s
 const searchReply=(q,id)=>({schema_version:'forge-unified-search.v1',tenant_id:'gbautomation',agent_id:id,query:q.query,
  coverage:{[q.source]:'available'},results:[{id:q.source+'-1',source:q.source,title:'Evidence',href:'do-not-forward'}]});
 
+test('host preserves exact destinations and refuses ambiguous or shortened identities',async()=>{
+ const key='source:'+ 'x'.repeat(280);
+ const read=makeWorkspaceReader({readCatalog:async()=>{throw Error('Unavailable');},readSearch:async(q,id)=>{
+  const data=searchReply(q,id);
+  if(q.source==='session')data.results=[{id:key,title:'Session',source:'session',navigation:{kind:'session',id:key}}];
+  if(q.source==='pr')data.results[0].navigation={kind:'github',href:'https://github.com/gbauto/gbautomation/pull/1660'};
+  if(q.source==='code')data.results[0].navigation={kind:'github',href:'https://evil.invalid/path'};
+  return data;
+ }});
+ const result=await read('workspaceSearch',{search:'Evidence'},agent);
+ assert.equal(result.activities.find(r=>r.source==='session').navigation.id,key);
+ assert.equal(result.activities.find(r=>r.source==='session').id,key);
+ assert.equal(result.activities.find(r=>r.source==='pr').scope,'shared_repository');
+ assert.equal(result.activities.find(r=>r.source==='code').navigation,null);
+});
+
 test('workspace search reuses exact-owner readers without invoking all-source classifier',async()=>{
  const calls=[];
  const read=makeWorkspaceReader({readCatalog:async(q,id)=>{calls.push({q,id});return {agent_id:id,rows:[],catalog_sha256:hash,next:null};},

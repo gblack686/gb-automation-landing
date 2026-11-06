@@ -130,13 +130,13 @@ async function search(request: {agent_id:string;config_sha256?:string;query:{que
    const rows:any[]=[];let truncated=false;
    if(cards.status==='fulfilled'){
     const data:any=cards.value;
-    rows.push(...data.rows.map((row:any)=>({id:row.proposal_id,title:row.card_title||row.proposal_id,
+    rows.push(...data.rows.map((row:any)=>({id:row.proposal_id,kind:'proposal',title:row.card_title||row.proposal_id,
      snippet:row.source_type||'',status:row.state||'',updated_at:row.updated_at||''})));
     truncated ||= data.total>data.rows.length;
    }
    if(plans.status==='fulfilled'){
     const data:any=project({view:'planning',agent_id:agent,config_sha256:request.config_sha256},plans.value);
-    rows.push(...data.prds.filter((row:any)=>`${row.title} ${row.path}`.toLowerCase().includes(query.toLowerCase())).map((row:any)=>({id:row.prd_id,title:row.title,snippet:'TAC plan · '+row.path,status:row.status,updated_at:row.updated_at||''})));
+    rows.push(...data.prds.filter((row:any)=>`${row.title} ${row.path}`.toLowerCase().includes(query.toLowerCase())).map((row:any)=>({id:row.prd_id,kind:'plan',title:row.title,snippet:'TAC plan · '+row.path,status:row.status,updated_at:row.updated_at||''})));
     truncated ||= data.prds.length===100;
    }
    return {rows:rows.slice(0,41),coverage:cards.status==='rejected'||plans.status==='rejected'?'stale':'available',truncated:truncated||rows.length>40};
@@ -145,7 +145,7 @@ async function search(request: {agent_id:string;config_sha256?:string;query:{que
    const secret=await credentials();
    const data=await read(`${secret.url}/rest/v1/rpc/forge_search_session_intents`,{method:'POST',headers:{apikey:secret.key,Authorization:`Bearer ${secret.key}`,'Content-Type':'application/json'},body:JSON.stringify({p_tenant:TENANT,p_expert:agent,p_query:query,p_limit:40})});
    if(!Array.isArray(data.rows)||data.rows.length>41)throw Error('Invalid summary source');
-   return {rows:data.rows.map((row:any)=>({id:row.intent_event_id,title:String(row.intent_summary||'').slice(0,120),snippet:row.intent_summary||'',status:row.intent_type||'',updated_at:row.updated_at||''})),truncated:Boolean(data.truncated)};
+   return {rows:data.rows.map((row:any)=>({id:row.intent_event_id,session_key:row.session_key,title:String(row.intent_summary||'').slice(0,120),snippet:row.intent_summary||'',status:row.intent_type||'',updated_at:row.updated_at||''})),truncated:Boolean(data.truncated)};
   },
   pr:async (query:string) => {
    const terms=`${query} is:pr repo:gbauto/gbautomation repo:gblack686/gb-automation-landing`;

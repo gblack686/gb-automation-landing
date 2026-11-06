@@ -16,6 +16,13 @@ export default function ForgeAtlas() {
  const chatProbeVersion = useRef(0);
  const [channel,setChannel] = useState(() => crypto.randomUUID());
  const [html,setHtml] = useState('');
+ const header=useRef(null);
+ const [headerHeight,setHeaderHeight]=useState(40);
+ useEffect(()=>{
+  if(!header.current)return;
+  const observer=new ResizeObserver(([entry])=>setHeaderHeight(Math.ceil(entry.target.getBoundingClientRect().height)));
+  observer.observe(header.current);return()=>observer.disconnect();
+ },[html]);
  const [error,setError] = useState('');
  const [attempt,setAttempt] = useState(0);
  const [visual,setVisual]=useState(null);
@@ -72,9 +79,12 @@ export default function ForgeAtlas() {
        || message?.type !== 'forge-atlas.request.v1' || message.channel !== channel
        || typeof message.id !== 'string' || !/^\d{1,9}$/.test(message.id)
        || !['atlas','planning','history','schedule','approvalSnapshot','proposals','proposal','search','operatorData','visualOpen','visualActive','builderOpen','resourceGalleryOpen','workspaceCatalog','workspaceArtifact','workspaceLookup','workspaceSearch','factorySnapshot'].includes(message.view) || JSON.stringify(message).length > 18000) return;
-   const concurrent=message.view==='search'||message.view.startsWith('workspace');
+   const concurrent=['search','history','proposal'].includes(message.view)||message.view.startsWith('workspace');
    const pendingKey=concurrent?`${message.view}:${message.id}`:message.view;
-   if (pending.has(pendingKey) || (concurrent&&[...pending].filter(key=>key.startsWith(message.view+':')).length>=4)) return;
+   if (pending.has(pendingKey)) return;
+   if(concurrent&&[...pending].filter(key=>key.startsWith(message.view+':')).length>=4){
+    frame.current?.contentWindow?.postMessage({type:'forge-atlas.response.v1',channel,id:message.id,ok:false,payload:null},'*');return;
+   }
    pending.add(pendingKey);
    let payload,ok = false;
    try {
@@ -196,7 +206,7 @@ export default function ForgeAtlas() {
   {error && <button onClick={() => setAttempt(v => v+1)} className="mt-5 border border-current rounded-md p-3">Retry</button>}
   {selectedAgent&&<button onClick={()=>setResourceGallery('ui')} className="mt-5 border border-current rounded-md p-3">Expert resources</button>}
  </main>{resourcePanel}</>;
- return <><header className="forge-host-header" style={{position:'fixed',inset:'0 0 auto',height:40,zIndex:110,display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0 16px',background:'#191919',color:'#F3F1E7',fontSize:12}}>
+ return <><header ref={header} className="forge-host-header" style={{position:'fixed',inset:'0 0 auto',minHeight:40,zIndex:110,display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0 16px',background:'#191919',color:'#F3F1E7',fontSize:12}}>
   <span className="forge-host-name">Agent Forge · Private workspace</span>
   <nav style={{display:'flex',gap:20,alignItems:'center'}}><select aria-label="Registered agents" value={selectedAgent.agent_id} onChange={event=>{
    const next=agents.find(agent=>agent.agent_id===event.target.value);if(!next)return;
@@ -208,7 +218,7 @@ export default function ForgeAtlas() {
   </select><a href={`/${mode}/${selectedAgent.agent_id}?window=presence`}>Avatar</a>{selectedAgent.agent_id==='artist-packet-expert'&&<button onClick={()=>setVisual({brief:null})}>Avatar jobs</button>}{selectedAgent.agent_id==='artist-packet-expert'&&<button onClick={()=>setBuilder(true)}>Expert Config Builder</button>}{selectedAgent.agent_id==='youtube-intel'&&<a href="/workshop">YouTube health</a>}<a href={`/${mode}/${selectedAgent.agent_id}?window=proposals`}>Proposals</a><button onClick={() => signOut()}>Sign out</button></nav>
  </header><iframe key={channel} ref={frame} name={`forge-atlas:${channel}`} title={`${selectedAgent.display_name} Atlas`} srcDoc={html} onLoad={frameLoaded}
   sandbox="allow-scripts allow-downloads allow-popups allow-popups-to-escape-sandbox"
-  referrerPolicy="no-referrer" style={{position:'fixed',inset:'40px 0 0',width:'100%',height:'calc(100dvh - 40px)',border:0,zIndex:100}} />
+  referrerPolicy="no-referrer" style={{position:'fixed',inset:`${headerHeight}px 0 0`,width:'100%',height:`calc(100dvh - ${headerHeight}px)`,border:0,zIndex:100}} />
   {visual&&<ForgeVisualStudio brief={visual.brief} onClose={()=>setVisual(null)} onAdopt={()=>frame.current?.contentWindow?.postMessage({type:'forge-visual.updated.v1',channel},'*')}/>}
   <button type="button" onClick={()=>setResourceGallery('ui')} style={{position:'fixed',bottom:16,right:16,zIndex:120,padding:'10px 16px',background:'#191919',color:'#F3F1E7',borderRadius:8,border:'1px solid #8C8A84'}}>Expert resources</button>
   {resourcePanel}{builder&&<ForgeExpertBuilder onClose={()=>setBuilder(false)}/>}</>;

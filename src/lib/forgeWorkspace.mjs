@@ -1,5 +1,6 @@
 // Atlas presentation is retained. These adapters add exact expert-owned reads;
 // account credentials and signed object URLs never cross the document channel.
+import {recordIdentity,recordNavigation,recordScope} from '../../shared/forgeSearchNavigation.mjs';
 export const WORKSPACE_WINDOWS = Object.freeze([
  'skills','commands','presence','chat','canvas','proposals','checks','config',
  'knowledge','prds','kanban','artifacts','console','changes','atlas','history',
@@ -57,9 +58,9 @@ export function makeWorkspaceReader({readCatalog,readArtifact,readSearch,documen
     if(data?.schema_version!=='forge-unified-search.v1'||data.tenant_id!=='gbautomation'||data.agent_id!==agentId
      ||data.query!==query||!Array.isArray(data.results)||data.results.length>40
      ||!['available','empty','stale','unavailable'].includes(data.coverage?.[source])
-     ||data.results.some(row=>row.source!==source||typeof row.id!=='string'||typeof row.title!=='string'))deny();
+     ||data.results.some(row=>row.source!==source||!recordIdentity(row.id)||typeof row.title!=='string'))deny();
     coverage[source]=data.coverage[source];result.truncated||=data.truncated||data.results.length>10;
-    result.activities.push(...data.results.slice(0,10).map(row=>({id:row.id.slice(0,200),source,title:row.title.slice(0,240),
+    result.activities.push(...data.results.slice(0,10).map(row=>({id:row.id,source,scope:recordScope(source),navigation:recordNavigation(source,row.id,row.navigation),title:row.title.slice(0,240),
      snippet:typeof row.snippet==='string'?row.snippet.slice(0,500):'',status:typeof row.status==='string'?row.status.slice(0,80):'',
      updated_at:typeof row.updated_at==='string'?row.updated_at.slice(0,40):''})));
    }
