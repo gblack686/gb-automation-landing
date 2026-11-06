@@ -32,12 +32,11 @@ export default function ForgeAtlas() {
    if(!active)return;
    const list=Array.isArray(data?.agents)?data.agents:[];
    setAgents(list);
-   const requested=window.location.pathname.split('/').at(-1);
-   const selected=list.find(agent=>agent.agent_id===requested)||list[0]||null;
+   const requested=workspaceLocation(window.location.pathname,window.location.search)?.agentId;
+   const selected=list.find(agent=>agent.agent_id===requested)||null;
    setSelectedAgent(selected);
    setBuilder(selected?.agent_id==='artist-packet-expert'&&new URLSearchParams(window.location.search).get('window')==='tasks');
-   if(selected&&selected.agent_id!==requested)window.history.replaceState(null,'',`/${mode}/${selected.agent_id}`);
-   if(!selected)setError('No registered agents are available for this account.');
+   if(!selected)setError(list.length?'This expert is not registered for your account. Open a workspace from your expert catalog.':'No registered agents are available for this account.');
   }).catch(()=>{if(active)setError('Your registered agents could not load. Please sign in again.');});
   return()=>{active=false;};
  },[]);
@@ -45,7 +44,7 @@ export default function ForgeAtlas() {
   if(!selectedAgent)return;
   let active = true;
   const abort = new AbortController();
-  const workspaceRead=makeWorkspaceReader({readCatalog:readResourceCatalog,readArtifact:readResourceArtifact,documentFor:resourceDocument,signal:abort.signal});
+  const workspaceRead=makeWorkspaceReader({readCatalog:readResourceCatalog,readArtifact:readResourceArtifact,readSearch:(query,id)=>readAtlas('search',query,id),documentFor:resourceDocument,signal:abort.signal});
   const pending = new Set();
   const receive = async event => {
    const message = event.data;
@@ -72,14 +71,14 @@ export default function ForgeAtlas() {
    if (event.source !== frame.current?.contentWindow || event.origin !== 'null'
        || message?.type !== 'forge-atlas.request.v1' || message.channel !== channel
        || typeof message.id !== 'string' || !/^\d{1,9}$/.test(message.id)
-       || !['atlas','planning','history','schedule','approvalSnapshot','proposals','proposal','search','operatorData','visualOpen','visualActive','builderOpen','resourceGalleryOpen','workspaceCatalog','workspaceArtifact','workspaceLookup'].includes(message.view) || JSON.stringify(message).length > 18000) return;
+       || !['atlas','planning','history','schedule','approvalSnapshot','proposals','proposal','search','operatorData','visualOpen','visualActive','builderOpen','resourceGalleryOpen','workspaceCatalog','workspaceArtifact','workspaceLookup','workspaceSearch'].includes(message.view) || JSON.stringify(message).length > 18000) return;
    const concurrent=message.view==='search'||message.view.startsWith('workspace');
    const pendingKey=concurrent?`${message.view}:${message.id}`:message.view;
    if (pending.has(pendingKey) || (concurrent&&[...pending].filter(key=>key.startsWith(message.view+':')).length>=4)) return;
    pending.add(pendingKey);
    let payload,ok = false;
    try {
-    if(['workspaceCatalog','workspaceArtifact','workspaceLookup'].includes(message.view)){
+    if(['workspaceCatalog','workspaceArtifact','workspaceLookup','workspaceSearch'].includes(message.view)){
      payload=await workspaceRead(message.view,message.input,selectedAgent.agent_id);
     }else if(message.view==='resourceGalleryOpen'){
      if(!message.input || Object.keys(message.input).some(key=>key!=='kind') || !['ui','kb','process'].includes(message.input.kind))throw Error('Invalid resource selection');

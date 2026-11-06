@@ -4,6 +4,44 @@ import {makeWorkspaceReader,workspaceLocation,workspaceHref,WORKSPACE_WINDOWS} f
 const agent='youtube-intel',hash='a'.repeat(64);
 const input={resource_id:'ui.youtube',catalog_sha256:hash};
 const asset={agent_id:agent,owner_expert:agent,...input,sha256:hash,freshness:'stale',observed_at:'2026-11-01T00:00:00Z',media_type:'text/html',url:'must-not-leak'};
+const searchReply=(q,id)=>({schema_version:'forge-unified-search.v1',tenant_id:'gbautomation',agent_id:id,query:q.query,
+ coverage:{[q.source]:'available'},results:[{id:q.source+'-1',source:q.source,title:'Evidence',href:'do-not-forward'}]});
+
+test('workspace search reuses exact-owner readers without invoking all-source classifier',async()=>{
+ const calls=[];
+ const read=makeWorkspaceReader({readCatalog:async(q,id)=>{calls.push({q,id});return {agent_id:id,rows:[],catalog_sha256:hash,next:null};},
+  readSearch:async(q,id)=>{calls.push({q,id});return searchReply(q,id);}});
+ const result=await read('workspaceSearch',{search:' Evidence '},agent);
+ assert.equal(result.query,'Evidence');assert.equal(result.activities.length,4);assert.equal(result.coverage.resources,'empty');
+ assert.deepEqual(calls.slice(1).map(x=>x.q.source),['proposal','session','pr','code']);
+ assert(calls.every(x=>x.id===agent));assert.equal(calls[0].q.owner,agent);
+ assert(!JSON.stringify(result).includes('do-not-forward'));
+});
+
+test('partial search preserves available sources and labels failures unavailable',async()=>{
+ const read=makeWorkspaceReader({readCatalog:async()=>{throw Error('Offline');},readSearch:async(q,id)=>{
+  if(q.source==='session')throw Error('Offline');return {...searchReply(q,id),coverage:{[q.source]:'empty'},results:[]};}});
+ const result=await read('workspaceSearch',{search:'Evidence'},agent);
+ assert.deepEqual(result.coverage,{resources:'unavailable',proposal:'empty',session:'unavailable',pr:'empty',code:'empty'});
+ assert.deepEqual(result.activities,[]);
+});
+
+test('search identity mismatch fails closed, including a foreign catalog or mixed source',async()=>{
+ for(const corrupted of ['catalog','agent','source','query']){
+  const read=makeWorkspaceReader({readCatalog:async()=>({agent_id:corrupted==='catalog'?'foreign':agent,rows:[],catalog_sha256:hash,next:null}),
+   readSearch:async(q,id)=>{const data=searchReply(q,id);if(corrupted==='agent')data.agent_id='foreign';if(corrupted==='source')data.results[0].source='foreign';if(corrupted==='query')data.query='other';return data;}});
+  await assert.rejects(read('workspaceSearch',{search:'Evidence'},agent));
+ }
+});
+
+test('search input is bounded before any reads and delayed cancelled responses are denied',async()=>{
+ let calls=0;const read=makeWorkspaceReader({readCatalog:async()=>{calls++;},readSearch:async()=>{calls++;}});
+ for(const input of [{search:''},{search:'x'.repeat(121)},{search:'a\nb'},{search:'x',owner:'foreign'}])await assert.rejects(read('workspaceSearch',input,agent));
+ assert.equal(calls,0);
+ const controller=new AbortController();
+ const delayed=makeWorkspaceReader({signal:controller.signal,readCatalog:async()=>{controller.abort();return {};},readSearch:searchReply});
+ await assert.rejects(delayed('workspaceSearch',{search:'Evidence'},agent));
+});
 test('every Atlas window and expert resource round trips through both routes',()=>{
  for(const mode of ['bench','atlas'])for(const windowId of WORKSPACE_WINDOWS){
   const url=new URL(workspaceHref(agent,{mode,windowId,resourceId:input.resource_id}),'https://fixture.invalid');

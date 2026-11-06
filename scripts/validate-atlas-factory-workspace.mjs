@@ -30,6 +30,11 @@ await page.route('**/__workspace_fixture',async r=>{
  if(x.view==='agents')return r.fulfill({json:{agents:agents.map(id=>({agent_id:id,display_name:id,config_sha256:receipts[id].yaml_sha256}))}});
  if(x.view==='document')return r.fulfill({json:{agent_id:x.agent_id,tenant_id:'gbautomation',url:`https://fixture.s3.us-east-1.amazonaws.com/gbautomation/${x.agent_id}/index.html`,sha256:hash(docs[x.agent_id]),bytes:Buffer.byteLength(docs[x.agent_id])}});
  if(fail)return r.fulfill({status:503,body:'Unavailable'});
+ if(x.view==='search'){
+  if(x.query.source==='session')return r.fulfill({status:503,body:'Unavailable fixture source'});
+  return r.fulfill({json:{schema_version:'forge-unified-search.v1',tenant_id:'gbautomation',agent_id:x.agent_id,query:x.query.query,
+   coverage:{[x.query.source]:'available'},results:[{id:x.query.source+'-fixture',source:x.query.source,title:'Reviewed '+x.query.source+' evidence',snippet:'Synthetic search result'}]}});
+ }
  if(['resourceCatalog','resourceArtifact'].includes(x.view)){
   if(x.view==='resourceArtifact'&&holdArtifact)await new Promise(resolve=>{releaseArtifact=resolve;});
   try{return r.fulfill({json:await resourceRead(x)});}catch{return r.fulfill({status:503,body:'Unavailable'});}
@@ -69,10 +74,10 @@ try{
  assert.equal(await current().locator('iframe[title="youtube-intel reviewed UI saved result"]').count(),0);
  checks.push('Delayed artifact response from previous expert is fenced after expert switching');
  // Resolve a resource directly after reload, including its owning expert.
- await page.goto(base+'/bench/news-agent?window=resources&resource=ui.news-agent.review');
+ await page.goto(base+'/bench/news-agent/?window=resources&resource=ui.news-agent.review');
  frame=current();await frame.frameLocator('iframe[title="news-agent reviewed UI saved result"]').getByRole('heading',{name:'Reviewed UI fixture'}).waitFor();
  assert.equal(await page.getByLabel('Registered agents').inputValue(),'news-agent');
- checks.push('Exact expert/resource deep link opens the saved app after a full reload');
+ checks.push('Exact expert/resource deep link, including trailing slash, opens the saved app after a full reload');
  await page.getByLabel('Registered agents').selectOption('youtube-intel');
  frame=current();await frame.getByRole('button',{name:'Open in window',exact:true}).waitFor();
  assert.equal(await frame.locator('iframe[title="news-agent reviewed UI saved result"]').count(),0);
@@ -85,6 +90,20 @@ try{
  await frame.getByText('No resources match these filters.',{exact:true}).waitFor();
  fail=true;await frame.getByRole('button',{name:'Refresh',exact:true}).click();await frame.getByText(/Resources could not load/).waitFor();fail=false;
  checks.push('Explicit deterministic search and honest failure versus empty-result states');
+ await frame.getByLabel('Search expert resources').fill('reviewed');
+ await frame.getByLabel('Resource type').selectOption('all');
+ await frame.getByText('Reviewed proposal evidence',{exact:true}).waitFor();
+ await frame.getByText(/session: unavailable/).waitFor();
+ assert(requests.filter(x=>x.view==='search').every(x=>x.agent_id==='youtube-intel'&&x.query.source!=='all'));
+ const searchCount=requests.filter(x=>x.view==='search').length;
+ await frame.getByLabel('Search expert resources').fill('typing only');await page.waitForTimeout(350);
+ assert.equal(requests.filter(x=>x.view==='search').length,searchCount);
+ await frame.getByLabel('Search expert resources').fill('reviewed');
+ await frame.getByRole('button',{name:'Open in window',exact:true}).click();
+ await frame.frameLocator('iframe[title="youtube-intel reviewed UI saved result"]').getByRole('heading',{name:'Reviewed UI fixture'}).waitFor();
+ await frame.getByRole('button',{name:'Close app window',exact:true}).click();
+ checks.push('Unified search combines owned resources and existing work sources, labels partial failure, and performs no reads while typing');
+ await frame.getByLabel('Resource type').selectOption('ui');
  await frame.getByLabel('Search expert resources').fill('reviewed');await frame.getByRole('button',{name:'Search',exact:true}).click();
  await frame.getByRole('button',{name:'Open in window',exact:true}).waitFor();tamper=true;
  await frame.getByRole('button',{name:'Open in window',exact:true}).click();await frame.getByText(/saved result could not be verified/).waitFor();tamper=false;
@@ -95,8 +114,12 @@ try{
  assert(await frame.locator('body').evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
  await page.screenshot({path:output+'/mobile.png',fullPage:true});
  checks.push('390px mobile document and owned app operate without horizontal overflow');
+ await page.goto(base+'/bench/unregistered-expert?window=resources');
+ await page.getByRole('status').filter({hasText:'This expert is not registered for your account.'}).waitFor();
+ assert.equal(await page.locator('iframe[title$=" Atlas"]').count(),0);
+ checks.push('Unknown requested expert cannot silently open a different registered expert');
  assert.deepEqual(errors,[]);
  await writeFile(output+'/validation.json',JSON.stringify({ok:true,checks,fixture:true,productionAcceptance:false,sourceDocuments:Object.fromEntries(agents.map(id=>[id,hash(docs[id])]))},null,2));
  console.log(JSON.stringify({ok:true,checks}));
 }catch(error){await writeFile(output+'/failure.json',JSON.stringify({ok:false,error:String(error),errors,checks,requests},null,2));throw error;}
-finally{await browser.close();}
+finally{releaseArtifact?.();await page.unrouteAll({behavior:'ignoreErrors'});await browser.close();}
