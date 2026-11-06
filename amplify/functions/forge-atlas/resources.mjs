@@ -90,7 +90,8 @@ export function makeResourceService({enabled = false, loadManifest, describeArti
   }
   const {owner,kind,search='',offset=0} = request.query;
   const matching = data.resources.filter(row => (!owner || row.owner_expert===owner)
-   && (!kind || row.kind===kind) && `${row.title} ${row.description||''}`.toLowerCase().includes(search.toLowerCase()));
+   && (!kind || row.kind===kind) && `${row.id} ${row.title} ${row.description||''}`.toLowerCase().includes(search.toLowerCase()))
+   .sort((a,b)=>Number(b.id===search)-Number(a.id===search));
   return {...envelope,schema_version:'forge-resource-catalog.v1',
    owners:[...new Set(data.resources.map(row=>row.owner_expert).filter(Boolean))].sort(),
    total:matching.length,offset,next:offset+50<matching.length?offset+50:null,

@@ -6,13 +6,15 @@ import ForgeVisualStudio from '../components/ForgeVisualStudio';
 import ForgeExpertBuilder from '../components/ForgeExpertBuilder';
 import ForgeResourceGallery from '../components/ForgeResourceGallery';
 import {visualRequest,visualAsset} from '../lib/forgeVisualClient';
+import {readResourceCatalog,readResourceArtifact,resourceDocument} from '../lib/forgeResourceClient';
+import {makeWorkspaceReader,workspaceLocation,WORKSPACE_WINDOWS} from '../lib/forgeWorkspace.mjs';
 
 const CSP = "default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval'; style-src 'unsafe-inline'; img-src data: blob:; font-src data:; frame-src 'self' about: blob:; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'";
 const YOUTUBE_REPORT_ORIGIN = 'https://6ab9d13b0b89b5644e56270a--gbautoxyz.netlify.app';
 export default function ForgeAtlas() {
  const frame = useRef(null);
  const chatProbeVersion = useRef(0);
- const [channel] = useState(() => crypto.randomUUID());
+ const [channel,setChannel] = useState(() => crypto.randomUUID());
  const [html,setHtml] = useState('');
  const [error,setError] = useState('');
  const [attempt,setAttempt] = useState(0);
@@ -20,7 +22,9 @@ export default function ForgeAtlas() {
  const [builder,setBuilder]=useState(()=>new URLSearchParams(window.location.search).get('window')==='tasks');
  const [agents,setAgents]=useState([]);
  const [selectedAgent,setSelectedAgent]=useState(null);
- const [resourceGallery,setResourceGallery]=useState(()=>new URLSearchParams(window.location.search).get('window')==='resources'?'ui':null);
+ const mode=workspaceLocation(window.location.pathname,window.location.search)?.mode||'atlas';
+ const selectedScope=useRef(null);selectedScope.current=selectedAgent?.agent_id;
+ const [resourceGallery,setResourceGallery]=useState(()=>window.location.pathname.startsWith('/atlas/')&&new URLSearchParams(window.location.search).get('window')==='resources'?'ui':null);
  useEffect(() => () => { chatProbeVersion.current += 1; }, [html, selectedAgent]);
  useEffect(()=>{
   let active=true;
@@ -32,7 +36,7 @@ export default function ForgeAtlas() {
    const selected=list.find(agent=>agent.agent_id===requested)||list[0]||null;
    setSelectedAgent(selected);
    setBuilder(selected?.agent_id==='artist-packet-expert'&&new URLSearchParams(window.location.search).get('window')==='tasks');
-   if(selected&&selected.agent_id!==requested)window.history.replaceState(null,'',`/atlas/${selected.agent_id}`);
+   if(selected&&selected.agent_id!==requested)window.history.replaceState(null,'',`/${mode}/${selected.agent_id}`);
    if(!selected)setError('No registered agents are available for this account.');
   }).catch(()=>{if(active)setError('Your registered agents could not load. Please sign in again.');});
   return()=>{active=false;};
@@ -41,6 +45,7 @@ export default function ForgeAtlas() {
   if(!selectedAgent)return;
   let active = true;
   const abort = new AbortController();
+  const workspaceRead=makeWorkspaceReader({readCatalog:readResourceCatalog,readArtifact:readResourceArtifact,documentFor:resourceDocument,signal:abort.signal});
   const pending = new Set();
   const receive = async event => {
    const message = event.data;
@@ -61,19 +66,22 @@ export default function ForgeAtlas() {
      ok=true;
     }catch{payload=null;}
     finally{pending.delete(key);}
-    if(active)frame.current?.contentWindow?.postMessage({type:'forge-chat.response.v1',channel,id:message.id,ok,payload},'*');
+    if(active&&selectedScope.current===selectedAgent.agent_id)frame.current?.contentWindow?.postMessage({type:'forge-chat.response.v1',channel,id:message.id,ok,payload},'*');
     return;
    }
    if (event.source !== frame.current?.contentWindow || event.origin !== 'null'
        || message?.type !== 'forge-atlas.request.v1' || message.channel !== channel
        || typeof message.id !== 'string' || !/^\d{1,9}$/.test(message.id)
-       || !['atlas','planning','history','schedule','approvalSnapshot','proposals','proposal','search','operatorData','visualOpen','visualActive','builderOpen','resourceGalleryOpen'].includes(message.view) || JSON.stringify(message).length > 18000) return;
-   const pendingKey=message.view==='search'?`search:${message.id}`:message.view;
-   if (pending.has(pendingKey) || (message.view==='search'&&[...pending].filter(key=>key.startsWith('search:')).length>=4)) return;
+       || !['atlas','planning','history','schedule','approvalSnapshot','proposals','proposal','search','operatorData','visualOpen','visualActive','builderOpen','resourceGalleryOpen','workspaceCatalog','workspaceArtifact','workspaceLookup'].includes(message.view) || JSON.stringify(message).length > 18000) return;
+   const concurrent=message.view==='search'||message.view.startsWith('workspace');
+   const pendingKey=concurrent?`${message.view}:${message.id}`:message.view;
+   if (pending.has(pendingKey) || (concurrent&&[...pending].filter(key=>key.startsWith(message.view+':')).length>=4)) return;
    pending.add(pendingKey);
    let payload,ok = false;
    try {
-    if(message.view==='resourceGalleryOpen'){
+    if(['workspaceCatalog','workspaceArtifact','workspaceLookup'].includes(message.view)){
+     payload=await workspaceRead(message.view,message.input,selectedAgent.agent_id);
+    }else if(message.view==='resourceGalleryOpen'){
      if(!message.input || Object.keys(message.input).some(key=>key!=='kind') || !['ui','kb','process'].includes(message.input.kind))throw Error('Invalid resource selection');
      setResourceGallery(message.input.kind);payload={opened:true};
     }else if(message.view==='builderOpen'){
@@ -107,11 +115,11 @@ export default function ForgeAtlas() {
     ok = true;
    } catch { payload = null; }
    finally { pending.delete(pendingKey); }
-   if (active) frame.current?.contentWindow?.postMessage({type:'forge-atlas.response.v1',channel,id:message.id,ok,payload},'*');
+   if (active&&selectedScope.current===selectedAgent.agent_id) frame.current?.contentWindow?.postMessage({type:'forge-atlas.response.v1',channel,id:message.id,ok,payload},'*');
   };
   window.addEventListener('message',receive);
   const stopAuth = Hub.listen('auth',({payload}) => {
-   if (payload.event === 'signedOut') { active = false; abort.abort(); setHtml(''); setVisual(null);setBuilder(false);setResourceGallery(null); window.location.assign('/login?next='+encodeURIComponent('/atlas/'+selectedAgent.agent_id)); }
+   if (payload.event === 'signedOut') { active = false; abort.abort(); setHtml(''); setVisual(null);setBuilder(false);setResourceGallery(null); window.location.assign('/login?next='+encodeURIComponent('/'+mode+'/'+selectedAgent.agent_id)); }
   });
   (async () => {
    setError(''); setHtml('');
@@ -153,10 +161,12 @@ export default function ForgeAtlas() {
        throw Error('Document binding changed');
     }
     const requestedWindow=new URLSearchParams(window.location.search).get('window');
-    const startWindow = ['proposals','presence','chat'].includes(requestedWindow) ? `<meta name="forge-start-window" content="${requestedWindow}">` : '';
+    const startWindow = WORKSPACE_WINDOWS.includes(requestedWindow) ? `<meta name="forge-start-window" content="${requestedWindow}">` : '';
+    const route=workspaceLocation(window.location.pathname,window.location.search);
+    const workspaceMeta=`<meta name="forge-workspace-mode" content="${mode}">`+(route?.resourceId?`<meta name="forge-start-resource" content="${route.resourceId}">`:'');
     const policy = selectedAgent.agent_id === 'youtube-intel'
       ? CSP.replace("frame-src 'self' about: blob:",`frame-src 'self' about: blob: ${YOUTUBE_REPORT_ORIGIN}`) : CSP;
-    if (active) setHtml(content.replace('<head>',`<head><meta http-equiv="Content-Security-Policy" content="${policy}"><meta name="forge-host-channel" content="${channel}">${startWindow}`));
+    if (active&&selectedScope.current===selectedAgent.agent_id) setHtml(content.replace('<head>',`<head><meta http-equiv="Content-Security-Policy" content="${policy}"><meta name="forge-host-channel" content="${channel}">${startWindow}${workspaceMeta}`));
    } catch { if (active) setError('Your workspace could not load. Please retry or sign in again.'); }
   })();
   return () => { active = false; abort.abort(); stopAuth(); window.removeEventListener('message',receive); };
@@ -190,12 +200,13 @@ export default function ForgeAtlas() {
   <span className="forge-host-name">Agent Forge · Private workspace</span>
   <nav style={{display:'flex',gap:20,alignItems:'center'}}><select aria-label="Registered agents" value={selectedAgent.agent_id} onChange={event=>{
    const next=agents.find(agent=>agent.agent_id===event.target.value);if(!next)return;
+   selectedScope.current=next.agent_id;setChannel(crypto.randomUUID());
    setHtml('');setBuilder(false);setVisual(null);setResourceGallery(null);setSelectedAgent(next);
-   window.history.replaceState(null,'',`/atlas/${next.agent_id}`);
+   window.history.replaceState(null,'',`/${mode}/${next.agent_id}`);
   }} style={{color:'#191919',background:'#F3F1E7',padding:'4px 8px',maxWidth:200}}>
    {agents.map(agent=><option key={agent.agent_id} value={agent.agent_id}>{agent.display_name}</option>)}
-  </select><a href={`/atlas/${selectedAgent.agent_id}?window=presence`}>Avatar</a>{selectedAgent.agent_id==='artist-packet-expert'&&<button onClick={()=>setVisual({brief:null})}>Avatar jobs</button>}{selectedAgent.agent_id==='artist-packet-expert'&&<button onClick={()=>setBuilder(true)}>Expert Config Builder</button>}{selectedAgent.agent_id==='youtube-intel'&&<a href="/workshop">YouTube health</a>}<a href={`/atlas/${selectedAgent.agent_id}?window=proposals`}>Proposals</a><button onClick={() => signOut()}>Sign out</button></nav>
- </header><iframe ref={frame} name={`forge-atlas:${channel}`} title={`${selectedAgent.display_name} Atlas`} srcDoc={html} onLoad={frameLoaded}
+  </select><a href={`/${mode}/${selectedAgent.agent_id}?window=presence`}>Avatar</a>{selectedAgent.agent_id==='artist-packet-expert'&&<button onClick={()=>setVisual({brief:null})}>Avatar jobs</button>}{selectedAgent.agent_id==='artist-packet-expert'&&<button onClick={()=>setBuilder(true)}>Expert Config Builder</button>}{selectedAgent.agent_id==='youtube-intel'&&<a href="/workshop">YouTube health</a>}<a href={`/${mode}/${selectedAgent.agent_id}?window=proposals`}>Proposals</a><button onClick={() => signOut()}>Sign out</button></nav>
+ </header><iframe key={channel} ref={frame} name={`forge-atlas:${channel}`} title={`${selectedAgent.display_name} Atlas`} srcDoc={html} onLoad={frameLoaded}
   sandbox="allow-scripts allow-downloads allow-popups allow-popups-to-escape-sandbox"
   referrerPolicy="no-referrer" style={{position:'fixed',inset:'40px 0 0',width:'100%',height:'calc(100dvh - 40px)',border:0,zIndex:100}} />
   {visual&&<ForgeVisualStudio brief={visual.brief} onClose={()=>setVisual(null)} onAdopt={()=>frame.current?.contentWindow?.postMessage({type:'forge-visual.updated.v1',channel},'*')}/>}

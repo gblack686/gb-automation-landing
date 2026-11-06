@@ -37,7 +37,7 @@ import ForgeIntake from './pages/ForgeIntake';
 
 function CommandLayerVisibility() {
   const { pathname } = useLocation();
-  if (pathname === '/' || pathname.startsWith('/atlas/') || pathname === '/workshop') return null;
+  if (pathname === '/' || pathname.startsWith('/atlas/') || pathname.startsWith('/bench/') || pathname === '/workshop') return null;
   return <HermesCommandLayer />;
 }
 
@@ -58,6 +58,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/atlas/:agentId" element={<RequireAuth allowedGroups={['tenant-gbautomation']}><ForgeAtlas /></RequireAuth>} />
+          <Route path="/bench/:agentId" element={<RequireAuth allowedGroups={['tenant-gbautomation']}><ForgeAtlas /></RequireAuth>} />
           <Route path="/workshop" element={<RequireAuth allowedGroups={['tenant-gbautomation']}><AgentWorkshop /></RequireAuth>} />
           <Route path="/forge-intake" element={<RequireAuth><ForgeIntake /></RequireAuth>} />
           <Route path="/chat" element={<ChatRedirect />} />
