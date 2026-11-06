@@ -4,6 +4,7 @@ import { signOut } from 'aws-amplify/auth';
 import { readAtlas, expertChat } from '../lib/forgeAtlasClient';
 import ForgeVisualStudio from '../components/ForgeVisualStudio';
 import ForgeExpertBuilder from '../components/ForgeExpertBuilder';
+import ForgeResourceGallery from '../components/ForgeResourceGallery';
 import {visualRequest,visualAsset} from '../lib/forgeVisualClient';
 
 const CSP = "default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval'; style-src 'unsafe-inline'; img-src data: blob:; font-src data:; frame-src 'self' about: blob:; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'";
@@ -19,6 +20,7 @@ export default function ForgeAtlas() {
  const [builder,setBuilder]=useState(()=>new URLSearchParams(window.location.search).get('window')==='tasks');
  const [agents,setAgents]=useState([]);
  const [selectedAgent,setSelectedAgent]=useState(null);
+ const [resourceGallery,setResourceGallery]=useState(()=>new URLSearchParams(window.location.search).get('window')==='resources'?'ui':null);
  useEffect(() => () => { chatProbeVersion.current += 1; }, [html, selectedAgent]);
  useEffect(()=>{
   let active=true;
@@ -65,13 +67,16 @@ export default function ForgeAtlas() {
    if (event.source !== frame.current?.contentWindow || event.origin !== 'null'
        || message?.type !== 'forge-atlas.request.v1' || message.channel !== channel
        || typeof message.id !== 'string' || !/^\d{1,9}$/.test(message.id)
-       || !['atlas','planning','history','schedule','approvalSnapshot','proposals','proposal','search','operatorData','visualOpen','visualActive','builderOpen'].includes(message.view) || JSON.stringify(message).length > 18000) return;
+       || !['atlas','planning','history','schedule','approvalSnapshot','proposals','proposal','search','operatorData','visualOpen','visualActive','builderOpen','resourceGalleryOpen'].includes(message.view) || JSON.stringify(message).length > 18000) return;
    const pendingKey=message.view==='search'?`search:${message.id}`:message.view;
    if (pending.has(pendingKey) || (message.view==='search'&&[...pending].filter(key=>key.startsWith('search:')).length>=4)) return;
    pending.add(pendingKey);
    let payload,ok = false;
    try {
-    if(message.view==='builderOpen'){
+    if(message.view==='resourceGalleryOpen'){
+     if(!message.input || Object.keys(message.input).some(key=>key!=='kind') || !['ui','kb','process'].includes(message.input.kind))throw Error('Invalid resource selection');
+     setResourceGallery(message.input.kind);payload={opened:true};
+    }else if(message.view==='builderOpen'){
      if(selectedAgent.agent_id!=='artist-packet-expert'||message.input&&Object.keys(message.input).length)throw Error('Builder identity is host-owned');
      setBuilder(true);payload={opened:true};
     }else if(message.view==='visualOpen'){
@@ -106,7 +111,7 @@ export default function ForgeAtlas() {
   };
   window.addEventListener('message',receive);
   const stopAuth = Hub.listen('auth',({payload}) => {
-   if (payload.event === 'signedOut') { active = false; abort.abort(); setHtml(''); setVisual(null);setBuilder(false); window.location.assign('/login?next='+encodeURIComponent('/atlas/'+selectedAgent.agent_id)); }
+   if (payload.event === 'signedOut') { active = false; abort.abort(); setHtml(''); setVisual(null);setBuilder(false);setResourceGallery(null); window.location.assign('/login?next='+encodeURIComponent('/atlas/'+selectedAgent.agent_id)); }
   });
   (async () => {
    setError(''); setHtml('');
@@ -173,16 +178,19 @@ export default function ForgeAtlas() {
    }catch{/* Retry a transient capability failure while this frame remains active. */}
   }
  };
- if (!html) return <main className="min-h-screen grid place-content-center bg-[#F3F1E7] text-[#191919] p-8 text-center">
+ const requestedOwner=new URLSearchParams(window.location.search).get('owner')||'';
+ const resourcePanel=resourceGallery&&selectedAgent?<ForgeResourceGallery key={selectedAgent.agent_id} agentId={selectedAgent.agent_id} initialKind={resourceGallery} initialOwner={/^[a-z][a-z0-9-]{1,62}$/.test(requestedOwner)?requestedOwner:''} onClose={()=>setResourceGallery(null)}/>:null;
+ if (!html) return <><main className="min-h-screen grid place-content-center bg-[#F3F1E7] text-[#191919] p-8 text-center">
   <h1 className="text-3xl font-serif">{selectedAgent?.display_name||'Agent Forge'}</h1>
   <p role="status" className="mt-4">{error || 'Opening your private workspace…'}</p>
   {error && <button onClick={() => setAttempt(v => v+1)} className="mt-5 border border-current rounded-md p-3">Retry</button>}
- </main>;
+  {selectedAgent&&<button onClick={()=>setResourceGallery('ui')} className="mt-5 border border-current rounded-md p-3">Expert resources</button>}
+ </main>{resourcePanel}</>;
  return <><header className="forge-host-header" style={{position:'fixed',inset:'0 0 auto',height:40,zIndex:110,display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0 16px',background:'#191919',color:'#F3F1E7',fontSize:12}}>
   <span className="forge-host-name">Agent Forge · Private workspace</span>
   <nav style={{display:'flex',gap:20,alignItems:'center'}}><select aria-label="Registered agents" value={selectedAgent.agent_id} onChange={event=>{
    const next=agents.find(agent=>agent.agent_id===event.target.value);if(!next)return;
-   setHtml('');setBuilder(false);setVisual(null);setSelectedAgent(next);
+   setHtml('');setBuilder(false);setVisual(null);setResourceGallery(null);setSelectedAgent(next);
    window.history.replaceState(null,'',`/atlas/${next.agent_id}`);
   }} style={{color:'#191919',background:'#F3F1E7',padding:'4px 8px',maxWidth:200}}>
    {agents.map(agent=><option key={agent.agent_id} value={agent.agent_id}>{agent.display_name}</option>)}
@@ -191,5 +199,6 @@ export default function ForgeAtlas() {
   sandbox="allow-scripts allow-downloads allow-popups allow-popups-to-escape-sandbox"
   referrerPolicy="no-referrer" style={{position:'fixed',inset:'40px 0 0',width:'100%',height:'calc(100dvh - 40px)',border:0,zIndex:100}} />
   {visual&&<ForgeVisualStudio brief={visual.brief} onClose={()=>setVisual(null)} onAdopt={()=>frame.current?.contentWindow?.postMessage({type:'forge-visual.updated.v1',channel},'*')}/>}
-  {builder&&<ForgeExpertBuilder onClose={()=>setBuilder(false)}/>}</>;
+  <button type="button" onClick={()=>setResourceGallery('ui')} style={{position:'fixed',bottom:16,right:16,zIndex:120,padding:'10px 16px',background:'#191919',color:'#F3F1E7',borderRadius:8,border:'1px solid #8C8A84'}}>Expert resources</button>
+  {resourcePanel}{builder&&<ForgeExpertBuilder onClose={()=>setBuilder(false)}/>}</>;
 }

@@ -16,6 +16,7 @@ import {SqsEventSource} from 'aws-cdk-lib/aws-lambda-event-sources';
 import {forgeBuilder,forgeBuilderWorker} from './functions/forge-builder/resource';
 import {builderInfrastructure} from './functions/forge-builder/infrastructure.mjs';
 import { workshopIssuer, workshopSecretArn } from './functions/forge-workshop/infrastructure.mjs';
+import {validateAppConfig} from './functions/forge-atlas/live-apps.mjs';
 
 /**
  * @see https://docs.amplify.aws/react/build-a-backend/ to add storage, functions, and more
@@ -38,6 +39,19 @@ const atlasStack = Stack.of(backend.forgeAtlas.resources.lambda);
 const atlasDocuments = atlasStorage(atlasStack);
 atlasDocuments.grantRead(backend.forgeAtlas.resources.lambda, 'gbautomation/*/index.html');
 atlasDocuments.grantRead(backend.forgeAtlas.resources.lambda, 'gbautomation/forge-agent-registry.v1.json');
+// Private resource delivery is a separately enabled read capability. No write grant.
+atlasDocuments.grantRead(backend.forgeAtlas.resources.lambda, 'gbautomation/resources/*');
+backend.forgeAtlas.addEnvironment('FORGE_RESOURCES_ENABLED',process.env.FORGE_RESOURCES_ENABLED==='true'?'true':'false');
+backend.forgeAtlas.addEnvironment('FORGE_PI_JOBS_ENABLED',process.env.FORGE_PI_JOBS_ENABLED==='true'?'true':'false');
+// Live reads have a separate reviewed configuration and exact secret ARN. No default route/grant.
+if(process.env.FORGE_LIVE_APP_CONFIG){
+ validateAppConfig(JSON.parse(process.env.FORGE_LIVE_APP_CONFIG));
+ const arn=process.env.FORGE_LIVE_APP_SECRET_ARN||'';
+ if(!/^arn:aws:secretsmanager:[a-z0-9-]+:\d{12}:secret:gbautomation\/hosted-apps\/[A-Za-z0-9_-]+$/.test(arn))throw Error('Live app secret ARN required');
+ backend.forgeAtlas.addEnvironment('FORGE_LIVE_APP_CONFIG',process.env.FORGE_LIVE_APP_CONFIG);
+ backend.forgeAtlas.addEnvironment('FORGE_LIVE_APP_SECRET_ARN',arn);
+ backend.forgeAtlas.resources.lambda.addToRolePolicy(new PolicyStatement({actions:['secretsmanager:GetSecretValue'],resources:[arn]}));
+}
 backend.forgeAtlas.addEnvironment('DOCUMENT_BUCKET', atlasDocuments.bucketName);
 backend.forgeAtlas.addEnvironment('COGNITO_ISSUER', atlasIssuer(atlasStack,backend.auth.resources.userPool.userPoolId));
 if (process.env.FORGE_LEGACY_OPERATOR_SUB) backend.forgeAtlas.addEnvironment('FORGE_LEGACY_OPERATOR_SUB', process.env.FORGE_LEGACY_OPERATOR_SUB);
