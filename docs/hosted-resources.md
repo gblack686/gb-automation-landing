@@ -56,6 +56,26 @@ manifests and job ledgers. No object deletion is required.
 
 ## Workspace record navigation
 
+The Factory snapshot optionally includes `journey_evidence` from the paired
+GBAutomation native YouTube/News adapters. Its original capture time and source
+digest remain attached to the exact expert/configuration-bound snapshot. The
+server validates bounded identities, original metric scope, null costs and
+missing trace/target links. Old snapshots omit this extension and display a
+clear unavailable state. Unknown fields and supplied URLs are rejected.
+
+The existing Factory window exposes keyboard-accessible work/output/collector
+details and explicitly aggregate target navigation. It does not equate artifact
+verification or completion with delivery or acceptance, and it adds no polling.
+Native output publication and real Langfuse/per-run target links remain open;
+there is no invented link from an artifact ID to a resource or trace URL.
+
+Deploy the paired reader before publishing a snapshot with this optional
+extension. Rollback restores prior object versions and matching website source;
+the old reader rejects new fields. Preserve immutable evidence and game state.
+Validate `factory-journeys.test.mjs` plus the native journey browser scenarios
+in `scripts/validate-atlas-factory-workspace.mjs`. These are source checks;
+publication and real identity/mobile acceptance remain separate.
+
 Workspace search carries typed exact destinations for proposals, indexed plans
 and sessions. Proposal details use the existing owned reader even when the
 record is outside the current catalog page. Plans open their scoped index and
