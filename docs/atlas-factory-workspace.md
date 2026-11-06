@@ -35,7 +35,41 @@ future work. A source response for another expert or query is rejected.
 
 Home can supply exact Bench resource links when its separate presentation setting
 is enabled. Unknown experts do not fall back to another expert. No additional
-search index, account capability, live feature flag or runtime owner is introduced.
+search index, account capability or runtime owner is introduced by search.
+
+The **Factory Goals & Results** window reads `forge-factory-workspace.v1` through
+the separately disabled `FORGE_FACTORY_ENABLED` capability. After operator and
+registered-expert authorization, `factorySnapshot` reads only
+`gbautomation/<agent_id>/factory-workspace.json` in the existing private bucket.
+Object version, size and SHA-256 metadata are checked before exact expert and
+configuration binding, field bounds, coverage and target-state validation.
+No browser-supplied storage key or remote URL is accepted.
+The enabled deployment grants only `s3:GetObject` and `s3:GetObjectVersion` for
+the fixed `gbautomation/*/factory-workspace.json` pattern. Disabled deployments
+add no Factory storage grant. This is a prepared template change, not a live
+permission change.
+
+The GBAutomation producer is
+`resources/skills/factory-game/scripts/build_workspace_snapshot.py`. It verifies
+the canonical season ledger and the hashes of any supplied frozen game inputs;
+it does not rescore or write live game state. Missing inputs stay unavailable.
+Shared game-seat totals are labeled separately from owned goals and quests.
+Goal progress requires scored acceptance receipts. Proposed targets remain
+proposed, missing numeric measurements remain pending, and failed targets are
+retained. XP is a game receipt total, not an effectiveness or release gate.
+
+Refresh is manual and failure retains the original labeled capture. The
+six-hour freshness label describes the saved capture, not an unattended
+acceptance run. Exact output/trace/target joins remain separate work. Browser
+validation checks clipping and viewport visibility in addition to text presence,
+including the host's initially zero-size embedded frame and mobile deep links.
+
+Before activation, publish configuration-bound snapshots and matching rendered
+documents as private versioned objects, bind their digests and versions to the
+reviewed paired sources, then review the exact `FORGE_FACTORY_ENABLED` change.
+Rollback disables that capability and restores the previous paired document,
+snapshot and website versions. Preserve all evidence and game state. No new
+owner, schedule or scoring policy is part of this capability.
 
 The canonical template is in GBAutomation. A website deployment alone does not
 update versioned private documents. Release must bind both sources and preserve

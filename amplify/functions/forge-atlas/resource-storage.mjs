@@ -22,6 +22,10 @@ export function makeResourceStorage({client,bucket,sign}) {
   return {bytes,sha256:digest,version_id:response.VersionId};
  };
  return {
+  async loadFactorySnapshot(agent) {
+   if(typeof agent!=='string'||!/^[a-z][a-z0-9-]{1,62}$/.test(agent))throw Error('Factory expert unavailable');
+   return read(`gbautomation/${agent}/factory-workspace.json`,null,1_000_000);
+  },
   async loadManifest() {
    const active=await read(`${RESOURCE_ROOT}/active.json`,null,2048);
    const pointer=validateResourcePointer(JSON.parse(active.bytes.toString('utf8')));

@@ -3,7 +3,7 @@
 export const WORKSPACE_WINDOWS = Object.freeze([
  'skills','commands','presence','chat','canvas','proposals','checks','config',
  'knowledge','prds','kanban','artifacts','console','changes','atlas','history',
- 'table','schedule','resources',
+ 'table','schedule','resources','factory',
 ]);
 const slug=/^[a-z][a-z0-9-]{1,62}$/;
 const resource=/^[a-z][a-z0-9._-]{2,159}$/;

@@ -71,7 +71,7 @@ export default function ForgeAtlas() {
    if (event.source !== frame.current?.contentWindow || event.origin !== 'null'
        || message?.type !== 'forge-atlas.request.v1' || message.channel !== channel
        || typeof message.id !== 'string' || !/^\d{1,9}$/.test(message.id)
-       || !['atlas','planning','history','schedule','approvalSnapshot','proposals','proposal','search','operatorData','visualOpen','visualActive','builderOpen','resourceGalleryOpen','workspaceCatalog','workspaceArtifact','workspaceLookup','workspaceSearch'].includes(message.view) || JSON.stringify(message).length > 18000) return;
+       || !['atlas','planning','history','schedule','approvalSnapshot','proposals','proposal','search','operatorData','visualOpen','visualActive','builderOpen','resourceGalleryOpen','workspaceCatalog','workspaceArtifact','workspaceLookup','workspaceSearch','factorySnapshot'].includes(message.view) || JSON.stringify(message).length > 18000) return;
    const concurrent=message.view==='search'||message.view.startsWith('workspace');
    const pendingKey=concurrent?`${message.view}:${message.id}`:message.view;
    if (pending.has(pendingKey) || (concurrent&&[...pending].filter(key=>key.startsWith(message.view+':')).length>=4)) return;
@@ -106,6 +106,7 @@ export default function ForgeAtlas() {
        || payload.tenant_id!=='gbautomation' || payload.agent_id!==selectedAgent.agent_id
        || payload.query!==message.input?.query || !Array.isArray(payload.results) || payload.results.length>40
        || !payload.coverage || ['proposal','session','pr','code'].some(key=>!['available','empty','stale','unavailable'].includes(payload.coverage[key]))))throw Error('Invalid search result');
+     if(message.view==='factorySnapshot' && (payload?.schema_version!=='forge-factory-workspace.v1'||payload.tenant_id!=='gbautomation'||payload.agent_id!==selectedAgent.agent_id||payload.config_sha256!==selectedAgent.config_sha256))throw Error('Invalid factory scope');
      if(message.view==='operatorData' && (payload?.schema_version!=='forge-operator-data.v1'
        || payload.tenant_id!=='gbautomation' || payload.agent_id!==selectedAgent.agent_id
        || payload.surface!==message.input?.surface || !Array.isArray(payload.lanes)

@@ -8,7 +8,7 @@ import { capabilityEdit } from './functions/capability-edit/resource';
 import { forgeAtlas } from './functions/forge-atlas/resource';
 import { forgeWorkshop } from './functions/forge-workshop/resource';
 import { Stack } from 'aws-cdk-lib';
-import { atlasIssuer, atlasSecretArn, scheduleSecretArn, typesafeSecretArn, atlasStorage } from './functions/forge-atlas/infrastructure.mjs';
+import { atlasIssuer, atlasSecretArn, scheduleSecretArn, typesafeSecretArn, atlasStorage, factorySnapshotPolicy } from './functions/forge-atlas/infrastructure.mjs';
 import {forgeVisual,forgeVisualWorker} from './functions/forge-visual/resource';
 import {Duration} from 'aws-cdk-lib';
 import {Queue} from 'aws-cdk-lib/aws-sqs';
@@ -42,6 +42,9 @@ atlasDocuments.grantRead(backend.forgeAtlas.resources.lambda, 'gbautomation/forg
 // Private resource delivery is a separately enabled read capability. No write grant.
 atlasDocuments.grantRead(backend.forgeAtlas.resources.lambda, 'gbautomation/resources/*');
 backend.forgeAtlas.addEnvironment('FORGE_RESOURCES_ENABLED',process.env.FORGE_RESOURCES_ENABLED==='true'?'true':'false');
+backend.forgeAtlas.addEnvironment('FORGE_FACTORY_ENABLED',process.env.FORGE_FACTORY_ENABLED==='true'?'true':'false');
+const factoryPolicy=factorySnapshotPolicy(atlasDocuments,process.env.FORGE_FACTORY_ENABLED==='true');
+if(factoryPolicy)backend.forgeAtlas.resources.lambda.addToRolePolicy(factoryPolicy);
 backend.forgeAtlas.addEnvironment('FORGE_PI_JOBS_ENABLED',process.env.FORGE_PI_JOBS_ENABLED==='true'?'true':'false');
 // Live reads have a separate reviewed configuration and exact secret ARN. No default route/grant.
 if(process.env.FORGE_LIVE_APP_CONFIG){

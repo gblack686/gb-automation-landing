@@ -38,7 +38,7 @@ export function requestFor(event, issuer) {
  let input = event.arguments.input;
  if (typeof input === 'string') { try { input = JSON.parse(input); } catch { deny('invalid_request'); } }
  if (!object(input) || JSON.stringify(input).length > 4096 || Object.keys(input).some(k => !['view','query','agent_id'].includes(k))
-     || !['agents','document','atlas','planning','history','schedule','approvalSnapshot','proposals','proposal','search','operatorData','resourceCatalog','resourceArtifact'].includes(input.view)
+     || !['agents','document','atlas','planning','history','schedule','approvalSnapshot','proposals','proposal','search','operatorData','resourceCatalog','resourceArtifact','factorySnapshot'].includes(input.view)
      || (input.agent_id !== undefined && !agentSlug.test(input.agent_id))
      || (input.view === 'agents' && input.agent_id !== undefined)) deny('invalid_request');
  const query = input.query || {};
@@ -167,7 +167,7 @@ export function project(request, raw, now = new Date().toISOString()) {
   captured_at:now,source:'supabase',prds,cards,artifacts:[]};
 }
 
-export function makeHandler({issuer,rpc,document,proposals,resources=async()=>{throw Error('Resources unavailable');},search=async()=>{throw Error('Search source unavailable');},operatorData=async()=>{throw Error('Operator source unavailable');},operatorSubject='',schedule=async()=>{throw Error('Schedule source unavailable');},approvalSnapshot=async()=>{throw Error('Approval source unavailable');},registry=async claims=>[{
+export function makeHandler({issuer,rpc,document,proposals,factory=async()=>{throw Error('Factory unavailable');},resources=async()=>{throw Error('Resources unavailable');},search=async()=>{throw Error('Search source unavailable');},operatorData=async()=>{throw Error('Operator source unavailable');},operatorSubject='',schedule=async()=>{throw Error('Schedule source unavailable');},approvalSnapshot=async()=>{throw Error('Approval source unavailable');},registry=async claims=>[{
  tenant_id:TENANT,agent_id:EXPERT,display_name:'Artist Packet Expert',config_sha256:CONFIG_SHA,subjects:[claims.sub],status:'active'
 }]}) {
  return async event => {
@@ -186,6 +186,10 @@ export function makeHandler({issuer,rpc,document,proposals,resources=async()=>{t
    const selected=visible.find(row=>row.agent_id===request.agent_id);
    if(!selected)deny('agent_access_required');
    request.config_sha256=selected.config_sha256;
+   if(request.view==='factorySnapshot'){
+    if(!operatorBootstrap(request.claims.sub,operatorSubject)||selected.status!=='active')deny('operator_access_required');
+    return {payload:{ok:true,data:await factory(request)}};
+   }
    if (['resourceCatalog','resourceArtifact'].includes(request.view)) {
     if(!operatorBootstrap(request.claims.sub,operatorSubject))deny('operator_access_required');
     if(selected.status!=='active')deny('agent_access_required');

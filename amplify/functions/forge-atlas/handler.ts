@@ -7,6 +7,7 @@ import { proposalPath, projectProposals } from './proposals.mjs';
 import { runSearch } from './search.mjs';
 import { classifySearch } from './jev-search.mjs';
 import { projectOperatorData } from './operator-data.mjs';
+import { makeFactoryService } from './factory.mjs';
 import { makeChatHandler } from './chat.mjs';
 import { makeResourceService, validateResourceManifest } from './resources.mjs';
 import { makeResourceStorage } from './resource-storage.mjs';
@@ -214,7 +215,8 @@ const liveApps=makeLiveAppHandler({issuer:process.env.COGNITO_ISSUER,operatorSub
   return result.SecretString||'';
  }});
 const resources=makeResourceService({enabled:process.env.FORGE_RESOURCES_ENABLED==='true',liveAppAvailable:liveApps.available,...resourceStorage});
-const readHandler=makeHandler({issuer:process.env.COGNITO_ISSUER,rpc,document,proposals,search,operatorData,resources,operatorSubject:process.env.FORGE_LEGACY_OPERATOR_SUB,schedule,approvalSnapshot,registry});
+const factory=makeFactoryService({enabled:process.env.FORGE_FACTORY_ENABLED==='true',load:(agent:string)=>resourceStorage.loadFactorySnapshot(agent)});
+const readHandler=makeHandler({issuer:process.env.COGNITO_ISSUER,rpc,document,proposals,search,operatorData,resources,factory,operatorSubject:process.env.FORGE_LEGACY_OPERATOR_SUB,schedule,approvalSnapshot,registry});
 const chatHandler=makeChatHandler({issuer:process.env.COGNITO_ISSUER,registry,db:chatDb});
 const piHandler=makePiJobHandler({issuer:process.env.COGNITO_ISSUER,operatorSubject:process.env.FORGE_LEGACY_OPERATOR_SUB,
  enabled:process.env.FORGE_PI_JOBS_ENABLED==='true',registry,
