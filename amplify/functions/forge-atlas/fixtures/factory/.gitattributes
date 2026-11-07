@@ -1,0 +1,2 @@
+# Manifest digests bind the original producer bytes on every checkout platform.
+*.json -text

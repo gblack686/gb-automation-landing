@@ -1,16 +1,17 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
+import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
 import {validateFactory} from './factory.mjs';
 import {validateContinuity} from './factory-continuity.mjs';
-const root=process.env.FORGE_WORKSPACE_CONTINUITY_FIXTURES;
-if(!root)throw Error('Explicit synthetic producer fixtures are required');
+const root=process.env.FORGE_WORKSPACE_CONTINUITY_FIXTURES??fileURLToPath(new URL('./fixtures/factory/continuity',import.meta.url));
+if(!root)throw Error('Synthetic producer fixture path cannot be empty');
 const source=JSON.parse(await readFile(root+'/news-agent-factory.json'));
 const hash=b=>createHash('sha256').update(b).digest('hex');
 const verify=d=>{const bytes=Buffer.from(JSON.stringify(d));return validateFactory(bytes,hash(bytes),{agent_id:d.agent_id,config_sha256:d.config_sha256});};
 
-test('actual producer snapshot preserves native failure counts and separate qualification',()=>{
+test('synthetic producer snapshot preserves native failure counts and separate qualification',()=>{
  const d=verify(source),e=d.continuity_evidence;
  assert.equal(e.selection.slots_total,4);assert.equal(e.selection.verdict_counts.failed,1);assert.equal(e.selection.verdict_counts.missing,1);
  assert.equal(e.window.slot_gate_passed,false);assert.equal(e.window.qualification.shakeout_passed,false);

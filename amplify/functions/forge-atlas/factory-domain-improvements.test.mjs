@@ -2,9 +2,11 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {join} from 'node:path';
+import {fileURLToPath} from 'node:url';
 import {validateImprovements} from './factory-improvements.mjs';
 import {projectImprovementProposal} from './improvement-proposals.mjs';
-const root=process.env.FORGE_DOMAIN_IMPROVEMENT_FIXTURES;if(!root)throw Error('Explicit synthetic native fixtures required');
+const root=process.env.FORGE_DOMAIN_IMPROVEMENT_FIXTURES??fileURLToPath(new URL('./fixtures/factory/domain-improvements',import.meta.url));
+if(!root)throw Error('Synthetic native fixture path cannot be empty');
 for(const agent of ['news-agent','youtube-intel']){
  const path=join(root,agent,'ready'),d=JSON.parse(await readFile(join(path,'projection.json')));
  test(agent+' exact native review and canonical proposal preserve ownership',async()=>{

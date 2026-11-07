@@ -1,0 +1,91 @@
+{
+  "schema_version": "forge-factory-test-fixtures.v1",
+  "purpose": "Frozen synthetic producer outputs for offline consumer contract tests. Not live evidence or publication inputs.",
+  "source_repository": "gbauto/gbautomation",
+  "source_commit": "74fc79d36ea43f2bb61f8677d0d87a04e1cff737",
+  "source_kind": "gbautomation_local",
+  "source_label": "GB Automation",
+  "files": [
+    {
+      "path": "continuity/news-agent-factory.json",
+      "sha256": "bc658449310f99bb3de392e18943ab790ff4f4128440ee537faab59bac6d808d",
+      "bytes": 18864,
+      "producer": "scripts/build_atlas_continuity_fixtures.py",
+      "source_path": "second-brain/plans/2026-11-05-atlas-factory-workspace/evidence/continuity-window-20261107T051501Z/fixtures/news-agent-factory.json",
+      "original_sha256": "bc658449310f99bb3de392e18943ab790ff4f4128440ee537faab59bac6d808d",
+      "transformation": "none; exact original output bytes"
+    },
+    {
+      "path": "native-links/news-agent-factory.json",
+      "sha256": "f3da2392a19c21071ae2caa37637731fb9770281581d681eecd5df9eb39a46a9",
+      "bytes": 17268,
+      "producer": "scripts/build_atlas_native_links_fixtures.mjs",
+      "source_path": "second-brain/plans/2026-11-05-atlas-factory-workspace/evidence/native-links-20261107T054204Z/fixtures/workspace/news-agent-factory.json",
+      "original_sha256": "f3da2392a19c21071ae2caa37637731fb9770281581d681eecd5df9eb39a46a9",
+      "transformation": "none; exact original output bytes"
+    },
+    {
+      "path": "native-links/youtube-intel-factory.json",
+      "sha256": "2da88c9fb4edc407b9a516674d5553fbf423b96e6202f7e2e53233698273d25a",
+      "bytes": 15228,
+      "producer": "scripts/build_atlas_native_links_fixtures.mjs",
+      "source_path": "second-brain/plans/2026-11-05-atlas-factory-workspace/evidence/native-links-20261107T054204Z/fixtures/workspace/youtube-intel-factory.json",
+      "original_sha256": "2da88c9fb4edc407b9a516674d5553fbf423b96e6202f7e2e53233698273d25a",
+      "transformation": "none; exact original output bytes"
+    },
+    {
+      "path": "domain-improvements/news-agent/ready/projection.json",
+      "sha256": "9c6bbb586533405e0f693556dacba99ba64d94c6b47e9b562eb7f42c0da932b1",
+      "bytes": 13756,
+      "producer": "scripts/build_atlas_domain_improvement_fixtures.mjs",
+      "source_path": "second-brain/plans/2026-11-05-atlas-factory-workspace/evidence/domain-improvement-20261107T060523Z/fixtures-2/news-agent/ready/projection.json",
+      "original_sha256": "9c6bbb586533405e0f693556dacba99ba64d94c6b47e9b562eb7f42c0da932b1",
+      "transformation": "none; exact original output bytes"
+    },
+    {
+      "path": "domain-improvements/news-agent/ready/preparation.json",
+      "sha256": "f099e9a01fd6fdabeba234f0cc612eacc6a3b5590f1d8f48e4fb124e60b12ea6",
+      "bytes": 3950,
+      "producer": "scripts/build_atlas_domain_improvement_fixtures.mjs",
+      "source_path": "second-brain/plans/2026-11-05-atlas-factory-workspace/evidence/domain-improvement-20261107T060523Z/fixtures-2/news-agent/ready/preparation.json",
+      "original_sha256": "2a5a27b52b85d6d477c98a74ec14028ac7f359a8eb50b0beffa8844397f4989b",
+      "transformation": "Exact field selection: canonical proposal binding inputs only; no field values rewritten."
+    },
+    {
+      "path": "domain-improvements/news-agent/performance/projection.json",
+      "sha256": "50c6256d17e5c3dc0e62b39b9e0a39da40cc49d1605350b0feb18473547e2747",
+      "bytes": 13729,
+      "producer": "scripts/build_atlas_domain_improvement_fixtures.mjs",
+      "source_path": "second-brain/plans/2026-11-05-atlas-factory-workspace/evidence/domain-improvement-20261107T060523Z/fixtures-2/news-agent/performance/projection.json",
+      "original_sha256": "50c6256d17e5c3dc0e62b39b9e0a39da40cc49d1605350b0feb18473547e2747",
+      "transformation": "none; exact original output bytes"
+    },
+    {
+      "path": "domain-improvements/youtube-intel/ready/projection.json",
+      "sha256": "14e29d7c9a9229dbaee0424e80662ff476aa40146c8b219cfdcd962dec99fcae",
+      "bytes": 13751,
+      "producer": "scripts/build_atlas_domain_improvement_fixtures.mjs",
+      "source_path": "second-brain/plans/2026-11-05-atlas-factory-workspace/evidence/domain-improvement-20261107T060523Z/fixtures-2/youtube-intel/ready/projection.json",
+      "original_sha256": "14e29d7c9a9229dbaee0424e80662ff476aa40146c8b219cfdcd962dec99fcae",
+      "transformation": "none; exact original output bytes"
+    },
+    {
+      "path": "domain-improvements/youtube-intel/ready/preparation.json",
+      "sha256": "f3baa0b74cfafa239c520a8f8e9f14964c9b016efe76e1c794241d430e093da1",
+      "bytes": 3980,
+      "producer": "scripts/build_atlas_domain_improvement_fixtures.mjs",
+      "source_path": "second-brain/plans/2026-11-05-atlas-factory-workspace/evidence/domain-improvement-20261107T060523Z/fixtures-2/youtube-intel/ready/preparation.json",
+      "original_sha256": "9aef6c9b15d18bd7069dd523f878b7e65fad12432a25998d72482b20fb2ca45b",
+      "transformation": "Exact field selection: canonical proposal binding inputs only; no field values rewritten."
+    },
+    {
+      "path": "domain-improvements/youtube-intel/performance/projection.json",
+      "sha256": "9b1c747955899aa9200af5d61d4faaac77d0b5c897117c81755bc52082e0864d",
+      "bytes": 13754,
+      "producer": "scripts/build_atlas_domain_improvement_fixtures.mjs",
+      "source_path": "second-brain/plans/2026-11-05-atlas-factory-workspace/evidence/domain-improvement-20261107T060523Z/fixtures-2/youtube-intel/performance/projection.json",
+      "original_sha256": "9b1c747955899aa9200af5d61d4faaac77d0b5c897117c81755bc52082e0864d",
+      "transformation": "none; exact original output bytes"
+    }
+  ]
+}

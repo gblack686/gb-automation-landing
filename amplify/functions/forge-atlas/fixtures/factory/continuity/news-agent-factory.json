@@ -1,0 +1,552 @@
+{
+  "schema_version": "forge-factory-workspace.v1",
+  "tenant_id": "gbautomation",
+  "agent_id": "news-agent",
+  "expert_id": "gbautomation/news-agent",
+  "config_sha256": "157ec816cd66065956ca5f8781f1efa015880c200437ff19be939090571b79ed",
+  "captured_at": "2026-11-06T05:15:05.361790+00:00",
+  "source": {
+    "ledger_sha256": "683cd6efc7c9a0ca67022caa9c999b9309a09596232e1617e9768ad674350027",
+    "ledger_file_sha256": "617a038e35f309a5b8ba26397084429eee70136a4d2010ece6e462f7c94d8975",
+    "from_season": "2026-W45",
+    "to_season": "2026-W45",
+    "inputs": {
+      "rocks.json": {
+        "sha256": "eb0c88dccb939f7d1fd361cc66da6aaa4af60aea5e1b7645cd9927d2627e94f2",
+        "captured_at": null
+      },
+      "kanban-snapshot.json": {
+        "sha256": "a514ae3f032079401141dba5234bd1b7ce8ac192e9fdb7e1d22ac3bb1e41c72a",
+        "captured_at": null
+      }
+    },
+    "targets": {
+      "sha256": "93244728ddf5103eff0b5ea27fb86f545e76a04924b0e3c6711c6140d5da3e06",
+      "measured_at": "2026-11-06T05:15:05.361790+00:00"
+    }
+  },
+  "seat": {
+    "id": "pi",
+    "name": "Pi",
+    "shared": true,
+    "experts": [
+      "consulting/hooks",
+      "consulting/pi",
+      "gbautomation/news-agent",
+      "gbautomation/telegram"
+    ],
+    "season": "2026-W45",
+    "xp": 4,
+    "cumulative_xp": 4,
+    "level": 1,
+    "slots": 1
+  },
+  "goals": [
+    {
+      "id": "rock_fixture_news-agent",
+      "title": "Useful news-agent results",
+      "status": "pending",
+      "recorded_status": "active",
+      "checks_total": 2,
+      "checks_proven": 1,
+      "objective_id": ""
+    }
+  ],
+  "quests": [
+    {
+      "id": "t_fixture_news-agent",
+      "title": "Reviewed news-agent quest",
+      "status": "done",
+      "closeout": "receipt_only",
+      "receipt_ids": [
+        "kanban:t_fixture_news-agent:receipt_only"
+      ]
+    }
+  ],
+  "receipts": [
+    {
+      "receipt_id": "kanban:t_fixture_news-agent:receipt_only",
+      "source": "kanban_snapshot",
+      "rule": "closeout_receipt_only",
+      "xp": 2,
+      "season": "2026-W45"
+    },
+    {
+      "receipt_id": "rock:rock_fixture_news-agent:check:0:r_fixture",
+      "source": "sprint_rocks",
+      "rule": "done_when_check_met",
+      "xp": 2,
+      "season": "2026-W45"
+    }
+  ],
+  "targets": [
+    {
+      "id": "fixture_quality",
+      "label": "Review quality",
+      "gate": "",
+      "approved": false,
+      "state": "met",
+      "acceptance": "proposed",
+      "value": 100,
+      "goal": 95,
+      "op": ">=",
+      "unit": "%",
+      "observed_at": null,
+      "detail": "Synthetic proposed target."
+    },
+    {
+      "id": "fixture_reliability",
+      "label": "Reliable results",
+      "gate": "",
+      "approved": true,
+      "state": "missed",
+      "acceptance": "missed",
+      "value": 80,
+      "goal": 99,
+      "op": ">=",
+      "unit": "%",
+      "observed_at": null,
+      "detail": "Synthetic missed gate."
+    },
+    {
+      "id": "fixture_latency",
+      "label": "Time to useful output",
+      "gate": "",
+      "approved": true,
+      "state": "pending",
+      "acceptance": "pending",
+      "value": null,
+      "goal": 10,
+      "op": "<=",
+      "unit": "minutes",
+      "observed_at": null,
+      "detail": "Measurement missing."
+    }
+  ],
+  "coverage": {
+    "game": "available",
+    "goals": "available",
+    "quests": "available",
+    "targets": "available"
+  },
+  "counts": {
+    "goals": 1,
+    "quests": 1,
+    "receipts": 2,
+    "targets": 3
+  },
+  "truncated": [],
+  "limitations": [
+    "Snapshot only; capture time is not proof of runtime health.",
+    "Pi activity alone earns no XP; verified outcome details require the scored package and separately pinned authority.",
+    "Exact task/output/trace/target joins require explicit source identities; none are inferred here."
+  ],
+  "journey_evidence": {
+    "schema_version": "forge-workspace-journeys.v1",
+    "expert_id": "gbautomation/news-agent",
+    "captured_at": "2026-11-06T05:15:05.361790+00:00",
+    "source_sha256": "4de2c8c6b87925523b2ce5552739b7d85133e7562dd199908aae2b7b0eb85cc8",
+    "selection": "explicit_ids",
+    "rows": [
+      {
+        "id": "news-card-8",
+        "kind": "news",
+        "work": [
+          {
+            "label": "Conversation",
+            "id": "1"
+          },
+          {
+            "label": "Sweep",
+            "id": "77"
+          },
+          {
+            "label": "Sweep task",
+            "id": "101"
+          },
+          {
+            "label": "Run entry",
+            "id": "100"
+          },
+          {
+            "label": "Tool task",
+            "id": "104"
+          },
+          {
+            "label": "Generation",
+            "id": "102"
+          },
+          {
+            "label": "Generation task",
+            "id": "103"
+          },
+          {
+            "label": "Provider call",
+            "id": "synthetic-provider-call"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "8",
+            "artifact_id": null,
+            "sha256": null,
+            "verification": "recorded"
+          }
+        ],
+        "collector_events": [
+          {
+            "id": "fixture-event",
+            "session_id": "dna-local-1",
+            "type": "tool_result",
+            "is_error": false
+          }
+        ],
+        "generation": {
+          "id": "102",
+          "scope": "generation",
+          "provider": "fixture-provider",
+          "model": "fixture-model",
+          "input_tokens": 10,
+          "output_tokens": 20,
+          "cache_read_tokens": 1000,
+          "total_tokens": 1030,
+          "cost_usd": null,
+          "duration_ms": 4500
+        },
+        "complete": null,
+        "delivered": null,
+        "langfuse_trace_id": null,
+        "target_evidence": "missing",
+        "acceptance": "pending",
+        "status": "completed"
+      }
+    ]
+  },
+  "continuity_evidence": {
+    "schema_version": "forge-continuity-review.v1",
+    "expert_id": "gbautomation/news-agent",
+    "captured_at": "2026-11-06T05:15:05.361790+00:00",
+    "evidence_mode": "fixture",
+    "promotion_authorized": false,
+    "source": {
+      "commit": "44955a58f7d5ad5dac69a5929e3832f6e82237cf",
+      "files": {
+        "src/context.ts": {
+          "blob": "7719d1b48114d581fe452005a964ae052698008f",
+          "sha256": "bd07b6152e2b67512d4907acffd5707eb15dd41533f98cbfe90d045d3110ec59"
+        },
+        "src/continuity-proof.ts": {
+          "blob": "d87f497a4b830d3609274ea519a154af39e78864",
+          "sha256": "6be72dafbd06c5e18a450c652e86ea56f414c7324e3ff5db4eeeec342e715e08"
+        },
+        "src/continuity-qualification.ts": {
+          "blob": "a30699e7196135468f2b32ab2d1059870d5f74f7",
+          "sha256": "aed7d75851c5942378b9c70dff0e38c7305c581bfa583145bf8f7cd7d74f03ef"
+        }
+      },
+      "method": "immutable_git_blobs",
+      "checkout_mutated": false,
+      "pins_sha256": "4ccd1e785292ba0ac6336e6119f4c847e47267b73f6d90ae349312ddf90dc762",
+      "input_sha256": "e8405941a71a8a68d16324eb9b15f93964d0ae53e844e01990edf949fd8d280e",
+      "qualification_input_sha256": "f24a0f74faf9c98f76460858e191651db355301bc7d94d59243ab5ff7946f3db",
+      "native_input_hash": "300ed692f137a75824eb331708f4f9f7f97676a37cd3ec6bf92e7b0caebb881a",
+      "native_proof_sha256": "5c8e3b5d64db4cd3001d9602ca7e61334260a61c0a2ddb34b7940e6f23458b01",
+      "native_qualification_sha256": "b291b73079e516d749133d46433aa1df48a4f7f6af451742daa42eeb44ad9b07",
+      "export_sha256": "3f5310790a04ccebe4f8d08805bb1133ed350028a191e4085fe8379ba68863fe"
+    },
+    "window": {
+      "from": "2026-11-04T14:00:00.000Z",
+      "until": "2026-11-04T14:20:00.000Z",
+      "as_of": "2026-11-04T14:35:00.000Z",
+      "scope": "all_three_lanes",
+      "live_window_eligible": false,
+      "slot_gate_passed": false,
+      "trace_gate_passed": true,
+      "integrity_gate_passed": true,
+      "global_issues": [],
+      "qualification": {
+        "auxiliary_passed": false,
+        "shakeout_passed": false,
+        "seven_day_passed": false,
+        "thirty_day_passed": false,
+        "issues": [
+          "availability_below_target",
+          "backup_rpo_missed",
+          "candidate_evaluation_missing:news",
+          "candidate_evaluation_missing:youtube",
+          "coverage_incomplete:backups",
+          "coverage_incomplete:deadman",
+          "coverage_incomplete:evaluations",
+          "coverage_incomplete:incidents",
+          "coverage_incomplete:observer",
+          "coverage_incomplete:reports",
+          "coverage_incomplete:standards",
+          "isolated_restore_unverified",
+          "observer_deadman_gap",
+          "standard_unverified:acquisition",
+          "standard_unverified:durability",
+          "standard_unverified:identity",
+          "standard_unverified:improvement",
+          "standard_unverified:observability",
+          "standard_unverified:prime",
+          "standard_unverified:privacy",
+          "standard_unverified:release"
+        ]
+      }
+    },
+    "selection": {
+      "kind": "exact_expert_scopes",
+      "slots_total": 4,
+      "slots_displayed": 4,
+      "truncated": false,
+      "verdict_counts": {
+        "successful": 2,
+        "pending": 0,
+        "missing": 1,
+        "failed": 1,
+        "late": 0,
+        "unknown": 0
+      }
+    },
+    "rows": [
+      {
+        "id": "news:news-5m-v1:1111111111111111111111111111111111111111111111111111111111111111:2026-11-04T14:00Z",
+        "lane": "news",
+        "scope_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+        "owner": "fixture-news",
+        "due_at": "2026-11-04T14:00:00.000Z",
+        "deadline_at": "2026-11-04T14:01:00.000Z",
+        "verdict": "failed",
+        "accounted": true,
+        "timely_successful": false,
+        "issues": [
+          "domain_failed"
+        ],
+        "runs_total": 1,
+        "runs_truncated": false,
+        "runs": [
+          {
+            "id": "fixture-run-0",
+            "receipt_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "result": "failed",
+            "admitted_at": "2026-11-04T14:00:01.000Z",
+            "ended_at": "2026-11-04T14:00:30.000Z",
+            "evidence_gaps": [],
+            "attempts_total": 1,
+            "outputs_total": 1,
+            "outputs_truncated": false,
+            "outputs": [
+              {
+                "id": "output-0",
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "eligible_at": "2026-11-04T14:00:00.000Z",
+                "eligibility_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "accepted_at": "2026-11-04T14:00:25.000Z"
+              }
+            ],
+            "sinks": [
+              {
+                "sink": "pi",
+                "root_observation_id": "pi-observation-0",
+                "expected_total": 1,
+                "verified_total": 1,
+                "complete": true,
+                "verified_at": "2026-11-04T14:00:31.000Z",
+                "readback_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+              },
+              {
+                "sink": "langfuse",
+                "root_observation_id": "langfuse-observation-0",
+                "expected_total": 1,
+                "verified_total": 1,
+                "complete": true,
+                "verified_at": "2026-11-04T14:00:31.000Z",
+                "readback_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+              }
+            ],
+            "langfuse_trace_id": null
+          }
+        ]
+      },
+      {
+        "id": "news:news-5m-v1:1111111111111111111111111111111111111111111111111111111111111111:2026-11-04T14:05Z",
+        "lane": "news",
+        "scope_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+        "owner": "fixture-news",
+        "due_at": "2026-11-04T14:05:00.000Z",
+        "deadline_at": "2026-11-04T14:06:00.000Z",
+        "verdict": "successful",
+        "accounted": true,
+        "timely_successful": true,
+        "issues": [],
+        "runs_total": 1,
+        "runs_truncated": false,
+        "runs": [
+          {
+            "id": "fixture-run-2",
+            "receipt_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "result": "completed",
+            "admitted_at": "2026-11-04T14:05:01.000Z",
+            "ended_at": "2026-11-04T14:05:30.000Z",
+            "evidence_gaps": [],
+            "attempts_total": 1,
+            "outputs_total": 1,
+            "outputs_truncated": false,
+            "outputs": [
+              {
+                "id": "output-2",
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "eligible_at": "2026-11-04T14:05:00.000Z",
+                "eligibility_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "accepted_at": "2026-11-04T14:05:25.000Z"
+              }
+            ],
+            "sinks": [
+              {
+                "sink": "pi",
+                "root_observation_id": "pi-observation-2",
+                "expected_total": 1,
+                "verified_total": 1,
+                "complete": true,
+                "verified_at": "2026-11-04T14:05:31.000Z",
+                "readback_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+              },
+              {
+                "sink": "langfuse",
+                "root_observation_id": "langfuse-observation-2",
+                "expected_total": 1,
+                "verified_total": 1,
+                "complete": true,
+                "verified_at": "2026-11-04T14:05:31.000Z",
+                "readback_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+              }
+            ],
+            "langfuse_trace_id": null
+          }
+        ]
+      },
+      {
+        "id": "news:news-5m-v1:1111111111111111111111111111111111111111111111111111111111111111:2026-11-04T14:10Z",
+        "lane": "news",
+        "scope_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+        "owner": "fixture-news",
+        "due_at": "2026-11-04T14:10:00.000Z",
+        "deadline_at": "2026-11-04T14:11:00.000Z",
+        "verdict": "successful",
+        "accounted": true,
+        "timely_successful": true,
+        "issues": [],
+        "runs_total": 1,
+        "runs_truncated": false,
+        "runs": [
+          {
+            "id": "fixture-run-3",
+            "receipt_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "result": "completed",
+            "admitted_at": "2026-11-04T14:10:01.000Z",
+            "ended_at": "2026-11-04T14:10:30.000Z",
+            "evidence_gaps": [],
+            "attempts_total": 1,
+            "outputs_total": 1,
+            "outputs_truncated": false,
+            "outputs": [
+              {
+                "id": "output-3",
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "eligible_at": "2026-11-04T14:10:00.000Z",
+                "eligibility_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "accepted_at": "2026-11-04T14:10:25.000Z"
+              }
+            ],
+            "sinks": [
+              {
+                "sink": "pi",
+                "root_observation_id": "pi-observation-3",
+                "expected_total": 1,
+                "verified_total": 1,
+                "complete": true,
+                "verified_at": "2026-11-04T14:10:31.000Z",
+                "readback_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+              },
+              {
+                "sink": "langfuse",
+                "root_observation_id": "langfuse-observation-3",
+                "expected_total": 1,
+                "verified_total": 1,
+                "complete": true,
+                "verified_at": "2026-11-04T14:10:31.000Z",
+                "readback_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+              }
+            ],
+            "langfuse_trace_id": null
+          }
+        ]
+      },
+      {
+        "id": "news:news-5m-v1:1111111111111111111111111111111111111111111111111111111111111111:2026-11-04T14:15Z",
+        "lane": "news",
+        "scope_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+        "owner": "fixture-news",
+        "due_at": "2026-11-04T14:15:00.000Z",
+        "deadline_at": "2026-11-04T14:16:00.000Z",
+        "verdict": "missing",
+        "accounted": false,
+        "timely_successful": false,
+        "issues": [
+          "missing"
+        ],
+        "runs_total": 0,
+        "runs_truncated": false,
+        "runs": []
+      }
+    ],
+    "limitations": [
+      "Full-window gates cover all three lanes, not only this expert.",
+      "A successful slot is not full continuity qualification or release authorization.",
+      "Native output hashes describe native accepted content; exported UI artifact hashes require a separate exact join.",
+      "Native sink roots are observation IDs. This contract supplies no Langfuse trace ID.",
+      "Replay validates pinned supplied evidence; capture provenance and live operation still require their native receipts."
+    ]
+  },
+  "benchmark_evidence": {
+    "schema_version": "forge-benchmark-scorecard.v1",
+    "expert_id": "gbautomation/news-agent",
+    "catalog_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "scope": "synthetic_benchmark",
+    "production_acceptance": false,
+    "through": "2026-11-03T00:00:00Z",
+    "rows": [
+      {
+        "id": "fixture-Codex",
+        "case_id": "B07",
+        "system": "Codex",
+        "model": "fixture-model",
+        "state": "passed",
+        "code": "pass",
+        "visual": "Not reviewed",
+        "tokens": 1000,
+        "seconds": 20,
+        "elapsed_seconds": 30,
+        "estimate_usd": null,
+        "receipt_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "comparison_group": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      },
+      {
+        "id": "fixture-Pi-factory",
+        "case_id": "B07",
+        "system": "Pi factory",
+        "model": "fixture-model",
+        "state": "failed",
+        "code": "fail",
+        "visual": "Not reviewed",
+        "tokens": null,
+        "seconds": 20,
+        "elapsed_seconds": 30,
+        "estimate_usd": null,
+        "receipt_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "comparison_group": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      }
+    ],
+    "source_sha256": "88c1dcd0111945c2a5bb16a84e135e1f60504e0676623dff558a0c63d5adaeda"
+  }
+}

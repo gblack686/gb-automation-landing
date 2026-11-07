@@ -192,6 +192,13 @@ and native accepted-content hashes are not exported HTML/JSON artifact hashes.
 No trace URL or saved-output join is inferred. There is no new endpoint,
 capability flag, polling, approval write or execution action.
 
+The standard Atlas Node suite uses committed, hash-bound synthetic outputs in
+`amplify/functions/forge-atlas/fixtures/factory/` for continuity, native links
+and domain improvements. A clean checkout needs no private repository or
+fixture environment variables. These are frozen consumer contract checks;
+they do not claim a fresh producer run. Explicit fixture variables below
+remain available for paired producer validation and fail on invalid paths.
+
 Validate with `FORGE_WORKSPACE_CONTINUITY_FIXTURES` for the colocated reader
 test and `FORGE_WORKSPACE_CONTINUITY=1` plus `FORGE_WORKSPACE_FIXTURES` for the
 existing workspace browser validator. Fixtures come from GBAutomation's

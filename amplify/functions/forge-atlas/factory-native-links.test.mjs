@@ -1,14 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
+import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
 import {validateFactory} from './factory.mjs';
-const root=process.env.FORGE_WORKSPACE_NATIVE_LINK_FIXTURES;
-if(!root)throw Error('Explicit synthetic native-link fixtures required');
+const root=process.env.FORGE_WORKSPACE_NATIVE_LINK_FIXTURES??fileURLToPath(new URL('./fixtures/factory/native-links',import.meta.url));
+if(!root)throw Error('Synthetic native-link fixture path cannot be empty');
 const hash=b=>createHash('sha256').update(b).digest('hex');
 const fixtures=await Promise.all(['news-agent','youtube-intel'].map(async agent=>JSON.parse(await readFile(root+'/'+agent+'-factory.json'))));
 const verify=d=>{const bytes=Buffer.from(JSON.stringify(d));return validateFactory(bytes,hash(bytes),{agent_id:d.agent_id,config_sha256:d.config_sha256});};
-test('real producer snapshots retain separate native content, exported artifact and trace identities',()=>{
+test('synthetic producer snapshots retain separate native content, exported artifact and trace identities',()=>{
  for(const d of fixtures){const row=verify(d).continuity_evidence.journey_links.rows[0];assert.equal(row.run_verified,true);assert.equal(row.outputs[0].verification,'verified');
   assert.notEqual(row.trace.id,row.trace.root_observation_id);assert.equal(d.journey_evidence.rows[0].acceptance,'pending');}
  const news=fixtures[0].continuity_evidence.journey_links.rows[0].outputs[0];assert.notEqual(news.native_content_sha256,news.artifact_sha256);
