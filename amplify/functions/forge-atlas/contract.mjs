@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto';
 import { resourceQuery } from './resources.mjs';
+import { expertScheduleProfile } from '../../../shared/forge-expert-identity.mjs';
 
 export const EXPERT = 'artist-packet-expert';
 // Tenant agent selection is validated against a server-owned registration list.
@@ -8,7 +9,7 @@ export const CONFIG_SHA = 'bf142e4e937a53701b4a27b02d90068ee0c8f73636f123dd97a56
 export const YOUTUBE_CONFIG_SHA = '4e835524a45dacf2eb509b51809ca09ca2f805a28c57807acaf8a9eaba5389c7';
 // The main operator Cognito subject is held as a digest, not an account ID in source.
 export const MAIN_OPERATOR_SUBJECT_SHA = '1193744c59425c9c71db9516110593d3d9b697645fe99bf17c06f65abea449b8';
-const agentSlug = /^[a-z][a-z0-9-]{2,62}$/;
+const agentSlug = /^[a-z][a-z0-9-]{1,62}$/;
 // Cognito subjects use the UUID-shaped hex layout but do not promise RFC variant bits.
 // The verified deployment issuer and tenant group provide authorization.
 const cognitoSubject = /^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i;
@@ -202,7 +203,7 @@ export function makeHandler({issuer,rpc,document,proposals,factory=async()=>{thr
     return {payload:{ok:true,data:await operatorData(request)}};
    }
    if (request.view === 'schedule') {
-    const profile=request.agent_id==='youtube-intel'?'expert-gbautomation-youtube-intel':request.agent_id;
+    const profile=expertScheduleProfile(request.agent_id);
     return {payload:{ok:true,data:projectSchedule(await schedule(request.query.date),request.agent_id,profile,request.query.date)}};
    }
    if (request.view === 'approvalSnapshot') return {payload:{ok:true,data:projectApprovalSnapshot(await approvalSnapshot(request),request.agent_id)}};

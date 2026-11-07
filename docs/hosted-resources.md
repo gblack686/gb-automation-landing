@@ -11,6 +11,13 @@ checks. The operator catalog is a private fleet index. The selected agent remain
 registered on every request; `owner` filters refer to canonical catalog owners,
 including the existing short names `pi` and `ci`, and do not change authorization.
 
+Registered expert IDs also accept the canonical two-character `pi` ID. Exact
+subject membership and active registration remain required. The document host
+and schedule reader share `shared/forge-expert-identity.mjs`: YouTube, News and
+Pi bind to their canonical `expert-*` profiles. This mapping neither creates a
+schedule nor enables chat or runtime actions. Missing schedule evidence stays
+unavailable; a short agent slug is not a substitute for its profile identity.
+
 The server reads `gbautomation/resources/active.json` from the existing private,
 versioned Forge bucket. Its `hosted-resource-pointer.v1` payload names the hash
 and exact S3 version of an immutable manifest at

@@ -95,6 +95,32 @@ test('errors hide database/provider details',async () => {
  const handler=makeHandler({issuer,rpc:async()=>{throw Error('password=private');}});
  assert.deepEqual((await handler(event({view:'history',query:{view:'sessions'}}))).payload,{ok:false,error:'atlas_unavailable'});
 });
+
+test('canonical short Pi identity requires exact registration and subject access',async () => {
+ const subject=event({}).identity.claims.sub;let reads=0;
+ const handler=makeHandler({issuer,operatorSubject:subject,
+  registry:async()=>[{tenant_id:'gbautomation',agent_id:'pi',display_name:'Pi Expert',config_sha256:'d'.repeat(64),subjects:[subject],status:'active'}],
+  document:async id=>{reads++;return {agent_id:id};},factory:async r=>{reads++;return {agent_id:r.agent_id,config_sha256:r.config_sha256};}});
+ assert.deepEqual((await handler(event({view:'agents'}))).payload.data.agents.map(a=>a.agent_id),['pi']);
+ assert.equal((await handler(event({view:'document',agent_id:'pi'}))).payload.data.agent_id,'pi');
+ assert.equal((await handler(event({view:'factorySnapshot',agent_id:'pi'}))).payload.data.config_sha256,'d'.repeat(64));
+ for(const id of ['p','../pi','PI','pi/','pi\n'])assert.equal((await handler(event({view:'document',agent_id:id}))).payload.ok,false);
+ assert.equal((await handler(event({view:'document',agent_id:'ci'}))).payload.error,'agent_access_required');
+ const foreign=event({view:'document',agent_id:'pi'});foreign.identity.claims.sub='bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
+ assert.equal((await handler(foreign)).payload.error,'agent_access_required');assert.equal(reads,2);
+});
+
+test('News and Pi schedule reads use their canonical expert profiles and exclude adjacent identities',async () => {
+ const day='2026-11-06';
+ for(const [agent,profile] of [['news-agent','expert-gbautomation-news-agent'],['pi','expert-consulting-pi']]){
+  const job={id:'owned',name:'Owned job',scheduler:'Hermes',profile,schedule:'0 9 * * *',kind:'cron',precision:'clock',enabled:true,state:'active',times:[day+'T09:00:00-08:00']};
+  const raw={schema_version:'gbauto-schedule.v1',timezone:'America/Los_Angeles',date:day,generated_at:'2026-11-06T18:00:00Z',source_updated_at:{[profile]:null,[agent]:null},jobs:[job,{...job,id:'slug-is-not-profile',profile:agent},{...job,id:'foreign',profile:'expert-gbautomation-youtube-intel'}]};
+  const handler=makeHandler({issuer,registry:async claims=>[{tenant_id:'gbautomation',agent_id:agent,display_name:agent,config_sha256:'e'.repeat(64),subjects:[claims.sub],status:'active'}],schedule:async()=>raw});
+  const result=(await handler(event({view:'schedule',agent_id:agent,query:{date:day}}))).payload;
+  assert.equal(result.ok,true);assert.equal(result.data.profile,profile);assert.deepEqual(result.data.jobs.map(j=>j.id),['owned']);
+  assert.equal((await handler(event({view:'schedule',agent_id:agent,query:{date:day,profile:'another'}}))).payload.ok,false);
+ }
+});
 test('trace links require exact project path and trace identity',() => {
  assert.equal(traceURL('https://us.cloud.langfuse.com/project/p/traces/a','a'),'https://us.cloud.langfuse.com/project/p/traces/a');
  for (const url of ['https://evil.example/project/p/traces/a','https://us.cloud.langfuse.com/project/p/traces/b','https://us.cloud.langfuse.com/project/p/traces/a?x=1'])assert.equal(traceURL(url,'a'),null);

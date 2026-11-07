@@ -8,6 +8,7 @@ import ForgeResourceGallery from '../components/ForgeResourceGallery';
 import {visualRequest,visualAsset} from '../lib/forgeVisualClient';
 import {readResourceCatalog,readResourceArtifact,resourceDocument} from '../lib/forgeResourceClient';
 import {makeWorkspaceReader,workspaceLocation,WORKSPACE_WINDOWS} from '../lib/forgeWorkspace.mjs';
+import {expertScheduleProfile} from '../../shared/forge-expert-identity.mjs';
 
 const CSP = "default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval'; style-src 'unsafe-inline'; img-src data: blob:; font-src data:; frame-src 'self' about: blob:; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'";
 const YOUTUBE_REPORT_ORIGIN = 'https://6ab9d13b0b89b5644e56270a--gbautoxyz.netlify.app';
@@ -163,7 +164,7 @@ export default function ForgeAtlas() {
      if (!planningData || !scheduleData) throw Error('Document binding missing');
      const scope = JSON.parse(planningData.textContent).scope;
      const schedule = JSON.parse(scheduleData.textContent);
-     const expectedProfile = selectedAgent.agent_id === 'youtube-intel' ? 'expert-gbautomation-youtube-intel' : selectedAgent.agent_id;
+     const expectedProfile = expertScheduleProfile(selectedAgent.agent_id);
      if (packaged.agent_id !== selectedAgent.agent_id || packaged.yaml_sha256 !== selectedAgent.config_sha256
          || scope?.tenant_id !== 'gbautomation' || scope?.agent_id !== selectedAgent.agent_id
          || scope?.config_sha256 !== selectedAgent.config_sha256
