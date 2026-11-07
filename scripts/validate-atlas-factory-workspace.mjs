@@ -34,7 +34,7 @@ const factoryRead=makeFactoryService({enabled:true,load:async id=>{const bytes=a
 const browser=await chromium.launch({headless:true,channel:'chrome'});
 const page=await browser.newPage({viewport:{width:1500,height:1000}});page.setDefaultTimeout(20000);
 const errors=[],checks=[],requests=[];let fail=false,tamper=false,holdArtifact=false,releaseArtifact=null,failFactory=false,foreignFactory=false;
-let omitJourneys=false,foreignJourneys=false;
+let omitJourneys=false,foreignJourneys=false,foreignBenchmarks=false,omitBenchmarks=false;
 let records=false,holdHistory=false,releaseHistory=null,holdProposal=false,releaseProposal=null;
 const planID='prd_'+'c'.repeat(20),sessionKey='fixture-host:'+ 's'.repeat(280);
 // Total-suite bound grows with scenarios; individual actions still time out at 20s.
@@ -65,6 +65,8 @@ await page.route('**/__workspace_fixture',async r=>{
    if(foreignFactory)data.agent_id='foreign-expert';
    if(omitJourneys)delete data.journey_evidence;
    if(foreignJourneys&&data.journey_evidence)data.journey_evidence.expert_id='gbautomation/youtube-intel';
+   if(foreignBenchmarks&&data.benchmark_evidence)data.benchmark_evidence.expert_id='gbautomation/youtube-intel';
+   if(omitBenchmarks)delete data.benchmark_evidence;
    return r.fulfill({json:data});
   }catch{return r.fulfill({status:503,body:'Invalid factory fixture'});}
  }
@@ -326,6 +328,17 @@ try{
  assert.equal(await factory.getByText('Reviewed youtube-intel quest',{exact:true}).count(),0);
  await page.screenshot({path:output+'/factory-desktop.png'});
  checks.push('Factory displays verified goal progress, owned quests, shared Pi seat totals and proposed/missed/pending targets distinctly');
+ await factory.getByRole('button',{name:'Benchmark outcomes',exact:true}).click();
+ const bench=factory.locator('[data-factory-section="Benchmark outcomes"]');
+ await visibleEvidence(bench.getByRole('heading',{name:'Benchmark outcomes',exact:true}));
+ await bench.getByText(/not production target acceptance/).waitFor();
+ await bench.locator('[data-benchmark-system="Pi factory"]').getByText('Tokens: Unknown · 0/1 measured',{exact:true}).waitFor();
+ await bench.locator('[data-benchmark-system="Pi factory"]').getByText(/Overall passed 0\/1 terminal/).waitFor();
+ await page.screenshot({path:output+'/benchmarks-desktop.png'});
+ foreignBenchmarks=true;await factory.getByRole('button',{name:'Refresh factory evidence'}).click();
+ await factory.getByRole('status').filter({hasText:'Refresh unavailable. Keeping saved evidence captured'}).waitFor();foreignBenchmarks=false;
+ assert.equal(await bench.locator('[data-benchmark-system]').count(),2);
+ checks.push('Benchmark scorecards preserve failure/unknown metrics and production distinction; foreign owner retains last-good evidence');
  await factory.getByRole('button',{name:'Expert journeys',exact:true}).click();
  const newsJourney=factory.locator('[data-journey-id="news-card-8"]');
  const inspect=newsJourney.locator('.factory-journey-detail > summary');await inspect.focus();await page.keyboard.press('Enter');
@@ -367,6 +380,14 @@ try{
  await visibleEvidence(frame.locator('#window-factory').getByRole('heading',{name:'Shared Pi seat'}));
  checks.push('Factory focus survives desktop-to-mobile resize and fresh mobile deep link; goals and missed targets are visible after scrolling at 390px');
  const mobileFactory=frame.locator('#window-factory');
+ await mobileFactory.getByRole('button',{name:'Benchmark outcomes',exact:true}).click();
+ const mobileBench=mobileFactory.locator('[data-factory-section="Benchmark outcomes"]');
+ await visibleEvidence(mobileBench.getByRole('heading',{name:'Benchmark outcomes',exact:true}));
+ assert(await mobileBench.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+ await page.screenshot({path:output+'/benchmarks-mobile.png'});
+ omitBenchmarks=true;await mobileFactory.getByRole('button',{name:'Refresh factory evidence'}).click();
+ await mobileFactory.getByText('Benchmark evidence has not been published for this expert.',{exact:true}).waitFor();omitBenchmarks=false;
+ checks.push('Benchmark section remains visible at 390px and legacy snapshots explicitly report unavailable evidence');
  await mobileFactory.getByRole('button',{name:'Expert journeys',exact:true}).click();
  const mobileJourney=mobileFactory.locator('[data-journey-id="news-card-8"]');
  await mobileJourney.locator('.factory-journey-detail > summary').click();

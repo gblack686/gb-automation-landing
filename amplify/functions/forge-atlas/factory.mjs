@@ -2,6 +2,7 @@
 // this reader verifies identity, bytes, bounds and display-safe fields.
 import {createHash} from 'node:crypto';
 import {validateJourneys} from './factory-journeys.mjs';
+import {validateBenchmarks} from './factory-benchmarks.mjs';
 const sha=/^[a-f0-9]{64}$/,slug=/^[a-z][a-z0-9-]{1,62}$/;
 const fail=()=>{throw Error('Factory evidence unavailable');};
 const object=v=>v&&typeof v==='object'&&!Array.isArray(v);
@@ -16,7 +17,7 @@ export function validateFactory(bytes,expected,request,now=Date.now()){
  if(!Buffer.isBuffer(bytes)||bytes.length>1_000_000||!sha.test(expected)
   ||createHash('sha256').update(bytes).digest('hex')!==expected)fail();
  const d=JSON.parse(bytes.toString('utf8'));
- only(d,['schema_version','tenant_id','agent_id','expert_id','config_sha256','captured_at','source','seat','goals','quests','receipts','targets','coverage','counts','truncated','limitations','journey_evidence']);
+ only(d,['schema_version','tenant_id','agent_id','expert_id','config_sha256','captured_at','source','seat','goals','quests','receipts','targets','coverage','counts','truncated','limitations','journey_evidence','benchmark_evidence']);
  if(d.schema_version!=='forge-factory-workspace.v1'||d.tenant_id!=='gbautomation'||d.agent_id!==request.agent_id
   ||!slug.test(d.agent_id)||!['gbautomation/'+d.agent_id,'consulting/'+d.agent_id].includes(d.expert_id)
   ||d.config_sha256!==request.config_sha256||!sha.test(d.config_sha256)||!stamp(d.captured_at)||Date.parse(d.captured_at)>now+300_000)fail();
@@ -67,6 +68,7 @@ export function validateFactory(bytes,expected,request,now=Date.now()){
   if((d.coverage[key]==='available')!==!!source||d.coverage[key]==='unavailable'&&d[key].length)fail();
  }
  if('journey_evidence' in d)validateJourneys(d.journey_evidence,d.expert_id,d.captured_at);
+ if('benchmark_evidence' in d)validateBenchmarks(d.benchmark_evidence,d.expert_id,d.captured_at);
  return {...d,snapshot_sha256:expected,freshness:now-Date.parse(d.captured_at)>6*3600_000?'stale':'recent'};
 }
 
