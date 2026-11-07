@@ -12,7 +12,8 @@ if(!root)throw Error('Set FORGE_WORKSPACE_FIXTURES to the canonical renderer fix
 const base=process.env.FORGE_WORKSPACE_BASE||'http://127.0.0.1:5201';
 const output='artifacts/atlas-factory-workspace-validation/'+new Date().toISOString().replace(/[:.]/g,'-');await mkdir(output,{recursive:true});
 const hash=x=>createHash('sha256').update(x).digest('hex');
-const agents=['youtube-intel','news-agent'];const docs={},receipts={};
+const improvementOnly=process.env.FORGE_WORKSPACE_IMPROVEMENTS==='1';
+const agents=['youtube-intel','news-agent',...(improvementOnly?['pi']:[])];const docs={},receipts={};
 const outputOnly=process.env.FORGE_WORKSPACE_JOURNEY_OUTPUTS==='1';
 const benchmarkOnly=process.env.FORGE_WORKSPACE_BENCHMARK_TIMELINES==='1';
 const archivedMode=outputOnly||benchmarkOnly;
@@ -32,7 +33,8 @@ const resourceRead=makeResourceService({enabled:true,loadManifest:async pin=>{
  if(pin&&(archivedUnavailable||pin.manifest_sha256!==publication.manifest_sha256||pin.manifest_version_id!==publication.manifest_version_id))throw Error('Archived manifest unavailable');
  return {bytes:Buffer.from(entry.manifest_bytes),sha256:publication.manifest_sha256,version_id:publication.manifest_version_id};
 },describeArtifact:async artifact=>({url:archivedMode?`https://fixture.s3.us-east-1.amazonaws.com/${artifact.key}?versionId=${artifact.version_id}&X-Amz-Expires=60`:artifactURL})});
-const factoryRead=makeFactoryService({enabled:true,load:async id=>{const bytes=await readFile(`${root}/${id}-factory.json`);return {bytes,sha256:hash(bytes)};}});
+let partialImprovements=false,foreignImprovements=false,omitImprovements=false;
+const factoryRead=makeFactoryService({enabled:true,load:async id=>{const name=id==='pi'&&partialImprovements?'pi-partial':id;const bytes=await readFile(`${root}/${name}-factory.json`);return {bytes,sha256:hash(bytes)};}});
 const browser=await chromium.launch({headless:true,channel:'chrome'});
 const page=await browser.newPage({viewport:{width:1500,height:1000}});page.setDefaultTimeout(20000);
 const errors=[],checks=[],requests=[];let fail=false,tamper=false,holdArtifact=false,releaseArtifact=null,failFactory=false,foreignFactory=false;
@@ -69,6 +71,8 @@ await page.route('**/__workspace_fixture',async r=>{
    if(foreignJourneys&&data.journey_evidence)data.journey_evidence.expert_id='gbautomation/youtube-intel';
    if(foreignBenchmarks&&data.benchmark_evidence)data.benchmark_evidence.expert_id='gbautomation/youtube-intel';
    if(omitBenchmarks)delete data.benchmark_evidence;
+   if(omitImprovements)delete data.improvement_evidence;
+   if(foreignImprovements&&data.improvement_evidence)data.improvement_evidence.expert_id='gbautomation/news-agent';
    return r.fulfill({json:data});
   }catch{return r.fulfill({status:503,body:'Invalid factory fixture'});}
  }
@@ -124,7 +128,43 @@ async function visibleEvidence(locator){
  assert.fail('Evidence is clipped, covered or outside the viewport: '+locator+' '+JSON.stringify(observation));
 }
 try{
- if(benchmarkOnly){
+ if(improvementOnly){
+  for(const width of [1440,390]){
+   await page.setViewportSize({width,height:1000});await page.goto(base+'/bench/pi?window=factory');
+   const factory=current().locator('#window-factory');await factory.getByRole('status').filter({hasText:'Stale saved evidence'}).waitFor();
+   const open=factory.getByRole('button',{name:'Improvement review',exact:true});await open.focus();await page.keyboard.press('Enter');
+   const section=factory.locator('[data-factory-section="Improvement review"]');
+   assert.equal(await section.locator('[data-improvement-id]').count(),9);
+   const cards=section.locator('[data-improvement-id]'),card=cards.filter({hasText:'confirmed_performance_requires_review'});
+   await card.locator('summary').focus();await page.keyboard.press('Enter');
+   await card.getByText(/Reused proposal: .* original usage shown below; not a new spend/).waitFor();
+   const counts=card.getByText('Confirmations: 3/3 repeated pairs · 1/1 holdout pairs',{exact:true});
+   await counts.scrollIntoViewIfNeeded();await visibleEvidence(counts);
+   await card.getByText('Promotion: Requires the existing reviewed release route. No approval is granted by this view.',{exact:true}).waitFor();
+   assert.equal(await section.getByRole('button').count(),0);
+   await page.screenshot({path:output+'/improvement-review-'+width+'.png'});
+   checks.push('Nine real native-controller fixture cycles rendered; keyboard details and confirmations visible at '+width+'px');
+  }
+  partialImprovements=true;await page.reload();let factory=current().locator('#window-factory');
+  await factory.getByRole('status').filter({hasText:'Stale saved evidence'}).waitFor();
+  await factory.getByRole('button',{name:'Improvement review',exact:true}).click();
+  const partial=factory.locator('[data-improvement-id]').filter({hasText:'control_evidence'}).first();await partial.locator('summary').click();
+  await partial.getByText('Usage: Unknown: retained attempt or benchmark evidence is missing',{exact:true}).waitFor();
+  assert(await partial.getByText(/Native decision: .* · missing/).count());
+  checks.push('Missing retained receipt hides usage and invalidates decision evidence');partialImprovements=false;
+  foreignImprovements=true;await page.reload();factory=current().locator('#window-factory');
+  await factory.getByRole('status').filter({hasText:'Factory evidence is unavailable'}).waitFor();
+  assert.equal(await factory.locator('[data-improvement-id]').count(),0);foreignImprovements=false;
+  omitImprovements=true;await page.reload();factory=current().locator('#window-factory');
+  await factory.getByText('Native improvement evidence has not been published.',{exact:true}).waitFor();omitImprovements=false;
+  checks.push('Wrong-owner response denied and unpublished review remains explicit');
+  await page.goto(base+'/bench/news-agent?window=factory');factory=current().locator('#window-factory');
+  await factory.getByRole('status').filter({hasText:'Stale saved evidence'}).waitFor();
+  assert.equal(await factory.getByRole('button',{name:'Improvement review',exact:true}).isVisible(),false);
+  assert.equal(await factory.locator('[data-improvement-id]').count(),0);
+  assert(requests.every(r=>!['improvementDetect','improvementConfirm','improvementRevoke','approve','dispatch'].includes(r.view)));
+  checks.push('News does not inherit factory-wide ownership; no mutation request sent');
+ }else if(benchmarkOnly){
   for(const [agent,caseID,width] of [['youtube-intel','B06',1440],['news-agent','B07',390]]){
    await page.setViewportSize({width,height:1000});await page.goto(base+'/bench/'+agent+'?window=factory');
    const frame=current(),factory=frame.locator('#window-factory');await factory.getByRole('status').filter({hasText:'Stale saved evidence'}).waitFor();
