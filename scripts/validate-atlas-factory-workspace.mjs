@@ -110,6 +110,14 @@ try{
  assert(requests.some(x=>x.view==='resourceCatalog'&&x.query.owner==='youtube-intel'));
  assert.equal(await frame.getByText('news-agent reviewed UI',{exact:true}).count(),0);
  checks.push('All 18 original Atlas windows retained plus expert resources and Factory; exact owner filtering');
+ const hostResources=page.getByRole('button',{name:'Expert resources',exact:true});
+ assert.equal(await hostResources.count(),1);
+ assert(await hostResources.evaluate(el=>!!el.closest('.forge-host-header nav')));
+ await hostResources.focus();await page.keyboard.press('Enter');
+ await page.getByRole('dialog',{name:'Expert resources',exact:true}).waitFor();
+ await page.getByRole('button',{name:'Close expert resources'}).click();
+ assert(await hostResources.evaluate(el=>document.activeElement===el));
+ checks.push('Keyboard host resource access stays in the header and returns focus after closing');
  await frame.getByRole('button',{name:'Open in window',exact:true}).click();
  const result=frame.frameLocator('iframe[title="youtube-intel reviewed UI saved result"]');
  await result.getByRole('heading',{name:'Reviewed UI fixture'}).waitFor();
@@ -299,6 +307,23 @@ try{
  await ytFactory.getByText('Native journey evidence has not been published for this expert.',{exact:true}).waitFor();
  assert.equal(await ytFactory.locator('[data-journey-id]').count(),0);omitJourneys=false;
  checks.push('Older snapshots explicitly report unavailable journeys instead of zero successes or invented history');
+ for(const mode of ['bench','atlas']){
+  await page.goto(base+'/'+mode+'/youtube-intel?window=factory');frame=current();
+  await frame.locator('#window-factory').getByRole('status').filter({hasText:'Stale saved evidence'}).waitFor();
+  const launcher=page.getByRole('button',{name:'Expert resources',exact:true});
+  assert(await launcher.evaluate(el=>!!el.closest('.forge-host-header nav')));
+  const geometry=await page.locator('.forge-host-header nav').evaluate(nav=>[...nav.children].map(e=>e.getBoundingClientRect().toJSON()));
+  for(let i=0;i<geometry.length;i++){
+   const a=geometry[i];assert(a.x>=0&&a.right<=390&&a.width>0&&a.height>0);
+   for(let j=i+1;j<geometry.length;j++){const b=geometry[j];assert(Math.min(a.right,b.right)<=Math.max(a.left,b.left)||Math.min(a.bottom,b.bottom)<=Math.max(a.top,b.top),'Header controls overlap');}
+  }
+  await launcher.click();await page.getByRole('dialog',{name:'Expert resources',exact:true}).waitFor();
+  await page.getByRole('button',{name:'Close expert resources'}).click();
+  const dock=await frame.locator('#dock').boundingBox();assert(dock);
+  assert(await page.evaluate(({x,y})=>document.elementFromPoint(x,y)?.tagName==='IFRAME',{x:350,y:dock.y+dock.height/2}),'Host launcher covers the dock');
+  await page.screenshot({path:output+'/header-resources-'+mode+'-mobile.png'});
+ }
+ checks.push('Bench and legacy Atlas keep mobile resource access in a nonoverlapping header with an unobstructed dock');
  await page.goto(base+'/bench/unregistered-expert?window=resources');
  await page.getByRole('status').filter({hasText:'This expert is not registered for your account.'}).waitFor();
  assert.equal(await page.locator('iframe[title$=" Atlas"]').count(),0);

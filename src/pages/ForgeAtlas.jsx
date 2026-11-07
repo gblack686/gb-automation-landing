@@ -215,11 +215,11 @@ export default function ForgeAtlas() {
    window.history.replaceState(null,'',`/${mode}/${next.agent_id}`);
   }} style={{color:'#191919',background:'#F3F1E7',padding:'4px 8px',maxWidth:200}}>
    {agents.map(agent=><option key={agent.agent_id} value={agent.agent_id}>{agent.display_name}</option>)}
-  </select><a href={`/${mode}/${selectedAgent.agent_id}?window=presence`}>Avatar</a>{selectedAgent.agent_id==='artist-packet-expert'&&<button onClick={()=>setVisual({brief:null})}>Avatar jobs</button>}{selectedAgent.agent_id==='artist-packet-expert'&&<button onClick={()=>setBuilder(true)}>Expert Config Builder</button>}{selectedAgent.agent_id==='youtube-intel'&&<a href="/workshop">YouTube health</a>}<a href={`/${mode}/${selectedAgent.agent_id}?window=proposals`}>Proposals</a><button onClick={() => signOut()}>Sign out</button></nav>
+  </select><a href={`/${mode}/${selectedAgent.agent_id}?window=presence`}>Avatar</a>{selectedAgent.agent_id==='artist-packet-expert'&&<button onClick={()=>setVisual({brief:null})}>Avatar jobs</button>}{selectedAgent.agent_id==='artist-packet-expert'&&<button onClick={()=>setBuilder(true)}>Expert Config Builder</button>}{selectedAgent.agent_id==='youtube-intel'&&<a href="/workshop">YouTube health</a>}<a href={`/${mode}/${selectedAgent.agent_id}?window=proposals`}>Proposals</a><button onClick={() => signOut()}>Sign out</button>
+  <button type="button" onClick={()=>setResourceGallery('ui')} aria-label="Expert resources">Resources</button></nav>
  </header><iframe key={channel} ref={frame} name={`forge-atlas:${channel}`} title={`${selectedAgent.display_name} Atlas`} srcDoc={html} onLoad={frameLoaded}
   sandbox="allow-scripts allow-downloads allow-popups allow-popups-to-escape-sandbox"
   referrerPolicy="no-referrer" style={{position:'fixed',inset:`${headerHeight}px 0 0`,width:'100%',height:`calc(100dvh - ${headerHeight}px)`,border:0,zIndex:100}} />
   {visual&&<ForgeVisualStudio brief={visual.brief} onClose={()=>setVisual(null)} onAdopt={()=>frame.current?.contentWindow?.postMessage({type:'forge-visual.updated.v1',channel},'*')}/>}
-  <button type="button" onClick={()=>setResourceGallery('ui')} style={{position:'fixed',bottom:16,right:16,zIndex:120,padding:'10px 16px',background:'#191919',color:'#F3F1E7',borderRadius:8,border:'1px solid #8C8A84'}}>Expert resources</button>
   {resourcePanel}{builder&&<ForgeExpertBuilder onClose={()=>setBuilder(false)}/>}</>;
 }
