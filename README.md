@@ -78,11 +78,17 @@ Development output is in the terminal. Authorized deployed backend diagnostics
 use the existing Amplify and Lambda logs; never paste secrets into receipts.
 
 Production uses Amplify Hosting. At the hosted-access review on 2026-11-05,
-auto-build was disabled: pushing a branch did not deploy it. `amplify.yml` uses
+Amplify auto-build was disabled: a source push did not start an Amplify build. `amplify.yml` uses
 the Amplify pipeline deployment command in its hosting environment. Both
 `npm run amplify:sandbox` and the misleadingly named `npm run amplify:deploy`
 provision a sandbox (the latter adds `--once`); neither is a local-only build
 nor this production release procedure. They require explicit cloud authority.
+
+The legacy Netlify workflow is manual-only. It no longer publishes on a push to
+`master`, so merging workspace source cannot invoke that deployment. Its current
+recipe still writes placeholder Cognito configuration; review that configuration
+and the destination before any separately authorized manual invocation. Source
+validation workflows remain enabled and separate from publication.
 
 For release, pin merged source, preserve the previous website/backend/config
 tuple, apply only the approved delta, and run real identity/private-object

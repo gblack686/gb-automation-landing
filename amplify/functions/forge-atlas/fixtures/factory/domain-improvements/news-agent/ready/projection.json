@@ -1,0 +1,225 @@
+{
+  "schema_version": "forge-improvement-review.v1",
+  "expert_id": "gbautomation/news-agent",
+  "captured_at": "2026-11-04T16:00:00.000Z",
+  "source": {
+    "diagnostics_sha256": "4fb571558dc626d19d43f5ab481c098a60a6d6967aa7ab8bf5f49af6224645d6",
+    "policy_sha256": "63c2da470f81f358701ae4ed637f94d558a7140609921cab47ce0d377626eb43",
+    "runs_sha256": null,
+    "verifier_source_commit": "44955a58f7d5ad5dac69a5929e3832f6e82237cf"
+  },
+  "controller": {
+    "configured": true,
+    "enabled": false,
+    "revoked": false,
+    "release_hold": false,
+    "policy_hash": "7ca26e599f10c42a4f4c7665e4f7420e8815dd2f94c1e504edc4fe0b4e753e14",
+    "standing_authority_sha256": null
+  },
+  "scope": "bounded_native_diagnostics",
+  "promotion_authorized": false,
+  "rows": [
+    {
+      "id": "improvement:9e064e9a56b4fecff78491619b89dd5f",
+      "task_id": 1,
+      "updated_at": "2026-11-04T15:15:01.000Z",
+      "phase": "terminal",
+      "outcome": "review_ready",
+      "reason": "domain_protected_evaluation_requires_review",
+      "base_commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "candidate_sha256": "c4530560214a612c531f126f5941d75b3862b40d9efe682490954ba92b9762e0",
+      "finding": {
+        "run_id": "daily:2026-11-04:news",
+        "request_id": "daily:2026-11-04:news",
+        "kind": "bug",
+        "code": "missing_context",
+        "evidence_sha256": "459b91dd4750caa727a62161b338c8a3f0183dfcb1dc8b3cac09edf5b5b73c49",
+        "verification": "verified"
+      },
+      "proposal": {
+        "summary": "Synthetic news context correction",
+        "artifact_sha256": "8c84a15b890740150b5e17d8d8c47cf796bb6b2866bc9b53094eedeca4dde262",
+        "candidate_sha256": "c4530560214a612c531f126f5941d75b3862b40d9efe682490954ba92b9762e0",
+        "changed_paths": [
+          "native.mjs"
+        ]
+      },
+      "attempts": [
+        {
+          "id": "improvement:9e064e9a56b4fecff78491619b89dd5f:proposal",
+          "stage": "proposal",
+          "status": "completed",
+          "reused_from": null,
+          "artifact_sha256": "8c84a15b890740150b5e17d8d8c47cf796bb6b2866bc9b53094eedeca4dde262",
+          "receipt_sha256": "72b47bed6a30e28045d48aeefeddef63c6fda3eb2ee3ec97b89e4a6783b4b58b",
+          "verification": "verified",
+          "usage": {
+            "model_calls": 1,
+            "input_tokens": 100,
+            "cache_read_tokens": 20,
+            "output_tokens": 20,
+            "total_tokens": 120,
+            "estimate_usd": 0.01,
+            "elapsed_ms": 100,
+            "complete": true
+          }
+        },
+        {
+          "id": "improvement:9e064e9a56b4fecff78491619b89dd5f:control",
+          "stage": "control",
+          "status": "completed",
+          "reused_from": null,
+          "artifact_sha256": "17200f6ad0001993902326a7aa0058623ef8e47a9d4a384e9900661c364dc694",
+          "receipt_sha256": "1a7d45ea9e58300e7e923d110f1ecb685eaaa924f9cc099682b25b5619e6d6d3",
+          "verification": "verified",
+          "usage": {
+            "model_calls": 0,
+            "input_tokens": 0,
+            "cache_read_tokens": 0,
+            "output_tokens": 0,
+            "total_tokens": 0,
+            "estimate_usd": 0,
+            "elapsed_ms": 1000,
+            "complete": true
+          }
+        },
+        {
+          "id": "improvement:9e064e9a56b4fecff78491619b89dd5f:candidate",
+          "stage": "candidate",
+          "status": "completed",
+          "reused_from": null,
+          "artifact_sha256": "51449de84f1b5c8acd963e0baa48d8a96bb84e1e123dc0583be19dabf0a18ee9",
+          "receipt_sha256": "c32f0a56a77d750745c1f1b34caf30003719426eda17a027473baeb485da59d9",
+          "verification": "verified",
+          "usage": {
+            "model_calls": 0,
+            "input_tokens": 0,
+            "cache_read_tokens": 0,
+            "output_tokens": 0,
+            "total_tokens": 0,
+            "estimate_usd": 0,
+            "elapsed_ms": 1000,
+            "complete": true
+          }
+        }
+      ],
+      "evaluation": {
+        "outcome": "review_ready",
+        "reason": "domain_protected_evaluation_requires_review",
+        "receipt_sha256": "e362ef2b2327e331fbe7ec5ad2afed3a428285c28dde6f2243c8ed50e5dd796c",
+        "scope_valid": true,
+        "regression_passed": true,
+        "complete": true,
+        "classification": "internal_bug",
+        "confirmations": 0,
+        "holdouts": 0,
+        "required_confirmations": 3,
+        "required_holdouts": 1,
+        "verification": "verified"
+      },
+      "release_state": "none",
+      "effects": [],
+      "missing": [],
+      "verification": "verified",
+      "domain": {
+        "source": "news",
+        "repository": "gbauto/durable-news-agent",
+        "finding": {
+          "daily_receipt_sha256": "330ccea97a0133143271c4d9b072757c3a9a603ad07da6880caac08fcd57cd06",
+          "source_evidence_sha256": "459b91dd4750caa727a62161b338c8a3f0183dfcb1dc8b3cac09edf5b5b73c49",
+          "assessment_sha256": "d0f35f2e3e454e69bd67100cddca81a1418057da623521b27c6867fc2876c527",
+          "defect_sha256": "4020549cbcb9573aa5a3168a641b1bc67dffe320d37f80c1f29241e47c05255f",
+          "reuse_sha256": "81ad6dfdc9543c0fd4cb05b6c92ffda4c554c4da92a504ae126067d28059861b"
+        },
+        "assessment": {
+          "protected_inputs": true,
+          "correctness": true,
+          "privacy": true,
+          "quality_delta": 0.33333333333333337,
+          "cost_ratio": 1,
+          "p95_latency_ratio": 1,
+          "cohorts": [
+            {
+              "cohort": "comparison",
+              "sha256": "b8a780474014b6ceb3e69ca4bb09395e09d69af51c987b2ba69b90f25feef3b5",
+              "cases": 5,
+              "control_passed": 4,
+              "candidate_passed": 5
+            },
+            {
+              "cohort": "holdout",
+              "sha256": "462998aaec36c566624f26f79473aae016ecf9439f1eeb82977a5252bda6fe82",
+              "cases": 5,
+              "control_passed": 4,
+              "candidate_passed": 5
+            }
+          ],
+          "measurement_scope": "protected_native_probe_zero_model_calls"
+        }
+      },
+      "proposal_reference": {
+        "proposal_id": "prop_expert_news_agent_news_agent_improvement_92e4676ac240ca683cdf_e6a4b290404e",
+        "binding": {
+          "schema_version": "forge-improvement-proposal-binding.v1",
+          "expert_id": "gbautomation/news-agent",
+          "cycle_id": "improvement:9e064e9a56b4fecff78491619b89dd5f",
+          "base_commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "candidate_sha256": "c4530560214a612c531f126f5941d75b3862b40d9efe682490954ba92b9762e0",
+          "policy_hash": "7ca26e599f10c42a4f4c7665e4f7420e8815dd2f94c1e504edc4fe0b4e753e14",
+          "finding_sha256": "459b91dd4750caa727a62161b338c8a3f0183dfcb1dc8b3cac09edf5b5b73c49",
+          "proposal_sha256": "8c84a15b890740150b5e17d8d8c47cf796bb6b2866bc9b53094eedeca4dde262",
+          "evaluation_sha256": "e362ef2b2327e331fbe7ec5ad2afed3a428285c28dde6f2243c8ed50e5dd796c",
+          "confirmations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "attempts_sha256": "9ff3936f176f6e44a6ba3ca3de2963eaf0b1b1f38d32fbe3141d20c8f8b46eb2",
+          "source_synthetic": true,
+          "domain_sha256": "7171a5d70909993b2b60f9a5ac54cff6ebbf1124407eaa1433b2433693e9be2c",
+          "native_source_sha256": "c8c9fc4e7e935c951d1a5d665cc11882f470c0b3632b0548feb094541df1ad1b"
+        },
+        "binding_sha256": "92e4676ac240ca683cdf9dc61cf105011c171125c60fd29ed514b860b3b88e56",
+        "attempts_json": "[{\"artifact_sha256\":\"51449de84f1b5c8acd963e0baa48d8a96bb84e1e123dc0583be19dabf0a18ee9\",\"id\":\"improvement:9e064e9a56b4fecff78491619b89dd5f:candidate\",\"receipt_sha256\":\"c32f0a56a77d750745c1f1b34caf30003719426eda17a027473baeb485da59d9\",\"reused_from\":null,\"stage\":\"candidate\",\"status\":\"completed\",\"usage\":{\"cache_read_tokens\":0,\"complete\":true,\"elapsed_ms\":1000,\"estimate_usd\":0,\"input_tokens\":0,\"model_calls\":0,\"output_tokens\":0,\"total_tokens\":0},\"verification\":\"verified\"},{\"artifact_sha256\":\"17200f6ad0001993902326a7aa0058623ef8e47a9d4a384e9900661c364dc694\",\"id\":\"improvement:9e064e9a56b4fecff78491619b89dd5f:control\",\"receipt_sha256\":\"1a7d45ea9e58300e7e923d110f1ecb685eaaa924f9cc099682b25b5619e6d6d3\",\"reused_from\":null,\"stage\":\"control\",\"status\":\"completed\",\"usage\":{\"cache_read_tokens\":0,\"complete\":true,\"elapsed_ms\":1000,\"estimate_usd\":0,\"input_tokens\":0,\"model_calls\":0,\"output_tokens\":0,\"total_tokens\":0},\"verification\":\"verified\"},{\"artifact_sha256\":\"8c84a15b890740150b5e17d8d8c47cf796bb6b2866bc9b53094eedeca4dde262\",\"id\":\"improvement:9e064e9a56b4fecff78491619b89dd5f:proposal\",\"receipt_sha256\":\"72b47bed6a30e28045d48aeefeddef63c6fda3eb2ee3ec97b89e4a6783b4b58b\",\"reused_from\":null,\"stage\":\"proposal\",\"status\":\"completed\",\"usage\":{\"cache_read_tokens\":20,\"complete\":true,\"elapsed_ms\":100,\"estimate_usd\":0.01,\"input_tokens\":100,\"model_calls\":1,\"output_tokens\":20,\"total_tokens\":120},\"verification\":\"verified\"}]",
+        "domain_json": "{\"assessment\":{\"cohorts\":[{\"candidate_passed\":5,\"cases\":5,\"cohort\":\"comparison\",\"control_passed\":4,\"sha256\":\"b8a780474014b6ceb3e69ca4bb09395e09d69af51c987b2ba69b90f25feef3b5\"},{\"candidate_passed\":5,\"cases\":5,\"cohort\":\"holdout\",\"control_passed\":4,\"sha256\":\"462998aaec36c566624f26f79473aae016ecf9439f1eeb82977a5252bda6fe82\"}],\"correctness\":true,\"cost_ratio\":1,\"measurement_scope\":\"protected_native_probe_zero_model_calls\",\"p95_latency_ratio\":1,\"privacy\":true,\"protected_inputs\":true,\"quality_delta\":0.33333333333333337},\"finding\":{\"assessment_sha256\":\"d0f35f2e3e454e69bd67100cddca81a1418057da623521b27c6867fc2876c527\",\"daily_receipt_sha256\":\"330ccea97a0133143271c4d9b072757c3a9a603ad07da6880caac08fcd57cd06\",\"defect_sha256\":\"4020549cbcb9573aa5a3168a641b1bc67dffe320d37f80c1f29241e47c05255f\",\"reuse_sha256\":\"81ad6dfdc9543c0fd4cb05b6c92ffda4c554c4da92a504ae126067d28059861b\",\"source_evidence_sha256\":\"459b91dd4750caa727a62161b338c8a3f0183dfcb1dc8b3cac09edf5b5b73c49\"},\"repository\":\"gbauto/durable-news-agent\",\"source\":\"news\"}",
+        "domain_source_json": "{\"domain\":\"news\",\"evidence_mode\":\"fixture\",\"inputs_sha256\":\"4d8c2e7907b0032d7e967c369184d8896be9409d8fd5d7fb5efd76f2b40c431b\",\"native_source\":{\"checkout_mutated\":false,\"commit\":\"44955a58f7d5ad5dac69a5929e3832f6e82237cf\",\"files\":{\"src/context.ts\":{\"blob\":\"7719d1b48114d581fe452005a964ae052698008f\",\"sha256\":\"bd07b6152e2b67512d4907acffd5707eb15dd41533f98cbfe90d045d3110ec59\"},\"src/expert-daily-contract.ts\":{\"blob\":\"c0bb1170cfc4836135b48cf11a5d2dc0a448de49\",\"sha256\":\"89d6f3ce93a88c3f207487f7f49d071ec61e96b5c5f6b132c476407719dfe464\"},\"src/factory-domain-benchmark.ts\":{\"blob\":\"9a8b0efdfcee2f035276a9b3182acf31913b30b2\",\"projection_sha256\":\"615bec2dc8b2be2d71265bd1b48e5fb6b57da0b194d0257abeab9407d0bc355a\",\"sha256\":\"d89dc720cd5ed00cafc6b4adf51c1e52c7a3714be2fafad15024922bac4667e5\"},\"src/factory-improvement-contract.ts\":{\"blob\":\"b0af07d5d8bf877ca8350864c40293588e8836c1\",\"sha256\":\"1f5d3b39a8a1310563b7c014c2845b16f479c84e3e5f0176bfab41dbb081c0c3\"},\"src/schedules.ts\":{\"blob\":\"4d9366f8b57f5b959b6f24d667c4d6c690c51899\",\"projection_sha256\":\"641a970254cbfa01b8f9d57c1358c0feda814788694e7a75f7ea5baf4834a77c\",\"sha256\":\"07adf06ee03441db09162b8a807209bed8bb9070d7c305b968faa5dab27dfdcf\"},\"src/workspace.ts\":{\"blob\":\"0cfc83ed5fd14977615100b83f339cf96286f2f1\",\"projection_sha256\":\"cc113a6e9d28eb6d22cb7035f43f6613704a17c91b60a924b3764e4fed4734bc\",\"sha256\":\"9c8f5a63c65333fd7ca9e196a27c40a71c6d9f8bcbc9fe04f5b5138c908e2940\"}},\"method\":\"immutable_git_pure_projection\"}}"
+      }
+    }
+  ],
+  "domain_source": {
+    "domain": "news",
+    "inputs_sha256": "4d8c2e7907b0032d7e967c369184d8896be9409d8fd5d7fb5efd76f2b40c431b",
+    "evidence_mode": "fixture",
+    "native_source": {
+      "commit": "44955a58f7d5ad5dac69a5929e3832f6e82237cf",
+      "files": {
+        "src/context.ts": {
+          "blob": "7719d1b48114d581fe452005a964ae052698008f",
+          "sha256": "bd07b6152e2b67512d4907acffd5707eb15dd41533f98cbfe90d045d3110ec59"
+        },
+        "src/workspace.ts": {
+          "blob": "0cfc83ed5fd14977615100b83f339cf96286f2f1",
+          "sha256": "9c8f5a63c65333fd7ca9e196a27c40a71c6d9f8bcbc9fe04f5b5138c908e2940",
+          "projection_sha256": "cc113a6e9d28eb6d22cb7035f43f6613704a17c91b60a924b3764e4fed4734bc"
+        },
+        "src/factory-improvement-contract.ts": {
+          "blob": "b0af07d5d8bf877ca8350864c40293588e8836c1",
+          "sha256": "1f5d3b39a8a1310563b7c014c2845b16f479c84e3e5f0176bfab41dbb081c0c3"
+        },
+        "src/schedules.ts": {
+          "blob": "4d9366f8b57f5b959b6f24d667c4d6c690c51899",
+          "sha256": "07adf06ee03441db09162b8a807209bed8bb9070d7c305b968faa5dab27dfdcf",
+          "projection_sha256": "641a970254cbfa01b8f9d57c1358c0feda814788694e7a75f7ea5baf4834a77c"
+        },
+        "src/expert-daily-contract.ts": {
+          "blob": "c0bb1170cfc4836135b48cf11a5d2dc0a448de49",
+          "sha256": "89d6f3ce93a88c3f207487f7f49d071ec61e96b5c5f6b132c476407719dfe464"
+        },
+        "src/factory-domain-benchmark.ts": {
+          "blob": "9a8b0efdfcee2f035276a9b3182acf31913b30b2",
+          "sha256": "d89dc720cd5ed00cafc6b4adf51c1e52c7a3714be2fafad15024922bac4667e5",
+          "projection_sha256": "615bec2dc8b2be2d71265bd1b48e5fb6b57da0b194d0257abeab9407d0bc355a"
+        }
+      },
+      "method": "immutable_git_pure_projection",
+      "checkout_mutated": false
+    }
+  },
+  "source_sha256": "c5ab36627cc88b6d569cf1158c0c2250ff7c3eb56123981a2cae0034ea692814"
+}

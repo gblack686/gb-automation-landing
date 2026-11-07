@@ -5,3 +5,4 @@ export function atlasSecretArn(stack: Stack): string;
 export function scheduleSecretArn(stack: Stack): string;
 export function typesafeSecretArn(stack: Stack): string;
 export function atlasStorage(stack: Stack): Bucket;
+export function factorySnapshotPolicy(bucket:import('aws-cdk-lib/aws-s3').IBucket,enabled?:boolean):import('aws-cdk-lib/aws-iam').PolicyStatement|null;

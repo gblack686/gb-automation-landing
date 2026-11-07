@@ -1,4 +1,5 @@
 import { readAtlas } from './forgeAtlasClient';
+import { appendNewsOutput } from './forgeNewsOutput.mjs';
 
 const MAX_BYTES=8_000_000;
 const TYPES={'text/html':'html','text/plain':'txt','text/markdown':'md','application/json':'json','image/png':'png'};
@@ -12,10 +13,11 @@ export async function readResourceCatalog(query,agentId) {
  return data;
 }
 
-export async function readResourceArtifact(resourceId,catalogSha,agentId,signal) {
- const asset=await readAtlas('resourceArtifact',{resource_id:resourceId,catalog_sha256:catalogSha},agentId);
+export async function readResourceArtifact(resourceId,catalogSha,agentId,signal,catalogVersion) {
+ if(catalogVersion!==undefined&&(!/^[A-Za-z0-9._~+-]{1,200}$/.test(catalogVersion)||catalogVersion==='null'))throw Error('Invalid saved-result version.');
+ const asset=await readAtlas('resourceArtifact',{resource_id:resourceId,catalog_sha256:catalogSha,...(catalogVersion?{catalog_version_id:catalogVersion}:{})},agentId);
  if(asset?.schema_version!=='forge-resource-artifact.v1'||asset.tenant_id!=='gbautomation'||asset.agent_id!==agentId
-   || asset.resource_id!==resourceId||asset.catalog_sha256!==catalogSha||!/^[a-f0-9]{64}$/.test(asset.sha256)
+   || asset.resource_id!==resourceId||asset.catalog_sha256!==catalogSha||catalogVersion!==undefined&&asset.catalog_version_id!==catalogVersion||!/^[a-f0-9]{64}$/.test(asset.sha256)
    || !Object.hasOwn(TYPES,asset.media_type)||!Number.isSafeInteger(asset.bytes)||asset.bytes<1||asset.bytes>MAX_BYTES
    || !Number.isFinite(Date.parse(asset.expires_at))||Date.parse(asset.expires_at)<=Date.now()
    || Date.parse(asset.expires_at)>Date.now()+65_000)throw Error('This saved result is unavailable. Refresh the catalog and retry.');
@@ -50,6 +52,7 @@ export function resourceDocument(bytes,mediaType) {
   let binary='';for(let i=0;i<bytes.length;i+=8192)binary+=String.fromCharCode(...bytes.subarray(i,i+8192));
   img.src='data:image/png;base64,'+btoa(binary);doc.body.append(img);
  }else if(mediaType!=='text/html'){
+  if(mediaType==='application/json'&&appendNewsOutput(doc,new TextDecoder().decode(bytes)))return '<!doctype html>'+doc.documentElement.outerHTML;
   const pre=doc.createElement('pre');pre.style.cssText='white-space:pre-wrap;overflow-wrap:anywhere;padding:16px;font:15px/1.6 system-ui';
   pre.textContent=new TextDecoder().decode(bytes);doc.body.append(pre);
  }

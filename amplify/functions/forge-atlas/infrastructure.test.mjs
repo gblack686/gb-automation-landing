@@ -2,7 +2,7 @@ import { App, Stack } from 'aws-cdk-lib';
 import { Template } from 'aws-cdk-lib/assertions';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { atlasIssuer, atlasSecretArn, scheduleSecretArn, typesafeSecretArn, atlasStorage } from './infrastructure.mjs';
+import { atlasIssuer, atlasSecretArn, scheduleSecretArn, typesafeSecretArn, atlasStorage, factorySnapshotPolicy } from './infrastructure.mjs';
 test('private document storage retains versions and blocks all public access',() => {
  const stack=new Stack(new App(),'AtlasStorage');atlasStorage(stack);
  const template=Template.fromStack(stack);
@@ -16,4 +16,15 @@ test('issuer and secret access are bound to this deployment',() => {
  assert.match(scheduleSecretArn(stack),/:secretsmanager:us-east-1:123456789012:secret:gbautomation\/core\/hermes-chat-basic-auth-\*$/);
  assert.match(typesafeSecretArn(stack),/:secretsmanager:us-east-1:123456789012:secret:gbautomation\/typesafe\/api-key-\*$/);
  assert.deepEqual(stack.resolve(atlasIssuer(stack,'us-east-1_example')),{'Fn::Join':['',['https://cognito-idp.us-east-1.',{Ref:'AWS::URLSuffix'},'/us-east-1_example']]});
+});
+
+test('factory capability adds only saved snapshot reads and no grant when disabled',()=>{
+ const stack=new Stack(new App(),'FactoryRead'),bucket=atlasStorage(stack);
+ assert.equal(factorySnapshotPolicy(bucket),null);
+ assert.equal(factorySnapshotPolicy(bucket,false),null);
+ const policy=stack.resolve(factorySnapshotPolicy(bucket,true).toStatementJson());
+ assert.deepEqual(policy.Action,['s3:GetObject','s3:GetObjectVersion']);
+ assert.equal(policy.Effect,'Allow');
+ assert.match(JSON.stringify(policy.Resource),/gbautomation\/\*\/factory-workspace\.json/);
+ assert.doesNotMatch(JSON.stringify(policy),/PutObject|DeleteObject|ListBucket|resources\/\*/);
 });

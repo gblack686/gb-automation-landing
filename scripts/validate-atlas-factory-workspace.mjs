@@ -1,0 +1,803 @@
+// Real canonical document + host + resource verifier. All data is synthetic;
+// no credentials, real Cognito, production API or Mini connection are used.
+import {chromium} from 'playwright';
+import assert from 'node:assert/strict';
+import {readFile,mkdir,writeFile} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+import {makeResourceService} from '../amplify/functions/forge-atlas/resources.mjs';
+import {makeFactoryService} from '../amplify/functions/forge-atlas/factory.mjs';
+import {runSearch} from '../amplify/functions/forge-atlas/search.mjs';
+import {projectProposals} from '../amplify/functions/forge-atlas/proposals.mjs';
+const root=process.env.FORGE_WORKSPACE_FIXTURES;
+if(!root)throw Error('Set FORGE_WORKSPACE_FIXTURES to the canonical renderer fixture directory');
+const base=process.env.FORGE_WORKSPACE_BASE||'http://127.0.0.1:5201';
+const output='artifacts/atlas-factory-workspace-validation/'+new Date().toISOString().replace(/[:.]/g,'-');await mkdir(output,{recursive:true});
+const hash=x=>createHash('sha256').update(x).digest('hex');
+const improvementOnly=process.env.FORGE_WORKSPACE_IMPROVEMENTS==='1';
+const outcomeOnly=process.env.FORGE_WORKSPACE_OUTCOMES==='1';
+const continuityOnly=process.env.FORGE_WORKSPACE_CONTINUITY==='1';
+const nativeLinksOnly=process.env.FORGE_WORKSPACE_NATIVE_LINKS==='1';
+const domainImprovementOnly=process.env.FORGE_WORKSPACE_DOMAIN_IMPROVEMENTS==='1';
+const proposalPreparation=process.env.FORGE_WORKSPACE_IMPROVEMENT_PROPOSALS?JSON.parse(await readFile(process.env.FORGE_WORKSPACE_IMPROVEMENT_PROPOSALS+'/preparation.json')):null;
+const linkedRows=new Map((proposalPreparation?.spine_rows.agent_os_proposals||[]).map(row=>[row.proposal_id,{...row,producer_runs:proposalPreparation.spine_rows.producer_runs.find(p=>p.producer_run_id===row.producer_run_id)}]));
+let linkedMissing=false,linkedChanged=false,linkedForeign=false,linkedWorkflow=false,holdLinked=false,releaseLinked=null;
+let holdStartupCatalog=false,releaseStartupCatalog=null;
+const linkedEntry=proposalPreparation?.entries[0];
+const workflow=linkedEntry?{workflow_id:'workflow_native_review',proposal_id:linkedEntry.proposal.proposal_id,title:'Existing factory review workflow',
+ gate:'scope',state:'review',client_id:'gbautomation',project_id:'factory',scope_version:1,plan_version:0,documents:[],events:[],deliveries:[],reminders:[],artifacts:[]}:null;
+const agents=['youtube-intel','news-agent',...(improvementOnly?['pi']:[])];const docs={},receipts={};
+const outputOnly=process.env.FORGE_WORKSPACE_JOURNEY_OUTPUTS==='1';
+const benchmarkOnly=process.env.FORGE_WORKSPACE_BENCHMARK_TIMELINES==='1';
+const archivedMode=outputOnly||benchmarkOnly;
+const outputFixture=benchmarkOnly?JSON.parse(await readFile(`${root}/benchmark-timeline-fixture.json`)):outputOnly?JSON.parse(await readFile(`${root}/journey-output-fixture.json`)):null;
+let archivedUnavailable=false;
+for(const id of agents){docs[id]=await readFile(`${root}/${id}.html`,'utf8');receipts[id]=JSON.parse(await readFile(`${root}/${id}.json`));}
+const object=Buffer.from('<!doctype html><html><head></head><body><h1>Reviewed UI fixture</h1><button id="play" onclick="this.textContent=\'Playing\'">Play</button><script>try{parent.localStorage.getItem("x");document.body.dataset.parent="allowed"}catch{document.body.dataset.parent="denied"}</script></body></html>');
+const asset={sha256:hash(object),key:`gbautomation/resources/artifacts/${hash(object)}.html`,bytes:object.length,media_type:'text/html',version_id:'fixture-v1'};
+const artifactURL=`https://fixture.s3.us-east-1.amazonaws.com/${asset.key}?versionId=fixture-v1&X-Amz-Expires=60`;
+const observed=new Date(Date.now()-3600_000).toISOString(),expires=new Date(Date.now()-60_000).toISOString();
+const rows=agents.map(id=>({id:`ui.${id}.review`,title:`${id} reviewed UI`,kind:'ui',owner_expert:id,delivery_mode:'artifact',source_commit:'a'.repeat(40),content_sha256:asset.sha256,observed_at:observed,expires_at:expires,artifact:asset}));
+rows.push({...rows[0],id:'ui.youtube-intel.unavailable',title:'Waiting for a published UI',delivery_mode:'unavailable',artifact:undefined,content_sha256:undefined});
+const raw=Buffer.from(JSON.stringify({schema_version:'hosted-resource-delivery.v1',tenant_id:'gbautomation',source_commit:'a'.repeat(40),captured_at:observed,resources:rows}));
+const resourceRead=makeResourceService({enabled:true,loadManifest:async pin=>{
+ if(!archivedMode)return {bytes:raw,sha256:hash(raw)};
+ const entry=outputFixture[pin?'archived':'current'],publication=entry.publication;
+ if(pin&&(archivedUnavailable||pin.manifest_sha256!==publication.manifest_sha256||pin.manifest_version_id!==publication.manifest_version_id))throw Error('Archived manifest unavailable');
+ return {bytes:Buffer.from(entry.manifest_bytes),sha256:publication.manifest_sha256,version_id:publication.manifest_version_id};
+},describeArtifact:async artifact=>({url:archivedMode?`https://fixture.s3.us-east-1.amazonaws.com/${artifact.key}?versionId=${artifact.version_id}&X-Amz-Expires=60`:artifactURL})});
+let partialImprovements=false,foreignImprovements=false,omitImprovements=false;
+const factoryRead=makeFactoryService({enabled:true,load:async id=>{const name=(id==='pi'||domainImprovementOnly)&&partialImprovements?id+'-partial':id;const bytes=await readFile(`${root}/${name}-factory.json`);return {bytes,sha256:hash(bytes)};}});
+const browser=await chromium.launch({headless:true,channel:'chrome'});
+const page=await browser.newPage({viewport:{width:1500,height:1000}});page.setDefaultTimeout(20000);
+const errors=[],checks=[],requests=[];let fail=false,tamper=false,holdArtifact=false,releaseArtifact=null,failFactory=false,foreignFactory=false;
+let omitJourneys=false,foreignJourneys=false,foreignBenchmarks=false,omitBenchmarks=false;
+let omitOutcomes=false,foreignOutcomes=false;
+let omitContinuity=false,foreignContinuity=false,foreignContinuityLane=false,missingQualification=false;
+let omitNativeLinks=false,missingNativeTrace=false,foreignNativeLinks=false;
+let records=false,holdHistory=false,releaseHistory=null,holdProposal=false,releaseProposal=null;
+const planID='prd_'+'c'.repeat(20),sessionKey='fixture-host:'+ 's'.repeat(280);
+// Total-suite bound grows with scenarios; individual actions still time out at 20s.
+const watchdog=setTimeout(async()=>{await writeFile(output+'/timeout.json',JSON.stringify({ok:false,checks,errors,requests},null,2));console.error('Browser validation exceeded 210 seconds: '+output);process.exit(1);},210_000);
+checks.push=(...items)=>{console.log(items.join('\n'));return Array.prototype.push.apply(checks,items);};
+page.on('pageerror',e=>errors.push(e.message));
+await page.route('**/src/lib/forgeAtlasClient.js*',r=>r.fulfill({contentType:'application/javascript',body:`export async function readAtlas(view,query={},agent_id=null){const r=await fetch('/__workspace_fixture',{method:'POST',body:JSON.stringify({view,query,agent_id})});if(!r.ok)throw Error('Unavailable');return r.json();} export async function expertChat(){return {enabled:false}}`}));
+await page.route('**/__workspace_fixture',async r=>{
+ const x=r.request().postDataJSON();requests.push(x);
+ if(x.view==='agents')return r.fulfill({json:{agents:agents.map(id=>({agent_id:id,display_name:id,config_sha256:receipts[id].yaml_sha256}))}});
+ if(x.view==='document')return r.fulfill({json:{agent_id:x.agent_id,tenant_id:'gbautomation',url:`https://fixture.s3.us-east-1.amazonaws.com/gbautomation/${x.agent_id}/index.html`,sha256:hash(docs[x.agent_id]),bytes:Buffer.byteLength(docs[x.agent_id])}});
+ if(fail)return r.fulfill({status:503,body:'Unavailable'});
+ if(x.view==='approvalSnapshot')return r.fulfill({json:{mode:'live_read_only',workflows:linkedWorkflow&&x.agent_id==='pi'?[workflow]:[],connection:{tenant:'gbautomation',writes_enabled:false}}});
+ if(x.view==='proposals'){
+  if(holdStartupCatalog&&x.agent_id==='pi')await new Promise(resolve=>{releaseStartupCatalog=resolve;});
+  return r.fulfill({json:{rows:[],total:0}});
+ }
+ if(x.view==='proposal'){
+  if(linkedRows.has(x.query.proposal_id)){
+   if(holdLinked)await new Promise(resolve=>{releaseLinked=resolve;});
+   if(linkedMissing)return r.fulfill({contentType:'application/json',body:'null'});
+   const row=structuredClone(linkedRows.get(x.query.proposal_id));
+   if(linkedChanged){const m=row.producer_runs.metadata;m.native_improvement.candidate_sha256='f'.repeat(64);
+    m.native_binding_sha256=hash(JSON.stringify(Object.fromEntries(Object.keys(m.native_improvement).sort().map(k=>[k,m.native_improvement[k]]))));
+    row.payload.source.artifact_id='native-improvement-binding:'+m.native_binding_sha256;
+   }
+   if(linkedForeign)row.producer_runs.owner_expert='news-agent';
+   try{return r.fulfill({json:projectProposals({view:'proposal',agent_id:x.agent_id,query:x.query},[row],null)});}
+   catch{return r.fulfill({status:503,body:'Bound proposal unavailable'});}
+  }
+  if(holdProposal&&x.query.proposal_id==='prop_slow')await new Promise(resolve=>{releaseProposal=resolve;});
+  return r.fulfill({json:{proposal_id:x.query.proposal_id,tenant_id:'gbautomation',agent_id:x.agent_id,card_title:x.query.proposal_id==='prop_review'?'Exact proposal outside first catalog page':x.query.proposal_id,source_type:'transcript',card_type:'expert-portfolio-proposal',state:'gated',summary:'Synthetic exact proposal detail',updated_at:observed}});
+ }
+ if(x.view==='planning')return r.fulfill({json:{schema_version:'forge-planning-snapshot.v1',tenant_id:'gbautomation',agent_id:x.agent_id,board_slug:'gbautomation',config_sha256:receipts[x.agent_id].yaml_sha256,captured_at:new Date().toISOString(),source:'supabase',prds:[{prd_id:planID,title:'Exact indexed plan',path:'second-brain/plans/fixture/report.html',status:'draft',updated_at:observed,config_sha256:receipts[x.agent_id].yaml_sha256,source:'prd_artifacts',body_sha256:'c'.repeat(64)}],cards:[],artifacts:[]}});
+ if(x.view==='history'){
+  if(holdHistory&&x.query.session_key==='slow-session')await new Promise(resolve=>{releaseHistory=resolve;});
+  const message=x.query.session_key===sessionKey?'Exact long-key session message':x.query.session_key;
+  return r.fulfill({json:{schema_version:'forge-history-page.v1',source:'supabase',tenant_id:'gbautomation',agent_id:x.agent_id,view:x.query.view,session_key:x.query.session_key||null,message_key:x.query.message_key||null,next:null,rows:x.query.view==='messages'?[{message_key:'message-'+x.query.session_key,seq:1,ts:observed,message_text:message,preview_truncated:false}]:[]}});
+ }
+ if(x.view==='factorySnapshot'){
+  if(failFactory)return r.fulfill({status:503,body:'Factory fixture unavailable'});
+  try{const data=await factoryRead({...x,config_sha256:receipts[x.agent_id].yaml_sha256});
+   if(foreignFactory)data.agent_id='foreign-expert';
+   if(omitJourneys)delete data.journey_evidence;
+   if(foreignJourneys&&data.journey_evidence)data.journey_evidence.expert_id='gbautomation/youtube-intel';
+   if(foreignBenchmarks&&data.benchmark_evidence)data.benchmark_evidence.expert_id='gbautomation/youtube-intel';
+   if(omitBenchmarks)delete data.benchmark_evidence;
+   if(omitImprovements)delete data.improvement_evidence;
+   if(omitOutcomes)delete data.outcome_evidence;
+   if(foreignOutcomes&&data.outcome_evidence)data.outcome_evidence.quests[0].expert_id='consulting/pi';
+   if(omitContinuity)delete data.continuity_evidence;
+   if(foreignContinuity&&data.continuity_evidence)data.continuity_evidence.expert_id='gbautomation/youtube-intel';
+   if(foreignContinuityLane&&data.continuity_evidence)data.continuity_evidence.rows[0].lane='youtube-trusted';
+   if(missingQualification&&data.continuity_evidence){data.continuity_evidence.window.qualification=null;data.continuity_evidence.source.qualification_input_sha256=null;data.continuity_evidence.source.native_qualification_sha256=null;}
+   if(omitNativeLinks&&data.continuity_evidence)delete data.continuity_evidence.journey_links;
+   if(missingNativeTrace&&data.continuity_evidence?.journey_links)for(const row of data.continuity_evidence.journey_links.rows){row.trace=null;row.gaps=['native_trace_readback_incomplete'];}
+   if(foreignNativeLinks&&data.continuity_evidence?.journey_links)data.continuity_evidence.journey_links.journey_source_sha256='0'.repeat(64);
+   if(foreignImprovements&&data.improvement_evidence)data.improvement_evidence.expert_id='gbautomation/news-agent';
+   return r.fulfill({json:data});
+  }catch{return r.fulfill({status:503,body:'Invalid factory fixture'});}
+ }
+ if(x.view==='search'){
+  if(records){
+   const adapters={proposal:async()=>({rows:[{id:'prop_review',kind:'proposal',title:'Reviewed exact proposal'},{id:planID,kind:'plan',title:'Reviewed exact plan'}]}),
+    session:async()=>({rows:[{id:'intent-one',session_key:sessionKey,title:'Reviewed exact session'},{id:'legacy-intent',title:'Legacy session without explicit key'}]}),
+    pr:async()=>({rows:[{id:'pr-fixture',title:'Shared PR',href:'https://github.com/gbauto/gbautomation/pull/1660'}]}),
+    code:async()=>({rows:[{id:'code-fixture',title:'Shared code',href:'https://github.com/gbauto/gbautomation/blob/main/README.md#L1'}]})};
+   return r.fulfill({json:await runSearch({agent_id:x.agent_id,query:x.query},adapters)});
+  }
+  if(x.query.source==='session')return r.fulfill({status:503,body:'Unavailable fixture source'});
+  return r.fulfill({json:{schema_version:'forge-unified-search.v1',tenant_id:'gbautomation',agent_id:x.agent_id,query:x.query.query,
+   coverage:{[x.query.source]:'available'},results:[{id:x.query.source+'-fixture',source:x.query.source,title:'Reviewed '+x.query.source+' evidence',snippet:'Synthetic search result'}]}});
+ }
+ if(['resourceCatalog','resourceArtifact'].includes(x.view)){
+  if(x.view==='resourceArtifact'&&holdArtifact)await new Promise(resolve=>{releaseArtifact=resolve;});
+  try{return r.fulfill({json:await resourceRead(x)});}catch{return r.fulfill({status:503,body:'Unavailable'});}
+ }
+ return r.fulfill({status:503,body:'Fixture lane unavailable'});
+});
+await page.route('https://fixture.s3.us-east-1.amazonaws.com/**',r=>{
+ const url=new URL(r.request().url());
+ const id=agents.find(id=>url.pathname===`/gbautomation/${id}/index.html`);
+ let saved=null;
+ if(archivedMode)for(const entry of Object.values(outputFixture)){
+  if(!entry?.manifest_bytes)continue;
+  const resource=JSON.parse(entry.manifest_bytes).resources.find(row=>url.pathname.endsWith(row.artifact.key));
+  if(resource)saved=benchmarkOnly?entry.contents[resource.content_sha256]:resource.owner_expert==='news-agent'?entry.news_content:entry.content;
+ }
+ const body=saved===null||saved===undefined?object:Buffer.from(saved);
+ return r.fulfill({contentType:'text/html',body:id?docs[id]:tamper?Buffer.alloc(body.length,32):body,headers:{'Access-Control-Allow-Origin':base}});
+});
+const current=()=>page.frameLocator('iframe[title$=" Atlas"]');
+// DOM visibility alone allows offscreen or clipped text to pass. Check the
+// iframe viewport and every scrolling/clipping ancestor before accepting it.
+async function visibleEvidence(locator){
+ const deadline=Date.now()+5000;let observation;
+ do{
+  observation=await locator.evaluate(el=>{
+   const r=el.getBoundingClientRect();let left=0,top=0,right=innerWidth,bottom=innerHeight;
+   for(let p=el.parentElement;p;p=p.parentElement){const s=getComputedStyle(p),box=p.getBoundingClientRect();
+    if(/auto|scroll|hidden|clip/.test(s.overflowX)){left=Math.max(left,box.left);right=Math.min(right,box.right);}
+    if(/auto|scroll|hidden|clip/.test(s.overflowY)){top=Math.max(top,box.top);bottom=Math.min(bottom,box.bottom);}
+   }
+   const cx=(r.left+r.right)/2,cy=(r.top+r.bottom)/2,hit=document.elementFromPoint(cx,cy);
+   return {visible:r.width>0&&r.height>0&&r.left>=left-1&&r.right<=right+1&&r.top>=top-1&&r.bottom<=bottom+1&&!!hit&&(el.contains(hit)||hit.contains(el)),rect:r.toJSON(),clip:{left,top,right,bottom},hit:hit?.className};
+  });
+  const box=await locator.boundingBox(),viewport=page.viewportSize();
+  if(observation.visible&&box&&box.y>=0&&box.y+box.height<=viewport.height+1)return;
+  await page.waitForTimeout(20);
+ }while(Date.now()<deadline);
+ assert.fail('Evidence is clipped, covered or outside the viewport: '+locator+' '+JSON.stringify(observation));
+}
+async function lookupFinished(handle){
+ for(let i=0;i<250&&await handle.evaluate(el=>el.disabled);i++)await page.waitForTimeout(20);
+ assert.equal(await handle.evaluate(el=>el.disabled),false,'Proposal lookup did not finish');
+}
+try{
+ if(domainImprovementOnly){
+  for(const agent of ['news-agent','youtube-intel'])for(const width of [1440,390]){
+   await page.setViewportSize({width,height:1000});await page.goto(base+'/bench/'+agent+'?window=factory');
+   const factory=current().locator('#window-factory');await factory.getByRole('status').filter({hasText:'Saved evidence'}).waitFor();
+   const open=factory.getByRole('button',{name:'Improvement review',exact:true});await open.focus();await page.keyboard.press('Enter');
+   const section=factory.locator('[data-factory-section="Improvement review"]');
+   await visibleEvidence(section.getByText('Synthetic test evidence · Not eligible for live acceptance',{exact:true}));
+   const detail=section.getByText('Inspect finding, proposal and comparison',{exact:true});await detail.focus();await page.keyboard.press('Enter');
+   const cases=agent==='news-agent'?5:6;
+   const holdout=section.getByText(`Holdout cohort: ${cases} cases · Baseline ${cases-1} passed · Candidate ${cases} passed`,{exact:true});
+   await holdout.evaluate(el=>el.scrollIntoView({block:'center',behavior:'instant'}));await visibleEvidence(holdout);
+   assert.match(await section.innerText(),/Correctness passed · Privacy passed/);
+   assert.match(await section.innerText(),/zero model calls/);assert.doesNotMatch(await section.innerText(),/repeated pairs/);
+   assert(await current().locator('body').evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
+   await page.screenshot({path:output+'/domain-'+agent+'-'+width+'.png'});
+   const find=section.getByRole('button',{name:'Find saved proposal',exact:true});await find.focus();await page.keyboard.press('Enter');
+   const dialog=current().locator('dialog').filter({hasText:'Review '+agent});await dialog.waitFor({state:'visible'});
+   assert.match(await dialog.innerText(),/Synthetic/);await dialog.getByRole('button',{name:'Close approval review'}).click();
+   checks.push(`Exact ${agent} domain cohorts, quality/resource scope and bound proposal navigation at ${width}px`);
+  }
+  await page.goto(base+'/bench/youtube-intel?window=factory');let factory=current().locator('#window-factory');
+  await factory.getByRole('status').filter({hasText:'Saved evidence'}).waitFor();
+  failFactory=true;await factory.getByRole('button',{name:'Refresh factory evidence'}).click();
+  await factory.getByRole('status').filter({hasText:'Keeping saved evidence captured'}).waitFor();failFactory=false;
+  checks.push('Refresh outage preserves the labeled last-good expert improvement capture');
+  partialImprovements=true;await factory.getByRole('button',{name:'Refresh factory evidence'}).click();
+  await factory.getByRole('status').filter({hasText:'Saved evidence'}).waitFor();
+  const partial=factory.locator('[data-factory-section="Improvement review"]');assert.match(await partial.innerText(),/Evidence incomplete/);
+  assert.equal(await partial.getByRole('button',{name:'Find saved proposal',exact:true,includeHidden:true}).count(),0);partialImprovements=false;
+  checks.push('Missing native inputs remove measurements and proposal references while retaining the pending experiment');
+  foreignImprovements=true;await factory.getByRole('button',{name:'Refresh factory evidence'}).click();
+  await factory.getByRole('status').filter({hasText:'Keeping saved evidence captured'}).waitFor();foreignImprovements=false;
+  checks.push('Client rejects a foreign expert improvement capture');
+  await page.goto(base+'/bench/news-agent?window=factory');factory=current().locator('#window-factory');
+  await factory.getByRole('status').filter({hasText:'Saved evidence'}).waitFor();
+  const reads=requests.length;await page.waitForTimeout(1200);assert.equal(requests.length,reads);
+  assert(requests.every(r=>!['approve','dispatch','score','improvementDetect','improvementConfirm','benchmarkRun'].includes(r.view)));
+  checks.push('Domain review and proposal lookup add no polling, benchmark run, approval or release request');
+ }else if(nativeLinksOnly){
+  const expected=JSON.parse(await readFile(root+'/news-agent-factory.json')).continuity_evidence.journey_links.rows[0];
+  for(const width of [1440,390]){
+   await page.setViewportSize({width,height:1000});await page.goto(base+'/bench/news-agent?window=factory');
+   const factory=current().locator('#window-factory');await factory.getByRole('status').filter({hasText:'Saved evidence'}).waitFor();
+   const button=factory.getByRole('button',{name:'Expert journeys',exact:true});await button.focus();await page.keyboard.press('Enter');
+   const journey=factory.locator('[data-journey-id="news-card-8"]');
+   await journey.getByText('Inspect work, outputs and telemetry',{exact:true}).click();
+   const trace=journey.getByText('Verified native trace ID: '+expected.trace.id,{exact:true});
+   await trace.evaluate(el=>el.scrollIntoView({block:'center',behavior:'instant'}));await visibleEvidence(trace);
+   assert.match(await journey.innerText(),/whole native run/);assert.match(await journey.innerText(),/Target acceptance: pending/);
+   const slot=journey.getByRole('button',{name:'Inspect linked operation slot',exact:true});await slot.focus();await page.keyboard.press('Enter');
+   const native=factory.locator('[data-continuity-slot]').filter({hasText:expected.native_run_id});
+   const back=native.getByRole('button',{name:'Inspect linked journey news-card-8',exact:true});await back.evaluate(el=>el.scrollIntoView({block:'center',behavior:'instant'}));await visibleEvidence(back);await back.focus();await page.keyboard.press('Enter');
+   assert.equal(await journey.evaluate(el=>el===document.activeElement),true);
+   await journey.locator('.factory-journey-output').evaluate(el=>el.open=true);
+   const relation=journey.getByText('Native output relationship: Verified against the captured native content',{exact:true});
+   await relation.evaluate(el=>el.scrollIntoView({block:'center',behavior:'instant'}));await visibleEvidence(relation);
+   assert(await journey.evaluate(el=>el.scrollWidth<=el.clientWidth+1));
+   assert(await current().locator('body').evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
+   await page.screenshot({path:output+'/native-links-'+width+'.png'});
+   checks.push(`Exact native run, exported News output and verified model trace navigate both ways by keyboard at ${width}px`);
+  }
+  await page.goto(base+'/bench/youtube-intel?window=factory');let factory=current().locator('#window-factory');
+  await factory.getByRole('status').filter({hasText:'Saved evidence'}).waitFor();
+  assert.equal(await factory.locator('[data-journey-id="news-card-8"]').count(),0);
+  const youtubeToggle=factory.getByRole('button',{name:'Expert journeys',exact:true});
+  await youtubeToggle.focus();await page.keyboard.press('Enter');
+  const youtubeJourney=factory.locator('[data-journey-id]');assert.equal(await youtubeJourney.count(),1);
+  const youtubeDetails=youtubeJourney.getByText('Inspect work, outputs and telemetry',{exact:true});
+  await youtubeDetails.focus();await page.keyboard.press('Enter');
+  const youtubeSlot=youtubeJourney.getByRole('button',{name:'Inspect linked operation slot',exact:true});
+  await youtubeSlot.focus();await page.keyboard.press('Enter');
+  const youtubeBack=factory.getByRole('button',{name:/^Inspect linked journey /});
+  await youtubeBack.focus();await page.keyboard.press('Enter');
+  assert.equal(await youtubeJourney.evaluate(el=>el===document.activeElement),true);
+  checks.push('Expert switch replaces native News joins with the exact YouTube run and output');
+  failFactory=true;await factory.getByRole('button',{name:'Refresh factory evidence'}).click();
+  await factory.getByRole('status').filter({hasText:'Keeping saved evidence captured'}).waitFor();failFactory=false;
+  checks.push('Refresh outage preserves the visibly labeled last-good native links');
+  missingNativeTrace=true;await factory.getByRole('button',{name:'Refresh factory evidence'}).click();
+  await factory.getByRole('status').filter({hasText:'Saved evidence'}).waitFor();
+  assert.equal(await factory.getByText(/^Verified native trace ID:/).count(),0);missingNativeTrace=false;
+  checks.push('Incomplete readback removes the trace identity while retaining the native run and saved result');
+  omitNativeLinks=true;await factory.getByRole('button',{name:'Refresh factory evidence'}).click();
+  await factory.getByRole('status').filter({hasText:'Saved evidence'}).waitFor();
+  assert.equal(await factory.getByRole('button',{name:'Inspect linked operation slot',exact:true,includeHidden:true}).count(),0);omitNativeLinks=false;
+  checks.push('Legacy snapshot shows unavailable trace evidence without inventing joins');
+  foreignNativeLinks=true;await page.goto(base+'/bench/news-agent?window=factory');factory=current().locator('#window-factory');
+  await factory.getByRole('status').filter({hasText:'Factory evidence is unavailable'}).waitFor();
+  assert.equal(await factory.locator('[data-journey-id]').count(),0);foreignNativeLinks=false;
+  checks.push('Client boundary rejects links from a different original journey capture');
+  await page.goto(base+'/bench/news-agent?window=factory');factory=current().locator('#window-factory');
+  await factory.getByRole('status').filter({hasText:'Saved evidence'}).waitFor();
+  const reads=requests.length;await page.waitForTimeout(1200);assert.equal(requests.length,reads);
+  assert(requests.every(r=>!['approve','dispatch','score','improvementDetect','improvementConfirm','benchmarkRun'].includes(r.view)));
+  checks.push('Native evidence inspection adds no idle polling, invented project URL, scoring or execution request');
+ }else if(continuityOnly){
+  for(const width of [1440,390]){
+   await page.setViewportSize({width,height:1000});await page.goto(base+'/bench/news-agent?window=factory');
+   const factory=current().locator('#window-factory');await factory.getByRole('status').filter({hasText:'Saved evidence'}).waitFor();
+   const open=factory.getByRole('button',{name:'Operation evidence',exact:true});await open.focus();await page.keyboard.press('Enter');
+   const section=factory.locator('[data-factory-section="Operation evidence"]');
+   await visibleEvidence(section.getByText('4 expected slots · 2 successful · 1 missing',{exact:true}));
+   assert.match(await section.innerText(),/Synthetic test evidence · Not eligible for live acceptance/);
+   assert.match(await section.innerText(),/successful: 2 · pending: 0 · missing: 1 · failed: 1/);
+   assert.match(await section.innerText(),/72-hour \/ 7-day \/ 30-day acceptance: Not proven \/ Not proven \/ Not proven/);
+   await page.screenshot({path:output+'/continuity-summary-'+width+'.png'});
+   const inspect=section.getByText('Inspect 4 scheduled slots',{exact:true});await inspect.focus();await page.keyboard.press('Enter');
+   const failed=section.locator('[data-continuity-slot]').filter({hasText:'news · failed'});
+   const native=failed.getByText('Inspect native evidence',{exact:true});await native.focus();await page.keyboard.press('Enter');
+   const trace=failed.getByText('Langfuse trace: No verified trace ID supplied. Observation IDs cannot open a trace.',{exact:true});
+   await trace.evaluate(el=>el.scrollIntoView({block:'center',behavior:'instant'}));await visibleEvidence(trace);
+   assert.match(await failed.innerText(),/Native content hash:/);assert.match(await failed.innerText(),/langfuse observation:/);
+   assert.equal(await failed.locator('a').count(),0);
+   assert(await section.evaluate(el=>el.scrollWidth<=el.clientWidth+1));
+   assert(await current().locator('body').evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
+   await page.screenshot({path:output+'/continuity-native-'+width+'.png'});
+   checks.push(`Exact News denominator, missing/failed slots and native identities inspected by keyboard at ${width}px; fixture cannot imply acceptance`);
+  }
+  await page.goto(base+'/bench/youtube-intel?window=factory');
+  let factory=current().locator('#window-factory');await factory.getByRole('status').filter({hasText:'Saved evidence'}).waitFor();
+  const section=factory.locator('[data-factory-section="Operation evidence"]');
+  assert.equal(await section.locator('[data-continuity-slot]').count(),2);
+  assert.equal(await section.locator('[data-continuity-slot^="news:"]').count(),0);
+  checks.push('Expert switch shows only trusted/likes YouTube lanes; News slots are absent');
+  failFactory=true;await factory.getByRole('button',{name:'Refresh factory evidence'}).click();
+  await factory.getByRole('status').filter({hasText:'Keeping saved evidence captured'}).waitFor();
+  assert.equal(await section.locator('[data-continuity-slot]').count(),2);failFactory=false;
+  checks.push('Refresh outage retains the visibly labeled last-good continuity capture');
+  missingQualification=true;await factory.getByRole('button',{name:'Refresh factory evidence'}).click();
+  await factory.getByText('Qualification evidence is unavailable. No acceptance claim can be made.',{exact:true}).waitFor();missingQualification=false;
+  checks.push('Missing qualification stays unavailable while native slot evidence remains inspectable');
+  omitContinuity=true;await factory.getByRole('button',{name:'Refresh factory evidence'}).click();
+  await factory.getByText('Native operation evidence has not been published for this expert. Acceptance is unproven.',{exact:true}).waitFor();omitContinuity=false;
+  checks.push('Older snapshot remains usable with an honest unavailable operation section');
+  for(const variant of ['owner','lane']){
+   foreignContinuity=variant==='owner';foreignContinuityLane=variant==='lane';
+   await page.goto(base+'/bench/news-agent?window=factory');factory=current().locator('#window-factory');
+   await factory.getByRole('status').filter({hasText:'Factory evidence is unavailable'}).waitFor();
+   assert.equal(await factory.locator('[data-continuity-slot]').count(),0);
+  }
+  foreignContinuity=false;foreignContinuityLane=false;
+  checks.push('Opaque document rejects foreign expert and nested lane after the host boundary');
+  await page.goto(base+'/bench/news-agent?window=factory');factory=current().locator('#window-factory');
+  await factory.getByRole('status').filter({hasText:'Saved evidence'}).waitFor();
+  const reads=requests.filter(r=>r.view==='factorySnapshot').length;await page.waitForTimeout(1200);
+  assert.equal(requests.filter(r=>r.view==='factorySnapshot').length,reads);
+  assert(requests.every(r=>!['approve','dispatch','score','improvementDetect','improvementConfirm','benchmarkRun'].includes(r.view)));
+  checks.push('No idle polling, inferred trace navigation, scoring, approval or execution request');
+ }else if(outcomeOnly){
+  for(const width of [1440,390]){
+   await page.setViewportSize({width,height:1000});await page.goto(base+'/bench/youtube-intel?window=factory');
+   const factory=current().locator('#window-factory');await factory.getByRole('status').filter({hasText:'Saved evidence'}).waitFor();
+   const button=factory.getByRole('button',{name:'Verified outcomes',exact:true});await button.focus();await page.keyboard.press('Enter');
+   const section=factory.locator('[data-factory-section="Verified outcomes"]');
+   assert.equal(await section.locator('[data-outcome-quest]').count(),5);
+   await visibleEvidence(section.getByText('Verified impact: 1 outcome currently verified · 17 net outcome XP.',{exact:true}));
+   assert.match(await section.innerText(),/including 1 rejected/);
+   await page.screenshot({path:output+'/outcomes-summary-'+width+'.png'});
+   const withdrawn=section.locator('[data-outcome-quest="quest-withdrawn"]');
+   await withdrawn.getByText('Inspect outcome history',{exact:true}).click();
+   const reversal=withdrawn.getByText(/outcome_credit_reversal · -1.5 XP/);await reversal.evaluate(el=>el.scrollIntoView({block:'center',behavior:'instant'}));await visibleEvidence(reversal);
+   assert.match(await withdrawn.innerText(),/independent_validator · 1.5 XP/);
+   assert.match(await withdrawn.innerText(),/Reverses d4:/);
+   assert(await section.evaluate(el=>el.scrollWidth<=el.clientWidth+1));
+   assert(await current().locator('body').evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
+   await page.screenshot({path:output+'/outcomes-history-'+width+'.png'});
+   checks.push(`Exact YouTube ownership, separate activity/impact and fractional withdrawal history readable at ${width}px`);
+  }
+  await page.goto(base+'/bench/news-agent?window=factory');
+  let factory=current().locator('#window-factory');await factory.getByRole('status').filter({hasText:'Saved evidence'}).waitFor();
+  assert.equal(await factory.locator('[data-outcome-quest]').count(),1);
+  assert.equal(await factory.locator('[data-outcome-quest="quest-foreign"]').count(),1);
+  assert.equal(await factory.locator('[data-outcome-quest="quest-1"]').count(),0);
+  checks.push('Switching expert retains only the explicitly News-owned quest');
+  failFactory=true;await factory.getByRole('button',{name:'Refresh factory evidence'}).click();
+  await factory.getByRole('status').filter({hasText:'Keeping saved evidence captured'}).waitFor();
+  assert.equal(await factory.locator('[data-outcome-quest]').count(),1);failFactory=false;
+  checks.push('Refresh failure retains visibly labeled last-good outcome history');
+  omitOutcomes=true;await factory.getByRole('button',{name:'Refresh factory evidence'}).click();
+  await factory.getByText('The original scored outcome package and its pinned authority have not been published for this expert. Outcome details are unavailable.',{exact:true}).waitFor();
+  assert.equal(await factory.locator('[data-outcome-quest]').count(),0);omitOutcomes=false;
+  checks.push('Older snapshot displays unavailable details without inventing zero progress');
+  foreignOutcomes=true;await page.goto(base+'/bench/news-agent?window=factory');factory=current().locator('#window-factory');
+  await factory.getByRole('status').filter({hasText:'Factory evidence is unavailable'}).waitFor();
+  assert.equal(await factory.locator('[data-outcome-quest]').count(),0);foreignOutcomes=false;
+  checks.push('Opaque document denies a foreign expert even after the host read boundary');
+  await page.goto(base+'/bench/youtube-intel?window=factory');factory=current().locator('#window-factory');
+  await factory.getByRole('status').filter({hasText:'Saved evidence'}).waitFor();
+  const reads=requests.filter(r=>r.view==='factorySnapshot').length;await page.waitForTimeout(1200);
+  assert.equal(requests.filter(r=>r.view==='factorySnapshot').length,reads);
+  assert(requests.every(r=>!['approve','dispatch','score','improvementDetect','improvementConfirm','benchmarkRun'].includes(r.view)));
+  checks.push('Manual read only: no idle factory polling, model calls, award or approval writes');
+ }else if(improvementOnly){
+  for(const width of [1440,390]){
+   await page.setViewportSize({width,height:1000});await page.goto(base+'/bench/pi?window=factory');
+   const factory=current().locator('#window-factory');await factory.getByRole('status').filter({hasText:'Stale saved evidence'}).waitFor();
+   const open=factory.getByRole('button',{name:'Improvement review',exact:true});await open.focus();await page.keyboard.press('Enter');
+   const section=factory.locator('[data-factory-section="Improvement review"]');
+   assert.equal(await section.locator('[data-improvement-id]').count(),9);
+   const cards=section.locator('[data-improvement-id]'),card=cards.filter({hasText:'confirmed_performance_requires_review'});
+   await card.locator('summary').focus();await page.keyboard.press('Enter');
+   await card.getByText(/Reused proposal: .* original usage shown below; not a new spend/).waitFor();
+   const counts=card.getByText('Confirmations: 3/3 repeated pairs · 1/1 holdout pairs',{exact:true});
+   await counts.scrollIntoViewIfNeeded();await visibleEvidence(counts);
+   await card.getByText('Promotion: Requires the existing reviewed release route. No approval is granted by this view.',{exact:true}).waitFor();
+   assert.equal(await section.getByRole('button').count(),proposalPreparation?2:0);
+   await page.screenshot({path:output+'/improvement-review-'+width+'.png'});
+   checks.push('Nine real native-controller fixture cycles rendered; keyboard details and confirmations visible at '+width+'px');
+   if(proposalPreparation){
+    const lookup=card.getByRole('button',{name:'Find saved proposal',exact:true});await lookup.focus();await page.keyboard.press('Enter');
+    const dialog=current().locator('#forge-approval-dialog');await dialog.getByRole('heading',{name:'Linked factory experiment'}).waitFor();
+    assert(await dialog.locator('[data-native-accept]').isDisabled());
+    await dialog.getByText('Evidence: Synthetic test fixture',{exact:true}).waitFor();
+    const candidate=dialog.getByText('Candidate: '+linkedEntry.review.native_improvement.candidate_sha256,{exact:true});
+    await candidate.scrollIntoViewIfNeeded();await visibleEvidence(candidate);
+    assert(await dialog.evaluate(e=>e.scrollWidth<=e.clientWidth+1),'Proposal dialog content must fit its width');
+    assert(await dialog.locator('.approval-document').evaluateAll(nodes=>nodes.every(e=>e.scrollWidth<=e.clientWidth+1)),'Long experiment hashes must wrap in proposal content');
+    await page.screenshot({path:output+'/improvement-proposal-'+width+'.png'});
+    await dialog.locator('.dialog-close').click();
+    checks.push('Keyboard opens exact saved proposal with current binding and disabled approval at '+width+'px');
+   }
+  }
+  if(proposalPreparation){
+   await page.setViewportSize({width:1440,height:1000});linkedWorkflow=true;holdStartupCatalog=true;releaseStartupCatalog=null;
+   await page.goto(base+'/bench/pi?window=factory');
+   let factory=current().locator('#window-factory');await factory.getByRole('status').filter({hasText:'Stale saved evidence'}).waitFor();
+   const cycle=linkedEntry.review.native_improvement.cycle_id;
+   const lookup=()=>current().locator(`[data-improvement-id="${cycle}"]`).getByRole('button',{name:'Find saved proposal',exact:true});
+   await current().locator('body').evaluate(()=>{
+    const open=window.ForgeApprovals.open;
+    window.ForgeApprovals.open=async(...args)=>{try{return await open(...args);}catch(e){window.fixtureNativeError=String(e);throw e;}};
+   });
+   await lookup().click();let dialog=current().locator('#forge-approval-dialog');
+   await dialog.getByRole('heading',{name:'Existing factory review workflow',exact:true}).waitFor();
+   assert.equal(await current().locator('body').evaluate(()=>window.fixtureNativeError||null),null);
+   await dialog.getByRole('heading',{name:'Linked factory experiment',exact:true}).waitFor();
+   assert(releaseStartupCatalog);holdStartupCatalog=false;releaseStartupCatalog();
+   await current().locator('#forge-native-proposals h3').waitFor({state:'attached'});
+   assert.equal(await dialog.getByRole('heading',{name:'Linked factory experiment',exact:true}).count(),1);
+   assert.equal(await dialog.locator('#approval-decision-form').count(),0);await dialog.locator('.dialog-close').click();
+   checks.push('Exact native proposal binding precedes the existing workflow; delayed startup cannot overwrite its evidence context');
+   for(const state of ['changed','missing','foreign']){
+    linkedChanged=state==='changed';linkedMissing=state==='missing';linkedForeign=state==='foreign';
+    await current().locator('body').evaluate(()=>window.ForgeWorkspace.open('factory'));
+    await lookup().click();
+    await current().locator(`[data-improvement-id="${cycle}"]`).getByRole('status').filter({hasText:'unavailable or has changed'}).waitFor();
+    assert.equal(await current().locator('#forge-approval-dialog').evaluate(el=>el.open),false);
+   }
+   linkedChanged=linkedMissing=linkedForeign=false;
+   checks.push('Existing workflow cannot bypass changed binding, missing proposal or foreign-owner denial');
+   holdLinked=true;releaseLinked=null;const staleSelection=await lookup().elementHandle();await lookup().click();
+   for(let i=0;i<250&&!releaseLinked;i++)await page.waitForTimeout(20);assert(releaseLinked);
+   await current().locator('body').evaluate(()=>window.ForgeApprovals.open('prop_newest'));
+   await current().locator('#forge-approval-dialog h2').filter({hasText:'prop_newest'}).waitFor();
+   holdLinked=false;releaseLinked();await lookupFinished(staleSelection);
+   assert.equal(await current().locator('#forge-approval-dialog h2').textContent(),'prop_newest');
+   await current().locator('#forge-approval-dialog .dialog-close').click();
+   checks.push('Delayed native proposal read cannot replace a newer selected proposal');
+   await current().locator('body').evaluate(()=>window.ForgeWorkspace.open('factory'));
+   holdLinked=true;releaseLinked=null;const staleCapture=await lookup().elementHandle();await lookup().click();
+   for(let i=0;i<250&&!releaseLinked;i++)await page.waitForTimeout(20);assert(releaseLinked);
+   await current().locator('#window-factory').getByRole('button',{name:'Refresh factory evidence',exact:true}).click();
+   await current().locator('#window-factory').getByRole('status').filter({hasText:'Stale saved evidence'}).waitFor();
+   holdLinked=false;releaseLinked();await lookupFinished(staleCapture);
+   assert.equal(await current().locator('#forge-approval-dialog').evaluate(el=>el.open),false);
+   linkedWorkflow=false;
+   checks.push('Refreshing factory evidence invalidates an in-flight proposal lookup');
+  }
+  partialImprovements=true;await page.reload();let factory=current().locator('#window-factory');
+  await factory.getByRole('status').filter({hasText:'Stale saved evidence'}).waitFor();
+  await factory.getByRole('button',{name:'Improvement review',exact:true}).click();
+  const partial=factory.locator('[data-improvement-id]').filter({hasText:'control_evidence'}).first();await partial.locator('summary').click();
+  await partial.getByText('Usage: Unknown: retained attempt or benchmark evidence is missing',{exact:true}).waitFor();
+  assert(await partial.getByText(/Native decision: .* · missing/).count());
+  checks.push('Missing retained receipt hides usage and invalidates decision evidence');partialImprovements=false;
+  foreignImprovements=true;await page.reload();factory=current().locator('#window-factory');
+  await factory.getByRole('status').filter({hasText:'Factory evidence is unavailable'}).waitFor();
+  assert.equal(await factory.locator('[data-improvement-id]').count(),0);foreignImprovements=false;
+  omitImprovements=true;await page.reload();factory=current().locator('#window-factory');
+  await factory.getByText('Native improvement evidence has not been published.',{exact:true}).waitFor();omitImprovements=false;
+  checks.push('Wrong-owner response denied and unpublished review remains explicit');
+  await page.goto(base+'/bench/news-agent?window=factory');factory=current().locator('#window-factory');
+  await factory.getByRole('status').filter({hasText:'Stale saved evidence'}).waitFor();
+  assert.equal(await factory.getByRole('button',{name:'Improvement review',exact:true}).isVisible(),false);
+  assert.equal(await factory.locator('[data-improvement-id]').count(),0);
+  assert(requests.every(r=>!['improvementDetect','improvementConfirm','improvementRevoke','approve','dispatch'].includes(r.view)));
+  checks.push('News does not inherit factory-wide ownership; no mutation request sent');
+ }else if(benchmarkOnly){
+  for(const [agent,caseID,width] of [['youtube-intel','B06',1440],['news-agent','B07',390]]){
+   await page.setViewportSize({width,height:1000});await page.goto(base+'/bench/'+agent+'?window=factory');
+   const frame=current(),factory=frame.locator('#window-factory');await factory.getByRole('status').filter({hasText:'Stale saved evidence'}).waitFor();
+   await factory.getByRole('button',{name:'Benchmark outcomes',exact:true}).click();
+   const open=factory.getByRole('button',{name:'Open benchmark timeline',exact:true});await open.focus();await page.keyboard.press('Enter');
+   const chart=frame.frameLocator('iframe[title="Benchmark timeline saved result"]');
+   await chart.getByRole('button',{name:'Play',exact:true}).waitFor();
+   await chart.getByText('8 / 8 selected attempts revealed',{exact:false}).waitFor();
+   const cases=await chart.getByLabel('Task',{exact:true}).locator('option').allTextContents();assert.deepEqual(cases,['All',caseID]);
+   assert.equal(await chart.getByLabel('Relevant expert',{exact:true}).inputValue(),'All');
+   await chart.getByRole('button',{name:'Rewind',exact:true}).click();await chart.getByRole('button',{name:'Play',exact:true}).click();
+   await chart.getByRole('button',{name:'Pause',exact:true}).click();await chart.getByRole('button',{name:'Show all',exact:true}).click();
+   const content=await chart.locator('body').evaluate(()=>({parentAccess:(()=>{try{parent.localStorage.getItem('test');return true;}catch{return false;}})(),hasNewMarker:document.documentElement.outerHTML.includes('synthetic newer publication'),overflow:document.documentElement.scrollWidth>innerWidth+1}));
+   assert.equal(content.parentAccess,false);assert.equal(content.hasNewMarker,false);assert.equal(content.overflow,false);
+   assert(requests.some(r=>r.view==='resourceArtifact'&&r.query.resource_id==='ui.'+agent+'.benchmark-timeline'&&r.query.catalog_version_id==='fixture-archived-timeline-manifest'));
+   await chart.getByRole('button',{name:'Play',exact:true}).scrollIntoViewIfNeeded();
+   await page.screenshot({path:output+'/benchmark-timeline-'+agent+'.png'});
+   checks.push(agent+' exact archived Bokeh chart opens inside its expert window; only '+caseID+' attempts, playback works, parent state denied at '+width+'px');
+  }
+  await page.goto(base+'/bench/news-agent?window=factory');const frame=current(),factory=frame.locator('#window-factory');
+  await factory.getByRole('status').filter({hasText:'Stale saved evidence'}).waitFor();
+  await factory.getByRole('button',{name:'Benchmark outcomes',exact:true}).click();
+  archivedUnavailable=true;await factory.getByRole('button',{name:'Open benchmark timeline',exact:true}).click();
+  await frame.getByText('The saved result could not be verified. Refresh to retry.',{exact:true}).waitFor();
+  assert.equal(await frame.locator('iframe[title="Benchmark timeline saved result"]').count(),0);archivedUnavailable=false;
+  checks.push('Missing archived chart fails without substituting the current publication');
+ }else if(outputOnly){
+  await page.goto(base+'/bench/youtube-intel?window=factory');let frame=current();
+  const factory=frame.locator('#window-factory');await factory.getByRole('status').filter({hasText:'Stale saved evidence'}).waitFor();
+  await factory.getByRole('button',{name:'Expert journeys',exact:true}).click();
+  const journey=factory.locator('[data-journey-id="yt_'+ '1'.repeat(24)+'"]');
+  await journey.locator('.factory-journey-detail > summary').click();await journey.locator('.factory-journey-output > summary').click();
+  const open=journey.getByRole('button',{name:'Open saved output',exact:true});await open.focus();await page.keyboard.press('Enter');
+  const result=frame.frameLocator('iframe[title="Output output-0 saved result"]');
+  await result.getByRole('heading',{name:'Captured output v1',exact:true}).waitFor();
+  await result.getByRole('button',{name:'Play',exact:true}).click();await result.getByRole('button',{name:'Playing',exact:true}).waitFor();
+  assert.equal(await result.getByText('Newer output v2',{exact:true}).count(),0);
+  const pinned=requests.filter(x=>x.view==='resourceArtifact');assert(pinned.length);
+  assert(pinned.every(x=>x.query.catalog_sha256===outputFixture.archived.publication.manifest_sha256&&x.query.catalog_version_id===outputFixture.archived.publication.manifest_version_id));
+  checks.push('Keyboard journey output opens exact archived bytes in an existing sandboxed app window while the newer catalog is active');
+  await page.screenshot({path:output+'/journey-output-desktop.png'});
+  await frame.getByRole('button',{name:'Refresh saved result',exact:true}).click();await result.getByRole('heading',{name:'Captured output v1',exact:true}).waitFor();
+  archivedUnavailable=true;await frame.getByRole('button',{name:'Refresh saved result',exact:true}).click();
+  await frame.getByText('The saved result could not be verified. Refresh to retry.',{exact:true}).waitFor();
+  assert.equal(await frame.locator('iframe[title="Output output-0 saved result"]').count(),0);
+  archivedUnavailable=false;tamper=true;await frame.getByRole('button',{name:'Refresh saved result',exact:true}).click();
+  await frame.getByText('The saved result could not be verified. Refresh to retry.',{exact:true}).waitFor();
+  assert.equal(await frame.locator('iframe[title="Output output-0 saved result"]').count(),0);tamper=false;
+  await frame.getByRole('button',{name:'Refresh saved result',exact:true}).click();await result.getByRole('heading',{name:'Captured output v1',exact:true}).waitFor();
+  checks.push('Retry stays on the pinned version; missing archives and changed bytes never fall back to a newer output');
+  await page.setViewportSize({width:390,height:844});await visibleEvidence(frame.locator('.expert-app-window').getByRole('button',{name:'Refresh saved result',exact:true}));
+  await page.screenshot({path:output+'/journey-output-mobile.png'});
+  await frame.getByRole('button',{name:'Close app window',exact:true}).click();
+  await frame.locator('body').evaluate(()=>ForgeWorkspace.open('factory'));
+  assert.equal(await factory.locator('[data-journey-id="yt_'+ '2'.repeat(24)+'"]').getByRole('button',{name:'Open saved output',exact:true}).count(),0);
+  checks.push('Mobile saved output remains usable; unverified partial output has no invented link');
+  holdArtifact=true;releaseArtifact=null;await open.click();
+  for(let i=0;i<100&&!releaseArtifact;i++)await page.waitForTimeout(20);assert(releaseArtifact);
+  await page.getByLabel('Registered agents').selectOption('news-agent');
+  await current().locator('#window-factory').waitFor();holdArtifact=false;releaseArtifact();
+  assert.equal(await current().locator('iframe[title="Output output-0 saved result"]').count(),0);
+  checks.push('Switching experts fences delayed archived output replies');
+  await page.setViewportSize({width:1500,height:1000});frame=current();
+  const newsFactory=frame.locator('#window-factory');await newsFactory.getByRole('status').filter({hasText:'Stale saved evidence'}).waitFor();
+  await newsFactory.getByRole('button',{name:'Expert journeys',exact:true}).click();
+  const news=newsFactory.locator('[data-journey-id="news-card-8"]');
+  await news.locator('.factory-journey-detail > summary').click();await news.locator('.factory-journey-output > summary').click();
+  await news.getByText('Running News source: Not verified by this export',{exact:true}).waitFor();
+  await news.getByRole('button',{name:'Open saved output',exact:true}).click();
+  const newsResult=frame.frameLocator('iframe[title="Output 8 saved result"]');
+  await newsResult.getByRole('heading',{name:'Captured News headline v1',exact:true}).waitFor();
+  await newsResult.getByText('Captured output. Delivery and target acceptance remain unproven.',{exact:true}).waitFor();
+  assert.equal(await newsResult.getByText('Newer News headline v2',{exact:true}).count(),0);
+  assert(requests.some(x=>x.view==='resourceArtifact'&&x.agent_id==='news-agent'&&x.query.catalog_version_id===outputFixture.archived.publication.manifest_version_id));
+  await page.screenshot({path:output+'/news-output-desktop.png'});
+  await frame.getByRole('button',{name:'Refresh saved result',exact:true}).click();
+  await newsResult.getByRole('heading',{name:'Captured News headline v1',exact:true}).waitFor();
+  checks.push('News output opens its archived headline and summary with exact native identities, without asserting delivery or running source');
+  await page.setViewportSize({width:390,height:844});
+  await visibleEvidence(frame.locator('.expert-app-window').getByRole('button',{name:'Refresh saved result',exact:true}));
+  assert(await newsResult.locator('body').evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+  await page.screenshot({path:output+'/news-output-mobile.png'});
+  checks.push('News saved result stays pinned on refresh and remains readable in a mobile app window');
+  const safeText=await page.evaluate(async input=>{
+   const {resourceDocument}=await import('/src/lib/forgeResourceClient.js');
+   input.card.props_json=JSON.stringify({title:'<img src=x onerror="window.injected=1">',summary:'<script>window.injected=1</script>'});
+   const raw=new TextEncoder().encode(JSON.stringify(input));
+   const doc=new DOMParser().parseFromString(resourceDocument(raw,'application/json'),'text/html');
+   return {title:doc.querySelector('h1')?.textContent,summary:doc.querySelector('.summary')?.textContent,scripts:doc.querySelectorAll('script').length,images:doc.querySelectorAll('img').length,csp:doc.querySelector('meta[http-equiv="Content-Security-Policy"]')?.content};
+  },JSON.parse(outputFixture.archived.news_content));
+  assert.equal(safeText.title,'<img src=x onerror="window.injected=1">');assert.equal(safeText.scripts,0);assert.equal(safeText.images,0);assert(safeText.csp.includes("connect-src 'none'"));
+  checks.push('News title and summary remain text, with no injected markup and the existing no-network document policy');
+ }else{
+ await page.goto(base+'/bench/youtube-intel?window=resources',{waitUntil:'domcontentloaded'});
+ let frame=current();await frame.getByRole('button',{name:'Open in window',exact:true}).waitFor();
+ assert.equal(await frame.locator('.window').count(),20);
+ assert(requests.some(x=>x.view==='resourceCatalog'&&x.query.owner==='youtube-intel'));
+ assert.equal(await frame.getByText('news-agent reviewed UI',{exact:true}).count(),0);
+ checks.push('All 18 original Atlas windows retained plus expert resources and Factory; exact owner filtering');
+ const hostResources=page.getByRole('button',{name:'Expert resources',exact:true});
+ assert.equal(await hostResources.count(),1);
+ assert(await hostResources.evaluate(el=>!!el.closest('.forge-host-header nav')));
+ await hostResources.focus();await page.keyboard.press('Enter');
+ await page.getByRole('dialog',{name:'Expert resources',exact:true}).waitFor();
+ await page.getByRole('button',{name:'Close expert resources'}).click();
+ assert(await hostResources.evaluate(el=>document.activeElement===el));
+ checks.push('Keyboard host resource access stays in the header and returns focus after closing');
+ await frame.getByRole('button',{name:'Open in window',exact:true}).click();
+ const result=frame.frameLocator('iframe[title="youtube-intel reviewed UI saved result"]');
+ await result.getByRole('heading',{name:'Reviewed UI fixture'}).waitFor();
+ await result.getByRole('button',{name:'Play',exact:true}).click();await result.getByRole('button',{name:'Playing'}).waitFor();
+ assert.equal(await result.locator('body').getAttribute('data-parent'),'denied');
+ await frame.getByText(/Stale saved result ·/).waitFor();
+ checks.push('Interactive saved UI inside Atlas; nested frame cannot read parent storage; original capture remains stale');
+ await page.screenshot({path:output+'/desktop.png'});
+ await frame.getByRole('button',{name:'Close app window',exact:true}).click();
+ assert.equal(await frame.locator('iframe[title="youtube-intel reviewed UI saved result"]').count(),0);
+ checks.push('Closing an app releases its window and returns keyboard focus to resources');
+ holdArtifact=true;releaseArtifact=null;
+ await frame.getByRole('button',{name:'Open in window',exact:true}).click();
+ await assert.doesNotReject(async()=>{for(let i=0;i<100&&!releaseArtifact;i++)await page.waitForTimeout(20);assert(releaseArtifact);});
+ await page.getByLabel('Registered agents').selectOption('news-agent');
+ await current().getByRole('button',{name:'Open in window',exact:true}).waitFor();
+ holdArtifact=false;releaseArtifact();
+ assert.equal(await current().locator('iframe[title="youtube-intel reviewed UI saved result"]').count(),0);
+ checks.push('Delayed artifact response from previous expert is fenced after expert switching');
+ // Resolve a resource directly after reload, including its owning expert.
+ await page.goto(base+'/bench/news-agent/?window=resources&resource=ui.news-agent.review');
+ frame=current();await frame.frameLocator('iframe[title="news-agent reviewed UI saved result"]').getByRole('heading',{name:'Reviewed UI fixture'}).waitFor();
+ assert.equal(await page.getByLabel('Registered agents').inputValue(),'news-agent');
+ checks.push('Exact expert/resource deep link, including trailing slash, opens the saved app after a full reload');
+ await page.getByLabel('Registered agents').selectOption('youtube-intel');
+ frame=current();await frame.getByRole('button',{name:'Open in window',exact:true}).waitFor();
+ assert.equal(await frame.locator('iframe[title="news-agent reviewed UI saved result"]').count(),0);
+ assert.equal(new URL(page.url()).pathname,'/bench/youtube-intel');
+ const before=requests.length;
+ assert.equal(await frame.locator('body').evaluate(async digest=>{try{await ForgeHost.read('workspaceArtifact',{resource_id:'ui.news-agent.review',catalog_sha256:digest});return false;}catch{return true;}},hash(raw)),true);
+ checks.push('Expert switching clears old document and app frames; forged cross-owner artifact denied');
+ await frame.getByLabel('Search expert resources').fill('missing query');
+ await frame.locator('#window-resources').getByRole('button',{name:'Search',exact:true}).click();
+ await frame.getByText('No resources match these filters.',{exact:true}).waitFor();
+ fail=true;await frame.getByRole('button',{name:'Refresh',exact:true}).click();await frame.getByText(/Resources could not load/).waitFor();fail=false;
+ checks.push('Explicit deterministic search and honest failure versus empty-result states');
+ await frame.getByLabel('Search expert resources').fill('reviewed');
+ await frame.getByLabel('Resource type').selectOption('all');
+ await frame.getByText('Reviewed proposal evidence',{exact:true}).waitFor();
+ await frame.getByText(/session: unavailable/).waitFor();
+ assert(requests.filter(x=>x.view==='search').every(x=>x.agent_id==='youtube-intel'&&x.query.source!=='all'));
+ const searchCount=requests.filter(x=>x.view==='search').length;
+ await frame.getByLabel('Search expert resources').fill('typing only');await page.waitForTimeout(350);
+ assert.equal(requests.filter(x=>x.view==='search').length,searchCount);
+ await frame.getByLabel('Search expert resources').fill('reviewed');
+ await frame.getByRole('button',{name:'Open in window',exact:true}).click();
+ await frame.frameLocator('iframe[title="youtube-intel reviewed UI saved result"]').getByRole('heading',{name:'Reviewed UI fixture'}).waitFor();
+ await frame.getByRole('button',{name:'Close app window',exact:true}).click();
+ checks.push('Unified search combines owned resources and existing work sources, labels partial failure, and performs no reads while typing');
+ records=true;await frame.locator('#window-resources').getByRole('button',{name:'Search',exact:true}).click();
+ await frame.getByRole('button',{name:'Open proposal',exact:true}).waitFor();
+ assert.equal(await frame.getByRole('link',{name:'Open pull request ↗'}).getAttribute('href'),'https://github.com/gbauto/gbautomation/pull/1660');
+ assert.equal(await frame.getByRole('link',{name:'Open code location ↗'}).getAttribute('href'),'https://github.com/gbauto/gbautomation/blob/main/README.md#L1');
+ assert.equal(await frame.locator('.expert-resource-card').filter({hasText:'Legacy session without explicit key'}).getByRole('button').count(),0);
+ await frame.getByRole('button',{name:'Open proposal',exact:true}).focus();await page.keyboard.press('Enter');
+ await frame.locator('#forge-approval-dialog').getByRole('heading',{name:'Exact proposal outside first catalog page'}).waitFor();
+ assert(await frame.locator('#forge-approval-dialog [data-native-accept]').isDisabled());
+ await visibleEvidence(frame.locator('#forge-approval-dialog h2'));
+ await page.screenshot({path:output+'/record-proposal.png'});
+ await frame.locator('#forge-approval-dialog .dialog-close').click();
+ await frame.locator('body').evaluate(()=>ForgeWorkspace.open('resources'));
+ await frame.getByRole('button',{name:'Open plan',exact:true}).click();
+ await frame.locator('#planning-dialog-title').filter({hasText:'Exact indexed plan'}).waitFor();
+ await frame.getByText('The plan file is not included in this offline package. Its scoped index record is available below.',{exact:true}).waitFor();
+ await visibleEvidence(frame.locator('#planning-dialog-title'));
+ await page.screenshot({path:output+'/record-plan.png'});
+ await frame.locator('#planning-dialog').evaluate(el=>el.close());
+ await frame.locator('body').evaluate(()=>ForgeWorkspace.open('resources'));
+ await frame.getByRole('button',{name:'Open session',exact:true}).click();
+ await frame.locator('#history-rows').getByText('Exact long-key session message',{exact:true}).waitFor();
+ assert.equal(await frame.locator('#history-breadcrumb p').textContent(),sessionKey);
+ checks.push('Keyboard search opens exact proposal outside catalog page, typed plan index and untruncated session; writes stay disabled, legacy destinations unavailable, shared PR/code links exact');
+ holdHistory=true;
+ await frame.locator('body').evaluate(()=>{window.slowHistory=ForgeHistory.refresh({view:'messages',session_key:'slow-session'});});
+ for(let i=0;i<100&&!releaseHistory;i++)await page.waitForTimeout(20);assert(releaseHistory);
+ await frame.locator('body').evaluate(()=>ForgeHistory.refresh({view:'messages',session_key:'newest-session'}));
+ releaseHistory();await frame.locator('body').evaluate(()=>window.slowHistory);holdHistory=false;
+ assert.equal(await frame.locator('#history-breadcrumb p').textContent(),'newest-session');
+ holdProposal=true;
+ await frame.locator('body').evaluate(()=>{window.slowProposal=ForgeApprovals.open('prop_slow');});
+ for(let i=0;i<100&&!releaseProposal;i++)await page.waitForTimeout(20);assert(releaseProposal);
+ await frame.locator('body').evaluate(()=>ForgeApprovals.open('prop_newest'));
+ releaseProposal();await frame.locator('body').evaluate(()=>window.slowProposal);holdProposal=false;
+ assert.equal(await frame.locator('#forge-approval-dialog h2').textContent(),'prop_newest');
+ await frame.locator('#forge-approval-dialog .dialog-close').click();
+ checks.push('Late history/proposal responses cannot replace a newer selected record across the real host channel');
+ await page.setViewportSize({width:390,height:844});
+ await frame.locator('body').evaluate(()=>ForgeWorkspace.open('resources'));
+ await frame.getByRole('button',{name:'Open proposal',exact:true}).click();
+ await frame.locator('#forge-approval-dialog h2').filter({hasText:'Exact proposal outside first catalog page'}).waitFor();
+ await visibleEvidence(frame.locator('#forge-approval-dialog h2'));
+ assert(await frame.locator('body').evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+ assert(await page.locator('body').evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+ const signOutBox=await page.getByRole('button',{name:'Sign out',exact:true}).boundingBox();assert(signOutBox.x>=0&&signOutBox.x+signOutBox.width<=390);
+ await page.screenshot({path:output+'/record-mobile.png',fullPage:true});
+ await frame.locator('#forge-approval-dialog .dialog-close').click();
+ await page.setViewportSize({width:1500,height:1000});
+ await frame.locator('body').evaluate(()=>ForgeWorkspace.open('resources'));records=false;
+ checks.push('Exact proposal review is readable at 390px with no horizontal document overflow');
+ await frame.getByLabel('Resource type').selectOption('ui');
+ await frame.getByLabel('Search expert resources').fill('reviewed');await frame.locator('#window-resources').getByRole('button',{name:'Search',exact:true}).click();
+ await frame.getByRole('button',{name:'Open in window',exact:true}).waitFor();tamper=true;
+ await frame.getByRole('button',{name:'Open in window',exact:true}).click();await frame.getByText(/saved result could not be verified/).waitFor();tamper=false;
+ checks.push('Altered saved-result bytes rejected before nested scripts execute');
+ await page.setViewportSize({width:390,height:844});
+ await page.goto(base+'/bench/news-agent?window=resources');frame=current();await frame.getByRole('button',{name:'Open in window',exact:true}).waitFor();
+ await frame.getByRole('button',{name:'Open in window',exact:true}).click();await frame.frameLocator('iframe[title="news-agent reviewed UI saved result"]').getByRole('heading',{name:'Reviewed UI fixture'}).waitFor();
+ assert(await frame.locator('body').evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+ await page.screenshot({path:output+'/mobile.png',fullPage:true});
+ checks.push('390px mobile document and owned app operate without horizontal overflow');
+ await page.setViewportSize({width:1500,height:1000});
+ await page.goto(base+'/bench/news-agent?window=factory');frame=current();
+ const factory=frame.locator('#window-factory');
+ await writeFile(output+'/factory-layout.json',JSON.stringify(await factory.evaluate(el=>({rect:el.getBoundingClientRect().toJSON(),stage:document.getElementById('workspace').getBoundingClientRect().toJSON(),viewport:[innerWidth,innerHeight],states:ForgePreview.states(),styles:getComputedStyle(document.body).cssText,body:document.body.className,scroll:[scrollX,scrollY]})),null,2));
+ await factory.getByRole('heading',{name:'Shared Pi seat'}).waitFor();
+ await factory.getByText('pending · 1 / 2 acceptance checks proven',{exact:true}).waitFor();
+ await factory.getByText(/Proposed target · 100 %/).waitFor();
+ await factory.getByText(/missed · 80 %/).waitFor();
+ await factory.getByText(/pending · Unknown minutes/).waitFor();
+ await factory.getByRole('status').filter({hasText:'Stale saved evidence'}).waitFor();
+ await visibleEvidence(factory.getByText('pending · 1 / 2 acceptance checks proven',{exact:true}));
+ const desktopBox=await factory.boundingBox();assert(desktopBox.width>1000&&desktopBox.height>500);
+ assert.equal(await factory.getByText('Reviewed youtube-intel quest',{exact:true}).count(),0);
+ await page.screenshot({path:output+'/factory-desktop.png'});
+ checks.push('Factory displays verified goal progress, owned quests, shared Pi seat totals and proposed/missed/pending targets distinctly');
+ await factory.getByRole('button',{name:'Benchmark outcomes',exact:true}).click();
+ const bench=factory.locator('[data-factory-section="Benchmark outcomes"]');
+ await visibleEvidence(bench.getByRole('heading',{name:'Benchmark outcomes',exact:true}));
+ await bench.getByText(/not production target acceptance/).waitFor();
+ await bench.locator('[data-benchmark-system="Pi factory"]').getByText('Tokens: Unknown · 0/1 measured',{exact:true}).waitFor();
+ await bench.locator('[data-benchmark-system="Pi factory"]').getByText(/Overall passed 0\/1 terminal/).waitFor();
+ await page.screenshot({path:output+'/benchmarks-desktop.png'});
+ foreignBenchmarks=true;await factory.getByRole('button',{name:'Refresh factory evidence'}).click();
+ await factory.getByRole('status').filter({hasText:'Refresh unavailable. Keeping saved evidence captured'}).waitFor();foreignBenchmarks=false;
+ assert.equal(await bench.locator('[data-benchmark-system]').count(),2);
+ checks.push('Benchmark scorecards preserve failure/unknown metrics and production distinction; foreign owner retains last-good evidence');
+ await factory.getByRole('button',{name:'Expert journeys',exact:true}).click();
+ const newsJourney=factory.locator('[data-journey-id="news-card-8"]');
+ const inspect=newsJourney.locator('.factory-journey-detail > summary');await inspect.focus();await page.keyboard.press('Enter');
+ await newsJourney.getByText('Tool task: 104',{exact:true}).waitFor();
+ await newsJourney.getByText('Recorded model cost: Unknown',{exact:true}).waitFor();
+ await newsJourney.getByText(/Tokens: 1,030 recorded total/).waitFor();
+ assert.equal(await newsJourney.getByRole('link').count(),0);
+ await newsJourney.locator('.factory-journey-output > summary').click();
+ await newsJourney.getByText('Hosted output: Exact output link has not been published.',{exact:true}).waitFor();
+ await newsJourney.getByRole('heading',{name:'News card 8'}).evaluate(el=>el.scrollIntoView({block:'center',behavior:'instant'}));
+ await visibleEvidence(newsJourney.getByRole('heading',{name:'News card 8'}));
+ await page.screenshot({path:output+'/journey-desktop.png'});
+ await newsJourney.getByRole('button',{name:'View expert targets (aggregate)',exact:true}).click();
+ await visibleEvidence(factory.getByRole('heading',{name:'Measured targets',exact:true}));
+ checks.push('Keyboard journey inspection reveals exact work/output/collector IDs, generation-only metrics and unknown cost; aggregate targets remain separate and no output/trace URL is invented');
+ foreignJourneys=true;await factory.getByRole('button',{name:'Refresh factory evidence'}).click();
+ await factory.getByRole('status').filter({hasText:'Refresh unavailable. Keeping saved evidence captured'}).waitFor();foreignJourneys=false;
+ assert.equal(await factory.locator('[data-journey-id="news-card-8"]').count(),1);
+ checks.push('Foreign nested journey owner is rejected while last-good evidence remains labeled');
+ failFactory=true;await factory.getByRole('button',{name:'Refresh factory evidence'}).click();
+ await factory.getByRole('status').filter({hasText:'Refresh unavailable. Keeping saved evidence captured'}).waitFor();
+ await factory.getByRole('heading',{name:'Shared Pi seat'}).waitFor();failFactory=false;
+ console.log('Failed-refresh retention checked');
+ foreignFactory=true;await factory.getByRole('button',{name:'Refresh factory evidence'}).click();
+ await factory.getByRole('status').filter({hasText:'Refresh unavailable. Keeping saved evidence captured'}).waitFor();foreignFactory=false;
+ checks.push('Failed or foreign factory refresh retains last-good capture without relabeling it live');
+ await factory.getByRole('heading',{name:'Shared Pi seat'}).evaluate(el=>el.scrollIntoView({block:'start',behavior:'instant'}));
+ await page.setViewportSize({width:390,height:844});
+ console.log('Factory viewport changed to mobile');
+ await visibleEvidence(factory.getByRole('heading',{name:'Shared Pi seat'}));
+ const progress=factory.getByText('pending · 1 / 2 acceptance checks proven',{exact:true});
+ await progress.evaluate(el=>el.scrollIntoView({block:'center',behavior:'instant'}));await visibleEvidence(progress);
+ assert(await factory.locator('..').evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+ await page.screenshot({path:output+'/factory-mobile.png',fullPage:true});
+ const missed=factory.getByText(/missed · 80 %/);await missed.evaluate(el=>el.scrollIntoView({block:'center',behavior:'instant'}));await visibleEvidence(missed);
+ await page.screenshot({path:output+'/factory-mobile-targets.png'});
+ await page.goto(base+'/bench/news-agent?window=factory');frame=current();
+ await frame.locator('#window-factory').getByRole('heading',{name:'Shared Pi seat'}).waitFor();
+ await visibleEvidence(frame.locator('#window-factory').getByRole('heading',{name:'Shared Pi seat'}));
+ checks.push('Factory focus survives desktop-to-mobile resize and fresh mobile deep link; goals and missed targets are visible after scrolling at 390px');
+ const mobileFactory=frame.locator('#window-factory');
+ await mobileFactory.getByRole('button',{name:'Benchmark outcomes',exact:true}).click();
+ const mobileBench=mobileFactory.locator('[data-factory-section="Benchmark outcomes"]');
+ await visibleEvidence(mobileBench.getByRole('heading',{name:'Benchmark outcomes',exact:true}));
+ assert(await mobileBench.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+ await page.screenshot({path:output+'/benchmarks-mobile.png'});
+ omitBenchmarks=true;await mobileFactory.getByRole('button',{name:'Refresh factory evidence'}).click();
+ await mobileFactory.getByText('Benchmark evidence has not been published for this expert.',{exact:true}).waitFor();omitBenchmarks=false;
+ checks.push('Benchmark section remains visible at 390px and legacy snapshots explicitly report unavailable evidence');
+ await mobileFactory.getByRole('button',{name:'Expert journeys',exact:true}).click();
+ const mobileJourney=mobileFactory.locator('[data-journey-id="news-card-8"]');
+ await mobileJourney.locator('.factory-journey-detail > summary').click();
+ const cost=mobileJourney.getByText('Recorded model cost: Unknown',{exact:true});
+ await cost.evaluate(el=>el.scrollIntoView({block:'center',behavior:'instant'}));await visibleEvidence(cost);
+ assert(await frame.locator('body').evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+ await page.screenshot({path:output+'/journey-mobile-news.png'});
+ await page.goto(base+'/bench/youtube-intel?window=factory');frame=current();
+ const ytFactory=frame.locator('#window-factory');await ytFactory.getByRole('status').filter({hasText:'Stale saved evidence'}).waitFor();
+ await ytFactory.getByRole('button',{name:'Expert journeys',exact:true}).click();
+ const partial=ytFactory.locator('[data-journey-id="yt_'+ '2'.repeat(24)+'"]');
+ await partial.getByText('Recorded run: partial · Target acceptance: pending',{exact:true}).waitFor();
+ await partial.locator('.factory-journey-detail > summary').click();
+ const unverified=partial.locator('.factory-journey-output > summary');await unverified.click();
+ await unverified.evaluate(el=>el.scrollIntoView({block:'center',behavior:'instant'}));await visibleEvidence(unverified);
+ assert.match(await unverified.innerText(),/Artifact unverified/);
+ assert(await frame.locator('body').evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+ await page.screenshot({path:output+'/journey-mobile-youtube.png'});
+ checks.push('News generation details and partial YouTube output remain readable at 390px; failed verification and pending acceptance remain visible');
+ omitJourneys=true;await ytFactory.getByRole('button',{name:'Refresh factory evidence'}).click();
+ await ytFactory.getByText('Native journey evidence has not been published for this expert.',{exact:true}).waitFor();
+ assert.equal(await ytFactory.locator('[data-journey-id]').count(),0);omitJourneys=false;
+ checks.push('Older snapshots explicitly report unavailable journeys instead of zero successes or invented history');
+ for(const mode of ['bench','atlas']){
+  await page.goto(base+'/'+mode+'/youtube-intel?window=factory');frame=current();
+  await frame.locator('#window-factory').getByRole('status').filter({hasText:'Stale saved evidence'}).waitFor();
+  const launcher=page.getByRole('button',{name:'Expert resources',exact:true});
+  assert(await launcher.evaluate(el=>!!el.closest('.forge-host-header nav')));
+  const geometry=await page.locator('.forge-host-header nav').evaluate(nav=>[...nav.children].map(e=>e.getBoundingClientRect().toJSON()));
+  for(let i=0;i<geometry.length;i++){
+   const a=geometry[i];assert(a.x>=0&&a.right<=390&&a.width>0&&a.height>0);
+   for(let j=i+1;j<geometry.length;j++){const b=geometry[j];assert(Math.min(a.right,b.right)<=Math.max(a.left,b.left)||Math.min(a.bottom,b.bottom)<=Math.max(a.top,b.top),'Header controls overlap');}
+  }
+  await launcher.click();await page.getByRole('dialog',{name:'Expert resources',exact:true}).waitFor();
+  await page.getByRole('button',{name:'Close expert resources'}).click();
+  const dock=await frame.locator('#dock').boundingBox();assert(dock);
+  assert(await page.evaluate(({x,y})=>document.elementFromPoint(x,y)?.tagName==='IFRAME',{x:350,y:dock.y+dock.height/2}),'Host launcher covers the dock');
+  await page.screenshot({path:output+'/header-resources-'+mode+'-mobile.png'});
+ }
+ checks.push('Bench and legacy Atlas keep mobile resource access in a nonoverlapping header with an unobstructed dock');
+ await page.goto(base+'/bench/unregistered-expert?window=resources');
+ await page.getByRole('status').filter({hasText:'This expert is not registered for your account.'}).waitFor();
+ assert.equal(await page.locator('iframe[title$=" Atlas"]').count(),0);
+ checks.push('Unknown requested expert cannot silently open a different registered expert');
+ }
+ assert.deepEqual(errors,[]);
+ await writeFile(output+'/validation.json',JSON.stringify({ok:true,checks,fixture:true,productionAcceptance:false,sourceDocuments:Object.fromEntries(agents.map(id=>[id,hash(docs[id])]))},null,2));
+ console.log(JSON.stringify({ok:true,checks}));
+}catch(error){await page.screenshot({path:output+'/failure.png'}).catch(()=>{});await writeFile(output+'/failure.json',JSON.stringify({ok:false,error:String(error),errors,checks,requests},null,2));throw error;}
+finally{clearTimeout(watchdog);releaseArtifact?.();releaseHistory?.();releaseProposal?.();await page.unrouteAll({behavior:'ignoreErrors'});await browser.close();}

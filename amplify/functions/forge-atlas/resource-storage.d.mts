@@ -1,1 +1,1 @@
-export function makeResourceStorage(options:{client:any;bucket:string|undefined;sign:any}):{loadManifest:()=>Promise<any>;describeArtifact:(artifact:any)=>Promise<any>};
+export function makeResourceStorage(options:{client:any;bucket:string|undefined;sign:any}):{loadManifest:()=>Promise<any>;describeArtifact:(artifact:any)=>Promise<any>;loadFactorySnapshot:(agent:string)=>Promise<{bytes:Buffer;sha256:string;version_id:string}>};

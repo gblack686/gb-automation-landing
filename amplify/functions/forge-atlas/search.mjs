@@ -1,4 +1,5 @@
-// Authenticated Forge host search. Adapters return only profile-owned summaries.
+// Authenticated search: owned summaries and explicitly shared repository context.
+import {recordIdentity,recordNavigation,recordScope} from '../../../shared/forgeSearchNavigation.mjs';
 export const SEARCH_SOURCES = ['proposal','session','pr','code'];
 const empty = () => ({proposal:'unavailable',session:'unavailable',pr:'unavailable',code:'unavailable'});
 const safe = (value,max) => typeof value === 'string' ? value.slice(0,max) : '';
@@ -25,11 +26,13 @@ export async function runSearch(request, adapters) {
   coverage[type]=source.coverage==='stale'?'stale':source.rows.length?'available':source.coverage==='unavailable'?'unavailable':'empty';
   truncated ||= Boolean(source.truncated || source.rows.length>request.query.limit);
   for(const row of source.rows.slice(0,request.query.limit)) {
-   if(!row || !row.id || !row.title)continue;
-   const href=safe(row.href,500);
-   results.push({id:safe(row.id,200),source:type,title:safe(row.title,240),snippet:safe(row.snippet,500),
+   if(!row || !recordIdentity(row.id) || !row.title)continue;
+   const candidate=type==='session'?{kind:'session',id:row.session_key}:
+    type==='proposal'?{kind:row.kind,id:row.id}:{kind:'github',href:row.href};
+   const navigation=recordNavigation(type,row.id,candidate);
+   results.push({id:row.id,source:type,scope:recordScope(type),navigation,title:safe(row.title,240),snippet:safe(row.snippet,500),
     status:safe(row.status,80),updated_at:safe(row.updated_at,40),
-    href:/^https:\/\/github\.com\/[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+\/(pull|blob)\//.test(href)?href:''});
+    href:navigation?.kind==='github'?navigation.href:''});
   }
  }
  results.sort((a,b)=>Number(b.source===intentSource)-Number(a.source===intentSource)

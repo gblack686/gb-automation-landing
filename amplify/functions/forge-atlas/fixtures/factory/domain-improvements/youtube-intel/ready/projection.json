@@ -1,0 +1,225 @@
+{
+  "schema_version": "forge-improvement-review.v1",
+  "expert_id": "gbautomation/youtube-intel",
+  "captured_at": "2026-11-04T16:00:00.000Z",
+  "source": {
+    "diagnostics_sha256": "62c6da9177b49ef425f71d4a2fef02ada9f29d6a1e74ca7f0e6eccd46097fd71",
+    "policy_sha256": "2ad0b8eb42426b111f29c16ec8243d490d45ea87288f01ecdf541df84c3e86c6",
+    "runs_sha256": null,
+    "verifier_source_commit": "44955a58f7d5ad5dac69a5929e3832f6e82237cf"
+  },
+  "controller": {
+    "configured": true,
+    "enabled": false,
+    "revoked": false,
+    "release_hold": false,
+    "policy_hash": "9e39ece737adc358f2d2e1c78ca50d20f17e46f8de7c426954fda26deec0ff72",
+    "standing_authority_sha256": null
+  },
+  "scope": "bounded_native_diagnostics",
+  "promotion_authorized": false,
+  "rows": [
+    {
+      "id": "improvement:787e87e4c9dc0f2d4f49e5d067a6b913",
+      "task_id": 1,
+      "updated_at": "2026-11-04T15:15:01.000Z",
+      "phase": "terminal",
+      "outcome": "review_ready",
+      "reason": "domain_protected_evaluation_requires_review",
+      "base_commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "candidate_sha256": "e311e4e6702ef0381d5d7d9d31227531f9287dbd138ce31e5e662b5ce1fd9ce4",
+      "finding": {
+        "run_id": "daily:2026-11-04:youtube",
+        "request_id": "daily:2026-11-04:youtube",
+        "kind": "bug",
+        "code": "missing_context",
+        "evidence_sha256": "3eb9ba8dcb1aa97ea20ddb24f6b98ca002908ccd5bf4b8a168001909e5900881",
+        "verification": "verified"
+      },
+      "proposal": {
+        "summary": "Synthetic youtube context correction",
+        "artifact_sha256": "33a85fa956f11f1da36e347a886287fe277a7719861f455293137d522a470d32",
+        "candidate_sha256": "e311e4e6702ef0381d5d7d9d31227531f9287dbd138ce31e5e662b5ce1fd9ce4",
+        "changed_paths": [
+          "native.mjs"
+        ]
+      },
+      "attempts": [
+        {
+          "id": "improvement:787e87e4c9dc0f2d4f49e5d067a6b913:proposal",
+          "stage": "proposal",
+          "status": "completed",
+          "reused_from": null,
+          "artifact_sha256": "33a85fa956f11f1da36e347a886287fe277a7719861f455293137d522a470d32",
+          "receipt_sha256": "188f47c5f382e3d55456e8dcac6af848b7eaf2c9c5e1e4e498b808bf6642c34e",
+          "verification": "verified",
+          "usage": {
+            "model_calls": 1,
+            "input_tokens": 100,
+            "cache_read_tokens": 20,
+            "output_tokens": 20,
+            "total_tokens": 120,
+            "estimate_usd": 0.01,
+            "elapsed_ms": 100,
+            "complete": true
+          }
+        },
+        {
+          "id": "improvement:787e87e4c9dc0f2d4f49e5d067a6b913:control",
+          "stage": "control",
+          "status": "completed",
+          "reused_from": null,
+          "artifact_sha256": "62be7cb96d971e458d02ba545342e390cc102e09e53e8bb22f57602e659409e0",
+          "receipt_sha256": "b7389148c06b185477f7d48dfdc5b691723e6a35cdf1da0dcef9ceaaf955a6fa",
+          "verification": "verified",
+          "usage": {
+            "model_calls": 0,
+            "input_tokens": 0,
+            "cache_read_tokens": 0,
+            "output_tokens": 0,
+            "total_tokens": 0,
+            "estimate_usd": 0,
+            "elapsed_ms": 1200,
+            "complete": true
+          }
+        },
+        {
+          "id": "improvement:787e87e4c9dc0f2d4f49e5d067a6b913:candidate",
+          "stage": "candidate",
+          "status": "completed",
+          "reused_from": null,
+          "artifact_sha256": "f3a9490a212bc5a19877fca330f8a4c67b34a271f2f8cba9eccb2bb3e0820724",
+          "receipt_sha256": "5a4d973105588dd64eb862bb2ac796015b57042a0acf9805313c33be6d3f1d7f",
+          "verification": "verified",
+          "usage": {
+            "model_calls": 0,
+            "input_tokens": 0,
+            "cache_read_tokens": 0,
+            "output_tokens": 0,
+            "total_tokens": 0,
+            "estimate_usd": 0,
+            "elapsed_ms": 1200,
+            "complete": true
+          }
+        }
+      ],
+      "evaluation": {
+        "outcome": "review_ready",
+        "reason": "domain_protected_evaluation_requires_review",
+        "receipt_sha256": "21f59782dedaa78da334284b9d193494eba9ea3fcdd082a259c449518473aca6",
+        "scope_valid": true,
+        "regression_passed": true,
+        "complete": true,
+        "classification": "internal_bug",
+        "confirmations": 0,
+        "holdouts": 0,
+        "required_confirmations": 3,
+        "required_holdouts": 1,
+        "verification": "verified"
+      },
+      "release_state": "none",
+      "effects": [],
+      "missing": [],
+      "verification": "verified",
+      "domain": {
+        "source": "youtube",
+        "repository": "gbauto/gbauto-pi-host",
+        "finding": {
+          "daily_receipt_sha256": "8f5fef7bc0e7f7bee96b92528b80476d779e6f21c23278b867ca6586e53f4908",
+          "source_evidence_sha256": "3eb9ba8dcb1aa97ea20ddb24f6b98ca002908ccd5bf4b8a168001909e5900881",
+          "assessment_sha256": "8b09ed72878c0c4792ea3ba2f26515e4afbc2beb832f3150a85dc71d0d69c619",
+          "defect_sha256": "36dc111f34cf279a189e3c0ea0c00c8976435c7504cd3fb1be76e2924ea9db1b",
+          "reuse_sha256": "81ad6dfdc9543c0fd4cb05b6c92ffda4c554c4da92a504ae126067d28059861b"
+        },
+        "assessment": {
+          "protected_inputs": true,
+          "correctness": true,
+          "privacy": true,
+          "quality_delta": 0.25,
+          "cost_ratio": 1,
+          "p95_latency_ratio": 1,
+          "cohorts": [
+            {
+              "cohort": "comparison",
+              "sha256": "faa1411494f13115879e6133df76167bfc97041da1f58f925fcbb14a3fac7b48",
+              "cases": 6,
+              "control_passed": 5,
+              "candidate_passed": 6
+            },
+            {
+              "cohort": "holdout",
+              "sha256": "2ae3c21c2f0201f4ebc69235a845e9220203cb785c9367b96f7838e85e15bd54",
+              "cases": 6,
+              "control_passed": 5,
+              "candidate_passed": 6
+            }
+          ],
+          "measurement_scope": "protected_native_probe_zero_model_calls"
+        }
+      },
+      "proposal_reference": {
+        "proposal_id": "prop_expert_youtube_intel_youtube_intel_improvement_9ac18f090699ff5c871d_802f0409f56e",
+        "binding": {
+          "schema_version": "forge-improvement-proposal-binding.v1",
+          "expert_id": "gbautomation/youtube-intel",
+          "cycle_id": "improvement:787e87e4c9dc0f2d4f49e5d067a6b913",
+          "base_commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "candidate_sha256": "e311e4e6702ef0381d5d7d9d31227531f9287dbd138ce31e5e662b5ce1fd9ce4",
+          "policy_hash": "9e39ece737adc358f2d2e1c78ca50d20f17e46f8de7c426954fda26deec0ff72",
+          "finding_sha256": "3eb9ba8dcb1aa97ea20ddb24f6b98ca002908ccd5bf4b8a168001909e5900881",
+          "proposal_sha256": "33a85fa956f11f1da36e347a886287fe277a7719861f455293137d522a470d32",
+          "evaluation_sha256": "21f59782dedaa78da334284b9d193494eba9ea3fcdd082a259c449518473aca6",
+          "confirmations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "attempts_sha256": "325f4050de4dcedaefbe441660d5f2fe247d2545569b546356f0a5a612365d52",
+          "source_synthetic": true,
+          "domain_sha256": "2b8820f0c9a03d128d9be7346a3128c7da58260c5eb9f70b6fcf61262237b108",
+          "native_source_sha256": "5a91965cce683b3a642574cd4b9dd352601cb10a0c5e4ccef9541cfcd69511f9"
+        },
+        "binding_sha256": "9ac18f090699ff5c871de5673b471167f080f08a7ce13c516c777ab18be331dc",
+        "attempts_json": "[{\"artifact_sha256\":\"f3a9490a212bc5a19877fca330f8a4c67b34a271f2f8cba9eccb2bb3e0820724\",\"id\":\"improvement:787e87e4c9dc0f2d4f49e5d067a6b913:candidate\",\"receipt_sha256\":\"5a4d973105588dd64eb862bb2ac796015b57042a0acf9805313c33be6d3f1d7f\",\"reused_from\":null,\"stage\":\"candidate\",\"status\":\"completed\",\"usage\":{\"cache_read_tokens\":0,\"complete\":true,\"elapsed_ms\":1200,\"estimate_usd\":0,\"input_tokens\":0,\"model_calls\":0,\"output_tokens\":0,\"total_tokens\":0},\"verification\":\"verified\"},{\"artifact_sha256\":\"62be7cb96d971e458d02ba545342e390cc102e09e53e8bb22f57602e659409e0\",\"id\":\"improvement:787e87e4c9dc0f2d4f49e5d067a6b913:control\",\"receipt_sha256\":\"b7389148c06b185477f7d48dfdc5b691723e6a35cdf1da0dcef9ceaaf955a6fa\",\"reused_from\":null,\"stage\":\"control\",\"status\":\"completed\",\"usage\":{\"cache_read_tokens\":0,\"complete\":true,\"elapsed_ms\":1200,\"estimate_usd\":0,\"input_tokens\":0,\"model_calls\":0,\"output_tokens\":0,\"total_tokens\":0},\"verification\":\"verified\"},{\"artifact_sha256\":\"33a85fa956f11f1da36e347a886287fe277a7719861f455293137d522a470d32\",\"id\":\"improvement:787e87e4c9dc0f2d4f49e5d067a6b913:proposal\",\"receipt_sha256\":\"188f47c5f382e3d55456e8dcac6af848b7eaf2c9c5e1e4e498b808bf6642c34e\",\"reused_from\":null,\"stage\":\"proposal\",\"status\":\"completed\",\"usage\":{\"cache_read_tokens\":20,\"complete\":true,\"elapsed_ms\":100,\"estimate_usd\":0.01,\"input_tokens\":100,\"model_calls\":1,\"output_tokens\":20,\"total_tokens\":120},\"verification\":\"verified\"}]",
+        "domain_json": "{\"assessment\":{\"cohorts\":[{\"candidate_passed\":6,\"cases\":6,\"cohort\":\"comparison\",\"control_passed\":5,\"sha256\":\"faa1411494f13115879e6133df76167bfc97041da1f58f925fcbb14a3fac7b48\"},{\"candidate_passed\":6,\"cases\":6,\"cohort\":\"holdout\",\"control_passed\":5,\"sha256\":\"2ae3c21c2f0201f4ebc69235a845e9220203cb785c9367b96f7838e85e15bd54\"}],\"correctness\":true,\"cost_ratio\":1,\"measurement_scope\":\"protected_native_probe_zero_model_calls\",\"p95_latency_ratio\":1,\"privacy\":true,\"protected_inputs\":true,\"quality_delta\":0.25},\"finding\":{\"assessment_sha256\":\"8b09ed72878c0c4792ea3ba2f26515e4afbc2beb832f3150a85dc71d0d69c619\",\"daily_receipt_sha256\":\"8f5fef7bc0e7f7bee96b92528b80476d779e6f21c23278b867ca6586e53f4908\",\"defect_sha256\":\"36dc111f34cf279a189e3c0ea0c00c8976435c7504cd3fb1be76e2924ea9db1b\",\"reuse_sha256\":\"81ad6dfdc9543c0fd4cb05b6c92ffda4c554c4da92a504ae126067d28059861b\",\"source_evidence_sha256\":\"3eb9ba8dcb1aa97ea20ddb24f6b98ca002908ccd5bf4b8a168001909e5900881\"},\"repository\":\"gbauto/gbauto-pi-host\",\"source\":\"youtube\"}",
+        "domain_source_json": "{\"domain\":\"youtube\",\"evidence_mode\":\"fixture\",\"inputs_sha256\":\"3b2b44661da77a78c227b02496512ecf8819c1a53bad0f2c42c2bdf40a4b87bf\",\"native_source\":{\"checkout_mutated\":false,\"commit\":\"44955a58f7d5ad5dac69a5929e3832f6e82237cf\",\"files\":{\"src/context.ts\":{\"blob\":\"7719d1b48114d581fe452005a964ae052698008f\",\"sha256\":\"bd07b6152e2b67512d4907acffd5707eb15dd41533f98cbfe90d045d3110ec59\"},\"src/expert-daily-contract.ts\":{\"blob\":\"c0bb1170cfc4836135b48cf11a5d2dc0a448de49\",\"sha256\":\"89d6f3ce93a88c3f207487f7f49d071ec61e96b5c5f6b132c476407719dfe464\"},\"src/factory-domain-benchmark.ts\":{\"blob\":\"9a8b0efdfcee2f035276a9b3182acf31913b30b2\",\"projection_sha256\":\"615bec2dc8b2be2d71265bd1b48e5fb6b57da0b194d0257abeab9407d0bc355a\",\"sha256\":\"d89dc720cd5ed00cafc6b4adf51c1e52c7a3714be2fafad15024922bac4667e5\"},\"src/factory-improvement-contract.ts\":{\"blob\":\"b0af07d5d8bf877ca8350864c40293588e8836c1\",\"sha256\":\"1f5d3b39a8a1310563b7c014c2845b16f479c84e3e5f0176bfab41dbb081c0c3\"},\"src/schedules.ts\":{\"blob\":\"4d9366f8b57f5b959b6f24d667c4d6c690c51899\",\"projection_sha256\":\"641a970254cbfa01b8f9d57c1358c0feda814788694e7a75f7ea5baf4834a77c\",\"sha256\":\"07adf06ee03441db09162b8a807209bed8bb9070d7c305b968faa5dab27dfdcf\"},\"src/workspace.ts\":{\"blob\":\"0cfc83ed5fd14977615100b83f339cf96286f2f1\",\"projection_sha256\":\"cc113a6e9d28eb6d22cb7035f43f6613704a17c91b60a924b3764e4fed4734bc\",\"sha256\":\"9c8f5a63c65333fd7ca9e196a27c40a71c6d9f8bcbc9fe04f5b5138c908e2940\"}},\"method\":\"immutable_git_pure_projection\"}}"
+      }
+    }
+  ],
+  "domain_source": {
+    "domain": "youtube",
+    "inputs_sha256": "3b2b44661da77a78c227b02496512ecf8819c1a53bad0f2c42c2bdf40a4b87bf",
+    "evidence_mode": "fixture",
+    "native_source": {
+      "commit": "44955a58f7d5ad5dac69a5929e3832f6e82237cf",
+      "files": {
+        "src/context.ts": {
+          "blob": "7719d1b48114d581fe452005a964ae052698008f",
+          "sha256": "bd07b6152e2b67512d4907acffd5707eb15dd41533f98cbfe90d045d3110ec59"
+        },
+        "src/workspace.ts": {
+          "blob": "0cfc83ed5fd14977615100b83f339cf96286f2f1",
+          "sha256": "9c8f5a63c65333fd7ca9e196a27c40a71c6d9f8bcbc9fe04f5b5138c908e2940",
+          "projection_sha256": "cc113a6e9d28eb6d22cb7035f43f6613704a17c91b60a924b3764e4fed4734bc"
+        },
+        "src/factory-improvement-contract.ts": {
+          "blob": "b0af07d5d8bf877ca8350864c40293588e8836c1",
+          "sha256": "1f5d3b39a8a1310563b7c014c2845b16f479c84e3e5f0176bfab41dbb081c0c3"
+        },
+        "src/schedules.ts": {
+          "blob": "4d9366f8b57f5b959b6f24d667c4d6c690c51899",
+          "sha256": "07adf06ee03441db09162b8a807209bed8bb9070d7c305b968faa5dab27dfdcf",
+          "projection_sha256": "641a970254cbfa01b8f9d57c1358c0feda814788694e7a75f7ea5baf4834a77c"
+        },
+        "src/expert-daily-contract.ts": {
+          "blob": "c0bb1170cfc4836135b48cf11a5d2dc0a448de49",
+          "sha256": "89d6f3ce93a88c3f207487f7f49d071ec61e96b5c5f6b132c476407719dfe464"
+        },
+        "src/factory-domain-benchmark.ts": {
+          "blob": "9a8b0efdfcee2f035276a9b3182acf31913b30b2",
+          "sha256": "d89dc720cd5ed00cafc6b4adf51c1e52c7a3714be2fafad15024922bac4667e5",
+          "projection_sha256": "615bec2dc8b2be2d71265bd1b48e5fb6b57da0b194d0257abeab9407d0bc355a"
+        }
+      },
+      "method": "immutable_git_pure_projection",
+      "checkout_mutated": false
+    }
+  },
+  "source_sha256": "1fb65dd725cc28e5da8d44486ff0b9740923f1dd526f954210e47f23a8554c35"
+}

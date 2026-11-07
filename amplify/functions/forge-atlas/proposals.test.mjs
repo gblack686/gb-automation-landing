@@ -39,8 +39,10 @@ test('PostgREST inner join scopes count, search, state, page and detail to the d
  for(const url of [list,detail]) {
   assert.equal(url.searchParams.get('producer_runs.tenant'),'eq.gbautomation');
   assert.equal(url.searchParams.get('producer_runs.owner_expert'),'eq.artist-packet-expert');
-  assert.ok(url.searchParams.get('select').includes('producer_runs!inner(producer_run_id,tenant,owner_expert)'));
+  assert.ok(url.searchParams.get('select').includes('producer_runs!inner(producer_run_id,tenant,owner_expert'));
  }
+ assert.equal(list.searchParams.get('select').includes('metadata'),false);
+ assert.equal(detail.searchParams.get('select').includes('synthetic,metadata'),true);
 });
 test('responses verify tenant and identity and expose only review fields',()=>{
  const request={view:'proposal',query:{proposal_id:'prop_one'}};

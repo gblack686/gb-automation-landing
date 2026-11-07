@@ -1,9 +1,9 @@
 name: Deploy to Netlify (gbautomation.xyz)
 
 on:
-  push:
-    branches: [master]
-  workflow_dispatch:  # allow manual re-deploy from Actions tab
+  # Source merges must not publish the legacy frontend. Review the destination,
+  # sign-in configuration and paired backend before an authorized manual release.
+  workflow_dispatch:
 
 concurrency:
   group: deploy-netlify-prod

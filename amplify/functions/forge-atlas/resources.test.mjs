@@ -130,3 +130,19 @@ test('storage rejects oversized streams, replaced bytes, missing versions and fo
   await assert.rejects(makeResourceStorage({client,bucket:'private',sign:async()=>assert.fail('invalid asset signed')}).describeArtifact(artifact));
  }
 });
+
+test('archived manifest reads pin its hash/version and do not follow the active pointer',async()=>{
+ const manifest={...packed(fixture()),version_id:'old-manifest'};const calls=[];
+ const store=makeResourceStorage({bucket:'private',client:{send:async command=>{
+  calls.push(command.input);assert.equal(command.input.Key,`${RESOURCE_ROOT}/manifests/${manifest.sha256}.json`);
+  assert.equal(command.input.VersionId,'old-manifest');
+  return {VersionId:'old-manifest',ContentLength:manifest.bytes.length,Metadata:{sha256:manifest.sha256},Body:Readable.from([manifest.bytes])};
+ }}});
+ const service=makeResourceService({enabled:true,loadManifest:store.loadManifest,clock,describeArtifact:async()=>({url:'signed'})});
+ const req={view:'resourceArtifact',agent_id:'youtube-intel',query:{resource_id:row.id,catalog_sha256:manifest.sha256,catalog_version_id:'old-manifest'}};
+ const result=await service(req);assert.equal(result.catalog_version_id,'old-manifest');assert.equal(result.version_id,'v-artifact');assert.equal(calls.length,1);
+ for(const catalog_version_id of ['null','../path',''])await assert.rejects(service({...req,query:{...req.query,catalog_version_id}}));
+ assert.equal(calls.length,1);
+ const wrong=makeResourceService({enabled:true,clock,loadManifest:async()=>({...manifest,version_id:'other-version'}),describeArtifact:()=>assert.fail('wrong catalog signed')});
+ await assert.rejects(wrong(req));
+});

@@ -3,6 +3,21 @@ import assert from 'node:assert/strict';
 import { makeHandler } from './contract.mjs';
 import { runSearch } from './search.mjs';
 
+test('search distinguishes plans, exact session keys and shared repository context',async()=>{
+ const key='session:'+ 'a'.repeat(280),plan='prd_'+'b'.repeat(20);
+ const data=await runSearch({agent_id:'youtube-intel',query:{query:'evidence',source:'all',limit:40}}, {
+  proposal:async()=>({rows:[{id:'prop_one',kind:'proposal',title:'Proposal'},{id:plan,kind:'plan',title:'Plan'}]}),
+  session:async()=>({rows:[{id:key,session_key:key,title:'Session'},{id:'intent-only',session_id:'native-id',title:'Legacy summary'},{id:'x'.repeat(513),title:'Oversize identity'}]}),
+  pr:async()=>({rows:[{id:'1',title:'PR',href:'https://github.com/gbauto/gbautomation/pull/1660'}]}),code:async()=>({rows:[]}),
+ });
+ assert.equal(data.results.length,5);
+ assert.deepEqual(data.results.find(r=>r.id===plan).navigation,{kind:'plan',id:plan});
+ assert.deepEqual(data.results.find(r=>r.id===key).navigation,{kind:'session',id:key});
+ assert.equal(data.results.find(r=>r.id==='intent-only').navigation,null);
+ assert.equal(data.results.find(r=>r.id==='1').scope,'shared_repository');
+ assert.equal(data.results.find(r=>r.id==='prop_one').scope,'expert_owned');
+});
+
 const issuer='https://cognito-idp.us-east-1.amazonaws.com/us-east-1_test';
 const event=input=>({identity:{claims:{iss:issuer,sub:'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa','cognito:groups':['tenant-gbautomation']}},typeName:'Query',fieldName:'forgeAtlasRead',arguments:{input}});
 test('search is authenticated, exact expert bound, and read only',async()=>{

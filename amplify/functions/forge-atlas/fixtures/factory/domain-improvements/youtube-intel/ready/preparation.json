@@ -1,0 +1,75 @@
+{
+  "spine_rows": {
+    "agent_os_proposals": [
+      {
+        "proposal_id": "prop_expert_youtube_intel_youtube_intel_improvement_9ac18f090699ff5c871d_802f0409f56e",
+        "tenant": "gbautomation",
+        "source_type": "second_brain_item",
+        "source_event_id": "src_expert_802f0409f56e7458",
+        "source_synthetic": true,
+        "producer_run_id": "producer_expert_portfolio_youtube_intel_802f0409f56e",
+        "workflow_route": "self_improvement",
+        "payload": {
+          "schema_version": "proposal.v1",
+          "proposal_id": "prop_expert_youtube_intel_youtube_intel_improvement_9ac18f090699ff5c871d_802f0409f56e",
+          "tenant": "gbautomation",
+          "producer": {
+            "kind": "research_design_decision",
+            "producer_run_id": "producer_expert_portfolio_youtube_intel_802f0409f56e",
+            "input_source_event_ids": [
+              "src_expert_802f0409f56e7458"
+            ],
+            "output_variant": "expert_portfolio_proposal",
+            "trace_id": "trace.expert_portfolio.youtube_intel.802f0409f56e"
+          },
+          "source": {
+            "type": "second_brain_item",
+            "source_event_id": "src_expert_802f0409f56e7458",
+            "synthetic": true,
+            "artifact_id": "native-improvement-binding:9ac18f090699ff5c871de5673b471167f080f08a7ce13c516c777ab18be331dc"
+          },
+          "workflow": {
+            "route": "self_improvement",
+            "step": 1,
+            "step_count": 3
+          }
+        }
+      }
+    ],
+    "producer_runs": [
+      {
+        "owner_expert": "youtube-intel",
+        "tenant": "gbautomation",
+        "synthetic": true,
+        "metadata": {
+          "summary": "Synthetic youtube context correction Native outcome: review_ready. Baseline aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa; candidate e311e4e6702ef0381d5d7d9d31227531f9287dbd138ce31e5e662b5ce1fd9ce4.",
+          "next_action": "Review the bound baseline, candidate and retained experiments in the existing proposal workflow. Prepare an exact promotion and compatible rollback. This record grants no experiment, deployment or release authority.",
+          "deduplication": {
+            "status": "native_cycle_evidence_identity",
+            "binding_sha256": "9ac18f090699ff5c871de5673b471167f080f08a7ce13c516c777ab18be331dc",
+            "scope": "Exact native evidence only; existing PRD equivalence not asserted."
+          },
+          "identity_sha256": "802f0409f56e7458a083f2795dc3dd2fa0ba8c880913873efdfee01f4f2fd5b8",
+          "native_improvement": {
+            "schema_version": "forge-improvement-proposal-binding.v1",
+            "expert_id": "gbautomation/youtube-intel",
+            "cycle_id": "improvement:787e87e4c9dc0f2d4f49e5d067a6b913",
+            "base_commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "candidate_sha256": "e311e4e6702ef0381d5d7d9d31227531f9287dbd138ce31e5e662b5ce1fd9ce4",
+            "policy_hash": "9e39ece737adc358f2d2e1c78ca50d20f17e46f8de7c426954fda26deec0ff72",
+            "finding_sha256": "3eb9ba8dcb1aa97ea20ddb24f6b98ca002908ccd5bf4b8a168001909e5900881",
+            "proposal_sha256": "33a85fa956f11f1da36e347a886287fe277a7719861f455293137d522a470d32",
+            "evaluation_sha256": "21f59782dedaa78da334284b9d193494eba9ea3fcdd082a259c449518473aca6",
+            "confirmations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "attempts_sha256": "325f4050de4dcedaefbe441660d5f2fe247d2545569b546356f0a5a612365d52",
+            "source_synthetic": true,
+            "domain_sha256": "2b8820f0c9a03d128d9be7346a3128c7da58260c5eb9f70b6fcf61262237b108",
+            "native_source_sha256": "5a91965cce683b3a642574cd4b9dd352601cb10a0c5e4ccef9541cfcd69511f9"
+          },
+          "native_binding_sha256": "9ac18f090699ff5c871de5673b471167f080f08a7ce13c516c777ab18be331dc",
+          "trace_evidence": "correlation_only_no_langfuse_receipt"
+        }
+      }
+    ]
+  }
+}

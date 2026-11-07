@@ -10,7 +10,10 @@ export default function ForgeResourceGallery({agentId,onClose,initialKind='ui',i
  const [query,setQuery]=useState(''),[offset,setOffset]=useState(0),[attempt,setAttempt]=useState(0);
  const [data,setData]=useState(null),[loading,setLoading]=useState(true),[error,setError]=useState('');
  const [opened,setOpened]=useState(null),[artifact,setArtifact]=useState(null),[artifactError,setArtifactError]=useState('');
- useEffect(()=>{dialog.current.showModal();return()=>{artifactAbort.current?.abort();};},[]);
+ useEffect(()=>{
+  const trigger=document.activeElement,modal=dialog.current;modal.showModal();
+  return()=>{artifactAbort.current?.abort();modal.close();if(trigger instanceof HTMLElement&&trigger.isConnected)trigger.focus({preventScroll:true});};
+ },[]);
  useEffect(()=>{
   let active=true;setLoading(true);setError('');
   readResourceCatalog({kind,...(owner?{owner}:{}),...(query?{search:query}:{}),offset},agentId)

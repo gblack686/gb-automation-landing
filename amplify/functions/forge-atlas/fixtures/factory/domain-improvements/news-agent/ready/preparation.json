@@ -1,0 +1,75 @@
+{
+  "spine_rows": {
+    "agent_os_proposals": [
+      {
+        "proposal_id": "prop_expert_news_agent_news_agent_improvement_92e4676ac240ca683cdf_e6a4b290404e",
+        "tenant": "gbautomation",
+        "source_type": "second_brain_item",
+        "source_event_id": "src_expert_e6a4b290404e4079",
+        "source_synthetic": true,
+        "producer_run_id": "producer_expert_portfolio_news_agent_e6a4b290404e",
+        "workflow_route": "self_improvement",
+        "payload": {
+          "schema_version": "proposal.v1",
+          "proposal_id": "prop_expert_news_agent_news_agent_improvement_92e4676ac240ca683cdf_e6a4b290404e",
+          "tenant": "gbautomation",
+          "producer": {
+            "kind": "research_design_decision",
+            "producer_run_id": "producer_expert_portfolio_news_agent_e6a4b290404e",
+            "input_source_event_ids": [
+              "src_expert_e6a4b290404e4079"
+            ],
+            "output_variant": "expert_portfolio_proposal",
+            "trace_id": "trace.expert_portfolio.news_agent.e6a4b290404e"
+          },
+          "source": {
+            "type": "second_brain_item",
+            "source_event_id": "src_expert_e6a4b290404e4079",
+            "synthetic": true,
+            "artifact_id": "native-improvement-binding:92e4676ac240ca683cdf9dc61cf105011c171125c60fd29ed514b860b3b88e56"
+          },
+          "workflow": {
+            "route": "self_improvement",
+            "step": 1,
+            "step_count": 3
+          }
+        }
+      }
+    ],
+    "producer_runs": [
+      {
+        "owner_expert": "news-agent",
+        "tenant": "gbautomation",
+        "synthetic": true,
+        "metadata": {
+          "summary": "Synthetic news context correction Native outcome: review_ready. Baseline aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa; candidate c4530560214a612c531f126f5941d75b3862b40d9efe682490954ba92b9762e0.",
+          "next_action": "Review the bound baseline, candidate and retained experiments in the existing proposal workflow. Prepare an exact promotion and compatible rollback. This record grants no experiment, deployment or release authority.",
+          "deduplication": {
+            "status": "native_cycle_evidence_identity",
+            "binding_sha256": "92e4676ac240ca683cdf9dc61cf105011c171125c60fd29ed514b860b3b88e56",
+            "scope": "Exact native evidence only; existing PRD equivalence not asserted."
+          },
+          "identity_sha256": "e6a4b290404e40796c1e88c22759fad7afc35210241b53848a9be46534f418a6",
+          "native_improvement": {
+            "schema_version": "forge-improvement-proposal-binding.v1",
+            "expert_id": "gbautomation/news-agent",
+            "cycle_id": "improvement:9e064e9a56b4fecff78491619b89dd5f",
+            "base_commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "candidate_sha256": "c4530560214a612c531f126f5941d75b3862b40d9efe682490954ba92b9762e0",
+            "policy_hash": "7ca26e599f10c42a4f4c7665e4f7420e8815dd2f94c1e504edc4fe0b4e753e14",
+            "finding_sha256": "459b91dd4750caa727a62161b338c8a3f0183dfcb1dc8b3cac09edf5b5b73c49",
+            "proposal_sha256": "8c84a15b890740150b5e17d8d8c47cf796bb6b2866bc9b53094eedeca4dde262",
+            "evaluation_sha256": "e362ef2b2327e331fbe7ec5ad2afed3a428285c28dde6f2243c8ed50e5dd796c",
+            "confirmations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "attempts_sha256": "9ff3936f176f6e44a6ba3ca3de2963eaf0b1b1f38d32fbe3141d20c8f8b46eb2",
+            "source_synthetic": true,
+            "domain_sha256": "7171a5d70909993b2b60f9a5ac54cff6ebbf1124407eaa1433b2433693e9be2c",
+            "native_source_sha256": "c8c9fc4e7e935c951d1a5d665cc11882f470c0b3632b0548feb094541df1ad1b"
+          },
+          "native_binding_sha256": "92e4676ac240ca683cdf9dc61cf105011c171125c60fd29ed514b860b3b88e56",
+          "trace_evidence": "correlation_only_no_langfuse_receipt"
+        }
+      }
+    ]
+  }
+}
