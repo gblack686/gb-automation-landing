@@ -1,12 +1,13 @@
 // Server-only projection. Ownership follows the proposal's producer run.
 import { TENANT, EXPERT } from './contract.mjs';
+import {projectImprovementProposal} from './improvement-proposals.mjs';
 const columns = ['proposal_id','tenant','card_title','source_type','source_event_id','source_synthetic','producer_run_id','card_type','state','workflow_route','task_id','created_at','updated_at'];
-const ownership = 'producer_runs!inner(producer_run_id,tenant,owner_expert)';
+const ownership = view=>'producer_runs!inner(producer_run_id,tenant,owner_expert'+(view==='proposal'?',synthetic,metadata':'')+')';
 const scope = {tenant_id:TENANT,agent_id:EXPERT};
 const text = (value,max=4000) => typeof value === 'string' ? value.slice(0,max) : '';
 export function proposalPath({view,query,agent_id=EXPERT}) {
  const agent=agent_id;
- const params = new URLSearchParams({tenant:`eq.${TENANT}`,'producer_runs.tenant':`eq.${TENANT}`,'producer_runs.owner_expert':`eq.${agent}`,select:columns.join(',')+','+ownership+(view==='proposal'?',payload':''),limit:view==='proposal'?'1':'50'});
+ const params = new URLSearchParams({tenant:`eq.${TENANT}`,'producer_runs.tenant':`eq.${TENANT}`,'producer_runs.owner_expert':`eq.${agent}`,select:columns.join(',')+','+ownership(view)+(view==='proposal'?',payload':''),limit:view==='proposal'?'1':'50'});
  if (view === 'proposal') params.set('proposal_id',`eq.${query.proposal_id}`);
  else {
   params.set('offset',String(query.offset || 0));
@@ -30,11 +31,17 @@ export function projectProposals(request,rows,contentRange) {
    const payload=row.payload || {};
    value.summary=text(payload.summary || payload.card?.description || payload.card?.summary);
    value.action_items=Array.isArray(payload.action_items)?payload.action_items.slice(0,30).map(item=>text(typeof item==='string'?item:item?.description || item?.title || item?.text,1000)).filter(Boolean):[];
+   const reference=projectImprovementProposal(row);
+   if(reference){
+    value.improvement_reference=reference;
+    value.summary=value.summary||text(row.producer_runs.metadata.summary);
+    if(!value.action_items.length){const action=text(row.producer_runs.metadata.next_action,1000);if(action)value.action_items=[action];}
+   }
   }
   return value;
  });
  if(request.view==='proposal') return projected[0] || null;
  const total=Number(contentRange?.split('/').at(-1));
  if(!Number.isSafeInteger(total)||total<projected.length)throw Error('Invalid proposal count');
- return {...scope,rows:projected,total,offset:request.query.offset || 0,limit:50};
+ return {...scope,agent_id:agent,rows:projected,total,offset:request.query.offset || 0,limit:50};
 }

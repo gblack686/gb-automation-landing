@@ -7,12 +7,20 @@ import {createHash} from 'node:crypto';
 import {makeResourceService} from '../amplify/functions/forge-atlas/resources.mjs';
 import {makeFactoryService} from '../amplify/functions/forge-atlas/factory.mjs';
 import {runSearch} from '../amplify/functions/forge-atlas/search.mjs';
+import {projectProposals} from '../amplify/functions/forge-atlas/proposals.mjs';
 const root=process.env.FORGE_WORKSPACE_FIXTURES;
 if(!root)throw Error('Set FORGE_WORKSPACE_FIXTURES to the canonical renderer fixture directory');
 const base=process.env.FORGE_WORKSPACE_BASE||'http://127.0.0.1:5201';
 const output='artifacts/atlas-factory-workspace-validation/'+new Date().toISOString().replace(/[:.]/g,'-');await mkdir(output,{recursive:true});
 const hash=x=>createHash('sha256').update(x).digest('hex');
 const improvementOnly=process.env.FORGE_WORKSPACE_IMPROVEMENTS==='1';
+const proposalPreparation=process.env.FORGE_WORKSPACE_IMPROVEMENT_PROPOSALS?JSON.parse(await readFile(process.env.FORGE_WORKSPACE_IMPROVEMENT_PROPOSALS+'/preparation.json')):null;
+const linkedRows=new Map((proposalPreparation?.spine_rows.agent_os_proposals||[]).map(row=>[row.proposal_id,{...row,producer_runs:proposalPreparation.spine_rows.producer_runs.find(p=>p.producer_run_id===row.producer_run_id)}]));
+let linkedMissing=false,linkedChanged=false,linkedForeign=false,linkedWorkflow=false,holdLinked=false,releaseLinked=null;
+let holdStartupCatalog=false,releaseStartupCatalog=null;
+const linkedEntry=proposalPreparation?.entries[0];
+const workflow=linkedEntry?{workflow_id:'workflow_native_review',proposal_id:linkedEntry.proposal.proposal_id,title:'Existing factory review workflow',
+ gate:'scope',state:'review',client_id:'gbautomation',project_id:'factory',scope_version:1,plan_version:0,documents:[],events:[],deliveries:[],reminders:[],artifacts:[]}:null;
 const agents=['youtube-intel','news-agent',...(improvementOnly?['pi']:[])];const docs={},receipts={};
 const outputOnly=process.env.FORGE_WORKSPACE_JOURNEY_OUTPUTS==='1';
 const benchmarkOnly=process.env.FORGE_WORKSPACE_BENCHMARK_TIMELINES==='1';
@@ -51,9 +59,24 @@ await page.route('**/__workspace_fixture',async r=>{
  if(x.view==='agents')return r.fulfill({json:{agents:agents.map(id=>({agent_id:id,display_name:id,config_sha256:receipts[id].yaml_sha256}))}});
  if(x.view==='document')return r.fulfill({json:{agent_id:x.agent_id,tenant_id:'gbautomation',url:`https://fixture.s3.us-east-1.amazonaws.com/gbautomation/${x.agent_id}/index.html`,sha256:hash(docs[x.agent_id]),bytes:Buffer.byteLength(docs[x.agent_id])}});
  if(fail)return r.fulfill({status:503,body:'Unavailable'});
- if(x.view==='approvalSnapshot')return r.fulfill({json:{mode:'live_read_only',workflows:[],connection:{tenant:'gbautomation',writes_enabled:false}}});
- if(x.view==='proposals')return r.fulfill({json:{rows:[],total:0}});
+ if(x.view==='approvalSnapshot')return r.fulfill({json:{mode:'live_read_only',workflows:linkedWorkflow&&x.agent_id==='pi'?[workflow]:[],connection:{tenant:'gbautomation',writes_enabled:false}}});
+ if(x.view==='proposals'){
+  if(holdStartupCatalog&&x.agent_id==='pi')await new Promise(resolve=>{releaseStartupCatalog=resolve;});
+  return r.fulfill({json:{rows:[],total:0}});
+ }
  if(x.view==='proposal'){
+  if(linkedRows.has(x.query.proposal_id)){
+   if(holdLinked)await new Promise(resolve=>{releaseLinked=resolve;});
+   if(linkedMissing)return r.fulfill({contentType:'application/json',body:'null'});
+   const row=structuredClone(linkedRows.get(x.query.proposal_id));
+   if(linkedChanged){const m=row.producer_runs.metadata;m.native_improvement.candidate_sha256='f'.repeat(64);
+    m.native_binding_sha256=hash(JSON.stringify(Object.fromEntries(Object.keys(m.native_improvement).sort().map(k=>[k,m.native_improvement[k]]))));
+    row.payload.source.artifact_id='native-improvement-binding:'+m.native_binding_sha256;
+   }
+   if(linkedForeign)row.producer_runs.owner_expert='news-agent';
+   try{return r.fulfill({json:projectProposals({view:'proposal',agent_id:x.agent_id,query:x.query},[row],null)});}
+   catch{return r.fulfill({status:503,body:'Bound proposal unavailable'});}
+  }
   if(holdProposal&&x.query.proposal_id==='prop_slow')await new Promise(resolve=>{releaseProposal=resolve;});
   return r.fulfill({json:{proposal_id:x.query.proposal_id,tenant_id:'gbautomation',agent_id:x.agent_id,card_title:x.query.proposal_id==='prop_review'?'Exact proposal outside first catalog page':x.query.proposal_id,source_type:'transcript',card_type:'expert-portfolio-proposal',state:'gated',summary:'Synthetic exact proposal detail',updated_at:observed}});
  }
@@ -127,6 +150,10 @@ async function visibleEvidence(locator){
  }while(Date.now()<deadline);
  assert.fail('Evidence is clipped, covered or outside the viewport: '+locator+' '+JSON.stringify(observation));
 }
+async function lookupFinished(handle){
+ for(let i=0;i<250&&await handle.evaluate(el=>el.disabled);i++)await page.waitForTimeout(20);
+ assert.equal(await handle.evaluate(el=>el.disabled),false,'Proposal lookup did not finish');
+}
 try{
  if(improvementOnly){
   for(const width of [1440,390]){
@@ -141,9 +168,68 @@ try{
    const counts=card.getByText('Confirmations: 3/3 repeated pairs · 1/1 holdout pairs',{exact:true});
    await counts.scrollIntoViewIfNeeded();await visibleEvidence(counts);
    await card.getByText('Promotion: Requires the existing reviewed release route. No approval is granted by this view.',{exact:true}).waitFor();
-   assert.equal(await section.getByRole('button').count(),0);
+   assert.equal(await section.getByRole('button').count(),proposalPreparation?2:0);
    await page.screenshot({path:output+'/improvement-review-'+width+'.png'});
    checks.push('Nine real native-controller fixture cycles rendered; keyboard details and confirmations visible at '+width+'px');
+   if(proposalPreparation){
+    const lookup=card.getByRole('button',{name:'Find saved proposal',exact:true});await lookup.focus();await page.keyboard.press('Enter');
+    const dialog=current().locator('#forge-approval-dialog');await dialog.getByRole('heading',{name:'Linked factory experiment'}).waitFor();
+    assert(await dialog.locator('[data-native-accept]').isDisabled());
+    await dialog.getByText('Evidence: Synthetic test fixture',{exact:true}).waitFor();
+    const candidate=dialog.getByText('Candidate: '+linkedEntry.review.native_improvement.candidate_sha256,{exact:true});
+    await candidate.scrollIntoViewIfNeeded();await visibleEvidence(candidate);
+    assert(await dialog.evaluate(e=>e.scrollWidth<=e.clientWidth+1),'Proposal dialog content must fit its width');
+    assert(await dialog.locator('.approval-document').evaluateAll(nodes=>nodes.every(e=>e.scrollWidth<=e.clientWidth+1)),'Long experiment hashes must wrap in proposal content');
+    await page.screenshot({path:output+'/improvement-proposal-'+width+'.png'});
+    await dialog.locator('.dialog-close').click();
+    checks.push('Keyboard opens exact saved proposal with current binding and disabled approval at '+width+'px');
+   }
+  }
+  if(proposalPreparation){
+   await page.setViewportSize({width:1440,height:1000});linkedWorkflow=true;holdStartupCatalog=true;releaseStartupCatalog=null;
+   await page.goto(base+'/bench/pi?window=factory');
+   let factory=current().locator('#window-factory');await factory.getByRole('status').filter({hasText:'Stale saved evidence'}).waitFor();
+   const cycle=linkedEntry.review.native_improvement.cycle_id;
+   const lookup=()=>current().locator(`[data-improvement-id="${cycle}"]`).getByRole('button',{name:'Find saved proposal',exact:true});
+   await current().locator('body').evaluate(()=>{
+    const open=window.ForgeApprovals.open;
+    window.ForgeApprovals.open=async(...args)=>{try{return await open(...args);}catch(e){window.fixtureNativeError=String(e);throw e;}};
+   });
+   await lookup().click();let dialog=current().locator('#forge-approval-dialog');
+   await dialog.getByRole('heading',{name:'Existing factory review workflow',exact:true}).waitFor();
+   assert.equal(await current().locator('body').evaluate(()=>window.fixtureNativeError||null),null);
+   await dialog.getByRole('heading',{name:'Linked factory experiment',exact:true}).waitFor();
+   assert(releaseStartupCatalog);holdStartupCatalog=false;releaseStartupCatalog();
+   await current().locator('#forge-native-proposals h3').waitFor({state:'attached'});
+   assert.equal(await dialog.getByRole('heading',{name:'Linked factory experiment',exact:true}).count(),1);
+   assert.equal(await dialog.locator('#approval-decision-form').count(),0);await dialog.locator('.dialog-close').click();
+   checks.push('Exact native proposal binding precedes the existing workflow; delayed startup cannot overwrite its evidence context');
+   for(const state of ['changed','missing','foreign']){
+    linkedChanged=state==='changed';linkedMissing=state==='missing';linkedForeign=state==='foreign';
+    await current().locator('body').evaluate(()=>window.ForgeWorkspace.open('factory'));
+    await lookup().click();
+    await current().locator(`[data-improvement-id="${cycle}"]`).getByRole('status').filter({hasText:'unavailable or has changed'}).waitFor();
+    assert.equal(await current().locator('#forge-approval-dialog').evaluate(el=>el.open),false);
+   }
+   linkedChanged=linkedMissing=linkedForeign=false;
+   checks.push('Existing workflow cannot bypass changed binding, missing proposal or foreign-owner denial');
+   holdLinked=true;releaseLinked=null;const staleSelection=await lookup().elementHandle();await lookup().click();
+   for(let i=0;i<250&&!releaseLinked;i++)await page.waitForTimeout(20);assert(releaseLinked);
+   await current().locator('body').evaluate(()=>window.ForgeApprovals.open('prop_newest'));
+   await current().locator('#forge-approval-dialog h2').filter({hasText:'prop_newest'}).waitFor();
+   holdLinked=false;releaseLinked();await lookupFinished(staleSelection);
+   assert.equal(await current().locator('#forge-approval-dialog h2').textContent(),'prop_newest');
+   await current().locator('#forge-approval-dialog .dialog-close').click();
+   checks.push('Delayed native proposal read cannot replace a newer selected proposal');
+   await current().locator('body').evaluate(()=>window.ForgeWorkspace.open('factory'));
+   holdLinked=true;releaseLinked=null;const staleCapture=await lookup().elementHandle();await lookup().click();
+   for(let i=0;i<250&&!releaseLinked;i++)await page.waitForTimeout(20);assert(releaseLinked);
+   await current().locator('#window-factory').getByRole('button',{name:'Refresh factory evidence',exact:true}).click();
+   await current().locator('#window-factory').getByRole('status').filter({hasText:'Stale saved evidence'}).waitFor();
+   holdLinked=false;releaseLinked();await lookupFinished(staleCapture);
+   assert.equal(await current().locator('#forge-approval-dialog').evaluate(el=>el.open),false);
+   linkedWorkflow=false;
+   checks.push('Refreshing factory evidence invalidates an in-flight proposal lookup');
   }
   partialImprovements=true;await page.reload();let factory=current().locator('#window-factory');
   await factory.getByRole('status').filter({hasText:'Stale saved evidence'}).waitFor();

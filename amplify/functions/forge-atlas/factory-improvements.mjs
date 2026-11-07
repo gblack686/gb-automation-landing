@@ -1,5 +1,6 @@
 // Read-only native controller projection. A decision or effect is not a new
 // approval, external release readback, or permission to invoke the controller.
+import {validateImprovementReference} from './improvement-proposals.mjs';
 const fail=()=>{throw Error('Improvement evidence unavailable');};
 const need=value=>{if(!value)fail();};
 const only=(value,keys)=>{const names=keys.split(' ');need(value&&typeof value==='object'&&!Array.isArray(value)&&Object.keys(value).length===names.length&&names.every(k=>Object.hasOwn(value,k)));};
@@ -25,7 +26,7 @@ export function validateImprovements(d,expert,captured){
  need(c.standing_authority_sha256===null||hash(c.standing_authority_sha256));
  const seen=new Set();
  for(const r of list(d.rows,100)){
-  only(r,'id task_id updated_at phase outcome reason base_commit candidate_sha256 finding proposal attempts evaluation release_state effects missing verification');
+  only(r,'id task_id updated_at phase outcome reason base_commit candidate_sha256 finding proposal attempts evaluation release_state effects missing verification'+(Object.hasOwn(r,'proposal_reference')?' proposal_reference':''));
   need(typeof r.id==='string'&&/^improvement:[a-f0-9]{32}$/.test(r.id)&&!seen.has(r.id));seen.add(r.id);
   need(count(r.task_id)&&r.task_id>0&&stamp(r.updated_at)&&Date.parse(r.updated_at)<=Date.parse(d.captured_at)
    &&['admitted','proposal','control','candidate','evaluating','releasing','terminal'].includes(r.phase)
@@ -72,6 +73,7 @@ export function validateImprovements(d,expert,captured){
    else need(['target_commit','previous_release','artifact_sha256'].every(k=>e[k]===null));
   }
   need(missing.includes('release_receipts')===r.effects.some(e=>e.verification==='missing'));
+  if(Object.hasOwn(r,'proposal_reference'))validateImprovementReference(r.proposal_reference,r,c);
  }
  return d;
 }
