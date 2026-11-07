@@ -9,6 +9,7 @@ export const WORKSPACE_WINDOWS = Object.freeze([
 const slug=/^[a-z][a-z0-9-]{1,62}$/;
 const resource=/^[a-z][a-z0-9._-]{2,159}$/;
 const sha=/^[a-f0-9]{64}$/;
+const version=value=>typeof value==='string'&&/^[A-Za-z0-9._~+-]{1,200}$/.test(value)&&value!=='null';
 const plain=value=>value&&typeof value==='object'&&!Array.isArray(value);
 const deny=()=>{throw Error('Workspace resource unavailable');};
 
@@ -82,13 +83,19 @@ export function makeWorkspaceReader({readCatalog,readArtifact,readSearch,documen
    return result;
   }
   if(view==='workspaceArtifact'){
-   if(Object.keys(input).sort().join()!=='catalog_sha256,resource_id'
+   const pinned=Object.hasOwn(input,'catalog_version_id');
+   const keys=pinned?'catalog_sha256,catalog_version_id,content_sha256,resource_id,version_id':'catalog_sha256,resource_id';
+   if(Object.keys(input).sort().join()!==keys
+    ||pinned&&(!version(input.catalog_version_id)||!version(input.version_id)||!sha.test(input.content_sha256))
     ||!resource.test(input.resource_id)||!sha.test(input.catalog_sha256))deny();
-   const {asset,bytes}=await readArtifact(input.resource_id,input.catalog_sha256,agentId,signal);
+   const {asset,bytes}=await readArtifact(input.resource_id,input.catalog_sha256,agentId,signal,input.catalog_version_id);
    // The fleet gallery can read another owner's item; an expert window cannot.
-   if(signal?.aborted||asset.owner_expert!==agentId||asset.agent_id!==agentId)deny();
+   if(signal?.aborted||asset.owner_expert!==agentId||asset.agent_id!==agentId
+    ||asset.resource_id!==input.resource_id||asset.catalog_sha256!==input.catalog_sha256
+    ||pinned&&(asset.sha256!==input.content_sha256||asset.version_id!==input.version_id||asset.catalog_version_id!==input.catalog_version_id))deny();
    return {schema_version:'forge-workspace-artifact.v1',agent_id:agentId,resource_id:asset.resource_id,
     catalog_sha256:asset.catalog_sha256,sha256:asset.sha256,observed_at:asset.observed_at,
+    ...(pinned?{catalog_version_id:asset.catalog_version_id,version_id:asset.version_id}:{}),
     freshness:asset.freshness,html:documentFor(bytes,asset.media_type)};
   }
   deny();

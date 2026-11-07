@@ -13,6 +13,9 @@ const base=process.env.FORGE_WORKSPACE_BASE||'http://127.0.0.1:5201';
 const output='artifacts/atlas-factory-workspace-validation/'+new Date().toISOString().replace(/[:.]/g,'-');await mkdir(output,{recursive:true});
 const hash=x=>createHash('sha256').update(x).digest('hex');
 const agents=['youtube-intel','news-agent'];const docs={},receipts={};
+const outputOnly=process.env.FORGE_WORKSPACE_JOURNEY_OUTPUTS==='1';
+const outputFixture=outputOnly?JSON.parse(await readFile(`${root}/journey-output-fixture.json`)):null;
+let archivedUnavailable=false;
 for(const id of agents){docs[id]=await readFile(`${root}/${id}.html`,'utf8');receipts[id]=JSON.parse(await readFile(`${root}/${id}.json`));}
 const object=Buffer.from('<!doctype html><html><head></head><body><h1>Reviewed UI fixture</h1><button id="play" onclick="this.textContent=\'Playing\'">Play</button><script>try{parent.localStorage.getItem("x");document.body.dataset.parent="allowed"}catch{document.body.dataset.parent="denied"}</script></body></html>');
 const asset={sha256:hash(object),key:`gbautomation/resources/artifacts/${hash(object)}.html`,bytes:object.length,media_type:'text/html',version_id:'fixture-v1'};
@@ -21,7 +24,12 @@ const observed=new Date(Date.now()-3600_000).toISOString(),expires=new Date(Date
 const rows=agents.map(id=>({id:`ui.${id}.review`,title:`${id} reviewed UI`,kind:'ui',owner_expert:id,delivery_mode:'artifact',source_commit:'a'.repeat(40),content_sha256:asset.sha256,observed_at:observed,expires_at:expires,artifact:asset}));
 rows.push({...rows[0],id:'ui.youtube-intel.unavailable',title:'Waiting for a published UI',delivery_mode:'unavailable',artifact:undefined,content_sha256:undefined});
 const raw=Buffer.from(JSON.stringify({schema_version:'hosted-resource-delivery.v1',tenant_id:'gbautomation',source_commit:'a'.repeat(40),captured_at:observed,resources:rows}));
-const resourceRead=makeResourceService({enabled:true,loadManifest:async()=>({bytes:raw,sha256:hash(raw)}),describeArtifact:async()=>({url:artifactURL})});
+const resourceRead=makeResourceService({enabled:true,loadManifest:async pin=>{
+ if(!outputOnly)return {bytes:raw,sha256:hash(raw)};
+ const entry=outputFixture[pin?'archived':'current'],publication=entry.publication;
+ if(pin&&(archivedUnavailable||pin.manifest_sha256!==publication.manifest_sha256||pin.manifest_version_id!==publication.manifest_version_id))throw Error('Archived manifest unavailable');
+ return {bytes:Buffer.from(entry.manifest_bytes),sha256:publication.manifest_sha256,version_id:publication.manifest_version_id};
+},describeArtifact:async artifact=>({url:outputOnly?`https://fixture.s3.us-east-1.amazonaws.com/${artifact.key}?versionId=${artifact.version_id}&X-Amz-Expires=60`:artifactURL})});
 const factoryRead=makeFactoryService({enabled:true,load:async id=>{const bytes=await readFile(`${root}/${id}-factory.json`);return {bytes,sha256:hash(bytes)};}});
 const browser=await chromium.launch({headless:true,channel:'chrome'});
 const page=await browser.newPage({viewport:{width:1500,height:1000}});page.setDefaultTimeout(20000);
@@ -29,7 +37,8 @@ const errors=[],checks=[],requests=[];let fail=false,tamper=false,holdArtifact=f
 let omitJourneys=false,foreignJourneys=false;
 let records=false,holdHistory=false,releaseHistory=null,holdProposal=false,releaseProposal=null;
 const planID='prd_'+'c'.repeat(20),sessionKey='fixture-host:'+ 's'.repeat(280);
-const watchdog=setTimeout(async()=>{await writeFile(output+'/timeout.json',JSON.stringify({ok:false,checks,errors,requests},null,2));console.error('Browser validation exceeded 150 seconds: '+output);process.exit(1);},150_000);
+// Total-suite bound grows with scenarios; individual actions still time out at 20s.
+const watchdog=setTimeout(async()=>{await writeFile(output+'/timeout.json',JSON.stringify({ok:false,checks,errors,requests},null,2));console.error('Browser validation exceeded 210 seconds: '+output);process.exit(1);},210_000);
 checks.push=(...items)=>{console.log(items.join('\n'));return Array.prototype.push.apply(checks,items);};
 page.on('pageerror',e=>errors.push(e.message));
 await page.route('**/src/lib/forgeAtlasClient.js*',r=>r.fulfill({contentType:'application/javascript',body:`export async function readAtlas(view,query={},agent_id=null){const r=await fetch('/__workspace_fixture',{method:'POST',body:JSON.stringify({view,query,agent_id})});if(!r.ok)throw Error('Unavailable');return r.json();} export async function expertChat(){return {enabled:false}}`}));
@@ -80,7 +89,9 @@ await page.route('**/__workspace_fixture',async r=>{
 await page.route('https://fixture.s3.us-east-1.amazonaws.com/**',r=>{
  const url=new URL(r.request().url());
  const id=agents.find(id=>url.pathname===`/gbautomation/${id}/index.html`);
- return r.fulfill({contentType:'text/html',body:id?docs[id]:tamper?Buffer.alloc(object.length,32):object,headers:{'Access-Control-Allow-Origin':base}});
+ const saved=outputOnly?Object.values(outputFixture).find(v=>v?.manifest_bytes&&url.pathname.endsWith(JSON.parse(v.manifest_bytes).resources[0].artifact.key))?.content:null;
+ const body=saved===null||saved===undefined?object:Buffer.from(saved);
+ return r.fulfill({contentType:'text/html',body:id?docs[id]:tamper?Buffer.alloc(body.length,32):body,headers:{'Access-Control-Allow-Origin':base}});
 });
 const current=()=>page.frameLocator('iframe[title$=" Atlas"]');
 // DOM visibility alone allows offscreen or clipped text to pass. Check the
@@ -104,6 +115,43 @@ async function visibleEvidence(locator){
  assert.fail('Evidence is clipped, covered or outside the viewport: '+locator+' '+JSON.stringify(observation));
 }
 try{
+ if(outputOnly){
+  await page.goto(base+'/bench/youtube-intel?window=factory');let frame=current();
+  const factory=frame.locator('#window-factory');await factory.getByRole('status').filter({hasText:'Stale saved evidence'}).waitFor();
+  await factory.getByRole('button',{name:'Expert journeys',exact:true}).click();
+  const journey=factory.locator('[data-journey-id="yt_'+ '1'.repeat(24)+'"]');
+  await journey.locator('.factory-journey-detail > summary').click();await journey.locator('.factory-journey-output > summary').click();
+  const open=journey.getByRole('button',{name:'Open saved output',exact:true});await open.focus();await page.keyboard.press('Enter');
+  const result=frame.frameLocator('iframe[title="Output output-0 saved result"]');
+  await result.getByRole('heading',{name:'Captured output v1',exact:true}).waitFor();
+  await result.getByRole('button',{name:'Play',exact:true}).click();await result.getByRole('button',{name:'Playing',exact:true}).waitFor();
+  assert.equal(await result.getByText('Newer output v2',{exact:true}).count(),0);
+  const pinned=requests.filter(x=>x.view==='resourceArtifact');assert(pinned.length);
+  assert(pinned.every(x=>x.query.catalog_sha256===outputFixture.archived.publication.manifest_sha256&&x.query.catalog_version_id===outputFixture.archived.publication.manifest_version_id));
+  checks.push('Keyboard journey output opens exact archived bytes in an existing sandboxed app window while the newer catalog is active');
+  await page.screenshot({path:output+'/journey-output-desktop.png'});
+  await frame.getByRole('button',{name:'Refresh saved result',exact:true}).click();await result.getByRole('heading',{name:'Captured output v1',exact:true}).waitFor();
+  archivedUnavailable=true;await frame.getByRole('button',{name:'Refresh saved result',exact:true}).click();
+  await frame.getByText('The saved result could not be verified. Refresh to retry.',{exact:true}).waitFor();
+  assert.equal(await frame.locator('iframe[title="Output output-0 saved result"]').count(),0);
+  archivedUnavailable=false;tamper=true;await frame.getByRole('button',{name:'Refresh saved result',exact:true}).click();
+  await frame.getByText('The saved result could not be verified. Refresh to retry.',{exact:true}).waitFor();
+  assert.equal(await frame.locator('iframe[title="Output output-0 saved result"]').count(),0);tamper=false;
+  await frame.getByRole('button',{name:'Refresh saved result',exact:true}).click();await result.getByRole('heading',{name:'Captured output v1',exact:true}).waitFor();
+  checks.push('Retry stays on the pinned version; missing archives and changed bytes never fall back to a newer output');
+  await page.setViewportSize({width:390,height:844});await visibleEvidence(frame.locator('.expert-app-window').getByRole('button',{name:'Refresh saved result',exact:true}));
+  await page.screenshot({path:output+'/journey-output-mobile.png'});
+  await frame.getByRole('button',{name:'Close app window',exact:true}).click();
+  await frame.locator('body').evaluate(()=>ForgeWorkspace.open('factory'));
+  assert.equal(await factory.locator('[data-journey-id="yt_'+ '2'.repeat(24)+'"]').getByRole('button',{name:'Open saved output',exact:true}).count(),0);
+  checks.push('Mobile saved output remains usable; unverified partial output has no invented link');
+  holdArtifact=true;releaseArtifact=null;await open.click();
+  for(let i=0;i<100&&!releaseArtifact;i++)await page.waitForTimeout(20);assert(releaseArtifact);
+  await page.getByLabel('Registered agents').selectOption('news-agent');
+  await current().locator('#window-factory').waitFor();holdArtifact=false;releaseArtifact();
+  assert.equal(await current().locator('iframe[title="Output output-0 saved result"]').count(),0);
+  checks.push('Switching experts fences delayed archived output replies');
+ }else{
  await page.goto(base+'/bench/youtube-intel?window=resources',{waitUntil:'domcontentloaded'});
  let frame=current();await frame.getByRole('button',{name:'Open in window',exact:true}).waitFor();
  assert.equal(await frame.locator('.window').count(),20);
@@ -328,6 +376,7 @@ try{
  await page.getByRole('status').filter({hasText:'This expert is not registered for your account.'}).waitFor();
  assert.equal(await page.locator('iframe[title$=" Atlas"]').count(),0);
  checks.push('Unknown requested expert cannot silently open a different registered expert');
+ }
  assert.deepEqual(errors,[]);
  await writeFile(output+'/validation.json',JSON.stringify({ok:true,checks,fixture:true,productionAcceptance:false,sourceDocuments:Object.fromEntries(agents.map(id=>[id,hash(docs[id])]))},null,2));
  console.log(JSON.stringify({ok:true,checks}));

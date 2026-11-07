@@ -21,8 +21,9 @@ const version = value => typeof value === 'string' && /^[A-Za-z0-9._~+-]{1,200}$
 
 export function resourceQuery(view, query) {
  if (!object(query)) return false;
- if (view === 'resourceArtifact') return Object.keys(query).sort().join() === 'catalog_sha256,resource_id'
-  && matches(id,query.resource_id) && matches(sha,query.catalog_sha256);
+ if (view === 'resourceArtifact') return ['catalog_sha256,resource_id','catalog_sha256,catalog_version_id,resource_id'].includes(Object.keys(query).sort().join())
+  && matches(id,query.resource_id) && matches(sha,query.catalog_sha256)
+  && (query.catalog_version_id===undefined||version(query.catalog_version_id));
  if (view !== 'resourceCatalog' || Object.keys(query).some(k => !['owner','kind','search','offset'].includes(k))) return false;
  return (query.owner === undefined || matches(slug,query.owner))
   && (query.kind === undefined || ['ui','kb','process'].includes(query.kind))
@@ -72,9 +73,11 @@ export function makeResourceService({enabled = false, loadManifest, describeArti
  return async request => {
   if (!enabled || !resourceQuery(request.view,request.query)) fail();
   const now = clock();
-  const manifest = await loadManifest();
+  const pin=request.view==='resourceArtifact'&&request.query.catalog_version_id?{schema_version:'hosted-resource-pointer.v1',manifest_sha256:request.query.catalog_sha256,manifest_version_id:request.query.catalog_version_id}:undefined;
+  const manifest = await loadManifest(pin);
+  if(pin&&(manifest.sha256!==pin.manifest_sha256||manifest.version_id!==pin.manifest_version_id))fail();
   const data = validateResourceManifest(manifest.bytes,manifest.sha256,now);
-  const envelope = {tenant_id:'gbautomation',agent_id:request.agent_id,catalog_sha256:manifest.sha256,
+  const envelope = {tenant_id:'gbautomation',agent_id:request.agent_id,catalog_sha256:manifest.sha256,catalog_version_id:manifest.version_id,
    source_commit:data.source_commit,captured_at:data.captured_at};
   if (request.view === 'resourceArtifact') {
    if (request.query.catalog_sha256 !== manifest.sha256) fail();

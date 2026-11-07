@@ -76,6 +76,28 @@ Validate `factory-journeys.test.mjs` plus the native journey browser scenarios
 in `scripts/validate-atlas-factory-workspace.mjs`. These are source checks;
 publication and real identity/mobile acceptance remain separate.
 
+Verified YouTube outputs may also carry an explicit `hosted_binding`: the
+registered resource ID, catalog digest/version and artifact digest/version.
+GBAutomation prepares that binding from the exact native capture and verified
+publication receipt. Unverified outputs and News cards without a verified
+artifact export remain unavailable; completion never implies publication.
+
+An artifact request may include `catalog_version_id` with its catalog digest.
+The storage adapter then reads only that immutable manifest version under the
+existing private prefix, rather than following the active pointer. Registered
+operator/expert authorization still runs before storage. The workspace checks
+the artifact owner, resource identity, expected content digest and both versions
+before rendering; signed URLs never enter the workspace document channel.
+Refresh retries the same captured output. Missing/replaced archived objects
+cannot silently substitute the latest result. Normal catalog reads are unchanged.
+
+The existing read grants already cover versioned manifests and artifacts; no
+new cloud resource, owner, schedule or IAM prefix is needed. Deploy readers
+before snapshots/documents using output bindings. Restore earlier snapshots
+and documents before rolling back those strict readers. Retain archived object
+versions. Run the existing workspace browser validator normally and with
+`FORGE_WORKSPACE_JOURNEY_OUTPUTS=1` using generated output fixtures for the latter.
+
 Workspace search carries typed exact destinations for proposals, indexed plans
 and sessions. Proposal details use the existing owned reader even when the
 record is outside the current catalog page. Plans open their scoped index and

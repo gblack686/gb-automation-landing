@@ -32,3 +32,14 @@ test('YouTube artifact verification does not become delivery or target acceptanc
  d.rows[0].outputs[0].verification='verified';d.rows[0].outputs[0].sha256=null;
  assert.throws(()=>validateJourneys(d,d.expert_id,snapshot));
 });
+
+test('only verified native outputs can carry exact archived publication bindings',()=>{
+ const d=fixture();d.expert_id='gbautomation/youtube-intel';const id='yt_'+'1'.repeat(24);d.output_links_sha256=['e'.repeat(64)];
+ d.rows=[{id,kind:'youtube',status:'completed',work:[{label:'Run',id},{label:'Source commit',id:'b'.repeat(40)},{label:'Binding',id:'c'.repeat(64)}],
+  outputs:[{id:'output',artifact_id:'artifact',sha256:'d'.repeat(64),verification:'verified',hosted_binding:{resource_id:'ui.youtube',catalog_sha256:'a'.repeat(64),catalog_version_id:'manifest-v1',content_sha256:'d'.repeat(64),version_id:'artifact-v1'}}],
+  collector_events:[],generation:null,complete:true,delivered:false,langfuse_trace_id:null,target_evidence:'missing',acceptance:'pending'}];
+ validateJourneys(d,d.expert_id,snapshot);
+ for(const edit of [v=>v.rows[0].outputs[0].hosted_binding.content_sha256='b'.repeat(64),v=>v.rows[0].outputs[0].hosted_binding.catalog_version_id='null',v=>v.rows[0].outputs[0].verification='unverified',v=>delete v.output_links_sha256,v=>v.rows[0].outputs[0].hosted_binding.url='https://evil.invalid']){
+  const bad=structuredClone(d);edit(bad);assert.throws(()=>validateJourneys(bad,bad.expert_id,snapshot));
+ }
+});

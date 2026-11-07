@@ -6,10 +6,11 @@ const text=(v,n=240)=>typeof v==='string'&&v.length>0&&v.length<=n&&!/[\x00-\x1f
 const integer=v=>typeof v==='string'&&/^[1-9][0-9]{0,15}$/.test(v)&&Number.isSafeInteger(Number(v));
 const numeric=v=>v===null||typeof v==='number'&&Number.isFinite(v)&&v>=0;
 const stamp=v=>typeof v==='string'&&/(Z|[+-]\d{2}:\d{2})$/.test(v)&&Number.isFinite(Date.parse(v));
-function only(v,keys){if(!v||typeof v!=='object'||Array.isArray(v)||Object.keys(v).some(k=>!keys.includes(k))||keys.some(k=>!(k in v)))fail();}
+function only(v,keys,optional=[]){if(!v||typeof v!=='object'||Array.isArray(v)||Object.keys(v).some(k=>!keys.includes(k)&&!optional.includes(k))||keys.some(k=>!(k in v)))fail();}
 function rows(v,cap){if(!Array.isArray(v)||v.length>cap||new Set(v.map(r=>r?.id)).size!==v.length)fail();return v;}
 export function validateJourneys(data,expert,snapshotAt){
- only(data,['schema_version','expert_id','captured_at','source_sha256','selection','rows']);
+ only(data,['schema_version','expert_id','captured_at','source_sha256','selection','rows'],['output_links_sha256']);
+ if('output_links_sha256' in data&&(!Array.isArray(data.output_links_sha256)||!data.output_links_sha256.length||data.output_links_sha256.length>20||data.output_links_sha256.some(v=>!sha.test(v))||new Set(data.output_links_sha256).size!==data.output_links_sha256.length))fail();
  if(data.schema_version!=='forge-workspace-journeys.v1'||data.expert_id!==expert
   ||!['gbautomation/youtube-intel','gbautomation/news-agent'].includes(expert)
   ||!stamp(data.captured_at)||Date.parse(data.captured_at)>Date.parse(snapshotAt)||!sha.test(data.source_sha256)||data.selection!=='explicit_ids')fail();
@@ -28,12 +29,19 @@ export function validateJourneys(data,expert,snapshotAt){
     ||typeof row.complete!=='boolean'||typeof row.delivered!=='boolean'||row.generation!==null||row.collector_events?.length!==0)fail();
   }else if(!/^news-card-[1-9][0-9]{0,15}$/.test(row.id)||row.complete!==null||row.delivered!==null)fail();
   for(const output of rows(row.outputs,100)){
-   only(output,['id','artifact_id','sha256','verification']);
+   only(output,['id','artifact_id','sha256','verification'],['hosted_binding']);
    if(!text(output.id))fail();
    if(kind==='youtube'){
     if(!text(output.artifact_id)||!['verified','unverified'].includes(output.verification)
      ||output.sha256!==null&&!sha.test(output.sha256)||output.verification==='verified'&&output.sha256===null)fail();
    }else if(output.artifact_id!==null||output.sha256!==null||output.verification!=='recorded'||row.id!=='news-card-'+output.id)fail();
+   if('hosted_binding' in output){
+    const b=output.hosted_binding;only(b,['resource_id','catalog_sha256','catalog_version_id','content_sha256','version_id']);
+    const version=v=>typeof v==='string'&&/^[A-Za-z0-9._~+-]{1,200}$/.test(v)&&v!=='null';
+    if(kind!=='youtube'||output.verification!=='verified'||!data.output_links_sha256
+     ||typeof b.resource_id!=='string'||!/^[a-z][a-z0-9._-]{2,159}$/.test(b.resource_id)||!sha.test(b.catalog_sha256)
+     ||b.content_sha256!==output.sha256||!version(b.catalog_version_id)||!version(b.version_id))fail();
+   }
   }
   if(kind==='news'&&row.outputs.length!==1)fail();
   let session=null;

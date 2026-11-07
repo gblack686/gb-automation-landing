@@ -26,7 +26,8 @@ export function makeResourceStorage({client,bucket,sign}) {
    if(typeof agent!=='string'||!/^[a-z][a-z0-9-]{1,62}$/.test(agent))throw Error('Factory expert unavailable');
    return read(`gbautomation/${agent}/factory-workspace.json`,null,1_000_000);
   },
-  async loadManifest() {
+  async loadManifest(pinned=undefined) {
+   if(pinned!==undefined){const pointer=validateResourcePointer(pinned);return read(pointer.key,pointer.version_id,1_500_000,pointer.sha256);}
    const active=await read(`${RESOURCE_ROOT}/active.json`,null,2048);
    const pointer=validateResourcePointer(JSON.parse(active.bytes.toString('utf8')));
    return read(pointer.key,pointer.version_id,1_500_000,pointer.sha256);

@@ -97,3 +97,17 @@ test('verified result carries capture age but never signed URL; aborted requests
  controller.abort();await assert.rejects(read('workspaceArtifact',input,agent));
  await assert.rejects(read('workspaceArtifact',{...input,resource_id:'https://invalid'},agent));
 });
+
+test('journey artifact is pinned to the archived catalog and exact content before rendering',async()=>{
+ const pinned={...input,catalog_version_id:'old-manifest',content_sha256:hash,version_id:'old-artifact'};
+ const saved={...asset,catalog_version_id:'old-manifest',version_id:'old-artifact'};let rendered=0;
+ const read=makeWorkspaceReader({readArtifact:async(id,catalog,owner,signal,version)=>{
+  assert.equal(version,'old-manifest');return {asset:saved,bytes:new Uint8Array()};
+ },documentFor:()=>{rendered++;return 'exact output';}});
+ assert.equal((await read('workspaceArtifact',pinned,agent)).version_id,'old-artifact');assert.equal(rendered,1);
+ for(const [field,value] of [['sha256','b'.repeat(64)],['version_id','new-artifact'],['catalog_version_id','new-manifest'],['resource_id','ui.other'],['owner_expert','news-agent']]){
+  const denied=makeWorkspaceReader({readArtifact:async()=>({asset:{...saved,[field]:value},bytes:new Uint8Array()}),documentFor:()=>assert.fail('wrong output rendered')});
+  await assert.rejects(denied('workspaceArtifact',pinned,agent));
+ }
+ for(const key of ['content_sha256','version_id']){const incomplete={...pinned};delete incomplete[key];await assert.rejects(read('workspaceArtifact',incomplete,agent));}
+});
