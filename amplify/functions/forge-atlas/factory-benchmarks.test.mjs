@@ -9,6 +9,17 @@ test('missing metrics, failure and zero retain distinct meanings',()=>{
  const d=fixture();assert.equal(validateBenchmarks(d,expert,captured),d);
  assert.equal(d.rows[0].tokens,null);assert.equal(d.rows[0].seconds,0);assert.equal(d.production_acceptance,false);
 });
+test('timeline is optional and only opens an immutable resource for the selected expert',()=>{
+ const d=fixture();d.timeline={links_sha256:sha,descriptor_sha256:sha,hosted_binding:{resource_id:'ui.news-agent.benchmark-timeline',
+  catalog_sha256:sha,catalog_version_id:'manifest-v1',content_sha256:sha,version_id:'artifact-v1'}};
+ assert.equal(validateBenchmarks(d,expert,captured),d);
+ for(const change of [v=>v.timeline.hosted_binding.resource_id='ui.youtube-intel.benchmark-timeline',
+  v=>v.timeline.hosted_binding.version_id='null',v=>v.timeline.hosted_binding.catalog_version_id='',
+  v=>v.timeline.hosted_binding.url='https://untrusted.invalid',v=>v.timeline.links_sha256='wrong',
+  v=>v.timeline.descriptor_sha256='wrong',v=>v.timeline.hosted_binding.content_sha256='wrong']){
+  const wrong=structuredClone(d);change(wrong);assert.throws(()=>validateBenchmarks(wrong,expert,captured));
+ }
+});
 test('foreign expert, task relevance, duplicate runs, fabricated acceptance and unexpected fields rejected',()=>{
  for(const change of [d=>d.expert_id='gbautomation/youtube-intel',d=>d.scope='production',d=>d.production_acceptance=true,
   d=>d.through='2027-01-01T00:00:00Z',d=>d.through='2026-11-03T00:00:00',d=>d.rows.push({...d.rows[0]}),

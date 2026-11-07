@@ -14,7 +14,9 @@ const output='artifacts/atlas-factory-workspace-validation/'+new Date().toISOStr
 const hash=x=>createHash('sha256').update(x).digest('hex');
 const agents=['youtube-intel','news-agent'];const docs={},receipts={};
 const outputOnly=process.env.FORGE_WORKSPACE_JOURNEY_OUTPUTS==='1';
-const outputFixture=outputOnly?JSON.parse(await readFile(`${root}/journey-output-fixture.json`)):null;
+const benchmarkOnly=process.env.FORGE_WORKSPACE_BENCHMARK_TIMELINES==='1';
+const archivedMode=outputOnly||benchmarkOnly;
+const outputFixture=benchmarkOnly?JSON.parse(await readFile(`${root}/benchmark-timeline-fixture.json`)):outputOnly?JSON.parse(await readFile(`${root}/journey-output-fixture.json`)):null;
 let archivedUnavailable=false;
 for(const id of agents){docs[id]=await readFile(`${root}/${id}.html`,'utf8');receipts[id]=JSON.parse(await readFile(`${root}/${id}.json`));}
 const object=Buffer.from('<!doctype html><html><head></head><body><h1>Reviewed UI fixture</h1><button id="play" onclick="this.textContent=\'Playing\'">Play</button><script>try{parent.localStorage.getItem("x");document.body.dataset.parent="allowed"}catch{document.body.dataset.parent="denied"}</script></body></html>');
@@ -25,11 +27,11 @@ const rows=agents.map(id=>({id:`ui.${id}.review`,title:`${id} reviewed UI`,kind:
 rows.push({...rows[0],id:'ui.youtube-intel.unavailable',title:'Waiting for a published UI',delivery_mode:'unavailable',artifact:undefined,content_sha256:undefined});
 const raw=Buffer.from(JSON.stringify({schema_version:'hosted-resource-delivery.v1',tenant_id:'gbautomation',source_commit:'a'.repeat(40),captured_at:observed,resources:rows}));
 const resourceRead=makeResourceService({enabled:true,loadManifest:async pin=>{
- if(!outputOnly)return {bytes:raw,sha256:hash(raw)};
+ if(!archivedMode)return {bytes:raw,sha256:hash(raw)};
  const entry=outputFixture[pin?'archived':'current'],publication=entry.publication;
  if(pin&&(archivedUnavailable||pin.manifest_sha256!==publication.manifest_sha256||pin.manifest_version_id!==publication.manifest_version_id))throw Error('Archived manifest unavailable');
  return {bytes:Buffer.from(entry.manifest_bytes),sha256:publication.manifest_sha256,version_id:publication.manifest_version_id};
-},describeArtifact:async artifact=>({url:outputOnly?`https://fixture.s3.us-east-1.amazonaws.com/${artifact.key}?versionId=${artifact.version_id}&X-Amz-Expires=60`:artifactURL})});
+},describeArtifact:async artifact=>({url:archivedMode?`https://fixture.s3.us-east-1.amazonaws.com/${artifact.key}?versionId=${artifact.version_id}&X-Amz-Expires=60`:artifactURL})});
 const factoryRead=makeFactoryService({enabled:true,load:async id=>{const bytes=await readFile(`${root}/${id}-factory.json`);return {bytes,sha256:hash(bytes)};}});
 const browser=await chromium.launch({headless:true,channel:'chrome'});
 const page=await browser.newPage({viewport:{width:1500,height:1000}});page.setDefaultTimeout(20000);
@@ -92,10 +94,10 @@ await page.route('https://fixture.s3.us-east-1.amazonaws.com/**',r=>{
  const url=new URL(r.request().url());
  const id=agents.find(id=>url.pathname===`/gbautomation/${id}/index.html`);
  let saved=null;
- if(outputOnly)for(const entry of Object.values(outputFixture)){
+ if(archivedMode)for(const entry of Object.values(outputFixture)){
   if(!entry?.manifest_bytes)continue;
   const resource=JSON.parse(entry.manifest_bytes).resources.find(row=>url.pathname.endsWith(row.artifact.key));
-  if(resource)saved=resource.owner_expert==='news-agent'?entry.news_content:entry.content;
+  if(resource)saved=benchmarkOnly?entry.contents[resource.content_sha256]:resource.owner_expert==='news-agent'?entry.news_content:entry.content;
  }
  const body=saved===null||saved===undefined?object:Buffer.from(saved);
  return r.fulfill({contentType:'text/html',body:id?docs[id]:tamper?Buffer.alloc(body.length,32):body,headers:{'Access-Control-Allow-Origin':base}});
@@ -122,7 +124,34 @@ async function visibleEvidence(locator){
  assert.fail('Evidence is clipped, covered or outside the viewport: '+locator+' '+JSON.stringify(observation));
 }
 try{
- if(outputOnly){
+ if(benchmarkOnly){
+  for(const [agent,caseID,width] of [['youtube-intel','B06',1440],['news-agent','B07',390]]){
+   await page.setViewportSize({width,height:1000});await page.goto(base+'/bench/'+agent+'?window=factory');
+   const frame=current(),factory=frame.locator('#window-factory');await factory.getByRole('status').filter({hasText:'Stale saved evidence'}).waitFor();
+   await factory.getByRole('button',{name:'Benchmark outcomes',exact:true}).click();
+   const open=factory.getByRole('button',{name:'Open benchmark timeline',exact:true});await open.focus();await page.keyboard.press('Enter');
+   const chart=frame.frameLocator('iframe[title="Benchmark timeline saved result"]');
+   await chart.getByRole('button',{name:'Play',exact:true}).waitFor();
+   await chart.getByText('8 / 8 selected attempts revealed',{exact:false}).waitFor();
+   const cases=await chart.getByLabel('Task',{exact:true}).locator('option').allTextContents();assert.deepEqual(cases,['All',caseID]);
+   assert.equal(await chart.getByLabel('Relevant expert',{exact:true}).inputValue(),'All');
+   await chart.getByRole('button',{name:'Rewind',exact:true}).click();await chart.getByRole('button',{name:'Play',exact:true}).click();
+   await chart.getByRole('button',{name:'Pause',exact:true}).click();await chart.getByRole('button',{name:'Show all',exact:true}).click();
+   const content=await chart.locator('body').evaluate(()=>({parentAccess:(()=>{try{parent.localStorage.getItem('test');return true;}catch{return false;}})(),hasNewMarker:document.documentElement.outerHTML.includes('synthetic newer publication'),overflow:document.documentElement.scrollWidth>innerWidth+1}));
+   assert.equal(content.parentAccess,false);assert.equal(content.hasNewMarker,false);assert.equal(content.overflow,false);
+   assert(requests.some(r=>r.view==='resourceArtifact'&&r.query.resource_id==='ui.'+agent+'.benchmark-timeline'&&r.query.catalog_version_id==='fixture-archived-timeline-manifest'));
+   await chart.getByRole('button',{name:'Play',exact:true}).scrollIntoViewIfNeeded();
+   await page.screenshot({path:output+'/benchmark-timeline-'+agent+'.png'});
+   checks.push(agent+' exact archived Bokeh chart opens inside its expert window; only '+caseID+' attempts, playback works, parent state denied at '+width+'px');
+  }
+  await page.goto(base+'/bench/news-agent?window=factory');const frame=current(),factory=frame.locator('#window-factory');
+  await factory.getByRole('status').filter({hasText:'Stale saved evidence'}).waitFor();
+  await factory.getByRole('button',{name:'Benchmark outcomes',exact:true}).click();
+  archivedUnavailable=true;await factory.getByRole('button',{name:'Open benchmark timeline',exact:true}).click();
+  await frame.getByText('The saved result could not be verified. Refresh to retry.',{exact:true}).waitFor();
+  assert.equal(await frame.locator('iframe[title="Benchmark timeline saved result"]').count(),0);archivedUnavailable=false;
+  checks.push('Missing archived chart fails without substituting the current publication');
+ }else if(outputOnly){
   await page.goto(base+'/bench/youtube-intel?window=factory');let frame=current();
   const factory=frame.locator('#window-factory');await factory.getByRole('status').filter({hasText:'Stale saved evidence'}).waitFor();
   await factory.getByRole('button',{name:'Expert journeys',exact:true}).click();

@@ -132,6 +132,21 @@ Validation adds `shared/forgeSearchNavigation.test.mjs` and the exact-record
 scenarios in `scripts/validate-atlas-factory-workspace.mjs`. These use synthetic
 transport; real publication and identity acceptance remain release gates.
 
+The optional Factory benchmark scorecard can carry a `timeline` binding. Its
+resource must be `ui.<selected-expert>.benchmark-timeline`; both manifest and
+artifact versions are explicit. The existing authenticated saved-output reader
+and sandbox handle this chart. A missing archived chart cannot fall back to the
+current catalog. This is a historical synthetic-task view and grants no target
+credit, game progress, review approval or publication authority.
+
+The producer builds separate Pi, YouTube and News artifacts. Expert filtering
+cannot reveal rows that are not present in that expert's artifact. Validate real
+Bokeh rendering, playback, owner isolation and missing-archive behavior with
+`FORGE_WORKSPACE_BENCHMARK_TIMELINES=1` in the existing workspace browser
+validator. Its transport and object versions are synthetic; it is not cloud
+acceptance. Install this compatible reader before extended snapshots and
+documents. For rollback, restore snapshots/documents first and retain archives.
+
 ## Bounded Pi requests
 
 `FORGE_PI_JOBS_ENABLED` independently defaults to false. `forgePiRead` and

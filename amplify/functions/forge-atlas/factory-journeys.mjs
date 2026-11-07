@@ -1,5 +1,6 @@
 // Optional extension of the private Factory snapshot. No URL or approval is
 // inferred from a native task, artifact or collector event identity.
+import {validSavedBinding} from './saved-binding.mjs';
 const fail=()=>{throw Error('Factory journey evidence unavailable');};
 const sha=/^[a-f0-9]{64}$/;
 const text=(v,n=240)=>typeof v==='string'&&v.length>0&&v.length<=n&&!/[\x00-\x1f\x7f]/.test(v);
@@ -42,11 +43,8 @@ export function validateJourneys(data,expert,snapshotAt){
      ||typeof output.export_source_commit!=='string'||!/^[a-f0-9]{40}$/.test(output.export_source_commit))fail();
    }
    if('hosted_binding' in output){
-    const b=output.hosted_binding;only(b,['resource_id','catalog_sha256','catalog_version_id','content_sha256','version_id']);
-    const version=v=>typeof v==='string'&&/^[A-Za-z0-9._~+-]{1,200}$/.test(v)&&v!=='null';
-    if(output.verification!=='verified'||!data.output_links_sha256
-     ||typeof b.resource_id!=='string'||!/^[a-z][a-z0-9._-]{2,159}$/.test(b.resource_id)||!sha.test(b.catalog_sha256)
-     ||b.content_sha256!==output.sha256||!version(b.catalog_version_id)||!version(b.version_id))fail();
+    const b=output.hosted_binding;
+    if(!validSavedBinding(b)||output.verification!=='verified'||!data.output_links_sha256||b.content_sha256!==output.sha256)fail();
    }
   }
   if(kind==='news'&&row.outputs.length!==1)fail();
