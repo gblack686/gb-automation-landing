@@ -14,6 +14,7 @@ const base=process.env.FORGE_WORKSPACE_BASE||'http://127.0.0.1:5201';
 const output='artifacts/atlas-factory-workspace-validation/'+new Date().toISOString().replace(/[:.]/g,'-');await mkdir(output,{recursive:true});
 const hash=x=>createHash('sha256').update(x).digest('hex');
 const improvementOnly=process.env.FORGE_WORKSPACE_IMPROVEMENTS==='1';
+const outcomeOnly=process.env.FORGE_WORKSPACE_OUTCOMES==='1';
 const proposalPreparation=process.env.FORGE_WORKSPACE_IMPROVEMENT_PROPOSALS?JSON.parse(await readFile(process.env.FORGE_WORKSPACE_IMPROVEMENT_PROPOSALS+'/preparation.json')):null;
 const linkedRows=new Map((proposalPreparation?.spine_rows.agent_os_proposals||[]).map(row=>[row.proposal_id,{...row,producer_runs:proposalPreparation.spine_rows.producer_runs.find(p=>p.producer_run_id===row.producer_run_id)}]));
 let linkedMissing=false,linkedChanged=false,linkedForeign=false,linkedWorkflow=false,holdLinked=false,releaseLinked=null;
@@ -47,6 +48,7 @@ const browser=await chromium.launch({headless:true,channel:'chrome'});
 const page=await browser.newPage({viewport:{width:1500,height:1000}});page.setDefaultTimeout(20000);
 const errors=[],checks=[],requests=[];let fail=false,tamper=false,holdArtifact=false,releaseArtifact=null,failFactory=false,foreignFactory=false;
 let omitJourneys=false,foreignJourneys=false,foreignBenchmarks=false,omitBenchmarks=false;
+let omitOutcomes=false,foreignOutcomes=false;
 let records=false,holdHistory=false,releaseHistory=null,holdProposal=false,releaseProposal=null;
 const planID='prd_'+'c'.repeat(20),sessionKey='fixture-host:'+ 's'.repeat(280);
 // Total-suite bound grows with scenarios; individual actions still time out at 20s.
@@ -95,6 +97,8 @@ await page.route('**/__workspace_fixture',async r=>{
    if(foreignBenchmarks&&data.benchmark_evidence)data.benchmark_evidence.expert_id='gbautomation/youtube-intel';
    if(omitBenchmarks)delete data.benchmark_evidence;
    if(omitImprovements)delete data.improvement_evidence;
+   if(omitOutcomes)delete data.outcome_evidence;
+   if(foreignOutcomes&&data.outcome_evidence)data.outcome_evidence.quests[0].expert_id='consulting/pi';
    if(foreignImprovements&&data.improvement_evidence)data.improvement_evidence.expert_id='gbautomation/news-agent';
    return r.fulfill({json:data});
   }catch{return r.fulfill({status:503,body:'Invalid factory fixture'});}
@@ -155,7 +159,51 @@ async function lookupFinished(handle){
  assert.equal(await handle.evaluate(el=>el.disabled),false,'Proposal lookup did not finish');
 }
 try{
- if(improvementOnly){
+ if(outcomeOnly){
+  for(const width of [1440,390]){
+   await page.setViewportSize({width,height:1000});await page.goto(base+'/bench/youtube-intel?window=factory');
+   const factory=current().locator('#window-factory');await factory.getByRole('status').filter({hasText:'Saved evidence'}).waitFor();
+   const button=factory.getByRole('button',{name:'Verified outcomes',exact:true});await button.focus();await page.keyboard.press('Enter');
+   const section=factory.locator('[data-factory-section="Verified outcomes"]');
+   assert.equal(await section.locator('[data-outcome-quest]').count(),5);
+   await visibleEvidence(section.getByText('Verified impact: 1 outcome currently verified · 17 net outcome XP.',{exact:true}));
+   assert.match(await section.innerText(),/including 1 rejected/);
+   await page.screenshot({path:output+'/outcomes-summary-'+width+'.png'});
+   const withdrawn=section.locator('[data-outcome-quest="quest-withdrawn"]');
+   await withdrawn.getByText('Inspect outcome history',{exact:true}).click();
+   const reversal=withdrawn.getByText(/outcome_credit_reversal · -1.5 XP/);await reversal.evaluate(el=>el.scrollIntoView({block:'center',behavior:'instant'}));await visibleEvidence(reversal);
+   assert.match(await withdrawn.innerText(),/independent_validator · 1.5 XP/);
+   assert.match(await withdrawn.innerText(),/Reverses d4:/);
+   assert(await section.evaluate(el=>el.scrollWidth<=el.clientWidth+1));
+   assert(await current().locator('body').evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
+   await page.screenshot({path:output+'/outcomes-history-'+width+'.png'});
+   checks.push(`Exact YouTube ownership, separate activity/impact and fractional withdrawal history readable at ${width}px`);
+  }
+  await page.goto(base+'/bench/news-agent?window=factory');
+  let factory=current().locator('#window-factory');await factory.getByRole('status').filter({hasText:'Saved evidence'}).waitFor();
+  assert.equal(await factory.locator('[data-outcome-quest]').count(),1);
+  assert.equal(await factory.locator('[data-outcome-quest="quest-foreign"]').count(),1);
+  assert.equal(await factory.locator('[data-outcome-quest="quest-1"]').count(),0);
+  checks.push('Switching expert retains only the explicitly News-owned quest');
+  failFactory=true;await factory.getByRole('button',{name:'Refresh factory evidence'}).click();
+  await factory.getByRole('status').filter({hasText:'Keeping saved evidence captured'}).waitFor();
+  assert.equal(await factory.locator('[data-outcome-quest]').count(),1);failFactory=false;
+  checks.push('Refresh failure retains visibly labeled last-good outcome history');
+  omitOutcomes=true;await factory.getByRole('button',{name:'Refresh factory evidence'}).click();
+  await factory.getByText('The original scored outcome package and its pinned authority have not been published for this expert. Outcome details are unavailable.',{exact:true}).waitFor();
+  assert.equal(await factory.locator('[data-outcome-quest]').count(),0);omitOutcomes=false;
+  checks.push('Older snapshot displays unavailable details without inventing zero progress');
+  foreignOutcomes=true;await page.goto(base+'/bench/news-agent?window=factory');factory=current().locator('#window-factory');
+  await factory.getByRole('status').filter({hasText:'Factory evidence is unavailable'}).waitFor();
+  assert.equal(await factory.locator('[data-outcome-quest]').count(),0);foreignOutcomes=false;
+  checks.push('Opaque document denies a foreign expert even after the host read boundary');
+  await page.goto(base+'/bench/youtube-intel?window=factory');factory=current().locator('#window-factory');
+  await factory.getByRole('status').filter({hasText:'Saved evidence'}).waitFor();
+  const reads=requests.filter(r=>r.view==='factorySnapshot').length;await page.waitForTimeout(1200);
+  assert.equal(requests.filter(r=>r.view==='factorySnapshot').length,reads);
+  assert(requests.every(r=>!['approve','dispatch','score','improvementDetect','improvementConfirm','benchmarkRun'].includes(r.view)));
+  checks.push('Manual read only: no idle factory polling, model calls, award or approval writes');
+ }else if(improvementOnly){
   for(const width of [1440,390]){
    await page.setViewportSize({width,height:1000});await page.goto(base+'/bench/pi?window=factory');
    const factory=current().locator('#window-factory');await factory.getByRole('status').filter({hasText:'Stale saved evidence'}).waitFor();

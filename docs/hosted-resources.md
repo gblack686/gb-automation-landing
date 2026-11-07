@@ -56,6 +56,27 @@ manifests and job ledgers. No object deletion is required.
 
 ## Workspace record navigation
 
+The Factory window also accepts optional `outcome_evidence` from the paired
+Factory Game snapshot producer. The producer replays the original D4 package
+with a separately pinned authority, requires an exact match with the ledger
+extension and every in-range hashed season entry, and projects only quests
+whose explicit expert matches the selected workspace. Shared-seat totals never
+assign an outcome to another expert. Missing packages show unavailable detail.
+
+The strict hosted reader preserves reviewed activity, verified impact and
+in-range ledger credit separately. Rejected, pending, failed and withdrawn
+quests stay visible, with append-only reversals and fractional XP. These are
+frozen evidence claims, never live acceptance or permission to award credit.
+No endpoint, setting, writer, timer or scoring rule is added. Deploy the paired
+reader and regenerated documents before publishing extended snapshots; restore
+prior snapshot versions before reverting an older strict reader. Synthetic
+test authorities and packages must never be published as real evidence.
+
+Source checks: `node --test amplify/functions/forge-atlas/factory*.test.mjs`.
+The outcome fixture/browser mode additionally verifies real paired producer
+bytes, desktop/mobile history, foreign-owner denial, manual refresh failure
+and the absence of reads while idle or any writes/model calls.
+
 The Factory snapshot optionally includes `journey_evidence` from the paired
 GBAutomation native YouTube/News adapters. Its original capture time and source
 digest remain attached to the exact expert/configuration-bound snapshot. The
