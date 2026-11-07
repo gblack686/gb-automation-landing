@@ -193,6 +193,25 @@ Install the compatible reader and regenerated documents before extended
 snapshots; restore compatible snapshot versions before reverting the reader.
 Source tests do not establish hosted or live acceptance.
 
+The optional `journey_links` object now binds the original journey capture to
+displayed native operation slots and their saved output identities. The paired
+producer replays pinned native observation/span functions and reads source and
+relay databases in read-only transactions. News native-content and exported-JSON
+hashes remain distinct; HTML run reports are not accepted YouTube summaries.
+Every expected span, payload and recorded readback must match the original sink
+capture before a trace ID is exposed. The display reader binds expert, source,
+journey digest, run, output and readback fields. It verifies trace/root identity
+namespaces and accepts no caller-supplied project URL.
+
+Factory supports keyboard navigation between the exact journey and operation
+slot. Missing source closure, changed bytes, absent/conflicting readbacks and
+older snapshots remain explicit. A verified link grants no target acceptance or
+game credit, and whole-run trace scope does not change generation-only metrics.
+Use `FORGE_WORKSPACE_NATIVE_LINK_FIXTURES` for reader tests and
+`FORGE_WORKSPACE_NATIVE_LINKS=1` for the browser scenario. The paired synthetic
+builder is `scripts/build_atlas_native_links_fixtures.mjs` in GBAutomation.
+Private live joins and hosted acceptance still require release evidence.
+
 ## Bounded Pi requests
 
 `FORGE_PI_JOBS_ENABLED` independently defaults to false. `forgePiRead` and

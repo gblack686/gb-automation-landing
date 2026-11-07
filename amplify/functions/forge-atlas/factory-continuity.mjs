@@ -1,5 +1,6 @@
 // Display boundary for the paired producer's replay of native Pi evidence.
 // The native reducer owns acceptance. This reader verifies safe shape and scope.
+import {validateNativeLinks} from './factory-native-links.mjs';
 const fail=()=>{throw Error('Continuity evidence unavailable');};
 const need=v=>{if(!v)fail();};
 const exact=(v,keys)=>need(v&&typeof v==='object'&&!Array.isArray(v)&&Object.keys(v).length===keys.length&&keys.every(k=>Object.hasOwn(v,k)));
@@ -17,8 +18,9 @@ const strings=(v,max=1000)=>need(list(v,max).every(text));
 const verdicts=['successful','pending','missing','failed','late','unknown'];
 const sourceFiles=['src/context.ts','src/continuity-proof.ts','src/continuity-qualification.ts'];
 
-export function validateContinuity(d,expert,snapshotAt){
- exact(d,['schema_version','expert_id','captured_at','evidence_mode','promotion_authorized','source','window','selection','rows','limitations']);
+export function validateContinuity(d,expert,snapshotAt,journeys){
+ exact(d,['schema_version','expert_id','captured_at','evidence_mode','promotion_authorized','source','window','selection','rows','limitations',
+  ...(Object.hasOwn(d,'journey_links')?['journey_links']:[])]);
  need(d.schema_version==='forge-continuity-review.v1'&&d.expert_id===expert
   &&['gbautomation/news-agent','gbautomation/youtube-intel'].includes(expert)&&d.promotion_authorized===false);
  need(stamp(d.captured_at)&&Date.parse(d.captured_at)<=Date.parse(snapshotAt)&&['live','fixture','historical-replay'].includes(d.evidence_mode));
@@ -81,4 +83,5 @@ export function validateContinuity(d,expert,snapshotAt){
  }
  for(const k of verdicts)need(s.truncated?visible[k]<=s.verdict_counts[k]:visible[k]===s.verdict_counts[k]);
  strings(d.limitations,10);
+ if(Object.hasOwn(d,'journey_links'))validateNativeLinks(d.journey_links,d,journeys);
 }

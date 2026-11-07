@@ -16,6 +16,7 @@ const hash=x=>createHash('sha256').update(x).digest('hex');
 const improvementOnly=process.env.FORGE_WORKSPACE_IMPROVEMENTS==='1';
 const outcomeOnly=process.env.FORGE_WORKSPACE_OUTCOMES==='1';
 const continuityOnly=process.env.FORGE_WORKSPACE_CONTINUITY==='1';
+const nativeLinksOnly=process.env.FORGE_WORKSPACE_NATIVE_LINKS==='1';
 const proposalPreparation=process.env.FORGE_WORKSPACE_IMPROVEMENT_PROPOSALS?JSON.parse(await readFile(process.env.FORGE_WORKSPACE_IMPROVEMENT_PROPOSALS+'/preparation.json')):null;
 const linkedRows=new Map((proposalPreparation?.spine_rows.agent_os_proposals||[]).map(row=>[row.proposal_id,{...row,producer_runs:proposalPreparation.spine_rows.producer_runs.find(p=>p.producer_run_id===row.producer_run_id)}]));
 let linkedMissing=false,linkedChanged=false,linkedForeign=false,linkedWorkflow=false,holdLinked=false,releaseLinked=null;
@@ -51,6 +52,7 @@ const errors=[],checks=[],requests=[];let fail=false,tamper=false,holdArtifact=f
 let omitJourneys=false,foreignJourneys=false,foreignBenchmarks=false,omitBenchmarks=false;
 let omitOutcomes=false,foreignOutcomes=false;
 let omitContinuity=false,foreignContinuity=false,foreignContinuityLane=false,missingQualification=false;
+let omitNativeLinks=false,missingNativeTrace=false,foreignNativeLinks=false;
 let records=false,holdHistory=false,releaseHistory=null,holdProposal=false,releaseProposal=null;
 const planID='prd_'+'c'.repeat(20),sessionKey='fixture-host:'+ 's'.repeat(280);
 // Total-suite bound grows with scenarios; individual actions still time out at 20s.
@@ -105,6 +107,9 @@ await page.route('**/__workspace_fixture',async r=>{
    if(foreignContinuity&&data.continuity_evidence)data.continuity_evidence.expert_id='gbautomation/youtube-intel';
    if(foreignContinuityLane&&data.continuity_evidence)data.continuity_evidence.rows[0].lane='youtube-trusted';
    if(missingQualification&&data.continuity_evidence){data.continuity_evidence.window.qualification=null;data.continuity_evidence.source.qualification_input_sha256=null;data.continuity_evidence.source.native_qualification_sha256=null;}
+   if(omitNativeLinks&&data.continuity_evidence)delete data.continuity_evidence.journey_links;
+   if(missingNativeTrace&&data.continuity_evidence?.journey_links)for(const row of data.continuity_evidence.journey_links.rows){row.trace=null;row.gaps=['native_trace_readback_incomplete'];}
+   if(foreignNativeLinks&&data.continuity_evidence?.journey_links)data.continuity_evidence.journey_links.journey_source_sha256='0'.repeat(64);
    if(foreignImprovements&&data.improvement_evidence)data.improvement_evidence.expert_id='gbautomation/news-agent';
    return r.fulfill({json:data});
   }catch{return r.fulfill({status:503,body:'Invalid factory fixture'});}
@@ -165,7 +170,64 @@ async function lookupFinished(handle){
  assert.equal(await handle.evaluate(el=>el.disabled),false,'Proposal lookup did not finish');
 }
 try{
- if(continuityOnly){
+ if(nativeLinksOnly){
+  const expected=JSON.parse(await readFile(root+'/news-agent-factory.json')).continuity_evidence.journey_links.rows[0];
+  for(const width of [1440,390]){
+   await page.setViewportSize({width,height:1000});await page.goto(base+'/bench/news-agent?window=factory');
+   const factory=current().locator('#window-factory');await factory.getByRole('status').filter({hasText:'Saved evidence'}).waitFor();
+   const button=factory.getByRole('button',{name:'Expert journeys',exact:true});await button.focus();await page.keyboard.press('Enter');
+   const journey=factory.locator('[data-journey-id="news-card-8"]');
+   await journey.getByText('Inspect work, outputs and telemetry',{exact:true}).click();
+   const trace=journey.getByText('Verified native trace ID: '+expected.trace.id,{exact:true});
+   await trace.evaluate(el=>el.scrollIntoView({block:'center',behavior:'instant'}));await visibleEvidence(trace);
+   assert.match(await journey.innerText(),/whole native run/);assert.match(await journey.innerText(),/Target acceptance: pending/);
+   const slot=journey.getByRole('button',{name:'Inspect linked operation slot',exact:true});await slot.focus();await page.keyboard.press('Enter');
+   const native=factory.locator('[data-continuity-slot]').filter({hasText:expected.native_run_id});
+   const back=native.getByRole('button',{name:'Inspect linked journey news-card-8',exact:true});await back.evaluate(el=>el.scrollIntoView({block:'center',behavior:'instant'}));await visibleEvidence(back);await back.focus();await page.keyboard.press('Enter');
+   assert.equal(await journey.evaluate(el=>el===document.activeElement),true);
+   await journey.locator('.factory-journey-output').evaluate(el=>el.open=true);
+   const relation=journey.getByText('Native output relationship: Verified against the captured native content',{exact:true});
+   await relation.evaluate(el=>el.scrollIntoView({block:'center',behavior:'instant'}));await visibleEvidence(relation);
+   assert(await journey.evaluate(el=>el.scrollWidth<=el.clientWidth+1));
+   assert(await current().locator('body').evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
+   await page.screenshot({path:output+'/native-links-'+width+'.png'});
+   checks.push(`Exact native run, exported News output and verified model trace navigate both ways by keyboard at ${width}px`);
+  }
+  await page.goto(base+'/bench/youtube-intel?window=factory');let factory=current().locator('#window-factory');
+  await factory.getByRole('status').filter({hasText:'Saved evidence'}).waitFor();
+  assert.equal(await factory.locator('[data-journey-id="news-card-8"]').count(),0);
+  const youtubeToggle=factory.getByRole('button',{name:'Expert journeys',exact:true});
+  await youtubeToggle.focus();await page.keyboard.press('Enter');
+  const youtubeJourney=factory.locator('[data-journey-id]');assert.equal(await youtubeJourney.count(),1);
+  const youtubeDetails=youtubeJourney.getByText('Inspect work, outputs and telemetry',{exact:true});
+  await youtubeDetails.focus();await page.keyboard.press('Enter');
+  const youtubeSlot=youtubeJourney.getByRole('button',{name:'Inspect linked operation slot',exact:true});
+  await youtubeSlot.focus();await page.keyboard.press('Enter');
+  const youtubeBack=factory.getByRole('button',{name:/^Inspect linked journey /});
+  await youtubeBack.focus();await page.keyboard.press('Enter');
+  assert.equal(await youtubeJourney.evaluate(el=>el===document.activeElement),true);
+  checks.push('Expert switch replaces native News joins with the exact YouTube run and output');
+  failFactory=true;await factory.getByRole('button',{name:'Refresh factory evidence'}).click();
+  await factory.getByRole('status').filter({hasText:'Keeping saved evidence captured'}).waitFor();failFactory=false;
+  checks.push('Refresh outage preserves the visibly labeled last-good native links');
+  missingNativeTrace=true;await factory.getByRole('button',{name:'Refresh factory evidence'}).click();
+  await factory.getByRole('status').filter({hasText:'Saved evidence'}).waitFor();
+  assert.equal(await factory.getByText(/^Verified native trace ID:/).count(),0);missingNativeTrace=false;
+  checks.push('Incomplete readback removes the trace identity while retaining the native run and saved result');
+  omitNativeLinks=true;await factory.getByRole('button',{name:'Refresh factory evidence'}).click();
+  await factory.getByRole('status').filter({hasText:'Saved evidence'}).waitFor();
+  assert.equal(await factory.getByRole('button',{name:'Inspect linked operation slot',exact:true,includeHidden:true}).count(),0);omitNativeLinks=false;
+  checks.push('Legacy snapshot shows unavailable trace evidence without inventing joins');
+  foreignNativeLinks=true;await page.goto(base+'/bench/news-agent?window=factory');factory=current().locator('#window-factory');
+  await factory.getByRole('status').filter({hasText:'Factory evidence is unavailable'}).waitFor();
+  assert.equal(await factory.locator('[data-journey-id]').count(),0);foreignNativeLinks=false;
+  checks.push('Client boundary rejects links from a different original journey capture');
+  await page.goto(base+'/bench/news-agent?window=factory');factory=current().locator('#window-factory');
+  await factory.getByRole('status').filter({hasText:'Saved evidence'}).waitFor();
+  const reads=requests.length;await page.waitForTimeout(1200);assert.equal(requests.length,reads);
+  assert(requests.every(r=>!['approve','dispatch','score','improvementDetect','improvementConfirm','benchmarkRun'].includes(r.view)));
+  checks.push('Native evidence inspection adds no idle polling, invented project URL, scoring or execution request');
+ }else if(continuityOnly){
   for(const width of [1440,390]){
    await page.setViewportSize({width,height:1000});await page.goto(base+'/bench/news-agent?window=factory');
    const factory=current().locator('#window-factory');await factory.getByRole('status').filter({hasText:'Saved evidence'}).waitFor();

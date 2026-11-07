@@ -74,7 +74,7 @@ export function validateFactory(bytes,expected,request,now=Date.now()){
  if('benchmark_evidence' in d)validateBenchmarks(d.benchmark_evidence,d.expert_id,d.captured_at);
  if('improvement_evidence' in d)validateImprovements(d.improvement_evidence,d.expert_id,d.captured_at);
  if('outcome_evidence' in d)validateOutcomes(d.outcome_evidence,d.expert_id,d.captured_at,d.source);
- if('continuity_evidence' in d)validateContinuity(d.continuity_evidence,d.expert_id,d.captured_at);
+ if('continuity_evidence' in d)validateContinuity(d.continuity_evidence,d.expert_id,d.captured_at,d.journey_evidence);
  return {...d,snapshot_sha256:expected,freshness:now-Date.parse(d.captured_at)>6*3600_000?'stale':'recent'};
 }
 
