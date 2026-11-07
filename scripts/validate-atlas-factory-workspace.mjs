@@ -15,6 +15,7 @@ const output='artifacts/atlas-factory-workspace-validation/'+new Date().toISOStr
 const hash=x=>createHash('sha256').update(x).digest('hex');
 const improvementOnly=process.env.FORGE_WORKSPACE_IMPROVEMENTS==='1';
 const outcomeOnly=process.env.FORGE_WORKSPACE_OUTCOMES==='1';
+const continuityOnly=process.env.FORGE_WORKSPACE_CONTINUITY==='1';
 const proposalPreparation=process.env.FORGE_WORKSPACE_IMPROVEMENT_PROPOSALS?JSON.parse(await readFile(process.env.FORGE_WORKSPACE_IMPROVEMENT_PROPOSALS+'/preparation.json')):null;
 const linkedRows=new Map((proposalPreparation?.spine_rows.agent_os_proposals||[]).map(row=>[row.proposal_id,{...row,producer_runs:proposalPreparation.spine_rows.producer_runs.find(p=>p.producer_run_id===row.producer_run_id)}]));
 let linkedMissing=false,linkedChanged=false,linkedForeign=false,linkedWorkflow=false,holdLinked=false,releaseLinked=null;
@@ -49,6 +50,7 @@ const page=await browser.newPage({viewport:{width:1500,height:1000}});page.setDe
 const errors=[],checks=[],requests=[];let fail=false,tamper=false,holdArtifact=false,releaseArtifact=null,failFactory=false,foreignFactory=false;
 let omitJourneys=false,foreignJourneys=false,foreignBenchmarks=false,omitBenchmarks=false;
 let omitOutcomes=false,foreignOutcomes=false;
+let omitContinuity=false,foreignContinuity=false,foreignContinuityLane=false,missingQualification=false;
 let records=false,holdHistory=false,releaseHistory=null,holdProposal=false,releaseProposal=null;
 const planID='prd_'+'c'.repeat(20),sessionKey='fixture-host:'+ 's'.repeat(280);
 // Total-suite bound grows with scenarios; individual actions still time out at 20s.
@@ -99,6 +101,10 @@ await page.route('**/__workspace_fixture',async r=>{
    if(omitImprovements)delete data.improvement_evidence;
    if(omitOutcomes)delete data.outcome_evidence;
    if(foreignOutcomes&&data.outcome_evidence)data.outcome_evidence.quests[0].expert_id='consulting/pi';
+   if(omitContinuity)delete data.continuity_evidence;
+   if(foreignContinuity&&data.continuity_evidence)data.continuity_evidence.expert_id='gbautomation/youtube-intel';
+   if(foreignContinuityLane&&data.continuity_evidence)data.continuity_evidence.rows[0].lane='youtube-trusted';
+   if(missingQualification&&data.continuity_evidence){data.continuity_evidence.window.qualification=null;data.continuity_evidence.source.qualification_input_sha256=null;data.continuity_evidence.source.native_qualification_sha256=null;}
    if(foreignImprovements&&data.improvement_evidence)data.improvement_evidence.expert_id='gbautomation/news-agent';
    return r.fulfill({json:data});
   }catch{return r.fulfill({status:503,body:'Invalid factory fixture'});}
@@ -159,7 +165,60 @@ async function lookupFinished(handle){
  assert.equal(await handle.evaluate(el=>el.disabled),false,'Proposal lookup did not finish');
 }
 try{
- if(outcomeOnly){
+ if(continuityOnly){
+  for(const width of [1440,390]){
+   await page.setViewportSize({width,height:1000});await page.goto(base+'/bench/news-agent?window=factory');
+   const factory=current().locator('#window-factory');await factory.getByRole('status').filter({hasText:'Saved evidence'}).waitFor();
+   const open=factory.getByRole('button',{name:'Operation evidence',exact:true});await open.focus();await page.keyboard.press('Enter');
+   const section=factory.locator('[data-factory-section="Operation evidence"]');
+   await visibleEvidence(section.getByText('4 expected slots · 2 successful · 1 missing',{exact:true}));
+   assert.match(await section.innerText(),/Synthetic test evidence · Not eligible for live acceptance/);
+   assert.match(await section.innerText(),/successful: 2 · pending: 0 · missing: 1 · failed: 1/);
+   assert.match(await section.innerText(),/72-hour \/ 7-day \/ 30-day acceptance: Not proven \/ Not proven \/ Not proven/);
+   await page.screenshot({path:output+'/continuity-summary-'+width+'.png'});
+   const inspect=section.getByText('Inspect 4 scheduled slots',{exact:true});await inspect.focus();await page.keyboard.press('Enter');
+   const failed=section.locator('[data-continuity-slot]').filter({hasText:'news · failed'});
+   const native=failed.getByText('Inspect native evidence',{exact:true});await native.focus();await page.keyboard.press('Enter');
+   const trace=failed.getByText('Langfuse trace: No verified trace ID supplied. Observation IDs cannot open a trace.',{exact:true});
+   await trace.evaluate(el=>el.scrollIntoView({block:'center',behavior:'instant'}));await visibleEvidence(trace);
+   assert.match(await failed.innerText(),/Native content hash:/);assert.match(await failed.innerText(),/langfuse observation:/);
+   assert.equal(await failed.locator('a').count(),0);
+   assert(await section.evaluate(el=>el.scrollWidth<=el.clientWidth+1));
+   assert(await current().locator('body').evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
+   await page.screenshot({path:output+'/continuity-native-'+width+'.png'});
+   checks.push(`Exact News denominator, missing/failed slots and native identities inspected by keyboard at ${width}px; fixture cannot imply acceptance`);
+  }
+  await page.goto(base+'/bench/youtube-intel?window=factory');
+  let factory=current().locator('#window-factory');await factory.getByRole('status').filter({hasText:'Saved evidence'}).waitFor();
+  const section=factory.locator('[data-factory-section="Operation evidence"]');
+  assert.equal(await section.locator('[data-continuity-slot]').count(),2);
+  assert.equal(await section.locator('[data-continuity-slot^="news:"]').count(),0);
+  checks.push('Expert switch shows only trusted/likes YouTube lanes; News slots are absent');
+  failFactory=true;await factory.getByRole('button',{name:'Refresh factory evidence'}).click();
+  await factory.getByRole('status').filter({hasText:'Keeping saved evidence captured'}).waitFor();
+  assert.equal(await section.locator('[data-continuity-slot]').count(),2);failFactory=false;
+  checks.push('Refresh outage retains the visibly labeled last-good continuity capture');
+  missingQualification=true;await factory.getByRole('button',{name:'Refresh factory evidence'}).click();
+  await factory.getByText('Qualification evidence is unavailable. No acceptance claim can be made.',{exact:true}).waitFor();missingQualification=false;
+  checks.push('Missing qualification stays unavailable while native slot evidence remains inspectable');
+  omitContinuity=true;await factory.getByRole('button',{name:'Refresh factory evidence'}).click();
+  await factory.getByText('Native operation evidence has not been published for this expert. Acceptance is unproven.',{exact:true}).waitFor();omitContinuity=false;
+  checks.push('Older snapshot remains usable with an honest unavailable operation section');
+  for(const variant of ['owner','lane']){
+   foreignContinuity=variant==='owner';foreignContinuityLane=variant==='lane';
+   await page.goto(base+'/bench/news-agent?window=factory');factory=current().locator('#window-factory');
+   await factory.getByRole('status').filter({hasText:'Factory evidence is unavailable'}).waitFor();
+   assert.equal(await factory.locator('[data-continuity-slot]').count(),0);
+  }
+  foreignContinuity=false;foreignContinuityLane=false;
+  checks.push('Opaque document rejects foreign expert and nested lane after the host boundary');
+  await page.goto(base+'/bench/news-agent?window=factory');factory=current().locator('#window-factory');
+  await factory.getByRole('status').filter({hasText:'Saved evidence'}).waitFor();
+  const reads=requests.filter(r=>r.view==='factorySnapshot').length;await page.waitForTimeout(1200);
+  assert.equal(requests.filter(r=>r.view==='factorySnapshot').length,reads);
+  assert(requests.every(r=>!['approve','dispatch','score','improvementDetect','improvementConfirm','benchmarkRun'].includes(r.view)));
+  checks.push('No idle polling, inferred trace navigation, scoring, approval or execution request');
+ }else if(outcomeOnly){
   for(const width of [1440,390]){
    await page.setViewportSize({width,height:1000});await page.goto(base+'/bench/youtube-intel?window=factory');
    const factory=current().locator('#window-factory');await factory.getByRole('status').filter({hasText:'Saved evidence'}).waitFor();

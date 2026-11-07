@@ -168,6 +168,31 @@ validator. Its transport and object versions are synthetic; it is not cloud
 acceptance. Install this compatible reader before extended snapshots and
 documents. For rollback, restore snapshots/documents first and retain archives.
 
+## Native operation evidence
+
+The existing Factory snapshot also accepts optional `continuity_evidence` from
+the paired native replay producer. `factory-continuity.mjs` checks exact expert
+and lane ownership, bounded identities, immutable source manifests, capture
+times, complete denominators and qualification consistency. The native Pi
+reducer and qualifier remain the acceptance authority; this display reader
+cannot promote a slot pass into live acceptance.
+
+Operation evidence shows the selected expert's scheduled slots and all verdict
+counts. Overall qualification explicitly covers News, trusted YouTube and liked
+videos together. Fixture and historical evidence are labeled. Missing
+qualification stays unavailable. Native observation roots are not trace IDs,
+and native accepted-content hashes are not exported HTML/JSON artifact hashes.
+No trace URL or saved-output join is inferred. There is no new endpoint,
+capability flag, polling, approval write or execution action.
+
+Validate with `FORGE_WORKSPACE_CONTINUITY_FIXTURES` for the colocated reader
+test and `FORGE_WORKSPACE_CONTINUITY=1` plus `FORGE_WORKSPACE_FIXTURES` for the
+existing workspace browser validator. Fixtures come from GBAutomation's
+`scripts/build_atlas_continuity_fixtures.py` and are never publication inputs.
+Install the compatible reader and regenerated documents before extended
+snapshots; restore compatible snapshot versions before reverting the reader.
+Source tests do not establish hosted or live acceptance.
+
 ## Bounded Pi requests
 
 `FORGE_PI_JOBS_ENABLED` independently defaults to false. `forgePiRead` and
