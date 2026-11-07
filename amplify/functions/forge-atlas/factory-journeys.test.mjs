@@ -43,3 +43,13 @@ test('only verified native outputs can carry exact archived publication bindings
   const bad=structuredClone(d);edit(bad);assert.throws(()=>validateJourneys(bad,bad.expert_id,snapshot));
  }
 });
+
+test('exported News outputs retain capture-producer source and exact immutable publication',()=>{
+ const d=fixture();d.output_links_sha256=['e'.repeat(64)];
+ d.rows[0].outputs=[{id:'8',artifact_id:'news-card-8',sha256:'d'.repeat(64),verification:'verified',export_source_commit:'e'.repeat(40),
+  hosted_binding:{resource_id:'ui.news.result',catalog_sha256:'a'.repeat(64),catalog_version_id:'news-manifest-v1',content_sha256:'d'.repeat(64),version_id:'news-artifact-v1'}}];
+ assert.equal(validateJourneys(d,expert,snapshot).rows[0].acceptance,'pending');
+ for(const edit of [v=>delete v.rows[0].outputs[0].export_source_commit,v=>v.rows[0].outputs[0].artifact_id='news-card-9',v=>v.rows[0].outputs[0].verification='recorded',v=>v.rows[0].outputs[0].export_source_commit='bad',v=>v.rows[0].outputs[0].hosted_binding.content_sha256='b'.repeat(64),v=>v.rows[0].outputs[0].running_source_commit='e'.repeat(40)]){
+  const bad=structuredClone(d);edit(bad);assert.throws(()=>validateJourneys(bad,expert,snapshot));
+ }
+});

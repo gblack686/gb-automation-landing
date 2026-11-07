@@ -89,7 +89,12 @@ await page.route('**/__workspace_fixture',async r=>{
 await page.route('https://fixture.s3.us-east-1.amazonaws.com/**',r=>{
  const url=new URL(r.request().url());
  const id=agents.find(id=>url.pathname===`/gbautomation/${id}/index.html`);
- const saved=outputOnly?Object.values(outputFixture).find(v=>v?.manifest_bytes&&url.pathname.endsWith(JSON.parse(v.manifest_bytes).resources[0].artifact.key))?.content:null;
+ let saved=null;
+ if(outputOnly)for(const entry of Object.values(outputFixture)){
+  if(!entry?.manifest_bytes)continue;
+  const resource=JSON.parse(entry.manifest_bytes).resources.find(row=>url.pathname.endsWith(row.artifact.key));
+  if(resource)saved=resource.owner_expert==='news-agent'?entry.news_content:entry.content;
+ }
  const body=saved===null||saved===undefined?object:Buffer.from(saved);
  return r.fulfill({contentType:'text/html',body:id?docs[id]:tamper?Buffer.alloc(body.length,32):body,headers:{'Access-Control-Allow-Origin':base}});
 });
@@ -151,6 +156,36 @@ try{
   await current().locator('#window-factory').waitFor();holdArtifact=false;releaseArtifact();
   assert.equal(await current().locator('iframe[title="Output output-0 saved result"]').count(),0);
   checks.push('Switching experts fences delayed archived output replies');
+  await page.setViewportSize({width:1500,height:1000});frame=current();
+  const newsFactory=frame.locator('#window-factory');await newsFactory.getByRole('status').filter({hasText:'Stale saved evidence'}).waitFor();
+  await newsFactory.getByRole('button',{name:'Expert journeys',exact:true}).click();
+  const news=newsFactory.locator('[data-journey-id="news-card-8"]');
+  await news.locator('.factory-journey-detail > summary').click();await news.locator('.factory-journey-output > summary').click();
+  await news.getByText('Running News source: Not verified by this export',{exact:true}).waitFor();
+  await news.getByRole('button',{name:'Open saved output',exact:true}).click();
+  const newsResult=frame.frameLocator('iframe[title="Output 8 saved result"]');
+  await newsResult.getByRole('heading',{name:'Captured News headline v1',exact:true}).waitFor();
+  await newsResult.getByText('Captured output. Delivery and target acceptance remain unproven.',{exact:true}).waitFor();
+  assert.equal(await newsResult.getByText('Newer News headline v2',{exact:true}).count(),0);
+  assert(requests.some(x=>x.view==='resourceArtifact'&&x.agent_id==='news-agent'&&x.query.catalog_version_id===outputFixture.archived.publication.manifest_version_id));
+  await page.screenshot({path:output+'/news-output-desktop.png'});
+  await frame.getByRole('button',{name:'Refresh saved result',exact:true}).click();
+  await newsResult.getByRole('heading',{name:'Captured News headline v1',exact:true}).waitFor();
+  checks.push('News output opens its archived headline and summary with exact native identities, without asserting delivery or running source');
+  await page.setViewportSize({width:390,height:844});
+  await visibleEvidence(frame.locator('.expert-app-window').getByRole('button',{name:'Refresh saved result',exact:true}));
+  assert(await newsResult.locator('body').evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+  await page.screenshot({path:output+'/news-output-mobile.png'});
+  checks.push('News saved result stays pinned on refresh and remains readable in a mobile app window');
+  const safeText=await page.evaluate(async input=>{
+   const {resourceDocument}=await import('/src/lib/forgeResourceClient.js');
+   input.card.props_json=JSON.stringify({title:'<img src=x onerror="window.injected=1">',summary:'<script>window.injected=1</script>'});
+   const raw=new TextEncoder().encode(JSON.stringify(input));
+   const doc=new DOMParser().parseFromString(resourceDocument(raw,'application/json'),'text/html');
+   return {title:doc.querySelector('h1')?.textContent,summary:doc.querySelector('.summary')?.textContent,scripts:doc.querySelectorAll('script').length,images:doc.querySelectorAll('img').length,csp:doc.querySelector('meta[http-equiv="Content-Security-Policy"]')?.content};
+  },JSON.parse(outputFixture.archived.news_content));
+  assert.equal(safeText.title,'<img src=x onerror="window.injected=1">');assert.equal(safeText.scripts,0);assert.equal(safeText.images,0);assert(safeText.csp.includes("connect-src 'none'"));
+  checks.push('News title and summary remain text, with no injected markup and the existing no-network document policy');
  }else{
  await page.goto(base+'/bench/youtube-intel?window=resources',{waitUntil:'domcontentloaded'});
  let frame=current();await frame.getByRole('button',{name:'Open in window',exact:true}).waitFor();

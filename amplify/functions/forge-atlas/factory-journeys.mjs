@@ -29,16 +29,22 @@ export function validateJourneys(data,expert,snapshotAt){
     ||typeof row.complete!=='boolean'||typeof row.delivered!=='boolean'||row.generation!==null||row.collector_events?.length!==0)fail();
   }else if(!/^news-card-[1-9][0-9]{0,15}$/.test(row.id)||row.complete!==null||row.delivered!==null)fail();
   for(const output of rows(row.outputs,100)){
-   only(output,['id','artifact_id','sha256','verification'],['hosted_binding']);
+   only(output,['id','artifact_id','sha256','verification'],['hosted_binding','export_source_commit']);
    if(!text(output.id))fail();
    if(kind==='youtube'){
     if(!text(output.artifact_id)||!['verified','unverified'].includes(output.verification)
-     ||output.sha256!==null&&!sha.test(output.sha256)||output.verification==='verified'&&output.sha256===null)fail();
-   }else if(output.artifact_id!==null||output.sha256!==null||output.verification!=='recorded'||row.id!=='news-card-'+output.id)fail();
+     ||output.sha256!==null&&!sha.test(output.sha256)||output.verification==='verified'&&output.sha256===null||'export_source_commit' in output)fail();
+   }else{
+    if(row.id!=='news-card-'+output.id)fail();
+    if(output.verification==='recorded'){
+     if(output.artifact_id!==null||output.sha256!==null||'export_source_commit' in output)fail();
+    }else if(output.verification!=='verified'||output.artifact_id!==row.id||!sha.test(output.sha256)
+     ||typeof output.export_source_commit!=='string'||!/^[a-f0-9]{40}$/.test(output.export_source_commit))fail();
+   }
    if('hosted_binding' in output){
     const b=output.hosted_binding;only(b,['resource_id','catalog_sha256','catalog_version_id','content_sha256','version_id']);
     const version=v=>typeof v==='string'&&/^[A-Za-z0-9._~+-]{1,200}$/.test(v)&&v!=='null';
-    if(kind!=='youtube'||output.verification!=='verified'||!data.output_links_sha256
+    if(output.verification!=='verified'||!data.output_links_sha256
      ||typeof b.resource_id!=='string'||!/^[a-z][a-z0-9._-]{2,159}$/.test(b.resource_id)||!sha.test(b.catalog_sha256)
      ||b.content_sha256!==output.sha256||!version(b.catalog_version_id)||!version(b.version_id))fail();
    }

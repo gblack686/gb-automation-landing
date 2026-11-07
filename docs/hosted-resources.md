@@ -79,8 +79,10 @@ publication and real identity/mobile acceptance remain separate.
 Verified YouTube outputs may also carry an explicit `hosted_binding`: the
 registered resource ID, catalog digest/version and artifact digest/version.
 GBAutomation prepares that binding from the exact native capture and verified
-publication receipt. Unverified outputs and News cards without a verified
-artifact export remain unavailable; completion never implies publication.
+publication receipt. Verified News card exports also support this path. Their
+`export_source_commit` identifies the capture producer, not the running News
+agent. Recorded-only News cards and unverified outputs remain unavailable;
+completion never implies publication.
 
 An artifact request may include `catalog_version_id` with its catalog digest.
 The storage adapter then reads only that immutable manifest version under the
@@ -97,6 +99,14 @@ before snapshots/documents using output bindings. Restore earlier snapshots
 and documents before rolling back those strict readers. Retain archived object
 versions. Run the existing workspace browser validator normally and with
 `FORGE_WORKSPACE_JOURNEY_OUTPUTS=1` using generated output fixtures for the latter.
+
+The saved-result viewer recognizes `forge-news-card-export.v1` JSON. It presents
+the captured headline, summary and native card/task/generation identities, with
+the complete source record available in a details control. All native text is
+inserted through text nodes; it cannot create scripts, links or image requests.
+Existing artifact verification, sandboxing and the no-network document policy
+remain in force. Other JSON and native card variants keep the generic source
+view. Recognized but malformed or foreign-expert News exports are rejected.
 
 Workspace search carries typed exact destinations for proposals, indexed plans
 and sessions. Proposal details use the existing owned reader even when the

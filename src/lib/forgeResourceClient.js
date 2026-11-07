@@ -1,4 +1,5 @@
 import { readAtlas } from './forgeAtlasClient';
+import { appendNewsOutput } from './forgeNewsOutput.mjs';
 
 const MAX_BYTES=8_000_000;
 const TYPES={'text/html':'html','text/plain':'txt','text/markdown':'md','application/json':'json','image/png':'png'};
@@ -51,6 +52,7 @@ export function resourceDocument(bytes,mediaType) {
   let binary='';for(let i=0;i<bytes.length;i+=8192)binary+=String.fromCharCode(...bytes.subarray(i,i+8192));
   img.src='data:image/png;base64,'+btoa(binary);doc.body.append(img);
  }else if(mediaType!=='text/html'){
+  if(mediaType==='application/json'&&appendNewsOutput(doc,new TextDecoder().decode(bytes)))return '<!doctype html>'+doc.documentElement.outerHTML;
   const pre=doc.createElement('pre');pre.style.cssText='white-space:pre-wrap;overflow-wrap:anywhere;padding:16px;font:15px/1.6 system-ui';
   pre.textContent=new TextDecoder().decode(bytes);doc.body.append(pre);
  }
