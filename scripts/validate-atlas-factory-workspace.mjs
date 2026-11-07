@@ -17,6 +17,7 @@ const improvementOnly=process.env.FORGE_WORKSPACE_IMPROVEMENTS==='1';
 const outcomeOnly=process.env.FORGE_WORKSPACE_OUTCOMES==='1';
 const continuityOnly=process.env.FORGE_WORKSPACE_CONTINUITY==='1';
 const nativeLinksOnly=process.env.FORGE_WORKSPACE_NATIVE_LINKS==='1';
+const domainImprovementOnly=process.env.FORGE_WORKSPACE_DOMAIN_IMPROVEMENTS==='1';
 const proposalPreparation=process.env.FORGE_WORKSPACE_IMPROVEMENT_PROPOSALS?JSON.parse(await readFile(process.env.FORGE_WORKSPACE_IMPROVEMENT_PROPOSALS+'/preparation.json')):null;
 const linkedRows=new Map((proposalPreparation?.spine_rows.agent_os_proposals||[]).map(row=>[row.proposal_id,{...row,producer_runs:proposalPreparation.spine_rows.producer_runs.find(p=>p.producer_run_id===row.producer_run_id)}]));
 let linkedMissing=false,linkedChanged=false,linkedForeign=false,linkedWorkflow=false,holdLinked=false,releaseLinked=null;
@@ -45,7 +46,7 @@ const resourceRead=makeResourceService({enabled:true,loadManifest:async pin=>{
  return {bytes:Buffer.from(entry.manifest_bytes),sha256:publication.manifest_sha256,version_id:publication.manifest_version_id};
 },describeArtifact:async artifact=>({url:archivedMode?`https://fixture.s3.us-east-1.amazonaws.com/${artifact.key}?versionId=${artifact.version_id}&X-Amz-Expires=60`:artifactURL})});
 let partialImprovements=false,foreignImprovements=false,omitImprovements=false;
-const factoryRead=makeFactoryService({enabled:true,load:async id=>{const name=id==='pi'&&partialImprovements?'pi-partial':id;const bytes=await readFile(`${root}/${name}-factory.json`);return {bytes,sha256:hash(bytes)};}});
+const factoryRead=makeFactoryService({enabled:true,load:async id=>{const name=(id==='pi'||domainImprovementOnly)&&partialImprovements?id+'-partial':id;const bytes=await readFile(`${root}/${name}-factory.json`);return {bytes,sha256:hash(bytes)};}});
 const browser=await chromium.launch({headless:true,channel:'chrome'});
 const page=await browser.newPage({viewport:{width:1500,height:1000}});page.setDefaultTimeout(20000);
 const errors=[],checks=[],requests=[];let fail=false,tamper=false,holdArtifact=false,releaseArtifact=null,failFactory=false,foreignFactory=false;
@@ -170,7 +171,45 @@ async function lookupFinished(handle){
  assert.equal(await handle.evaluate(el=>el.disabled),false,'Proposal lookup did not finish');
 }
 try{
- if(nativeLinksOnly){
+ if(domainImprovementOnly){
+  for(const agent of ['news-agent','youtube-intel'])for(const width of [1440,390]){
+   await page.setViewportSize({width,height:1000});await page.goto(base+'/bench/'+agent+'?window=factory');
+   const factory=current().locator('#window-factory');await factory.getByRole('status').filter({hasText:'Saved evidence'}).waitFor();
+   const open=factory.getByRole('button',{name:'Improvement review',exact:true});await open.focus();await page.keyboard.press('Enter');
+   const section=factory.locator('[data-factory-section="Improvement review"]');
+   await visibleEvidence(section.getByText('Synthetic test evidence · Not eligible for live acceptance',{exact:true}));
+   const detail=section.getByText('Inspect finding, proposal and comparison',{exact:true});await detail.focus();await page.keyboard.press('Enter');
+   const cases=agent==='news-agent'?5:6;
+   const holdout=section.getByText(`Holdout cohort: ${cases} cases · Baseline ${cases-1} passed · Candidate ${cases} passed`,{exact:true});
+   await holdout.evaluate(el=>el.scrollIntoView({block:'center',behavior:'instant'}));await visibleEvidence(holdout);
+   assert.match(await section.innerText(),/Correctness passed · Privacy passed/);
+   assert.match(await section.innerText(),/zero model calls/);assert.doesNotMatch(await section.innerText(),/repeated pairs/);
+   assert(await current().locator('body').evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
+   await page.screenshot({path:output+'/domain-'+agent+'-'+width+'.png'});
+   const find=section.getByRole('button',{name:'Find saved proposal',exact:true});await find.focus();await page.keyboard.press('Enter');
+   const dialog=current().locator('dialog').filter({hasText:'Review '+agent});await dialog.waitFor({state:'visible'});
+   assert.match(await dialog.innerText(),/Synthetic/);await dialog.getByRole('button',{name:'Close approval review'}).click();
+   checks.push(`Exact ${agent} domain cohorts, quality/resource scope and bound proposal navigation at ${width}px`);
+  }
+  await page.goto(base+'/bench/youtube-intel?window=factory');let factory=current().locator('#window-factory');
+  await factory.getByRole('status').filter({hasText:'Saved evidence'}).waitFor();
+  failFactory=true;await factory.getByRole('button',{name:'Refresh factory evidence'}).click();
+  await factory.getByRole('status').filter({hasText:'Keeping saved evidence captured'}).waitFor();failFactory=false;
+  checks.push('Refresh outage preserves the labeled last-good expert improvement capture');
+  partialImprovements=true;await factory.getByRole('button',{name:'Refresh factory evidence'}).click();
+  await factory.getByRole('status').filter({hasText:'Saved evidence'}).waitFor();
+  const partial=factory.locator('[data-factory-section="Improvement review"]');assert.match(await partial.innerText(),/Evidence incomplete/);
+  assert.equal(await partial.getByRole('button',{name:'Find saved proposal',exact:true,includeHidden:true}).count(),0);partialImprovements=false;
+  checks.push('Missing native inputs remove measurements and proposal references while retaining the pending experiment');
+  foreignImprovements=true;await factory.getByRole('button',{name:'Refresh factory evidence'}).click();
+  await factory.getByRole('status').filter({hasText:'Keeping saved evidence captured'}).waitFor();foreignImprovements=false;
+  checks.push('Client rejects a foreign expert improvement capture');
+  await page.goto(base+'/bench/news-agent?window=factory');factory=current().locator('#window-factory');
+  await factory.getByRole('status').filter({hasText:'Saved evidence'}).waitFor();
+  const reads=requests.length;await page.waitForTimeout(1200);assert.equal(requests.length,reads);
+  assert(requests.every(r=>!['approve','dispatch','score','improvementDetect','improvementConfirm','benchmarkRun'].includes(r.view)));
+  checks.push('Domain review and proposal lookup add no polling, benchmark run, approval or release request');
+ }else if(nativeLinksOnly){
   const expected=JSON.parse(await readFile(root+'/news-agent-factory.json')).continuity_evidence.journey_links.rows[0];
   for(const width of [1440,390]){
    await page.setViewportSize({width,height:1000});await page.goto(base+'/bench/news-agent?window=factory');

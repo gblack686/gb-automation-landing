@@ -1,6 +1,7 @@
 // Read-only native controller projection. A decision or effect is not a new
 // approval, external release readback, or permission to invoke the controller.
 import {validateImprovementReference} from './improvement-proposals.mjs';
+import {domainExperts,validateDomainSource,validateDomainRow} from './factory-domain-improvements.mjs';
 const fail=()=>{throw Error('Improvement evidence unavailable');};
 const need=value=>{if(!value)fail();};
 const only=(value,keys)=>{const names=keys.split(' ');need(value&&typeof value==='object'&&!Array.isArray(value)&&Object.keys(value).length===names.length&&names.every(k=>Object.hasOwn(value,k)));};
@@ -10,29 +11,30 @@ const count=v=>Number.isSafeInteger(v)&&v>=0;
 const stamp=v=>typeof v==='string'&&/(Z|[+-]\d{2}:\d{2})$/.test(v)&&Number.isFinite(Date.parse(v));
 const list=(v,n)=>{need(Array.isArray(v)&&v.length<=n);return v;};
 const outcomes=['rejected','inconclusive','confirmation_needed','review_ready','repair_eligible','held','failed','cancelled'];
-const missingFields=['finding_receipt','proposal_evidence','control_evidence','candidate_evidence','evaluation_receipt','confirmation_cycles','confirmation_artifacts','release_receipts'];
+const missingFields=['finding_receipt','proposal_evidence','control_evidence','candidate_evidence','evaluation_receipt','confirmation_cycles','confirmation_artifacts','release_receipts','domain_assessment'];
 
 export function validateImprovements(d,expert,captured){
- only(d,'schema_version expert_id captured_at source controller scope promotion_authorized rows source_sha256');
- need(expert==='consulting/pi'&&d.expert_id===expert&&d.schema_version==='forge-improvement-review.v1'
+ only(d,'schema_version expert_id captured_at source controller scope promotion_authorized rows source_sha256'+(domainExperts[expert]?' domain_source':''));
+ need((expert==='consulting/pi'||Object.hasOwn(domainExperts,expert))&&d.expert_id===expert&&d.schema_version==='forge-improvement-review.v1'
   &&d.scope==='bounded_native_diagnostics'&&d.promotion_authorized===false&&hash(d.source_sha256)
   &&stamp(d.captured_at)&&Date.parse(d.captured_at)<=Date.parse(captured));
  const source=d.source;only(source,'diagnostics_sha256 policy_sha256 runs_sha256 verifier_source_commit');
  need(hash(source.diagnostics_sha256)&&hash(source.verifier_source_commit,40));
  for(const field of ['policy_sha256','runs_sha256'])need(source[field]===null||hash(source[field]));
+ validateDomainSource(d,expert);
  const c=d.controller;only(c,'configured enabled revoked release_hold policy_hash standing_authority_sha256');
  need(['configured','enabled','revoked','release_hold'].every(k=>typeof c[k]==='boolean'));
  need(c.configured?hash(c.policy_hash)&&hash(source.policy_sha256):!c.enabled&&!d.rows.length&&c.policy_hash===null&&c.standing_authority_sha256===null);
  need(c.standing_authority_sha256===null||hash(c.standing_authority_sha256));
  const seen=new Set();
  for(const r of list(d.rows,100)){
-  only(r,'id task_id updated_at phase outcome reason base_commit candidate_sha256 finding proposal attempts evaluation release_state effects missing verification'+(Object.hasOwn(r,'proposal_reference')?' proposal_reference':''));
+  only(r,'id task_id updated_at phase outcome reason base_commit candidate_sha256 finding proposal attempts evaluation release_state effects missing verification'+(domainExperts[expert]?' domain':'')+(Object.hasOwn(r,'proposal_reference')?' proposal_reference':''));
   need(typeof r.id==='string'&&/^improvement:[a-f0-9]{32}$/.test(r.id)&&!seen.has(r.id));seen.add(r.id);
   need(count(r.task_id)&&r.task_id>0&&stamp(r.updated_at)&&Date.parse(r.updated_at)<=Date.parse(d.captured_at)
    &&['admitted','proposal','control','candidate','evaluating','releasing','terminal'].includes(r.phase)
    &&(r.outcome===null||outcomes.includes(r.outcome))&&(r.reason===null||text(r.reason))
    &&hash(r.base_commit,40)&&(r.candidate_sha256===null||hash(r.candidate_sha256))&&['none','pending','healthy','rolled_back','held'].includes(r.release_state));
-  const missing=list(r.missing,8);need(new Set(missing).size===missing.length&&missing.every(v=>missingFields.includes(v))&&r.verification===(missing.length?'partial':'verified'));
+  const missing=list(r.missing,9);need(new Set(missing).size===missing.length&&missing.every(v=>missingFields.includes(v))&&r.verification===(missing.length?'partial':'verified'));
   const f=r.finding;only(f,'run_id request_id kind code evidence_sha256 verification');
   need(['run_id','request_id','code'].every(k=>text(f[k]))&&['bug','performance'].includes(f.kind)&&hash(f.evidence_sha256)
    &&f.verification===(missing.includes('finding_receipt')?'missing':'verified'));
@@ -73,7 +75,8 @@ export function validateImprovements(d,expert,captured){
    else need(['target_commit','previous_release','artifact_sha256'].every(k=>e[k]===null));
   }
   need(missing.includes('release_receipts')===r.effects.some(e=>e.verification==='missing'));
-  if(Object.hasOwn(r,'proposal_reference'))validateImprovementReference(r.proposal_reference,r,c);
+  validateDomainRow(r,d);
+  if(Object.hasOwn(r,'proposal_reference'))validateImprovementReference(r.proposal_reference,r,c,d.domain_source);
  }
  return d;
 }

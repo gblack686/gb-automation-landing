@@ -212,6 +212,31 @@ Use `FORGE_WORKSPACE_NATIVE_LINK_FIXTURES` for reader tests and
 builder is `scripts/build_atlas_native_links_fixtures.mjs` in GBAutomation.
 Private live joins and hosted acceptance still require release evidence.
 
+## Domain improvement review
+
+Native improvement review also supports the exact News and YouTube expert.
+The paired producer replays immutable native daily-finding, decision and
+protected domain-grader declarations, retaining separate original/projection
+hashes. Its independently pinned input packet binds daily receipts, source
+evidence, comparison/holdout suites and native observation artifacts. No model
+or benchmark worker is started by the read path.
+
+`factory-domain-improvements.mjs` validates owner/repository, source manifest,
+completeness and domain gates. The existing Factory window shows both cohort
+denominators, correctness/privacy/quality and native probe cost/p95 ratios.
+Probe ratios cover zero-model-call checks; proposal tokens and estimates are
+separate. Missing evidence remains incomplete, and synthetic mode is visible.
+Domain proposal references bind full domain/source evidence in addition to the
+existing cycle, candidate, policy and receipts. Canonical detail lookup verifies
+the proposal's exact expert. Factory proposal identities remain unchanged.
+
+Use `FORGE_DOMAIN_IMPROVEMENT_FIXTURES` for reader tests and
+`FORGE_WORKSPACE_DOMAIN_IMPROVEMENTS=1` for browser checks. Install compatible
+readers and regenerated documents before domain snapshots; restore compatible
+snapshots before reverting readers. Retain all proposals, decisions and native
+receipts. Source tests and fixture observations do not establish actual sandbox
+execution, publication, live expert acceptance or release approval.
+
 ## Bounded Pi requests
 
 `FORGE_PI_JOBS_ENABLED` independently defaults to false. `forgePiRead` and
