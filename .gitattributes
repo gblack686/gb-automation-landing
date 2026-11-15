@@ -7,3 +7,6 @@ public/forge/*.json text eol=lf
 amplify/functions/forge-builder/image/** -text
 amplify/functions/forge-builder/canonical/*.mjs -text
 src/lib/forge-builder/** -text
+# Preserve the reviewed Wealth package bytes on every checkout platform.
+public/apps/wealth/* -text
+amplify/functions/forge-atlas/wealth-vendor/* -text
