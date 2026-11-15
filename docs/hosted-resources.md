@@ -1,5 +1,10 @@
 # Private expert resource delivery
 
+The separately configured [authenticated Whale Room](whale-room.md) uses a
+trusted first-party resource window and dedicated capture-only MM2 transport.
+Its code packaging and authority are separate from saved opaque artifacts and
+the benchmark-only live read below.
+
 Source implementation for GBAutomation's approved hosted-access plan, phases 1–5.
 Production activation is a separate release. `FORGE_RESOURCES_ENABLED` defaults
 to `false`; enabling it is an explicit backend configuration change. This source

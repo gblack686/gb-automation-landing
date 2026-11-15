@@ -1,0 +1,4 @@
+.forge-whale-room{flex:1;min-height:0;min-width:0;overflow:auto;color:#f2f3f5;background:#1e1f22}
+.forge-whale-room>p{padding:16px}.forge-whale-room>div{min-width:0;min-height:0}
+.forge-whale-room .wr-cloud{height:min(75dvh,850px);min-height:400px}
+@media(max-width:600px){.forge-whale-room .wr-cloud{height:calc(100dvh - 190px);min-height:300px}}

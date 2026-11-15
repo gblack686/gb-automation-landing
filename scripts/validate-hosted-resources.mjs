@@ -7,7 +7,7 @@ import { makeHandler } from '../amplify/functions/forge-atlas/contract.mjs';
 import { makeResourceService } from '../amplify/functions/forge-atlas/resources.mjs';
 
 const base=process.env.FORGE_RESOURCE_BASE||'http://127.0.0.1:5198';
-const output='artifacts/hosted-resources-validation';await mkdir(output,{recursive:true});
+const output=process.env.FORGE_RESOURCE_OUTPUT||'artifacts/hosted-resources-validation';await mkdir(output,{recursive:true});
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
 const agent='artist-packet-expert',operator='aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',issuer='https://cognito-idp.us-east-1.amazonaws.com/fixture';
 const document='<!doctype html><html><head></head><body><h1>Character Forge fixture</h1><p>forge-atlas.request.v1</p></body></html>';

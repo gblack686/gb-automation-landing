@@ -3,6 +3,7 @@ import { readResourceCatalog, readResourceArtifact, resourceDocument } from '../
 import './ForgeResourceGallery.css';
 import ForgePiActions from './ForgePiActions';
 import ForgeLiveBenchmark from './ForgeLiveBenchmark';
+import ForgeWhaleRoom from './ForgeWhaleRoom';
 
 export default function ForgeResourceGallery({agentId,onClose,initialKind='ui',initialOwner=''}) {
  const dialog=useRef(null),artifactAbort=useRef(null),returnFocus=useRef(null);
@@ -29,7 +30,7 @@ export default function ForgeResourceGallery({agentId,onClose,initialKind='ui',i
   returnFocus.current=event.currentTarget;artifactAbort.current?.abort();
   const controller=new AbortController();artifactAbort.current=controller;
   setOpened(row);setArtifact(null);setArtifactError('');
-  if(row.availability==='live_read')return;
+  if(['live_read','first_party_app'].includes(row.availability))return;
   try {
    const result=await readResourceArtifact(row.id,data.catalog_sha256,agentId,controller.signal);
    if(!controller.signal.aborted)setArtifact({html:resourceDocument(result.bytes,result.asset.media_type),...result.asset});
@@ -40,8 +41,8 @@ export default function ForgeResourceGallery({agentId,onClose,initialKind='ui',i
    <button type="button" onClick={onClose} aria-label="Close expert resources">Close</button></header>
   {opened?<section className="resource-viewer">
    <div className="resource-viewer-tools"><button type="button" onClick={back}>Back to gallery</button>
-    <span>{opened.owner_expert||'Unassigned'} · {opened.availability==='live_read'?'Read-only Mini view':artifact?.freshness==='stale'?'Saved result is stale':opened.freshness==='stale'?'Saved result is stale':'Saved result'}</span></div>
-   {opened.availability==='live_read'?<ForgeLiveBenchmark row={opened} catalogSha={data.catalog_sha256} agentId={agentId}/>:artifact?<><p className="resource-evidence">Captured {new Date(artifact.observed_at).toLocaleString()} · SHA-256 {artifact.sha256.slice(0,12)}</p>
+    <span>{opened.owner_expert||'Unassigned'} · {opened.availability==='first_party_app'?'Private cloud captures':opened.availability==='live_read'?'Read-only Mini view':artifact?.freshness==='stale'?'Saved result is stale':opened.freshness==='stale'?'Saved result is stale':'Saved result'}</span></div>
+   {opened.availability==='first_party_app'&&opened.app_id==='wealth-platform'?<ForgeWhaleRoom row={opened} catalogSha={data.catalog_sha256}/>:opened.availability==='live_read'?<ForgeLiveBenchmark row={opened} catalogSha={data.catalog_sha256} agentId={agentId}/>:artifact?<><p className="resource-evidence">Captured {new Date(artifact.observed_at).toLocaleString()} · SHA-256 {artifact.sha256.slice(0,12)}</p>
     <iframe title={`${opened.title} saved result`} srcDoc={artifact.html} sandbox="allow-scripts" referrerPolicy="no-referrer" /></>
     :<p role={artifactError?'alert':'status'}>{artifactError||'Verifying saved result…'}</p>}
   </section>:<>
@@ -63,6 +64,7 @@ export default function ForgeResourceGallery({agentId,onClose,initialKind='ui',i
     <p className="resource-meta">{row.freshness==='stale'?'Stale capture':'Captured'} · {new Date(row.observed_at).toLocaleString()}</p>
     <p className="resource-meta">Source {row.source_commit.slice(0,10)}{row.content_sha256?' · SHA '+row.content_sha256.slice(0,10):''}</p>
     {row.availability==='saved_result'?<button type="button" onClick={event=>open(row,event)}>Open saved result</button>
+     :row.availability==='first_party_app'&&row.app_id==='wealth-platform'?<button type="button" onClick={event=>open(row,event)}>Open Whale Room</button>
      :row.availability==='live_read'?<button type="button" onClick={event=>open(row,event)}>Open live view</button>
      :<p className="resource-unavailable">{row.delivery_mode==='live_app'?'Live access is not enabled.':'No hosted result is available yet.'}</p>}
    </li>)}</ul>

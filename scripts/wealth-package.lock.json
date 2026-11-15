@@ -1,0 +1,35 @@
+{
+  "schema_version": "forge-wealth-package.v1",
+  "source_commit": "4655bf9e942b069fe21118ffb70f0d2cf292d247",
+  "source_state": "coordinator-frozen-working-tree",
+  "files": {
+    "host/forge-contract.mjs": {
+      "sha256": "975ecef0982383bceca57cf63521353b26891dce2b34ac5e45880f369bcc1095",
+      "bytes": 10962
+    },
+    "host/forge-client.mjs": {
+      "sha256": "94e7946bead0dfaacdc6bcc3d0d0d2583b131a3057f14775993dd26e56c1c269",
+      "bytes": 7789
+    },
+    "host/forge-gateway.mjs": {
+      "sha256": "3055b36be08fcd1e7b606aed87581c4728e3ba576ecc4e7cf6df26eb75fd3142",
+      "bytes": 11479
+    },
+    "web/whale-cloud.js": {
+      "sha256": "1d36d07ebc8c803deb9ad88d108412fc36c068471548634ff7a0cfbb35b9b0bb",
+      "bytes": 4140
+    },
+    "web/whale-browser-captures.js": {
+      "sha256": "881d532778dab6ae317a6c2f0a9c184b99072dd1922459eadc41d11c76fe1418",
+      "bytes": 13528
+    },
+    "web/whale-room.css": {
+      "sha256": "d663aa5f5c158db15f46e5884b0c226d1932148e746c75bcf679fb69477d1d0c",
+      "bytes": 14750
+    },
+    "host/capture-response.mjs": {
+      "sha256": "52f5370d06fe7bdc74798e225a1c6bd9fab507c4f6344f40211cdf27b3266288",
+      "bytes": 4818
+    }
+  }
+}
