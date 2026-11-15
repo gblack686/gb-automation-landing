@@ -13,6 +13,8 @@ import { makeResourceService, validateResourceManifest } from './resources.mjs';
 import { makeResourceStorage } from './resource-storage.mjs';
 import { makePiJobHandler } from './pi-jobs.mjs';
 import {makeLiveAppHandler} from './live-apps.mjs';
+import {makeWealthAppHandler} from './wealth-app.mjs';
+import {wealthSecretArns} from './wealth-config.mjs';
 
 let secret: {url:string;key:string}|undefined;
 let scheduleAuth: string|undefined;
@@ -214,7 +216,16 @@ const liveApps=makeLiveAppHandler({issuer:process.env.COGNITO_ISSUER,operatorSub
   const result=await new SecretsManagerClient({}).send(new GetSecretValueCommand({SecretId:secretId}));
   return result.SecretString||'';
  }});
-const resources=makeResourceService({enabled:process.env.FORGE_RESOURCES_ENABLED==='true',liveAppAvailable:liveApps.available,...resourceStorage});
+const wealthApp=makeWealthAppHandler({issuer:process.env.COGNITO_ISSUER,operatorSubject:process.env.FORGE_LEGACY_OPERATOR_SUB,registry,
+ config:process.env.FORGE_WEALTH_CONFIG?JSON.parse(process.env.FORGE_WEALTH_CONFIG):undefined,
+ resourcesEnabled:process.env.FORGE_RESOURCES_ENABLED==='true',loadManifest:resourceStorage.loadManifest,
+ credentials:async()=>{
+  const arns=wealthSecretArns(process.env.FORGE_WEALTH_READ_SECRET_ARN,process.env.FORGE_WEALTH_COMMAND_SECRET_ARN,process.env.FORGE_LIVE_APP_SECRET_ARN);
+  const read=await new SecretsManagerClient({}).send(new GetSecretValueCommand({SecretId:arns[0]}));
+  const command=arns[1]?await new SecretsManagerClient({}).send(new GetSecretValueCommand({SecretId:arns[1]})):null;
+  return {read:read.SecretString||'',command:command?command.SecretString||'':null};
+ }});
+const resources=makeResourceService({enabled:process.env.FORGE_RESOURCES_ENABLED==='true',liveAppAvailable:liveApps.available,firstPartyAppAvailable:wealthApp.available,...resourceStorage});
 const factory=makeFactoryService({enabled:process.env.FORGE_FACTORY_ENABLED==='true',load:(agent:string)=>resourceStorage.loadFactorySnapshot(agent)});
 const readHandler=makeHandler({issuer:process.env.COGNITO_ISSUER,rpc,document,proposals,search,operatorData,resources,factory,operatorSubject:process.env.FORGE_LEGACY_OPERATOR_SUB,schedule,approvalSnapshot,registry});
 const chatHandler=makeChatHandler({issuer:process.env.COGNITO_ISSUER,registry,db:chatDb});
@@ -242,5 +253,6 @@ const piHandler=makePiJobHandler({issuer:process.env.COGNITO_ISSUER,operatorSubj
 export const handler=(event:unknown)=>{
  const field=(event as {fieldName?:string;info?:{fieldName?:string}})?.fieldName||(event as {info?:{fieldName?:string}})?.info?.fieldName||'';
  if(field==='forgeAppRead')return liveApps.handle(event);
+ if(['forgeWealthRead','forgeWealthCommand'].includes(field))return wealthApp.handle(event);
  return ['forgePiRead','forgePiCommand'].includes(field)?piHandler(event):['forgeChatRead','forgeChatCommand'].includes(field)?chatHandler(event):readHandler(event);
 };

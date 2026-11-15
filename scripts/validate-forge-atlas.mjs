@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { readFile, mkdir, writeFile } from 'node:fs/promises';
 const base=process.env.FORGE_ATLAS_BASE || 'http://127.0.0.1:5197';
-const output='artifacts/forge-atlas-validation';await mkdir(output,{recursive:true});
+const output=process.env.FORGE_ATLAS_OUTPUT||'artifacts/forge-atlas-validation';await mkdir(output,{recursive:true});
 const fixture=`<!doctype html><html><head></head><body><h1>Hosted document fixture</h1><script>
  const channel=document.querySelector('meta[name="forge-host-channel"]').content;let sequence=0;const pending=new Map();
  window.ForgeHost={chatReady:false,read(view,input={}){return new Promise((resolve,reject)=>{const id=String(++sequence);setTimeout(()=>{if(pending.delete(id))reject(Error('Timed out'));},10000);pending.set(id,{resolve,reject,type:'forge-atlas.response.v1'});parent.postMessage({type:'forge-atlas.request.v1',channel,id,view,input},'*');});},chat(action,input={}){return new Promise((resolve,reject)=>{const id=String(++sequence);setTimeout(()=>{if(pending.delete(id))reject(Error('Timed out'));},10000);pending.set(id,{resolve,reject,type:'forge-chat.response.v1'});parent.postMessage({type:'forge-chat.request.v1',channel,id,action,input},'*');});}};

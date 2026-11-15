@@ -17,6 +17,7 @@ import {forgeBuilder,forgeBuilderWorker} from './functions/forge-builder/resourc
 import {builderInfrastructure} from './functions/forge-builder/infrastructure.mjs';
 import { workshopIssuer, workshopSecretArn } from './functions/forge-workshop/infrastructure.mjs';
 import {validateAppConfig} from './functions/forge-atlas/live-apps.mjs';
+import {validateWealthConfig,wealthSecretArns} from './functions/forge-atlas/wealth-config.mjs';
 
 /**
  * @see https://docs.amplify.aws/react/build-a-backend/ to add storage, functions, and more
@@ -56,6 +57,15 @@ if(process.env.FORGE_LIVE_APP_CONFIG){
  backend.forgeAtlas.resources.lambda.addToRolePolicy(new PolicyStatement({actions:['secretsmanager:GetSecretValue'],resources:[arn]}));
 }
 backend.forgeAtlas.addEnvironment('DOCUMENT_BUCKET', atlasDocuments.bucketName);
+// Whale Room has independent default-off config and exact read/command secret grants.
+if(process.env.FORGE_WEALTH_CONFIG){
+ validateWealthConfig(JSON.parse(process.env.FORGE_WEALTH_CONFIG));
+ const arns=wealthSecretArns(process.env.FORGE_WEALTH_READ_SECRET_ARN,process.env.FORGE_WEALTH_COMMAND_SECRET_ARN,process.env.FORGE_LIVE_APP_SECRET_ARN);
+ backend.forgeAtlas.addEnvironment('FORGE_WEALTH_CONFIG',process.env.FORGE_WEALTH_CONFIG);
+ backend.forgeAtlas.addEnvironment('FORGE_WEALTH_READ_SECRET_ARN',arns[0]);
+ if(arns[1])backend.forgeAtlas.addEnvironment('FORGE_WEALTH_COMMAND_SECRET_ARN',arns[1]);
+ backend.forgeAtlas.resources.lambda.addToRolePolicy(new PolicyStatement({actions:['secretsmanager:GetSecretValue'],resources:arns}));
+}
 backend.forgeAtlas.addEnvironment('COGNITO_ISSUER', atlasIssuer(atlasStack,backend.auth.resources.userPool.userPoolId));
 if (process.env.FORGE_LEGACY_OPERATOR_SUB) backend.forgeAtlas.addEnvironment('FORGE_LEGACY_OPERATOR_SUB', process.env.FORGE_LEGACY_OPERATOR_SUB);
 backend.forgeAtlas.resources.lambda.addToRolePolicy(new PolicyStatement({
