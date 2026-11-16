@@ -54,7 +54,7 @@ export function mountBrowserCaptures(root, {enqueue, call, back, isStopped, clou
   const options=el('details','wr-capture-options');
   if(cloud){
     const header=el('header','wr-forum-header'),context=el('div','wr-forum-context');
-    const channelToggle=button('☰',()=>{workspace.dataset.pane='channels';});channelToggle.className='wr-mobile-channel-toggle';channelToggle.setAttribute('aria-label','Browse channels');
+    const channelToggle=button('☰',()=>{workspace.dataset.pane='channels';workspace.querySelector('.wr-sidebar [aria-current="true"]')?.focus();});channelToggle.className='wr-mobile-channel-toggle';channelToggle.setAttribute('aria-label','Browse channels');
     const hash=el('span','wr-channel-icon','#');hash.setAttribute('aria-hidden','true');context.append(hash,heading,el('span','wr-header-description','Your private Discord library'));
     reload.textContent='↻';reload.setAttribute('aria-label','Reload saved captures');reload.title='Reload saved captures';reload.className='wr-icon-button';
     const summary=el('summary','','Capture');options.append(summary);

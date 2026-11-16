@@ -136,6 +136,9 @@ try{
  await page.getByRole('button',{name:'All saved captures',exact:true}).click();await waitList('Synthetic private capture');await waitList('Synthetic second channel capture');
  assert.deepEqual(lastList(),{offset:0});checks.push('All saved captures clears the channel filter and restores both synthetic histories');
  await page.setViewportSize({width:390,height:844});
+ await browse();assert(await page.locator('.wr-sidebar [aria-current="true"]').evaluate(n=>document.activeElement===n));
+ await page.keyboard.press('Escape');assert.equal(await rail.isVisible(),false);assert(await page.getByRole('button',{name:'Browse channels',exact:true}).evaluate(n=>document.activeElement===n));
+ checks.push('Mobile drawer focuses the selected channel and Escape returns focus to Browse channels without closing the app');
  for(let index=0;index<12;index++){
   await browse();
   const button=channelButton(index);await button.focus();await page.keyboard.press('Space');
