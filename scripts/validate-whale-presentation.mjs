@@ -73,7 +73,8 @@ const captures=page.getByRole('list',{name:'Saved browser captures',exact:true})
 const detail=page.getByRole('region',{name:'Saved capture detail',exact:true});
 const lastList=()=>requests.filter(r=>r.input.operation==='captureList').at(-1).input.args;
 const waitList=text=>captures.getByText(text,{exact:false}).first().waitFor();
-const select=async index=>{await channelButton(index).click();await channelButton(index).and(page.locator('[aria-current="true"]')).waitFor();};
+const browse=async()=>{if(page.viewportSize().width<=700&&!await rail.isVisible())await page.getByRole('button',{name:'Browse channels',exact:true}).click();};
+const select=async index=>{await browse();await channelButton(index).click();await page.waitForFunction(id=>document.querySelector(`.wr-sidebar button[data-channel-id="${id}"]`)?.getAttribute('aria-current')==='true',channels[index].id);};
 const snapshot=async label=>{
  const layout=await page.evaluate(()=>{
   const measure=selector=>{const n=document.querySelector(selector),s=getComputedStyle(n),r=n.getBoundingClientRect();return {selector,font:s.fontFamily,display:s.display,columns:s.gridTemplateColumns,direction:s.flexDirection,x:r.x,y:r.y,width:r.width,height:r.height,scrollHeight:n.scrollHeight,clientHeight:n.clientHeight,overflow:s.overflow};};
@@ -94,7 +95,7 @@ try{
  assert.equal(await page.getByRole('button',{name:'All saved captures',exact:true}).getAttribute('aria-current'),'true');
  assert.equal(await page.evaluate(()=>typeof WealthHost.fetch),'function');
  checks.push('Compiled /atlas route, actual Amplify SDK and authenticated host bridge; twelve registry labels; All saved captures selected; false Back omitted');
- const target=await page.getByRole('combobox',{name:'Capture channel',exact:true}).inputValue();
+ const target=await page.getByRole('combobox',{name:'Capture channel',exact:true,includeHidden:true}).inputValue();
  fixture.controls.paged=true;await select(0);await waitList('Synthetic private capture');
  await page.getByRole('button',{name:'More captures',exact:true}).click();await waitList('No saved captures for this channel');
  assert.deepEqual(lastList(),{offset:40,revision:7,channel_id:channels[0].id});
@@ -102,12 +103,18 @@ try{
  assert.deepEqual(lastList(),{offset:0,channel_id:channels[1].id});
  assert.equal(await captures.getByRole('button').count(),1);assert(!(await captures.innerText()).includes('columbus-trades'));
  assert.equal(await page.getByRole('button',{name:'Previous captures',exact:true}).isDisabled(),true);
- assert.equal(await page.getByRole('combobox',{name:'Capture channel',exact:true}).inputValue(),target);
+ assert.equal(await page.getByRole('combobox',{name:'Capture channel',exact:true,includeHidden:true}).inputValue(),target);
  assert.equal(await page.locator('.wr-sidebar [aria-current="true"]').count(),1);
  checks.push('Exact signed captureList channel argument; server filters results; pagination offset/revision reset; capture target stays independent');
  await snapshot('desktop-selected');
  assert.equal(layouts.at(-1).elements.find(e=>e.selector==='.wr-sidebar nav').direction,'column');
- assert.equal(layouts.at(-1).selected[0].background,'rgb(64, 71, 107)');
+ assert.equal(layouts.at(-1).selected[0].background,'rgb(64, 66, 73)');
+ const viewport=page.viewportSize(),dialog=layouts.at(-1).elements.find(e=>e.selector==='.forge-resource-dialog');
+ assert.equal(dialog.x,0);assert.equal(dialog.y,0);assert.equal(dialog.width,viewport.width);assert.equal(dialog.height,viewport.height);
+ assert.match(await page.locator('.wr-post-title').first().evaluate(n=>getComputedStyle(n).fontFamily),/sans-serif/);
+ const beforeModes=requests.length;await page.getByRole('searchbox',{name:'Search saved messages on this page'}).fill('absent-example');
+ assert.equal(await captures.locator('[data-capture-id]:visible').count(),0);await page.getByRole('searchbox').fill('');
+ await page.getByRole('button',{name:'Chat',exact:true}).click();assert.equal(await page.locator('.wr-cloud').getAttribute('data-view'),'chat');await page.getByRole('button',{name:'Forum',exact:true}).click();assert.equal(requests.length,beforeModes);
  checks.push('Desktop uses compiled host CSS, vertical channel navigation and visible selected-channel styling');
  await select(2);await waitList('No saved captures for this channel');
  const empty=await captures.innerText();assert(empty.includes('prepared Mac mini #2 browser'));assert(empty.includes('Capture on Mac mini #2'));assert(!empty.includes('Capture visible messages'));
@@ -116,9 +123,9 @@ try{
  let releaseDetail,enteredDetail;const startedDetail=new Promise(resolve=>enteredDetail=resolve);
  fixture.controls.detailWait=new Promise(resolve=>releaseDetail=resolve);fixture.controls.detailEntered=enteredDetail;
  await captures.getByRole('button').click();await startedDetail;
- await select(1);assert.equal(await detail.innerText(),'');
+ await select(1);assert.equal(await detail.locator('.wr-original').count(),0);assert(!(await detail.innerText()).includes('Synthetic private'));
  fixture.controls.detailWait=null;releaseDetail();await waitList('Synthetic second channel capture');
- assert.equal(await detail.innerText(),'');assert(!(await captures.innerText()).includes('Synthetic private'));
+ assert.equal(await detail.locator('.wr-original').count(),0);assert(!(await detail.innerText()).includes('Synthetic private'));assert(!(await captures.innerText()).includes('Synthetic private'));
  checks.push('Channel change scrubs detail immediately and fences a delayed signed previous-channel detail response');
  let releaseList,enteredList;const startedList=new Promise(resolve=>enteredList=resolve);
  fixture.controls.listWait=new Promise(resolve=>releaseList=resolve);fixture.controls.listEntered=enteredList;
@@ -130,22 +137,23 @@ try{
  assert.deepEqual(lastList(),{offset:0});checks.push('All saved captures clears the channel filter and restores both synthetic histories');
  await page.setViewportSize({width:390,height:844});
  for(let index=0;index<12;index++){
+  await browse();
   const button=channelButton(index);await button.focus();await page.keyboard.press('Space');
   await page.waitForFunction(id=>document.querySelector(`.wr-sidebar button[data-channel-id="${id}"]`)?.getAttribute('aria-current')==='true',channels[index].id);
-  await page.getByText('Saved history: #'+channels[index].name,{exact:true}).waitFor();
+  await page.getByText('Saved history: #'+channels[index].name,{exact:true}).waitFor({state:'attached'});
   await waitList(index===0?'Synthetic private capture':index===1?'Synthetic second channel capture':'No saved captures for this channel');
   assert.deepEqual(lastList(),{offset:0,channel_id:channels[index].id});
  }
- await channelButton(11).focus();await page.keyboard.press('Tab');await page.keyboard.press('Shift+Tab');
+ await browse();await channelButton(11).focus();await page.keyboard.press('Tab');await page.keyboard.press('Shift+Tab');
  assert.equal(await channelButton(11).evaluate(n=>document.activeElement===n),true);
  const focus=await channelButton(11).evaluate(n=>({visible:n.matches(':focus-visible'),outline:getComputedStyle(n).outlineWidth}));
  assert(focus.visible);assert.equal(focus.outline,'3px');
  await snapshot('mobile-last-channel-keyboard');
- assert.equal(layouts.at(-1).elements.find(e=>e.selector==='.wr-sidebar nav').display,'grid');
- checks.push('390px mobile two-column scrollable rail; keyboard selects every one of twelve channels; selected and focus styles visible; no horizontal overflow');
+ assert.equal(layouts.at(-1).elements.find(e=>e.selector==='.wr-sidebar nav').display,'flex');
+ checks.push('390px mobile channel drawer; keyboard selects all twelve channels and returns to feed; selected and focus styles visible; no horizontal overflow');
  await select(0);await waitList('Synthetic private capture');
  await captures.getByRole('button').focus();await page.keyboard.press('Enter');
- await page.getByText('Synthetic private detail <img src=x onerror=unsafe()>',{exact:true}).waitFor();
+ await page.locator('.wr-original').getByText('Synthetic private detail <img src=x onerror=unsafe()>',{exact:true}).waitFor();
  assert.equal(await page.locator('.wr-original img,.wr-original script').count(),0);await snapshot('mobile-detail');
  checks.push('Mobile keyboard opens detail with exact safe text rendering and reachable nested scroll areas');
  await page.getByRole('button',{name:'Back to gallery',exact:true}).click();await page.getByRole('button',{name:'Open Whale Room',exact:true}).waitFor();
