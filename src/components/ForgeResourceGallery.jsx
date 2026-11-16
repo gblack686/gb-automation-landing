@@ -36,12 +36,14 @@ export default function ForgeResourceGallery({agentId,onClose,initialKind='ui',i
    if(!controller.signal.aborted)setArtifact({html:resourceDocument(result.bytes,result.asset.media_type),...result.asset});
   }catch(reason){if(!controller.signal.aborted)setArtifactError(reason.message||'The saved result could not open.');}
  };
- return <dialog ref={dialog} className="forge-resource-dialog" aria-labelledby="resource-gallery-title" onCancel={event=>{event.preventDefault();onClose();}}>
-  <header className="resource-heading"><div><p>Character Forge</p><h2 id="resource-gallery-title">{opened?opened.title:'Expert resources'}</h2></div>
+ const whaleOpen=opened?.availability==='first_party_app'&&opened?.app_id==='wealth-platform';
+ return <dialog ref={dialog} className={`forge-resource-dialog${whaleOpen?' forge-resource-whale':''}`} aria-labelledby="resource-gallery-title" onCancel={event=>{event.preventDefault();onClose();}}>
+  <header className="resource-heading"><div>{!whaleOpen&&<p>Character Forge</p>}<h2 id="resource-gallery-title">{opened?opened.title:'Expert resources'}</h2>{whaleOpen&&<span className="resource-whale-private">Private library</span>}</div>
+   {whaleOpen&&<button className="resource-whale-back" type="button" onClick={back}>Back to gallery</button>}
    <button type="button" onClick={onClose} aria-label="Close expert resources">Close</button></header>
   {opened?<section className="resource-viewer">
-   <div className="resource-viewer-tools"><button type="button" onClick={back}>Back to gallery</button>
-    <span>{opened.owner_expert||'Unassigned'} · {opened.availability==='first_party_app'?'Private cloud captures':opened.availability==='live_read'?'Read-only Mini view':artifact?.freshness==='stale'?'Saved result is stale':opened.freshness==='stale'?'Saved result is stale':'Saved result'}</span></div>
+   {!whaleOpen&&<div className="resource-viewer-tools"><button type="button" onClick={back}>Back to gallery</button>
+    <span>{opened.owner_expert||'Unassigned'} · {opened.availability==='first_party_app'?'Private cloud captures':opened.availability==='live_read'?'Read-only Mini view':artifact?.freshness==='stale'?'Saved result is stale':opened.freshness==='stale'?'Saved result is stale':'Saved result'}</span></div>}
    {opened.availability==='first_party_app'&&opened.app_id==='wealth-platform'?<ForgeWhaleRoom row={opened} catalogSha={data.catalog_sha256}/>:opened.availability==='live_read'?<ForgeLiveBenchmark row={opened} catalogSha={data.catalog_sha256} agentId={agentId}/>:artifact?<><p className="resource-evidence">Captured {new Date(artifact.observed_at).toLocaleString()} · SHA-256 {artifact.sha256.slice(0,12)}</p>
     <iframe title={`${opened.title} saved result`} srcDoc={artifact.html} sandbox="allow-scripts" referrerPolicy="no-referrer" /></>
     :<p role={artifactError?'alert':'status'}>{artifactError||'Verifying saved result…'}</p>}

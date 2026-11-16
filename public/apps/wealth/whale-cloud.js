@@ -8,12 +8,31 @@ export function mountCloudWhaleRoom(container,{fetch:hostFetch,subscribeSession,
     return ()=>root.remove();
   }
   let stopped=false,active=null,queue=Promise.resolve(),panel,unsubscribe=()=>{},timer;
+  root.dataset.pane='feed';root.dataset.view='forum';
+  const rail=node('nav','','wr-server-rail');rail.setAttribute('aria-label','Whale Room workspace');
+  const orb=node('span','W','wr-server-home');orb.setAttribute('aria-hidden','true');
+  const closeChannels=()=>{root.dataset.pane='feed';root.querySelector('.wr-mobile-channel-toggle')?.focus();};
+  const server=node('button','WR','wr-server-current');server.type='button';server.setAttribute('aria-label','Show Whale Room channels');server.onclick=()=>{if(root.dataset.pane==='channels')closeChannels();else{root.dataset.pane='channels';root.querySelector('.wr-sidebar [aria-current="true"]')?.focus();}};
+  rail.append(orb,node('span','','wr-server-divider'),server,node('span','PRIVATE','wr-server-caption'));
   const sidebar=node('aside','','wr-sidebar'),nav=node('nav');nav.setAttribute('aria-label','Whale Room channels');
-  const allChannels=node('button','All saved captures');allChannels.type='button';allChannels.dataset.channelId='';allChannels.onclick=()=>panel?.selectChannel('');
-  sidebar.append(node('h2','Whale Room'),node('p','Private saved captures','wr-meta'),allChannels,nav);
-  const selectChannel=id=>{for(const b of sidebar.querySelectorAll('button[data-channel-id]')){if(b.dataset.channelId===id)b.setAttribute('aria-current','true');else b.removeAttribute('aria-current');}};
-  const renderChannels=channels=>{nav.replaceChildren();for(const {id,name} of channels){const b=node('button','#'+name);b.type='button';b.dataset.channelId=id;b.onclick=()=>panel?.selectChannel(id);nav.append(b);}};
-  const main=node('section','','wr-browser-captures');root.append(sidebar,main);
+  const brand=node('div','','wr-server-heading');brand.append(node('strong','Whale Room'),node('span','⌄','wr-chevron'));
+  const channelBack=node('button','Back to messages','wr-mobile-channel-back');channelBack.type='button';channelBack.onclick=closeChannels;
+  const chooseChannel=id=>{const drawer=root.dataset.pane==='channels';panel?.selectChannel(id);root.dataset.pane='feed';if(drawer)closeChannels();};
+  const allChannels=node('button','All saved captures');allChannels.type='button';allChannels.dataset.channelId='';allChannels.onclick=()=>chooseChannel('');
+  const channelScroll=node('div','','wr-channel-scroll');channelScroll.append(channelBack,node('p','YOUR LIBRARY','wr-channel-group-label'),allChannels,nav);
+  const identity=node('div','','wr-reader-identity');identity.append(node('span','W','wr-reader-orb'),node('div','Private workspace','wr-reader-name'),node('span','Saved from Discord','wr-reader-subtitle'));
+  sidebar.append(brand,channelScroll,identity);
+  const selectChannel=id=>{for(const b of sidebar.querySelectorAll('button[data-channel-id]')){if(b.dataset.channelId===id)b.setAttribute('aria-current','true');else b.removeAttribute('aria-current');}root.dataset.pane='feed';};
+  const renderChannels=channels=>{
+    nav.replaceChildren();
+    for(const [label,match] of [['TRADER CHANNELS',name=>!['institutional-charts','daily-candle'].includes(name)],['MARKET CONTEXT',name=>['institutional-charts','daily-candle'].includes(name)]]){
+      const entries=channels.filter(c=>match(c.name));if(!entries.length)continue;
+      const group=node('div','','wr-channel-group');group.append(node('p',label,'wr-channel-group-label'));
+      for(const {id,name} of entries){const b=node('button','#'+name);b.type='button';b.dataset.channelId=id;b.onclick=()=>chooseChannel(id);group.append(b);}nav.append(group);
+    }
+  };
+  const main=node('section','','wr-browser-captures');root.append(rail,sidebar,main);
+  root.addEventListener('keydown',event=>{if(event.key==='Escape'&&root.dataset.pane==='channels'){event.preventDefault();event.stopPropagation();closeChannels();}});
   const scrub=message=>{
     if(stopped)return;stopped=true;clearTimeout(timer);active?.abort();panel?.destroy();unsubscribe();
     [...root.querySelectorAll('*')].reverse().forEach(n=>{n.textContent='';n.removeAttribute('href');});root.replaceChildren();

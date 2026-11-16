@@ -24,20 +24,20 @@
     {
       "source": "web/whale-cloud.js",
       "file": "whale-cloud.js",
-      "sha256": "1d36d07ebc8c803deb9ad88d108412fc36c068471548634ff7a0cfbb35b9b0bb",
-      "bytes": 4140
+      "sha256": "2eb293663221f056c7b9e1e4d5c77c0198d997c208349550ffb46e274989a036",
+      "bytes": 6244
     },
     {
       "source": "web/whale-browser-captures.js",
       "file": "whale-browser-captures.js",
-      "sha256": "881d532778dab6ae317a6c2f0a9c184b99072dd1922459eadc41d11c76fe1418",
-      "bytes": 13528
+      "sha256": "7a8d8c3f150e5e17c1247787267627a334f1c41e32194f1ad873968835b2418b",
+      "bytes": 20398
     },
     {
       "source": "web/whale-room.css",
       "file": "whale-room.css",
-      "sha256": "d663aa5f5c158db15f46e5884b0c226d1932148e746c75bcf679fb69477d1d0c",
-      "bytes": 14750
+      "sha256": "e50b37d1f746e40c95cb56c50748fb358c8df1cd6fd8d8d37a663b67b6095994",
+      "bytes": 29574
     }
   ]
 }

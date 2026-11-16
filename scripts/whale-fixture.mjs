@@ -18,6 +18,18 @@ export function whaleFixture(overrides={}) {
  let saved=[{id:captureId,guild_id:'100',channel_id:channel,channel_name:'columbus-trades',excerpt:'Synthetic private capture <script>unsafe()</script>',body:'Synthetic private detail <img src=x onerror=unsafe()>',body_bytes:51,first_captured_at:row.observed_at,last_captured_at:row.observed_at,observations:1,url:'https://discord.com/channels/100/'+channel,source_message_id:null,author:null,source_timestamp:null,history:'partial',provenance:'operator_browser_capture',identity:'snapshot_content',body_format:'browser_accessibility_text'}];
  const channels=controls.channels||[{id:channel,name:'columbus-trades'},...Array.from({length:11},(_,i)=>({id:String(20000000+i),name:'synthetic-channel-'+i}))];
  if(controls.multichannel)saved.push({...saved[0],id:'e'.repeat(64),channel_id:channels[1].id,channel_name:channels[1].name,excerpt:'Synthetic second channel capture',body:'Synthetic second channel detail',body_bytes:31,url:'https://discord.com/channels/100/'+channels[1].id});
+ if(controls.forumPreview){
+  // Explicit visual-review fixtures only. These never enter the application bundle.
+  const examples=[
+   ['BTC range high — waiting for confirmation','The range high is the area I am watching today. A clean close and a retest would tell me more than the initial move.\n\nFor now, keeping this on the watchlist. If price falls back into the range, the idea needs another look.'],
+   ['ETH follow-up: the retest matters','The first move has already happened. Watching how price behaves around the prior breakout area before deciding whether the structure is still intact.'],
+   ['A quick note on position sizing','A clear invalidation level should come before choosing a position size. I would rather miss an entry than rush into a setup I cannot explain.'],
+   ['Market context for the week ahead','Watching the higher-timeframe range and the next scheduled macro releases. The useful question is where the current idea stops making sense.'],
+   ['Keeping a record of the setup','Saving the original reasoning helps when reviewing what happened later. Entry, invalidation and context belong together.'],
+   ['What I am waiting to see next','No new entry here. Waiting for price to make the decision easier and keeping the original scenario in view.'],
+  ];
+  saved=examples.map(([title,text],index)=>{const body=title+'\n\n'+text;return {...saved[0],id:hash('forum-preview-'+index),excerpt:body.slice(0,300),body,body_bytes:Buffer.byteLength(body),last_captured_at:`2026-11-15T${String(19-index).padStart(2,'0')}:24:00Z`};});
+ }
  const dispatch=async(principal,route)=>{
   routes.push({principal,route});const path=route.path.replace('/api/wealth/v1/whale-room/browser-captures','');
   if(route.method==='GET'){
