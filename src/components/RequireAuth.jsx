@@ -51,12 +51,12 @@ export default function RequireAuth({ children, allowedGroups = [], allowedEmail
   }
 
   if (authState === 'unauthed') {
-    const next = encodeURIComponent(location.pathname + location.search);
+    const next = encodeURIComponent(location.pathname + location.search + location.hash);
     return <Navigate to={`/login?next=${next}`} replace />;
   }
 
   if (authState === 'forbidden') {
-    const next = encodeURIComponent(location.pathname + location.search);
+    const next = encodeURIComponent(location.pathname + location.search + location.hash);
     const switchAccount = async () => {
       await signOut();
       window.location.assign(`/login?next=${next}`);

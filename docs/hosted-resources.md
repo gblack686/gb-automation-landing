@@ -1,5 +1,109 @@
 # Private expert resource delivery
 
+## System Home
+
+The protected `/system` route is the default administrator destination after
+login. Safe explicit `next` paths preserve query and hash state. A small
+authenticated `forgeSystemHomeRead` query accepts exactly `{view:"access"}` or
+`{view:"snapshot"}`. The access descriptor reads no system snapshot: it returns
+the server-selected destination and an active registered expert for the existing
+resource gallery. Other accounts receive only their existing authorized expert
+workspace or tenant portal. A failed access lookup has no infrastructure fallback.
+
+Every snapshot read checks the deployment Cognito issuer, subject and expiry,
+the existing exact operator policy and active subject registration. Tenant group
+membership alone never grants system access. AppSync verifies token signatures;
+the function does not accept caller URLs, keys, tenants or expert identities.
+`FORGE_SYSTEM_HOME_ENABLED` defaults to `false`. The fixed capture freshness TTL
+is `FORGE_SYSTEM_HOME_TTL_SECONDS` (default 180, allowed 30–3600 seconds).
+
+The reader uses the existing private document bucket and read grant. It reads
+`gbautomation/resources/system-home/active.json` (maximum 2048 bytes), whose exact
+`forge-system-home-pointer.v1` fields are `schema_version`, `snapshot_sha256` and
+`snapshot_version_id`. The snapshot key is derived as
+`gbautomation/resources/system-home/snapshots/<sha256>.json` (maximum 750000 bytes).
+Both reads require versioned objects and verify SHA metadata against bounded
+stream bytes; the snapshot version and digest must match the pointer. There are
+no new signing secrets, public URLs, proxy routes or write grants.
+
+The strict `forge-system-home.v1` snapshot contains `tenant_id`, `captured_at`,
+`source_commit`, `operations`, `observability`, `topology`, `context_graph` and `docs`. The private
+producer supplies the reviewed topology; no private inventory is bundled into
+the website. The reader rejects extra fields, invalid metrics and future times.
+Docs IDs allow 300 characters (including index paths), titles 200, and safe
+relative paths 500. API delivery adds `retrieved_at`, `freshness` and `ttl_seconds`.
+Capture, source update, source fetch and latest-event times remain independent.
+Old valid captures stay stale; missing/invalid objects stay unavailable. Counts
+remain null when unknown, and observability coverage is always incomplete.
+`sessions_sampled` counts the bounded observation sample. Session/event totals
+are only explicit source-reported totals and are never inferred from that sample.
+The metric cards identify this scope in visible text and hover detail.
+
+Operations Center includes the interactive boundary graph and bounded operations
+records. Docs / KB shows indexed records and opens the existing authenticated
+saved-resource gallery for available previews. Agent Observability preserves the
+selected session in the URL and shows unknown sessions as unavailable. These are
+read-only hosted projections; they do not expose raw transcripts or local app
+control endpoints. Visible controls and Shift+Tab cycle in that order. Editing,
+dialogs, handled/composing/repeated and additional-modifier events retain native
+behavior. Refresh runs every 30 seconds only while the admin page is visible.
+Logout, expiry, account change or access denial clears private state and fences
+late replies; a transient unavailable read may retain labeled last-successful data.
+
+Operations Center defaults to one combined runtime operations/knowledge explorer
+inside the same authenticated shell. `context_graph` is required in this
+unreleased v1 contract: `schema: ai-os-context-graph.v1`, `visibility: admin`,
+`complete: false`, two exact source descriptors (`operations`, `knowledge`),
+at most 400 nodes and 2000 observed links. Sources retain independent timestamps,
+snapshot/stale/unavailable status, unknown totals and truncation flags. Labels
+and areas are bounded metadata; opaque node identities, source membership,
+unique links and endpoint provenance are validated before delivery. Extra fields,
+raw content/URLs, invalid timestamps and unknown identities are rejected.
+
+The private shared collector owns reconciliation: only matching original
+identity and safe metadata produce a shared node. The website never merges by
+label or infers edges. Distinct conflicting records stay distinct. Source and
+area filters, node search, keyboard/touch inspection, pan/zoom and focus controls
+explore the actual supplied relationships. Source badges distinguish operations,
+knowledge and shared identities. Node selection can carry its label to the Docs
+search view; saved reports still use the authenticated gallery. Missing sources
+and retained stale captures remain explicit. The pinned master topology is a
+secondary Architecture reference in Operations Center, not runtime graph data.
+
+Pair this strict reader with the updated private producer before activation;
+older snapshots without `context_graph` fail closed. Graph source validation
+adds `system-context-graph.test.mjs`, paired feed validation, and combined-graph
+browser cases. Production feature configurations and activation stay with root.
+
+Source checks: `node --test amplify/functions/forge-atlas/*.test.mjs`,
+`node --test src/lib/systemHome.test.mjs`, backend TypeScript and `npm run build`.
+`scripts/validate-system-home.mjs` uses isolated browser fixtures; set
+`SYSTEM_HOME_BASE` to the local Vite origin and `SYSTEM_HOME_OUTPUT` to a private
+evidence directory. Existing Forge/resource and tenant checks remain relevant.
+
+Run `node --test scripts/audit-system-home-build.test.mjs` and
+`node scripts/audit-system-home-build.mjs dist <private-feed> --public-baseline <deployed-40hex>`.
+The optional baseline must be the recorded previously public release. It permits
+existing prose only in assets with identical bytes at the same `public/` path
+after CRLF-to-LF checkout normalization, and reports those matches separately.
+New or otherwise changed assets, opaque graph IDs and credential
+patterns remain strict failures. No report is removed or modified by this audit.
+
+Activation is coordinator-owned: preserve the paired website/backend/config and
+private object versions, deploy reviewed readers with the flag off, publish and
+read back the paired producer snapshot, then explicitly enable only System Home.
+Preserve every current production backend feature configuration, including
+resources, Factory, Pi jobs, benchmark and Wealth; apply only the authorized
+System Home delta. The browser sends an explicit authenticated GraphQL query,
+so it does not depend on new operation metadata in existing browser outputs.
+The deployed schema must still contain the new query before live acceptance;
+compiling with existing outputs does not establish runtime compatibility.
+Verify real admin/non-admin/API-key denial, revocation/expiry, source freshness,
+off-site/mobile and producer-host availability. Local fixture results do not
+establish live acceptance. Rollback first disables `FORGE_SYSTEM_HOME_ENABLED`,
+then restores the compatible website/backend/config tuple and prior pointer
+version if needed. Retain immutable snapshots and unrelated capability settings.
+
 The separately configured [authenticated Whale Room](whale-room.md) uses a
 trusted first-party resource window and dedicated capture-only MM2 transport.
 Its code packaging and authority are separate from saved opaque artifacts and

@@ -18,6 +18,7 @@ import {builderInfrastructure} from './functions/forge-builder/infrastructure.mj
 import { workshopIssuer, workshopSecretArn } from './functions/forge-workshop/infrastructure.mjs';
 import {validateAppConfig} from './functions/forge-atlas/live-apps.mjs';
 import {validateWealthConfig,wealthSecretArns} from './functions/forge-atlas/wealth-config.mjs';
+import {systemTTL} from './functions/forge-atlas/system-home.mjs';
 
 /**
  * @see https://docs.amplify.aws/react/build-a-backend/ to add storage, functions, and more
@@ -43,6 +44,8 @@ atlasDocuments.grantRead(backend.forgeAtlas.resources.lambda, 'gbautomation/forg
 // Private resource delivery is a separately enabled read capability. No write grant.
 atlasDocuments.grantRead(backend.forgeAtlas.resources.lambda, 'gbautomation/resources/*');
 backend.forgeAtlas.addEnvironment('FORGE_RESOURCES_ENABLED',process.env.FORGE_RESOURCES_ENABLED==='true'?'true':'false');
+backend.forgeAtlas.addEnvironment('FORGE_SYSTEM_HOME_ENABLED',process.env.FORGE_SYSTEM_HOME_ENABLED==='true'?'true':'false');
+backend.forgeAtlas.addEnvironment('FORGE_SYSTEM_HOME_TTL_SECONDS',String(systemTTL(process.env.FORGE_SYSTEM_HOME_TTL_SECONDS??180)));
 backend.forgeAtlas.addEnvironment('FORGE_FACTORY_ENABLED',process.env.FORGE_FACTORY_ENABLED==='true'?'true':'false');
 const factoryPolicy=factorySnapshotPolicy(atlasDocuments,process.env.FORGE_FACTORY_ENABLED==='true');
 if(factoryPolicy)backend.forgeAtlas.resources.lambda.addToRolePolicy(factoryPolicy);

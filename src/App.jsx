@@ -13,6 +13,7 @@ import UiAgents from './pages/UiAgents';
 import UiAgent from './pages/UiAgent';
 import TacCatalog from './pages/TacCatalog';
 import Login from './pages/Login';
+import SystemHome from './pages/SystemHome';
 import OnboardingDocs from './pages/OnboardingDocs';
 import PRDIndex from './pages/PRDIndex';
 import PRDView from './pages/PRDView';
@@ -37,7 +38,7 @@ import ForgeIntake from './pages/ForgeIntake';
 
 function CommandLayerVisibility() {
   const { pathname } = useLocation();
-  if (pathname === '/' || pathname.startsWith('/atlas/') || pathname.startsWith('/bench/') || pathname === '/workshop') return null;
+  if (pathname === '/' || pathname === '/system' || pathname.startsWith('/atlas/') || pathname.startsWith('/bench/') || pathname === '/workshop') return null;
   return <HermesCommandLayer />;
 }
 
@@ -57,6 +58,7 @@ function App() {
           {/* Public — homepage + PRDs */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/system" element={<RequireAuth><SystemHome /></RequireAuth>} />
           <Route path="/atlas/:agentId" element={<RequireAuth allowedGroups={['tenant-gbautomation']}><ForgeAtlas /></RequireAuth>} />
           <Route path="/bench/:agentId" element={<RequireAuth allowedGroups={['tenant-gbautomation']}><ForgeAtlas /></RequireAuth>} />
           <Route path="/workshop" element={<RequireAuth allowedGroups={['tenant-gbautomation']}><AgentWorkshop /></RequireAuth>} />

@@ -1,40 +1,36 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Authenticator, useAuthenticator } from '@aws-amplify/ui-react';
-import { fetchAuthSession } from 'aws-amplify/auth';
+import { openSystemSession } from '../lib/systemHomeClient';
+import { safeNext } from '../lib/systemHome.mjs';
 import { ArrowLeft, LockKeyhole, ShieldCheck } from 'lucide-react';
 
-function getNextPath(search, groups = []) {
-  const params = new URLSearchParams(search);
-  const next = params.get('next');
-  if (next?.startsWith('/') && !next.startsWith('//')) return next;
-  return groups.includes('tenant-gbautomation') ? '/atlas/artist-packet-expert' : '/apps';
-}
-
 /**
- * Preserves deep links and sends GBAutomation members to their Forge workspace.
+ * Preserves safe deep links; the server selects the default authorized workspace.
  */
 function PostAuthRedirect() {
   const { authStatus } = useAuthenticator((ctx) => [ctx.authStatus]);
   const location = useLocation();
   const navigate = useNavigate();
+  const [error,setError]=useState('');
+  const [attempt,setAttempt]=useState(0);
 
   useEffect(() => {
     if (authStatus !== 'authenticated') return;
     let active = true;
-    fetchAuthSession()
-      .then((session) => {
-        if (!active) return;
-        const groups = session.tokens?.accessToken?.payload?.['cognito:groups'] || [];
-        navigate(getNextPath(location.search, groups), { replace: true });
-      })
-      .catch(() => {
-        if (active) navigate(getNextPath(location.search), { replace: true });
-      });
-    return () => { active = false; };
-  }, [authStatus, location.search, navigate]);
+    setError('');
+    const next=safeNext(location.search);
+    if(next){navigate(next,{replace:true});return;}
+    const guard=openSystemSession(()=>{if(active)setError('Your session could not be verified.');});
+    guard.read('access').then(access=>{
+      if(!active)return;
+      if(access.destination)navigate(access.destination,{replace:true});
+      else setError('No workspace is assigned to this account.');
+    }).catch(()=>{if(active)setError('Your workspace is unavailable. Please retry.');});
+    return ()=>{active=false;guard.stop();};
+  }, [authStatus, location.search, navigate, attempt]);
 
-  return null;
+  return error?<div role="alert"><p>{error}</p><button onClick={()=>setAttempt(x=>x+1)}>Retry workspace</button></div>:<p role="status">Opening your workspace...</p>;
 }
 
 export default function Login() {

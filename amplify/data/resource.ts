@@ -18,6 +18,8 @@ const schema = a.schema({
   forgeWorkshopStatus: a.query().arguments({input:a.json().required()}).returns(a.ref('ForgeWorkshopResult'))
     .authorization(allow=>[allow.authenticated()]).handler(a.handler.function(forgeWorkshop)),
   ForgeAtlasResult: a.customType({payload:a.json()}),
+  forgeSystemHomeRead: a.query().arguments({input:a.json().required()}).returns(a.ref('ForgeAtlasResult'))
+    .authorization(allow => [allow.authenticated()]).handler(a.handler.function(forgeAtlas)),
   forgeBuilderRead:a.query().arguments({input:a.json().required()}).returns(a.ref('ForgeAtlasResult'))
     .authorization(allow=>[allow.authenticated()]).handler(a.handler.function(forgeBuilder)),
   forgeBuilderCommand:a.mutation().arguments({input:a.json().required()}).returns(a.ref('ForgeAtlasResult'))

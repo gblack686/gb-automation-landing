@@ -15,6 +15,8 @@ import { makePiJobHandler } from './pi-jobs.mjs';
 import {makeLiveAppHandler} from './live-apps.mjs';
 import {makeWealthAppHandler} from './wealth-app.mjs';
 import {wealthSecretArns} from './wealth-config.mjs';
+import {makeSystemHomeHandler,systemTTL} from './system-home.mjs';
+import {makeSystemHomeStorage} from './system-home-storage.mjs';
 
 let secret: {url:string;key:string}|undefined;
 let scheduleAuth: string|undefined;
@@ -250,9 +252,13 @@ const piHandler=makePiJobHandler({issuer:process.env.COGNITO_ISSUER,operatorSubj
   return data.resources.some((row:{id:string;owner_expert:string|null;delivery_mode:string})=>row.id===resource&&row.owner_expert===expert
     && (action==='catalog.refresh'||row.delivery_mode==='artifact'));
  }});
+const systemHome=makeSystemHomeHandler({issuer:process.env.COGNITO_ISSUER,operatorSubject:process.env.FORGE_LEGACY_OPERATOR_SUB,registry,
+ enabled:process.env.FORGE_SYSTEM_HOME_ENABLED==='true',ttl:systemTTL(process.env.FORGE_SYSTEM_HOME_TTL_SECONDS??180),
+ load:makeSystemHomeStorage({client:new S3Client({}),bucket:process.env.DOCUMENT_BUCKET})});
 export const handler=(event:unknown)=>{
  const field=(event as {fieldName?:string;info?:{fieldName?:string}})?.fieldName||(event as {info?:{fieldName?:string}})?.info?.fieldName||'';
  if(field==='forgeAppRead')return liveApps.handle(event);
+ if(field==='forgeSystemHomeRead')return systemHome(event);
  if(['forgeWealthRead','forgeWealthCommand'].includes(field))return wealthApp.handle(event);
  return ['forgePiRead','forgePiCommand'].includes(field)?piHandler(event):['forgeChatRead','forgeChatCommand'].includes(field)?chatHandler(event):readHandler(event);
 };
