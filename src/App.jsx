@@ -35,6 +35,8 @@ import OpsRoutes from './ops/routes';
 import ForgeAtlas from './pages/ForgeAtlas';
 import AgentWorkshop from './pages/AgentWorkshop';
 import ForgeIntake from './pages/ForgeIntake';
+import Workspace from './pages/Workspace';
+import WorkspaceHandoff from './pages/WorkspaceHandoff';
 
 function CommandLayerVisibility() {
   const { pathname } = useLocation();
@@ -58,6 +60,9 @@ function App() {
           {/* Public — homepage + PRDs */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          {/* Invite-only YouTube Intel clients (client access plan). The gateway on MM2 does the real checks. */}
+          <Route path="/workspace" element={<RequireAuth allowedGroups={['youtube-intel-client']}><Workspace /></RequireAuth>} />
+          <Route path="/workspace/handoff" element={<RequireAuth allowedGroups={['youtube-intel-client']}><WorkspaceHandoff /></RequireAuth>} />
           <Route path="/system" element={<RequireAuth><SystemHome /></RequireAuth>} />
           <Route path="/atlas/:agentId" element={<RequireAuth allowedGroups={['tenant-gbautomation']}><ForgeAtlas /></RequireAuth>} />
           <Route path="/bench/:agentId" element={<RequireAuth allowedGroups={['tenant-gbautomation']}><ForgeAtlas /></RequireAuth>} />
