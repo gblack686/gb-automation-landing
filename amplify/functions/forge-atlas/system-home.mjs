@@ -85,7 +85,9 @@ export function makeSystemHomeHandler({issuer,operatorSubject='',registry,load,e
    const admin=!!agent && !!operatorBootstrap(c.sub,operatorSubject);
    if(input.view==='access') {
     const portal=['gbautomation','jid5274','smoke-client'].find(t=>groups.includes(`tenant-${t}`));
-    return {payload:{ok:true,data:{schema_version:'forge-system-access.v1',admin,destination:admin?'/system':agent?`/atlas/${agent.agent_id}`:portal?`/clients/${portal}`:null,agent_id:agent?.agent_id||null}}};
+    // Invite-only YouTube Intel clients land on their workspace page (client access plan).
+    const client=!portal&&groups.includes('youtube-intel-client')&&groups.filter(g=>/^tenant-cz-[a-z0-9-]{3,32}$/.test(g)).length===1;
+    return {payload:{ok:true,data:{schema_version:'forge-system-access.v1',admin,destination:admin?'/system':agent?`/atlas/${agent.agent_id}`:portal?`/clients/${portal}`:client?'/workspace':null,agent_id:agent?.agent_id||null}}};
    }
    if(!groups.includes('tenant-gbautomation')||!admin)deny('system_access_required');
    if(!enabled)deny('system_unavailable');

@@ -22,6 +22,12 @@ test('same-tenant non-admin, pending, removed and foreign registry never read sy
 test('ordinary tenants get only their portal without any registry or snapshot call',async()=>{
  for(const tenant of ['jid5274','smoke-client']){const h=setup(),e=event('access',{'cognito:groups':[`tenant-${tenant}`]});assert.equal((await h.run(e)).payload.data.destination,`/clients/${tenant}`);e.arguments.input.view='snapshot';assert.equal((await h.run(e)).payload.error,'system_access_required');assert.equal(h.reads(),0);assert.equal(h.registries(),0);}
  const h=setup();assert.equal((await h.run(event('access',{'cognito:groups':[]}))).payload.data.destination,null);
+ // YouTube Intel clients: exactly one tenant-cz group plus the client group; never the system snapshot.
+ const cz=event('access',{'cognito:groups':['youtube-intel-client','tenant-cz-0123456789']});assert.equal((await h.run(cz)).payload.data.destination,'/workspace');
+ cz.arguments.input.view='snapshot';assert.equal((await h.run(cz)).payload.error,'system_access_required');
+ assert.equal((await h.run(event('access',{'cognito:groups':['youtube-intel-client']}))).payload.data.destination,null);
+ assert.equal((await h.run(event('access',{'cognito:groups':['youtube-intel-client','tenant-cz-0123456789','tenant-cz-abcdef0123']}))).payload.data.destination,null);
+ assert.equal((await h.run(event('access',{'cognito:groups':['tenant-cz-0123456789']}))).payload.data.destination,null);
 });
 test('anonymous, API-key, invalid issuer, expiry, future token and malicious inputs stop before registry/storage',async()=>{
  const bad=[{...event(),identity:null},event('snapshot',{iss:'foreign'}),event('snapshot',{sub:'invalid'}),event('snapshot',{exp:now/1000}),event('snapshot',{nbf:now/1000+61}),{...event(),typeName:'Mutation'}, {...event(),fieldName:'forgeAtlasRead'}];
