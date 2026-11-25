@@ -453,8 +453,16 @@ async function fetchTraces(args: JsonRecord) {
   };
 }
 
-export const handler = async (event: { arguments?: JsonRecord }) => {
+/** Operators only: AppSync allows tenant-gbautomation, and the handler checks again. */
+function requireOperator(event: { identity?: { claims?: JsonRecord } }): void {
+  const raw = event?.identity?.claims?.['cognito:groups'];
+  const groups = Array.isArray(raw) ? raw.map(String) : typeof raw === 'string' ? raw.split(',').map((g) => g.trim()) : [];
+  if (!groups.includes('tenant-gbautomation')) throw new Error('tenant-gbautomation access required');
+}
+
+export const handler = async (event: { arguments?: JsonRecord; identity?: { claims?: JsonRecord } }) => {
   try {
+    requireOperator(event);
     return { payload: await fetchTraces(event.arguments || {}) };
   } catch (error) {
     return { payload: fallbackPayload(error instanceof Error ? error.message : 'Langfuse Amplify function failed') };

@@ -56,7 +56,7 @@ const schema = a.schema({
       limit: a.integer(),
     })
     .returns(a.ref('LangfuseTracePayload'))
-    .authorization((allow) => [allow.authenticated()])
+    .authorization((allow) => [allow.groups(['tenant-gbautomation'])])
     .handler(a.handler.function(langfuseTraces)),
 
   // /ops/mac-mini dashboard. All three route to the single macMiniOps Lambda, which
@@ -68,14 +68,14 @@ const schema = a.schema({
   macMiniTelemetry: a
     .query()
     .returns(a.ref('MacMiniResult'))
-    .authorization((allow) => [allow.authenticated()])
+    .authorization((allow) => [allow.groups(['tenant-gbautomation'])])
     .handler(a.handler.function(macMiniOps)),
 
   macMiniRequest: a
     .query()
     .arguments({ id: a.string().required() })
     .returns(a.ref('MacMiniResult'))
-    .authorization((allow) => [allow.authenticated()])
+    .authorization((allow) => [allow.groups(['tenant-gbautomation'])])
     .handler(a.handler.function(macMiniOps)),
 
   gbautomationChatMessages: a
@@ -85,7 +85,7 @@ const schema = a.schema({
       limit: a.integer(),
     })
     .returns(a.ref('MacMiniResult'))
-    .authorization((allow) => [allow.authenticated()])
+    .authorization((allow) => [allow.groups(['tenant-gbautomation'])])
     .handler(a.handler.function(macMiniOps)),
 
   sendGbautomationChatMessage: a
@@ -95,14 +95,14 @@ const schema = a.schema({
       content: a.string().required(),
     })
     .returns(a.ref('MacMiniResult'))
-    .authorization((allow) => [allow.authenticated()])
+    .authorization((allow) => [allow.groups(['tenant-gbautomation'])])
     .handler(a.handler.function(macMiniOps)),
 
   createMacMiniRequest: a
     .mutation()
     .arguments({ action: a.string().required(), params: a.json() })
     .returns(a.ref('MacMiniResult'))
-    .authorization((allow) => [allow.authenticated()])
+    .authorization((allow) => [allow.groups(['tenant-gbautomation'])])
     .handler(a.handler.function(macMiniOps)),
 
   smokeClientChat: a
@@ -112,7 +112,7 @@ const schema = a.schema({
       context: a.json(),
     })
     .returns(a.ref('MacMiniResult'))
-    .authorization((allow) => [allow.authenticated()])
+    .authorization((allow) => [allow.groups(['tenant-gbautomation', 'tenant-smoke-client'])])
     .handler(a.handler.function(macMiniOps)),
 
   ContactSubmission: a
@@ -143,7 +143,7 @@ const schema = a.schema({
     .secondaryIndexes((index) => [index('path').queryField('vaultDocByPath')])
     .authorization((allow) => [
       allow.publicApiKey(),
-      allow.authenticated().to(['read']),
+      allow.groups(['tenant-gbautomation']).to(['read']),
     ]),
 
   MallCrawlTarget: a
@@ -159,7 +159,7 @@ const schema = a.schema({
     })
     .secondaryIndexes((index) => [index('handle').queryField('mallCrawlTargetByHandle')])
     .authorization((allow) => [
-      allow.authenticated(),
+      allow.groups(['tenant-gbautomation']),
       allow.publicApiKey().to(['read']),
     ]),
 
@@ -181,7 +181,7 @@ const schema = a.schema({
       updatedAt: a.datetime(),
     })
     .authorization((allow) => [
-      allow.authenticated().to(['read']),
+      allow.groups(['tenant-gbautomation']).to(['read']),
       allow.publicApiKey().to(['create', 'update', 'delete']),
     ]),
 
@@ -207,7 +207,7 @@ const schema = a.schema({
       summary: a.string(),
     })
     .returns(a.ref('CapabilityEditResult'))
-    .authorization((allow) => [allow.authenticated()])
+    .authorization((allow) => [allow.groups(['tenant-gbautomation'])])
     .handler(a.handler.function(capabilityEdit)),
 
   editCapability: a
@@ -220,7 +220,7 @@ const schema = a.schema({
       summary: a.string(),
     })
     .returns(a.ref('CapabilityEditResult'))
-    .authorization((allow) => [allow.authenticated()])
+    .authorization((allow) => [allow.groups(['tenant-gbautomation'])])
     .handler(a.handler.function(capabilityEdit)),
 });
 

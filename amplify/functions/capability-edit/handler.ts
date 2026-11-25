@@ -76,8 +76,16 @@ function slugify(s: string): string {
     .slice(0, 40) || 'capability';
 }
 
+/** Operators only: AppSync allows tenant-gbautomation, and the handler checks again. */
+function requireOperator(event: Json): void {
+  const raw = event?.identity?.claims?.['cognito:groups'];
+  const groups = Array.isArray(raw) ? raw.map(String) : typeof raw === 'string' ? raw.split(',').map((g) => g.trim()) : [];
+  if (!groups.includes('tenant-gbautomation')) throw new Error('tenant-gbautomation access required');
+}
+
 export const handler = async (event: Json) => {
   try {
+    requireOperator(event);
     const args: Json = event?.arguments || {};
     const kind = String(args.kind || '').trim();
     const path = String(args.path || '').trim();

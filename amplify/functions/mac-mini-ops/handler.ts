@@ -64,6 +64,13 @@ function emailOf(event: Json): string {
   return String(id?.claims?.email || id?.username || 'ops-user');
 }
 
+/** The email allowlist counts only for a Cognito-verified email claim, never a username. */
+function verifiedEmailOf(event: Json): string {
+  const claims = event?.identity?.claims || {};
+  const verified = claims.email_verified === true || claims.email_verified === 'true';
+  return verified && typeof claims.email === 'string' ? claims.email.toLowerCase() : '';
+}
+
 function groupsOf(event: Json): string[] {
   const raw = event?.identity?.claims?.['cognito:groups'];
   if (Array.isArray(raw)) return raw.map(String);
@@ -72,10 +79,16 @@ function groupsOf(event: Json): string[] {
 }
 
 function requireGbautomationAccess(event: Json): void {
-  const email = emailOf(event).toLowerCase();
+  const email = verifiedEmailOf(event);
   const groups = groupsOf(event);
-  if (groups.includes(GB_AUTOMATION_GROUP) || GB_AUTOMATION_EMAILS.has(email)) return;
+  if (groups.includes(GB_AUTOMATION_GROUP) || (email && GB_AUTOMATION_EMAILS.has(email))) return;
   throw new Error('tenant-gbautomation access required');
+}
+
+function requireSmokeClientAccess(event: Json): void {
+  const groups = groupsOf(event);
+  if (groups.includes('tenant-smoke-client') || groups.includes(GB_AUTOMATION_GROUP)) return;
+  throw new Error('tenant-smoke-client access required');
 }
 
 function normalizeSessionId(value: unknown): string {
@@ -191,6 +204,7 @@ export const handler = async (event: Json) => {
     const args: Json = event?.arguments || {};
 
     if (op === 'smokeClientChat') {
+      requireSmokeClientAccess(event);
       const text = String(args.text || '').trim();
       if (!text) return { payload: { error: 'Empty message ignored.' } };
       const context = parseContext(args.context);
@@ -247,6 +261,7 @@ export const handler = async (event: Json) => {
     }
 
     if (op === 'createMacMiniRequest') {
+      requireGbautomationAccess(event);
       const action = String(args.action || '').trim();
       if (!ALLOWED_ACTIONS.includes(action)) {
         return { payload: { error: `action must be one of ${ALLOWED_ACTIONS.join(', ')}` } };
@@ -264,6 +279,7 @@ export const handler = async (event: Json) => {
     }
 
     if (op === 'macMiniRequest') {
+      requireGbautomationAccess(event);
       const id = String(args.id || '');
       const sel = 'select=id,action,status,result,error,requested_by,requested_at,completed_at';
       // Workshop results require the explicit Forge owner binding, not this ops route.
@@ -310,12 +326,13 @@ export const handler = async (event: Json) => {
     }
 
     // default: macMiniTelemetry
+    requireGbautomationAccess(event);
     const rows = await pgGet(
       `ops_dashboard_snapshots?snapshot_key=eq.${TELEMETRY_KEY}&select=snapshot,generated_at,updated_at&limit=1`,
     );
     const row = Array.isArray(rows) && rows.length ? rows[0] : null;
-    // This legacy ops query is available to any signed-in account. Expert run
-    // and log evidence has a stricter owner/tenant binding in Forge Workshop.
+    // Operators only (tenant-gbautomation). Expert run and log evidence has a
+    // stricter owner/tenant binding in Forge Workshop.
     const snapshot=row?.snapshot;
     const publicSnapshot=snapshot && typeof snapshot==='object' && !Array.isArray(snapshot)
       ? Object.fromEntries(Object.entries(snapshot).filter(([key])=>key!=='expert')) : null;
