@@ -37,6 +37,10 @@ const backend = defineBackend({
   forgeBuilderWorker,
 });
 
+// Invite-only pool: only an administrator creates users (client access plan decision 2).
+// The login page hiding the button was never a control; this is.
+backend.auth.resources.cfnResources.cfnUserPool.adminCreateUserConfig = { allowAdminCreateUserOnly: true };
+
 const atlasStack = Stack.of(backend.forgeAtlas.resources.lambda);
 const atlasDocuments = atlasStorage(atlasStack);
 atlasDocuments.grantRead(backend.forgeAtlas.resources.lambda, 'gbautomation/*/index.html');
